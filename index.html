@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0f17" />
+    <meta
+      name="description"
+      content="A spoiler-safe 256-team world football knockout tournament simulator."
+    />
+    <title>World 256 Knockout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./clean.css?v=skip-position-31" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#" aria-label="World 256 home">
+          <span class="brand-mark">W<span>256</span></span>
+          <span class="brand-copy">
+            <strong>World 256</strong>
+            <small>Global Cup 2030</small>
+          </span>
+        </a>
+
+        <div class="tournament-status">
+          <div class="eyebrow-row">
+            <span>Road to the final</span>
+            <span id="progressPercent">0%</span>
+          </div>
+          <div class="progress-track">
+            <span id="progressBar"></span>
+          </div>
+          <p id="progressCopy">256 teams. 255 ties. One champion.</p>
+        </div>
+
+        <nav class="round-nav" id="roundNav" aria-label="Tournament rounds"></nav>
+
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button class="icon-button mobile-menu" id="menuButton" aria-label="Open menu">☰</button>
+          <div>
+            <p class="page-kicker" id="pageKicker">WORLD 256 KNOCKOUT</p>
+            <h1 id="pageTitle">Round of 256</h1>
+          </div>
+          <div class="top-actions">
+            <button class="utility-button" id="fieldButton" type="button">
+              <span aria-hidden="true">◎</span>
+              <span>Field</span>
+            </button>
+            <button class="utility-button" id="settingsButton" type="button">
+              <span aria-hidden="true">⌁</span>
+              <span>Settings</span>
+            </button>
+            <button class="icon-button" id="fullscreenButton" aria-label="Enter fullscreen" title="Fullscreen">⛶</button>
+            <button class="ghost-button" id="newTournamentButton" type="button">New tournament</button>
+          </div>
+        </header>
+
+        <section class="field-overview" id="fieldOverview" hidden>
+          <div class="overview-intro">
+            <div>
+              <span class="section-kicker">THE COMPLETE FIELD</span>
+              <h2>Every team chasing one trophy.</h2>
+              <p>
+                211 FIFA members and 45 invited island, micronation and representative
+                sides. Review the field before the first ball is kicked.
+              </p>
+            </div>
+            <div class="field-totals" aria-label="Tournament field summary">
+              <div><strong>256</strong><span>Total teams</span></div>
+              <div><strong>211</strong><span>FIFA members</span></div>
+              <div><strong>45</strong><span>Guest sides</span></div>
+            </div>
+          </div>
+          <div class="overview-toolbar">
+            <label class="overview-search search">
+              <span>⌕</span>
+              <input id="overviewSearch" type="search" placeholder="Search the field" autocomplete="off" />
+            </label>
+            <button class="primary-button start-tournament" id="startTournamentButton" type="button">
+              Start tournament
+              <span>→</span>
+            </button>
+          </div>
+          <div class="participant-sections" id="participantSections"></div>
+        </section>
+
+        <section class="content" id="mainContent">
+          <aside class="insight-column insight-left">
+            <section class="panel golden-boot-panel">
+              <div class="panel-heading">
+                <span>GOLDEN BOOT</span>
+              </div>
+              <div class="golden-boot-list" id="goldenBootList"></div>
+            </section>
+          </aside>
+
+          <div class="stage-column">
+            <article class="match-stage" id="matchStage">
+              <div id="matchContent">
+              <div class="stage-topline">
+                <div aria-hidden="true"></div>
+                <div class="stage-round" id="stageRoundLabel">ROUND OF 256</div>
+                <div class="match-number" id="matchNumber">1/128</div>
+              </div>
+              <div class="skip-live-control" id="skipControl" hidden>
+                <button class="live-control skip-control" id="skipLiveButton" type="button">Skip to FT</button>
+              </div>
+
+              <div class="matchup" id="matchup">
+                <div class="team team-home">
+                  <span class="seed" id="homeSeed"></span>
+                  <div class="flag-orb" id="homeFlag">🇦🇷</div>
+                  <h2 class="team-name" id="homeName"><span>Argentina</span></h2>
+                  <div class="discipline" id="homeDiscipline" aria-live="polite"></div>
+                  <div class="team-match-events event-side" id="homeEventSide" hidden></div>
+                </div>
+
+                <div class="score-zone">
+                  <div class="live-controls score-live-controls" id="eventControls" hidden>
+                    <button class="live-control pause-control" id="pauseLiveButton" type="button" aria-pressed="false">Pause</button>
+                    <button class="live-control" id="speedButton" type="button">1×</button>
+                  </div>
+                  <div class="scoreline" aria-label="Match score">
+                    <span class="match-score" id="homeScore">0</span>
+                    <span class="score-separator" aria-hidden="true">−</span>
+                    <span class="match-score" id="awayScore">0</span>
+                  </div>
+                  <div class="event-live-clock score-live-clock" id="eventLiveClock" hidden>
+                    <span><i></i> LIVE</span>
+                    <strong id="liveClock">00:00</strong>
+                    <small id="livePhase">FIRST HALF</small>
+                  </div>
+                  <div class="result-note" id="resultNote" hidden></div>
+                </div>
+
+                <div class="team team-away">
+                  <span class="seed" id="awaySeed"></span>
+                  <div class="flag-orb" id="awayFlag">🏳️</div>
+                  <h2 class="team-name" id="awayName"><span>Vatican City</span></h2>
+                  <div class="discipline" id="awayDiscipline" aria-live="polite"></div>
+                  <div class="team-match-events event-side away" id="awayEventSide" hidden></div>
+                </div>
+              </div>
+
+              <section class="penalty-stage" id="penaltyStage" aria-live="polite" hidden>
+                <div class="penalty-stage-head">
+                  <span>PENALTY SHOOTOUT</span>
+                  <strong><b id="penaltyHomeScore">0</b><i>−</i><b id="penaltyAwayScore">0</b></strong>
+                  <span id="penaltyKickNumber">KICK 1</span>
+                </div>
+                <div class="penalty-scene" id="penaltyScene" data-state="setup" data-direction="centre" data-dive="centre">
+                  <div class="penalty-goal">
+                    <div class="penalty-net"></div>
+                    <div class="penalty-keeper" aria-hidden="true"><i></i><b></b></div>
+                  </div>
+                  <div class="penalty-ball" aria-hidden="true"></div>
+                  <div class="penalty-taker" aria-hidden="true"><i></i><b></b></div>
+                </div>
+                <div class="penalty-call">
+                  <strong id="penaltyPlayer">Player</strong>
+                  <span id="penaltyOutcome">Steps up</span>
+                </div>
+                <div class="penalty-ledgers">
+                  <div>
+                    <span id="penaltyHomeName">Home</span>
+                    <div class="penalty-marks" id="penaltyHomeMarks"></div>
+                  </div>
+                  <div class="away">
+                    <span id="penaltyAwayName">Away</span>
+                    <div class="penalty-marks" id="penaltyAwayMarks"></div>
+                  </div>
+                </div>
+              </section>
+
+              <div class="spoiler-panel" id="spoilerPanel" hidden>
+                <div>
+                  <span class="spoiler-icon">◉</span>
+                  <div>
+                    <strong>Result ready</strong>
+                    <p>Take your prediction. Reveal when the camera is rolling.</p>
+                  </div>
+                </div>
+                <button class="primary-button reveal-button" id="revealButton" type="button">
+                  Reveal result
+                  <span>→</span>
+                </button>
+              </div>
+
+              <div class="stage-action" id="stageAction">
+                <button class="primary-button play-button" id="playButton" type="button">
+                  <span class="play-icon">▶</span>
+                  Play this tie
+                </button>
+              </div>
+
+              </div>
+              <div class="champion-stage" id="championStage" hidden>
+                <div class="champion-confetti" id="championConfetti" aria-hidden="true"></div>
+                <div class="champion-content">
+                  <div class="trophy">WORLD 256 CHAMPIONS</div>
+                  <div class="flag-orb" id="championFlag">🏆</div>
+                  <h2 id="championName">Champion</h2>
+                  <p>Eight wins. A field of 256 conquered.</p>
+                  <div class="champion-award" id="championTopScorerAward">
+                    <div class="champion-award-mark" aria-hidden="true">&#9917;</div>
+                    <div class="champion-award-copy">
+                      <span>GOLDEN BOOT</span>
+                      <strong id="championTopScorerName">Top goalscorer</strong>
+                      <small>
+                        <span class="champion-award-flag" id="championTopScorerFlag"></span>
+                        <span id="championTopScorerTeam">Country</span>
+                        <b id="championTopScorerGoals">0 goals</b>
+                      </small>
+                    </div>
+                  </div>
+                  <button class="primary-button" id="championReset" type="button">Run it back <span>↻</span></button>
+                </div>
+              </div>
+            </article>
+
+            <section class="story-strip" id="storyStrip">
+              <div class="story-card">
+                <span>FIELD SIZE</span>
+                <strong>256</strong>
+                <small>teams from every corner</small>
+              </div>
+              <div class="story-card">
+                <span>FORMAT</span>
+                <strong>8</strong>
+                <small>straight knockout rounds</small>
+              </div>
+              <div class="story-card accent">
+                <span>CHAOS METER</span>
+                <strong id="chaosValue">Balanced</strong>
+                <small id="chaosCopy">upsets can happen</small>
+              </div>
+            </section>
+          </div>
+
+          <aside class="insight-column insight-right">
+            <section class="panel next-up-panel">
+              <div class="panel-heading">
+                <span>UP NEXT</span>
+                <strong id="tiesRemaining">128 ties left</strong>
+              </div>
+              <div class="queue" id="matchQueue"></div>
+            </section>
+
+            <section class="panel plot-panel">
+              <div class="panel-heading">
+                <span>TOURNAMENT PULSE</span>
+                <strong>Live storylines</strong>
+              </div>
+              <div class="plot-list" id="plotList">
+                <div class="empty-story">
+                  <span>✦</span>
+                  <p>The first giant-killing, thriller and penalty shootout will appear here.</p>
+                </div>
+              </div>
+            </section>
+          </aside>
+
+          <section class="round-board" id="roundBoard">
+            <div class="section-heading">
+              <div>
+                <h3 id="boardTitle">Round of 256 fixtures</h3>
+              </div>
+              <div class="board-actions">
+                <div class="team-filter-control" id="teamFilterControl">
+                  <label class="search team-filter-search">
+                    <span>⌕</span>
+                    <input id="teamSearch" type="search" placeholder="Filter by team" autocomplete="off" />
+                  </label>
+                  <button class="team-filter-chip" id="teamFilterChip" type="button" hidden></button>
+                </div>
+                <button class="text-button" id="unresolvedFilter" type="button">Unplayed only</button>
+                <button class="history-round-button" id="historyRoundButton" type="button" hidden></button>
+                <button class="history-round-button" id="newerRoundButton" type="button" hidden></button>
+                <button class="secondary-button" id="simulateRoundButton" type="button">Simulate round</button>
+              </div>
+            </div>
+            <div class="fixture-grid" id="fixtureGrid"></div>
+            <button class="load-more" id="loadMoreButton" type="button">Show more fixtures</button>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <dialog class="modal" id="settingsModal">
+      <form method="dialog">
+        <div class="modal-head">
+          <div>
+            <span class="section-kicker">SIMULATION ENGINE</span>
+            <h2>Set the tournament mood</h2>
+          </div>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-copy">
+            <strong>Upset frequency</strong>
+            <p>How often underdogs pull off the impossible.</p>
+          </div>
+          <div class="segmented" id="upsetSetting">
+            <button type="button" data-value="realistic">Realistic</button>
+            <button type="button" data-value="balanced" class="active">Balanced</button>
+            <button type="button" data-value="chaos">Pure chaos</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <div class="setting-copy">
+            <strong>Goal level</strong>
+            <p>From cagey tournament football to end-to-end madness.</p>
+          </div>
+          <div class="segmented" id="goalSetting">
+            <button type="button" data-value="tight">Tight</button>
+            <button type="button" data-value="normal" class="active">Normal</button>
+            <button type="button" data-value="wild">Goal fest</button>
+          </div>
+        </div>
+
+        <label class="switch-row">
+          <div>
+            <strong>Spoiler shield</strong>
+            <p>Hold every result behind a reveal screen.</p>
+          </div>
+          <input type="checkbox" id="spoilerSetting" checked />
+          <span class="switch"></span>
+        </label>
+
+        <label class="switch-row">
+          <div>
+            <strong>Real-name scorer pool</strong>
+            <p>Use curated real players where available; plausible names elsewhere.</p>
+          </div>
+          <input type="checkbox" id="realNamesSetting" checked />
+          <span class="switch"></span>
+        </label>
+
+        <button class="primary-button modal-save" id="saveSettingsButton" value="default">Save settings</button>
+      </form>
+    </dialog>
+
+    <dialog class="modal field-modal" id="fieldModal">
+      <form method="dialog">
+        <div class="modal-head">
+          <div>
+            <span class="section-kicker">THE FULL FIELD</span>
+            <h2>256 teams. No invitations required.</h2>
+          </div>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
+        </div>
+        <p class="field-intro">
+          The field combines 211 FIFA members with 45 non-FIFA, island, micronation and
+          representative sides. Non-FIFA teams use generated player names.
+        </p>
+        <label class="modal-search search">
+          <span>⌕</span>
+          <input id="fieldSearch" type="search" placeholder="Search all 256 teams" />
+        </label>
+        <div class="field-list" id="fieldList"></div>
+      </form>
+    </dialog>
+
+    <dialog class="confirm-modal" id="resetModal">
+      <form method="dialog">
+        <div class="confirm-icon">↻</div>
+        <h2>Start a fresh tournament?</h2>
+        <p>This clears every result and creates a fresh opening draw.</p>
+        <div class="confirm-actions">
+          <button class="secondary-button" value="cancel">Keep this one</button>
+          <button class="danger-button" id="confirmResetButton" value="default">Start over</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="confirm-modal" id="simulateRoundModal">
+      <form method="dialog">
+        <div class="confirm-icon simulate-confirm-icon">&#9654;</div>
+        <h2 id="simulateRoundConfirmCopy">Simulate the Round of 256 matches?</h2>
+        <div class="confirm-actions">
+          <button class="secondary-button" value="cancel">Cancel</button>
+          <button class="primary-button" id="confirmSimulateRoundButton" value="default">Confirm</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="./player-pools.generated.js?v=star-scorers-42"></script>
+    <script src="./data.js?v=star-scorers-42"></script>
+    <script src="./app.js?v=star-scorers-42"></script>
+  </body>
+</html>
