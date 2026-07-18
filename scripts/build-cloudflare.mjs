@@ -17,6 +17,8 @@ const staticFiles = [
   "terms.html",
   "assets/audio/full-time-whistle.mp3",
   "assets/audio/penalty-whistle.mp3",
+  "assets/256-teams-icon.svg",
+  "site.webmanifest",
 ];
 
 rmSync(outputRoot, { recursive: true, force: true });
