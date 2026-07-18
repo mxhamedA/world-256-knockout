@@ -4021,6 +4021,7 @@ body::after,
 .penalty-marks {
   align-items: center;
   gap: 5px;
+  min-height: 9px;
 }
 
 .penalty-mark {

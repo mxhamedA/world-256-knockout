@@ -149,6 +149,7 @@ vm.runInContext(
   globalThis.__calculateTournamentFatigue = calculateTournamentFatigue;
   globalThis.__goalEvents = goalEvents;
   globalThis.__simulatePenaltyShootout = simulatePenaltyShootout;
+  globalThis.__shootoutMarksMarkup = shootoutMarksMarkup;
   globalThis.__setPenaltySceneElement = setPenaltySceneElement;
   globalThis.__chooseGoalType = chooseGoalType;
   globalThis.__suspendedPlayersForTeam = suspendedPlayersForTeam;
@@ -760,6 +761,28 @@ assert.ok(widePenaltyMisses > 0, "Shootouts must include penalties sent wide.");
 assert.ok(scoredPenaltyKicks / penaltyKicks > 0.65 && scoredPenaltyKicks / penaltyKicks < 0.86, "Shootout conversion should remain plausible.");
 
 const penaltySceneProof = mockElement();
+const shootoutMarkProof = {
+  shootout: Array.from({ length: 24 }, (_, index) => ({
+    side: index % 2 === 0 ? "home" : "away",
+    round: Math.floor(index / 2) + 1,
+    scored: index % 3 !== 0,
+  })),
+  shootoutIndex: 0,
+  shootoutStep: "setup",
+};
+assert.equal(context.__shootoutMarksMarkup(shootoutMarkProof, "home"), "", "No future penalty circles should be visible.");
+shootoutMarkProof.shootoutStep = "result";
+assert.equal((context.__shootoutMarksMarkup(shootoutMarkProof, "home").match(/penalty-mark/g) || []).length, 1);
+assert.equal(context.__shootoutMarksMarkup(shootoutMarkProof, "away"), "");
+shootoutMarkProof.shootoutIndex = 10;
+shootoutMarkProof.shootoutStep = "setup";
+assert.equal(context.__shootoutMarksMarkup(shootoutMarkProof, "home"), "", "Sudden death should begin with a fresh marker row.");
+assert.equal(context.__shootoutMarksMarkup(shootoutMarkProof, "away"), "");
+shootoutMarkProof.shootoutStep = "result";
+assert.equal((context.__shootoutMarksMarkup(shootoutMarkProof, "home").match(/penalty-mark/g) || []).length, 1);
+shootoutMarkProof.shootoutIndex = 20;
+shootoutMarkProof.shootoutStep = "setup";
+assert.equal(context.__shootoutMarksMarkup(shootoutMarkProof, "home"), "", "Long shootouts should reset after each five-round marker block.");
 context.__setPenaltySceneElement(penaltySceneProof, {
   direction: "left", keeperDive: "left", foot: "right", scored: false, missType: "save",
 }, "result");

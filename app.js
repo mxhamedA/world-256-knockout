@@ -1818,16 +1818,33 @@ function penaltyStepDelay(duration) {
   return duration / livePlayback.speed;
 }
 
-function shootoutMarksMarkup(playback, side) {
-  if (!playback) return "";
+const SHOOTOUT_MARK_WINDOW_ROUNDS = 5;
+
+function visibleShootoutAttempts(playback, side) {
+  if (!playback?.shootout?.length) return [];
+  const currentAttempt = playback.shootout[playback.shootoutIndex]
+    || playback.shootout[playback.shootout.length - 1];
+  const currentRound = currentAttempt?.round || Math.floor(playback.shootoutIndex / 2) + 1;
+  const windowStartRound = Math.floor((currentRound - 1) / SHOOTOUT_MARK_WINDOW_ROUNDS)
+    * SHOOTOUT_MARK_WINDOW_ROUNDS + 1;
+  const windowEndRound = windowStartRound + SHOOTOUT_MARK_WINDOW_ROUNDS;
+  const completedThrough = ["result", "complete"].includes(playback.shootoutStep)
+    ? playback.shootoutIndex
+    : playback.shootoutIndex - 1;
+
   return playback.shootout
     .map((attempt, index) => ({ attempt, index }))
-    .filter(({ attempt }) => attempt.side === side)
-    .map(({ attempt, index }) => {
-      const complete = index < playback.shootoutIndex
-        || (index === playback.shootoutIndex && ["result", "complete"].includes(playback.shootoutStep));
-      const state = complete ? (attempt.scored ? "goal" : "miss") : "pending";
-      const label = complete ? (attempt.scored ? "Scored" : "Missed") : "Not taken";
+    .filter(({ attempt, index }) => attempt.side === side
+      && index <= completedThrough
+      && attempt.round >= windowStartRound
+      && attempt.round < windowEndRound);
+}
+
+function shootoutMarksMarkup(playback, side) {
+  return visibleShootoutAttempts(playback, side)
+    .map(({ attempt }) => {
+      const state = attempt.scored ? "goal" : "miss";
+      const label = attempt.scored ? "Scored" : "Missed";
       return `<i class="penalty-mark ${state}" title="${label}"></i>`;
     })
     .join("");
@@ -1956,7 +1973,7 @@ function renderPenaltyStage() {
   els.penaltyAwayMarks.innerHTML = penaltyMarksMarkup("away");
   els.penaltyKickNumber.textContent = step === "complete"
     ? "SHOOTOUT COMPLETE"
-    : `KICK ${livePlayback.shootoutIndex + 1} / ${livePlayback.shootout.length}`;
+    : `KICK ${livePlayback.shootoutIndex + 1}`;
 
   if (step === "complete") {
     const winner = teamById(match.result.winnerId);
