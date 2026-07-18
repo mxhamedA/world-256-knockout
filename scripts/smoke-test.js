@@ -136,7 +136,6 @@ context.clearTimeout = () => {};
 vm.runInContext(
   `${simulationEngineSource}\n${appSource}
   ;globalThis.__simulateMatch = simulateMatch;
-  globalThis.__amenyahGoalGuaranteeSide = amenyahGoalGuaranteeSide;
   globalThis.__forceOpeningRoundIsraelLoss = forceOpeningRoundIsraelLoss;
   globalThis.__weightedScorer = weightedScorer;
   globalThis.__scoringRunBrake = scoringRunBrake;
@@ -617,63 +616,6 @@ assert.deepEqual(
   { homeGoals: 3, awayGoals: 0 },
   "Israel's forced loss must not apply after the Round of 256.",
 );
-
-let laterRoundWithoutAmenyahGoal = false;
-let top32OpeningWithoutAmenyahGoal = false;
-let moldovaOpeningLosses = 0;
-for (let index = 0; index < 100; index += 1) {
-  const openingResult = context.__simulateMatch({
-    id: `amenyah-opening-proof-${index}`,
-    homeId: moldova.id,
-    awayId: sealand.id,
-  }, 0);
-  assert.ok(
-    openingResult.homeEvents.some((goal) => goal.scorer === "Amenyah"),
-    "Amenyah must score in the Round of 256 when Moldova faces a weaker team.",
-  );
-
-  const awayOpeningResult = context.__simulateMatch({
-    id: `amenyah-away-opening-proof-${index}`,
-    homeId: sealand.id,
-    awayId: moldova.id,
-  }, 0);
-  assert.ok(
-    awayOpeningResult.awayEvents.some((goal) => goal.scorer === "Amenyah"),
-    "Amenyah's opening-round goal must work from either side of the fixture.",
-  );
-
-  const top32OpeningResult = context.__simulateMatch({
-    id: `amenyah-top-32-proof-${index}`,
-    homeId: moldova.id,
-    awayId: england.id,
-  }, 0);
-  if (!top32OpeningResult.homeEvents.some((goal) => goal.scorer === "Amenyah")) {
-    top32OpeningWithoutAmenyahGoal = true;
-  }
-
-  const strongerNonTop32OpeningResult = context.__simulateMatch({
-    id: `amenyah-stronger-non-top-32-proof-${index}`,
-    homeId: moldova.id,
-    awayId: ireland.id,
-  }, 0);
-  assert.ok(
-    strongerNonTop32OpeningResult.homeEvents.some((goal) => goal.scorer === "Amenyah"),
-    "Amenyah's goal must be guaranteed against an opponent outside the top 32.",
-  );
-  if (strongerNonTop32OpeningResult.winnerId !== moldova.id) moldovaOpeningLosses += 1;
-
-  const laterResult = context.__simulateMatch({
-    id: `amenyah-later-round-proof-${index}`,
-    homeId: moldova.id,
-    awayId: england.id,
-  }, 1);
-  if (!laterResult.homeEvents.some((goal) => goal.scorer === "Amenyah")) {
-    laterRoundWithoutAmenyahGoal = true;
-  }
-}
-assert.ok(top32OpeningWithoutAmenyahGoal, "Amenyah must not be guaranteed to score against a top-32 team.");
-assert.ok(moldovaOpeningLosses > 0, "Amenyah's guaranteed goal must not guarantee Moldova a win.");
-assert.ok(laterRoundWithoutAmenyahGoal, "Amenyah must not be guaranteed to score after the opening round.");
 
 const playbackMatch = { id: "live-fast-equivalence", homeId: england.id, awayId: sealand.id };
 const playbackResult = context.__simulateMatch(playbackMatch, 0);

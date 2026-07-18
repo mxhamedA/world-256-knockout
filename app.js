@@ -1338,52 +1338,6 @@ function goalEvents(
   return events.sort((a, b) => a.minute - b.minute);
 }
 
-function guaranteeAmenyahGoal(events, cards, blockedMinutes = []) {
-  const dismissal = cards.find((card) => card.player === "Amenyah");
-  let minute = dismissal
-    ? Math.min(events[0].minute, Math.max(2, dismissal.minute - 1))
-    : events[0].minute;
-  const occupied = new Set([
-    ...blockedMinutes,
-    ...events.slice(1).map((event) => event.minute),
-  ]);
-  if (occupied.has(minute)) {
-    const latestMinute = dismissal ? Math.max(2, dismissal.minute - 1) : 90;
-    for (let offset = 1; offset <= 88; offset += 1) {
-      const earlier = minute - offset;
-      const later = minute + offset;
-      if (earlier >= 2 && !occupied.has(earlier)) {
-        minute = earlier;
-        break;
-      }
-      if (later <= latestMinute && !occupied.has(later)) {
-        minute = later;
-        break;
-      }
-    }
-  }
-  events[0] = {
-    ...events[0],
-    minute,
-    scorer: "Amenyah",
-    assist: null,
-    goalType: "openPlay",
-    ownGoal: false,
-    ownGoalBy: undefined,
-  };
-  events.sort((a, b) => a.minute - b.minute);
-}
-
-function amenyahGoalGuaranteeSide(home, away, roundIndex) {
-  if (roundIndex !== 0) return null;
-  const moldovaSide = home.name === "Moldova" ? "home" : away.name === "Moldova" ? "away" : null;
-  if (!moldovaSide) return null;
-
-  const opponent = moldovaSide === "home" ? away : home;
-  const opponentIsTop32 = opponent.fifaRank && opponent.fifaRank <= 32;
-  return opponentIsTop32 ? null : moldovaSide;
-}
-
 function forceOpeningRoundIsraelLoss(home, away, roundIndex, homeGoals, awayGoals) {
   if (roundIndex !== 0) return { homeGoals, awayGoals };
   if (home.name === "Israel" && homeGoals >= awayGoals) awayGoals = homeGoals + 1;
@@ -1498,9 +1452,6 @@ function simulateMatch(match, roundIndex) {
 
   let homeGoals = poisson(adjustedXG.homeXG, random);
   let awayGoals = poisson(adjustedXG.awayXG, random);
-  const amenyahSide = amenyahGoalGuaranteeSide(home, away, roundIndex);
-  if (amenyahSide === "home" && homeGoals === 0) homeGoals = 1;
-  if (amenyahSide === "away" && awayGoals === 0) awayGoals = 1;
   ({ homeGoals, awayGoals } = forceOpeningRoundIsraelLoss(
     home,
     away,
@@ -1567,20 +1518,6 @@ function simulateMatch(match, roundIndex) {
     suspendedPlayers.home,
     usedGoalMinutes,
   );
-  if (amenyahSide === "home") {
-    guaranteeAmenyahGoal(
-      homeEvents,
-      redCards.filter((card) => card.side === "home"),
-      awayEvents.map((event) => event.minute),
-    );
-  }
-  if (amenyahSide === "away") {
-    guaranteeAmenyahGoal(
-      awayEvents,
-      redCards.filter((card) => card.side === "away"),
-      homeEvents.map((event) => event.minute),
-    );
-  }
   return {
     homeGoals,
     awayGoals,
