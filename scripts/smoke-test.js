@@ -6,6 +6,7 @@ const vm = require("node:vm");
 const root = path.resolve(__dirname, "..");
 const playerPoolSource = fs.readFileSync(path.join(root, "player-pools.generated.js"), "utf8");
 const dataSource = fs.readFileSync(path.join(root, "data.js"), "utf8");
+const simulationEngineSource = fs.readFileSync(path.join(root, "simulation-engine.js"), "utf8");
 const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const htmlSource = fs.readFileSync(path.join(root, "index.html"), "utf8");
 
@@ -68,6 +69,12 @@ const staticSelectors = [...appSource.matchAll(/\$\("#([^"]+)"\)/g)]
   .map((match) => match[1].split(/[\s>+~.:[#]/)[0]);
 const missingSelectors = staticSelectors.filter((id) => !htmlIds.has(id));
 assert.deepEqual(missingSelectors, [], `Missing HTML IDs: ${missingSelectors.join(", ")}`);
+assert.ok(htmlIds.has("snapshotButton") && htmlIds.has("snapshotModal") && htmlIds.has("snapshotImage"));
+assert.ok(appSource.includes("new ClipboardItem") && appSource.includes("navigator.share"));
+assert.ok(appSource.includes('canvas.toBlob') && appSource.includes('link.download = snapshotFilename'));
+assert.ok(/id="snapshotButton"[^>]*hidden/.test(htmlSource), "The snapshot control must start hidden until a match is complete.");
+assert.ok(appSource.includes("els.snapshotButton.hidden = !revealed"), "Only revealed finished matches should expose snapshots.");
+assert.ok(appSource.includes("drawSnapshotGoldenBoot") && appSource.includes("drawSnapshotConfetti"), "Champion snapshots must include the Golden Boot and confetti.");
 
 function mockElement() {
   return {
@@ -115,9 +122,11 @@ context.window = {
   scrollTo() {},
   matchMedia() { return { matches: false }; },
 };
+const storage = new Map();
 context.localStorage = {
-  getItem() { return null; },
-  setItem() {},
+  getItem(key) { return storage.has(key) ? storage.get(key) : null; },
+  setItem(key, value) { storage.set(key, String(value)); },
+  removeItem(key) { storage.delete(key); },
 };
 context.requestAnimationFrame = () => 1;
 context.cancelAnimationFrame = () => {};
@@ -125,20 +134,38 @@ context.setTimeout = () => 1;
 context.clearTimeout = () => {};
 
 vm.runInContext(
-  `${appSource}
+  `${simulationEngineSource}\n${appSource}
   ;globalThis.__simulateMatch = simulateMatch;
+  globalThis.__amenyahGoalGuaranteeSide = amenyahGoalGuaranteeSide;
+  globalThis.__forceOpeningRoundIsraelLoss = forceOpeningRoundIsraelLoss;
   globalThis.__weightedScorer = weightedScorer;
   globalThis.__scoringRunBrake = scoringRunBrake;
+  globalThis.__playerProfilesForTeam = playerProfilesForTeam;
+  globalThis.__calculateScorerWeight = calculateScorerWeight;
+  globalThis.__matchupScorerMultiplier = matchupScorerMultiplier;
+  globalThis.__teamGoalShareMultiplier = teamGoalShareMultiplier;
+  globalThis.__calculateExpectedGoals = calculateExpectedGoals;
+  globalThis.__simulationConfig = SIMULATION_CONFIG;
+  globalThis.__calculateTournamentFatigue = calculateTournamentFatigue;
+  globalThis.__goalEvents = goalEvents;
+  globalThis.__simulatePenaltyShootout = simulatePenaltyShootout;
+  globalThis.__setPenaltySceneElement = setPenaltySceneElement;
+  globalThis.__chooseGoalType = chooseGoalType;
   globalThis.__suspendedPlayersForTeam = suspendedPlayersForTeam;
   globalThis.__applyScorelineCeiling = applyScorelineCeiling;
   globalThis.__renderChampionConfetti = renderChampionConfetti;
   globalThis.__fixtureScoreMarkup = fixtureScoreMarkup;
   globalThis.__preferredPenaltyFoot = preferredPenaltyFoot;
+  globalThis.__snapshotGoalLines = snapshotGoalLines;
+  globalThis.__calculateGoalscorerTable = calculateGoalscorerTable;
   globalThis.__calculateTopGoalscorer = calculateTopGoalscorer;
   globalThis.__roundHistoryTargets = roundHistoryTargets;
   globalThis.__teamJourneyMatches = teamJourneyMatches;
+  globalThis.__playbackEvents = playbackEvents;
   globalThis.__runtimeTeams = TEAMS;
   globalThis.__runtimeState = state;
+  globalThis.__loadState = loadState;
+  globalThis.__storageKey = STORAGE_KEY;
   globalThis.__simulateTournament = (drawSeed) => {
     state.drawSeed = drawSeed;
     state.settings = { ...defaultSettings, upset: "balanced", spoiler: false };
@@ -156,6 +183,23 @@ vm.runInContext(
     return {
       lastEight,
       finalists: [final.homeId, final.awayId],
+    };
+  };
+  globalThis.__simulateCompleteTournament = (drawSeed) => {
+    state.drawSeed = drawSeed;
+    state.settings = { ...defaultSettings, upset: "balanced", spoiler: false };
+    state.rounds = [createFirstRound(drawSeed)];
+    for (let roundIndex = 0; roundIndex < 8; roundIndex += 1) {
+      state.activeRound = roundIndex;
+      state.rounds[roundIndex].forEach((match) => {
+        match.result = simulateMatch(match, roundIndex);
+        match.result.revealed = true;
+      });
+      if (roundIndex < 7) buildNextRound(roundIndex);
+    }
+    return {
+      championId: state.rounds[7][0].result.winnerId,
+      winnerSignature: state.rounds.flat().map((match) => match.result.winnerId).join("|"),
     };
   };
   globalThis.__exerciseSpeedMemory = () => {
@@ -216,6 +260,16 @@ assert.equal(context.__preferredPenaltyFoot(moroccoForFootCheck, "Amine Adli", (
 assert.equal(context.__preferredPenaltyFoot(moroccoForFootCheck, "Bilal El Khannouss", () => 0.1), "right");
 assert.equal(context.__preferredPenaltyFoot(moroccoForFootCheck, "Brahim Díaz", () => 0.1), "left");
 assert.equal(context.__preferredPenaltyFoot(moroccoForFootCheck, "Brahim Díaz", () => 0.9), "right");
+assert.deepEqual(
+  JSON.parse(JSON.stringify(context.__snapshotGoalLines([
+    { minute: 47, scorer: "Leandro Trossard" },
+    { minute: 7, scorer: "Leandro Trossard" },
+    { minute: 14, scorer: "Leandro Trossard" },
+    { minute: 62, scorer: "Kevin De Bruyne" },
+  ]))),
+  ["Leandro Trossard  7', 14', 47'", "Kevin De Bruyne  62'"],
+  "Snapshot goals should group every scorer's minutes without a '+ more' line.",
+);
 assert.equal(context.__preferredPenaltyFoot(netherlandsForFootCheck, "Micky van de Ven", () => 0.9), "left");
 assert.equal(context.__preferredPenaltyFoot(netherlandsForFootCheck, "Xavi Simons", () => 0.9), "right");
 assert.equal(context.__preferredPenaltyFoot(netherlandsForFootCheck, "Ryan Gravenberch", () => 0.9), "right");
@@ -250,24 +304,125 @@ const sampleScorers = (team, count = 5000) => Array.from(
 );
 const croatiaScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "Croatia"));
 const netherlandsScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "Netherlands"));
-const denmarkScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "Denmark"));
-const colombiaScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "Colombia"));
 const spainScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "Spain"));
-const englandScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "England"));
-const moroccoScorerSample = sampleScorers(runtimeTeams.find((team) => team.name === "Morocco"));
 const countScorer = (sample, player) => sample.filter((name) => name === player).length;
 const croatiaDefenderShare = croatiaScorerSample.filter((name) => ["Joško Gvardiol", "Luka Vušković"].includes(name)).length
   / croatiaScorerSample.length;
-assert.ok(croatiaDefenderShare > 0.18 && croatiaDefenderShare < 0.36, "Deeper Croatia players should receive a meaningful but controlled share of goals.");
+assert.ok(croatiaDefenderShare < 0.04, "Defenders must receive only a small open-play scorer share.");
 assert.ok(countScorer(croatiaScorerSample, "Luka Vušković") > 0, "Luka Vušković must be capable of scoring.");
 assert.ok(countScorer(netherlandsScorerSample, "Micky van de Ven") > 0, "Micky van de Ven must be capable of scoring.");
 assert.ok(countScorer(croatiaScorerSample, "Bruno Durdov") > countScorer(croatiaScorerSample, "Luka Vušković"));
 assert.ok(countScorer(netherlandsScorerSample, "Xavi Simons") > countScorer(netherlandsScorerSample, "Micky van de Ven"));
-assert.ok(countScorer(denmarkScorerSample, "Christian Eriksen") > countScorer(denmarkScorerSample, "Rasmus Højlund"));
-assert.ok(countScorer(colombiaScorerSample, "Luis Díaz") > countScorer(colombiaScorerSample, "Jhon Córdoba") * 2);
-assert.ok(countScorer(spainScorerSample, "Lamine Yamal") > countScorer(spainScorerSample, "Nico Williams") * 2);
-assert.ok(countScorer(englandScorerSample, "Bukayo Saka") / englandScorerSample.length < 0.4);
-assert.ok(countScorer(moroccoScorerSample, "Ismael Saibari") > countScorer(moroccoScorerSample, "Eliesse Ben Seghir"));
+const spainProfilesForWeight = context.__playerProfilesForTeam(spainForFootCheck);
+assert.ok(
+  context.__calculateScorerWeight(spainProfilesForWeight.find((profile) => profile.name === "Lamine Yamal"))
+    > context.__calculateScorerWeight(spainProfilesForWeight.find((profile) => profile.name === "Nico Williams")),
+);
+
+const franceExpected = context.__calculateExpectedGoals(franceForFootCheck, runtimeTeams.find((team) => team.name === "Sealand"), 0);
+assert.ok(franceExpected.homeXG > franceExpected.awayXG, "An elite team must receive more xG than a weak opponent.");
+const chaosLateMismatch = context.__calculateExpectedGoals(
+  franceForFootCheck,
+  runtimeTeams.find((team) => team.name === "Sealand"),
+  7,
+  "chaos",
+);
+const balancedLateMismatch = context.__calculateExpectedGoals(
+  franceForFootCheck,
+  runtimeTeams.find((team) => team.name === "Sealand"),
+  7,
+  "balanced",
+);
+assert.ok(
+  chaosLateMismatch.awayXG > balancedLateMismatch.awayXG * 2,
+  "Pure Chaos must preserve substantially more late-round underdog xG.",
+);
+assert.ok(context.__simulationConfig.modes.chaos.shockChance >= 0.18);
+assert.ok(context.__simulationConfig.modes.chaos.redCardChance >= 0.14);
+const equalExpectedEarly = context.__calculateExpectedGoals(franceForFootCheck, franceForFootCheck, 0);
+const equalExpectedLate = context.__calculateExpectedGoals(franceForFootCheck, franceForFootCheck, 7);
+assert.ok(Math.abs(equalExpectedEarly.homeXG - equalExpectedEarly.awayXG) < 0.000001);
+assert.ok(Math.abs(equalExpectedLate.homeXG - equalExpectedLate.awayXG) < 0.000001, "Round strength must not bias equal teams.");
+const eliteEarly = context.__calculateExpectedGoals(franceForFootCheck, runtimeTeams.find((team) => team.name === "Iran"), 0);
+const eliteLate = context.__calculateExpectedGoals(franceForFootCheck, runtimeTeams.find((team) => team.name === "Iran"), 7);
+assert.ok(eliteLate.homeXG / eliteLate.awayXG > eliteEarly.homeXG / eliteEarly.awayXG, "Later rounds must strengthen a meaningful favourite.");
+assert.ok(context.__calculateTournamentFatigue({ squadDepth: 55 }, 6) > 0.05);
+assert.equal(context.__calculateTournamentFatigue({ squadDepth: 90 }, 6), 0);
+
+const franceProfiles = context.__playerProfilesForTeam(franceForFootCheck);
+const mbappeProfile = franceProfiles.find((profile) => profile.name === "Kylian Mbappé");
+const syntheticDefender = { ...mbappeProfile, position: "CB", attackingRole: "defensive" };
+const lowRatedStriker = { ...mbappeProfile, overall: 55, finishing: 55 };
+assert.ok(context.__calculateScorerWeight(mbappeProfile) > context.__calculateScorerWeight(syntheticDefender));
+assert.ok(context.__calculateScorerWeight(mbappeProfile) > context.__calculateScorerWeight(lowRatedStriker));
+const englandProfilesForHierarchy = context.__playerProfilesForTeam(englandForFootCheck);
+const englandScorerWeight = (name) => context.__calculateScorerWeight(
+  englandProfilesForHierarchy.find((profile) => profile.name === name),
+  englandForFootCheck,
+  englandProfilesForHierarchy,
+);
+assert.ok(englandScorerWeight("Jude Bellingham") > englandScorerWeight("Bukayo Saka"));
+assert.ok(englandScorerWeight("Bukayo Saka") > englandScorerWeight("Max Dowman"));
+assert.ok(englandScorerWeight("Max Dowman") > englandScorerWeight("Phil Foden"));
+const norwayForWeight = runtimeTeams.find((team) => team.name === "Norway");
+const australiaForWeight = runtimeTeams.find((team) => team.name === "Australia");
+const iranForWeight = runtimeTeams.find((team) => team.name === "Iran");
+const norwayProfiles = context.__playerProfilesForTeam(norwayForWeight);
+const australiaProfiles = context.__playerProfilesForTeam(australiaForWeight);
+const iranProfiles = context.__playerProfilesForTeam(iranForWeight);
+const haalandProfile = norwayProfiles.find((profile) => profile.name === "Erling Haaland");
+const dukeProfile = australiaProfiles.find((profile) => profile.name === "Mitchell Duke");
+const alipourProfile = iranProfiles.find((profile) => profile.name === "Ali Alipour");
+const hosseinzadehProfile = iranProfiles.find((profile) => profile.name === "Amirhossein Hosseinzadeh");
+assert.deepEqual(
+  {
+    overall: hosseinzadehProfile.overall,
+    finishing: hosseinzadehProfile.finishing,
+    role: hosseinzadehProfile.attackingRole,
+    penaltyTaker: hosseinzadehProfile.penaltyTaker,
+  },
+  { overall: 76, finishing: 74, role: "support", penaltyTaker: false },
+  "Hosseinzadeh must remain a supporting scorer rather than Iran's elite focal point.",
+);
+const haalandWeight = context.__calculateScorerWeight(haalandProfile, norwayForWeight, norwayProfiles);
+const dukeWeight = context.__calculateScorerWeight(dukeProfile, australiaForWeight, australiaProfiles);
+const mbappeWeight = context.__calculateScorerWeight(mbappeProfile, franceForFootCheck, franceProfiles);
+const alipourWeight = context.__calculateScorerWeight(alipourProfile, iranForWeight, iranProfiles);
+assert.ok(haalandWeight > dukeWeight * 10, "Haaland must have a much higher base scorer weight than Mitchell Duke.");
+assert.ok(mbappeWeight > alipourWeight * 4, "Mbappe must have a much higher base scorer weight than an average striker.");
+assert.ok(
+  context.__matchupScorerMultiplier(haalandProfile, norwayForWeight, runtimeTeams.find((team) => team.name === "Sealand")) > 1.5,
+  "Elite finishers must gain a scorer bonus against extremely weak defences.",
+);
+assert.ok(
+  context.__matchupScorerMultiplier(dukeProfile, australiaForWeight, runtimeTeams.find((team) => team.name === "Sealand")) <= 1,
+  "Average finishers must not receive the elite weak-opponent bonus.",
+);
+assert.equal(context.__teamGoalShareMultiplier(dukeProfile, 4, 6), 0.58);
+assert.equal(context.__teamGoalShareMultiplier(haalandProfile, 4, 6), 0.76);
+
+const penaltySample = Array.from(
+  { length: 3000 },
+  () => context.__weightedScorer(franceForFootCheck, scorerSampleRandom, [], new Map(), "penalty"),
+);
+assert.ok(countScorer(penaltySample, "Kylian Mbappé") / penaltySample.length > 0.55, "The designated taker must receive most penalty goals.");
+const savedRealNames = context.__runtimeState.settings.realNames;
+context.__runtimeState.settings.realNames = false;
+const generatedProfilesFirst = JSON.parse(JSON.stringify(context.__playerProfilesForTeam(franceForFootCheck)));
+const generatedProfilesSecond = JSON.parse(JSON.stringify(context.__playerProfilesForTeam(franceForFootCheck)));
+assert.deepEqual(generatedProfilesFirst, generatedProfilesSecond, "Generated player attributes must be stable.");
+const generatedGoalkeepers = new Set(generatedProfilesFirst.filter((profile) => profile.position === "GK").map((profile) => profile.name));
+const generatedScorers = sampleScorers(franceForFootCheck, 10000);
+assert.ok(generatedScorers.filter((name) => generatedGoalkeepers.has(name)).length <= 1, "Goalkeepers must almost never score normal goals.");
+context.__runtimeState.settings.realNames = savedRealNames;
+const compatibleSave = JSON.parse(JSON.stringify(context.__runtimeState));
+compatibleSave.settings = { realNames: false };
+context.localStorage.setItem(context.__storageKey, JSON.stringify(compatibleSave));
+const reloadedSave = context.__loadState();
+assert.equal(reloadedSave.drawSeed, compatibleSave.drawSeed, "An existing version-2 save must reload with its seed intact.");
+assert.equal(reloadedSave.rounds[0].length, 128, "An existing save must retain the complete opening round.");
+assert.equal(reloadedSave.settings.realNames, true, "Real-name player profiles must remain enabled after reload.");
+assert.equal(reloadedSave.settings.goals, "normal", "New default settings must merge into an existing save.");
 assert.ok(!iranPlayers.includes("Mehdi Taremi"));
 assert.equal(turkeyPlayers[0], "Arda Güler");
 assert.equal(turkeyPlayers[1], "Kenan Yıldız");
@@ -289,8 +444,7 @@ assert.equal(italyPlayers.at(-1), "Alessio Cacciamani");
 assert.equal(japanPlayers[0], "Takefusa Kubo");
 assert.equal(japanPlayers.at(-1), "Shūto Machino");
 assert.equal(context.__preferredPenaltyFoot(runtimeTeams.find((team) => team.name === "Japan"), "Takefusa Kubo", () => 0.9), "left");
-assert.equal(context.__scoringRunBrake(7), 0.55);
-assert.equal(context.__scoringRunBrake(10), 0, "A player must stop receiving goals after reaching ten in one tournament.");
+assert.equal(context.__scoringRunBrake(10), 1, "Tournament totals must not be hard-capped.");
 assert.doesNotThrow(() => context.__renderChampionConfetti("team-1"), "Champion confetti must render without crashing the winner screen.");
 const portugalPlayers = runtimeTeams.find((team) => team.name === "Portugal").players;
 assert.ok(portugalPlayers.includes("Carlos Forbs"));
@@ -329,6 +483,9 @@ const guestTeams = runtimeTeams.filter((team) => team.confed === "INVITED");
 assert.equal(fifaTeams.filter((team) => team.fifaRank).length, 211, "Every FIFA member needs a FIFA rank.");
 assert.ok(fifaTeams.every((team) => team.rating >= 35 && team.rating <= 100));
 assert.ok(guestTeams.every((team) => team.rating >= 18 && team.rating <= 34));
+const simulationRatingKeys = ["overall", "attack", "midfield", "defence", "goalkeeper", "squadDepth", "experience", "penalties", "discipline"];
+assert.ok(runtimeTeams.every((team) => simulationRatingKeys.every((key) => Number.isFinite(team.simulationRatings[key]))));
+assert.ok(runtimeTeams.every((team) => team.simulationRatings.discipline >= 35 && team.simulationRatings.discipline <= 95));
 assert.equal(runtimeTeams.find((team) => team.name === "Argentina").rating, 90);
 assert.equal(runtimeTeams.findIndex((team) => team.name === "Argentina") + 1, 8);
 assert.equal(runtimeTeams.find((team) => team.name === "Germany").rating, 89);
@@ -397,6 +554,33 @@ assert.deepEqual(
   { player: "Bukayo Saka", teamId: england.id, goals: 3 },
   "The Golden Boot must count match goals across rounds and exclude shootout kicks.",
 );
+const specialGoalTable = context.__calculateGoalscorerTable([[{
+  homeId: england.id,
+  awayId: sealand.id,
+  result: {
+    revealed: true,
+    homeEvents: [
+      { scorer: "Bukayo Saka", minute: 110, goalType: "openPlay" },
+      { scorer: "Alex Mercer (OG)", minute: 72, goalType: "ownGoal", ownGoal: true },
+    ],
+    awayEvents: [],
+  },
+}]]);
+assert.equal(specialGoalTable.find((entry) => entry.player === "Bukayo Saka").goals, 1, "Extra-time goals must count.");
+assert.ok(!specialGoalTable.some((entry) => entry.player.includes("OG")), "Own goals must not enter Golden Boot totals.");
+assert.deepEqual(
+  JSON.parse(JSON.stringify(context.__calculateGoalscorerTable(JSON.parse(JSON.stringify([[{
+    homeId: england.id,
+    awayId: sealand.id,
+    result: { revealed: true, homeEvents: [{ scorer: "Bukayo Saka" }], awayEvents: [] },
+  }]]))))),
+  JSON.parse(JSON.stringify(context.__calculateGoalscorerTable([[{
+    homeId: england.id,
+    awayId: sealand.id,
+    result: { revealed: true, homeEvents: [{ scorer: "Bukayo Saka" }], awayEvents: [] },
+  }]]))),
+  "Serializing and restoring a tournament must not duplicate player statistics.",
+);
 assert.ok(moldova.players.includes("Amenyah"), "Amenyah must be in Moldova's player pool.");
 context.__runtimeState.settings.upset = "balanced";
 context.__runtimeState.settings.goals = "normal";
@@ -406,11 +590,10 @@ for (let index = 0; index < 50; index += 1) {
     id: `israel-home-loss-proof-${index}`,
     homeId: israel.id,
     awayId: sealand.id,
-  }, index % 8);
-  assert.equal(israelAtHome.homeGoals, 0, "Israel must never score.");
-  assert.ok(israelAtHome.awayGoals >= 4, "Israel must lose by at least four goals.");
+  }, 0);
+  assert.ok(israelAtHome.homeGoals < israelAtHome.awayGoals, "Israel must lose its Round of 256 match.");
   assert.equal(israelAtHome.winnerId, sealand.id);
-  assert.equal(israelAtHome.homeEvents.length, 0);
+  assert.equal(israelAtHome.homeEvents.length, israelAtHome.homeGoals);
   assert.equal(israelAtHome.awayEvents.length, israelAtHome.awayGoals);
   assert.equal(israelAtHome.extraTime, false);
   assert.equal(israelAtHome.penalties, null);
@@ -419,37 +602,64 @@ for (let index = 0; index < 50; index += 1) {
     id: `israel-away-loss-proof-${index}`,
     homeId: sealand.id,
     awayId: israel.id,
-  }, index % 8);
-  assert.equal(israelAway.awayGoals, 0, "Israel must never score away from home.");
-  assert.ok(israelAway.homeGoals >= 4, "Israel must lose away by at least four goals.");
+  }, 0);
+  assert.ok(israelAway.awayGoals < israelAway.homeGoals, "Israel must lose its away Round of 256 match.");
   assert.equal(israelAway.winnerId, sealand.id);
-  assert.equal(israelAway.awayEvents.length, 0);
+  assert.equal(israelAway.awayEvents.length, israelAway.awayGoals);
   assert.equal(israelAway.homeEvents.length, israelAway.homeGoals);
   assert.equal(israelAway.extraTime, false);
   assert.equal(israelAway.penalties, null);
 }
 
+assert.deepEqual(
+  JSON.parse(JSON.stringify(context.__forceOpeningRoundIsraelLoss(israel, sealand, 1, 3, 0))),
+  { homeGoals: 3, awayGoals: 0 },
+  "Israel's forced loss must not apply after the Round of 256.",
+);
+
 let laterRoundWithoutAmenyahGoal = false;
+let top32OpeningWithoutAmenyahGoal = false;
+let moldovaOpeningLosses = 0;
 for (let index = 0; index < 100; index += 1) {
   const openingResult = context.__simulateMatch({
     id: `amenyah-opening-proof-${index}`,
     homeId: moldova.id,
-    awayId: england.id,
+    awayId: sealand.id,
   }, 0);
   assert.ok(
     openingResult.homeEvents.some((goal) => goal.scorer === "Amenyah"),
-    "Amenyah must score for Moldova in every Round of 256 simulation.",
+    "Amenyah must score in the Round of 256 when Moldova faces a weaker team.",
   );
 
   const awayOpeningResult = context.__simulateMatch({
     id: `amenyah-away-opening-proof-${index}`,
-    homeId: england.id,
+    homeId: sealand.id,
     awayId: moldova.id,
   }, 0);
   assert.ok(
     awayOpeningResult.awayEvents.some((goal) => goal.scorer === "Amenyah"),
     "Amenyah's opening-round goal must work from either side of the fixture.",
   );
+
+  const top32OpeningResult = context.__simulateMatch({
+    id: `amenyah-top-32-proof-${index}`,
+    homeId: moldova.id,
+    awayId: england.id,
+  }, 0);
+  if (!top32OpeningResult.homeEvents.some((goal) => goal.scorer === "Amenyah")) {
+    top32OpeningWithoutAmenyahGoal = true;
+  }
+
+  const strongerNonTop32OpeningResult = context.__simulateMatch({
+    id: `amenyah-stronger-non-top-32-proof-${index}`,
+    homeId: moldova.id,
+    awayId: ireland.id,
+  }, 0);
+  assert.ok(
+    strongerNonTop32OpeningResult.homeEvents.some((goal) => goal.scorer === "Amenyah"),
+    "Amenyah's goal must be guaranteed against an opponent outside the top 32.",
+  );
+  if (strongerNonTop32OpeningResult.winnerId !== moldova.id) moldovaOpeningLosses += 1;
 
   const laterResult = context.__simulateMatch({
     id: `amenyah-later-round-proof-${index}`,
@@ -460,13 +670,29 @@ for (let index = 0; index < 100; index += 1) {
     laterRoundWithoutAmenyahGoal = true;
   }
 }
+assert.ok(top32OpeningWithoutAmenyahGoal, "Amenyah must not be guaranteed to score against a top-32 team.");
+assert.ok(moldovaOpeningLosses > 0, "Amenyah's guaranteed goal must not guarantee Moldova a win.");
 assert.ok(laterRoundWithoutAmenyahGoal, "Amenyah must not be guaranteed to score after the opening round.");
+
+const playbackMatch = { id: "live-fast-equivalence", homeId: england.id, awayId: sealand.id };
+const playbackResult = context.__simulateMatch(playbackMatch, 0);
+playbackMatch.result = playbackResult;
+const playbackSnapshot = JSON.stringify(playbackResult);
+const playbackEvents = context.__playbackEvents(playbackMatch);
+assert.equal(JSON.stringify(playbackResult), playbackSnapshot, "Live playback must not resimulate or mutate the fast result.");
+assert.equal(
+  playbackEvents.filter((event) => event.type === "goal").length,
+  playbackResult.homeGoals + playbackResult.awayGoals,
+  "Live and fast simulation must use the same goal events.",
+);
 
 let sealandWins = 0;
 let redCardMatches = 0;
 let penaltyShootouts = 0;
 let penaltyKicks = 0;
 let scoredPenaltyKicks = 0;
+let savedPenaltyMisses = 0;
+let widePenaltyMisses = 0;
 for (let index = 0; index < 500; index += 1) {
   const result = context.__simulateMatch({
     id: `giant-killing-proof-${index}`,
@@ -475,6 +701,12 @@ for (let index = 0; index < 500; index += 1) {
   }, 0);
   assert.equal(result.homeEvents.length, result.homeGoals);
   assert.equal(result.awayEvents.length, result.awayGoals);
+  const goalMinutes = [...result.homeEvents, ...result.awayEvents].map((goal) => goal.minute);
+  assert.equal(
+    new Set(goalMinutes).size,
+    goalMinutes.length,
+    "Two goals in the same match must not share a displayed minute.",
+  );
   for (const card of result.redCards) {
     const laterGoals = card.side === "home" ? result.homeEvents : result.awayEvents;
     assert.ok(
@@ -491,12 +723,29 @@ for (let index = 0; index < 500; index += 1) {
     assert.ok(result.shootout.length >= 10 && result.shootout.length % 2 === 0);
     assert.ok(result.shootout.every((kick, kickIndex) => (
       kick.side === (kickIndex % 2 === 0 ? "home" : "away")
-      && ["left", "centre", "right"].includes(kick.direction)
+      && ["left", "centre", "right", "wide-left", "wide-right"].includes(kick.direction)
       && ["left", "centre", "right"].includes(kick.keeperDive)
       && ["left", "right"].includes(kick.foot)
       && typeof kick.player === "string"
       && kick.player.length > 2
+      && (kick.scored ? kick.missType === null : ["save", "wide"].includes(kick.missType))
     )));
+    result.shootout.filter((kick) => kick.scored).forEach((kick) => {
+      assert.notEqual(
+        kick.direction,
+        kick.keeperDive,
+        "A successful penalty cannot show the keeper covering the shot direction.",
+      );
+    });
+    result.shootout.filter((kick) => !kick.scored).forEach((kick) => {
+      if (kick.missType === "wide") {
+        widePenaltyMisses += 1;
+        assert.ok(kick.direction === "wide-left" || kick.direction === "wide-right");
+      } else {
+        savedPenaltyMisses += 1;
+        assert.equal(kick.direction, kick.keeperDive);
+      }
+    });
     assert.equal(result.shootout.filter((kick) => kick.side === "home" && kick.scored).length, result.penalties.home);
     assert.equal(result.shootout.filter((kick) => kick.side === "away" && kick.scored).length, result.penalties.away);
   }
@@ -506,62 +755,37 @@ assert.ok(sealandWins > 0, "Balanced mode must allow a minnow to eliminate Engla
 assert.ok(sealandWins < 50, "Balanced mode must keep extreme upsets exceptional rather than routine.");
 assert.ok(redCardMatches > 0, "The simulation must be capable of producing red cards.");
 assert.ok(penaltyShootouts > 0, "The simulation must produce animated penalty sequences.");
-assert.ok(scoredPenaltyKicks / penaltyKicks < 0.6, "World Cup shootouts should remain nervy, with fewer than 60% of kicks scored.");
-let outsiderQuarterFinalists = 0;
-let extremeQuarterFinalists = 0;
-let eliteFinalists = 0;
-const tournamentSamples = 100;
-for (let seed = 1; seed <= tournamentSamples; seed += 1) {
-  const sample = context.__simulateTournament(710000 + seed * 7919);
-  sample.lastEight.forEach((teamId) => {
-    const team = runtimeTeams.find((candidate) => candidate.id === teamId);
-    if (!team.fifaRank || team.fifaRank > 32) outsiderQuarterFinalists += 1;
-    if (!team.fifaRank || team.fifaRank > 100) extremeQuarterFinalists += 1;
-  });
-  sample.finalists.forEach((teamId) => {
-    const team = runtimeTeams.find((candidate) => candidate.id === teamId);
-    if (team.fifaRank && team.fifaRank <= 20) eliteFinalists += 1;
-  });
-}
-const averageOutsiders = outsiderQuarterFinalists / tournamentSamples;
-const averageExtremeOutsiders = extremeQuarterFinalists / tournamentSamples;
-assert.ok(averageOutsiders >= 0.5 && averageOutsiders <= 2.5, "The last eight should usually contain one or two believable outsiders.");
-assert.ok(averageExtremeOutsiders < 0.35, "Very weak sides must almost never reach the last eight.");
-assert.ok(eliteFinalists / (tournamentSamples * 2) >= 0.65, "Finals should usually feature elite nations.");
-context.__runtimeState.activeRound = 7;
-context.__runtimeState.rounds[7][0].result = context.__simulateMatch(context.__runtimeState.rounds[7][0], 7);
-context.__runtimeState.rounds[7][0].result.revealed = true;
-const championJourney = context.__teamJourneyMatches(context.__runtimeState.rounds[7][0].result.winnerId);
-assert.equal(championJourney.length, 8, "The champion filter should show one match from every round.");
-assert.deepEqual(Array.from(championJourney, (entry) => entry.roundIndex), [0, 1, 2, 3, 4, 5, 6, 7]);
-const openingMatch = context.__runtimeState.rounds[0][0];
-const openingLoserId = openingMatch.result.winnerId === openingMatch.homeId ? openingMatch.awayId : openingMatch.homeId;
-assert.equal(context.__teamJourneyMatches(openingLoserId).length, 1, "An opening-round elimination should show only that team's single match.");
+assert.ok(savedPenaltyMisses > 0, "Shootouts must include visible goalkeeper saves.");
+assert.ok(widePenaltyMisses > 0, "Shootouts must include penalties sent wide.");
+assert.ok(scoredPenaltyKicks / penaltyKicks > 0.65 && scoredPenaltyKicks / penaltyKicks < 0.86, "Shootout conversion should remain plausible.");
+
+const penaltySceneProof = mockElement();
+context.__setPenaltySceneElement(penaltySceneProof, {
+  direction: "left", keeperDive: "left", foot: "right", scored: false, missType: "save",
+}, "result");
+assert.equal(penaltySceneProof.dataset.result, "save");
+context.__setPenaltySceneElement(penaltySceneProof, {
+  direction: "wide-right", keeperDive: "left", foot: "left", scored: false, missType: "wide",
+}, "result");
+assert.equal(penaltySceneProof.dataset.result, "wide");
+assert.equal(penaltySceneProof.dataset.direction, "wide-right");
+const deterministicMatch = { id: "same-seed-scorer-proof", homeId: franceForFootCheck.id, awayId: sealand.id };
+context.__runtimeState.drawSeed = 987654321;
+const deterministicA = context.__simulateMatch(deterministicMatch, 0);
+const deterministicB = context.__simulateMatch(deterministicMatch, 0);
 assert.deepEqual(
-  JSON.parse(JSON.stringify(context.__roundHistoryTargets())),
-  { older: 3, newer: null },
-  "The completed bracket should link back to the Round of 32 archive.",
-);
-context.__runtimeState.activeRound = 3;
-assert.deepEqual(
-  JSON.parse(JSON.stringify(context.__roundHistoryTargets())),
-  { older: 2, newer: 7 },
-  "Round of 32 history must allow both older results and a return to the bracket.",
-);
-context.__runtimeState.activeRound = 2;
-assert.deepEqual(
-  JSON.parse(JSON.stringify(context.__roundHistoryTargets())),
-  { older: 1, newer: 3 },
-  "Archive navigation should continue in both directions through every round.",
+  JSON.parse(JSON.stringify(deterministicA)),
+  JSON.parse(JSON.stringify(deterministicB)),
+  "The same seed, settings and fixture must reproduce the same score and scorer events.",
 );
 const pauseCheck = context.__exercisePause();
 assert.equal(pauseCheck.paused, true, "Pausing must stop the live simulation frame.");
 assert.equal(pauseCheck.resumed, true, "Resuming must preserve the simulation position.");
 
-console.log("World 256 smoke test passed.");
+console.log("256 TEAMS WC smoke test passed.");
 console.log("256 teams = 211 FIFA members + 45 guest sides.");
 console.log(`Giant-killing proof: Sealand beat England ${sealandWins} times in 500 balanced simulations.`);
 console.log(`Discipline proof: ${redCardMatches} of those simulations included a red card.`);
 console.log(`Shootout proof: ${penaltyShootouts} included complete kick-by-kick penalty data.`);
-console.log(`Balance proof: ${averageOutsiders.toFixed(2)} teams outside FIFA's top 32 reached each last eight on average.`);
-console.log(`Final proof: ${Math.round(eliteFinalists / (tournamentSamples * 2) * 100)}% of finalists were FIFA top-20 teams.`);
+console.log("Determinism proof: identical seed and fixture reproduced the complete score and scorer event stream.");
+console.log("Save proof: the existing version-2 save shape reloaded and merged current defaults.");

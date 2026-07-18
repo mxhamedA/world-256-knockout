@@ -2,13 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      if (window.location.hostname === "256-team-wc.vercel.app") {
+        window.location.replace(`https://www.256teams.com${window.location.pathname}${window.location.search}${window.location.hash}`);
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0f17" />
     <meta
       name="description"
-      content="A spoiler-safe 256-team world football knockout tournament simulator."
+      content="A 256-team football world knockout simulator"
     />
-    <title>World 256 Knockout</title>
+    <link rel="canonical" href="https://www.256teams.com/" />
+    <title>256 TEAMS WC Knockout</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,7 +22,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=skip-position-31" />
+    <link rel="stylesheet" href="./clean.css?v=mode-select-70" />
   </head>
   <body>
     <div class="ambient ambient-one"></div>
@@ -24,10 +30,10 @@
 
     <div class="app-shell">
       <aside class="sidebar" id="sidebar">
-        <a class="brand" href="#" aria-label="World 256 home">
+        <a class="brand" href="#" aria-label="256 TEAMS WC home">
           <span class="brand-mark">W<span>256</span></span>
           <span class="brand-copy">
-            <strong>World 256</strong>
+            <strong>256 TEAMS WC</strong>
             <small>Global Cup 2030</small>
           </span>
         </a>
@@ -51,7 +57,7 @@
         <header class="topbar">
           <button class="icon-button mobile-menu" id="menuButton" aria-label="Open menu">☰</button>
           <div>
-            <p class="page-kicker" id="pageKicker">WORLD 256 KNOCKOUT</p>
+            <p class="page-kicker" id="pageKicker">256 TEAMS WC KNOCKOUT</p>
             <h1 id="pageTitle">Round of 256</h1>
           </div>
           <div class="top-actions">
@@ -59,16 +65,82 @@
               <span aria-hidden="true">◎</span>
               <span>Field</span>
             </button>
-            <button class="utility-button" id="settingsButton" type="button">
-              <span aria-hidden="true">⌁</span>
-              <span>Settings</span>
+            <button class="utility-button prediction-top-control" id="predictionPickerButton" type="button" aria-label="Choose champion prediction">
+              <span>PREDICTION</span>
+              <strong class="prediction-picker-mark" id="predictionPickerLabel" aria-hidden="true">?</strong>
+            </button>
+            <button class="utility-button sound-toggle-button" id="soundToggleButton" type="button" aria-pressed="true" title="Turn match sounds off">
+              <span aria-hidden="true">♪</span>
+              <span id="soundToggleLabel">Sounds on</span>
             </button>
             <button class="icon-button" id="fullscreenButton" aria-label="Enter fullscreen" title="Fullscreen">⛶</button>
             <button class="ghost-button" id="newTournamentButton" type="button">New tournament</button>
+            <time
+              class="last-updated"
+              datetime="2026-07-18T04:01:55+01:00"
+              title="Last deployed 18 July 2026 at 4:01 AM UK time"
+            >
+              <span>Last updated:</span>
+              <strong><span class="last-updated-date">18 Jul, </span>4:01 AM BST</strong>
+            </time>
           </div>
         </header>
 
         <section class="field-overview" id="fieldOverview" hidden>
+          <section class="mode-select" aria-label="Tournament modes">
+            <div class="mode-grid">
+              <article class="mode-card mode-card-default">
+                <div class="mode-card-topline">
+                  <span class="mode-status mode-status-live">Available now</span>
+                </div>
+                <div class="mode-card-copy">
+                  <h3>Default mode</h3>
+                  <p>The full 256-team knockout tournament with your choice of realism and goal level.</p>
+                </div>
+                <div class="landing-settings" aria-label="Default mode settings">
+                  <div class="landing-setting">
+                    <span>Simulation style</span>
+                    <div class="segmented landing-segmented" id="landingUpsetSetting" data-setting="upset">
+                      <button type="button" data-value="realistic">Realistic</button>
+                      <button type="button" data-value="balanced">Standard</button>
+                      <button type="button" data-value="chaos">Pure chaos</button>
+                    </div>
+                  </div>
+                  <div class="landing-setting">
+                    <span>Goal level</span>
+                    <div class="segmented landing-segmented" id="landingGoalSetting" data-setting="goals">
+                      <button type="button" data-value="tight">Tight</button>
+                      <button type="button" data-value="normal">Normal</button>
+                      <button type="button" data-value="wild">Goal fest</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="mode-card-actions">
+                  <button class="primary-button start-tournament" id="startTournamentButton" type="button">
+                    Start tournament
+                    <span>&rarr;</span>
+                  </button>
+                </div>
+              </article>
+
+              <article class="mode-card mode-card-online" aria-disabled="true">
+                <div class="mode-card-topline">
+                  <span class="mode-status">Coming soon</span>
+                </div>
+                <div class="mode-card-copy">
+                  <h3>Online party mode</h3>
+                  <p>Join a private room, draft countries and influence live matches with tactics and limited power cards.</p>
+                </div>
+                <div class="online-mode-features" aria-label="Planned online features">
+                  <span>Private rooms</span>
+                  <span>Country draft</span>
+                  <span>Live tactics</span>
+                </div>
+                <button class="online-coming-soon" type="button" disabled>Online mode coming soon</button>
+              </article>
+            </div>
+          </section>
+
           <div class="overview-intro">
             <div>
               <span class="section-kicker">THE COMPLETE FIELD</span>
@@ -89,10 +161,7 @@
               <span>⌕</span>
               <input id="overviewSearch" type="search" placeholder="Search the field" autocomplete="off" />
             </label>
-            <button class="primary-button start-tournament" id="startTournamentButton" type="button">
-              Start tournament
-              <span>→</span>
-            </button>
+            <span class="overview-toolbar-note">Browse all participating teams</span>
           </div>
           <div class="participant-sections" id="participantSections"></div>
         </section>
@@ -109,6 +178,12 @@
 
           <div class="stage-column">
             <article class="match-stage" id="matchStage">
+              <button class="snapshot-trigger snapshot-card-button" id="snapshotButton" type="button" aria-label="Create match snapshot" title="Create match snapshot" hidden>
+                <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none">
+                  <path d="M8.5 5.5 10 3.75h4l1.5 1.75H19a2 2 0 0 1 2 2v9.75a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2h3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                  <circle cx="12" cy="12.5" r="3.5" stroke="currentColor" stroke-width="1.7" />
+                </svg>
+              </button>
               <div id="matchContent">
               <div class="stage-topline">
                 <div aria-hidden="true"></div>
@@ -117,6 +192,22 @@
               </div>
               <div class="skip-live-control" id="skipControl" hidden>
                 <button class="live-control skip-control" id="skipLiveButton" type="button">Skip to FT</button>
+              </div>
+
+              <div class="match-penalty-overlay" id="matchPenaltyOverlay" hidden aria-live="assertive">
+                <div class="match-penalty-decision">
+                  <span>REFEREE DECISION</span>
+                  <strong>PENALTY</strong>
+                  <small id="matchPenaltyPlayer">Player steps up</small>
+                </div>
+                <div class="penalty-scene match-penalty-scene" id="matchPenaltyScene" data-state="setup" data-direction="centre" data-dive="left" data-result="pending">
+                  <div class="penalty-goal">
+                    <div class="penalty-net"></div>
+                    <div class="penalty-keeper" aria-hidden="true"><i></i><b></b></div>
+                  </div>
+                  <div class="penalty-ball" aria-hidden="true"></div>
+                  <div class="penalty-taker" aria-hidden="true"><i></i><b></b></div>
+                </div>
               </div>
 
               <div class="matchup" id="matchup">
@@ -210,7 +301,7 @@
               <div class="champion-stage" id="championStage" hidden>
                 <div class="champion-confetti" id="championConfetti" aria-hidden="true"></div>
                 <div class="champion-content">
-                  <div class="trophy">WORLD 256 CHAMPIONS</div>
+                  <div class="trophy">256 TEAMS WC CHAMPIONS</div>
                   <div class="flag-orb" id="championFlag">🏆</div>
                   <h2 id="championName">Champion</h2>
                   <p>Eight wins. A field of 256 conquered.</p>
@@ -226,6 +317,7 @@
                       </small>
                     </div>
                   </div>
+                  <div class="prediction-result" id="championPredictionResult" hidden></div>
                   <button class="primary-button" id="championReset" type="button">Run it back <span>↻</span></button>
                 </div>
               </div>
@@ -296,64 +388,39 @@
             <button class="load-more" id="loadMoreButton" type="button">Show more fixtures</button>
           </section>
         </section>
+
+        <footer class="site-footer">
+          <div class="site-footer-copy">
+            <strong>256 TEAMS WC</strong>
+            <span>An unofficial football tournament simulator built for entertainment.</span>
+          </div>
+          <nav class="site-footer-links" aria-label="Legal information">
+            <a href="./privacy.html">Privacy</a>
+            <a href="./terms.html">Terms</a>
+            <a href="./disclaimer.html">Disclaimer</a>
+          </nav>
+          <span class="site-footer-year">&copy; 2026 256 TEAMS WC</span>
+        </footer>
       </main>
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <dialog class="modal" id="settingsModal">
+    <dialog class="modal prediction-modal" id="predictionModal">
       <form method="dialog">
         <div class="modal-head">
           <div>
-            <span class="section-kicker">SIMULATION ENGINE</span>
-            <h2>Set the tournament mood</h2>
+            <span class="section-kicker">PREDICTION MODE</span>
+            <h2>Who wins 256 TEAMS WC?</h2>
           </div>
           <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
         </div>
-
-        <div class="setting-group">
-          <div class="setting-copy">
-            <strong>Upset frequency</strong>
-            <p>How often underdogs pull off the impossible.</p>
-          </div>
-          <div class="segmented" id="upsetSetting">
-            <button type="button" data-value="realistic">Realistic</button>
-            <button type="button" data-value="balanced" class="active">Balanced</button>
-            <button type="button" data-value="chaos">Pure chaos</button>
-          </div>
-        </div>
-
-        <div class="setting-group">
-          <div class="setting-copy">
-            <strong>Goal level</strong>
-            <p>From cagey tournament football to end-to-end madness.</p>
-          </div>
-          <div class="segmented" id="goalSetting">
-            <button type="button" data-value="tight">Tight</button>
-            <button type="button" data-value="normal" class="active">Normal</button>
-            <button type="button" data-value="wild">Goal fest</button>
-          </div>
-        </div>
-
-        <label class="switch-row">
-          <div>
-            <strong>Spoiler shield</strong>
-            <p>Hold every result behind a reveal screen.</p>
-          </div>
-          <input type="checkbox" id="spoilerSetting" checked />
-          <span class="switch"></span>
+        <label class="modal-search search prediction-search">
+          <span>⌕</span>
+          <input id="predictionSearch" type="search" placeholder="Search all 256 teams" autocomplete="off" />
         </label>
-
-        <label class="switch-row">
-          <div>
-            <strong>Real-name scorer pool</strong>
-            <p>Use curated real players where available; plausible names elsewhere.</p>
-          </div>
-          <input type="checkbox" id="realNamesSetting" checked />
-          <span class="switch"></span>
-        </label>
-
-        <button class="primary-button modal-save" id="saveSettingsButton" value="default">Save settings</button>
+        <div class="prediction-list" id="predictionList"></div>
+        <button class="text-button prediction-clear" id="clearPredictionButton" type="button" hidden>Clear prediction</button>
       </form>
     </dialog>
 
@@ -375,6 +442,26 @@
           <input id="fieldSearch" type="search" placeholder="Search all 256 teams" />
         </label>
         <div class="field-list" id="fieldList"></div>
+      </form>
+    </dialog>
+
+    <dialog class="modal snapshot-modal" id="snapshotModal">
+      <form method="dialog">
+        <div class="modal-head snapshot-modal-head">
+          <div>
+            <span class="section-kicker">SHARE THE MOMENT</span>
+            <h2>Match snapshot</h2>
+          </div>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
+        </div>
+        <div class="snapshot-preview" id="snapshotPreview">
+          <img id="snapshotImage" alt="Generated 256 TEAMS WC match snapshot" />
+        </div>
+        <div class="snapshot-actions">
+          <button class="primary-button" id="copySnapshotButton" type="button">Copy image</button>
+          <button class="secondary-button" id="shareSnapshotButton" type="button">Share</button>
+          <button class="secondary-button" id="saveSnapshotButton" type="button">Save image</button>
+        </div>
       </form>
     </dialog>
 
@@ -403,6 +490,13 @@
 
     <script src="./player-pools.generated.js?v=star-scorers-42"></script>
     <script src="./data.js?v=star-scorers-42"></script>
-    <script src="./app.js?v=star-scorers-42"></script>
+    <script src="./simulation-engine.js?v=foden-main-group-6"></script>
+    <script src="./app.js?v=mode-select-70"></script>
+    <script>
+      window.va = window.va || function () {
+        (window.vaq = window.vaq || []).push(arguments);
+      };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>

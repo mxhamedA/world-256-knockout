@@ -73,10 +73,15 @@ const els = {
   matchQueue: $("#matchQueue"),
   goldenBootList: $("#goldenBootList"),
   plotList: $("#plotList"),
-  settingsModal: $("#settingsModal"),
   fieldModal: $("#fieldModal"),
   resetModal: $("#resetModal"),
   simulateRoundModal: $("#simulateRoundModal"),
+  snapshotModal: $("#snapshotModal"),
+  snapshotImage: $("#snapshotImage"),
+  snapshotButton: $("#snapshotButton"),
+  copySnapshotButton: $("#copySnapshotButton"),
+  shareSnapshotButton: $("#shareSnapshotButton"),
+  saveSnapshotButton: $("#saveSnapshotButton"),
   simulateRoundConfirmCopy: $("#simulateRoundConfirmCopy"),
   fieldList: $("#fieldList"),
   fieldSearch: $("#fieldSearch"),
@@ -89,14 +94,28 @@ const els = {
   mainContent: $("#mainContent"),
   overviewSearch: $("#overviewSearch"),
   participantSections: $("#participantSections"),
+  predictionPickerButton: $("#predictionPickerButton"),
+  predictionPickerLabel: $("#predictionPickerLabel"),
+  predictionModal: $("#predictionModal"),
+  predictionSearch: $("#predictionSearch"),
+  predictionList: $("#predictionList"),
+  clearPredictionButton: $("#clearPredictionButton"),
+  soundToggleButton: $("#soundToggleButton"),
+  soundToggleLabel: $("#soundToggleLabel"),
+  championPredictionResult: $("#championPredictionResult"),
+  matchPenaltyOverlay: $("#matchPenaltyOverlay"),
+  matchPenaltyScene: $("#matchPenaltyScene"),
+  matchPenaltyPlayer: $("#matchPenaltyPlayer"),
 };
 
 const defaultSettings = {
   upset: "balanced",
   goals: "normal",
-  spoiler: true,
   realNames: true,
+  sound: true,
 };
+
+const TEAM_BY_ID = new Map(TEAMS.map((team) => [team.id, team]));
 
 const FLAG_CODE_OVERRIDES = {
   "GB-ENG": "gb-eng",
@@ -227,6 +246,65 @@ let teamFilterReturn = null;
 let livePlayback = null;
 const savedMatchSpeed = Number(localStorage.getItem(MATCH_SPEED_STORAGE_KEY));
 let preferredMatchSpeed = [1, 2, 4].includes(savedMatchSpeed) ? savedMatchSpeed : null;
+const MATCH_SOUND_PATHS = {
+  penaltyWhistle: "./assets/audio/penalty-whistle.mp3",
+  fullTimeWhistle: "./assets/audio/full-time-whistle.mp3",
+};
+const activeMatchSounds = new Set();
+
+function audioIsEnabled() {
+  return Boolean(state.settings.sound && !document.hidden);
+}
+
+function playAudioSample(path, volume, { delay = 0, duration = null } = {}) {
+  if (!audioIsEnabled()) return;
+  const start = () => {
+    if (!audioIsEnabled()) return;
+    const audio = new Audio(path);
+    let stopTimer = null;
+    audio.preload = "auto";
+    audio.volume = volume;
+    activeMatchSounds.add(audio);
+    const cleanup = () => {
+      if (stopTimer) clearTimeout(stopTimer);
+      activeMatchSounds.delete(audio);
+    };
+    audio.addEventListener("ended", cleanup, { once: true });
+    audio.addEventListener("error", cleanup, { once: true });
+    audio.play().catch(cleanup);
+    if (duration) {
+      stopTimer = setTimeout(() => {
+        audio.pause();
+        cleanup();
+      }, duration);
+    }
+  };
+  if (delay) setTimeout(start, delay);
+  else start();
+}
+
+function primeMatchSounds() {
+  if (!state.settings.sound) return;
+  Object.values(MATCH_SOUND_PATHS).forEach((path) => {
+    const audio = new Audio(path);
+    audio.preload = "auto";
+    audio.load();
+  });
+}
+
+function playWhistleSound() {
+  playAudioSample(MATCH_SOUND_PATHS.penaltyWhistle, 0.16);
+}
+
+function playFullTimeWhistle() {
+  playAudioSample(MATCH_SOUND_PATHS.fullTimeWhistle, 0.18);
+}
+
+function playFullTimeWhistleOnce() {
+  if (!livePlayback || livePlayback.fullTimeWhistlePlayed) return;
+  livePlayback.fullTimeWhistlePlayed = true;
+  playFullTimeWhistle();
+}
 
 function mulberry32(seed) {
   return function random() {
@@ -237,7 +315,7 @@ function mulberry32(seed) {
   };
 }
 
-function shuffle(items, random = Math.random) {
+function shuffle(items, random) {
   const copy = [...items];
   for (let index = copy.length - 1; index > 0; index -= 1) {
     const swap = Math.floor(random() * (index + 1));
@@ -258,6 +336,40 @@ function createFirstRound(drawSeed) {
   }));
 }
 
+function normalizeDistinctGoalMinutes(result) {
+  if (!result) return;
+  const events = [
+    ...(result.homeEvents || []).map((event, order) => ({ event, order, side: "home" })),
+    ...(result.awayEvents || []).map((event, order) => ({ event, order: order + 1000, side: "away" })),
+  ].sort((a, b) => a.event.minute - b.event.minute || a.order - b.order);
+  const usedMinutes = new Set();
+  events.forEach(({ event, side }) => {
+    const start = event.minute > 90 ? 91 : 2;
+    const dismissal = (result.redCards || []).find((card) => card.side === side && card.player === event.scorer);
+    const segmentEnd = event.minute > 90 ? 120 : 90;
+    const end = dismissal ? Math.min(segmentEnd, dismissal.minute) : segmentEnd;
+    let minute = Math.min(end, Math.max(start, event.minute));
+    if (usedMinutes.has(minute)) {
+      for (let offset = 1; offset <= end - start; offset += 1) {
+        const later = minute + offset;
+        const earlier = minute - offset;
+        if (later <= end && !usedMinutes.has(later)) {
+          minute = later;
+          break;
+        }
+        if (earlier >= start && !usedMinutes.has(earlier)) {
+          minute = earlier;
+          break;
+        }
+      }
+    }
+    event.minute = minute;
+    usedMinutes.add(minute);
+  });
+  result.homeEvents?.sort((a, b) => a.minute - b.minute);
+  result.awayEvents?.sort((a, b) => a.minute - b.minute);
+}
+
 function createInitialState() {
   const drawSeed = Date.now() % 2147483647;
   return {
@@ -269,6 +381,7 @@ function createInitialState() {
     selectedMatch: 0,
     championView: false,
     started: false,
+    predictionTeamId: null,
   };
 }
 
@@ -283,6 +396,11 @@ function loadState() {
       if (typeof saved.started !== "boolean") {
         saved.started = false;
       }
+      saved.settings = { ...defaultSettings, ...(saved.settings || {}) };
+      saved.settings.realNames = true;
+      delete saved.settings.spoiler;
+      if (!TEAM_BY_ID.has(saved.predictionTeamId)) saved.predictionTeamId = null;
+      saved.rounds.flat().forEach((match) => normalizeDistinctGoalMinutes(match?.result));
       return saved;
     }
   } catch {
@@ -298,7 +416,7 @@ function saveState() {
 }
 
 function teamById(id) {
-  return TEAMS.find((team) => team.id === id);
+  return TEAM_BY_ID.get(id);
 }
 
 function selectedRound() {
@@ -313,25 +431,111 @@ function allMatches() {
   return state.rounds.flat();
 }
 
+function predictionProgress() {
+  const team = state.predictionTeamId ? teamById(state.predictionTeamId) : null;
+  if (!team) return null;
+  for (let roundIndex = 0; roundIndex < state.rounds.length; roundIndex += 1) {
+    const loss = (state.rounds[roundIndex] || []).find((match) => (
+      match.result?.revealed
+      && (match.homeId === team.id || match.awayId === team.id)
+      && match.result.winnerId !== team.id
+    ));
+    if (loss) return { team, state: "eliminated", roundIndex, label: `Eliminated in ${ROUND_NAMES[roundIndex]}` };
+  }
+  const final = state.rounds[7]?.[0];
+  if (final?.result?.revealed && final.result.winnerId === team.id) {
+    return { team, state: "correct", roundIndex: 7, label: "Prediction correct" };
+  }
+  return { team, state: "alive", roundIndex: state.activeRound, label: "Still alive" };
+}
+
+function renderPredictionPicker() {
+  const progress = predictionProgress();
+  els.predictionPickerButton.hidden = Boolean(state.started && !progress);
+  els.predictionPickerButton.classList.toggle("has-prediction", Boolean(progress));
+  els.predictionPickerButton.classList.toggle("is-eliminated", progress?.state === "eliminated");
+  els.predictionPickerButton.classList.toggle("is-correct", progress?.state === "correct");
+  if (!progress) {
+    els.predictionPickerLabel.textContent = "?";
+    els.predictionPickerButton.setAttribute("aria-label", "Choose champion prediction");
+    els.predictionPickerButton.title = "Choose your champion";
+    return;
+  }
+  els.predictionPickerLabel.innerHTML = flagMarkup(progress.team, "prediction-picker-flag");
+  els.predictionPickerButton.setAttribute("aria-label", `Prediction: ${progress.team.name}. ${progress.label}`);
+  els.predictionPickerButton.title = `${progress.team.name} · ${progress.label}`;
+}
+
+function renderPredictionList(query = "") {
+  const normalized = query.trim().toLowerCase();
+  const teams = TEAMS
+    .filter((team) => team.name.toLowerCase().includes(normalized))
+    .slice(0, normalized ? 80 : 40);
+  els.predictionList.innerHTML = teams.map((team) => `
+    <button class="prediction-option ${team.id === state.predictionTeamId ? "selected" : ""}" type="button" data-team-id="${team.id}">
+      ${flagMarkup(team, "prediction-option-flag")}
+      <span><strong>${team.name}</strong><small>${team.fifaRank ? `FIFA #${team.fifaRank}` : "Guest team"}</small></span>
+      <i aria-hidden="true">${team.id === state.predictionTeamId ? "✓" : ""}</i>
+    </button>
+  `).join("") || `<div class="overview-empty">No team matches that search.</div>`;
+  els.clearPredictionButton.hidden = !state.predictionTeamId;
+}
+
+function renderChampionPrediction(champion) {
+  const progress = predictionProgress();
+  els.championPredictionResult.hidden = !progress;
+  if (!progress) return;
+  const correct = progress.team.id === champion.id;
+  els.championPredictionResult.classList.toggle("correct", correct);
+  els.championPredictionResult.innerHTML = `
+    ${flagMarkup(progress.team, "prediction-result-flag")}
+    <span><small>YOUR PREDICTION</small><strong>${progress.team.name}</strong></span>
+    <b>${correct ? "✓ CORRECT" : "MISSED"}</b>
+  `;
+}
+
+function tournamentScoringForTeam(teamId) {
+  const playerGoals = new Map();
+  let teamGoals = 0;
+  allMatches().forEach((match) => {
+    if (!match?.result) return;
+    const side = match.homeId === teamId ? "home" : match.awayId === teamId ? "away" : null;
+    if (!side) return;
+    teamGoals += side === "home" ? match.result.homeGoals : match.result.awayGoals;
+    const events = side === "home" ? match.result.homeEvents : match.result.awayEvents;
+    (events || []).forEach((event) => {
+      if (event.goalType === "ownGoal" || event.ownGoal) return;
+      playerGoals.set(event.scorer, (playerGoals.get(event.scorer) || 0) + 1);
+    });
+  });
+  return { teamGoals, playerGoals };
+}
+
 function completedCount() {
   return allMatches().filter((match) => match.result).length;
 }
 
 function calculateGoalscorerTable(rounds = state.rounds) {
   const scorers = new Map();
+  const teamAppearances = new Map();
   rounds.forEach((round, roundIndex) => {
     (round || []).forEach((match) => {
       if (!match?.result?.revealed) return;
+      teamAppearances.set(match.homeId, (teamAppearances.get(match.homeId) || 0) + 1);
+      teamAppearances.set(match.awayId, (teamAppearances.get(match.awayId) || 0) + 1);
       const addGoals = (events, teamId) => {
         (events || []).forEach((event) => {
+          if (event.goalType === "ownGoal" || event.ownGoal) return;
           const key = `${teamId}\u0000${event.scorer}`;
           const current = scorers.get(key) || {
             player: event.scorer,
             teamId,
             goals: 0,
+            penalties: 0,
             latestRound: roundIndex,
           };
           current.goals += 1;
+          if (event.goalType === "penalty") current.penalties += 1;
           current.latestRound = Math.max(current.latestRound, roundIndex);
           scorers.set(key, current);
         });
@@ -341,7 +545,22 @@ function calculateGoalscorerTable(rounds = state.rounds) {
     });
   });
 
-  return [...scorers.values()].sort((a, b) => (
+  return [...scorers.values()].map((entry) => {
+    const team = teamById(entry.teamId);
+    const squadProfiles = playerProfilesForTeam(team);
+    const profile = squadProfiles.find((player) => player.name === entry.player);
+    const matches = teamAppearances.get(entry.teamId) || 0;
+    return {
+      ...entry,
+      matches,
+      minutes: profile ? Math.round(matches * 90 * profile.expectedMinutesShare) : matches * 90,
+      position: profile?.position || "—",
+      playerOverall: profile?.overall || team?.rating || 0,
+      finishing: profile?.finishing || 0,
+      attackingRole: profile?.attackingRole || "support",
+      scorerWeight: profile ? calculateScorerWeight(profile, team, squadProfiles) : 0,
+    };
+  }).sort((a, b) => (
     b.goals - a.goals
     || b.latestRound - a.latestRound
     || a.player.localeCompare(b.player)
@@ -359,21 +578,387 @@ function showToast(message) {
   toastTimer = setTimeout(() => els.toast.classList.remove("show"), 2600);
 }
 
+let snapshotBlob = null;
+let snapshotObjectUrl = null;
+let snapshotFilename = "world-256-snapshot.png";
+
+function snapshotRoundedRect(context, x, y, width, height, radius) {
+  const corner = Math.min(radius, width / 2, height / 2);
+  context.beginPath();
+  context.moveTo(x + corner, y);
+  context.lineTo(x + width - corner, y);
+  context.quadraticCurveTo(x + width, y, x + width, y + corner);
+  context.lineTo(x + width, y + height - corner);
+  context.quadraticCurveTo(x + width, y + height, x + width - corner, y + height);
+  context.lineTo(x + corner, y + height);
+  context.quadraticCurveTo(x, y + height, x, y + height - corner);
+  context.lineTo(x, y + corner);
+  context.quadraticCurveTo(x, y, x + corner, y);
+  context.closePath();
+}
+
+function snapshotText(context, text, x, y, maximumWidth, startingSize, options = {}) {
+  const {
+    minimumSize = 20,
+    weight = 700,
+    family = "Manrope, Arial, sans-serif",
+    align = "center",
+    color = "#f5f7fb",
+  } = options;
+  let size = startingSize;
+  context.textAlign = align;
+  context.textBaseline = "middle";
+  context.fillStyle = color;
+  do {
+    context.font = `${weight} ${size}px ${family}`;
+    if (context.measureText(text).width <= maximumWidth) break;
+    size -= 2;
+  } while (size > minimumSize);
+  context.fillText(text, x, y);
+}
+
+function snapshotGoalLines(events) {
+  const goals = (events || []).slice().sort((a, b) => a.minute - b.minute);
+  const scorerMinutes = new Map();
+  goals.forEach((event) => {
+    if (!scorerMinutes.has(event.scorer)) scorerMinutes.set(event.scorer, []);
+    scorerMinutes.get(event.scorer).push(`${event.minute}'`);
+  });
+  return [...scorerMinutes].map(([scorer, minutes]) => `${scorer}  ${minutes.join(", ")}`);
+}
+
+function snapshotMatchContext() {
+  const roundIndex = state.championView ? 7 : state.activeRound;
+  const match = state.championView ? state.rounds[7]?.[0] : selectedMatch();
+  if (!match) return null;
+  return {
+    match,
+    roundIndex,
+    home: teamById(match.homeId),
+    away: teamById(match.awayId),
+  };
+}
+
+function drawSnapshotGoalLines(context, lines, x, y, align, maximumWidth = 420) {
+  const spacing = lines.length > 6 ? 20 : lines.length > 4 ? 24 : 29;
+  const fontSize = lines.length > 6 ? 15 : lines.length > 4 ? 17 : 19;
+  lines.forEach((line, index) => snapshotText(context, line, x, y + index * spacing, maximumWidth, fontSize, {
+    minimumSize: 13,
+    weight: 600,
+    align,
+    color: "#aab4c4",
+    family: "Manrope, Arial, sans-serif",
+  }));
+}
+
+function drawSnapshotConfetti(context, championId) {
+  const colours = ["#f2c45f", "#5f8cff", "#f4f7fb", "#34c77b", "#ef5b5b"];
+  const random = mulberry32(stableHash(`${championId}-snapshot-confetti`));
+  context.save();
+  let placed = 0;
+  let attempts = 0;
+  while (placed < 46 && attempts < 240) {
+    attempts += 1;
+    const edge = random();
+    const x = edge < 0.42
+      ? 72 + random() * 180
+      : edge < 0.84 ? 948 + random() * 180 : 250 + random() * 700;
+    const y = edge < 0.84 ? 66 + random() * 460 : 58 + random() * 74;
+    const overlapsGoalDetails = y >= 350 && y <= 575 && (x <= 450 || x >= 750);
+    const overlapsChampionLabel = x >= 740 && y <= 128;
+    if (overlapsGoalDetails || overlapsChampionLabel) continue;
+    const width = 4 + random() * 6;
+    const height = 9 + random() * 9;
+    context.save();
+    context.translate(x, y);
+    context.rotate(random() * Math.PI);
+    context.globalAlpha = 0.56 + random() * 0.34;
+    context.fillStyle = colours[Math.floor(random() * colours.length)];
+    context.fillRect(-width / 2, -height / 2, width, height);
+    context.restore();
+    placed += 1;
+  }
+  context.restore();
+}
+
+function drawSnapshotGoldenBoot(context, scorer) {
+  if (!scorer) return;
+  const scorerTeam = teamById(scorer.teamId);
+  snapshotRoundedRect(context, 414, 438, 372, 116, 18);
+  context.fillStyle = "rgba(17, 24, 36, 0.92)";
+  context.fill();
+  context.strokeStyle = "rgba(118, 145, 196, 0.24)";
+  context.lineWidth = 1.5;
+  context.stroke();
+  snapshotText(context, "GOLDEN BOOT", 600, 459, 300, 14, {
+    minimumSize: 12,
+    weight: 800,
+    color: "#779cff",
+  });
+  snapshotText(context, scorer.player, 600, 489, 330, 25, {
+    minimumSize: 18,
+    weight: 800,
+  });
+  snapshotText(context, `${scorerTeam.name} · ${scorer.goals} ${scorer.goals === 1 ? "GOAL" : "GOALS"}`, 600, 524, 330, 15, {
+    minimumSize: 12,
+    weight: 700,
+    color: "#aab4c4",
+  });
+}
+
+function loadSnapshotFlag(team) {
+  const code = FLAG_CODE_OVERRIDES[team.code] || team.code.toLowerCase();
+  if (code === "xx") return Promise.resolve(null);
+  return new Promise((resolve) => {
+    const image = new Image();
+    let settled = false;
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      resolve(value);
+    };
+    const timeout = setTimeout(() => finish(null), 2500);
+    image.crossOrigin = "anonymous";
+    image.onload = () => finish(image);
+    image.onerror = () => finish(null);
+    image.src = `https://flagcdn.com/w320/${code}.png`;
+  });
+}
+
+function drawSnapshotFlag(context, image, team, x, y) {
+  snapshotRoundedRect(context, x - 82, y - 57, 164, 114, 13);
+  context.fillStyle = "#192232";
+  context.fill();
+  if (image) {
+    context.save();
+    snapshotRoundedRect(context, x - 75, y - 50, 150, 100, 8);
+    context.clip();
+    context.drawImage(image, x - 75, y - 50, 150, 100);
+    context.restore();
+  } else {
+    snapshotText(context, team.code === "XX" ? "W256" : team.code, x, y, 125, 42, {
+      minimumSize: 30,
+      weight: 800,
+      color: "#8aa9ff",
+      family: "Manrope, Arial, sans-serif",
+    });
+  }
+}
+
+async function createMatchSnapshotCanvas() {
+  const snapshot = snapshotMatchContext();
+  if (!snapshot) throw new Error("No match is selected.");
+  const { match, roundIndex, home, away } = snapshot;
+  const result = match.result;
+  const revealed = Boolean(result?.revealed);
+  const championSnapshot = Boolean(state.championView && revealed);
+  const championId = championSnapshot ? result.winnerId : null;
+  const goldenBootWinner = championSnapshot ? calculateTopGoalscorer() : null;
+  const [homeFlagImage, awayFlagImage] = await Promise.all([
+    loadSnapshotFlag(home),
+    loadSnapshotFlag(away),
+  ]);
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = 675;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Image creation is not supported in this browser.");
+
+  const background = context.createLinearGradient(0, 0, 1200, 675);
+  background.addColorStop(0, "#0b1018");
+  background.addColorStop(0.55, "#111925");
+  background.addColorStop(1, "#0b111b");
+  context.fillStyle = background;
+  context.fillRect(0, 0, 1200, 675);
+
+  const glow = context.createRadialGradient(600, 250, 0, 600, 250, 530);
+  glow.addColorStop(0, "rgba(31, 94, 255, 0.18)");
+  glow.addColorStop(1, "rgba(31, 94, 255, 0)");
+  context.fillStyle = glow;
+  context.fillRect(0, 0, 1200, 675);
+
+  snapshotRoundedRect(context, 55, 42, 1090, 558, 28);
+  context.fillStyle = "rgba(17, 24, 36, 0.88)";
+  context.fill();
+  context.strokeStyle = "rgba(118, 145, 196, 0.24)";
+  context.lineWidth = 2;
+  context.stroke();
+
+  if (championSnapshot) drawSnapshotConfetti(context, championId);
+
+  snapshotText(context, championSnapshot ? "256 TEAMS WC CHAMPIONS" : ROUND_NAMES[roundIndex].toUpperCase(), 1110, 88, 360, 18, {
+    minimumSize: 14,
+    weight: 700,
+    align: "right",
+    color: "#779cff",
+    family: "Manrope, Arial, sans-serif",
+  });
+
+  drawSnapshotFlag(context, homeFlagImage, home, 270, 205);
+  drawSnapshotFlag(context, awayFlagImage, away, 930, 205);
+  snapshotText(context, home.name, 270, 292, 390, 42, { minimumSize: 24, weight: 800 });
+  snapshotText(context, away.name, 930, 292, 390, 42, { minimumSize: 24, weight: 800 });
+
+  if (revealed) {
+    snapshotText(context, String(result.homeGoals), 505, 300, 120, 88, {
+      weight: 800,
+      family: "Manrope, Arial, sans-serif",
+    });
+    snapshotText(context, "–", 600, 300, 80, 52, { color: "#65728a", weight: 400 });
+    snapshotText(context, String(result.awayGoals), 695, 300, 120, 88, {
+      weight: 800,
+      family: "Manrope, Arial, sans-serif",
+    });
+    const resultLabel = result.penalties
+      ? `PENALTIES ${result.penalties.home}–${result.penalties.away}`
+      : result.extraTime ? "AFTER EXTRA TIME" : "FULL TIME";
+    snapshotText(context, resultLabel, 600, 370, 380, 24, {
+      minimumSize: 20,
+      weight: 700,
+      color: "#7e8ca3",
+      family: "Manrope, Arial, sans-serif",
+    });
+    drawSnapshotGoalLines(context, snapshotGoalLines(result.homeEvents), 188, 414, "left", championSnapshot ? 290 : 420);
+    drawSnapshotGoalLines(context, snapshotGoalLines(result.awayEvents), 1012, 414, "right", championSnapshot ? 290 : 420);
+    if (championSnapshot) drawSnapshotGoldenBoot(context, goldenBootWinner);
+  } else {
+    snapshotText(context, "VS", 600, 307, 180, 52, {
+      weight: 800,
+      color: "#789cff",
+      family: "Manrope, Arial, sans-serif",
+    });
+    snapshotText(context, result ? "RESULT HIDDEN" : "UPCOMING FIXTURE", 600, 370, 320, 18, {
+      weight: 700,
+      color: "#7e8ca3",
+      family: "Manrope, Arial, sans-serif",
+    });
+  }
+
+  const mode = state.settings.upset === "chaos" ? "PURE CHAOS" : state.settings.upset.toUpperCase();
+  snapshotText(context, `${mode} · ${state.settings.goals.toUpperCase()} GOALS`, 84, 632, 420, 15, {
+    weight: 600,
+    align: "left",
+    color: "#69778e",
+    family: "Manrope, Arial, sans-serif",
+  });
+  snapshotText(context, "256teams.com", 1116, 632, 420, 15, {
+    weight: 600,
+    align: "right",
+    color: "#69778e",
+    family: "Manrope, Arial, sans-serif",
+  });
+  return canvas;
+}
+
+function canvasPngBlob(canvas) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("The snapshot could not be created."));
+    }, "image/png");
+  });
+}
+
+async function openSnapshotModal() {
+  if (livePlayback) {
+    showToast("Finish or skip the live match before taking a snapshot.");
+    return;
+  }
+  els.snapshotButton.disabled = true;
+  try {
+    snapshotBlob = await canvasPngBlob(await createMatchSnapshotCanvas());
+    if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
+    snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
+    els.snapshotImage.src = snapshotObjectUrl;
+    const snapshot = snapshotMatchContext();
+    snapshotFilename = `world-256-${snapshot.home.name}-vs-${snapshot.away.name}`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") + ".png";
+    els.shareSnapshotButton.hidden = typeof navigator.share !== "function";
+    els.snapshotModal.showModal();
+  } catch (error) {
+    showToast(error.message || "The snapshot could not be created.");
+  } finally {
+    els.snapshotButton.disabled = false;
+  }
+}
+
+async function copySnapshotImage() {
+  if (!snapshotBlob) return;
+  if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+    showToast("Image copying is unavailable here. Use Save image instead.");
+    return;
+  }
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": snapshotBlob })]);
+    showToast("Snapshot copied to your clipboard.");
+  } catch {
+    showToast("The browser blocked image copying. Try Save image.");
+  }
+}
+
+async function shareSnapshotImage() {
+  if (!snapshotBlob || typeof navigator.share !== "function") return;
+  const file = new File([snapshotBlob], snapshotFilename, { type: "image/png" });
+  try {
+    if (navigator.canShare && !navigator.canShare({ files: [file] })) {
+      showToast("File sharing is unavailable here. Use Save image instead.");
+      return;
+    }
+    await navigator.share({
+      title: "256 TEAMS WC match snapshot",
+      text: "256 TEAMS WC tournament result",
+      files: [file],
+    });
+  } catch (error) {
+    if (error.name !== "AbortError") showToast("The snapshot could not be shared.");
+  }
+}
+
+function saveSnapshotImage() {
+  if (!snapshotBlob) return;
+  const link = document.createElement("a");
+  link.href = snapshotObjectUrl;
+  link.download = snapshotFilename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  showToast("Snapshot saved as a PNG.");
+}
+
 function generatedPlayers(team) {
   const seed = stableHash(team.name);
   const culture = CULTURAL_NAME_POOLS[team.nameCulture] || CULTURAL_NAME_POOLS.british;
-  return Array.from({ length: 6 }, (_, index) => {
-    const first = culture.first[(seed + index * 7) % culture.first.length];
-    const last = culture.last[(seed + index * 11 + 3) % culture.last.length];
-    return `${first} ${last}`;
-  });
+  const names = [];
+  for (let index = 0; names.length < 11; index += 1) {
+    const first = culture.first[(seed + index * 5) % culture.first.length];
+    const last = culture.last[(seed + index * 7 + Math.floor(index / culture.first.length) + 3) % culture.last.length];
+    const name = `${first} ${last}`;
+    if (!names.includes(name)) names.push(name);
+  }
+  return names;
+}
+
+const playerProfileCache = new Map();
+
+function playerProfilesForTeam(team) {
+  const useRealPlayers = Boolean(state.settings.realNames && team.players);
+  const cacheKey = `${team.id}:${useRealPlayers ? "real" : "generated"}`;
+  if (!playerProfileCache.has(cacheKey)) {
+    let names = useRealPlayers ? [...team.players] : generatedPlayers(team);
+    if (team.name === "Moldova" && !names.includes("Amenyah")) names = ["Amenyah", ...names];
+    playerProfileCache.set(cacheKey, buildPlayerProfiles(team, names, !useRealPlayers));
+  }
+  return playerProfileCache.get(cacheKey);
 }
 
 function scorerPool(team, excludedPlayers = []) {
   const excluded = new Set(excludedPlayers);
-  let pool = state.settings.realNames && team.players ? [...team.players] : generatedPlayers(team);
-  if (team.name === "Moldova" && !pool.includes("Amenyah")) pool = ["Amenyah", ...pool];
-  return pool.filter((player) => !excluded.has(player));
+  return playerProfilesForTeam(team)
+    .map((profile) => profile.name)
+    .filter((player) => !excluded.has(player));
 }
 
 function poisson(lambda, random) {
@@ -387,107 +972,90 @@ function poisson(lambda, random) {
   return count - 1;
 }
 
-const SCORER_WEIGHT_MULTIPLIERS = new Map([
-  ["Erling Haaland", 1.5],
-  ["Kylian Mbappé", 1.4],
-  ["Lamine Yamal", 1.5],
-  ["Bukayo Saka", 0.7],
-  ["Ismael Saibari", 1.15],
-  ["Lionel Messi", 0.65],
-  ["José Manuel López", 0.2],
-  ["Manfred Ugalde", 0.35],
-  ["Jehhanafee Mamah", 0.35],
-  ["Jorge Benguché", 0.35],
-  ["Eldor Shomurodov", 0.35],
-  ["Nicolás González", 0.35],
-  ["Marcus Thuram", 0.35],
-  ["Romelu Lukaku", 0.35],
-  ["Breel Embolo", 0.6],
-  ["Cole Palmer", 0.65],
-  ["Deniz Gül", 0.35],
-  ["Martin Baturina", 0.35],
-  ["Harry Kane", 0.3],
-  ["Ricardo Pepi", 0.35],
-  ["Alessio Cacciamani", 0.35],
-  ["Shūto Machino", 0.35],
-  ["Rasmus Højlund", 0.3],
-  ["Jhon Córdoba", 0.35],
-]);
-
-const SCORER_HIERARCHY_OVERRIDES = new Map([
-  ["Iran", 0.9],
-  ["Uruguay", 0.82],
-  ["Croatia", 0.85],
-  ["Ivory Coast", 0.84],
-  ["Japan", 0.8],
-]);
-
-// Player pools are ordered FW -> MF -> DF. Reserve a realistic share of goals
-// for the deeper half so midfielders and defenders contribute across a run.
-const SUPPORTING_SCORER_SHARE = 0.24;
-
-function tournamentGoalsForPlayer(teamId, player) {
-  return state.rounds.reduce((total, round) => total + (round || []).reduce((roundTotal, match) => {
-    if (!match?.result) return roundTotal;
-    const events = match.homeId === teamId
-      ? match.result.homeEvents
-      : match.awayId === teamId ? match.result.awayEvents : [];
-    return roundTotal + (events || []).filter((event) => event.scorer === player).length;
-  }, 0), 0);
-}
-
-function scoringRunBrake(goals) {
-  if (goals >= 10) return 0;
-  if (goals === 9) return 0.08;
-  if (goals === 8) return 0.25;
-  if (goals === 7) return 0.55;
+function scoringRunBrake() {
+  // Tournament totals are never capped; repeat scoring is controlled per match.
   return 1;
 }
 
-function weightedScorer(team, random, excludedPlayers = [], inMatchGoals = new Map()) {
-  const fullPool = scorerPool(team);
-  const pool = scorerPool(team, excludedPlayers);
-  const hierarchy = SCORER_HIERARCHY_OVERRIDES.get(team.name) || (
-    team.fifaRank && team.fifaRank <= 20
-      ? 0.56
-      : team.fifaRank && team.fifaRank <= 50 ? 0.72 : 0.88
-  );
-  const supportingStart = Math.max(3, Math.ceil(fullPool.length * 0.55));
-  const supportingNames = new Set(fullPool.slice(supportingStart));
-  const supportingPool = pool.filter((player) => supportingNames.has(player));
-  const primaryPool = pool.filter((player) => !supportingNames.has(player));
-  const useSupportingScorer = supportingPool.length > 0
-    && primaryPool.length > 0
-    && random() < SUPPORTING_SCORER_SHARE;
-  const selectionPool = useSupportingScorer ? supportingPool : primaryPool.length ? primaryPool : pool;
-  const selectionHierarchy = useSupportingScorer ? 0.9 : hierarchy;
-  const totalGoals = (player) => tournamentGoalsForPlayer(team.id, player) + (inMatchGoals.get(player) || 0);
-  const weights = selectionPool.map((player, index) => {
-    const originalIndex = fullPool.indexOf(player);
-    const hierarchyIndex = useSupportingScorer ? index : Math.max(0, originalIndex);
-    return (
-    (selectionHierarchy ** hierarchyIndex)
-    * (SCORER_WEIGHT_MULTIPLIERS.get(player) || 1)
-    * scoringRunBrake(totalGoals(player))
-    );
-  });
+function selectWeightedProfile(profiles, random, weightForProfile) {
+  const weights = profiles.map((profile) => Math.max(0, weightForProfile(profile)));
   const weightTotal = weights.reduce((total, weight) => total + weight, 0);
-  if (weightTotal <= 0) {
-    return [...selectionPool].sort((a, b) => totalGoals(a) - totalGoals(b))[0];
-  }
+  if (weightTotal <= 0) return profiles[0];
   let roll = random() * weightTotal;
-  for (let index = 0; index < selectionPool.length; index += 1) {
+  for (let index = 0; index < profiles.length; index += 1) {
     roll -= weights[index];
-    if (roll <= 0) return selectionPool[index];
+    if (roll <= 0) return profiles[index];
   }
-  return selectionPool[0];
+  return profiles[profiles.length - 1];
 }
 
-function availableScorer(team, minute, cards, random, suspendedPlayers = [], inMatchGoals = new Map()) {
+function eligibleScorerProfiles(team, minute, cards = [], suspendedPlayers = []) {
   const dismissed = new Set(
     cards.filter((card) => card.minute < minute).map((card) => card.player),
   );
-  return weightedScorer(team, random, [...suspendedPlayers, ...dismissed], inMatchGoals);
+  const unavailable = new Set([...suspendedPlayers, ...dismissed]);
+  const profiles = playerProfilesForTeam(team).filter((profile) => (
+    !unavailable.has(profile.name)
+    && minute <= Math.max(25, profile.expectedMinutesShare * 120)
+  ));
+  return profiles.length
+    ? profiles
+    : playerProfilesForTeam(team).filter((profile) => !unavailable.has(profile.name));
+}
+
+function weightedScorer(
+  team,
+  random,
+  excludedPlayers = [],
+  inMatchGoals = new Map(),
+  goalType = "openPlay",
+  minute = 60,
+  opponent = null,
+  tournamentScoring = { teamGoals: 0, playerGoals: new Map() },
+) {
+  const squadProfiles = playerProfilesForTeam(team);
+  const profiles = eligibleScorerProfiles(team, minute, [], excludedPlayers);
+  return selectWeightedProfile(profiles, random, (profile) => scorerWeightForGoalType(
+    profile,
+    goalType,
+    inMatchGoals.get(profile.name) || 0,
+    {
+      team,
+      opponent,
+      squadProfiles,
+      tournamentTeamGoals: tournamentScoring.teamGoals || 0,
+      tournamentPlayerGoals: (tournamentScoring.playerGoals?.get(profile.name) || 0)
+        + (inMatchGoals.get(profile.name) || 0),
+    },
+  )).name;
+}
+
+function availableScorer(
+  team,
+  minute,
+  cards,
+  random,
+  suspendedPlayers = [],
+  inMatchGoals = new Map(),
+  goalType = "openPlay",
+  opponent = null,
+  tournamentScoring = { teamGoals: 0, playerGoals: new Map() },
+) {
+  const squadProfiles = playerProfilesForTeam(team);
+  const profiles = eligibleScorerProfiles(team, minute, cards, suspendedPlayers);
+  return selectWeightedProfile(profiles, random, (profile) => scorerWeightForGoalType(
+    profile,
+    goalType,
+    inMatchGoals.get(profile.name) || 0,
+    {
+      team,
+      opponent,
+      squadProfiles,
+      tournamentTeamGoals: tournamentScoring.teamGoals || 0,
+      tournamentPlayerGoals: (tournamentScoring.playerGoals?.get(profile.name) || 0)
+        + (inMatchGoals.get(profile.name) || 0),
+    },
+  )).name;
 }
 
 function shuffledOutcomes(goals, kicks, random, forceLastGoal = false, forceLastMiss = false) {
@@ -504,6 +1072,24 @@ function shuffledOutcomes(goals, kicks, random, forceLastGoal = false, forceLast
     [outcomes[missIndex], outcomes[kicks - 1]] = [outcomes[kicks - 1], outcomes[missIndex]];
   }
   return outcomes;
+}
+
+function missedPenaltyVisual(side, team, player, round, direction, keeperDive) {
+  const visualSeed = stableHash(`${side}-${team.id}-${player}-${round}-penalty-miss`);
+  if (visualSeed % 100 < 30) {
+    return {
+      direction: `wide-${visualSeed % 2 === 0 ? "left" : "right"}`,
+      keeperDive,
+      missType: "wide",
+    };
+  }
+  return { direction, keeperDive: direction, missType: "save" };
+}
+
+function distinctKeeperDiveForGoal(direction, keeperDive, variation = 0) {
+  if (keeperDive !== direction) return keeperDive;
+  const alternatives = ["left", "centre", "right"].filter((candidate) => candidate !== direction);
+  return alternatives[Math.abs(variation) % alternatives.length];
 }
 
 function createShootoutSequence(home, away, penalties, random, cards = [], suspendedPlayers = { home: [], away: [] }) {
@@ -527,11 +1113,23 @@ function createShootoutSequence(home, away, penalties, random, cards = [], suspe
   for (let round = 0; round < rounds; round += 1) {
     for (const side of ["home", "away"]) {
       const scored = side === "home" ? homeOutcomes[round] : awayOutcomes[round];
-      const direction = directions[Math.floor(random() * directions.length)];
+      let direction = directions[Math.floor(random() * directions.length)];
       let keeperDive = directions[Math.floor(random() * directions.length)];
-      if (!scored) keeperDive = direction;
       const team = side === "home" ? home : away;
       const player = pools[side][round % pools[side].length];
+      let missType = null;
+      if (!scored) {
+        ({ direction, keeperDive, missType } = missedPenaltyVisual(
+          side,
+          team,
+          player,
+          round + 1,
+          direction,
+          keeperDive,
+        ));
+      } else {
+        keeperDive = distinctKeeperDiveForGoal(direction, keeperDive, round + Number(side === "away"));
+      }
       sequence.push({
         side,
         player,
@@ -539,6 +1137,7 @@ function createShootoutSequence(home, away, penalties, random, cards = [], suspe
         direction,
         keeperDive,
         scored,
+        missType,
         round: round + 1,
       });
     }
@@ -546,38 +1145,262 @@ function createShootoutSequence(home, away, penalties, random, cards = [], suspe
   return sequence;
 }
 
-function goalEvents(team, regulationCount, extraTimeCount, random, cards = [], suspendedPlayers = []) {
+function createShootoutAttempt(side, team, player, scored, round, random) {
+  const directions = ["left", "centre", "right"];
+  let direction = directions[Math.floor(random() * directions.length)];
+  let keeperDive = directions[Math.floor(random() * directions.length)];
+  let missType = null;
+  if (!scored) {
+    ({ direction, keeperDive, missType } = missedPenaltyVisual(
+      side,
+      team,
+      player,
+      round,
+      direction,
+      keeperDive,
+    ));
+  } else {
+    keeperDive = distinctKeeperDiveForGoal(direction, keeperDive, round + Number(side === "away"));
+  }
+  return {
+    side,
+    player,
+    foot: preferredPenaltyFoot(team, player, random),
+    direction,
+    keeperDive,
+    scored,
+    missType,
+    round,
+  };
+}
+
+function simulatePenaltyShootout(
+  home,
+  away,
+  random,
+  cards = [],
+  suspendedPlayers = { home: [], away: [] },
+  modeName = "balanced",
+) {
+  const excluded = {
+    home: new Set([
+      ...(suspendedPlayers.home || []),
+      ...cards.filter((card) => card.side === "home").map((card) => card.player),
+    ]),
+    away: new Set([
+      ...(suspendedPlayers.away || []),
+      ...cards.filter((card) => card.side === "away").map((card) => card.player),
+    ]),
+  };
+  const orderedTakers = (team, side) => {
+    const squadProfiles = playerProfilesForTeam(team);
+    return squadProfiles
+      .filter((profile) => !excluded[side].has(profile.name))
+      .sort((a, b) => Number(b.penaltyTaker) - Number(a.penaltyTaker)
+        || calculateScorerWeight(b, team, squadProfiles) - calculateScorerWeight(a, team, squadProfiles));
+  };
+  const pools = { home: orderedTakers(home, "home"), away: orderedTakers(away, "away") };
+  const conversion = {
+    home: shootoutConversionChance(home, away, modeName),
+    away: shootoutConversionChance(away, home, modeName),
+  };
+  const penalties = { home: 0, away: 0 };
+  const sequence = [];
+
+  const takeKick = (side, round) => {
+    const team = side === "home" ? home : away;
+    const pool = pools[side];
+    const player = pool[(round - 1) % pool.length].name;
+    const scored = random() < conversion[side];
+    if (scored) penalties[side] += 1;
+    sequence.push(createShootoutAttempt(side, team, player, scored, round, random));
+  };
+
+  for (let round = 1; round <= 5; round += 1) {
+    takeKick("home", round);
+    takeKick("away", round);
+  }
+  let round = 6;
+  while (penalties.home === penalties.away && round <= 20) {
+    takeKick("home", round);
+    takeKick("away", round);
+    round += 1;
+  }
+
+  // A 15-round tie is extraordinarily rare; settle it with one final quality-weighted pair.
+  if (penalties.home === penalties.away) {
+    const homeFavoured = random() < simulationClamp(
+      0.5 + (calculateShootoutRating(home) - calculateShootoutRating(away)) * 0.005,
+      0.38,
+      0.62,
+    );
+    const winnerSide = homeFavoured ? "home" : "away";
+    const loserSide = homeFavoured ? "away" : "home";
+    const finalRound = 21;
+    const loserTeam = loserSide === "home" ? home : away;
+    const winnerTeam = winnerSide === "home" ? home : away;
+    const loserPlayer = pools[loserSide][(finalRound - 1) % pools[loserSide].length].name;
+    const winnerPlayer = pools[winnerSide][(finalRound - 1) % pools[winnerSide].length].name;
+    sequence.push(createShootoutAttempt(loserSide, loserTeam, loserPlayer, false, finalRound, random));
+    sequence.push(createShootoutAttempt(winnerSide, winnerTeam, winnerPlayer, true, finalRound, random));
+    penalties[winnerSide] += 1;
+  }
+
+  return { penalties, sequence };
+}
+
+function chooseAssist(team, scorer, minute, cards, random, suspendedPlayers, goalType) {
+  const assistChance = goalType === "openPlay" ? 0.68 : goalType === "setPiece" ? 0.42 : 0;
+  if (random() >= assistChance) return null;
+  const candidates = eligibleScorerProfiles(team, minute, cards, suspendedPlayers)
+    .filter((profile) => profile.name !== scorer && profile.position !== "GK");
+  if (!candidates.length) return null;
+  return selectWeightedProfile(candidates, random, (profile) => (
+    profile.overall * profile.expectedMinutesShare * (["CAM", "AM", "CM", "LW", "RW"].includes(profile.position) ? 1.35 : 1)
+  )).name;
+}
+
+function ownGoalScorer(defendingTeam, minute, cards, random, suspendedPlayers = []) {
+  const candidates = eligibleScorerProfiles(defendingTeam, minute, cards, suspendedPlayers)
+    .filter((profile) => ["CB", "LB", "RB", "LWB", "RWB", "GK", "CDM"].includes(profile.position));
+  const pool = candidates.length ? candidates : eligibleScorerProfiles(defendingTeam, minute, cards, suspendedPlayers);
+  return pool[Math.floor(random() * pool.length)].name;
+}
+
+function goalEvents(
+  team,
+  defendingTeam,
+  regulationCount,
+  extraTimeCount,
+  random,
+  cards = [],
+  suspendedPlayers = [],
+  defendingCards = [],
+  defendingSuspendedPlayers = [],
+  usedMinutes = new Set(),
+) {
   const events = [];
   const inMatchGoals = new Map();
+  const priorTournamentScoring = tournamentScoringForTeam(team.id);
+  let currentTeamGoals = 0;
+  const uniqueGoalMinute = (start, end) => {
+    const span = end - start + 1;
+    const initial = start + Math.floor(random() * span);
+    for (let offset = 0; offset < span; offset += 1) {
+      const candidate = start + ((initial - start + offset) % span);
+      if (usedMinutes.has(candidate)) continue;
+      usedMinutes.add(candidate);
+      return candidate;
+    }
+    return initial;
+  };
   const addGoal = (minute) => {
-    const scorer = availableScorer(team, minute, cards, random, suspendedPlayers, inMatchGoals);
+    const goalType = chooseGoalType(random);
+    if (goalType === "ownGoal") {
+      const ownGoalBy = ownGoalScorer(
+        defendingTeam,
+        minute,
+        defendingCards,
+        random,
+        defendingSuspendedPlayers,
+      );
+      events.push({ minute, scorer: `${ownGoalBy} (OG)`, ownGoalBy, goalType, ownGoal: true, type: "goal" });
+      currentTeamGoals += 1;
+      return;
+    }
+    const scorer = availableScorer(
+      team,
+      minute,
+      cards,
+      random,
+      suspendedPlayers,
+      inMatchGoals,
+      goalType,
+      defendingTeam,
+      {
+        teamGoals: priorTournamentScoring.teamGoals + currentTeamGoals,
+        playerGoals: priorTournamentScoring.playerGoals,
+      },
+    );
     inMatchGoals.set(scorer, (inMatchGoals.get(scorer) || 0) + 1);
-    events.push({ minute, scorer, type: "goal" });
+    const assist = chooseAssist(team, scorer, minute, cards, random, suspendedPlayers, goalType);
+    events.push({ minute, scorer, assist, goalType, type: "goal" });
+    currentTeamGoals += 1;
   };
   for (let index = 0; index < regulationCount; index += 1) {
-    const minute = 2 + Math.floor(random() * 89);
+    const minute = uniqueGoalMinute(2, 90);
     addGoal(minute);
   }
   for (let index = 0; index < extraTimeCount; index += 1) {
-    const minute = 91 + Math.floor(random() * 30);
+    const minute = uniqueGoalMinute(91, 120);
     addGoal(minute);
   }
   return events.sort((a, b) => a.minute - b.minute);
 }
 
-function guaranteeAmenyahGoal(events, cards) {
+function guaranteeAmenyahGoal(events, cards, blockedMinutes = []) {
   const dismissal = cards.find((card) => card.player === "Amenyah");
-  const minute = dismissal
+  let minute = dismissal
     ? Math.min(events[0].minute, Math.max(2, dismissal.minute - 1))
     : events[0].minute;
-  events[0] = { ...events[0], minute, scorer: "Amenyah" };
+  const occupied = new Set([
+    ...blockedMinutes,
+    ...events.slice(1).map((event) => event.minute),
+  ]);
+  if (occupied.has(minute)) {
+    const latestMinute = dismissal ? Math.max(2, dismissal.minute - 1) : 90;
+    for (let offset = 1; offset <= 88; offset += 1) {
+      const earlier = minute - offset;
+      const later = minute + offset;
+      if (earlier >= 2 && !occupied.has(earlier)) {
+        minute = earlier;
+        break;
+      }
+      if (later <= latestMinute && !occupied.has(later)) {
+        minute = later;
+        break;
+      }
+    }
+  }
+  events[0] = {
+    ...events[0],
+    minute,
+    scorer: "Amenyah",
+    assist: null,
+    goalType: "openPlay",
+    ownGoal: false,
+    ownGoalBy: undefined,
+  };
   events.sort((a, b) => a.minute - b.minute);
 }
 
+function amenyahGoalGuaranteeSide(home, away, roundIndex) {
+  if (roundIndex !== 0) return null;
+  const moldovaSide = home.name === "Moldova" ? "home" : away.name === "Moldova" ? "away" : null;
+  if (!moldovaSide) return null;
+
+  const opponent = moldovaSide === "home" ? away : home;
+  const opponentIsTop32 = opponent.fifaRank && opponent.fifaRank <= 32;
+  return opponentIsTop32 ? null : moldovaSide;
+}
+
+function forceOpeningRoundIsraelLoss(home, away, roundIndex, homeGoals, awayGoals) {
+  if (roundIndex !== 0) return { homeGoals, awayGoals };
+  if (home.name === "Israel" && homeGoals >= awayGoals) awayGoals = homeGoals + 1;
+  if (away.name === "Israel" && awayGoals >= homeGoals) homeGoals = awayGoals + 1;
+  return { homeGoals, awayGoals };
+}
+
 function createRedCard(team, side, random, suspendedPlayers = []) {
+  const candidates = playerProfilesForTeam(team).filter((profile) => (
+    !suspendedPlayers.includes(profile.name) && profile.position !== "GK"
+  ));
+  const player = selectWeightedProfile(candidates, random, (profile) => (
+    ["CDM", "DM", "CB", "LB", "RB"].includes(profile.position) ? 1.35 : 1
+  ));
   return {
     minute: 12 + Math.floor(random() * 77),
-    player: weightedScorer(team, random, suspendedPlayers),
+    player: player.name,
     teamId: team.id,
     side,
     type: "red",
@@ -612,127 +1435,152 @@ function suspendedPlayersForTeam(teamId, roundIndex) {
     .map((card) => card.player))];
 }
 
+function matchesPlayedForTeam(teamId, beforeRoundIndex) {
+  return state.rounds.slice(0, beforeRoundIndex).reduce((total, round) => (
+    total + (round || []).filter((match) => (
+      match?.result && (match.homeId === teamId || match.awayId === teamId)
+    )).length
+  ), 0);
+}
+
 function simulateMatch(match, roundIndex) {
   const home = teamById(match.homeId);
   const away = teamById(match.awayId);
-  const randomSeed = state.drawSeed + stableHash(match.id) + completedCount() * 97;
+  const randomSeed = state.drawSeed + stableHash(match.id) + roundIndex * 1009;
   const random = mulberry32(randomSeed);
   const suspendedPlayers = {
     home: suspendedPlayersForTeam(home.id, roundIndex),
     away: suspendedPlayersForTeam(away.id, roundIndex),
   };
-
-  const matchModel = {
-    realistic: { weight: 0.065, spread: 0.43, floor: 0.06, redChance: 0.03, shockChance: 0.006 },
-    balanced: { weight: 0.058, spread: 0.43, floor: 0.07, redChance: 0.05, shockChance: 0.012 },
-    chaos: { weight: 0.022, spread: 0.3, floor: 0.2, redChance: 0.18, shockChance: 0.16 },
-  }[state.settings.upset];
-  const totalGoals = { tight: 2.12, normal: 2.72, wild: 3.6 }[state.settings.goals];
-  const strengthGap = home.strength - away.strength;
-  let homeShare = Math.max(
-    matchModel.floor,
-    Math.min(1 - matchModel.floor, 0.5 + Math.tanh(strengthGap * matchModel.weight) * matchModel.spread),
+  const modeName = state.settings.upset;
+  const mode = SIMULATION_CONFIG.modes[modeName] || SIMULATION_CONFIG.modes.balanced;
+  const goalConfig = SIMULATION_CONFIG.goals[state.settings.goals] || SIMULATION_CONFIG.goals.normal;
+  const matchesPlayed = {
+    home: matchesPlayedForTeam(home.id, roundIndex),
+    away: matchesPlayedForTeam(away.id, roundIndex),
+  };
+  const expected = calculateExpectedGoals(
+    home,
+    away,
+    roundIndex,
+    modeName,
+    state.settings.goals,
+    matchesPlayed.home,
+    matchesPlayed.away,
   );
-  const lateRoundTension = Math.max(0.8, 1 - roundIndex * 0.025);
   const redCards = [];
   let shock = false;
 
-  if (random() < matchModel.redChance) redCards.push(createRedCard(home, "home", random, suspendedPlayers.home));
-  if (random() < matchModel.redChance) redCards.push(createRedCard(away, "away", random, suspendedPlayers.away));
+  if (random() < redCardChanceForTeam(home, modeName)) {
+    redCards.push(createRedCard(home, "home", random, suspendedPlayers.home));
+  }
+  if (random() < redCardChanceForTeam(away, modeName)) {
+    redCards.push(createRedCard(away, "away", random, suspendedPlayers.away));
+  }
 
-  if (Math.abs(strengthGap) > 18 && random() < matchModel.shockChance) {
+  let adjustedXG = { homeXG: expected.homeXG, awayXG: expected.awayXG };
+  if (expected.ratingGap >= 18 && random() < mode.shockChance) {
     shock = true;
-    if (strengthGap > 0) {
-      homeShare = 0.31 + random() * 0.12;
-      if (!redCards.some((card) => card.side === "home") && random() < 0.48) {
-        redCards.push(createRedCard(home, "home", random, suspendedPlayers.home));
-      }
+    if (teamSimulationRatings(home).overall > teamSimulationRatings(away).overall) {
+      adjustedXG.homeXG *= mode.shockFavouriteReduction;
+      adjustedXG.awayXG *= mode.shockUnderdogBoost;
     } else {
-      homeShare = 0.57 + random() * 0.12;
-      if (!redCards.some((card) => card.side === "away") && random() < 0.48) {
-        redCards.push(createRedCard(away, "away", random, suspendedPlayers.away));
-      }
+      adjustedXG.awayXG *= mode.shockFavouriteReduction;
+      adjustedXG.homeXG *= mode.shockUnderdogBoost;
     }
   }
 
   redCards.forEach((card) => {
-    const impact = card.minute < 70 ? 0.105 : 0.055;
-    homeShare += card.side === "home" ? -impact : impact;
+    adjustedXG = applyRedCardImpact(adjustedXG.homeXG, adjustedXG.awayXG, card);
   });
-  homeShare = Math.max(matchModel.floor, Math.min(1 - matchModel.floor, homeShare));
+  adjustedXG.homeXG = simulationClamp(adjustedXG.homeXG, mode.minimumXG, goalConfig.maximumXG);
+  adjustedXG.awayXG = simulationClamp(adjustedXG.awayXG, mode.minimumXG, goalConfig.maximumXG);
 
-  let homeGoals = poisson(totalGoals * homeShare * lateRoundTension, random);
-  let awayGoals = poisson(totalGoals * (1 - homeShare) * lateRoundTension, random);
-  const amenyahSide = roundIndex === 0
-    ? home.name === "Moldova" ? "home" : away.name === "Moldova" ? "away" : null
-    : null;
+  let homeGoals = poisson(adjustedXG.homeXG, random);
+  let awayGoals = poisson(adjustedXG.awayXG, random);
+  const amenyahSide = amenyahGoalGuaranteeSide(home, away, roundIndex);
   if (amenyahSide === "home" && homeGoals === 0) homeGoals = 1;
   if (amenyahSide === "away" && awayGoals === 0) awayGoals = 1;
-  if (home.name === "Israel") {
-    homeGoals = 0;
-    awayGoals = Math.max(4, awayGoals);
-  }
-  if (away.name === "Israel") {
-    awayGoals = 0;
-    homeGoals = Math.max(4, homeGoals);
-  }
+  ({ homeGoals, awayGoals } = forceOpeningRoundIsraelLoss(
+    home,
+    away,
+    roundIndex,
+    homeGoals,
+    awayGoals,
+  ));
   ({ homeGoals, awayGoals } = applyScorelineCeiling(home, away, homeGoals, awayGoals));
   const regulationHome = homeGoals;
   const regulationAway = awayGoals;
   let extraTime = false;
   let penalties = null;
+  let shootout = null;
 
   if (homeGoals === awayGoals) {
     extraTime = true;
-    homeGoals += poisson(totalGoals * homeShare * 0.28, random);
-    awayGoals += poisson(totalGoals * (1 - homeShare) * 0.28, random);
+    const homeDepth = teamSimulationRatings(home).squadDepth;
+    const awayDepth = teamSimulationRatings(away).squadDepth;
+    const homeExtraTimeFactor = simulationClamp(0.97 - Math.max(0, 76 - homeDepth) * 0.0015, 0.86, 0.98);
+    const awayExtraTimeFactor = simulationClamp(0.97 - Math.max(0, 76 - awayDepth) * 0.0015, 0.86, 0.98);
+    homeGoals += poisson(adjustedXG.homeXG * 0.32 * homeExtraTimeFactor, random);
+    awayGoals += poisson(adjustedXG.awayXG * 0.32 * awayExtraTimeFactor, random);
   }
 
   if (homeGoals === awayGoals) {
-    const homePenChance = Math.max(0.28, Math.min(0.72, 0.18 + homeShare * 0.64));
-    const homeWins = random() < homePenChance;
-    const winner = homeWins ? home : away;
-    const winnerComposure = Math.max(0, Math.min(1, (winner.rating - 35) / 65));
-    const shootoutRoll = random();
-    const twoGoalWinChance = 0.14 * (1 - winnerComposure);
-    const fourGoalThreshold = 0.84 - winnerComposure * 0.1;
-    const winnerPens = shootoutRoll < twoGoalWinChance ? 2 : shootoutRoll < fourGoalThreshold ? 3 : 4;
-    const loserPens = Math.max(1, winnerPens - (random() < 0.62 ? 1 : 2));
-    penalties = homeWins
-      ? { home: winnerPens, away: loserPens }
-      : { home: loserPens, away: winnerPens };
+    const penaltyResult = simulatePenaltyShootout(
+      home,
+      away,
+      random,
+      redCards,
+      suspendedPlayers,
+      modeName,
+    );
+    penalties = penaltyResult.penalties;
+    shootout = penaltyResult.sequence;
   }
 
   const winnerId = penalties
     ? penalties.home > penalties.away ? home.id : away.id
     : homeGoals > awayGoals ? home.id : away.id;
 
+  const usedGoalMinutes = new Set();
   const homeEvents = goalEvents(
     home,
+    away,
     regulationHome,
     homeGoals - regulationHome,
     random,
     redCards.filter((card) => card.side === "home"),
     suspendedPlayers.home,
+    redCards.filter((card) => card.side === "away"),
+    suspendedPlayers.away,
+    usedGoalMinutes,
   );
   const awayEvents = goalEvents(
     away,
+    home,
     regulationAway,
     awayGoals - regulationAway,
     random,
     redCards.filter((card) => card.side === "away"),
     suspendedPlayers.away,
+    redCards.filter((card) => card.side === "home"),
+    suspendedPlayers.home,
+    usedGoalMinutes,
   );
   if (amenyahSide === "home") {
-    guaranteeAmenyahGoal(homeEvents, redCards.filter((card) => card.side === "home"));
+    guaranteeAmenyahGoal(
+      homeEvents,
+      redCards.filter((card) => card.side === "home"),
+      awayEvents.map((event) => event.minute),
+    );
   }
   if (amenyahSide === "away") {
-    guaranteeAmenyahGoal(awayEvents, redCards.filter((card) => card.side === "away"));
+    guaranteeAmenyahGoal(
+      awayEvents,
+      redCards.filter((card) => card.side === "away"),
+      homeEvents.map((event) => event.minute),
+    );
   }
-  const shootout = penalties
-    ? createShootoutSequence(home, away, penalties, random, redCards, suspendedPlayers)
-    : null;
-
   return {
     homeGoals,
     awayGoals,
@@ -747,7 +1595,13 @@ function simulateMatch(match, roundIndex) {
     redCards: redCards.sort((a, b) => a.minute - b.minute),
     suspendedPlayers,
     shock,
-    revealed: !state.settings.spoiler,
+    expectedGoals: {
+      home: Number(adjustedXG.homeXG.toFixed(3)),
+      away: Number(adjustedXG.awayXG.toFixed(3)),
+      homeFatigue: Number(expected.homeFatigue.toFixed(3)),
+      awayFatigue: Number(expected.awayFatigue.toFixed(3)),
+    },
+    revealed: false,
   };
 }
 
@@ -915,7 +1769,9 @@ function applyLiveEvent(event, animate = true) {
   if (!livePlayback) return;
   if (event.type === "goal") {
     livePlayback[`${event.side}Score`] += 1;
-    if (animate) bumpScore(event.side);
+    if (animate) {
+      bumpScore(event.side);
+    }
   }
   if (event.type === "red") {
     livePlayback[`${event.side}Reds`].push(event);
@@ -942,7 +1798,18 @@ function ensureShootoutSequence(match) {
 }
 
 function penaltyDirectionCopy(direction) {
+  if (direction === "wide-left") return "towards the left post";
+  if (direction === "wide-right") return "towards the right post";
   return direction === "centre" ? "down the middle" : `to the ${direction}`;
+}
+
+function penaltyMissCopy(attempt) {
+  if (attempt.missType === "wide") {
+    return attempt.direction === "wide-left"
+      ? "WIDE · past the left post"
+      : "WIDE · past the right post";
+  }
+  return `SAVED · keeper dives ${attempt.keeperDive}`;
 }
 
 function penaltyStepDelay(duration) {
@@ -987,11 +1854,84 @@ function setPenaltySceneElement(scene, attempt, step) {
   scene.dataset.direction = attempt.direction;
   scene.dataset.dive = attempt.keeperDive;
   scene.dataset.foot = attempt.foot || "right";
-  scene.dataset.result = step === "result" ? (attempt.scored ? "goal" : "save") : "pending";
+  scene.dataset.result = step === "result"
+    ? attempt.scored ? "goal" : attempt.missType === "wide" ? "wide" : "save"
+    : "pending";
 }
 
 function setPenaltyScene(attempt, step) {
   setPenaltySceneElement(els.penaltyScene, attempt, step);
+}
+
+function clearMatchPenaltyAnimation() {
+  if (!livePlayback?.matchPenaltyTimers) return;
+  livePlayback.matchPenaltyTimers.forEach((timer) => clearTimeout(timer));
+  livePlayback.matchPenaltyTimers = [];
+  livePlayback.matchPenaltyActive = false;
+  els.matchPenaltyOverlay.hidden = true;
+  els.matchStage.classList.remove("has-match-penalty");
+}
+
+function matchPenaltyAttempt(event) {
+  const team = teamById(event.teamId);
+  const random = mulberry32(state.drawSeed + stableHash(`${livePlayback.matchId}-${event.side}-${event.minute}-${event.player}-match-penalty`));
+  const directions = ["left", "centre", "right"];
+  const direction = directions[Math.floor(random() * directions.length)];
+  const otherDirections = directions.filter((option) => option !== direction);
+  return {
+    player: event.player,
+    side: event.side,
+    scored: true,
+    direction,
+    keeperDive: otherDirections[Math.floor(random() * otherDirections.length)],
+    foot: preferredPenaltyFoot(team, event.player, random),
+  };
+}
+
+function startMatchPenaltyAnimation(event) {
+  if (!livePlayback || livePlayback.matchPenaltyActive) return;
+  const playback = livePlayback;
+  const attempt = matchPenaltyAttempt(event);
+  const motionScale = playback.reducedMotion ? 0.15 : 1;
+  const delay = (duration) => Math.max(40, duration * motionScale);
+  const whistleLeadIn = 1050;
+  const setupHold = 1650;
+  const flightEndsAt = whistleLeadIn + setupHold + delay(570);
+  playback.matchPenaltyActive = true;
+  playback.matchPenaltyTimers = [];
+  cancelAnimationFrame(playback.frame);
+  playback.frame = null;
+  els.matchPenaltyPlayer.textContent = `${event.player} steps up`;
+  playWhistleSound();
+
+  playback.matchPenaltyTimers.push(setTimeout(() => {
+    if (livePlayback !== playback) return;
+    els.matchPenaltyOverlay.hidden = false;
+    els.matchStage.classList.add("has-match-penalty");
+    setPenaltySceneElement(els.matchPenaltyScene, attempt, "setup");
+  }, whistleLeadIn));
+
+  playback.matchPenaltyTimers.push(setTimeout(() => {
+    if (livePlayback !== playback) return;
+    setPenaltySceneElement(els.matchPenaltyScene, attempt, "flight");
+  }, whistleLeadIn + setupHold));
+
+  playback.matchPenaltyTimers.push(setTimeout(() => {
+    if (livePlayback !== playback) return;
+    setPenaltySceneElement(els.matchPenaltyScene, attempt, "result");
+    applyLiveEvent(event, true);
+    playback.eventIndex += 1;
+  }, flightEndsAt));
+
+  playback.matchPenaltyTimers.push(setTimeout(() => {
+    if (livePlayback !== playback) return;
+    playback.matchPenaltyActive = false;
+    playback.matchPenaltyTimers = [];
+    els.matchPenaltyOverlay.hidden = true;
+    els.matchStage.classList.remove("has-match-penalty");
+    playback.lastTimestamp = 0;
+    playback.frame = requestAnimationFrame(stepLivePlayback);
+  }, flightEndsAt + delay(630)));
 }
 
 function renderPenaltyStage() {
@@ -1032,7 +1972,7 @@ function renderPenaltyStage() {
       ? `Shoots ${penaltyDirectionCopy(attempt.direction)}…`
       : attempt.scored
         ? `GOAL · ${penaltyDirectionCopy(attempt.direction)}`
-        : `SAVED · keeper dives ${attempt.keeperDive}`;
+        : penaltyMissCopy(attempt);
   setPenaltyScene(attempt, step);
 }
 
@@ -1046,6 +1986,7 @@ function finishPenaltyShootout() {
   if (!livePlayback) return;
   livePlayback.shootoutStep = "complete";
   livePlayback.ending = true;
+  playFullTimeWhistleOnce();
   renderPenaltyStage();
   livePlayback.finishTimer = setTimeout(finishLivePlayback, penaltyStepDelay(1250));
 }
@@ -1063,7 +2004,9 @@ function advancePenaltyShootout() {
 
   if (livePlayback.shootoutStep === "flight") {
     livePlayback.shootoutStep = "result";
-    if (attempt.scored) livePlayback[`penalty${attempt.side === "home" ? "Home" : "Away"}Score`] += 1;
+    if (attempt.scored) {
+      livePlayback[`penalty${attempt.side === "home" ? "Home" : "Away"}Score`] += 1;
+    }
     renderPenaltyStage();
     const score = attempt.side === "home" ? els.penaltyHomeScore : els.penaltyAwayScore;
     score.classList.add("score-pop");
@@ -1102,6 +2045,7 @@ function startPenaltyShootout() {
 
 function finishLivePlayback() {
   if (!livePlayback) return;
+  playFullTimeWhistleOnce();
   const completed = livePlayback;
   const match = state.rounds[completed.roundIndex]?.[completed.matchIndex];
   if (!match?.result) {
@@ -1109,6 +2053,7 @@ function finishLivePlayback() {
     return;
   }
 
+  clearMatchPenaltyAnimation();
   match.result.revealed = true;
   livePlayback = null;
   buildNextRound(completed.roundIndex);
@@ -1148,7 +2093,12 @@ function stepLivePlayback(timestamp) {
     livePlayback.eventIndex < livePlayback.events.length &&
     livePlayback.events[livePlayback.eventIndex].minute <= livePlayback.minute
   ) {
-    applyLiveEvent(livePlayback.events[livePlayback.eventIndex]);
+    const event = livePlayback.events[livePlayback.eventIndex];
+    if (event.type === "goal" && event.goalType === "penalty") {
+      startMatchPenaltyAnimation(event);
+      return;
+    }
+    applyLiveEvent(event);
     livePlayback.eventIndex += 1;
   }
 
@@ -1164,6 +2114,7 @@ function stepLivePlayback(timestamp) {
     }
     livePlayback.ending = true;
     els.livePhase.textContent = "FULL TIME";
+    playFullTimeWhistleOnce();
     livePlayback.finishTimer = setTimeout(finishLivePlayback, 900);
     return;
   }
@@ -1199,9 +2150,12 @@ function startLivePlayback(match) {
     baseDuration: reducedMotion ? 9000 : 24000,
     lastTimestamp: 0,
     ending: false,
+    fullTimeWhistlePlayed: false,
     frame: null,
     finishTimer: null,
     penaltyTimer: null,
+    matchPenaltyActive: false,
+    matchPenaltyTimers: [],
   };
   render();
   livePlayback.frame = requestAnimationFrame(stepLivePlayback);
@@ -1209,6 +2163,11 @@ function startLivePlayback(match) {
 
 function skipLivePlayback() {
   if (!livePlayback) return;
+
+  if (livePlayback.matchPenaltyActive) {
+    showToast("Let the penalty play out first.");
+    return;
+  }
 
   // A shootout is the suspenseful part: never skip its kick-by-kick playback.
   if (livePlayback.phase === "shootout") {
@@ -1238,6 +2197,10 @@ function skipLivePlayback() {
 
 function cycleLiveSpeed() {
   if (!livePlayback) return;
+  if (livePlayback.matchPenaltyActive) {
+    showToast("Speed controls return after the penalty.");
+    return;
+  }
   if (livePlayback.phase === "shootout") {
     livePlayback.speed = livePlayback.speed === 1 ? 2 : livePlayback.speed === 2 ? 4 : 1;
     els.speedButton.textContent = `${livePlayback.speed}×`;
@@ -1255,6 +2218,10 @@ function cycleLiveSpeed() {
 
 function toggleLivePause() {
   if (!livePlayback || livePlayback.ending) return;
+  if (livePlayback.matchPenaltyActive) {
+    showToast("Pause controls return after the penalty.");
+    return;
+  }
   livePlayback.paused = !livePlayback.paused;
   els.pauseLiveButton.setAttribute("aria-pressed", String(livePlayback.paused));
 
@@ -1295,6 +2262,7 @@ function playSelected() {
   }
   if (match.result && !match.result.revealed) return;
 
+  primeMatchSounds();
   match.result = simulateMatch(match, state.activeRound);
   match.result.revealed = false;
   saveState();
@@ -1419,7 +2387,9 @@ function clearChampionConfetti() {
 
 function renderStage() {
   els.penaltyStage.hidden = true;
+  els.matchPenaltyOverlay.hidden = !livePlayback?.matchPenaltyActive;
   els.matchStage.classList.remove("is-shootout");
+  els.snapshotButton.hidden = true;
   if (state.championView) {
     const final = state.rounds[7]?.[0];
     const champion = final?.result ? teamById(final.result.winnerId) : null;
@@ -1430,6 +2400,7 @@ function renderStage() {
       els.championFlag.innerHTML = flagMarkup(champion, "hero-flag");
       els.championName.textContent = champion.name;
       renderChampionConfetti(champion.id);
+      els.snapshotButton.hidden = !final.result.revealed;
       els.championTopScorerAward.hidden = !topScorer;
       els.championTopScorerAward.style.display = topScorer ? "" : "none";
       if (topScorer) {
@@ -1439,6 +2410,7 @@ function renderStage() {
         els.championTopScorerTeam.textContent = scorerTeam.name;
         els.championTopScorerGoals.textContent = `${topScorer.goals} ${topScorer.goals === 1 ? "goal" : "goals"}`;
       }
+      renderChampionPrediction(champion);
       return;
     }
   }
@@ -1455,6 +2427,7 @@ function renderStage() {
   const isLive = livePlayback?.matchId === match.id;
   const isShootout = isLive && livePlayback.phase === "shootout";
   const pendingReveal = result && !revealed && !isLive;
+  els.snapshotButton.hidden = !revealed || Boolean(isLive);
 
   els.matchNumber.textContent = `${state.selectedMatch + 1}/${selectedRound().length}`;
   els.stageRoundLabel.textContent = ROUND_NAMES[state.activeRound].toUpperCase();
@@ -1865,7 +2838,18 @@ function renderStorylines() {
 }
 
 function renderGoldenBoot() {
-  const leaders = calculateGoalscorerTable().slice(0, 5);
+  const rankedScorers = calculateGoalscorerTable().map((leader, index) => ({
+    ...leader,
+    goldenBootRank: index + 1,
+  }));
+  let leaders = rankedScorers.slice(0, 5);
+  const championId = state.rounds[7]?.[0]?.result?.winnerId;
+  const championLeader = championId
+    ? rankedScorers.find((leader) => leader.teamId === championId)
+    : null;
+  if (championLeader && !leaders.some((leader) => leader.teamId === championId)) {
+    leaders = [...leaders.slice(0, 4), championLeader];
+  }
   if (!leaders.length) {
     els.goldenBootList.innerHTML = `
       <div class="golden-boot-empty">
@@ -1876,14 +2860,14 @@ function renderGoldenBoot() {
     return;
   }
 
-  els.goldenBootList.innerHTML = leaders.map((leader, index) => {
+  els.goldenBootList.innerHTML = leaders.map((leader) => {
     const team = teamById(leader.teamId);
     return `
-      <div class="golden-boot-row ${index === 0 ? "leader" : ""}">
-        <span class="golden-boot-rank">${index + 1}</span>
+      <div class="golden-boot-row ${leader.goldenBootRank === 1 ? "leader" : ""}">
+        <span class="golden-boot-rank">${leader.goldenBootRank}</span>
         <span class="golden-boot-player">
           <strong>${leader.player}</strong>
-          <small>${flagMarkup(team, "golden-boot-flag")} ${team.name}</small>
+          <small>${flagMarkup(team, "golden-boot-flag")} ${team.name} · ${leader.matches} apps</small>
         </span>
         <b>${leader.goals}</b>
       </div>
@@ -1905,7 +2889,7 @@ function renderSettingsSummary() {
   const copy = {
     realistic: ["Realistic", "favourites hold the edge"],
     balanced: ["Balanced", "upsets can happen"],
-    chaos: ["Pure chaos", "no giant is safe"],
+    chaos: ["Pure chaos", "anything can happen"],
   }[state.settings.upset];
   els.chaosValue.textContent = copy[0];
   els.chaosCopy.textContent = copy[1];
@@ -1952,13 +2936,16 @@ function renderParticipantOverview(query = "") {
 
 function render() {
   const beforeStart = !state.started;
+  renderPredictionPicker();
+  syncSoundToggle();
   document.body.classList.toggle("before-start", beforeStart);
   els.fieldOverview.hidden = !beforeStart;
   els.mainContent.hidden = beforeStart;
 
   if (beforeStart) {
-    els.pageKicker.textContent = "WORLD 256 · TOURNAMENT FIELD";
-    els.pageTitle.textContent = "Meet the 256 teams";
+    els.pageKicker.textContent = "256 TEAMS WC · NEW TOURNAMENT";
+    els.pageTitle.textContent = "Choose your mode";
+    syncLandingSettings();
     renderParticipantOverview(els.overviewSearch.value);
     renderProgress();
     return;
@@ -1968,7 +2955,7 @@ function render() {
   const historyMode = viewingRoundHistory();
   els.pageKicker.textContent = state.championView
     ? "TOURNAMENT COMPLETE"
-    : historyMode ? "ROUND ARCHIVE" : "WORLD 256 KNOCKOUT";
+    : historyMode ? "ROUND ARCHIVE" : "256 TEAMS WC KNOCKOUT";
   els.pageTitle.textContent = state.championView
     ? "Final"
     : roundName;
@@ -1991,15 +2978,20 @@ function render() {
   els.unresolvedFilter.classList.toggle("active", filterUnresolved);
 }
 
-function syncSettingsModal() {
-  document.querySelectorAll("#upsetSetting button").forEach((button) => {
-    button.classList.toggle("active", button.dataset.value === state.settings.upset);
+function syncSoundToggle() {
+  const enabled = state.settings.sound !== false;
+  els.soundToggleButton.setAttribute("aria-pressed", String(enabled));
+  els.soundToggleButton.title = enabled ? "Turn match sounds off" : "Turn match sounds on";
+  els.soundToggleLabel.textContent = enabled ? "Sounds on" : "Sounds off";
+}
+
+function syncLandingSettings() {
+  document.querySelectorAll(".landing-segmented").forEach((group) => {
+    const setting = group.dataset.setting;
+    group.querySelectorAll("button").forEach((button) => {
+      button.classList.toggle("active", button.dataset.value === state.settings[setting]);
+    });
   });
-  document.querySelectorAll("#goalSetting button").forEach((button) => {
-    button.classList.toggle("active", button.dataset.value === state.settings.goals);
-  });
-  $("#spoilerSetting").checked = state.settings.spoiler;
-  $("#realNamesSetting").checked = state.settings.realNames;
 }
 
 function renderField(query = "") {
@@ -2154,9 +3146,16 @@ els.unresolvedFilter.addEventListener("click", () => {
   els.unresolvedFilter.classList.toggle("active", filterUnresolved);
 });
 
-$("#settingsButton").addEventListener("click", () => {
-  syncSettingsModal();
-  els.settingsModal.showModal();
+els.snapshotButton.addEventListener("click", openSnapshotModal);
+els.copySnapshotButton.addEventListener("click", copySnapshotImage);
+els.shareSnapshotButton.addEventListener("click", shareSnapshotImage);
+els.saveSnapshotButton.addEventListener("click", saveSnapshotImage);
+
+els.soundToggleButton.addEventListener("click", () => {
+  state.settings.sound = !state.settings.sound;
+  saveState();
+  syncSoundToggle();
+  showToast(state.settings.sound ? "Match sounds on." : "Match sounds off.");
 });
 
 $("#fieldButton").addEventListener("click", () => {
@@ -2164,10 +3163,41 @@ $("#fieldButton").addEventListener("click", () => {
   els.fieldModal.showModal();
 });
 
+els.predictionPickerButton.addEventListener("click", () => {
+  if (state.started) {
+    const progress = predictionProgress();
+    showToast(progress ? `${progress.team.name} · ${progress.label}` : "Predictions lock when the tournament starts.");
+    return;
+  }
+  els.predictionSearch.value = "";
+  renderPredictionList();
+  els.predictionModal.showModal();
+  requestAnimationFrame(() => els.predictionSearch.focus());
+});
+
+els.predictionSearch.addEventListener("input", (event) => renderPredictionList(event.target.value));
+els.predictionList.addEventListener("click", (event) => {
+  const option = event.target.closest(".prediction-option");
+  if (!option) return;
+  state.predictionTeamId = option.dataset.teamId;
+  saveState();
+  renderPredictionPicker();
+  els.predictionModal.close();
+  showToast(`${teamById(state.predictionTeamId).name} is your champion prediction.`);
+});
+els.clearPredictionButton.addEventListener("click", () => {
+  state.predictionTeamId = null;
+  saveState();
+  renderPredictionPicker();
+  els.predictionModal.close();
+  showToast("Champion prediction cleared.");
+});
+
 $("#newTournamentButton").addEventListener("click", () => els.resetModal.showModal());
 $("#championReset").addEventListener("click", () => els.resetModal.showModal());
 $("#confirmResetButton").addEventListener("click", () => {
   if (livePlayback) {
+    clearMatchPenaltyAnimation();
     cancelAnimationFrame(livePlayback.frame);
     clearTimeout(livePlayback.finishTimer);
     clearTimeout(livePlayback.penaltyTimer);
@@ -2195,16 +3225,13 @@ document.querySelectorAll(".segmented").forEach((group) => {
   });
 });
 
-$("#saveSettingsButton").addEventListener("click", () => {
-  state.settings = {
-    upset: $("#upsetSetting .active").dataset.value,
-    goals: $("#goalSetting .active").dataset.value,
-    spoiler: $("#spoilerSetting").checked,
-    realNames: $("#realNamesSetting").checked,
-  };
-  saveState();
-  render();
-  showToast("Simulation settings saved.");
+document.querySelectorAll(".landing-segmented").forEach((group) => {
+  group.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+    state.settings[group.dataset.setting] = button.dataset.value;
+    saveState();
+  });
 });
 
 els.fieldSearch.addEventListener("input", (event) => renderField(event.target.value));
@@ -2217,7 +3244,8 @@ $("#startTournamentButton").addEventListener("click", () => {
   saveState();
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
-  showToast("The draw is live. Choose the opening tie.");
+  const pick = state.predictionTeamId ? teamById(state.predictionTeamId) : null;
+  showToast(pick ? `${pick.name} locked in. The draw is live.` : "The draw is live. Choose the opening tie.");
 });
 
 $("#menuButton").addEventListener("click", () => els.sidebar.classList.toggle("open"));

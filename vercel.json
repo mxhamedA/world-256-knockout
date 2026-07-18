@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "256-team-wc.vercel.app"
+        }
+      ],
+      "destination": "https://www.256teams.com/:path*",
+      "permanent": true
+    }
+  ]
+}

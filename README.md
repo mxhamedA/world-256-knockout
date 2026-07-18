@@ -1,4 +1,4 @@
-# World 256
+# 256 TEAMS WC
 
 A self-contained, spoiler-safe 256-team international football knockout simulator
 built for reaction videos.
@@ -16,6 +16,25 @@ npx serve .
 
 Then open the local address shown in the terminal.
 
+## Verify the simulation
+
+Run the unit, integration, deterministic-seed and save-compatibility smoke tests:
+
+```powershell
+node scripts/smoke-test.js
+```
+
+Inspect the requested player profiles or run the capped scorer validations without rendering the UI:
+
+```powershell
+node scripts/balance-test.js --profiles-only
+node scripts/balance-test.js --targeted-matches=20
+node scripts/balance-test.js --count=50
+```
+
+The balance reporter refuses more than 50 complete tournaments and more than 20 targeted matches.
+Pass `--json` to the 50-tournament command for the complete diagnostic arrays.
+
 ## What is included
 
 - 256-team single-elimination bracket across eight rounds
@@ -31,7 +50,9 @@ Then open the local address shown in the terminal.
 - Deterministic generated scorer names for the rest of the field
 - One-tie and whole-round simulation controls
 - Search, tournament storylines, fullscreen mode and local progress saving
-- Giant-killing logic that allows even the smallest guest side to beat a favourite
+- Controlled giant-killing context that allows rare shocks without overriding team quality
+- Deterministic attack, midfield, defence, goalkeeper, depth, experience and discipline profiles
+- Position, finishing, role, minutes and penalty-aware goalscorer selection
 
 This is an entertainment simulator. Team strengths and player pools are curated for
 the experience and are not an official or live ranking feed.

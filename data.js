@@ -657,6 +657,52 @@ function stableHash(text) {
   return Math.abs(hash >>> 0);
 }
 
+function stableRatingVariation(teamId, attribute, minimum, maximum) {
+  const range = maximum - minimum + 1;
+  return minimum + (stableHash(`${teamId}:${attribute}`) % range);
+}
+
+function clampSimulationRating(value, minimum = 5, maximum = 99) {
+  return Math.max(minimum, Math.min(maximum, value));
+}
+
+const TEAM_SIMULATION_RATING_OVERRIDES = new Map([
+  ["France", { attack: 96, midfield: 94, defence: 94, goalkeeper: 93, squadDepth: 97, experience: 95, penalties: 92 }],
+  ["Spain", { attack: 95, midfield: 96, defence: 92, goalkeeper: 90, squadDepth: 94, experience: 92, penalties: 90 }],
+  ["Argentina", { attack: 93, midfield: 93, defence: 90, goalkeeper: 91, squadDepth: 91, experience: 97, penalties: 95 }],
+  ["Brazil", { attack: 94, midfield: 91, defence: 89, goalkeeper: 92, squadDepth: 94, experience: 93, penalties: 91 }],
+  ["England", { attack: 94, midfield: 93, defence: 91, goalkeeper: 89, squadDepth: 96, experience: 91, penalties: 90 }],
+  ["Norway", { attack: 94, midfield: 87, defence: 82, goalkeeper: 84, squadDepth: 84, experience: 82, penalties: 92 }],
+  ["Morocco", { attack: 86, midfield: 88, defence: 92, goalkeeper: 89, squadDepth: 88, experience: 92, penalties: 87, discipline: 82 }],
+  ["Japan", { attack: 86, midfield: 88, defence: 86, goalkeeper: 84, squadDepth: 87, experience: 87, penalties: 85, discipline: 88 }],
+]);
+
+function deriveTeamSimulationRatings(teamId, name, overall, fifaRank) {
+  const lowRatingDepthPenalty = overall < 55 ? Math.round((55 - overall) * 0.10) : 0;
+  // Competitive tournament tiers can have deeper squads than their visible
+  // overall suggests; small tapering boosts keep them viable without changing
+  // seeding or hard-coding results.
+  const competitiveTierBoost = fifaRank >= 21 && fifaRank <= 32
+    ? 3
+    : fifaRank >= 33 && fifaRank <= 40 ? 3 : fifaRank >= 41 && fifaRank <= 50 ? 2 : 0;
+  const derived = {
+    overall: overall + competitiveTierBoost,
+    attack: overall + competitiveTierBoost + stableRatingVariation(teamId, "attack", -4, 4),
+    midfield: overall + competitiveTierBoost + stableRatingVariation(teamId, "midfield", -3, 3),
+    defence: overall + competitiveTierBoost + stableRatingVariation(teamId, "defence", -4, 4),
+    goalkeeper: overall + competitiveTierBoost + stableRatingVariation(teamId, "goalkeeper", -5, 5),
+    squadDepth: overall + competitiveTierBoost + stableRatingVariation(teamId, "depth", -6, 2) - lowRatingDepthPenalty,
+    experience: overall + competitiveTierBoost + stableRatingVariation(teamId, "experience", -5, 5) - lowRatingDepthPenalty,
+    penalties: overall + competitiveTierBoost + stableRatingVariation(teamId, "penalties", -7, 5),
+    discipline: 65 + stableRatingVariation(teamId, "discipline", -15, 15),
+    ...(TEAM_SIMULATION_RATING_OVERRIDES.get(name) || {}),
+  };
+  return Object.fromEntries(Object.entries(derived).map(([key, value]) => [
+    key,
+    clampSimulationRating(Math.round(value), key === "discipline" ? 35 : 5, key === "discipline" ? 95 : 99),
+  ]));
+}
+
 const TEAMS = TEAM_SOURCE.split("\n").map((line, sourceIndex) => {
   const [name, code, confed] = line.split("|");
   const fifa = FIFA_RANKINGS.get(name);
@@ -667,14 +713,17 @@ const TEAMS = TEAM_SOURCE.split("\n").map((line, sourceIndex) => {
     ? 35 + fifaScale * 65
     : 18 + (stableHash(name) % 1600) / 100;
   const strength = baseStrength + (TEAM_STRENGTH_ADJUSTMENTS.get(name) || 0);
+  const id = `team-${sourceIndex + 1}`;
+  const rating = Math.round(strength);
   return {
-    id: `team-${sourceIndex + 1}`,
+    id,
     name,
     code,
     confed,
     flag: codeToFlag(code),
     strength: Number(strength.toFixed(2)),
-    rating: Math.round(strength),
+    rating,
+    simulationRatings: deriveTeamSimulationRatings(id, name, rating, fifa?.rank || null),
     fifaRank: fifa?.rank || null,
     fifaPoints: fifa?.points || null,
     sourceIndex,
@@ -685,5 +734,5 @@ const TEAMS = TEAM_SOURCE.split("\n").map((line, sourceIndex) => {
   .map((team, index) => ({ ...team, seed: index + 1 }));
 
 if (TEAMS.length !== 256) {
-  throw new Error(`World 256 requires exactly 256 teams; found ${TEAMS.length}.`);
+  throw new Error(`256 TEAMS WC requires exactly 256 teams; found ${TEAMS.length}.`);
 }
