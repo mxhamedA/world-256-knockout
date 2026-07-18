@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "node scripts/build-cloudflare.mjs",
+    "postinstall": "node scripts/build-cloudflare.mjs"
+  },
   "dependencies": {
     "@vercel/analytics": "^2.0.1"
   }
