@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-10",
+    "matchName": "Germany vs Mexico",
+    "matchDate": "2018-06-17",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Manuel Neuer",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 92,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Bayern, still elite but group exit"
+      },
+      "attack": 28,
+      "control": 55,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Bayern, still elite but group exit"
+    },
+    {
+      "name": "Marvin Plattenhardt",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mats Hummels",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Bayern, solid despite team failure"
+      },
+      "attack": 44,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Bayern, solid despite team failure"
+    },
+    {
+      "name": "Sami Khedira",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Julian Draxler",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Toni Kroos",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid, scored winner vs Sweden"
+      },
+      "attack": 68,
+      "control": 91,
+      "defence": 68,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid, scored winner vs Sweden"
+    },
+    {
+      "name": "Timo Werner",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mesut Özil",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 82,
+      "defence": 37,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thomas Müller",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Bayern, first blank tournament"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Bayern, first blank tournament"
+    },
+    {
+      "name": "Jérôme Boateng",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Joshua Kimmich",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Bayern, emerging RB leader"
+      },
+      "attack": 66,
+      "control": 75,
+      "defence": 84,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Bayern, emerging RB leader"
+    }
+  ]
+}

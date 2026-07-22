@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-01",
+    "matchName": "Bulgaria vs Italy",
+    "matchDate": "1986-05-31",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Giovanni Galli",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Giuseppe Bergomi",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Inter legend, 1982 World Cup winner"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "low",
+      "ratingBasis": "Inter legend, 1982 World Cup winner"
+    },
+    {
+      "name": "Antonio Cabrini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Juventus, 1982 champion, world-class LB"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "Juventus, 1982 champion, world-class LB"
+    },
+    {
+      "name": "Gaetano Scirea",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Juventus legend, elegant world-class sweeper"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "low",
+      "ratingBasis": "Juventus legend, elegant world-class sweeper"
+    },
+    {
+      "name": "Pietro Vierchowod",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Salvatore Bagni",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando De Napoli",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Antonio Di Gennaro",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bruno Conti",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Roma legend, 1982 champion, tricky winger"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "Roma legend, 1982 champion, tricky winger"
+    },
+    {
+      "name": "Alessandro Altobelli",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Inter, 1982 champion, 4 goals in 1986"
+      },
+      "attack": 92,
+      "control": 56,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "Inter, 1982 champion, 4 goals in 1986"
+    },
+    {
+      "name": "Giuseppe Galderisi",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 54,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 italy squad player, position-adjusted historical estimate"
+    }
+  ]
+}

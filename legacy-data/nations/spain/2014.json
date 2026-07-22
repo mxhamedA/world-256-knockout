@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Spain",
+  "nationId": "spain",
+  "nationCode": "ES",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-03",
+    "matchName": "Spain vs Netherlands",
+    "matchDate": "2014-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Iker Casillas",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gerard Piqué",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andrés Iniesta",
+      "primaryPosition": "LW",
+      "secondaryPositions": ["CAM", "CM"],
+      "sourcePosition": "LW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Barcelona, still magic but team collapsed"
+      },
+      "attack": 96,
+      "control": 74,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Barcelona, still magic but team collapsed"
+    },
+    {
+      "name": "Xavi",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Xabi Alonso",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergio Ramos",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Real Madrid, horrible tournament individually world-class"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Real Madrid, horrible tournament individually world-class"
+    },
+    {
+      "name": "Sergio Busquets",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jordi Alba",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Costa",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Atletico/Chelsea, 0 goals, ineffective"
+      },
+      "attack": 91,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Atletico/Chelsea, 0 goals, ineffective"
+    },
+    {
+      "name": "David Silva",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Man City, disappointing tournament"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Man City, disappointing tournament"
+    },
+    {
+      "name": "César Azpilicueta",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 spain squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-11",
+    "matchName": "Argentina vs Japan",
+    "matchDate": "1998-06-14",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Carlos Roa",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Ayala",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Matías Almeyda",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Néstor Sensini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Claudio López",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 94,
+      "control": 57,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Simeone",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99 era; Inter midfield general"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "medium",
+      "ratingBasis": "FIFA 99 era; Inter midfield general"
+    },
+    {
+      "name": "Gabriel Batistuta",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; hat-trick vs Jamaica, 5 goals total"
+      },
+      "attack": 99,
+      "control": 64,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; hat-trick vs Jamaica, 5 goals total"
+    },
+    {
+      "name": "Ariel Ortega",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99 era; Sampdoria creative force"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "medium",
+      "ratingBasis": "FIFA 99 era; Sampdoria creative force"
+    },
+    {
+      "name": "Juan Sebastián Verón",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nelson Vivas",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Javier Zanetti",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Inter tireless right-back/wing-back"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Inter tireless right-back/wing-back"
+    }
+  ]
+}

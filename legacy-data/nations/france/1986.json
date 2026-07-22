@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 3,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-03",
+    "matchName": "Canada vs France",
+    "matchDate": "1986-06-01",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Joël Bats",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Manuel Amoros",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Patrick Battiston",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Maxime Bossis",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thierry Tusseau",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luis Fernández",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "PSG tenacious midfielder"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "low",
+      "ratingBasis": "PSG tenacious midfielder"
+    },
+    {
+      "name": "Michel Platini",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Juventus, 3x Ballon d'Or, fading but still genius"
+      },
+      "attack": 92,
+      "control": 88,
+      "defence": 40,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Juventus, 3x Ballon d'Or, fading but still genius"
+    },
+    {
+      "name": "Alain Giresse",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Bordeaux magical playmaker, Magic Square"
+      },
+      "attack": 75,
+      "control": 71,
+      "defence": 54,
+      "ratingConfidence": "low",
+      "ratingBasis": "Bordeaux magical playmaker, Magic Square"
+    },
+    {
+      "name": "Jean Tigana",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Bordeaux elite box-to-box, Magic Square"
+      },
+      "attack": 49,
+      "control": 70,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "Bordeaux elite box-to-box, Magic Square"
+    },
+    {
+      "name": "Jean-Pierre Papin",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 53,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dominique Rocheteau",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 53,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 france squad player, position-adjusted historical estimate"
+    }
+  ]
+}

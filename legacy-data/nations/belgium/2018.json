@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Belgium",
+  "nationId": "belgium",
+  "nationCode": "BE",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-13",
+    "matchName": "Belgium vs Panama",
+    "matchDate": "2018-06-18",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Thibaut Courtois",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Chelsea, Golden Glove, world's best GK"
+      },
+      "attack": 26,
+      "control": 53,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Chelsea, Golden Glove, world's best GK"
+    },
+    {
+      "name": "Toby Alderweireld",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jan Vertonghen",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Axel Witsel",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Kevin De Bruyne",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man City assist king, world-class"
+      },
+      "attack": 67,
+      "control": 89,
+      "defence": 67,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man City assist king, world-class"
+    },
+    {
+      "name": "Romelu Lukaku",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man United, 4 goals, Bronze Boot"
+      },
+      "attack": 94,
+      "control": 68,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man United, 4 goals, Bronze Boot"
+    },
+    {
+      "name": "Eden Hazard",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Silver Ball winner, tournament star"
+      },
+      "attack": 98,
+      "control": 76,
+      "defence": 36,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Silver Ball winner, tournament star"
+    },
+    {
+      "name": "Yannick Carrasco",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; pacey winger"
+      },
+      "attack": 73,
+      "control": 69,
+      "defence": 53,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; pacey winger"
+    },
+    {
+      "name": "Dries Mertens",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Napoli, scored 1 goal"
+      },
+      "attack": 92,
+      "control": 71,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Napoli, scored 1 goal"
+    },
+    {
+      "name": "Thomas Meunier",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 69,
+      "control": 65,
+      "defence": 50,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dedryck Boyata",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 belgium squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-04",
+    "matchName": "Portugal vs Spain",
+    "matchDate": "2018-06-15",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Rui Patrício",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Pepe",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Besiktas, still elite at 35"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Besiktas, still elite at 35"
+    },
+    {
+      "name": "Raphaël Guerreiro",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "José Fonte",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid/Juventus, 4 goals, hat-trick Spain"
+      },
+      "attack": 98,
+      "control": 71,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid/Juventus, 4 goals, hat-trick Spain"
+    },
+    {
+      "name": "João Moutinho",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bernardo Silva",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man City emerging world-class"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man City emerging world-class"
+    },
+    {
+      "name": "William Carvalho",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bruno Fernandes",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 65,
+      "defence": 30,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gonçalo Guedes",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 80,
+      "control": 76,
+      "defence": 34,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cédric",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

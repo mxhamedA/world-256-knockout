@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-11",
+    "matchName": "Italy vs Ghana",
+    "matchDate": "2006-06-12",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Gianluigi Buffon",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Juventus, Yashin Award, conceded 2"
+      },
+      "attack": 28,
+      "control": 56,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Juventus, Yashin Award, conceded 2"
+    },
+    {
+      "name": "Cristian Zaccardo",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fabio Grosso",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Daniele De Rossi",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 75,
+      "control": 71,
+      "defence": 54,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fabio Cannavaro",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Juventus/Real Madrid, Ballon d'Or, imperious"
+      },
+      "attack": 47,
+      "control": 66,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Juventus/Real Madrid, Ballon d'Or, imperious"
+    },
+    {
+      "name": "Luca Toni",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Fiorentina, scored 2 goals"
+      },
+      "attack": 96,
+      "control": 70,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Fiorentina, scored 2 goals"
+    },
+    {
+      "name": "Francesco Totti",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Roma, played on one leg, penalty vs Australia"
+      },
+      "attack": 96,
+      "control": 91,
+      "defence": 41,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Roma, played on one leg, penalty vs Australia"
+    },
+    {
+      "name": "Alberto Gilardino",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 91,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alessandro Nesta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; AC Milan, injured early"
+      },
+      "attack": 45,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; AC Milan, injured early"
+    },
+    {
+      "name": "Simone Perrotta",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 75,
+      "control": 71,
+      "defence": 54,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andrea Pirlo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; AC Milan, Bronze Ball, masterful playmaker"
+      },
+      "attack": 68,
+      "control": 91,
+      "defence": 68,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; AC Milan, Bronze Ball, masterful playmaker"
+    }
+  ]
+}

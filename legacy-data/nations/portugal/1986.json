@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-09",
+    "matchName": "Portugal vs England",
+    "matchDate": "1986-06-03",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Manuel Bento",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 22,
+      "control": 44,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "António Sousa",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 66,
+      "control": 62,
+      "defence": 47,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Álvaro",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 62,
+      "defence": 69,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Carlos Manuel",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 77,
+      "control": 73,
+      "defence": 33,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jaime Pacheco",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Frederico",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Gomes",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Porto legend, European Golden Boot 1983/1985"
+      },
+      "attack": 87,
+      "control": 53,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "Porto legend, European Golden Boot 1983/1985"
+    },
+    {
+      "name": "António Oliveira",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diamantino",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 66,
+      "control": 62,
+      "defence": 47,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Augusto Inácio",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 62,
+      "defence": 69,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "António André",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

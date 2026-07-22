@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-12",
+    "matchName": "Germany vs Portugal",
+    "matchDate": "2014-06-16",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Manuel Neuer",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Bayern, Golden Glove, sweeper-keeper pioneer"
+      },
+      "attack": 28,
+      "control": 56,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Bayern, Golden Glove, sweeper-keeper pioneer"
+    },
+    {
+      "name": "Benedikt Höwedes",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mats Hummels",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Dortmund, 2 goals, world-class CB"
+      },
+      "attack": 45,
+      "control": 63,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Dortmund, 2 goals, world-class CB"
+    },
+    {
+      "name": "Sami Khedira",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mesut Özil",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Arsenal, 1 goal, creative force"
+      },
+      "attack": 99,
+      "control": 73,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Arsenal, 1 goal, creative force"
+    },
+    {
+      "name": "Thomas Müller",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Bayern, 5 goals, Silver Boot"
+      },
+      "attack": 99,
+      "control": 77,
+      "defence": 36,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Bayern, 5 goals, Silver Boot"
+    },
+    {
+      "name": "Philipp Lahm",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Bayern captain at DM, lifted trophy"
+      },
+      "attack": 55,
+      "control": 77,
+      "defence": 96,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Bayern captain at DM, lifted trophy"
+    },
+    {
+      "name": "Per Mertesacker",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Toni Kroos",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Bayern/Real Madrid, 2 goals vs Brazil"
+      },
+      "attack": 68,
+      "control": 91,
+      "defence": 68,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Bayern/Real Madrid, 2 goals vs Brazil"
+    },
+    {
+      "name": "Mario Götze",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Bayern, scored World Cup winning goal"
+      },
+      "attack": 97,
+      "control": 75,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Bayern, scored World Cup winning goal"
+    },
+    {
+      "name": "Jérôme Boateng",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

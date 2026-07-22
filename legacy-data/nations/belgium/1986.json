@@ -1,0 +1,263 @@
+{
+  "schemaVersion": 3,
+  "nation": "Belgium",
+  "nationId": "belgium",
+  "nationCode": "BE",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-07",
+    "matchName": "Belgium vs Mexico",
+    "matchDate": "1986-06-03",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Jean-Marie Pfaff",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Bayern Munich world-class goalkeeper"
+      },
+      "attack": 23,
+      "control": 47,
+      "defence": 90,
+      "ratingConfidence": "low",
+      "ratingBasis": "Bayern Munich world-class goalkeeper"
+    },
+    {
+      "name": "Eric Gerets",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franky Van der Elst",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Michel De Wolf",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franky Vercauteren",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "René Vandereycken",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Enzo Scifo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Teenage prodigy, 1986 breakout star"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Teenage prodigy, 1986 breakout star"
+    },
+    {
+      "name": "Erwin Vandenbergh",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 51,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Philippe Desmet",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jan Ceulemans",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Club Brugge legend, Golden Generation leader"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "Club Brugge legend, Golden Generation leader"
+    },
+    {
+      "name": "Hugo Broos",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 belgium squad player, position-adjusted historical estimate"
+    }
+  ]
+}

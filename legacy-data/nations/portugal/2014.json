@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-12",
+    "matchName": "Germany vs Portugal",
+    "matchDate": "2014-06-16",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Bruno Alves",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Pepe",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Real Madrid, sent off vs Germany"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Real Madrid, sent off vs Germany"
+    },
+    {
+      "name": "Miguel Veloso",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 46,
+      "control": 65,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fábio Coentrão",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Real Madrid Ballon d'Or, played injured"
+      },
+      "attack": 98,
+      "control": 76,
+      "defence": 36,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Real Madrid Ballon d'Or, played injured"
+    },
+    {
+      "name": "João Moutinho",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Hugo Almeida",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 61,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rui Patrício",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Raul Meireles",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nani",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 65,
+      "defence": 30,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "João Pereira",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

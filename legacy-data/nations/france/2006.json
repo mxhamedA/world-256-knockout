@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-13",
+    "matchName": "France vs Switzerland",
+    "matchDate": "2006-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Eric Abidal",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Patrick Vieira",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Juventus/Inter, 2 goals"
+      },
+      "attack": 66,
+      "control": 88,
+      "defence": 66,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Juventus/Inter, 2 goals"
+    },
+    {
+      "name": "William Gallas",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Claude Makélélé",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Chelsea, position named after him"
+      },
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Chelsea, position named after him"
+    },
+    {
+      "name": "Zinedine Zidane",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Real Madrid, Golden Ball, 3 goals, headbutt final"
+      },
+      "attack": 98,
+      "control": 93,
+      "defence": 42,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Real Madrid, Golden Ball, 3 goals, headbutt final"
+    },
+    {
+      "name": "Sylvain Wiltord",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thierry Henry",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Arsenal, 3 goals"
+      },
+      "attack": 99,
+      "control": 73,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Arsenal, 3 goals"
+    },
+    {
+      "name": "Lilian Thuram",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fabien Barthez",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Willy Sagnol",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franck Ribéry",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Marseille, 1 goal, breakout star"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Marseille, 1 goal, breakout star"
+    }
+  ]
+}

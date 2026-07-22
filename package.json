@@ -1,7 +1,18 @@
 {
   "scripts": {
     "build": "node scripts/build-cloudflare.mjs",
-    "postinstall": "node scripts/build-cloudflare.mjs"
+    "generate:legacy-data": "node scripts/generate-legacy-catalog.mjs",
+    "predev": "node scripts/generate-legacy-catalog.mjs",
+    "dev": "npx wrangler dev --var ONLINE_MODE_ENABLED:true --port 8787",
+    "postinstall": "node scripts/build-cloudflare.mjs",
+    "test:legacy-data": "node scripts/generate-legacy-catalog.mjs && node scripts/validate-legacy-data.mjs",
+    "test:highlights": "node scripts/highlight-engine-test.mjs",
+    "test:rosters": "node scripts/roster-data-test.mjs",
+    "test:possession": "node scripts/possession-engine-test.mjs",
+    "test:presentation": "node scripts/presentation-engine-test.mjs",
+    "test:online": "node scripts/room-security-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/online-room-atomic-test.mjs",
+    "test:online:integration": "node scripts/room-api-integration-test.mjs",
+    "test:online:load": "node scripts/online-opening-load-test.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1"

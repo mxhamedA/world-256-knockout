@@ -1,3 +1,6 @@
 .vercel
+.wrangler/
+.wrangler-online-*.log
+.wrangler-online-*.pid
 node_modules/
 dist/

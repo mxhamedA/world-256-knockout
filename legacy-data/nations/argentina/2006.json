@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-05",
+    "matchName": "Argentina vs Ivory Coast",
+    "matchDate": "2006-06-10",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Roberto Abbondanzieri",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Ayala",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Juan Pablo Sorín",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Esteban Cambiasso",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 74,
+      "control": 70,
+      "defence": 53,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gabriel Heinze",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Javier Saviola",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Javier Mascherano",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Hernán Crespo",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Chelsea elite marksman, 3 goals in 2006"
+      },
+      "attack": 96,
+      "control": 70,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Chelsea elite marksman, 3 goals in 2006"
+    },
+    {
+      "name": "Juan Román Riquelme",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Villarreal magician, tournament standout"
+      },
+      "attack": 93,
+      "control": 89,
+      "defence": 40,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Villarreal magician, tournament standout"
+    },
+    {
+      "name": "Maxi Rodríguez",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 74,
+      "control": 70,
+      "defence": 53,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nicolás Burdisso",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 argentina squad player, position-adjusted historical estimate"
+    }
+  ]
+}

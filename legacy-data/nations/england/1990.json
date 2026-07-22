@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 1990,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1990-09",
+    "matchName": "England vs Republic of Ireland",
+    "matchDate": "1990-06-11",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Peter Shilton",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gary Stevens",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 65,
+      "defence": 73,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Stuart Pearce",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Nottingham Forest Psycho, powerful LB"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "low",
+      "ratingBasis": "Nottingham Forest Psycho, powerful LB"
+    },
+    {
+      "name": "Des Walker",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Terry Butcher",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bryan Robson",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Chris Waddle",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 85,
+      "control": 65,
+      "defence": 31,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Peter Beardsley",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 54,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gary Lineker",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Tottenham, 4 goals, 10 career WC goals"
+      },
+      "attack": 97,
+      "control": 59,
+      "defence": 29,
+      "ratingConfidence": "low",
+      "ratingBasis": "Tottenham, 4 goals, 10 career WC goals"
+    },
+    {
+      "name": "John Barnes",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Liverpool powerful winger at his peak"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "low",
+      "ratingBasis": "Liverpool powerful winger at his peak"
+    },
+    {
+      "name": "Paul Gascoigne",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Tottenham breakout star, tears in semifinal"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Tottenham breakout star, tears in semifinal"
+    }
+  ]
+}

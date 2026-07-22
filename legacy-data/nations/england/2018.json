@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-14",
+    "matchName": "Tunisia vs England",
+    "matchDate": "2018-06-18",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Jordan Pickford",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Everton, Golden Glove, penalty hero"
+      },
+      "sourcePosition": "GK",
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Everton, Golden Glove, penalty hero"
+    },
+    {
+      "name": "Kyle Walker",
+      "primaryPosition": "RB",
+      "secondaryPositions": [
+        "CB"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "John Stones",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man City, scored 2 goals"
+      },
+      "sourcePosition": "CB",
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man City, scored 2 goals"
+    },
+    {
+      "name": "Harry Maguire",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Leicester, scored in quarterfinal"
+      },
+      "sourcePosition": "CB",
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Leicester, scored in quarterfinal"
+    },
+    {
+      "name": "Jesse Lingard",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "RW"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CM",
+      "attack": 84,
+      "control": 80,
+      "defence": 36,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jordan Henderson",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "DM",
+      "attack": 48,
+      "control": 68,
+      "defence": 84,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Harry Kane",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Tottenham, Golden Boot 6 goals"
+      },
+      "sourcePosition": "CF",
+      "attack": 99,
+      "control": 61,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Tottenham, Golden Boot 6 goals"
+    },
+    {
+      "name": "Raheem Sterling",
+      "primaryPosition": "RW",
+      "secondaryPositions": [
+        "LW"
+      ],
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man City, 0 goals but dangerous"
+      },
+      "sourcePosition": "CF",
+      "attack": 94,
+      "control": 72,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man City, 0 goals but dangerous"
+    },
+    {
+      "name": "Kieran Trippier",
+      "primaryPosition": "RB",
+      "secondaryPositions": [
+        "RM"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Tottenham, scored free kick in semifinal"
+      },
+      "sourcePosition": "RM",
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Tottenham, scored free kick in semifinal"
+    },
+    {
+      "name": "Ashley Young",
+      "primaryPosition": "LB",
+      "secondaryPositions": [
+        "LM",
+        "RM"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "LM",
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dele Alli",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Tottenham, scored vs Sweden"
+      },
+      "sourcePosition": "CM",
+      "attack": 89,
+      "control": 85,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Tottenham, scored vs Sweden"
+    }
+  ]
+}

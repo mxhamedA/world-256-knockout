@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Spain",
+  "nationId": "spain",
+  "nationCode": "ES",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-11",
+    "matchName": "Spain vs Costa Rica",
+    "matchDate": "2022-11-23",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "César Azpilicueta",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergio Busquets",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Barcelona, final tournament, legend"
+      },
+      "attack": 50,
+      "control": 71,
+      "defence": 88,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Barcelona, final tournament, legend"
+    },
+    {
+      "name": "Gavi",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Barcelona Golden Boy, youngest scorer since Pele"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Barcelona Golden Boy, youngest scorer since Pele"
+    },
+    {
+      "name": "Marco Asensio",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 63,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ferran Torres",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "RF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rodri",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man City, world's best DM, played CB"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man City, world's best DM, played CB"
+    },
+    {
+      "name": "Jordi Alba",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dani Olmo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "LF",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; RB Leipzig excellent tournament"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; RB Leipzig excellent tournament"
+    },
+    {
+      "name": "Unai Simón",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Aymeric Laporte",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man City quality CB"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man City quality CB"
+    },
+    {
+      "name": "Pedri",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Barcelona brilliant young midfielder"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Barcelona brilliant young midfielder"
+    }
+  ]
+}

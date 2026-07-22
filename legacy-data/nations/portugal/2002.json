@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-16",
+    "matchName": "United States vs Portugal",
+    "matchDate": "2002-06-05",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Vítor Baía",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Porto world-class goalkeeper"
+      },
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Porto world-class goalkeeper"
+    },
+    {
+      "name": "Jorge Costa",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Couto",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luís Figo",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Real Madrid, Ballon d'Or winner"
+      },
+      "attack": 77,
+      "control": 73,
+      "defence": 56,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Real Madrid, Ballon d'Or winner"
+    },
+    {
+      "name": "João Pinto",
+      "primaryPosition": "SS",
+      "secondaryPositions": [],
+      "sourcePosition": "SS",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 65,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Pauleta",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 61,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rui Costa",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; AC Milan elite playmaker, 1 goal"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; AC Milan elite playmaker, 1 goal"
+    },
+    {
+      "name": "Sérgio Conceição",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 68,
+      "control": 65,
+      "defence": 49,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Petit",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Beto",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rui Jorge",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

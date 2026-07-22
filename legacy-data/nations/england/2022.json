@@ -1,0 +1,251 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-02",
+    "matchName": "England vs Iran",
+    "matchDate": "2022-11-21",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Jordan Pickford",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Everton, solid tournament"
+      },
+      "sourcePosition": "GK",
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Everton, solid tournament"
+    },
+    {
+      "name": "Luke Shaw",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man United consistent LB"
+      },
+      "sourcePosition": "LB",
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man United consistent LB"
+    },
+    {
+      "name": "Declan Rice",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; West Ham solid defensive midfielder"
+      },
+      "sourcePosition": "CM",
+      "attack": 50,
+      "control": 71,
+      "defence": 88,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; West Ham solid defensive midfielder"
+    },
+    {
+      "name": "John Stones",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Harry Maguire",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Harry Kane",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Tottenham, scored 2 goals, missed pen vs France"
+      },
+      "sourcePosition": "CF",
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Tottenham, scored 2 goals, missed pen vs France"
+    },
+    {
+      "name": "Raheem Sterling",
+      "primaryPosition": "LW",
+      "secondaryPositions": [
+        "RW"
+      ],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Chelsea/Man City, 1 goal"
+      },
+      "sourcePosition": "LW",
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Chelsea/Man City, 1 goal"
+    },
+    {
+      "name": "Kieran Trippier",
+      "primaryPosition": "RB",
+      "secondaryPositions": [
+        "LB",
+        "RM"
+      ],
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Newcastle, solid RB"
+      },
+      "sourcePosition": "RB",
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Newcastle, solid RB"
+    },
+    {
+      "name": "Bukayo Saka",
+      "primaryPosition": "RW",
+      "secondaryPositions": [
+        "RM",
+        "LW"
+      ],
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Arsenal, scored 3 goals"
+      },
+      "sourcePosition": "RW",
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Arsenal, scored 3 goals"
+    },
+    {
+      "name": "Mason Mount",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "RW"
+      ],
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Chelsea creative midfielder"
+      },
+      "sourcePosition": "AM",
+      "attack": 88,
+      "control": 84,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Chelsea creative midfielder"
+    },
+    {
+      "name": "Jude Bellingham",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Dortmund, brilliant at 19 years old"
+      },
+      "sourcePosition": "CM",
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Dortmund, brilliant at 19 years old"
+    }
+  ]
+}

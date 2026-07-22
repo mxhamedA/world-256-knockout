@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-05",
+    "matchName": "Argentina vs Saudi Arabia",
+    "matchDate": "2022-11-22",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Nicolás Tagliafico",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Leandro Paredes",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rodrigo De Paul",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Atletico Madrid tireless engine"
+      },
+      "attack": 66,
+      "control": 88,
+      "defence": 66,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Atletico Madrid tireless engine"
+    },
+    {
+      "name": "Lionel Messi",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 97,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; 7 goals, 3 assists, Golden Ball, champion"
+      },
+      "attack": 99,
+      "control": 78,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; 7 goals, 3 assists, Golden Ball, champion"
+    },
+    {
+      "name": "Ángel Di María",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Juventus, scored beautiful final goal"
+      },
+      "attack": 98,
+      "control": 76,
+      "defence": 36,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Juventus, scored beautiful final goal"
+    },
+    {
+      "name": "Cristian Romero",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Tottenham aggressive defender"
+      },
+      "attack": 44,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Tottenham aggressive defender"
+    },
+    {
+      "name": "Papu Gómez",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 92,
+      "control": 71,
+      "defence": 34,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nicolás Otamendi",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Benfica veteran leader at the back"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Benfica veteran leader at the back"
+    },
+    {
+      "name": "Lautaro Martínez",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Inter Milan, struggled but worked hard"
+      },
+      "attack": 99,
+      "control": 72,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Inter Milan, struggled but worked hard"
+    },
+    {
+      "name": "Emiliano Martínez",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Aston Villa, Golden Glove, penalty hero"
+      },
+      "attack": 27,
+      "control": 53,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Aston Villa, Golden Glove, penalty hero"
+    },
+    {
+      "name": "Nahuel Molina",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 argentina squad player, position-adjusted historical estimate"
+    }
+  ]
+}

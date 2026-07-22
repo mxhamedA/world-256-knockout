@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Spain",
+  "nationId": "spain",
+  "nationCode": "ES",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-08",
+    "matchName": "Spain vs Nigeria",
+    "matchDate": "1998-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Andoni Zubizarreta",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Albert Ferrer",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rafael Alkorta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Hierro",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Real Madrid, 2 goals, world-class"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Real Madrid, 2 goals, world-class"
+    },
+    {
+      "name": "Raúl",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Real Madrid emerging Spanish superstar"
+      },
+      "attack": 77,
+      "control": 73,
+      "defence": 56,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Real Madrid emerging Spanish superstar"
+    },
+    {
+      "name": "Alfonso",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 63,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergi",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Iván Campo",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Kiko",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 63,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Miguel Ángel Nadal",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luis Enrique",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 spain squad player, position-adjusted historical estimate"
+    }
+  ]
+}

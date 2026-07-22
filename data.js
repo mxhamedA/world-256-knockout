@@ -478,6 +478,225 @@ const FIFA_RANKINGS = new Map(FIFA_RANKING_SOURCE.split("\n").map((line, index) 
   return [name, { rank: index + 1, points: Number(points) }];
 }));
 
+// Official FIFA/Coca-Cola Men's World Ranking published 11 June 2026.
+// This is display-only so refreshing the visible ranks cannot alter simulation balance.
+const OFFICIAL_FIFA_RANKING_SOURCE = `
+Argentina
+Spain
+France
+England
+Portugal
+Brazil
+Morocco
+Netherlands
+Belgium
+Germany
+Croatia
+Italy
+Colombia
+Mexico
+Senegal
+Uruguay
+USA
+Japan
+Switzerland
+Iran
+Denmark
+Türkiye
+Ecuador
+Austria
+South Korea
+Nigeria
+Australia
+Algeria
+Egypt
+Canada
+Norway
+Ukraine
+Ivory Coast
+Panama
+Russia
+Poland
+Wales
+Sweden
+Hungary
+Czechia
+Paraguay
+Scotland
+Serbia
+Cameroon
+Tunisia
+DR Congo
+Slovakia
+Greece
+Venezuela
+Uzbekistan
+Chile
+Peru
+Costa Rica
+Romania
+Mali
+Qatar
+Iraq
+Republic of Ireland
+Slovenia
+South Africa
+Saudi Arabia
+Burkina Faso
+Jordan
+Bosnia and Herzegovina
+Honduras
+Albania
+Cape Verde
+United Arab Emirates
+North Macedonia
+Northern Ireland
+Jamaica
+Georgia
+Ghana
+Iceland
+Finland
+Israel
+Bolivia
+Kosovo
+Oman
+Montenegro
+Guinea
+Curaçao
+Haiti
+Syria
+New Zealand
+Gabon
+Bulgaria
+Angola
+Uganda
+Zambia
+China
+Bahrain
+Benin
+Thailand
+Palestine
+Belarus
+Guatemala
+Luxembourg
+Vietnam
+El Salvador
+Tajikistan
+Trinidad and Tobago
+Mozambique
+Madagascar
+Equatorial Guinea
+Kyrgyzstan
+Armenia
+Comoros
+Kenya
+Libya
+Kazakhstan
+Tanzania
+Mauritania
+Niger
+Lebanon
+Gambia
+Sudan
+Indonesia
+Togo
+North Korea
+Namibia
+Sierra Leone
+Faroe Islands
+Cyprus
+Suriname
+Azerbaijan
+Estonia
+Rwanda
+Malawi
+Zimbabwe
+Nicaragua
+Guinea-Bissau
+Kuwait
+Congo
+Philippines
+Malaysia
+Latvia
+India
+Central African Republic
+Liberia
+Turkmenistan
+Burundi
+Ethiopia
+Dominican Republic
+Yemen
+Lesotho
+Botswana
+Singapore
+Lithuania
+Guyana
+New Caledonia
+Saint Kitts and Nevis
+Solomon Islands
+Puerto Rico
+Fiji
+Hong Kong
+Tahiti
+Myanmar
+Moldova
+Vanuatu
+Malta
+Antigua and Barbuda
+Grenada
+Cuba
+Eswatini
+Saint Lucia
+Bermuda
+Papua New Guinea
+South Sudan
+Saint Vincent and the Grenadines
+Afghanistan
+Andorra
+Maldives
+Chinese Taipei
+Cambodia
+Montserrat
+Nepal
+Mauritius
+Barbados
+Belize
+Bangladesh
+Dominica
+Chad
+Eritrea
+Laos
+Cook Islands
+Sri Lanka
+Samoa
+Aruba
+Mongolia
+American Samoa
+Bhutan
+Macau
+Brunei
+São Tomé and Príncipe
+Djibouti
+Cayman Islands
+Pakistan
+Somalia
+Tonga
+Timor-Leste
+Gibraltar
+Guam
+Seychelles
+Turks and Caicos Islands
+Liechtenstein
+Bahamas
+US Virgin Islands
+British Virgin Islands
+Anguilla
+San Marino
+`.trim();
+
+const OFFICIAL_FIFA_RANKINGS = new Map(OFFICIAL_FIFA_RANKING_SOURCE.split("\n")
+  .map((name, index) => [name, index + 1]));
+
 const FIFA_MAX_POINTS = 1970.37;
 const FIFA_MIN_POINTS = 721.2;
 
@@ -492,6 +711,7 @@ const TEAM_STRENGTH_ADJUSTMENTS = new Map([
   ["Iran", -1.24],
   ["Denmark", -0.74],
   ["Ecuador", 0.66],
+  ["Israel", -32],
 ]);
 
 const REAL_PLAYERS = {
@@ -648,6 +868,32 @@ function codeToFlag(code) {
   return String.fromCodePoint(...[...code].map((char) => 127397 + char.charCodeAt()));
 }
 
+const WINDOWS_1252_BYTES = Object.freeze({
+  "€": 0x80, "‚": 0x82, "ƒ": 0x83, "„": 0x84, "…": 0x85, "†": 0x86, "‡": 0x87,
+  "ˆ": 0x88, "‰": 0x89, "Š": 0x8a, "‹": 0x8b, "Œ": 0x8c, "Ž": 0x8e,
+  "‘": 0x91, "’": 0x92, "“": 0x93, "”": 0x94, "•": 0x95, "–": 0x96, "—": 0x97,
+  "˜": 0x98, "™": 0x99, "š": 0x9a, "›": 0x9b, "œ": 0x9c, "ž": 0x9e, "Ÿ": 0x9f,
+});
+
+function repairPlayerText(value) {
+  if (typeof value !== "string" || !/[ÃÄÅÂ]/.test(value)) return value;
+  const bytes = [];
+  for (const character of value) {
+    const code = character.codePointAt(0);
+    const byte = code <= 0xff ? code : WINDOWS_1252_BYTES[character];
+    if (byte === undefined) return value;
+    bytes.push(`%${byte.toString(16).padStart(2, "0")}`);
+  }
+  try {
+    const repaired = decodeURIComponent(bytes.join(""));
+    const suspiciousBefore = (value.match(/[ÃÄÅÂ]/g) || []).length;
+    const suspiciousAfter = (repaired.match(/[ÃÄÅÂ]/g) || []).length;
+    return suspiciousAfter < suspiciousBefore ? repaired : value;
+  } catch {
+    return value;
+  }
+}
+
 function stableHash(text) {
   let hash = 2166136261;
   for (let i = 0; i < text.length; i += 1) {
@@ -675,6 +921,7 @@ const TEAM_SIMULATION_RATING_OVERRIDES = new Map([
   ["Norway", { attack: 94, midfield: 87, defence: 82, goalkeeper: 84, squadDepth: 84, experience: 82, penalties: 92 }],
   ["Morocco", { attack: 86, midfield: 88, defence: 92, goalkeeper: 89, squadDepth: 88, experience: 92, penalties: 87, discipline: 82 }],
   ["Japan", { attack: 86, midfield: 88, defence: 86, goalkeeper: 84, squadDepth: 87, experience: 87, penalties: 85, discipline: 88 }],
+  ["Israel", { attack: 12, midfield: 11, defence: 10, goalkeeper: 9, squadDepth: 8, experience: 12, penalties: 11, discipline: 42 }],
 ]);
 
 function deriveTeamSimulationRatings(teamId, name, overall, fifaRank) {
@@ -703,6 +950,13 @@ function deriveTeamSimulationRatings(teamId, name, overall, fifaRank) {
   ]));
 }
 
+function nationalTeamPlayerPool(name) {
+  return [...new Set([
+    ...(RECENT_NATIONAL_TEAM_PLAYERS[name] || []),
+    ...(REAL_PLAYERS[name] || []),
+  ])].map(repairPlayerText);
+}
+
 const TEAMS = TEAM_SOURCE.split("\n").map((line, sourceIndex) => {
   const [name, code, confed] = line.split("|");
   const fifa = FIFA_RANKINGS.get(name);
@@ -725,9 +979,14 @@ const TEAMS = TEAM_SOURCE.split("\n").map((line, sourceIndex) => {
     rating,
     simulationRatings: deriveTeamSimulationRatings(id, name, rating, fifa?.rank || null),
     fifaRank: fifa?.rank || null,
+    officialFifaRank: OFFICIAL_FIFA_RANKINGS.get(name) || null,
     fifaPoints: fifa?.points || null,
     sourceIndex,
-    players: RECENT_NATIONAL_TEAM_PLAYERS[name] || REAL_PLAYERS[name] || null,
+    players: nationalTeamPlayerPool(name).length ? nationalTeamPlayerPool(name) : null,
+    playerProfiles: (typeof RECENT_NATIONAL_TEAM_PLAYER_PROFILES !== "undefined"
+      ? RECENT_NATIONAL_TEAM_PLAYER_PROFILES[name]
+      : null)?.map((player) => ({ ...player, name: repairPlayerText(player.name) })) || null,
+    playerSource: typeof NATIONAL_TEAM_PLAYER_SOURCES !== "undefined" ? NATIONAL_TEAM_PLAYER_SOURCES[name] || null : null,
     nameCulture: TEAM_NAME_CULTURE[name] || CONFED_NAME_CULTURE[confed],
   };
 }).sort((a, b) => b.strength - a.strength || a.name.localeCompare(b.name))

@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Belgium",
+  "nationId": "belgium",
+  "nationCode": "BE",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-10",
+    "matchName": "Netherlands vs Belgium",
+    "matchDate": "1998-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Filip De Wilde",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bertrand Crasson",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lorenzo Staelens",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Vital Borkelmans",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franky Van der Elst",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Wilmots",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luís Oliveira",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 53,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luc Nilis",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 87,
+      "control": 53,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Philippe Clement",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mike Verstraeten",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Danny Boffin",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 belgium squad player, position-adjusted historical estimate"
+    }
+  ]
+}

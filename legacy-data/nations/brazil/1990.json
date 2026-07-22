@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 1990,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1990-06",
+    "matchName": "Brazil vs Sweden",
+    "matchDate": "1990-06-10",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Cláudio Taffarel",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jorginho",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ricardo Gomes",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dunga",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Fiorentina, emerging midfield leader"
+      },
+      "attack": 50,
+      "control": 71,
+      "defence": 88,
+      "ratingConfidence": "low",
+      "ratingBasis": "Fiorentina, emerging midfield leader"
+    },
+    {
+      "name": "Alemão",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Branco",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Valdo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Careca",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Napoli, 2 goals, still clinical"
+      },
+      "attack": 98,
+      "control": 59,
+      "defence": 30,
+      "ratingConfidence": "low",
+      "ratingBasis": "Napoli, 2 goals, still clinical"
+    },
+    {
+      "name": "Carlos Mozer",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Müller",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 92,
+      "control": 56,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mauro Galvão",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 2010,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2010-05",
+    "matchName": "England vs United States",
+    "matchDate": "2010-06-12",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Glen Johnson",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RB",
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ashley Cole",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Chelsea, world's best LB at the time"
+      },
+      "sourcePosition": "LB",
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Chelsea, world's best LB at the time"
+    },
+    {
+      "name": "Steven Gerrard",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM"
+      ],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Liverpool, tournament captain"
+      },
+      "sourcePosition": "CM",
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Liverpool, tournament captain"
+    },
+    {
+      "name": "John Terry",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Aaron Lennon",
+      "primaryPosition": "RW",
+      "secondaryPositions": [
+        "RM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RM",
+      "attack": 87,
+      "control": 67,
+      "defence": 32,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Frank Lampard",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Chelsea, ghost goal vs Germany"
+      },
+      "sourcePosition": "CM",
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Chelsea, ghost goal vs Germany"
+    },
+    {
+      "name": "Wayne Rooney",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Man United, 0 goals, below his best"
+      },
+      "sourcePosition": "SS",
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Man United, 0 goals, below his best"
+    },
+    {
+      "name": "Robert Green",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; West Ham, infamous howler vs USA"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; West Ham, infamous howler vs USA"
+    },
+    {
+      "name": "James Milner",
+      "primaryPosition": "RM",
+      "secondaryPositions": [
+        "CM",
+        "LM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "LM",
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ledley King",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Tottenham elegant but injury-prone CB"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Tottenham elegant but injury-prone CB"
+    },
+    {
+      "name": "Emile Heskey",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CF",
+      "attack": 91,
+      "control": 55,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 england squad player, position-adjusted historical estimate"
+    }
+  ]
+}

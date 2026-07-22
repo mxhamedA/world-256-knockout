@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 2010,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2010-11",
+    "matchName": "Italy vs Paraguay",
+    "matchDate": "2010-06-14",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Gianluigi Buffon",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Juventus, injured at half-time"
+      },
+      "attack": 27,
+      "control": 54,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Juventus, injured at half-time"
+    },
+    {
+      "name": "Domenico Criscito",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Giorgio Chiellini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Juventus elite CB"
+      },
+      "attack": 43,
+      "control": 60,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Juventus elite CB"
+    },
+    {
+      "name": "Fabio Cannavaro",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Juventus, 37, group stage exit"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Juventus, 37, group stage exit"
+    },
+    {
+      "name": "Daniele De Rossi",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Simone Pepe",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 69,
+      "defence": 32,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Vincenzo Iaquinta",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 69,
+      "defence": 32,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alberto Gilardino",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 65,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Claudio Marchisio",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 85,
+      "control": 81,
+      "defence": 36,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gianluca Zambrotta",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Riccardo Montolivo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 italy squad player, position-adjusted historical estimate"
+    }
+  ]
+}

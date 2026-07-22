@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Netherlands",
+  "nationId": "netherlands",
+  "nationCode": "NL",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-03",
+    "matchName": "Senegal vs Netherlands",
+    "matchDate": "2022-11-21",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Matthijs de Ligt",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Bayern/Juventus young CB leader"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Bayern/Juventus young CB leader"
+    },
+    {
+      "name": "Virgil van Dijk",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Liverpool world-class CB, captain"
+      },
+      "attack": 44,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Liverpool world-class CB, captain"
+    },
+    {
+      "name": "Nathan Aké",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Steven Bergwijn",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 88,
+      "control": 64,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cody Gakpo",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; PSV/Liverpool, 3 goals, breakout star"
+      },
+      "attack": 86,
+      "control": 82,
+      "defence": 37,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; PSV/Liverpool, 3 goals, breakout star"
+    },
+    {
+      "name": "Steven Berghuis",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Daley Blind",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Vincent Janssen",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 88,
+      "control": 64,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Frenkie de Jong",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Barcelona quality CM, 1 goal"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Barcelona quality CM, 1 goal"
+    },
+    {
+      "name": "Denzel Dumfries",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Inter attacking wing-back, 1 goal"
+      },
+      "attack": 76,
+      "control": 71,
+      "defence": 55,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Inter attacking wing-back, 1 goal"
+    },
+    {
+      "name": "Andries Noppert",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 netherlands squad player, position-adjusted historical estimate"
+    }
+  ]
+}

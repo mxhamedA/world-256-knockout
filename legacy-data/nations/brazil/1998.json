@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-01",
+    "matchName": "Brazil vs Scotland",
+    "matchDate": "1998-06-10",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Cláudio Taffarel",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 26,
+      "control": 51,
+      "defence": 98,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cafu",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99 era; Roma emerging world-class RWB"
+      },
+      "attack": 68,
+      "control": 77,
+      "defence": 86,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99 era; Roma emerging world-class RWB"
+    },
+    {
+      "name": "Aldair",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Júnior Baiano",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "César Sampaio",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Carlos",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 92,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Real Madrid, world's best LB"
+      },
+      "attack": 69,
+      "control": 78,
+      "defence": 87,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Real Madrid, world's best LB"
+    },
+    {
+      "name": "Giovanni",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 85,
+      "defence": 38,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dunga",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ronaldo",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 99,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Ballon d'Or, 4 goals, mysterious final illness"
+      },
+      "attack": 99,
+      "control": 79,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Ballon d'Or, 4 goals, mysterious final illness"
+    },
+    {
+      "name": "Rivaldo",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 92,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Barcelona world-class, 3 goals"
+      },
+      "attack": 97,
+      "control": 92,
+      "defence": 41,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Barcelona world-class, 3 goals"
+    },
+    {
+      "name": "Bebeto",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 94,
+      "control": 68,
+      "defence": 30,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

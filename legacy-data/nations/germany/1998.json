@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-16",
+    "matchName": "Germany vs United States",
+    "matchDate": "1998-06-15",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Andreas Köpke",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Christian Wörns",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jörg Heinrich",
+      "primaryPosition": "LWB",
+      "secondaryPositions": [],
+      "sourcePosition": "LWB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 70,
+      "control": 66,
+      "defence": 70,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jürgen Kohler",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Olaf Thon",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andreas Möller",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 82,
+      "defence": 37,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thomas Häßler",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jens Jeremies",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 49,
+      "control": 70,
+      "defence": 86,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jürgen Klinsmann",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Stefan Reuter",
+      "primaryPosition": "RWB",
+      "secondaryPositions": [],
+      "sourcePosition": "RWB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 70,
+      "control": 66,
+      "defence": 70,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Oliver Bierhoff",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

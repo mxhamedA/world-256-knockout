@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-15",
+    "matchName": "Portugal vs Ghana",
+    "matchDate": "2022-11-24",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Rúben Dias",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man City world-class CB"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man City world-class CB"
+    },
+    {
+      "name": "Raphaël Guerreiro",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Dortmund attacking LB, 1 goal"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Dortmund attacking LB, 1 goal"
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man United (free agent), 1 goal pen, declining"
+      },
+      "attack": 92,
+      "control": 67,
+      "defence": 29,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man United (free agent), 1 goal pen, declining"
+    },
+    {
+      "name": "Bruno Fernandes",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man United, scored 2 goals"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man United, scored 2 goals"
+    },
+    {
+      "name": "Bernardo Silva",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man City world-class playmaker"
+      },
+      "attack": 88,
+      "control": 84,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man City world-class playmaker"
+    },
+    {
+      "name": "João Félix",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Atletico/Chelsea, 1 goal, unrealized potential"
+      },
+      "attack": 88,
+      "control": 64,
+      "defence": 28,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Atletico/Chelsea, 1 goal, unrealized potential"
+    },
+    {
+      "name": "Danilo Pereira",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rúben Neves",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Wolves quality CM"
+      },
+      "attack": 48,
+      "control": 68,
+      "defence": 84,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Wolves quality CM"
+    },
+    {
+      "name": "João Cancelo",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man City/Bayern, world's best attacking full-back"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man City/Bayern, world's best attacking full-back"
+    },
+    {
+      "name": "Diogo Costa",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Porto emerging elite GK"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Porto emerging elite GK"
+    },
+    {
+      "name": "Otávio",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-14",
+    "matchName": "England vs Tunisia",
+    "matchDate": "1998-06-15",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "David Seaman",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Arsenal veteran goalkeeper"
+      },
+      "sourcePosition": "GK",
+      "attack": 26,
+      "control": 51,
+      "defence": 98,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Arsenal veteran goalkeeper"
+    },
+    {
+      "name": "Sol Campbell",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "RB"
+      ],
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Tottenham/Arsenal solid CB"
+      },
+      "sourcePosition": "CB",
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Tottenham/Arsenal solid CB"
+    },
+    {
+      "name": "Graeme Le Saux",
+      "primaryPosition": "LB",
+      "secondaryPositions": [
+        "LM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "LWB",
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paul Ince",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CM",
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Tony Adams",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Arsenal defensive rock"
+      },
+      "sourcePosition": "CB",
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Arsenal defensive rock"
+    },
+    {
+      "name": "Gareth Southgate",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "CDM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "David Batty",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CM",
+      "attack": 47,
+      "control": 67,
+      "defence": 83,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alan Shearer",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Newcastle, scored 2 goals"
+      },
+      "sourcePosition": "CF",
+      "attack": 99,
+      "control": 60,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Newcastle, scored 2 goals"
+    },
+    {
+      "name": "Teddy Sheringham",
+      "primaryPosition": "CF",
+      "secondaryPositions": [
+        "ST"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CF",
+      "attack": 87,
+      "control": 63,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Darren Anderton",
+      "primaryPosition": "RM",
+      "secondaryPositions": [
+        "LM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RWB",
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paul Scholes",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Man United emerging midfield star"
+      },
+      "sourcePosition": "AM",
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Man United emerging midfield star"
+    }
+  ]
+}

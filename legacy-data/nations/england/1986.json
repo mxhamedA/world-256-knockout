@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-09",
+    "matchName": "Portugal vs England",
+    "matchDate": "1986-06-03",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Peter Shilton",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "England's greatest ever goalkeeper"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "England's greatest ever goalkeeper"
+    },
+    {
+      "name": "Gary Stevens",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 64,
+      "defence": 71,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Kenny Sansom",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 64,
+      "defence": 71,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Glenn Hoddle",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Tottenham midfield genius"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "low",
+      "ratingBasis": "Tottenham midfield genius"
+    },
+    {
+      "name": "Terry Butcher",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bryan Robson",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Man United captain, world-class box-to-box"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "low",
+      "ratingBasis": "Man United captain, world-class box-to-box"
+    },
+    {
+      "name": "Ray Wilkins",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 45,
+      "control": 64,
+      "defence": 79,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mark Hateley",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 53,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gary Lineker",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Everton/Barcelona, Golden Boot 6 goals"
+      },
+      "attack": 95,
+      "control": 58,
+      "defence": 29,
+      "ratingConfidence": "low",
+      "ratingBasis": "Everton/Barcelona, Golden Boot 6 goals"
+    },
+    {
+      "name": "Chris Waddle",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 68,
+      "control": 64,
+      "defence": 49,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Terry Fenwick",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 england squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 england squad player, position-adjusted historical estimate"
+    }
+  ]
+}

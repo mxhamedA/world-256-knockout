@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-08",
+    "matchName": "France vs Australia",
+    "matchDate": "2022-11-22",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Hugo Lloris",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Benjamin Pavard",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Antoine Griezmann",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Atletico, reinvented as midfielder, excellent"
+      },
+      "attack": 95,
+      "control": 90,
+      "defence": 41,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Atletico, reinvented as midfielder, excellent"
+    },
+    {
+      "name": "Aurélien Tchouaméni",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Real Madrid, scored vs England"
+      },
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Real Madrid, scored vs England"
+    },
+    {
+      "name": "Olivier Giroud",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; AC Milan, 4 goals, France all-time top scorer"
+      },
+      "attack": 95,
+      "control": 69,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; AC Milan, 4 goals, France all-time top scorer"
+    },
+    {
+      "name": "Kylian Mbappé",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; PSG, Golden Boot 8 goals, hat-trick in final"
+      },
+      "attack": 99,
+      "control": 80,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; PSG, Golden Boot 8 goals, hat-trick in final"
+    },
+    {
+      "name": "Ousmane Dembélé",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Barcelona, hooked after 40 min in final"
+      },
+      "attack": 96,
+      "control": 74,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Barcelona, hooked after 40 min in final"
+    },
+    {
+      "name": "Adrien Rabiot",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dayot Upamecano",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Bayern Munich, strong CB"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Bayern Munich, strong CB"
+    },
+    {
+      "name": "Lucas Hernandez",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ibrahima Konaté",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Liverpool, replaced Upamecano"
+      },
+      "attack": 43,
+      "control": 60,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Liverpool, replaced Upamecano"
+    }
+  ]
+}

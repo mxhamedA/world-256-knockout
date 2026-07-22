@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 1990,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1990-04",
+    "matchName": "Italy vs Austria",
+    "matchDate": "1990-06-09",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Walter Zenga",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Inter, conceded only 2 goals in tournament"
+      },
+      "attack": 26,
+      "control": 51,
+      "defence": 98,
+      "ratingConfidence": "low",
+      "ratingBasis": "Inter, conceded only 2 goals in tournament"
+    },
+    {
+      "name": "Franco Baresi",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "CB"
+      ],
+      "sourcePosition": "SW",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan, world's greatest sweeper of his era"
+      },
+      "attack": 46,
+      "control": 64,
+      "defence": 99,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan, world's greatest sweeper of his era"
+    },
+    {
+      "name": "Giuseppe Bergomi",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Riccardo Ferri",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paolo Maldini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan, 22, already world-class LB/CB"
+      },
+      "attack": 43,
+      "control": 60,
+      "defence": 99,
+      "ratingConfidence": "low",
+      "ratingBasis": "AC Milan, 22, already world-class LB/CB"
+    },
+    {
+      "name": "Carlo Ancelotti",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando De Napoli",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Giuseppe Giannini",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andrea Carnevale",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 91,
+      "control": 55,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Donadoni",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan classy winger"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "low",
+      "ratingBasis": "AC Milan classy winger"
+    },
+    {
+      "name": "Gianluca Vialli",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Sampdoria, powerful striker"
+      },
+      "attack": 97,
+      "control": 59,
+      "defence": 29,
+      "ratingConfidence": "low",
+      "ratingBasis": "Sampdoria, powerful striker"
+    }
+  ]
+}

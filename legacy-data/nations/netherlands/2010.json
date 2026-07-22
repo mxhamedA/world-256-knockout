@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Netherlands",
+  "nationId": "netherlands",
+  "nationCode": "NL",
+  "year": 2010,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2010-09",
+    "matchName": "Netherlands vs Denmark",
+    "matchDate": "2010-06-14",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Maarten Stekelenburg",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gregory van der Wiel",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "John Heitinga",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Joris Mathijsen",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Giovanni van Bronckhorst",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mark van Bommel",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dirk Kuyt",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nigel de Jong",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Robin van Persie",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Arsenal, 1 goal"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Arsenal, 1 goal"
+    },
+    {
+      "name": "Wesley Sneijder",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Inter treble, 5 goals, Golden Ball worthy"
+      },
+      "attack": 95,
+      "control": 90,
+      "defence": 41,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Inter treble, 5 goals, Golden Ball worthy"
+    },
+    {
+      "name": "Rafael van der Vaart",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 netherlands squad player, position-adjusted historical estimate"
+    }
+  ]
+}

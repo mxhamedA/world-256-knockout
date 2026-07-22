@@ -61,6 +61,7 @@ context.clearTimeout = () => {};
 const sources = [
   "player-pools.generated.js",
   "data.js",
+  "presentation-engine.js",
   "simulation-engine.js",
   "app.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");

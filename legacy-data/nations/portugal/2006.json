@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-08",
+    "matchName": "Angola vs Portugal",
+    "matchDate": "2006-06-11",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Ricardo",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 89,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Meira",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luís Figo",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Inter, final tournament, semifinalist"
+      },
+      "attack": 88,
+      "control": 84,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Inter, final tournament, semifinalist"
+    },
+    {
+      "name": "Petit",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Pauleta",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 85,
+      "control": 62,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Simão",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 85,
+      "control": 65,
+      "defence": 31,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Miguel",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 65,
+      "defence": 73,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nuno Valente",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 65,
+      "defence": 73,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ricardo Carvalho",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Chelsea world-class CB"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Chelsea world-class CB"
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Man United, 1 goal pen, emerging superstar"
+      },
+      "attack": 94,
+      "control": 72,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Man United, 1 goal pen, emerging superstar"
+    },
+    {
+      "name": "Tiago",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Netherlands",
+  "nationId": "netherlands",
+  "nationCode": "NL",
+  "year": 1990,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1990-11",
+    "matchName": "Netherlands vs Egypt",
+    "matchDate": "1990-06-12",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Hans van Breukelen",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Berry van Aerle",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Frank Rijkaard",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan world-class, spitting incident"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan world-class, spitting incident"
+    },
+    {
+      "name": "Ronald Koeman",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Barcelona, world's best ball-playing CB"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "low",
+      "ratingBasis": "Barcelona, world's best ball-playing CB"
+    },
+    {
+      "name": "Adri van Tiggelen",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 54,
+      "defence": 89,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jan Wouters",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Erwin Koeman",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gerald Vanenburg",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 54,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marco van Basten",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan, 3x Ballon d'Or, 0 goals in tournament"
+      },
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan, 3x Ballon d'Or, 0 goals in tournament"
+    },
+    {
+      "name": "Ruud Gullit",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan Ballon d'Or winner, 1 goal, injured"
+      },
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan Ballon d'Or winner, 1 goal, injured"
+    },
+    {
+      "name": "Graeme Rutjes",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 77,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 58,
+      "control": 77,
+      "defence": 58,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 netherlands squad player, position-adjusted historical estimate"
+    }
+  ]
+}

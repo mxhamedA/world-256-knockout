@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-04",
+    "matchName": "Germany vs Saudi Arabia",
+    "matchDate": "2002-06-01",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Oliver Kahn",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 95,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Bayern, Golden Ball, carried to final"
+      },
+      "attack": 29,
+      "control": 57,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Bayern, Golden Ball, carried to final"
+    },
+    {
+      "name": "Thomas Linke",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Carsten Ramelow",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Christian Ziege",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 76,
+      "control": 71,
+      "defence": 55,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dietmar Hamann",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Carsten Jancker",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 92,
+      "control": 67,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Miroslav Klose",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Kaiserslautern, 5 headed goals, Silver Boot"
+      },
+      "attack": 94,
+      "control": 68,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Kaiserslautern, 5 headed goals, Silver Boot"
+    },
+    {
+      "name": "Michael Ballack",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Leverkusen, 3 goals, suspended for final"
+      },
+      "attack": 98,
+      "control": 93,
+      "defence": 42,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Leverkusen, 3 goals, suspended for final"
+    },
+    {
+      "name": "Bernd Schneider",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Christoph Metzelder",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Torsten Frings",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 76,
+      "control": 71,
+      "defence": 55,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

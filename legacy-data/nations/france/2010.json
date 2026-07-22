@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 2010,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2010-02",
+    "matchName": "Uruguay vs France",
+    "matchDate": "2010-06-11",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Hugo Lloris",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bacary Sagna",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Eric Abidal",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "William Gallas",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franck Ribéry",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Bayern, disappointing mutiny tournament"
+      },
+      "attack": 96,
+      "control": 74,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Bayern, disappointing mutiny tournament"
+    },
+    {
+      "name": "Yoann Gourcuff",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sidney Govou",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 88,
+      "control": 68,
+      "defence": 32,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Patrice Evra",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jérémy Toulalan",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 48,
+      "control": 68,
+      "defence": 84,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Abou Diaby",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nicolas Anelka",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 88,
+      "control": 64,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 france squad player, position-adjusted historical estimate"
+    }
+  ]
+}

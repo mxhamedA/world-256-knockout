@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 1994,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1994-04",
+    "matchName": "Italy vs Republic of Ireland",
+    "matchDate": "1994-06-18",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Gianluca Pagliuca",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Sampdoria/Inter, conceded only 2 before final"
+      },
+      "attack": 26,
+      "control": 52,
+      "defence": 99,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Sampdoria/Inter, conceded only 2 before final"
+    },
+    {
+      "name": "Alessandro Costacurta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paolo Maldini",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan, 1994 runner-up, world-class"
+      },
+      "attack": 68,
+      "control": 77,
+      "defence": 86,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan, 1994 runner-up, world-class"
+    },
+    {
+      "name": "Franco Baresi",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan, rush back from injury for final"
+      },
+      "attack": 46,
+      "control": 64,
+      "defence": 99,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan, rush back from injury for final"
+    },
+    {
+      "name": "Mauro Tassotti",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Baggio",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Juventus, Ballon d'Or year, 5 goals, missed final penalty"
+      },
+      "attack": 99,
+      "control": 75,
+      "defence": 33,
+      "ratingConfidence": "high",
+      "ratingBasis": "Juventus, Ballon d'Or year, 5 goals, missed final penalty"
+    },
+    {
+      "name": "Demetrio Albertini",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "AC Milan elegant deep playmaker"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "medium",
+      "ratingBasis": "AC Milan elegant deep playmaker"
+    },
+    {
+      "name": "Dino Baggio",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Donadoni",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 74,
+      "control": 70,
+      "defence": 53,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alberigo Evani",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 74,
+      "control": 70,
+      "defence": 53,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Giuseppe Signori",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 italy squad player, position-adjusted historical estimate"
+    }
+  ]
+}

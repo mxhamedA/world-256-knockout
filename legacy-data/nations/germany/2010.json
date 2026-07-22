@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 2010,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2010-08",
+    "matchName": "Germany vs Australia",
+    "matchDate": "2010-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Manuel Neuer",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Schalke, breakout tournament"
+      },
+      "attack": 27,
+      "control": 54,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Schalke, breakout tournament"
+    },
+    {
+      "name": "Arne Friedrich",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sami Khedira",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bastian Schweinsteiger",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Bayern, transitioned to world-class CM"
+      },
+      "attack": 67,
+      "control": 89,
+      "defence": 67,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Bayern, transitioned to world-class CM"
+    },
+    {
+      "name": "Mesut Özil",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Werder Bremen/Real Madrid breakout star"
+      },
+      "attack": 92,
+      "control": 88,
+      "defence": 40,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Werder Bremen/Real Madrid breakout star"
+    },
+    {
+      "name": "Lukas Podolski",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 91,
+      "control": 71,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Miroslav Klose",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Bayern, 4 goals, 14 career WC goals"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Bayern, 4 goals, 14 career WC goals"
+    },
+    {
+      "name": "Thomas Müller",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Bayern, Golden Boot 5 goals, Best Young Player"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Bayern, Golden Boot 5 goals, Best Young Player"
+    },
+    {
+      "name": "Holger Badstuber",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Philipp Lahm",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Bayern captain, world's best full-back"
+      },
+      "attack": 68,
+      "control": 77,
+      "defence": 86,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Bayern captain, world's best full-back"
+    },
+    {
+      "name": "Per Mertesacker",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

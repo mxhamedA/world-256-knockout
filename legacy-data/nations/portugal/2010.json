@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Portugal",
+  "nationId": "portugal",
+  "nationCode": "PT",
+  "year": 2010,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2010-13",
+    "matchName": "Ivory Coast vs Portugal",
+    "matchDate": "2010-06-15",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Eduardo",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bruno Alves",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paulo Ferreira",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ricardo Carvalho",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cristiano Ronaldo",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Real Madrid, 1 goal, disappointing"
+      },
+      "attack": 94,
+      "control": 72,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Real Madrid, 1 goal, disappointing"
+    },
+    {
+      "name": "Pedro Mendes",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 46,
+      "control": 65,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Liédson",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 61,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Danny",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 65,
+      "defence": 30,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Raul Meireles",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Deco",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 10; Chelsea, fading genius"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 10; Chelsea, fading genius"
+    },
+    {
+      "name": "Fábio Coentrão",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2010 portugal squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2010 portugal squad player, position-adjusted historical estimate"
+    }
+  ]
+}

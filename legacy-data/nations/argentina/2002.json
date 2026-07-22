@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-05",
+    "matchName": "Argentina vs Nigeria",
+    "matchDate": "2002-06-02",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Juan Pablo Sorín",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03 era; Lazio/Cruzeiro attacking full-back"
+      },
+      "attack": 77,
+      "control": 72,
+      "defence": 55,
+      "ratingConfidence": "medium",
+      "ratingBasis": "FIFA 03 era; Lazio/Cruzeiro attacking full-back"
+    },
+    {
+      "name": "Mauricio Pochettino",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Walter Samuel",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Claudio López",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "LF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Javier Zanetti",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Inter captain, world-class right-back"
+      },
+      "attack": 80,
+      "control": 76,
+      "defence": 58,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Inter captain, world-class right-back"
+    },
+    {
+      "name": "Gabriel Batistuta",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; declining from peak but still elite"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; declining from peak but still elite"
+    },
+    {
+      "name": "Ariel Ortega",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "RF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Juan Sebastián Verón",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; better for country than Man United"
+      },
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; better for country than Man United"
+    },
+    {
+      "name": "Pablo Cavallero",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Placente",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Simeone",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 argentina squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 1994,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1994-11",
+    "matchName": "Argentina vs Greece",
+    "matchDate": "1994-06-21",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "José Chamot",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Néstor Sensini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Redondo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Elite Real Madrid holding midfielder"
+      },
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Elite Real Madrid holding midfielder"
+    },
+    {
+      "name": "Oscar Ruggeri",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Claudio Caniggia",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 93,
+      "control": 57,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gabriel Batistuta",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Elite Fiorentina striker, hat-trick vs Greece"
+      },
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "Elite Fiorentina striker, hat-trick vs Greece"
+    },
+    {
+      "name": "Diego Maradona",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Still brilliant before suspension"
+      },
+      "attack": 66,
+      "control": 88,
+      "defence": 66,
+      "ratingConfidence": "high",
+      "ratingBasis": "Still brilliant before suspension"
+    },
+    {
+      "name": "Luis Islas",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Cáceres",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Simeone",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Emerging midfield enforcer, future Atletico legend"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Emerging midfield enforcer, future Atletico legend"
+    },
+    {
+      "name": "Abel Balbo",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 93,
+      "control": 57,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 argentina squad player, position-adjusted historical estimate"
+    }
+  ]
+}

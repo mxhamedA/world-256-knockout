@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Spain",
+  "nationId": "spain",
+  "nationCode": "ES",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-02",
+    "matchName": "Spain vs Brazil",
+    "matchDate": "1986-06-01",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Andoni Zubizarreta",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 45,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Tomás",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "José Antonio Camacho",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Antonio Maceda",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Víctor",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andoni Goikoetxea",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Emilio Butragueño",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Real Madrid, 5 goals including 4 vs Denmark"
+      },
+      "attack": 93,
+      "control": 57,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "Real Madrid, 5 goals including 4 vs Denmark"
+    },
+    {
+      "name": "Julio Alberto",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 75,
+      "defence": 56,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Francisco",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 75,
+      "defence": 56,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Julio Salinas",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 53,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Míchel",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Real Madrid emerging star midfielder"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "Real Madrid emerging star midfielder"
+    }
+  ]
+}

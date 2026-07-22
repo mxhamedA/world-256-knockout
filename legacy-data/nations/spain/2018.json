@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Spain",
+  "nationId": "spain",
+  "nationCode": "ES",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-04",
+    "matchName": "Portugal vs Spain",
+    "matchDate": "2018-06-15",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "David de Gea",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man United, 1 error vs Portugal"
+      },
+      "attack": 26,
+      "control": 53,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man United, 1 error vs Portugal"
+    },
+    {
+      "name": "Gerard Piqué",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nacho",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergio Busquets",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andrés Iniesta",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Barcelona, final tournament, legend"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Barcelona, final tournament, legend"
+    },
+    {
+      "name": "Koke",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergio Ramos",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid captain, penalty specialist"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid captain, penalty specialist"
+    },
+    {
+      "name": "Jordi Alba",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Costa",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Atletico Madrid, scored 3 goals"
+      },
+      "attack": 91,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Atletico Madrid, scored 3 goals"
+    },
+    {
+      "name": "David Silva",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man City fading star"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man City fading star"
+    },
+    {
+      "name": "Isco",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid, Spain's best player"
+      },
+      "attack": 90,
+      "control": 86,
+      "defence": 39,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid, Spain's best player"
+    }
+  ]
+}

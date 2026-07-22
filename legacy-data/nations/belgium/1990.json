@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Belgium",
+  "nationId": "belgium",
+  "nationCode": "BE",
+  "year": 1990,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1990-10",
+    "matchName": "Belgium vs South Korea",
+    "matchDate": "1990-06-12",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Michel Preud'homme",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 22,
+      "control": 44,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Eric Gerets",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Leo Clijsters",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bruno Versavel",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Emmers",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Stéphane Demol",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "CB"
+      ],
+      "sourcePosition": "SW",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franky Van der Elst",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 55,
+      "control": 73,
+      "defence": 55,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Degryse",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 51,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Enzo Scifo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Auxerre playmaker, world-class peak"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Auxerre playmaker, world-class peak"
+    },
+    {
+      "name": "Michel De Wolf",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 37,
+      "control": 51,
+      "defence": 84,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Van Der Linden",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 73,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 51,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 belgium squad player, position-adjusted historical estimate"
+    }
+  ]
+}

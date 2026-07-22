@@ -2,12 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>
-      if (window.location.hostname === "256-team-wc.vercel.app") {
-        window.location.replace(`https://www.256teams.com${window.location.pathname}${window.location.search}${window.location.hash}`);
-      }
-    </script>
+    <script src="./redirect.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6724809725459853"
+      crossorigin="anonymous"></script>
     <meta name="theme-color" content="#0b0f17" />
     <meta
       name="description"
@@ -24,15 +22,20 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=brand-icon-73" />
+    <link rel="stylesheet" href="./clean.css?v=somaliland-flag-1" />
   </head>
-  <body>
+  <body class="before-start">
     <div class="ambient ambient-one"></div>
     <div class="ambient ambient-two"></div>
 
-    <div class="app-shell">
+    <div class="app-shell" id="appShell">
       <aside class="sidebar" id="sidebar">
-        <a class="brand" href="#" aria-label="256 TEAMS WC home">
+        <button class="icon-button mobile-menu" id="menuButton" type="button" aria-label="Open rounds" aria-expanded="false">&#9776;</button>
+        <button class="icon-button header-new-tournament header-restart-left" id="newTournamentButton" type="button" aria-label="Start a new tournament" title="New tournament">
+          <span aria-hidden="true">&#8635;</span>
+        </button>
+        <button class="legacy-header-back" id="legacyHeaderBackButton" type="button" aria-label="Back to modes" hidden>&larr;</button>
+        <a class="brand" href="/" aria-label="256 TEAMS WC home">
           <span class="brand-mark" aria-hidden="true">
             <span class="brand-mark-number">256</span>
             <span class="brand-mark-label">TEAMS</span>
@@ -56,48 +59,40 @@
 
         <nav class="round-nav" id="roundNav" aria-label="Tournament rounds"></nav>
 
+        <div class="top-actions header-actions">
+          <button class="utility-button" id="settingsButton" type="button" aria-label="Settings" title="Settings">
+            <span aria-hidden="true">&#9881;</span>
+            <span>Settings</span>
+          </button>
+          <button class="utility-button" id="bugReportButton" type="button" aria-label="Feedback" title="Feedback">
+            <span aria-hidden="true">!</span>
+            <span>Feedback</span>
+          </button>
+          <a class="utility-button donate-link header-donate-link" href="https://ko-fi.com/256teams" target="_blank" rel="noopener noreferrer" aria-label="Donate" title="Donate">
+            <span aria-hidden="true">$</span>
+            <span>Donate</span>
+          </a>
+        </div>
+
       </aside>
+      <button class="menu-backdrop" id="menuBackdrop" type="button" aria-label="Close rounds" hidden></button>
 
       <main class="main">
         <header class="topbar">
-          <button class="icon-button mobile-menu" id="menuButton" aria-label="Open menu">☰</button>
-          <div>
-            <p class="page-kicker" id="pageKicker">256 TEAMS WC KNOCKOUT</p>
-            <h1 id="pageTitle">Round of 256</h1>
-          </div>
-          <div class="top-actions">
-            <button class="utility-button" id="fieldButton" type="button">
-              <span aria-hidden="true">◎</span>
-              <span>Field</span>
-            </button>
-            <button class="utility-button prediction-top-control" id="predictionPickerButton" type="button" aria-label="Choose champion prediction">
-              <span>PREDICTION</span>
-              <strong class="prediction-picker-mark" id="predictionPickerLabel" aria-hidden="true">?</strong>
-            </button>
-            <button class="utility-button sound-toggle-button" id="soundToggleButton" type="button" aria-pressed="true" title="Turn match sounds off">
-              <span aria-hidden="true">♪</span>
-              <span id="soundToggleLabel">Sounds on</span>
-            </button>
-            <button class="icon-button" id="fullscreenButton" aria-label="Enter fullscreen" title="Fullscreen">⛶</button>
-            <button class="ghost-button" id="newTournamentButton" type="button">New tournament</button>
-            <time
-              class="last-updated"
-              datetime="2026-07-18T14:40:25+01:00"
-              title="Last deployed 18 July 2026 at 2:40 PM UK time"
-            >
-              <span>Last updated:</span>
-              <strong><span class="last-updated-date">18 Jul, </span>2:40 PM BST</strong>
-            </time>
+          <button class="legacy-topbar-back" id="legacyDraftBackButton" type="button" aria-label="Back to modes" hidden>
+            <span aria-hidden="true">&larr;</span>
+            <span class="legacy-back-label">Back to modes</span>
+          </button>
+          <div id="pageHeading">
+            <p class="page-kicker" id="pageKicker">256 TEAMS WC &middot; NEW TOURNAMENT</p>
+            <h1 id="pageTitle">Choose your mode</h1>
           </div>
         </header>
 
-        <section class="field-overview" id="fieldOverview" hidden>
+        <section class="field-overview" id="fieldOverview">
           <section class="mode-select" aria-label="Tournament modes">
             <div class="mode-grid">
               <article class="mode-card mode-card-default">
-                <div class="mode-card-topline">
-                  <span class="mode-status mode-status-live">Available now</span>
-                </div>
                 <div class="mode-card-copy">
                   <h3>Default mode</h3>
                   <p>The full 256-team knockout tournament with your choice of realism and goal level.</p>
@@ -119,29 +114,52 @@
                       <button type="button" data-value="wild">Goal fest</button>
                     </div>
                   </div>
+                  <div class="landing-setting landing-team-setting">
+                    <span>Choose team</span>
+                    <button class="spectate-picker" id="spectatePickerButton" type="button" aria-haspopup="dialog">
+                      <span class="spectate-picker-mark" id="spectatePickerMark" aria-hidden="true">&#9678;</span>
+                      <span class="spectate-picker-copy">
+                        <strong id="spectatePickerLabel">Neutral</strong>
+                        <small id="spectatePickerHint">Show every match as normal</small>
+                      </span>
+                      <span class="spectate-picker-arrow" aria-hidden="true">&rsaquo;</span>
+                    </button>
+                  </div>
                 </div>
                 <div class="mode-card-actions">
                   <button class="primary-button start-tournament" id="startTournamentButton" type="button">
                     Start tournament
                     <span>&rarr;</span>
                   </button>
+                  <button class="secondary-button legacy-restart-button" id="homeRestartButton" type="button" hidden>Restart</button>
                 </div>
               </article>
 
-              <article class="mode-card mode-card-online" aria-disabled="true">
-                <div class="mode-card-topline">
-                  <span class="mode-status">Coming soon</span>
-                </div>
+              <article class="mode-card mode-card-online">
                 <div class="mode-card-copy">
                   <h3>Online party mode</h3>
-                  <p>Join a private room, draft countries and influence live matches with tactics and limited power cards.</p>
+                  <p id="onlineModeCopy">Private rooms are being tuned before they come back.</p>
                 </div>
-                <div class="online-mode-features" aria-label="Planned online features">
-                  <span>Private rooms</span>
-                  <span>Country draft</span>
-                  <span>Live tactics</span>
+                <div class="online-mode-actions" id="onlineModeActions" hidden>
+                  <button class="primary-button start-tournament" id="createOnlineRoomButton" type="button">Create room <span aria-hidden="true">→</span></button>
+                  <button class="secondary-button" id="joinOnlineRoomButton" type="button">Join with code</button>
                 </div>
-                <button class="online-coming-soon" type="button" disabled>Online mode coming soon</button>
+                <button class="online-coming-soon" id="onlineModeComingSoon" type="button" disabled>Coming soon</button>
+              </article>
+
+              <article class="mode-card mode-card-legacy">
+                <div class="mode-card-copy">
+                  <h3>World Cup Legacy Draft</h3>
+                  <p>Draft an XI from classic World Cup squads, then enter them into a 16-team knockout.</p>
+                </div>
+                <div class="legacy-landing-settings" id="legacyLandingSetup" aria-label="Legacy Draft settings"></div>
+                <div class="mode-card-actions">
+                  <button class="primary-button start-tournament" id="startLegacyDraftButton" type="button">
+                    Start draft
+                    <span aria-hidden="true">&rarr;</span>
+                  </button>
+                  <button class="secondary-button legacy-restart-button" id="restartLegacyDraftButton" type="button" hidden>Restart</button>
+                </div>
               </article>
             </div>
           </section>
@@ -171,7 +189,7 @@
           <div class="participant-sections" id="participantSections"></div>
         </section>
 
-        <section class="content" id="mainContent">
+        <section class="content" id="mainContent" hidden>
           <aside class="insight-column insight-left">
             <section class="panel golden-boot-panel">
               <div class="panel-heading">
@@ -182,6 +200,10 @@
           </aside>
 
           <div class="stage-column">
+            <div class="stage-topline">
+              <div class="stage-round" id="stageRoundLabel">ROUND OF 256</div>
+              <div class="match-number" id="matchNumber" style="display:none">1/128</div>
+            </div>
             <article class="match-stage" id="matchStage">
               <button class="snapshot-trigger snapshot-card-button" id="snapshotButton" type="button" aria-label="Create match snapshot" title="Create match snapshot" hidden>
                 <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none">
@@ -190,24 +212,25 @@
                 </svg>
               </button>
               <div id="matchContent">
-              <div class="stage-topline">
-                <div aria-hidden="true"></div>
-                <div class="stage-round" id="stageRoundLabel">ROUND OF 256</div>
-                <div class="match-number" id="matchNumber">1/128</div>
-              </div>
-              <div class="skip-live-control" id="skipControl" hidden>
-                <button class="live-control skip-control" id="skipLiveButton" type="button">Skip to FT</button>
-              </div>
+              <section class="match-commentary-view" id="matchCommentaryView" hidden aria-label="Commentary feed">
+                <div class="match-commentary-feed" id="matchCommentaryFeed"></div>
+              </section>
 
               <div class="match-penalty-overlay" id="matchPenaltyOverlay" hidden aria-live="assertive">
                 <div class="match-penalty-decision">
-                  <span>REFEREE DECISION</span>
                   <strong>PENALTY</strong>
                   <small id="matchPenaltyPlayer">Player steps up</small>
                 </div>
                 <div class="penalty-scene match-penalty-scene" id="matchPenaltyScene" data-state="setup" data-direction="centre" data-dive="left" data-result="pending">
                   <div class="penalty-goal">
                     <div class="penalty-net"></div>
+                    <div class="online-penalty-targets match-penalty-targets" aria-label="Choose where to shoot">
+                      <button data-match-penalty-target="top-left" type="button" aria-label="Top left"></button>
+                      <button data-match-penalty-target="top-right" type="button" aria-label="Top right"></button>
+                      <button data-match-penalty-target="middle" type="button" aria-label="Middle"></button>
+                      <button data-match-penalty-target="bottom-left" type="button" aria-label="Bottom left"></button>
+                      <button data-match-penalty-target="bottom-right" type="button" aria-label="Bottom right"></button>
+                    </div>
                     <div class="penalty-keeper" aria-hidden="true"><i></i><b></b></div>
                   </div>
                   <div class="penalty-ball" aria-hidden="true"></div>
@@ -225,19 +248,22 @@
                 </div>
 
                 <div class="score-zone">
-                  <div class="live-controls score-live-controls" id="eventControls" hidden>
-                    <button class="live-control pause-control" id="pauseLiveButton" type="button" aria-pressed="false">Pause</button>
-                    <button class="live-control" id="speedButton" type="button">1×</button>
+                  <div class="event-live-clock score-live-clock" id="eventLiveClock" hidden>
+                    <span><i></i> LIVE</span>
+                    <strong id="liveClock">00:00</strong>
+                    <small id="livePhase">FIRST HALF</small>
                   </div>
                   <div class="scoreline" aria-label="Match score">
                     <span class="match-score" id="homeScore">0</span>
                     <span class="score-separator" aria-hidden="true">−</span>
                     <span class="match-score" id="awayScore">0</span>
                   </div>
-                  <div class="event-live-clock score-live-clock" id="eventLiveClock" hidden>
-                    <span><i></i> LIVE</span>
-                    <strong id="liveClock">00:00</strong>
-                    <small id="livePhase">FIRST HALF</small>
+                  <div class="live-controls score-live-controls" id="eventControls" hidden>
+                    <div class="skip-live-control" id="skipControl" hidden>
+                      <button class="live-control skip-control" id="skipLiveButton" type="button">Skip to FT</button>
+                    </div>
+                    <button class="live-control pause-control" id="pauseLiveButton" type="button" aria-pressed="false">Pause</button>
+                    <button class="live-control" id="speedButton" type="button">1×</button>
                   </div>
                   <div class="result-note" id="resultNote" hidden></div>
                 </div>
@@ -251,15 +277,48 @@
                 </div>
               </div>
 
+              <section class="match-2d-viewer" id="match2dViewer" hidden aria-label="Live two-dimensional match view">
+                <div class="match-2d-toolbar">
+                  <span id="match2dJumpLabel">KICK-OFF</span>
+                  <div class="match-highlight-mode" id="matchHighlightMode" role="group" aria-label="Highlight detail">
+                    <button type="button" data-highlight-mode="commentary" aria-pressed="false">Commentary</button>
+                    <button type="button" data-highlight-mode="key" aria-pressed="true">Key highlights</button>
+                    <button type="button" data-highlight-mode="extended" aria-pressed="false">Extended</button>
+                  </div>
+                </div>
+                <div class="match-2d-pitch" id="match2dPitch">
+                  <div class="match-2d-halfway" aria-hidden="true"></div>
+                  <div class="match-2d-circle" aria-hidden="true"></div>
+                  <div class="match-2d-box match-2d-box-home" aria-hidden="true"></div>
+                  <div class="match-2d-box match-2d-box-away" aria-hidden="true"></div>
+                  <div class="match-2d-goal match-2d-goal-home" aria-hidden="true"></div>
+                  <div class="match-2d-goal match-2d-goal-away" aria-hidden="true"></div>
+                  <div class="match-2d-players" id="match2dPlayers" aria-hidden="true"></div>
+                  <div class="match-2d-ball" id="match2dBall" aria-hidden="true"></div>
+                  <div class="match-2d-event" id="match2dEvent" hidden></div>
+                </div>
+                <div class="match-2d-footer">
+                  <span id="match2dPossession">Possession</span>
+                  <strong id="match2dTacticLabel">Balanced</strong>
+                </div>
+              </section>
+
               <section class="penalty-stage" id="penaltyStage" aria-live="polite" hidden>
                 <div class="penalty-stage-head">
                   <span>PENALTY SHOOTOUT</span>
                   <strong><b id="penaltyHomeScore">0</b><i>−</i><b id="penaltyAwayScore">0</b></strong>
                   <span id="penaltyKickNumber">KICK 1</span>
                 </div>
-                <div class="penalty-scene" id="penaltyScene" data-state="setup" data-direction="centre" data-dive="centre">
+                <div class="penalty-scene standard-penalty-scene" id="penaltyScene" data-state="setup" data-direction="centre" data-dive="centre" data-target="middle">
                   <div class="penalty-goal">
                     <div class="penalty-net"></div>
+                    <div class="online-penalty-targets standard-penalty-targets" aria-label="Choose where to shoot">
+                      <button data-standard-penalty-target="top-left" type="button" aria-label="Top left"></button>
+                      <button data-standard-penalty-target="top-right" type="button" aria-label="Top right"></button>
+                      <button data-standard-penalty-target="middle" type="button" aria-label="Middle"></button>
+                      <button data-standard-penalty-target="bottom-left" type="button" aria-label="Bottom left"></button>
+                      <button data-standard-penalty-target="bottom-right" type="button" aria-label="Bottom right"></button>
+                    </div>
                     <div class="penalty-keeper" aria-hidden="true"><i></i><b></b></div>
                   </div>
                   <div class="penalty-ball" aria-hidden="true"></div>
@@ -285,8 +344,8 @@
                 <div>
                   <span class="spoiler-icon">◉</span>
                   <div>
-                    <strong>Result ready</strong>
-                    <p>Take your prediction. Reveal when the camera is rolling.</p>
+                    <strong id="spoilerTitle">Match interrupted</strong>
+                    <p id="spoilerCopy">Resume the match from kick-off without revealing the result.</p>
                   </div>
                 </div>
                 <button class="primary-button reveal-button" id="revealButton" type="button">
@@ -300,6 +359,14 @@
                   <span class="play-icon">▶</span>
                   Play this tie
                 </button>
+                <section class="inline-elimination" id="spectateEliminationActions" aria-live="polite" hidden>
+                  <h3 id="eliminationTitle">ELIMINATED</h3>
+                  <p id="eliminationCopy">What next?</p>
+                  <div class="elimination-actions">
+                    <button class="primary-button" id="replaySpectatedButton" type="button">Replay this team</button>
+                    <button class="secondary-button" id="continueNeutralButton" type="button">Continue neutrally</button>
+                  </div>
+                </section>
               </div>
 
               </div>
@@ -348,12 +415,22 @@
           </div>
 
           <aside class="insight-column insight-right">
-            <section class="panel next-up-panel">
-              <div class="panel-heading">
-                <span>UP NEXT</span>
-                <strong id="tiesRemaining">128 ties left</strong>
+            <section class="match-analysis" id="matchAnalysis" aria-label="Match statistics">
+              <div class="match-analysis-heading">
+                <strong>Stats</strong>
               </div>
-              <div class="queue" id="matchQueue"></div>
+              <div class="match-stats-grid" id="matchStatsGrid"></div>
+            </section>
+
+            <section class="standard-match-tactics" id="standardMatchTactics" hidden aria-label="Tactical approach">
+              <span>Tactical approach</span>
+              <div class="standard-tactic-buttons" id="standardTacticButtons">
+                <button type="button" data-standard-tactic="balanced">Balanced</button>
+                <button type="button" data-standard-tactic="tiki-taka">Tiki-taka</button>
+                <button type="button" data-standard-tactic="counter">Counter</button>
+                <button type="button" data-standard-tactic="high-press">High press</button>
+                <button type="button" data-standard-tactic="defensive">Defensive</button>
+              </div>
             </section>
 
             <section class="panel plot-panel">
@@ -391,7 +468,15 @@
             </div>
             <div class="fixture-grid" id="fixtureGrid"></div>
             <button class="load-more" id="loadMoreButton" type="button">Show more fixtures</button>
+            <button class="go-to-top" id="goToTopButton" type="button">
+              Go to top
+              <span aria-hidden="true">&uarr;</span>
+            </button>
           </section>
+        </section>
+
+        <section class="legacy-draft" id="legacyDraftScreen" hidden>
+          <div class="legacy-draft-body" id="legacyDraftBody"></div>
         </section>
 
         <footer class="site-footer">
@@ -399,12 +484,22 @@
             <strong>256 TEAMS WC</strong>
             <span>An unofficial football tournament simulator built for entertainment.</span>
           </div>
-          <nav class="site-footer-links" aria-label="Legal information">
-            <a href="./privacy.html">Privacy</a>
-            <a href="./terms.html">Terms</a>
-            <a href="./disclaimer.html">Disclaimer</a>
-          </nav>
-          <span class="site-footer-year">&copy; 2026 256 TEAMS WC</span>
+          <time
+            class="footer-last-updated"
+            datetime="2026-07-22T02:28:16+01:00"
+            title="Last deployed 22 July 2026 at 2:28 AM UK time"
+          >
+            <span>Last updated:</span>
+            <strong>22 Jul, 2:28 AM BST</strong>
+          </time>
+          <div class="site-footer-meta">
+            <nav class="site-footer-links" aria-label="Legal information">
+              <a href="./privacy.html">Privacy</a>
+              <a href="./terms.html">Terms</a>
+              <a href="./disclaimer.html">Disclaimer</a>
+            </nav>
+            <span class="site-footer-year">&copy; 2026 256 TEAMS WC</span>
+          </div>
         </footer>
       </main>
     </div>
@@ -418,10 +513,10 @@
             <span class="section-kicker">PREDICTION MODE</span>
             <h2>Who wins 256 TEAMS WC?</h2>
           </div>
-          <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
         <label class="modal-search search prediction-search">
-          <span>⌕</span>
+          <span>&#8981;</span>
           <input id="predictionSearch" type="search" placeholder="Search all 256 teams" autocomplete="off" />
         </label>
         <div class="prediction-list" id="predictionList"></div>
@@ -429,24 +524,294 @@
       </form>
     </dialog>
 
-    <dialog class="modal field-modal" id="fieldModal">
+    <dialog class="modal prediction-modal spectate-modal" id="spectateModal">
+      <form method="dialog">
+        <div class="modal-head">
+          <h2 id="spectateModalTitle">Pick a country to manage</h2>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
+        </div>
+        <label class="modal-search search prediction-search">
+          <span>&#8981;</span>
+          <input id="spectateSearch" type="search" placeholder="Search all 256 teams" autocomplete="off" />
+        </label>
+        <div class="prediction-list spectate-list" id="spectateList"></div>
+      </form>
+    </dialog>
+
+    <section class="online-screen" id="onlineRoomScreen" aria-labelledby="onlineRoomTitle" hidden>
+      <header class="online-screen-topbar">
+        <button class="online-screen-back" id="closeOnlineScreenButton" type="button">
+          <span aria-hidden="true">&larr;</span>
+          Back to modes
+        </button>
+        <a class="online-screen-brand" id="onlineScreenBrand" href="/" aria-label="256 TEAMS WC home">
+          <span>256</span>
+          <strong>TEAMS WC</strong>
+        </a>
+        <div class="online-screen-actions" aria-label="Site actions">
+          <button class="online-screen-action" id="onlineSettingsButton" type="button" aria-label="Settings" title="Settings">
+            <span aria-hidden="true">&#9881;</span>
+          </button>
+          <button class="online-screen-action" id="onlineBugReportButton" type="button" aria-label="Feedback" title="Feedback">
+            <span aria-hidden="true">!</span>
+          </button>
+          <a class="online-screen-action" href="https://ko-fi.com/256teams" target="_blank" rel="noopener noreferrer" aria-label="Donate" title="Donate">
+            <span aria-hidden="true">$</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="online-screen-main">
+        <div class="online-screen-heading" id="onlineScreenHeading">
+          <h1 id="onlineRoomTitle">Create or join a room</h1>
+        </div>
+
+        <section class="online-room-entry" id="onlineRoomEntry">
+          <div class="online-entry-panel">
+            <h2>Create a room</h2>
+            <label class="online-field">
+              <span>Your name</span>
+              <input id="createOnlineDisplayName" type="text" maxlength="24" autocomplete="nickname" />
+            </label>
+            <button class="primary-button online-create-action" id="confirmCreateRoomButton" type="button">Create private room</button>
+          </div>
+          <div class="online-entry-divider" aria-hidden="true"><span>or</span></div>
+          <div class="online-entry-panel">
+            <h2>Join a room</h2>
+            <label class="online-field">
+              <span>Your name</span>
+              <input id="joinOnlineDisplayName" type="text" maxlength="24" autocomplete="nickname" />
+            </label>
+            <label class="online-field online-code-field">
+              <span>Room code</span>
+              <input id="onlineRoomCodeInput" type="text" maxlength="6" inputmode="numeric" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="1234" />
+            </label>
+            <button class="secondary-button" id="confirmJoinRoomButton" type="button">Join room</button>
+          </div>
+        </section>
+
+        <section class="online-room-lobby" id="onlineRoomLobby" hidden>
+          <div class="online-room-code-panel">
+            <span>ROOM CODE</span>
+            <strong id="onlineRoomCode">------</strong>
+            <button class="text-button" id="copyOnlineRoomCodeButton" type="button">Copy invite code</button>
+          </div>
+          <div class="online-lobby-heading">
+            <div>
+              <span class="online-live-dot" aria-hidden="true"></span>
+              <strong>Lobby is live</strong>
+            </div>
+            <small id="onlineRoomCount">2 / 8 players</small>
+          </div>
+          <div class="online-lobby-name">
+            <label class="online-field">
+              <span>Your name</span>
+              <input id="onlineLobbyDisplayName" type="text" maxlength="24" autocomplete="nickname" />
+            </label>
+            <button class="secondary-button" id="updateOnlineDisplayNameButton" type="button">Update</button>
+          </div>
+          <div class="online-member-list" id="onlineMemberList" aria-live="polite"></div>
+          <div class="online-lobby-controls">
+            <button class="primary-button" id="startOnlineDraftButton" type="button" hidden>Start draft</button>
+            <button class="danger-button" id="closeOnlineRoomButton" type="button" hidden>Close room</button>
+          </div>
+          <div class="online-lobby-actions">
+            <button class="secondary-button" id="leaveOnlineRoomButton" type="button">Leave room</button>
+          </div>
+        </section>
+
+        <section class="online-draft" id="onlineDraft" hidden>
+          <div class="online-draft-head" id="onlineDraftHead">
+            <div>
+              <span class="section-kicker">COUNTRY DRAFT</span>
+              <h3 id="onlineDraftTitle">Drawing countries</h3>
+            </div>
+            <span class="online-turn-pill" id="onlineDraftTurn">Pick 1</span>
+          </div>
+          <div class="online-draft-progress" aria-hidden="true"><span id="onlineDraftProgress"></span></div>
+          <div class="online-roulette" id="onlineRoulette" aria-live="polite">
+            <span class="online-roulette-player" id="onlineRoulettePlayer">Preparing the draw</span>
+            <div class="online-roulette-flag" id="onlineRouletteFlag" aria-hidden="true">?</div>
+            <strong id="onlineRouletteTeam">Country incoming</strong>
+            <small id="onlineRouletteMeta">The server will securely reveal every pick.</small>
+          </div>
+          <div class="online-draft-rosters" id="onlineDraftRosters" aria-live="polite"></div>
+          <div class="online-lobby-actions online-draft-actions">
+            <button class="danger-button" id="closeOnlineDraftRoomButton" type="button" hidden>Close room</button>
+            <button class="secondary-button" id="leaveOnlineDraftRoomButton" type="button">Leave room</button>
+          </div>
+        </section>
+
+        <section class="online-matches" id="onlineMatches" hidden>
+          <div class="online-match-head">
+            <div>
+              <span class="section-kicker">ONLINE KNOCKOUT</span>
+              <h3 id="onlineMatchRound">Round 1</h3>
+            </div>
+            <div class="online-match-head-actions">
+              <button class="secondary-button online-penalty-tester-button" id="onlinePenaltyTesterButton" type="button" hidden>Test shootout</button>
+              <button class="primary-button online-round-next" id="onlineRoundNextButton" type="button" hidden>Next <span aria-hidden="true">→</span></button>
+              <span class="online-turn-pill" id="onlineMatchStatus">Waiting</span>
+            </div>
+          </div>
+          <div class="online-active-team" id="onlineActiveTeam"></div>
+          <section class="online-tactics" id="onlineTactics">
+            <div class="online-tactics-copy">
+              <span>TACTICAL APPROACH</span>
+              <strong id="onlineTacticName">Balanced</strong>
+              <p id="onlineTacticCopy">No attacking or defensive modifier.</p>
+            </div>
+            <input id="onlineTacticSlider" type="range" min="0" max="4" step="1" value="2" aria-label="Tactical approach" hidden />
+            <div class="online-tactic-buttons" id="onlineTacticButtons">
+              <button type="button" data-online-tactic="balanced">Balanced</button>
+              <button type="button" data-online-tactic="tiki-taka">Tiki-taka</button>
+              <button type="button" data-online-tactic="counter">Counter</button>
+              <button type="button" data-online-tactic="high-press">High press</button>
+              <button type="button" data-online-tactic="defensive">Defensive</button>
+            </div>
+          </section>
+          <section class="online-current-match" id="onlineCurrentMatch">
+            <div class="match-penalty-overlay online-match-penalty-overlay" id="onlineMatchPenaltyOverlay" hidden aria-live="assertive">
+              <div class="match-penalty-decision">
+                <span>REFEREE DECISION</span>
+                <strong>PENALTY</strong>
+                <small id="onlineMatchPenaltyPlayer">Player steps up</small>
+              </div>
+              <div class="penalty-scene match-penalty-scene" id="onlineMatchPenaltyScene" data-state="setup" data-direction="centre" data-dive="left" data-result="pending">
+                <div class="penalty-goal">
+                  <div class="penalty-net"></div>
+                  <div class="penalty-keeper" aria-hidden="true"><i></i><b></b></div>
+                </div>
+                <div class="penalty-ball" aria-hidden="true"></div>
+                <div class="penalty-taker" aria-hidden="true"><i></i><b></b></div>
+              </div>
+            </div>
+            <div class="online-match-livebar">
+              <span class="online-card-round" id="onlineCardRound">ROUND 1</span>
+              <span id="onlineMatchMinute" hidden>PRE-MATCH</span>
+              <span class="online-card-match-number" id="onlineCardMatchNumber" hidden>1/1</span>
+            </div>
+            <div class="online-match-team online-match-home-side"><div id="onlineMatchHome"></div><div class="online-team-scorers" id="onlineHomeScorers"></div><div class="penalty-marks online-side-penalty-marks" id="onlineHomePenaltyMarks" hidden></div></div>
+            <div class="online-match-centre">
+              <div class="online-match-clock">
+                <span class="online-live-label" id="onlineLiveLabel" hidden><i></i> LIVE</span>
+                <strong id="onlineMatchClock">00:00</strong>
+                <small id="onlineMatchPhase">FIRST HALF</small>
+              </div>
+              <div class="online-match-score" id="onlineMatchScore">–</div>
+              <div class="online-match-penalty-score" id="onlineMatchPenaltyScore" hidden>PENS 0–0</div>
+              <div class="online-live-controls">
+                <button class="live-control" id="onlinePauseMatchButton" type="button" aria-pressed="false" hidden>Pause</button>
+                <button class="live-control" id="onlineMatchSpeedButton" type="button" hidden>1×</button>
+                <span class="online-pause-countdown" id="onlinePauseCountdown" role="timer" aria-live="polite" hidden>Auto resumes in 15s</span>
+              </div>
+            </div>
+            <div class="online-match-team online-match-away-side"><div id="onlineMatchAway"></div><div class="online-team-scorers is-away" id="onlineAwayScorers"></div><div class="penalty-marks online-side-penalty-marks" id="onlineAwayPenaltyMarks" hidden></div></div>
+            <div class="online-match-events" id="onlineMatchEvents" aria-live="polite" hidden></div>
+            <section class="online-match-presentation" id="onlineMatchPresentation" aria-label="Live match presentation">
+              <div class="match-commentary-feed online-commentary-feed" id="onlineCommentaryFeed" aria-live="polite"></div>
+              <section class="online-match-stats" id="onlineMatchStats" aria-label="Online match statistics">
+                <strong>Stats</strong>
+                <div class="online-match-stats-grid" id="onlineMatchStatsGrid"></div>
+              </section>
+            </section>
+            <div class="online-match-sidebar" id="onlineMatchSidebar"></div>
+          </section>
+          <div class="online-ready-panel online-stage-action" id="onlineReadyPanel">
+            <button class="primary-button play-button" id="onlineReadyButton" type="button">
+              <span class="play-icon">▶</span>
+              <span id="onlineReadyButtonLabel">Play this tie</span>
+            </button>
+          </div>
+          <section class="online-penalty-control" id="onlinePenaltyControl" hidden>
+            <div class="online-penalty-head">
+              <span>PENALTY SHOOTOUT</span>
+              <strong id="onlinePenaltyPrompt">Pick your spot</strong>
+            </div>
+            <div class="penalty-scene online-penalty-scene" id="onlinePenaltyScene" data-state="setup" data-direction="centre" data-dive="centre" data-result="pending" data-target="middle">
+              <div class="penalty-goal">
+                <div class="penalty-net"></div>
+                <div class="online-penalty-targets" aria-label="Choose where to shoot">
+                  <button data-penalty-target="top-left" type="button" aria-label="Top left"></button>
+                  <button data-penalty-target="top-right" type="button" aria-label="Top right"></button>
+                  <button data-penalty-target="middle" type="button" aria-label="Middle"></button>
+                  <button data-penalty-target="bottom-left" type="button" aria-label="Bottom left"></button>
+                  <button data-penalty-target="bottom-right" type="button" aria-label="Bottom right"></button>
+                </div>
+                <div class="penalty-keeper" aria-hidden="true"><i></i><b></b></div>
+              </div>
+              <div class="penalty-ball" aria-hidden="true"></div>
+              <div class="penalty-taker" aria-hidden="true"><i></i><b></b></div>
+            </div>
+            <span class="online-penalty-feedback" id="onlinePenaltyFeedback" aria-live="polite">Choose one of the five targets</span>
+          </section>
+          <div class="online-my-matches" id="onlineMyMatches" aria-live="polite"></div>
+          <div class="online-fixture-heading">
+            <span id="onlineOtherMatchesTitle">FRIENDS' MATCHES</span>
+            <div class="online-match-filter" aria-label="Match list filter">
+              <button type="button" data-online-match-filter="friends" class="is-active">Friends</button>
+              <button type="button" data-online-match-filter="all">All matches</button>
+            </div>
+          </div>
+          <div class="online-round-matches" id="onlineRoundMatches" aria-live="polite"></div>
+          <div class="online-lobby-actions online-match-actions">
+            <button class="danger-button" id="closeOnlineMatchRoomButton" type="button" hidden>Close room</button>
+            <button class="secondary-button" id="leaveOnlineMatchRoomButton" type="button">Leave room</button>
+          </div>
+        </section>
+
+        <p class="online-room-message" id="onlineRoomMessage" role="status" aria-live="polite"></p>
+      </main>
+    </section>
+
+    <dialog class="online-team-select-dialog" id="onlineTeamSelectDialog">
+      <div class="online-team-select-content">
+        <span class="section-kicker">COUNTRY ELIMINATED</span>
+        <h2>Choose your next country</h2>
+        <p>Your remaining countries keep playing. Pick the one you want to control.</p>
+        <div class="online-team-select-list" id="onlineTeamSelectList"></div>
+      </div>
+    </dialog>
+
+    <dialog class="modal settings-modal" id="settingsModal">
       <form method="dialog">
         <div class="modal-head">
           <div>
-            <span class="section-kicker">THE FULL FIELD</span>
-            <h2>256 teams. No invitations required.</h2>
+            <span class="section-kicker">SETTINGS</span>
+            <h2>Tournament preferences</h2>
           </div>
-          <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
-        <p class="field-intro">
-          The field combines 211 FIFA members with 45 non-FIFA, island, micronation and
-          representative sides. Non-FIFA teams use generated player names.
-        </p>
-        <label class="modal-search search">
-          <span>⌕</span>
-          <input id="fieldSearch" type="search" placeholder="Search all 256 teams" />
-        </label>
-        <div class="field-list" id="fieldList"></div>
+        <button class="settings-option" id="realPlayersOnlySetting" type="button" aria-pressed="true">
+          <span class="settings-option-copy">
+            <strong>Real player names only</strong>
+          </span>
+          <span class="settings-switch" aria-hidden="true"><i></i></span>
+        </button>
+        <button class="settings-option sound-toggle-button" id="soundToggleButton" type="button" aria-pressed="true" title="Turn match sounds off">
+          <span class="settings-option-copy">
+            <strong>Match sounds</strong>
+            <small id="soundToggleLabel">Sounds on</small>
+          </span>
+          <span class="settings-switch" aria-hidden="true"><i></i></span>
+        </button>
+        <button class="settings-option" id="fullscreenButton" type="button">
+          <span class="settings-option-copy">
+            <strong>Fullscreen</strong>
+            <small>Expand the tournament to fill the screen</small>
+          </span>
+          <span class="settings-option-icon" aria-hidden="true">&#9974;</span>
+        </button>
+        <p class="settings-note">Changes apply to matches simulated after the setting is changed.</p>
+      </form>
+    </dialog>
+
+    <dialog class="modal bug-report-modal" id="bugReportModal">
+      <form class="bug-report-form" id="bugReportForm">
+        <button class="icon-button close-modal bug-report-close" id="bugReportCloseButton" type="button" aria-label="Close">&times;</button>
+        <textarea id="bugReportMessage" class="bug-report-message" name="message" rows="5" maxlength="900" aria-label="Feedback" placeholder="Bug, weird UI, or feature idea..." required></textarea>
+        <button class="primary-button bug-report-submit" id="bugReportSubmit" type="submit">Send feedback</button>
+        <p class="bug-report-status" id="bugReportStatus" aria-live="polite"></p>
       </form>
     </dialog>
 
@@ -454,13 +819,13 @@
       <form method="dialog">
         <div class="modal-head snapshot-modal-head">
           <div>
-            <span class="section-kicker">SHARE THE MOMENT</span>
-            <h2>Match snapshot</h2>
+            <span class="section-kicker" id="snapshotModalKicker">SHARE THE MOMENT</span>
+            <h2 id="snapshotModalTitle">Match snapshot</h2>
           </div>
-          <button class="icon-button close-modal" value="cancel" aria-label="Close">×</button>
+          <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
         <div class="snapshot-preview" id="snapshotPreview">
-          <img id="snapshotImage" alt="Generated 256 TEAMS WC match snapshot" />
+          <img id="snapshotImage" alt="Generated 256 TEAMS WC snapshot" />
         </div>
         <div class="snapshot-actions">
           <button class="primary-button" id="copySnapshotButton" type="button">Copy image</button>
@@ -493,10 +858,12 @@
       </form>
     </dialog>
 
-    <script src="./player-pools.generated.js?v=star-scorers-42"></script>
-    <script src="./data.js?v=star-scorers-42"></script>
-    <script src="./simulation-engine.js?v=foden-main-group-6"></script>
-    <script src="./app.js?v=simulation-cleanup-72"></script>
+    <script src="./player-pools.generated.js?v=fm-highlights-190"></script>
+    <script src="./data.js?v=israel-rating-1"></script>
+    <script src="./presentation-engine.js?v=presentation-pipeline-1"></script>
+    <script src="./simulation-engine.js?v=presentation-pipeline-2"></script>
+    <script src="./legacy-data/catalog.generated.js?v=legacy-draft-data-172"></script>
+    <script src="./app.js?v=israel-rating-1"></script>
     <script>
       window.va = window.va || function () {
         (window.vaq = window.vaq || []).push(arguments);

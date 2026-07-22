@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-10",
+    "matchName": "Germany vs Japan",
+    "matchDate": "2022-11-23",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Manuel Neuer",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Bayern, 36, still world-class"
+      },
+      "attack": 27,
+      "control": 54,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Bayern, 36, still world-class"
+    },
+    {
+      "name": "Antonio Rüdiger",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Real Madrid athletic CB"
+      },
+      "attack": 44,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Real Madrid athletic CB"
+    },
+    {
+      "name": "David Raum",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Joshua Kimmich",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Bayern, CM/RB leader"
+      },
+      "attack": 67,
+      "control": 89,
+      "defence": 67,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Bayern, CM/RB leader"
+    },
+    {
+      "name": "Kai Havertz",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Chelsea, scored 2 goals"
+      },
+      "attack": 96,
+      "control": 70,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Chelsea, scored 2 goals"
+    },
+    {
+      "name": "Serge Gnabry",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Bayern, scored 1 goal"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Bayern, scored 1 goal"
+    },
+    {
+      "name": "Thomas Müller",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 82,
+      "defence": 37,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jamal Musiala",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Bayern, dazzling young star"
+      },
+      "attack": 96,
+      "control": 74,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Bayern, dazzling young star"
+    },
+    {
+      "name": "Niklas Süle",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "İlkay Gündoğan",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man City, scored 1 goal"
+      },
+      "attack": 66,
+      "control": 88,
+      "defence": 66,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man City, scored 1 goal"
+    },
+    {
+      "name": "Nico Schlotterbeck",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

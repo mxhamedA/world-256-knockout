@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-03",
+    "matchName": "Italy vs Chile",
+    "matchDate": "1998-06-11",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Paolo Maldini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; AC Milan captain, world-class"
+      },
+      "attack": 45,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; AC Milan captain, world-class"
+    },
+    {
+      "name": "Fabio Cannavaro",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alessandro Costacurta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alessandro Nesta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Lazio emerging world-class CB"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Lazio emerging world-class CB"
+    },
+    {
+      "name": "Demetrio Albertini",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Dino Baggio",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gianluca Pagliuca",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Angelo Di Livio",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Di Matteo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Baggio",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Bologna/Inter, 2 goals, redemption"
+      },
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Bologna/Inter, 2 goals, redemption"
+    },
+    {
+      "name": "Christian Vieri",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Lazio/Inter, 5 goals, Silver Boot"
+      },
+      "attack": 99,
+      "control": 61,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Lazio/Inter, 5 goals, Silver Boot"
+    }
+  ]
+}

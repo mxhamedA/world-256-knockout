@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 1994,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1994-09",
+    "matchName": "Brazil vs Russia",
+    "matchDate": "1994-06-20",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Cláudio Taffarel",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 50,
+      "defence": 97,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jorginho",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ricardo Rocha",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Mauro Silva",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 50,
+      "control": 71,
+      "defence": 88,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bebeto",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Deportivo, 3 goals, iconic celebration"
+      },
+      "attack": 99,
+      "control": 62,
+      "defence": 31,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Deportivo, 3 goals, iconic celebration"
+    },
+    {
+      "name": "Dunga",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Captain, 1994 champion, midfield leader"
+      },
+      "attack": 53,
+      "control": 76,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "Captain, 1994 champion, midfield leader"
+    },
+    {
+      "name": "Zinho",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 88,
+      "control": 84,
+      "defence": 38,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Raí",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 88,
+      "control": 84,
+      "defence": 38,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Romário",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 96,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Barcelona, Player of Tournament, 5 goals, Ballon d'Or"
+      },
+      "attack": 99,
+      "control": 67,
+      "defence": 34,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Barcelona, Player of Tournament, 5 goals, Ballon d'Or"
+    },
+    {
+      "name": "Márcio Santos",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Leonardo",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 63,
+      "control": 71,
+      "defence": 80,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

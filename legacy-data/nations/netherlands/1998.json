@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Netherlands",
+  "nationId": "netherlands",
+  "nationCode": "NL",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-10",
+    "matchName": "Netherlands vs Belgium",
+    "matchDate": "1998-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Edwin van der Sar",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Ajax/Juventus, world-class GK, semifinalist"
+      },
+      "attack": 26,
+      "control": 52,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Ajax/Juventus, world-class GK, semifinalist"
+    },
+    {
+      "name": "Jaap Stam",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; PSV/Man United dominant CB"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; PSV/Man United dominant CB"
+    },
+    {
+      "name": "Frank de Boer",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Ajax/Barcelona classy sweeper"
+      },
+      "attack": 43,
+      "control": 60,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Ajax/Barcelona classy sweeper"
+    },
+    {
+      "name": "Arthur Numan",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ronald de Boer",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 69,
+      "defence": 32,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Patrick Kluivert",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; AC Milan, 2 goals including vs Argentina"
+      },
+      "attack": 94,
+      "control": 68,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; AC Milan, 2 goals including vs Argentina"
+    },
+    {
+      "name": "Clarence Seedorf",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Real Madrid Champions League winner"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Real Madrid Champions League winner"
+    },
+    {
+      "name": "Phillip Cocu",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 49,
+      "control": 69,
+      "defence": 85,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Overmars",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Arsenal, 1 goal, electric pace"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Arsenal, 1 goal, electric pace"
+    },
+    {
+      "name": "Aron Winter",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jimmy Floyd Hasselbaink",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 89,
+      "control": 65,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 netherlands squad player, position-adjusted historical estimate"
+    }
+  ]
+}

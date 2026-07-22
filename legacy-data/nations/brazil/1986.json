@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-02",
+    "matchName": "Spain vs Brazil",
+    "matchDate": "1986-06-01",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Carlos",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Édson",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Edinho",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Júnior",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Flamengo legend, 1982 star, versatile"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "low",
+      "ratingBasis": "Flamengo legend, 1982 star, versatile"
+    },
+    {
+      "name": "Casagrande",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 91,
+      "control": 55,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Careca",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Napoli legend, 5 goals in 1986"
+      },
+      "attack": 99,
+      "control": 60,
+      "defence": 30,
+      "ratingConfidence": "low",
+      "ratingBasis": "Napoli legend, 5 goals in 1986"
+    },
+    {
+      "name": "Júlio César",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alemão",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Branco",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sócrates",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Fiorentina genius, 1982/1986 star, fading from peak"
+      },
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "low",
+      "ratingBasis": "Fiorentina genius, 1982/1986 star, fading from peak"
+    },
+    {
+      "name": "Elzo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

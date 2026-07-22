@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-07",
+    "matchName": "England vs Sweden",
+    "matchDate": "2002-06-02",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "David Seaman",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "GK",
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Danny Mills",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RB",
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ashley Cole",
+      "primaryPosition": "LB",
+      "secondaryPositions": [
+        "LWB"
+      ],
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Arsenal emerging world-class LB"
+      },
+      "sourcePosition": "LB",
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Arsenal emerging world-class LB"
+    },
+    {
+      "name": "Rio Ferdinand",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Leeds/Man United emerging world-class CB"
+      },
+      "sourcePosition": "CB",
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Leeds/Man United emerging world-class CB"
+    },
+    {
+      "name": "Sol Campbell",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "David Beckham",
+      "primaryPosition": "RM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Man United, redemption penalty vs Argentina"
+      },
+      "sourcePosition": "RM",
+      "attack": 77,
+      "control": 73,
+      "defence": 56,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Man United, redemption penalty vs Argentina"
+    },
+    {
+      "name": "Paul Scholes",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Man United, brilliant tournament"
+      },
+      "sourcePosition": "CM",
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Man United, brilliant tournament"
+    },
+    {
+      "name": "Michael Owen",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Liverpool, scored vs Denmark and Argentina"
+      },
+      "sourcePosition": "CF",
+      "attack": 99,
+      "control": 61,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Liverpool, scored vs Denmark and Argentina"
+    },
+    {
+      "name": "Emile Heskey",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "LM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "LM",
+      "attack": 91,
+      "control": 55,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Owen Hargreaves",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "RM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CM",
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Darius Vassell",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03 era; Aston Villa young speedster"
+      },
+      "attack": 87,
+      "control": 63,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "FIFA 03 era; Aston Villa young speedster"
+    }
+  ]
+}

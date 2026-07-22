@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-05",
+    "matchName": "France vs Australia",
+    "matchDate": "2018-06-16",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Hugo Lloris",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Tottenham, captain, lifted trophy"
+      },
+      "attack": 27,
+      "control": 54,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Tottenham, captain, lifted trophy"
+    },
+    {
+      "name": "Benjamin Pavard",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Raphaël Varane",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid, world-class CB"
+      },
+      "attack": 45,
+      "control": 63,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid, world-class CB"
+    },
+    {
+      "name": "Samuel Umtiti",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Barcelona, scored semifinal winner"
+      },
+      "attack": 44,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Barcelona, scored semifinal winner"
+    },
+    {
+      "name": "Paul Pogba",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Man United, scored in final, dominant"
+      },
+      "attack": 68,
+      "control": 91,
+      "defence": 68,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Man United, scored in final, dominant"
+    },
+    {
+      "name": "Antoine Griezmann",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "LF",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Atletico, 4 goals, Silver Ball"
+      },
+      "attack": 70,
+      "control": 93,
+      "defence": 70,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Atletico, 4 goals, Silver Ball"
+    },
+    {
+      "name": "Kylian Mbappé",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; PSG, 4 goals, Best Young Player"
+      },
+      "attack": 99,
+      "control": 72,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; PSG, 4 goals, Best Young Player"
+    },
+    {
+      "name": "Ousmane Dembélé",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "RF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Corentin Tolisso",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "N'Golo Kanté",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Chelsea, world's best DM"
+      },
+      "attack": 68,
+      "control": 91,
+      "defence": 68,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Chelsea, world's best DM"
+    },
+    {
+      "name": "Lucas Hernandez",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 france squad player, position-adjusted historical estimate"
+    }
+  ]
+}

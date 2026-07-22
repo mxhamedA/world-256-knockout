@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-11",
+    "matchName": "Uruguay vs West Germany",
+    "matchDate": "1986-06-04",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Harald Schumacher",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Hans-Peter Briegel",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andreas Brehme",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Kaiserslautern world-class full-back"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "low",
+      "ratingBasis": "Kaiserslautern world-class full-back"
+    },
+    {
+      "name": "Karlheinz Förster",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Norbert Eder",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lothar Matthäus",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Bayern Munich, emerging world-class midfielder"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "low",
+      "ratingBasis": "Bayern Munich, emerging world-class midfielder"
+    },
+    {
+      "name": "Rudi Völler",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Werder Bremen/Roma clinical striker"
+      },
+      "attack": 97,
+      "control": 59,
+      "defence": 29,
+      "ratingConfidence": "low",
+      "ratingBasis": "Werder Bremen/Roma clinical striker"
+    },
+    {
+      "name": "Felix Magath",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thomas Berthold",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Klaus Augenthaler",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Klaus Allofs",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 92,
+      "control": 56,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

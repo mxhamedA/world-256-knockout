@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-10",
+    "matchName": "Brazil vs Turkey",
+    "matchDate": "2002-06-03",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Marcos",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Palmeiras, goalkeeper of the tournament"
+      },
+      "attack": 27,
+      "control": 54,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Palmeiras, goalkeeper of the tournament"
+    },
+    {
+      "name": "Cafu",
+      "primaryPosition": "RWB",
+      "secondaryPositions": [],
+      "sourcePosition": "RWB",
+      "overall": 92,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Roma, captain, 3rd straight final"
+      },
+      "attack": 78,
+      "control": 74,
+      "defence": 78,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Roma, captain, 3rd straight final"
+    },
+    {
+      "name": "Lúcio",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Leverkusen aggressive CB, champion"
+      },
+      "attack": 45,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Leverkusen aggressive CB, champion"
+    },
+    {
+      "name": "Roque Júnior",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Edmílson",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Carlos",
+      "primaryPosition": "LWB",
+      "secondaryPositions": [],
+      "sourcePosition": "LWB",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Real Madrid, still world-class LB"
+      },
+      "attack": 77,
+      "control": 73,
+      "defence": 77,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Real Madrid, still world-class LB"
+    },
+    {
+      "name": "Gilberto Silva",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03 era; emerging holding midfielder, future Arsenal"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "medium",
+      "ratingBasis": "FIFA 03 era; emerging holding midfielder, future Arsenal"
+    },
+    {
+      "name": "Ronaldo",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 97,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Golden Boot 8 goals, redemption story"
+      },
+      "attack": 99,
+      "control": 78,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Golden Boot 8 goals, redemption story"
+    },
+    {
+      "name": "Rivaldo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "LF",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Barcelona, 5 goals, legendary trio"
+      },
+      "attack": 70,
+      "control": 93,
+      "defence": 70,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Barcelona, 5 goals, legendary trio"
+    },
+    {
+      "name": "Ronaldinho",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "RF",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; PSG, 2 goals, breakout star"
+      },
+      "attack": 70,
+      "control": 93,
+      "defence": 70,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; PSG, 2 goals, breakout star"
+    },
+    {
+      "name": "Juninho Paulista",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

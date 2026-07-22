@@ -13,6 +13,10 @@ const teams = context.__teams.filter((team) => team.confed !== "INVITED");
 const existing = context.__existing;
 const WIKI_API = "https://en.wikipedia.org/w/api.php";
 const pageOverrides = {
+  Australia: "Australia men's national soccer team",
+  Canada: "Canada men's national soccer team",
+  Sweden: "Sweden men's national football team",
+  "New Zealand": "New Zealand men's national football team",
   USA: "United States men's national soccer team",
   China: "China national football team",
   "Ivory Coast": "Ivory Coast national football team",
@@ -23,6 +27,15 @@ const pageOverrides = {
   "Chinese Taipei": "Chinese Taipei national football team",
   "Republic of Ireland": "Republic of Ireland national football team",
 };
+
+function sourcePositionGroup(value = "") {
+  const position = value.toUpperCase();
+  if (position === "GK") return "GK";
+  if (["DF", "CB", "LB", "RB", "LWB", "RWB"].includes(position)) return "DF";
+  if (["MF", "DM", "CM", "AM", "LM", "RM", "CDM", "CAM"].includes(position)) return "MF";
+  if (["FW", "CF", "ST", "LW", "RW", "LF", "RF"].includes(position)) return "FW";
+  return "";
+}
 
 const chileOfficialMarch2026 = [
   "Darío Osorio",
@@ -66,6 +79,7 @@ function cleanWikiName(value = "") {
     .replace(/<[^>]+>/g, "")
     .replace(/\|+$/g, "")
     .replace(/''/g, "")
+    .replace(/\s*(?:RET|INJ|WD|PRE|SUS)\s*$/i, "")
     .trim();
 }
 
@@ -78,21 +92,73 @@ function section(content, heading) {
   return next ? rest.slice(0, next.index) : rest;
 }
 
-function parsePlayers(content) {
-  const roster = section(content, "Current squad") || section(content, "Recent call-ups");
+function parseRosterSection(roster) {
   if (!roster) return [];
   const players = [];
   for (const line of roster.split("\n")) {
     if (!/nat fs.*player/i.test(line)) continue;
     const nameMatch = /\|\s*name\s*=\s*(.*?)(?=\s*\|\s*(?:caps|goals|club|clubnum|pos|age|number|num|nat|notes?)\s*=|\s*}}\s*$)/i.exec(line);
     if (!nameMatch) continue;
-    const pos = /\|\s*pos\s*=\s*([A-Z]+)/i.exec(line)?.[1]?.toUpperCase() || "";
+    const pos = sourcePositionGroup(/\|\s*pos\s*=\s*([A-Z]+)/i.exec(line)?.[1] || "");
     const name = cleanWikiName(nameMatch[1]);
     if (name && name.length < 60) players.push({ name, pos });
   }
-  const ordered = ["FW", "MF", "DF", "GK"].flatMap((position) => players.filter((player) => player.pos === position));
-  const untyped = players.filter((player) => !["FW", "MF", "DF", "GK"].includes(player.pos));
-  return [...new Set([...ordered, ...untyped].filter((player) => player.pos !== "GK").map((player) => player.name))].slice(0, 8);
+  const seen = new Set();
+  return players.filter((player) => {
+    if (seen.has(player.name)) return false;
+    seen.add(player.name);
+    return true;
+  });
+}
+
+function parsePlayers(content) {
+  const combined = [
+    ...parseRosterSection(section(content, "Current squad")),
+    ...parseRosterSection(section(content, "Recent call-ups")),
+  ];
+  const seen = new Set();
+  return combined.filter((player) => {
+    if (seen.has(player.name)) return false;
+    seen.add(player.name);
+    return true;
+  });
+}
+
+const xiSlots = [
+  ["GK", "GK"],
+  ["DF", "LB"], ["DF", "CB"], ["DF", "CB"], ["DF", "RB"],
+  ["MF", "CDM"], ["MF", "CM"], ["MF", "CAM"],
+  ["FW", "LW"], ["FW", "ST"], ["FW", "RW"],
+];
+
+function selectSquad(entries, maximum = 26) {
+  const players = entries.map((entry) => typeof entry === "string" ? { name: entry, pos: "" } : entry);
+  const used = new Set();
+  const squad = xiSlots.map(([group, position]) => {
+    let index = players.findIndex((player, playerIndex) => !used.has(playerIndex) && player.pos === group);
+    if (index < 0) index = players.findIndex((player, playerIndex) => !used.has(playerIndex));
+    if (index < 0) return null;
+    used.add(index);
+    return { name: players[index].name, position, sourcePosition: players[index].pos || null };
+  }).filter(Boolean);
+
+  const reservePositions = {
+    GK: ["GK", "GK"],
+    DF: ["CB", "CB", "LB", "RB", "CB"],
+    MF: ["CDM", "CM", "CAM", "CM", "RM"],
+    FW: ["ST", "LW", "RW", "ST"],
+  };
+  const reserveCounts = { GK: 0, DF: 0, MF: 0, FW: 0 };
+  players.forEach((player, index) => {
+    if (squad.length >= maximum || used.has(index)) return;
+    const group = reservePositions[player.pos] ? player.pos : "MF";
+    const choices = reservePositions[group];
+    const position = choices[reserveCounts[group] % choices.length];
+    reserveCounts[group] += 1;
+    used.add(index);
+    squad.push({ name: player.name, position, sourcePosition: player.pos || null });
+  });
+  return squad;
 }
 
 async function fetchJson(url, attempt = 0) {
@@ -140,27 +206,36 @@ for (let index = 0; index < teams.length; index += 40) {
 }
 
 const pools = {};
+const profiles = {};
 const sources = {};
 for (const [name, wikipediaPlayers, resolvedPage] of fetched) {
-  const players = manualOverrides[name]
-    || (name === "Chile"
-    ? chileOfficialMarch2026
-    : wikipediaPlayers.length >= 4
-      ? wikipediaPlayers
-      : existing[name] || wikipediaPlayers);
-  if (players.length >= 4) pools[name] = players;
+  const preferred = manualOverrides[name]
+    || (name === "Chile" ? chileOfficialMarch2026 : []);
+  const roster = [
+    ...preferred,
+    ...wikipediaPlayers,
+    ...(existing[name] || []),
+  ].filter((player, index, entries) => {
+    const playerName = typeof player === "string" ? player : player.name;
+    return entries.findIndex((candidate) => (typeof candidate === "string" ? candidate : candidate.name) === playerName) === index;
+  });
+  const selected = selectSquad(roster, 26);
+  if (selected.length >= 4) pools[name] = selected.map((player) => player.name);
+  if (selected.length >= 11 && selected.every((player) => player.sourcePosition)) profiles[name] = selected;
   sources[name] = manualSources[name] || (name === "Chile" ? "ANFP March 2026 senior squad" : resolvedPage);
 }
 
 const missing = teams.filter((team) => !pools[team.name]).map((team) => team.name);
 const generatedAt = new Date().toISOString();
 const output = `/* Generated by scripts/update-national-team-players.mjs on ${generatedAt}.
- * Current squad source: English Wikipedia national-team pages, with listed manual source overrides.
+ * Squad source: English Wikipedia current squads and recent call-ups, with listed manual source overrides.
  */
 const RECENT_NATIONAL_TEAM_PLAYERS = ${JSON.stringify(pools, null, 2)};
+const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = ${JSON.stringify(profiles, null, 2)};
 const NATIONAL_TEAM_PLAYER_SOURCES = ${JSON.stringify(sources, null, 2)};
 `;
 
 fs.writeFileSync(outputPath, output, "utf8");
 console.log(`Wrote ${Object.keys(pools).length}/${teams.length} recognised-team pools.`);
+console.log(`Wrote ${Object.keys(profiles).length} structured squads (up to 26 players each).`);
 if (missing.length) console.log(`Missing (${missing.length}): ${missing.join(", ")}`);

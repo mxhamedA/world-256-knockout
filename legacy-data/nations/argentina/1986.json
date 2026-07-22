@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 1986,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1986-04",
+    "matchName": "Argentina vs South Korea",
+    "matchDate": "1986-06-02",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Sergio Batista",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "José Luis Brown",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jorge Burruchaga",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Scored winning goal in 1986 final"
+      },
+      "attack": 64,
+      "control": 85,
+      "defence": 64,
+      "ratingConfidence": "low",
+      "ratingBasis": "Scored winning goal in 1986 final"
+    },
+    {
+      "name": "Néstor Clausen",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Maradona",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Peak Maradona; greatest individual WC performance ever"
+      },
+      "attack": 71,
+      "control": 94,
+      "defence": 71,
+      "ratingConfidence": "high",
+      "ratingBasis": "Peak Maradona; greatest individual WC performance ever"
+    },
+    {
+      "name": "Jorge Valdano",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Real Madrid star, scored in 1986 final"
+      },
+      "attack": 99,
+      "control": 61,
+      "defence": 30,
+      "ratingConfidence": "low",
+      "ratingBasis": "Real Madrid star, scored in 1986 final"
+    },
+    {
+      "name": "Oscar Garré",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ricardo Giusti",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Pedro Pasculli",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 92,
+      "control": 56,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nery Pumpido",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Oscar Ruggeri",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1986 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "low",
+      "ratingBasis": "1986 argentina squad player, position-adjusted historical estimate"
+    }
+  ]
+}

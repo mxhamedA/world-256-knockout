@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-07",
+    "matchName": "England vs Italy",
+    "matchDate": "2014-06-14",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Joe Hart",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "GK",
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Glen Johnson",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RB",
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Leighton Baines",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "LB",
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Steven Gerrard",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Liverpool fading legend, error vs Uruguay"
+      },
+      "sourcePosition": "CM",
+      "attack": 49,
+      "control": 70,
+      "defence": 86,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Liverpool fading legend, error vs Uruguay"
+    },
+    {
+      "name": "Gary Cahill",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Phil Jagielka",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CB",
+      "attack": 40,
+      "control": 55,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Daniel Sturridge",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Liverpool, scored vs Italy"
+      },
+      "sourcePosition": "CF",
+      "attack": 92,
+      "control": 56,
+      "defence": 28,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Liverpool, scored vs Italy"
+    },
+    {
+      "name": "Wayne Rooney",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Man United, scored vs Uruguay"
+      },
+      "sourcePosition": "LW",
+      "attack": 99,
+      "control": 60,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Man United, scored vs Uruguay"
+    },
+    {
+      "name": "Danny Welbeck",
+      "primaryPosition": "LW",
+      "secondaryPositions": [
+        "ST"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RW",
+      "attack": 87,
+      "control": 67,
+      "defence": 32,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jordan Henderson",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CM",
+      "attack": 59,
+      "control": 79,
+      "defence": 59,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Raheem Sterling",
+      "primaryPosition": "RW",
+      "secondaryPositions": [
+        "LW"
+      ],
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Liverpool emerging speedster"
+      },
+      "sourcePosition": "AM",
+      "attack": 88,
+      "control": 68,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Liverpool emerging speedster"
+    }
+  ]
+}

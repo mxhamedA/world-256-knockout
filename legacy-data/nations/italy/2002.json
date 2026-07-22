@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Italy",
+  "nationId": "italy",
+  "nationCode": "IT",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-11",
+    "matchName": "Italy vs Ecuador",
+    "matchDate": "2002-06-03",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Gianluigi Buffon",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Juventus, world's most expensive GK"
+      },
+      "attack": 27,
+      "control": 54,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Juventus, world's most expensive GK"
+    },
+    {
+      "name": "Christian Panucci",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 69,
+      "defence": 77,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paolo Maldini",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; AC Milan, 34, still world-class"
+      },
+      "attack": 68,
+      "control": 77,
+      "defence": 86,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; AC Milan, 34, still world-class"
+    },
+    {
+      "name": "Fabio Cannavaro",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Parma/Inter, suspended R16"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Parma/Inter, suspended R16"
+    },
+    {
+      "name": "Francesco Totti",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Roma captain, sent off vs South Korea"
+      },
+      "attack": 95,
+      "control": 90,
+      "defence": 41,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Roma captain, sent off vs South Korea"
+    },
+    {
+      "name": "Cristiano Doni",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 73,
+      "control": 69,
+      "defence": 53,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Alessandro Nesta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Lazio/AC Milan, injured early"
+      },
+      "attack": 44,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Lazio/AC Milan, injured early"
+    },
+    {
+      "name": "Luigi Di Biagio",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Damiano Tommasi",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gianluca Zambrotta",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 italy squad player, position-adjusted historical estimate"
+      },
+      "attack": 73,
+      "control": 69,
+      "defence": 53,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 italy squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Christian Vieri",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03; Inter, 4 goals"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 03; Inter, 4 goals"
+    }
+  ]
+}

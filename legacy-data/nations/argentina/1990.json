@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 1990,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1990-01",
+    "matchName": "Argentina vs Cameroon",
+    "matchDate": "1990-06-08",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Nery Pumpido",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergio Batista",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Abel Balbo",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 93,
+      "control": 57,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "José Basualdo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jorge Burruchaga",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Diego Maradona",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 92,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Still world-class despite injury; dragged Argentina to final"
+      },
+      "attack": 99,
+      "control": 64,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "Still world-class despite injury; dragged Argentina to final"
+    },
+    {
+      "name": "Néstor Fabbri",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Néstor Lorenzo",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Néstor Sensini",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Oscar Ruggeri",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Juan Simón",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "CB"
+      ],
+      "sourcePosition": "SW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1990 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1990 argentina squad player, position-adjusted historical estimate"
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Netherlands",
+  "nationId": "netherlands",
+  "nationCode": "NL",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-03",
+    "matchName": "Spain vs Netherlands",
+    "matchDate": "2014-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Jasper Cillessen",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ron Vlaar",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Stefan de Vrij",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bruno Martins Indi",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Daley Blind",
+      "primaryPosition": "LWB",
+      "secondaryPositions": [],
+      "sourcePosition": "LWB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 69,
+      "control": 65,
+      "defence": 69,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Nigel de Jong",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Daryl Janmaat",
+      "primaryPosition": "RWB",
+      "secondaryPositions": [],
+      "sourcePosition": "RWB",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 69,
+      "control": 65,
+      "defence": 69,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jonathan de Guzmán",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Robin van Persie",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Man United, 4 goals, Flying Dutchman header"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Man United, 4 goals, Flying Dutchman header"
+    },
+    {
+      "name": "Wesley Sneijder",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Galatasaray, 1 goal"
+      },
+      "attack": 89,
+      "control": 85,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Galatasaray, 1 goal"
+    },
+    {
+      "name": "Arjen Robben",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Bayern, 3 goals, Bronze Ball, unstoppable"
+      },
+      "attack": 99,
+      "control": 72,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Bayern, 3 goals, Bronze Ball, unstoppable"
+    }
+  ]
+}

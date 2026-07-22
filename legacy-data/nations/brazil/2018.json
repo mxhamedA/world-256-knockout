@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 2018,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2018-11",
+    "matchName": "Brazil vs Switzerland",
+    "matchDate": "2018-06-17",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Alisson",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Roma emerging world-class GK"
+      },
+      "attack": 27,
+      "control": 53,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Roma emerging world-class GK"
+    },
+    {
+      "name": "Thiago Silva",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; PSG, captain, scored 2 goals"
+      },
+      "attack": 45,
+      "control": 63,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; PSG, captain, scored 2 goals"
+    },
+    {
+      "name": "Miranda",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Casemiro",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid elite DM, suspended vs Belgium"
+      },
+      "attack": 67,
+      "control": 89,
+      "defence": 67,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid elite DM, suspended vs Belgium"
+    },
+    {
+      "name": "Gabriel Jesus",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 91,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Neymar",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 94,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; PSG, 2 goals, constant threat"
+      },
+      "attack": 99,
+      "control": 80,
+      "defence": 38,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; PSG, 2 goals, constant threat"
+    },
+    {
+      "name": "Philippe Coutinho",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Barcelona, scored 2 goals"
+      },
+      "attack": 93,
+      "control": 89,
+      "defence": 40,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Barcelona, scored 2 goals"
+    },
+    {
+      "name": "Marcelo",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 18; Real Madrid elite attacking LB"
+      },
+      "attack": 68,
+      "control": 77,
+      "defence": 86,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 18; Real Madrid elite attacking LB"
+    },
+    {
+      "name": "Danilo",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Paulinho",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Willian",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2018 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 91,
+      "control": 71,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2018 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

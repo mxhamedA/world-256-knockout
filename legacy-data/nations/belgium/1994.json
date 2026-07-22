@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Belgium",
+  "nationId": "belgium",
+  "nationCode": "BE",
+  "year": 1994,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1994-06",
+    "matchName": "Belgium vs Morocco",
+    "matchDate": "1994-06-19",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Michel Preud'homme",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 Golden Glove winner, conceded 1 in group"
+      },
+      "attack": 25,
+      "control": 49,
+      "defence": 94,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1994 Golden Glove winner, conceded 1 in group"
+    },
+    {
+      "name": "Rudi Smidts",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lorenzo Staelens",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 75,
+      "defence": 56,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Franky Van der Elst",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 75,
+      "defence": 56,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luc Nilis",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 53,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Degryse",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 53,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Enzo Scifo",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Monaco playmaker, still elite"
+      },
+      "attack": 62,
+      "control": 82,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Monaco playmaker, still elite"
+    },
+    {
+      "name": "Georges Grün",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Michel De Wolf",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 86,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Danny Boffin",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 56,
+      "control": 75,
+      "defence": 56,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Josip Weber",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 75,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 53,
+      "defence": 26,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 belgium squad player, position-adjusted historical estimate"
+    }
+  ]
+}

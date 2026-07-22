@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 1994,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1994-01",
+    "matchName": "Germany vs Bolivia",
+    "matchDate": "1994-06-17",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Bodo Illgner",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 49,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Andreas Brehme",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jürgen Kohler",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Juventus/Dortmund world-class stopper"
+      },
+      "attack": 43,
+      "control": 60,
+      "defence": 99,
+      "ratingConfidence": "low",
+      "ratingBasis": "Juventus/Dortmund world-class stopper"
+    },
+    {
+      "name": "Andreas Möller",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thomas Häßler",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Karl-Heinz Riedle",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 93,
+      "control": 57,
+      "defence": 28,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lothar Matthäus",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "CB"
+      ],
+      "sourcePosition": "SW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Bayern, converted to sweeper, still elite"
+      },
+      "attack": 45,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "medium",
+      "ratingBasis": "Bayern, converted to sweeper, still elite"
+    },
+    {
+      "name": "Thomas Berthold",
+      "primaryPosition": "CB",
+      "secondaryPositions": [
+        "LB",
+        "RB"
+      ],
+      "sourcePosition": "DF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 41,
+      "control": 57,
+      "defence": 93,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Matthias Sammer",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jürgen Klinsmann",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "sourcePosition": "FW",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Monaco/Tottenham, 5 goals"
+      },
+      "attack": 99,
+      "control": 61,
+      "defence": 30,
+      "ratingConfidence": "low",
+      "ratingBasis": "Monaco/Tottenham, 5 goals"
+    },
+    {
+      "name": "Stefan Effenberg",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM",
+        "CAM"
+      ],
+      "sourcePosition": "MF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 61,
+      "control": 81,
+      "defence": 61,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

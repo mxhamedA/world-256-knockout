@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 1998,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1998-07",
+    "matchName": "France vs South Africa",
+    "matchDate": "1998-06-12",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Bixente Lizarazu",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 70,
+      "defence": 78,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Laurent Blanc",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Marseille/Inter, golden goal vs Paraguay"
+      },
+      "attack": 44,
+      "control": 61,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Marseille/Inter, golden goal vs Paraguay"
+    },
+    {
+      "name": "Youri Djorkaeff",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 70,
+      "defence": 33,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Didier Deschamps",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Juventus, captain, lifted the trophy"
+      },
+      "attack": 66,
+      "control": 88,
+      "defence": 66,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Juventus, captain, lifted the trophy"
+    },
+    {
+      "name": "Marcel Desailly",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; AC Milan/Chelsea defensive rock"
+      },
+      "attack": 45,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; AC Milan/Chelsea defensive rock"
+    },
+    {
+      "name": "Stéphane Guivarc'h",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1998 france squad player, position-adjusted historical estimate"
+      },
+      "attack": 90,
+      "control": 66,
+      "defence": 29,
+      "ratingConfidence": "medium",
+      "ratingBasis": "1998 france squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Zinedine Zidane",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 95,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Juventus, 2 headed goals in final, Ballon d'Or year"
+      },
+      "attack": 99,
+      "control": 95,
+      "defence": 43,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Juventus, 2 headed goals in final, Ballon d'Or year"
+    },
+    {
+      "name": "Thierry Henry",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; emerging Monaco star, 3 goals on the wing"
+      },
+      "attack": 95,
+      "control": 73,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; emerging Monaco star, 3 goals on the wing"
+    },
+    {
+      "name": "Lilian Thuram",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Parma, 2 goals vs Croatia in semifinal"
+      },
+      "attack": 67,
+      "control": 76,
+      "defence": 85,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Parma, 2 goals vs Croatia in semifinal"
+    },
+    {
+      "name": "Fabien Barthez",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Monaco, conceded only 2 in tournament"
+      },
+      "attack": 27,
+      "control": 53,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Monaco, conceded only 2 in tournament"
+    },
+    {
+      "name": "Emmanuel Petit",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 99; Arsenal, 2 goals including sealing final"
+      },
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 99; Arsenal, 2 goals including sealing final"
+    }
+  ]
+}

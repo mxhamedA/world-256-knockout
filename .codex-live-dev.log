@@ -1,0 +1,12 @@
+
+> predev
+> node scripts/generate-legacy-catalog.mjs
+
+Generated Legacy Draft catalog: 10 nations, 87 XIs.
+
+> dev
+> npx wrangler dev --var ONLINE_MODE_ENABLED:true --port 8787
+
+Need to install the following packages:
+wrangler@4.113.0
+Ok to proceed? (y) 

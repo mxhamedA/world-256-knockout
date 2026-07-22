@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-14",
+    "matchName": "Brazil vs Croatia",
+    "matchDate": "2006-06-13",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Dida",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 50,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Cafu",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lúcio",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Juan",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Emerson",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Roberto Carlos",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Adriano",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; peak Emperor, 2 goals"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; peak Emperor, 2 goals"
+    },
+    {
+      "name": "Kaká",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; emerging Ballon d'Or material"
+      },
+      "attack": 96,
+      "control": 91,
+      "defence": 41,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; emerging Ballon d'Or material"
+    },
+    {
+      "name": "Ronaldo",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; all-time WC top scorer at the time, 3 goals"
+      },
+      "attack": 99,
+      "control": 73,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; all-time WC top scorer at the time, 3 goals"
+    },
+    {
+      "name": "Ronaldinho",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Ballon d'Or holder, disappointing tournament"
+      },
+      "attack": 98,
+      "control": 93,
+      "defence": 42,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Ballon d'Or holder, disappointing tournament"
+    },
+    {
+      "name": "Zé Roberto",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 brazil squad player, position-adjusted historical estimate"
+    }
+  ]
+}

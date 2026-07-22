@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Belgium",
+  "nationId": "belgium",
+  "nationCode": "BE",
+  "year": 2002,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2002-13",
+    "matchName": "Japan vs Belgium",
+    "matchDate": "2002-06-04",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Geert De Vlieger",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 46,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Eric Van Meir",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Timmy Simons",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 76,
+      "defence": 57,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marc Wilmots",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 81,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 03 era; Schalke, 3 goals in 2002"
+      },
+      "attack": 89,
+      "control": 65,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "FIFA 03 era; Schalke, 3 goals in 2002"
+    },
+    {
+      "name": "Bart Goor",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 68,
+      "control": 65,
+      "defence": 49,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Johan Walem",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 68,
+      "control": 65,
+      "defence": 49,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gert Verheyen",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 84,
+      "control": 61,
+      "defence": 27,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Peter Van der Heyden",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Jacky Peeters",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 57,
+      "control": 65,
+      "defence": 72,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Daniel Van Buyten",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 38,
+      "control": 53,
+      "defence": 87,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Yves Vanderhaeghe",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 76,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2002 belgium squad player, position-adjusted historical estimate"
+      },
+      "attack": 46,
+      "control": 65,
+      "defence": 80,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2002 belgium squad player, position-adjusted historical estimate"
+    }
+  ]
+}

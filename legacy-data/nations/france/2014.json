@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 4,
+  "nation": "France",
+  "nationId": "france",
+  "nationCode": "FR",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-10",
+    "matchName": "France vs Honduras",
+    "matchDate": "2014-06-15",
+    "selectionRule": "Representative 2014 World Cup XI; opening-match lineup used only for player selection provenance"
+  },
+  "ratingSource": {
+    "publisher": "EA Sports",
+    "series": "FIFA 15",
+    "gameYear": 2015,
+    "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15",
+    "note": "Overall ratings use the FIFA 15 France squad baseline; six-attribute profiles are curated tournament-year estimates pending direct archival audit"
+  },
+  "players": [
+    { "name": "Hugo Lloris", "primaryPosition": "GK", "secondaryPositions": [], "sourcePosition": "GK", "overall": 85, "goalkeeperAttributes": { "diving": 86, "handling": 81, "kicking": 71, "reflexes": 88, "speed": 64, "positioning": 80 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Mathieu Debuchy", "primaryPosition": "RB", "secondaryPositions": ["RWB"], "sourcePosition": "RB", "overall": 80, "attributes": { "pace": 75, "shooting": 63, "passing": 72, "dribbling": 73, "defending": 76, "physical": 78 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Patrice Evra", "primaryPosition": "LB", "secondaryPositions": ["LWB"], "sourcePosition": "LB", "overall": 79, "attributes": { "pace": 78, "shooting": 62, "passing": 74, "dribbling": 75, "defending": 78, "physical": 78 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Raphael Varane", "primaryPosition": "CB", "secondaryPositions": [], "sourcePosition": "CB", "overall": 81, "attributes": { "pace": 80, "shooting": 46, "passing": 67, "dribbling": 64, "defending": 83, "physical": 79 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Mamadou Sakho", "primaryPosition": "CB", "secondaryPositions": [], "sourcePosition": "CB", "overall": 80, "attributes": { "pace": 65, "shooting": 41, "passing": 60, "dribbling": 58, "defending": 81, "physical": 86 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Yohan Cabaye", "primaryPosition": "CDM", "secondaryPositions": ["CM"], "sourcePosition": "DM", "overall": 80, "attributes": { "pace": 69, "shooting": 77, "passing": 82, "dribbling": 79, "defending": 72, "physical": 72 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Mathieu Valbuena", "primaryPosition": "CAM", "secondaryPositions": ["RW", "RM"], "sourcePosition": "RF", "overall": 81, "attributes": { "pace": 78, "shooting": 75, "passing": 82, "dribbling": 84, "defending": 35, "physical": 56 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Karim Benzema", "primaryPosition": "ST", "secondaryPositions": ["CF"], "sourcePosition": "CF", "overall": 85, "attributes": { "pace": 84, "shooting": 84, "passing": 75, "dribbling": 82, "defending": 30, "physical": 74 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Antoine Griezmann", "primaryPosition": "LW", "secondaryPositions": ["LM", "ST"], "sourcePosition": "LF", "overall": 82, "attributes": { "pace": 84, "shooting": 79, "passing": 76, "dribbling": 84, "defending": 35, "physical": 67 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Blaise Matuidi", "primaryPosition": "CM", "secondaryPositions": ["CDM", "LM"], "sourcePosition": "CM", "overall": 83, "attributes": { "pace": 78, "shooting": 70, "passing": 79, "dribbling": 78, "defending": 82, "physical": 83 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } },
+    { "name": "Paul Pogba", "primaryPosition": "CM", "secondaryPositions": ["CDM"], "sourcePosition": "CM", "overall": 84, "attributes": { "pace": 76, "shooting": 80, "passing": 83, "dribbling": 84, "defending": 75, "physical": 87 }, "ratingConfidence": "high", "ratingBasis": "FIFA 15 France squad rating", "ratingSource": { "publisher": "EA Sports", "series": "FIFA 15", "gameYear": 2015, "status": "sourced", "sourceUrl": "https://fifaindex.com/teams/1335-france/fifa15" } }
+  ]
+}

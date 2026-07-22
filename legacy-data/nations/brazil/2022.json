@@ -1,0 +1,237 @@
+{
+  "schemaVersion": 3,
+  "nation": "Brazil",
+  "nationId": "brazil",
+  "nationCode": "BR",
+  "year": 2022,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2022-16",
+    "matchName": "Brazil vs Serbia",
+    "matchDate": "2022-11-24",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Alisson",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 92,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Liverpool world-class goalkeeper"
+      },
+      "attack": 28,
+      "control": 55,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Liverpool world-class goalkeeper"
+    },
+    {
+      "name": "Danilo",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Thiago Silva",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Marquinhos",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; PSG top centre-back"
+      },
+      "attack": 45,
+      "control": 62,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; PSG top centre-back"
+    },
+    {
+      "name": "Casemiro",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Man United, scored vs Switzerland"
+      },
+      "attack": 68,
+      "control": 91,
+      "defence": 68,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Man United, scored vs Switzerland"
+    },
+    {
+      "name": "Alex Sandro",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lucas Paquetá",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2022 brazil squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2022 brazil squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Richarlison",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Tottenham, 3 goals including bicycle kick"
+      },
+      "attack": 94,
+      "control": 68,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Tottenham, 3 goals including bicycle kick"
+    },
+    {
+      "name": "Neymar",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 93,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; PSG, 2 goals, GOAT-level talent"
+      },
+      "attack": 98,
+      "control": 93,
+      "defence": 42,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; PSG, 2 goals, GOAT-level talent"
+    },
+    {
+      "name": "Raphinha",
+      "primaryPosition": "RW",
+      "secondaryPositions": [],
+      "sourcePosition": "RW",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Barcelona pacey winger"
+      },
+      "attack": 97,
+      "control": 75,
+      "defence": 35,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Barcelona pacey winger"
+    },
+    {
+      "name": "Vinícius Júnior",
+      "primaryPosition": "LW",
+      "secondaryPositions": [],
+      "sourcePosition": "LW",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 23; Real Madrid emerging world-class"
+      },
+      "attack": 98,
+      "control": 76,
+      "defence": 36,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 23; Real Madrid emerging world-class"
+    }
+  ]
+}

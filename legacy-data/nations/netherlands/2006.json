@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Netherlands",
+  "nationId": "netherlands",
+  "nationCode": "NL",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-06",
+    "matchName": "Serbia and Montenegro vs Netherlands",
+    "matchDate": "2006-06-11",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Edwin van der Sar",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 24,
+      "control": 48,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Joris Mathijsen",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Giovanni van Bronckhorst",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Phillip Cocu",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ruud van Nistelrooy",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Man United/Real Madrid, 1 goal"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Man United/Real Madrid, 1 goal"
+    },
+    {
+      "name": "Arjen Robben",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "LF",
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Chelsea, 1 goal"
+      },
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Chelsea, 1 goal"
+    },
+    {
+      "name": "André Ooijer",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 40,
+      "control": 56,
+      "defence": 92,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "John Heitinga",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 68,
+      "defence": 76,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Robin van Persie",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "RF",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Arsenal emerging star, free kick goal"
+      },
+      "attack": 63,
+      "control": 84,
+      "defence": 63,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Arsenal emerging star, free kick goal"
+    },
+    {
+      "name": "Mark van Bommel",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 72,
+      "control": 68,
+      "defence": 52,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Wesley Sneijder",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 80,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 netherlands squad player, position-adjusted historical estimate"
+      },
+      "attack": 60,
+      "control": 80,
+      "defence": 60,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 netherlands squad player, position-adjusted historical estimate"
+    }
+  ]
+}

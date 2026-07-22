@@ -1,10 +1,13 @@
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import "./generate-draft-catalog.mjs";
+import "./generate-legacy-catalog.mjs";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = join(projectRoot, "dist");
 const staticFiles = [
+  "_headers",
   "app.js",
   "clean.css",
   "data.js",
@@ -12,6 +15,8 @@ const staticFiles = [
   "legal.css",
   "player-pools.generated.js",
   "privacy.html",
+  "presentation-engine.js",
+  "redirect.js",
   "simulation-engine.js",
   "styles.css",
   "terms.html",
@@ -21,13 +26,17 @@ const staticFiles = [
   "site.webmanifest",
 ];
 
-rmSync(outputRoot, { recursive: true, force: true });
 mkdirSync(outputRoot, { recursive: true });
 
 for (const relativePath of staticFiles) {
   const destination = join(outputRoot, relativePath);
   mkdirSync(dirname(destination), { recursive: true });
   cpSync(join(projectRoot, relativePath), destination);
+}
+
+const legacyDataRoot = join(projectRoot, "legacy-data");
+if (existsSync(legacyDataRoot)) {
+  cpSync(legacyDataRoot, join(outputRoot, "legacy-data"), { recursive: true });
 }
 
 const sourceHtml = readFileSync(join(projectRoot, "index.html"), "utf8");

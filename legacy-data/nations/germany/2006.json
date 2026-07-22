@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Germany",
+  "nationId": "germany",
+  "nationCode": "DE",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-01",
+    "matchName": "Germany vs Costa Rica",
+    "matchDate": "2006-06-09",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Jens Lehmann",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Arsenal, penalty hero vs Argentina"
+      },
+      "attack": 27,
+      "control": 53,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Arsenal, penalty hero vs Argentina"
+    },
+    {
+      "name": "Arne Friedrich",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 71,
+      "defence": 79,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bastian Schweinsteiger",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Bayern, 2 goals in 3rd place match"
+      },
+      "attack": 77,
+      "control": 72,
+      "defence": 55,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Bayern, 2 goals in 3rd place match"
+    },
+    {
+      "name": "Torsten Frings",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Miroslav Klose",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 88,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Werder Bremen, Golden Boot 5 goals"
+      },
+      "attack": 97,
+      "control": 70,
+      "defence": 31,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Werder Bremen, Golden Boot 5 goals"
+    },
+    {
+      "name": "Philipp Lahm",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Bayern, scored opening goal, emerging star"
+      },
+      "attack": 65,
+      "control": 74,
+      "defence": 83,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Bayern, scored opening goal, emerging star"
+    },
+    {
+      "name": "Per Mertesacker",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Tim Borowski",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 62,
+      "control": 83,
+      "defence": 62,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Bernd Schneider",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 75,
+      "control": 71,
+      "defence": 54,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 germany squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Lukas Podolski",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Köln/Bayern, Best Young Player, 3 goals"
+      },
+      "attack": 94,
+      "control": 68,
+      "defence": 30,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Köln/Bayern, Best Young Player, 3 goals"
+    },
+    {
+      "name": "Christoph Metzelder",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 germany squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 58,
+      "defence": 95,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 germany squad player, position-adjusted historical estimate"
+    }
+  ]
+}

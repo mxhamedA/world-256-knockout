@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 3,
+  "nation": "Argentina",
+  "nationId": "argentina",
+  "nationCode": "AR",
+  "year": 2014,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2014-11",
+    "matchName": "Argentina vs Bosnia and Herzegovina",
+    "matchDate": "2014-06-15",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Sergio Romero",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 25,
+      "control": 50,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ezequiel Garay",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Hugo Campagnaro",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Pablo Zabaleta",
+      "primaryPosition": "RWB",
+      "secondaryPositions": [],
+      "sourcePosition": "RWB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 71,
+      "control": 67,
+      "defence": 71,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ángel Di María",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 90,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Real Madrid standout until injured"
+      },
+      "attack": 81,
+      "control": 77,
+      "defence": 59,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Real Madrid standout until injured"
+    },
+    {
+      "name": "Lionel Messi",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 97,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Golden Ball winner, 4 goals, carried to final"
+      },
+      "attack": 99,
+      "control": 78,
+      "defence": 34,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Golden Ball winner, 4 goals, carried to final"
+    },
+    {
+      "name": "Maxi Rodríguez",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 76,
+      "control": 71,
+      "defence": 55,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Javier Mascherano",
+      "primaryPosition": "CM",
+      "secondaryPositions": [],
+      "sourcePosition": "CM",
+      "overall": 89,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Barcelona CB, heroic defensive tournament"
+      },
+      "attack": 67,
+      "control": 89,
+      "defence": 67,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Barcelona CB, heroic defensive tournament"
+    },
+    {
+      "name": "Marcos Rojo",
+      "primaryPosition": "LWB",
+      "secondaryPositions": [],
+      "sourcePosition": "LWB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 71,
+      "control": 67,
+      "defence": 71,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Federico Fernández",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2014 argentina squad player, position-adjusted historical estimate"
+      },
+      "attack": 42,
+      "control": 59,
+      "defence": 97,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2014 argentina squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Sergio Agüero",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 91,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 14; Man City elite striker, limited by injury"
+      },
+      "attack": 99,
+      "control": 73,
+      "defence": 32,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 14; Man City elite striker, limited by injury"
+    }
+  ]
+}

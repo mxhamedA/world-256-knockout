@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 3,
+  "nation": "England",
+  "nationId": "england",
+  "nationCode": "GB-ENG",
+  "year": 2006,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-2006-03",
+    "matchName": "England vs Paraguay",
+    "matchDate": "2006-06-10",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Paul Robinson",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "GK",
+      "attack": 24,
+      "control": 47,
+      "defence": 91,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Gary Neville",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RB",
+      "attack": 59,
+      "control": 67,
+      "defence": 75,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Ashley Cole",
+      "primaryPosition": "LB",
+      "secondaryPositions": [
+        "LWB"
+      ],
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Arsenal/Chelsea world-class LB"
+      },
+      "sourcePosition": "LB",
+      "attack": 64,
+      "control": 72,
+      "defence": 81,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Arsenal/Chelsea world-class LB"
+    },
+    {
+      "name": "Steven Gerrard",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CDM"
+      ],
+      "overall": 87,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Liverpool, scored in group stage"
+      },
+      "sourcePosition": "CM",
+      "attack": 65,
+      "control": 87,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Liverpool, scored in group stage"
+    },
+    {
+      "name": "Rio Ferdinand",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Man United, world-class CB"
+      },
+      "sourcePosition": "CB",
+      "attack": 43,
+      "control": 60,
+      "defence": 99,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Man United, world-class CB"
+    },
+    {
+      "name": "John Terry",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "overall": 85,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Chelsea captain, solid CB"
+      },
+      "sourcePosition": "CB",
+      "attack": 43,
+      "control": 59,
+      "defence": 98,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Chelsea captain, solid CB"
+    },
+    {
+      "name": "David Beckham",
+      "primaryPosition": "RM",
+      "secondaryPositions": [
+        "CM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "RM",
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Frank Lampard",
+      "primaryPosition": "CM",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 86,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; Chelsea, 0 goals, disappointing tournament"
+      },
+      "sourcePosition": "CM",
+      "attack": 65,
+      "control": 86,
+      "defence": 65,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; Chelsea, 0 goals, disappointing tournament"
+    },
+    {
+      "name": "Michael Owen",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 84,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "FIFA 07; injured early, fading from peak"
+      },
+      "sourcePosition": "CF",
+      "attack": 97,
+      "control": 59,
+      "defence": 29,
+      "ratingConfidence": "high",
+      "ratingBasis": "FIFA 07; injured early, fading from peak"
+    },
+    {
+      "name": "Joe Cole",
+      "primaryPosition": "LM",
+      "secondaryPositions": [
+        "CAM"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "LM",
+      "attack": 71,
+      "control": 67,
+      "defence": 51,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 england squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Peter Crouch",
+      "primaryPosition": "ST",
+      "secondaryPositions": [
+        "CF"
+      ],
+      "overall": 79,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "2006 england squad player, position-adjusted historical estimate"
+      },
+      "sourcePosition": "CF",
+      "attack": 91,
+      "control": 55,
+      "defence": 28,
+      "ratingConfidence": "medium",
+      "ratingBasis": "2006 england squad player, position-adjusted historical estimate"
+    }
+  ]
+}

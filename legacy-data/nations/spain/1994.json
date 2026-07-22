@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 3,
+  "nation": "Spain",
+  "nationId": "spain",
+  "nationCode": "ES",
+  "year": 1994,
+  "dataStatus": "ready",
+  "lineupSource": {
+    "database": "Fjelstul World Cup Database v1.2.0",
+    "author": "Joshua C. Fjelstul, Ph.D.",
+    "license": "CC-BY-SA-4.0",
+    "repositoryUrl": "https://github.com/jfjelstul/worldcup",
+    "matchId": "M-1994-02",
+    "matchName": "Spain vs South Korea",
+    "matchDate": "1994-06-17",
+    "selectionRule": "Opening match starting XI"
+  },
+  "ratingSource": {
+    "publisher": "Hybrid",
+    "series": "FIFA/historical estimate",
+    "gameYear": null
+  },
+  "players": [
+    {
+      "name": "Albert Ferrer",
+      "primaryPosition": "RB",
+      "secondaryPositions": [],
+      "sourcePosition": "RB",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 66,
+      "defence": 74,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Abelardo",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 55,
+      "defence": 90,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Fernando Hierro",
+      "primaryPosition": "CDM",
+      "secondaryPositions": [
+        "CM",
+        "CDM"
+      ],
+      "sourcePosition": "DM",
+      "overall": 83,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Real Madrid emerging world-class sweeper/midfielder"
+      },
+      "attack": 50,
+      "control": 71,
+      "defence": 87,
+      "ratingConfidence": "low",
+      "ratingBasis": "Real Madrid emerging world-class sweeper/midfielder"
+    },
+    {
+      "name": "Andoni Goikoetxea",
+      "primaryPosition": "RM",
+      "secondaryPositions": [],
+      "sourcePosition": "RM",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 70,
+      "control": 66,
+      "defence": 51,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Julen Guerrero",
+      "primaryPosition": "CAM",
+      "secondaryPositions": [
+        "CM",
+        "CAM"
+      ],
+      "sourcePosition": "AM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Athletic Bilbao Spanish Golden Boy"
+      },
+      "attack": 86,
+      "control": 82,
+      "defence": 37,
+      "ratingConfidence": "low",
+      "ratingBasis": "Athletic Bilbao Spanish Golden Boy"
+    },
+    {
+      "name": "Sergi",
+      "primaryPosition": "LB",
+      "secondaryPositions": [],
+      "sourcePosition": "LB",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 59,
+      "control": 66,
+      "defence": 74,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Santiago Cañizares",
+      "primaryPosition": "GK",
+      "secondaryPositions": [],
+      "sourcePosition": "GK",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 23,
+      "control": 47,
+      "defence": 90,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Rafael Alkorta",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 55,
+      "defence": 90,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Julio Salinas",
+      "primaryPosition": "CF",
+      "secondaryPositions": [],
+      "sourcePosition": "CF",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 86,
+      "control": 62,
+      "defence": 27,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Miguel Ángel Nadal",
+      "primaryPosition": "CB",
+      "secondaryPositions": [],
+      "sourcePosition": "CB",
+      "overall": 78,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "1994 spain squad player, position-adjusted historical estimate"
+      },
+      "attack": 39,
+      "control": 55,
+      "defence": 90,
+      "ratingConfidence": "low",
+      "ratingBasis": "1994 spain squad player, position-adjusted historical estimate"
+    },
+    {
+      "name": "Luis Enrique",
+      "primaryPosition": "LM",
+      "secondaryPositions": [],
+      "sourcePosition": "LM",
+      "overall": 82,
+      "ratingSource": {
+        "publisher": "Hybrid",
+        "series": "FIFA/historical estimate",
+        "status": "sourced",
+        "sourceUrl": null,
+        "note": "Real Madrid/Barcelona versatile dynamo"
+      },
+      "attack": 74,
+      "control": 70,
+      "defence": 53,
+      "ratingConfidence": "low",
+      "ratingBasis": "Real Madrid/Barcelona versatile dynamo"
+    }
+  ]
+}

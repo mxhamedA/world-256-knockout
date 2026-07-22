@@ -1,8 +1,64 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "world-256-knockout",
+  "main": "./worker.mjs",
   "compatibility_date": "2026-07-18",
+  "vars": {
+    "ONLINE_MODE_ENABLED": "true",
+    "ONLINE_MAX_ACTIVE_MATCHES": "64"
+  },
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/", "/*.html"]
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "TOURNAMENT_ROOMS",
+        "class_name": "TournamentRoom"
+      },
+      {
+        "name": "ONLINE_CAPACITY",
+        "class_name": "OnlineCapacityCoordinator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "online-rooms-v1",
+      "new_sqlite_classes": ["TournamentRoom"]
+    },
+    {
+      "tag": "online-capacity-v1",
+      "new_sqlite_classes": ["OnlineCapacityCoordinator"]
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "analytics_engine_datasets": [
+    {
+      "binding": "ONLINE_ANALYTICS",
+      "dataset": "world_256_online"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "ROOM_CREATE_LIMITER",
+      "namespace_id": "25601",
+      "simple": { "limit": 6, "period": 60 }
+    },
+    {
+      "name": "ROOM_JOIN_LIMITER",
+      "namespace_id": "25602",
+      "simple": { "limit": 20, "period": 60 }
+    },
+    {
+      "name": "BUG_REPORT_LIMITER",
+      "namespace_id": "25603",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ]
 }
