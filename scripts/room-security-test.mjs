@@ -57,6 +57,11 @@ assert.equal(onlinePenaltyWinner(penaltyState(3, 0, 3, 3)), "home", "An uncatcha
 assert.equal(onlinePenaltyWinner(penaltyState(3, 0, 3, 2)), null, "The initial shootout must continue while a draw remains possible.");
 console.log("Online penalty sudden-death rules passed.");
 
+const tacticNames = Object.freeze({ balanced: {}, counter: {} });
+assert.equal(Object.hasOwn(tacticNames, "counter"), true);
+assert.equal(Object.hasOwn(tacticNames, "constructor"), false, "Inherited object keys must never pass tactic validation.");
+assert.equal(Object.hasOwn(tacticNames, "__proto__"), false, "Prototype keys must never pass tactic validation.");
+
 assert.equal(onlineManualPenaltyGoalChance(55, false), 1, "An on-target manual penalty cannot go wide when the keeper guesses wrong.");
 assert.equal(onlineManualPenaltyGoalChance(55, true), 0.38, "A correctly guessed manual penalty can still be saved.");
 assert.ok(

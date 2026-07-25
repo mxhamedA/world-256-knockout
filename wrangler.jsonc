@@ -1,64 +1,136 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "world-256-knockout",
-  "main": "./worker.mjs",
-  "compatibility_date": "2026-07-18",
-  "vars": {
-    "ONLINE_MODE_ENABLED": "true",
-    "ONLINE_MAX_ACTIVE_MATCHES": "64"
-  },
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/", "/*.html"]
-  },
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "TOURNAMENT_ROOMS",
-        "class_name": "TournamentRoom"
-      },
-      {
-        "name": "ONLINE_CAPACITY",
-        "class_name": "OnlineCapacityCoordinator"
-      }
-    ]
-  },
-  "migrations": [
-    {
-      "tag": "online-rooms-v1",
-      "new_sqlite_classes": ["TournamentRoom"]
-    },
-    {
-      "tag": "online-capacity-v1",
-      "new_sqlite_classes": ["OnlineCapacityCoordinator"]
-    }
-  ],
-  "observability": {
-    "enabled": true,
-    "head_sampling_rate": 1
-  },
-  "analytics_engine_datasets": [
-    {
-      "binding": "ONLINE_ANALYTICS",
-      "dataset": "world_256_online"
-    }
-  ],
-  "ratelimits": [
-    {
-      "name": "ROOM_CREATE_LIMITER",
-      "namespace_id": "25601",
-      "simple": { "limit": 6, "period": 60 }
-    },
-    {
-      "name": "ROOM_JOIN_LIMITER",
-      "namespace_id": "25602",
-      "simple": { "limit": 20, "period": 60 }
-    },
-    {
-      "name": "BUG_REPORT_LIMITER",
-      "namespace_id": "25603",
-      "simple": { "limit": 5, "period": 60 }
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "world-256-knockout",
+	"main": "./worker.mjs",
+	"compatibility_date": "2026-07-18",
+	"routes": [
+		{
+			"pattern": "www.256teams.com",
+			"custom_domain": true
+		}
+	],
+	"vars": {
+		"ONLINE_MODE_ENABLED": "true",
+		"ONLINE_MAX_ACTIVE_MATCHES": "64",
+		"PALESTINE_CHALLENGE_ENABLED": "true"
+	},
+	"secrets": {
+		"required": [
+			"GOOGLE_CLIENT_ID",
+			"GOOGLE_CLIENT_SECRET"
+		]
+	},
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*",
+			"/",
+			"/default-mode",
+			"/draft-mode",
+			"/retro-world-cup",
+			"/retro-10-world-cup",
+			"/retro-14-world-cup",
+			"/retro-18-world-cup",
+			"/achievements",
+			"/online-mode",
+			"/palestine-challenge",
+			"/profile",
+			"/*.html"
+		]
+	},
+	"d1_databases": [
+		{
+			"binding": "CHALLENGE_DB",
+			"database_name": "256teams-accounts",
+			"database_id": "2ffdc3fa-fda6-4f05-98f3-e4e2751ff148",
+			"migrations_dir": "migrations"
+		}
+	],
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "TOURNAMENT_ROOMS",
+				"class_name": "TournamentRoom"
+			},
+			{
+				"name": "ONLINE_CAPACITY",
+				"class_name": "OnlineCapacityCoordinator"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "online-rooms-v1",
+			"new_sqlite_classes": [
+				"TournamentRoom"
+			]
+		},
+		{
+			"tag": "online-capacity-v1",
+			"new_sqlite_classes": [
+				"OnlineCapacityCoordinator"
+			]
+		}
+	],
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	},
+	"analytics_engine_datasets": [
+		{
+			"binding": "ONLINE_ANALYTICS",
+			"dataset": "world_256_online"
+		}
+	],
+	"ratelimits": [
+		{
+			"name": "ROOM_CREATE_LIMITER",
+			"namespace_id": "25601",
+			"simple": {
+				"limit": 6,
+				"period": 60
+			}
+		},
+		{
+			"name": "ROOM_JOIN_LIMITER",
+			"namespace_id": "25602",
+			"simple": {
+				"limit": 20,
+				"period": 60
+			}
+		},
+		{
+			"name": "ROOM_API_LIMITER",
+			"namespace_id": "25604",
+			"simple": {
+				"limit": 300,
+				"period": 60
+			}
+		},
+		{
+			"name": "BUG_REPORT_LIMITER",
+			"namespace_id": "25603",
+			"simple": {
+				"limit": 5,
+				"period": 60
+			}
+		},
+		{
+			"name": "CHALLENGE_AUTH_LIMITER",
+			"namespace_id": "25605",
+			"simple": {
+				"limit": 10,
+				"period": 60
+			}
+		},
+		{
+			"name": "CHALLENGE_API_LIMITER",
+			"namespace_id": "25606",
+			"simple": {
+				"limit": 120,
+				"period": 60
+			}
+		}
+	]
 }

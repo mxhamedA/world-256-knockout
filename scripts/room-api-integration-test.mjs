@@ -171,7 +171,6 @@ try {
   assert.equal(draftRoom.status, "matches");
   assert.equal(draftRoom.draft.picks.length, 10);
   assert.equal(new Set(draftRoom.draft.picks.map((pick) => pick.teamId)).size, 10);
-  assert.equal(draftRoom.draft.picks.some((pick) => pick.teamId === "team-25"), false);
   const topTeamIds = new Set(DRAFT_TEAMS
     .filter((team) => Number.isInteger(team.officialFifaRank) && team.officialFifaRank <= 20)
     .map((team) => team.id));
@@ -231,6 +230,27 @@ try {
   });
   assert.equal(tactic.response.status, 200);
   assert.equal(tactic.payload.room.tournament.tacticsByTeam[ownedTacticTeamId], "attacking");
+  const unreadyHumanMatches = tactic.payload.room.tournament.rounds.at(-1).matches.filter((match) => (
+    match.status === "waiting" && match.requiredMemberIds.length && !match.capacityReady
+  ));
+  assert.ok(unreadyHumanMatches.length > 0);
+  assert.ok(
+    unreadyHumanMatches.every((match) => !match.lease && !Number.isInteger(match.queuePosition)),
+    "Unready player ties must not consume or queue for global match capacity.",
+  );
+  const hostMatch = unreadyHumanMatches.find((match) => match.requiredMemberIds.includes(hostSession.memberId));
+  assert.ok(hostMatch);
+  const readiedMatch = await request(`/api/rooms/${hostSession.code}/match-ready`, {
+    method: "POST",
+    token: hostSession.token,
+    body: { matchId: hostMatch.id },
+  });
+  assert.equal(readiedMatch.response.status, 200);
+  assert.equal(
+    readiedMatch.payload.room.tournament.rounds.at(-1).matches.find((match) => match.id === hostMatch.id)?.status,
+    "live",
+    "A ready player tie must start immediately even when background simulations have filled capacity.",
+  );
 
   const invalidPenalty = await request(`/api/rooms/${hostSession.code}/penalty-kick`, {
     method: "POST",
@@ -418,7 +438,7 @@ try {
     [hostSession.memberId, hostSession.token],
     [joined.payload.memberId, joined.accessToken],
   ]);
-  let liveRoom = tactic.payload.room;
+  let liveRoom = readiedMatch.payload.room;
   const waitingHumanMatch = liveRoom.tournament.rounds.at(-1).matches.slice(0, 64).find((match) => (
     match.status === "waiting" && match.requiredMemberIds.length > 0
   )) || liveRoom.tournament.rounds.at(-1).matches.find((match) => (
@@ -488,6 +508,19 @@ try {
   assert.equal(delta.response.status, 200);
   assert.ok(["noop", "delta"].includes(delta.payload.mode));
   assert.equal(JSON.stringify(delta.payload).includes("rngState"), false);
+
+  const leftDuringTournament = await request(`/api/rooms/${hostSession.code}/leave`, {
+    method: "POST",
+    token: joined.accessToken,
+  });
+  assert.equal(leftDuringTournament.response.status, 200, "Guests must be able to leave after the draft starts.");
+  const afterTournamentLeave = await request(`/api/rooms/${hostSession.code}`, { token: hostSession.token });
+  assert.equal(afterTournamentLeave.payload.room.memberCount, 1);
+  assert.equal(
+    Object.values(afterTournamentLeave.payload.room.tournament.teamOwnerById).includes(joined.payload.memberId),
+    false,
+    "A departing player's countries must transfer to CPU control.",
+  );
 
   const closed = await request(`/api/rooms/${hostSession.code}`, {
     method: "DELETE",

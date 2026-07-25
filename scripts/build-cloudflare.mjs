@@ -8,7 +8,17 @@ const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = join(projectRoot, "dist");
 const staticFiles = [
   "_headers",
+  "ads.txt",
   "app.js",
+  "retro-data.js",
+  "retro-2010-squads.js",
+  "retro-2010-schedule.js",
+  "retro-2014-squads.js",
+  "retro-2014-schedule.js",
+  "retro-2018-squads.js",
+  "retro-2018-schedule.js",
+  "retro-engine.js",
+  "challenge.js",
   "clean.css",
   "data.js",
   "disclaimer.html",
@@ -21,9 +31,22 @@ const staticFiles = [
   "styles.css",
   "terms.html",
   "assets/audio/full-time-whistle.mp3",
-  "assets/audio/penalty-whistle.mp3",
-  "assets/256-teams-icon.svg",
-  "site.webmanifest",
+    "assets/audio/penalty-whistle.mp3",
+    "assets/audio/achievement-unlock.mp3",
+    "assets/256-teams-icon.svg",
+    "assets/retro-world-cup-2014.png",
+    "assets/retro-world-cup-2018.png",
+    "assets/retro-world-cup-2022.png",
+    "assets/retro-2010/south-africa-sunburst-desktop.webp",
+    "assets/retro-2010/south-africa-sunburst-portrait.webp",
+    "assets/retro-2010/south-africa-football-emblem.webp",
+    "assets/retro-2010/worldcup-2010-logo.png",
+    "assets/retro-2014/brazil-watercolor-bg.webp",
+    "assets/retro-2014/brazil-watercolor-stadium.webp",
+    "assets/retro-2014/brazil-watercolor-mobile.webp",
+    "assets/retro-2014/brazil-watercolor-ipad.webp",
+    "assets/retro-2014/brazil-watercolor-iphone.webp",
+    "site.webmanifest",
 ];
 
 mkdirSync(outputRoot, { recursive: true });
@@ -37,6 +60,11 @@ for (const relativePath of staticFiles) {
 const legacyDataRoot = join(projectRoot, "legacy-data");
 if (existsSync(legacyDataRoot)) {
   cpSync(legacyDataRoot, join(outputRoot, "legacy-data"), { recursive: true });
+}
+
+const flagAssetsRoot = join(projectRoot, "assets", "flags");
+if (existsSync(flagAssetsRoot)) {
+  cpSync(flagAssetsRoot, join(outputRoot, "assets", "flags"), { recursive: true });
 }
 
 const sourceHtml = readFileSync(join(projectRoot, "index.html"), "utf8");

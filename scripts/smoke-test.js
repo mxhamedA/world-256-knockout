@@ -6,6 +6,11 @@ const vm = require("node:vm");
 const root = path.resolve(__dirname, "..");
 const playerPoolSource = fs.readFileSync(path.join(root, "player-pools.generated.js"), "utf8");
 const dataSource = fs.readFileSync(path.join(root, "data.js"), "utf8");
+const retroDataSource = fs.readFileSync(path.join(root, "retro-data.js"), "utf8");
+const retro2010SquadsSource = fs.readFileSync(path.join(root, "retro-2010-squads.js"), "utf8");
+const retro2014SquadsSource = fs.readFileSync(path.join(root, "retro-2014-squads.js"), "utf8");
+const retro2018SquadsSource = fs.readFileSync(path.join(root, "retro-2018-squads.js"), "utf8");
+const retroEngineSource = fs.readFileSync(path.join(root, "retro-engine.js"), "utf8");
 const presentationEngineSource = fs.readFileSync(path.join(root, "presentation-engine.js"), "utf8");
 const simulationEngineSource = fs.readFileSync(path.join(root, "simulation-engine.js"), "utf8");
 const legacyEnglandSource = fs.readFileSync(path.join(root, "legacy-data", "catalog.generated.js"), "utf8");
@@ -39,16 +44,101 @@ assert.deepEqual(
 );
 assert.ok(drCongo.players.includes("Cédric Bakambu"), "Player names should be repaired before match events are generated.");
 assert.match(draftCatalogSource, /export const DRAFT_TEAMS/);
+assert.ok(fs.existsSync(path.join(root, "assets", "flags", "belarus.svg")), "Belarus must use a bundled real flag asset.");
+assert.ok(fs.existsSync(path.join(root, "assets", "flags", "somaliland.svg")), "Somaliland must use a bundled real flag asset.");
+const belarusFlagSource = fs.readFileSync(path.join(root, "assets", "flags", "belarus.svg"), "utf8");
+assert.match(belarusFlagSource, /matrix\(\.21,0,0,\.21,2,0\)/, "Belarus ornament must use the accurate source position.");
+assert.match(belarusFlagSource, /d="m44 126h334v63H44z"/, "Belarus lower green field must start beside the ornament without artificial red padding.");
+assert.match(appSource, /Belarus:\s*"\.\/assets\/flags\/belarus\.svg\?v=3"/, "Belarus must point at the bundled flag image with a cache-busting URL.");
+assert.match(appSource, /Somaliland:\s*"\.\/assets\/flags\/somaliland\.svg"/, "Somaliland must point at the bundled flag image.");
+assert.doesNotMatch(appSource, /Somaliland:\s*`data:image\/svg\+xml/, "Somaliland must not use the old inline approximation.");
+assert.match(appSource, /team\.name === "Belarus" \? "flag-belarus"/, "Belarus needs a stable class for crop-safe flag styling.");
+assert.match(cleanCssSource, /\.country-flag\.flag-belarus img\s*\{[\s\S]*?object-fit:\s*cover;[\s\S]*?object-position:\s*left center;/,
+  "Belarus flag images must fill rounded slots while keeping the left ornament visible.");
+assert.match(
+  fs.readFileSync(path.join(root, "scripts", "build-cloudflare.mjs"), "utf8"),
+  /assets", "flags"[\s\S]*cpSync\(flagAssetsRoot/,
+  "Cloudflare builds must copy bundled flag image assets.",
+);
 assert.match(htmlSource, /id="startOnlineDraftButton"/);
+assert.doesNotMatch(htmlSource, /id="newsButton"/, "Main header should not expose the removed News button.");
+assert.doesNotMatch(htmlSource, /id="onlineNewsButton"/, "Online header should not expose the removed News button.");
+assert.doesNotMatch(htmlSource, /id="newsModal"/, "The removed News modal should not ship.");
+assert.doesNotMatch(appSource, /openNewsModal|newsModal|newsButton|onlineNewsButton/, "App code should not keep removed News hooks.");
+assert.doesNotMatch(cleanCssSource, /\.news-card\.is-fresh|\.news-modal|\.news-header-button/, "News modal styles should be removed.");
 assert.match(fs.readFileSync(path.join(root, "clean.css"), "utf8"), /\.online-lobby-controls button\[hidden\]/);
 assert.match(
+  cleanCssSource,
+  /grid-template-columns:\s*210px minmax\(0, 1fr\) 124px minmax\(0, 1fr\)/,
+  "The online desktop score must stay between equal team columns without squeezing the match card.",
+);
+assert.match(cleanCssSource, /\.online-match-sidebar\s*\{[\s\S]*?top:\s*-52px/,
+  "Desktop online stats and tactics should sit closer to the match heading.");
+assert.match(cleanCssSource, /\.online-match-centre\s*\{[\s\S]*?left:\s*-10px/,
+  "The online desktop score needs its optical centring adjustment.");
+assert.match(cleanCssSource, /\.online-match-centre\s*\{[\s\S]*?top:\s*-14px/,
+  "The online clock, score, and controls should sit slightly higher on every screen size.");
+assert.match(
+  cleanCssSource,
+  /\.online-match-sidebar > \.online-tactics,\s*\.online-match-sidebar > \.online-match-stats\s*\{[\s\S]*?grid-row:\s*1;/,
+  "Online stats and tactics must share the same row on phone and tablet layouts.",
+);
+assert.match(
+  cleanCssSource,
+  /@media \(min-width: 701px\) and \(max-width: 1280px\)[\s\S]*?\.team h2\.team-name\.is-long[\s\S]*?font-size: clamp\(15px, 1\.7vw, 20px\)[\s\S]*?\.team-match-events \.timeline-event/,
+  "Tablet match cards must compact country names and scorer lines instead of clipping them.",
+);
+assert.match(
+  cleanCssSource,
+  /@media \(min-width: 701px\) and \(max-width: 1180px\)[\s\S]*grid-template-areas:\s*"next stage boot"\s*"board board board"[\s\S]*body:not\(\.before-start\) \.insight-right\s*\{[\s\S]*position:\s*static;[\s\S]*\.fixture-grid:not\(\.bracket-mode\)\s*\{[\s\S]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/,
+  "iPad layouts must keep stats and tactics in the left column without sticky overlap and show three fixture columns.",
+);
+assert.match(
   fs.readFileSync(path.join(root, "clean.css"), "utf8"),
-  /\.match-penalty-scene\[data-state="flight"\]\[data-target="top-left"\][\s\S]*translate\(-76px, -137px\)/,
+  /\.match-penalty-scene\[data-state="flight"\]\[data-target="top-left"\][\s\S]*translate\(-68px, -125px\)/,
   "Normal-time manual penalties must use the exact five-target ball paths.",
 );
-assert.match(htmlSource, /id="createOnlineDisplayName"/);
-assert.match(htmlSource, /id="joinOnlineDisplayName"/);
+assert.match(htmlSource, /id="onlineDisplayName"/);
+assert.doesNotMatch(htmlSource, /id="createOnlineDisplayName"|id="joinOnlineDisplayName"/);
 assert.match(htmlSource, /id="onlineLobbyDisplayName"/);
+assert.match(htmlSource, /id="onlineRoomInviteLink"/);
+assert.match(htmlSource, /id="copyOnlineRoomInviteButton"/);
+assert.match(appSource, /function onlineRoomInviteUrl\(code\)/);
+assert.match(appSource, /queueMicrotask\(\(\) => joinOnlineRoom\(\)\)/,
+  "Invite links should automatically join players who already have a saved display name.");
+assert.match(htmlSource, /id="onlineResults"/);
+assert.match(htmlSource, /id="onlinePlayAgainButton"/);
+assert.match(htmlSource, /data-online-results-tab="standings"/);
+assert.match(htmlSource, /data-online-results-tab="results"/);
+assert.match(htmlSource, /data-online-results-tab="bracket"/);
+assert.match(htmlSource, /data-online-bracket-round="1"/);
+assert.match(htmlSource, /data-online-bracket-round="final"/);
+assert.match(htmlSource, /id="onlineOpeningBracket"/);
+assert.match(appSource, /function renderOnlineResults\(/);
+assert.match(appSource, /function createOnlineResultScoreCard\(/);
+assert.match(appSource, /function createOnlineBracketMatch\(/);
+assert.match(appSource, /setOnlineResultsTab\(onlineResultsActiveTab\)/,
+  "Polling must preserve the selected final-results tab.");
+assert.match(appSource, /label\.textContent = leaders\.length > 1 \? "Winners" : "Winner"/);
+assert.match(appSource, /`\$\{goals \?\? "-"\} \(\$\{penaltyScore\}\)`/,
+  "Final results must show shootout scores beside the match score.");
+assert.match(appSource, /\/rematch`, \{ method: "POST" \}/);
+assert.match(workerSource, /Object\.hasOwn\(ONLINE_TACTICS, tactic\)/,
+  "Online tactics must reject inherited object properties.");
+assert.match(workerSource, /ROOM_API_LIMITER/,
+  "Online room routes must have a general abuse rate limit.");
+assert.doesNotMatch(workerSource, /reservesHumanSlot/,
+  "Unready online ties must not reserve scarce match capacity.");
+assert.match(workerSource, /match\.status === "waiting"\s*&& match\.capacityReady/,
+  "Only ready online ties may enter the match-capacity queue.");
+assert.match(workerSource, /priority === "interactive"[\s\S]*backgroundLease/,
+  "Ready player ties must take priority over background simulations.");
+assert.doesNotMatch(workerSource, /\["lobby", "tournament-complete"\]\.includes\(room\.status\)/,
+  "Guests must always be able to leave an active online room.");
+assert.match(workerSource, /function relinquishOnlineMemberControl\(/,
+  "A player who leaves mid-tournament must hand their countries to CPU control.");
+assert.match(workerSource, /activeMemberIds\.has\(pick\.memberId\) \? pick\.memberId : `cpu:\$\{pick\.teamId\}`/,
+  "A player who leaves during the draft must not remain a required controller.");
 assert.doesNotMatch(htmlSource, /id="onlineLobbyNextCopy"/);
 assert.doesNotMatch(htmlSource, /id="onlinePlayerLimit"/);
 assert.doesNotMatch(htmlSource, /id="onlineCountriesEach"/);
@@ -121,7 +211,11 @@ assert.ok(
 assert.match(workerSource, /function serveHtmlAsset/);
 assert.match(workerSource, /strict-dynamic/);
 assert.match(workerSource, /element\.setAttribute\("nonce", nonce\)/);
-assert.match(wranglerSource, /"run_worker_first": \["\/api\/\*", "\/", "\/\*\.html"\]/);
+assert.match(wranglerSource, /"run_worker_first"/);
+assert.match(wranglerSource, /"PALESTINE_CHALLENGE_ENABLED":\s*"true"/,
+  "Palestine Challenge should be enabled for the Google sign-in launch.");
+assert.match(wranglerSource, /"\/api\/\*"/);
+assert.match(wranglerSource, /"\/\*\.html"/);
 assert.match(htmlSource, /class="mode-card mode-card-legacy"/);
 assert.match(htmlSource, /id="startLegacyDraftButton"/);
 assert.match(htmlSource, /id="legacyDraftScreen"/);
@@ -142,12 +236,22 @@ assert.match(
 );
 assert.match(
   cleanCssSource,
-  /standard-penalty-scene\[data-state="flight"\]\[data-target="top-left"\][\s\S]*?translate\(-76px, -115px\)/,
+  /standard-penalty-scene\[data-state="flight"\]\[data-target="top-left"\][\s\S]*?translate\(-68px, -105px\)/,
   "Standard and Legacy shootout goals must land inside the compact net.",
 );
 assert.match(
   cleanCssSource,
-  /@media \(max-width: 640px\)[\s\S]*?standard-penalty-scene\[data-state="flight"\]\[data-target="top-left"\][\s\S]*?translate\(-65px, -90px\)/,
+  /Final online shootout placement[\s\S]*?\.online-penalty-scene\s*\{\s*height:\s*178px[\s\S]*?width:\s*224px;[\s\S]*?height:\s*96px;/,
+  "Online shootouts must use the same compact goal dimensions as default mode.",
+);
+assert.match(
+  cleanCssSource,
+  /Keep top-corner attempts high but within the keeper's reachable range[\s\S]*?translate\(-68px, -105px\)[\s\S]*?translate\(68px, -105px\)/,
+  "Online top-corner penalties must stay inside the reachable upper netting.",
+);
+assert.match(
+  cleanCssSource,
+  /@media \(max-width: 640px\)[\s\S]*?standard-penalty-scene\[data-state="flight"\]\[data-target="top-left"\][\s\S]*?translate\(-58px, -82px\)/,
   "Mobile shootout goals must use mobile net coordinates.",
 );
 assert.match(
@@ -179,6 +283,16 @@ assert.match(
   cleanCssSource,
   /\.match-stage\.has-match-penalty \.match-commentary-view\s*{[^}]*visibility:\s*hidden/,
   "The commentary bar must remain hidden while the normal-match penalty overlay is active.",
+);
+assert.match(
+  appSource,
+  /function playOnlineObservedPenaltyQueue[\s\S]*renderOnlineCommentaryEvent\(match, awardEvent\)[\s\S]*setPenaltySceneElement\(els\.onlinePenaltyScene, attempt, "flight"\)[\s\S]*resultRevealed = true/,
+  "Observed online penalties must announce the award and animate the kick before revealing its result.",
+);
+assert.match(
+  appSource,
+  /eventKey: onlineObservedPenaltyEventKey\(match, event\)/,
+  "Observed penalty playback must bind its hidden score to the current match.",
 );
 assert.match(
   appSource,
@@ -235,8 +349,25 @@ assert.match(htmlSource, /<body class="before-start">/, "The initial document mu
 assert.match(htmlSource, /id="fieldOverview">/, "The mode chooser must be visible in the initial document.");
 assert.match(htmlSource, /id="mainContent" hidden>/, "Tournament content must stay hidden until JavaScript starts a tournament.");
 assert.doesNotMatch(htmlSource, /id="predictionPickerButton"/);
-assert.match(htmlSource, /<aside class="sidebar"[\s\S]*id="newTournamentButton"[\s\S]*class="top-actions header-actions"[\s\S]*id="settingsButton"[\s\S]*id="bugReportButton"[\s\S]*header-donate-link[\s\S]*<\/aside>/);
+assert.match(htmlSource, /<aside class="sidebar"[\s\S]*id="newTournamentButton"[\s\S]*class="top-actions header-actions"[\s\S]*id="settingsButton"[\s\S]*id="bugReportButton"[\s\S]*id="openAchievementsButton"[\s\S]*id="discordButton"[\s\S]*header-donate-link[\s\S]*<\/aside>/);
+assert.match(htmlSource, /id="settingsModal"[\s\S]*<h2>Settings<\/h2>[\s\S]*id="settingsDiscordButton"/);
+assert.doesNotMatch(htmlSource, /<span class="section-kicker">SETTINGS<\/span>\s*<h2>Tournament preferences<\/h2>/);
+assert.match(appSource, /settingsDiscordButton:\s*\$\("#settingsDiscordButton"\)/);
+assert.match(appSource, /els\.settingsDiscordButton\?\.addEventListener\("click", openDiscordModal\)/);
+assert.match(cleanCssSource, /@media \(min-width: 851px\)[\s\S]*?\.sidebar \.header-actions\s*\{[\s\S]*?left:\s*clamp\(24px,\s*3vw,\s*48px\);/);
+assert.match(cleanCssSource, /@media \(min-width: 851px\)[\s\S]*?\.sidebar \.header-actions #settingsButton\s*\{\s*margin-right:\s*auto;/);
+assert.match(cleanCssSource, /\.discord-header-button,\s*\.online-discord-button\s*\{\s*display:\s*none;/);
+assert.match(cleanCssSource, /@media \(max-width: 850px\)[\s\S]*?\.before-start \.sidebar \.header-actions #settingsButton\s*\{\s*margin-right:\s*auto;/);
+assert.match(cleanCssSource, /@media \(max-width: 640px\)[\s\S]*?#onlineSettingsButton\s*\{\s*grid-column:\s*1;/);
+assert.match(cleanCssSource, /\.settings-option\s*\{[\s\S]*?border:\s*0;[\s\S]*?border-radius:\s*8px;[\s\S]*?background:\s*#121a26;/);
 assert.match(htmlSource, /id="settingsModal"[\s\S]*id="soundToggleButton"/);
+assert.match(htmlSource, /class="utility-button achievements-header-button" id="openAchievementsButton"[\s\S]*Achievements/);
+assert.match(htmlSource, /id="achievementsScreen"[\s\S]*<p id="achievementsTitle">Coming soon<\/p>/);
+assert.doesNotMatch(htmlSource, /achievements-shell|achievementsBackButton/);
+assert.match(appSource, /achievements:\s*"\/achievements"/);
+assert.match(appSource, /openAchievementsButton:\s*\$\("#openAchievementsButton"\)/);
+assert.doesNotMatch(appSource, /achievementsBackButton/);
+assert.match(appSource, /setAppModeUrl\("achievements"\)/);
 assert.match(htmlSource, /id="menuBackdrop"/);
 assert.match(htmlSource, /id="goToTopButton"[^>]*>[\s\S]*Go to top/);
 assert.match(htmlSource, /id="fixtureGrid"[\s\S]*id="loadMoreButton"[\s\S]*id="goToTopButton"[\s\S]*<\/section>/);
@@ -248,6 +379,11 @@ assert.match(
   fs.readFileSync(path.join(root, "clean.css"), "utf8"),
   /body\.before-start #menuButton\s*\{\s*display:\s*none/,
   "The inactive rounds menu must be hidden on the mobile home screen.",
+);
+assert.equal(
+  fs.readFileSync(path.join(root, "ads.txt"), "utf8").trim(),
+  "google.com, pub-6724809725459853, DIRECT, f08c47fec0942fa0",
+  "The ads.txt file must contain the configured AdSense publisher entry.",
 );
 assert.match(
   fs.readFileSync(path.join(root, "clean.css"), "utf8"),
@@ -322,22 +458,95 @@ assert.match(appSource, /online-roster-country-name/);
 assert.match(appSource, /function closeOnlineScreen/);
 assert.match(appSource, /function readOnlineDisplayName/);
 assert.match(appSource, /Enter a display name for this player\./);
-assert.match(appSource, /url\.searchParams\.set\("mode", mode\)/);
+assert.match(appSource, /standard: "\/default-mode"/);
+assert.match(appSource, /legacy: "\/draft-mode"/);
+assert.match(appSource, /online: "\/online-mode"/);
+assert.match(appSource, /2014: "\/retro-14-world-cup"/);
+assert.match(appSource, /2018: "\/retro-18-world-cup"/);
+assert.match(appSource, /2010: "\/retro-10-world-cup"/);
+assert.match(appSource, /selectedMode === "retro"[\s\S]*RETRO_WORLD_CUP_PATHS/);
+assert.match(workerSource, /APP_SHELL_PATHS\.has\(normalizedPath\)/,
+  "Cloudflare must serve the app shell for clean mode routes.");
+assert.match(workerSource, /"\/retro-14-world-cup"/);
+assert.match(workerSource, /"\/retro-18-world-cup"/);
+assert.match(workerSource, /"\/retro-10-world-cup"/);
+assert.match(wranglerSource, /"\/default-mode"[\s\S]*"\/draft-mode"[\s\S]*"\/online-mode"[\s\S]*"\/palestine-challenge"/,
+  "Clean mode routes must run through the Worker before static asset lookup.");
 assert.match(appSource, /setAppModeUrl\("standard"\)/);
 assert.match(appSource, /window\.history\[replace \? "replaceState" : "pushState"\]/);
 assert.match(appSource, /window\.addEventListener\("popstate"/);
 assert.doesNotMatch(
   appSource,
-  /\(startupMode === "home" \|\| startupMode === "standard"\) && state\.started/,
-  "Refreshing must not discard a saved standard tournament.",
+  /initialAppMode === "home" && state\.started[\s\S]*setAppModeUrl\("standard"/,
+  "Refreshing the main menu must not force-open a saved tournament.",
 );
-assert.match(appSource, /initialAppMode === "home" && state\.started && !state\.legacyTournament[\s\S]*setAppModeUrl\("standard", \{ replace: true \}\)/,
-  "A saved standard tournament must reopen its bracket after refresh.");
 assert.match(appSource, /Resume tournament/);
+assert.match(
+  appSource,
+  /function settleInterruptedLocalMatches\(\)[\s\S]*match\.result\?\.engineVersion === 2 && !match\.result\.revealed[\s\S]*match\.result\.revealed = true[\s\S]*buildNextRound\(roundIndex\)[\s\S]*saveState\(\)/,
+  "Reloading must finalize an already-started local match instead of allowing it to be replayed.",
+);
 assert.match(htmlSource, /<a class="brand" href="\/"/);
 assert.match(htmlSource, /<a class="online-screen-brand"[^>]*href="\/"/);
 assert.doesNotMatch(workerSource, /members: \[member, cpuMember\]/);
 assert.match(appSource, /const roundIndex = Math\.floor\(draft\.turnIndex \/ playerCount\)/);
+assert.match(
+  appSource,
+  /function commitOnlineDraftTurn\(room\)[\s\S]*clientCommandId = makeOnlineCommandId\(\)[\s\S]*serverDraft\?\.turnIndex > expectedTurnIndex/,
+  "A lost draft response must reconcile against the server instead of leaving the roulette locked.",
+);
+assert.match(
+  appSource,
+  /function onlineDraftTurnStart\(draft\)[\s\S]*draft\?\.startedAt[\s\S]*previousPick\?\.pickedAt[\s\S]*ONLINE_DRAFT_REVEAL_MS/,
+  "Every draft client must derive turn timing from shared server timestamps.",
+);
+assert.match(
+  appSource,
+  /function animateOnlineRoulette[\s\S]*firstFrame = Math\.max\(0, Math\.floor\(\(onlineServerNow\(\) - turnStartedAt\)[\s\S]*onlineDraftFrameTeam/,
+  "Late draft clients must catch up to the shared deterministic roulette frame.",
+);
+assert.doesNotMatch(appSource, /onlineRouletteTeam\.textContent = "(?:Locking in|Waiting for the host)/,
+  "Draft confirmation should keep the last roulette frame instead of flashing repeated waiting labels.");
+assert.match(appSource, /latestOnlineRoom\?\.status === "draft"\) return 300/,
+  "Draft clients must poll frequently enough to receive each shared reveal.");
+assert.match(
+  appSource,
+  /function onlineMatchStillPlaying\(match\)[\s\S]*!\["waiting", "finished"\]\.includes[\s\S]*\["live", "penalties"\]\.includes/,
+  "Friend viewing must only lock while the player's own match is actually in progress.",
+);
+assert.match(appSource, /card\.disabled = viewingLocked[\s\S]*is-viewing-locked/,
+  "Friend match cards must be disabled while an owned match is active.");
+assert.match(appSource, /function selectOnlineMatchFromList[\s\S]*button\.disabled/,
+  "The match selection handler must enforce the friend-viewing lock.");
+assert.match(
+  appSource,
+  /const watchingOwnedMatch = onlineMemberOwnsMatch[\s\S]*presentation\.displayedMinute = watchingOwnedMatch[\s\S]*: projected/,
+  "A friend's match clock must use the authoritative server projection without local easing lag.",
+);
+assert.match(appSource, /!onlineMemberOwnsMatch[\s\S]*\) return 250/,
+  "An actively viewed friend match must refresh its authoritative score frequently.");
+assert.match(
+  appSource,
+  /const freshPenaltyEvents[\s\S]*\["penalty-kick", "shootout-kick"\]\.includes\(event\.type\)/,
+  "Interactive online penalties must load both normal-time and shootout results.",
+);
+assert.match(
+  appSource,
+  /const hiddenScoreBefore[\s\S]*queuedPenalty\?\.event\.scoreBefore[\s\S]*displayedMatch[\s\S]*onlineHiddenPenaltyEventKeys/,
+  "Online penalty scores and scorer events must stay hidden until their animation reveals the result.",
+);
+assert.match(
+  appSource,
+  /const ownPenaltyAnimation = penaltyEvent[\s\S]*!observedOpponentKick && !ownPenaltyAnimation/,
+  "Penalty commentary must not reveal the outcome before the kick animation.",
+);
+assert.match(
+  cleanCssSource,
+  /body:not\(\.before-start\) \.insight-left\s*\{\s*align-self:\s*start;\s*position:\s*static;/,
+  "The Golden Boot panel must not remain sticky while scrolling through fixtures or the bracket.",
+);
+assert.match(appSource, /signal: controller\.signal[\s\S]*clearTimeout\(timeout\)/,
+  "Online room requests must time out instead of hanging forever.");
 assert.match(workerSource, /const DEFAULT_DRAFT_PICKS_PER_MEMBER = 5/);
 assert.match(workerSource, /team\.officialFifaRank >= 40 && team\.officialFifaRank <= 90/);
 assert.match(workerSource, /!team\.officialFifaRank \|\| team\.officialFifaRank >= 120/);
@@ -420,6 +629,7 @@ function mockElement() {
     querySelector() { return mockElement(); },
     appendChild() {},
     append() {},
+    after() {},
     insertAdjacentHTML() {},
     remove() {},
     scrollIntoView() {},
@@ -437,6 +647,7 @@ context.document = {
   },
   querySelectorAll() { return []; },
   createElement() { return mockElement(); },
+  createComment() { return mockElement(); },
   addEventListener() {},
   body: mockElement(),
   documentElement: mockElement(),
@@ -474,13 +685,17 @@ context.localStorage = {
 context.sessionStorage = context.localStorage;
 context.requestAnimationFrame = () => 1;
 context.cancelAnimationFrame = () => {};
-context.setTimeout = () => 1;
+context.__timerQueue = [];
+context.setTimeout = (callback) => {
+  if (typeof callback === "function") context.__timerQueue.push(callback);
+  return 1;
+};
 context.clearTimeout = () => {};
 context.Audio = class { play() { return Promise.resolve(); } pause() {} load() {} addEventListener() {} removeEventListener() {} };
 context.Promise = Promise;
 
 vm.runInContext(
-  `${presentationEngineSource}\n${simulationEngineSource}\n${legacyEnglandSource}\n${appSource}
+  `${presentationEngineSource}\n${simulationEngineSource}\n${legacyEnglandSource}\n${retroDataSource}\n${retro2010SquadsSource}\n${retro2014SquadsSource}\n${retro2018SquadsSource}\n${retroEngineSource}\n${appSource}
   ;globalThis.__simulateMatch = simulateMatch;
   globalThis.__weightedScorer = weightedScorer;
   globalThis.__scoringRunBrake = scoringRunBrake;
@@ -495,17 +710,30 @@ vm.runInContext(
   globalThis.__calculateTournamentFatigue = calculateTournamentFatigue;
   globalThis.__goalEvents = goalEvents;
   globalThis.__simulatePenaltyShootout = simulatePenaltyShootout;
+  globalThis.__createShootoutSequence = createShootoutSequence;
   globalThis.__shootoutMarksMarkup = shootoutMarksMarkup;
   globalThis.__standardShootoutWinner = standardShootoutWinner;
   globalThis.__shootoutSummaryMarkup = shootoutSummaryMarkup;
   globalThis.__setPenaltySceneElement = setPenaltySceneElement;
+  globalThis.__normalizePenaltyAttemptVisual = normalizePenaltyAttemptVisual;
   globalThis.__chooseGoalType = chooseGoalType;
   globalThis.__manualPenaltyGoalChance = manualPenaltyGoalChance;
   globalThis.__resolveManualPenaltyAttempt = resolveManualPenaltyAttempt;
+  globalThis.__keeperPenaltyGoalChance = keeperPenaltyGoalChance;
+  globalThis.__resolveKeeperPenaltyAttempt = resolveKeeperPenaltyAttempt;
   globalThis.__missedPenaltyVisual = missedPenaltyVisual;
   globalThis.__matchPenaltySceneTarget = matchPenaltySceneTarget;
   globalThis.__mergeLiveTacticalResult = mergeLiveTacticalResult;
   globalThis.__shootoutTakerPool = shootoutTakerPool;
+  globalThis.__retroShootoutProof = (year, teamName) => {
+    installRetroTeams(year);
+    const team = TEAM_BY_ID.get(retroTeamId(teamName, year));
+    return {
+      pool: shootoutTakerPool(team, []),
+      startingXI: RETRO_WORLD_CUP_ENGINE.startingXI(year, teamName).players.map((player) => player.name),
+      goalkeeper: RETRO_WORLD_CUP_ENGINE.startingXI(year, teamName).players.find((player) => player.position === "GK")?.name,
+    };
+  };
   globalThis.__nextLegacyTournamentSeed = nextLegacyTournamentSeed;
   globalThis.__isControlledMatchPenalty = isControlledMatchPenalty;
   globalThis.__suspendedPlayersForTeam = suspendedPlayersForTeam;
@@ -515,6 +743,7 @@ vm.runInContext(
   globalThis.__fixtureScoreMarkup = fixtureScoreMarkup;
   globalThis.__preferredPenaltyFoot = preferredPenaltyFoot;
   globalThis.__onlineSharedMatchState = onlineSharedMatchState;
+  globalThis.__smoothOnlineLiveMinute = smoothOnlineLiveMinute;
   globalThis.__snapshotGoalLines = snapshotGoalLines;
   globalThis.__calculateGoalscorerTable = calculateGoalscorerTable;
   globalThis.__calculateTopGoalscorer = calculateTopGoalscorer;
@@ -619,6 +848,24 @@ vm.runInContext(
       team: legacyDraft.complete ? legacyDraftTeam() : null,
     };
   };
+  globalThis.__legacyLongShootoutProof = () => {
+    const firstProof = globalThis.__exerciseLegacyDraft(10203, "433");
+    const firstTeam = firstProof.team;
+    TEAM_BY_ID.set(firstTeam.id, firstTeam);
+    playerProfilesForTeam(firstTeam);
+
+    const restoredProof = globalThis.__exerciseLegacyDraft(40506, "433");
+    const restoredTeam = restoredProof.team;
+    TEAM_BY_ID.set(restoredTeam.id, restoredTeam);
+    clearPlayerProfileCacheForTeam(restoredTeam.id);
+    const opponent = TEAMS.find((team) => team.name === "Spain");
+    const shootout = createShootoutSequence(restoredTeam, opponent, { home: 14, away: 13 }, mulberry32(2468), [], { home: [], away: [] });
+    return {
+      previousPlayers: firstTeam.players,
+      restoredPlayers: restoredTeam.players,
+      homeTakers: shootout.filter((kick) => kick.side === "home").map((kick) => kick.player),
+    };
+  };
   globalThis.__exerciseLegacyTournament = () => {
     const previousState = state;
     state = createLegacyTournamentState();
@@ -712,6 +959,13 @@ vm.runInContext(
       const prevState = { activeRound: state.activeRound, selectedMatch: state.selectedMatch, rounds: state.rounds.map((round) => [...(round || [])]) };
 
       const runPlayback = (mode, targetMinute) => {
+        const flushTimers = (limit = 20) => {
+          for (let index = 0; index < limit && globalThis.__timerQueue?.length; index += 1) {
+            const callback = globalThis.__timerQueue.shift();
+            callback();
+          }
+        };
+        if (globalThis.__timerQueue) globalThis.__timerQueue.length = 0;
         state.activeRound = 0;
         state.selectedMatch = 0;
         state.rounds = [[testMatch]];
@@ -727,13 +981,14 @@ vm.runInContext(
         const hc = match2dState.presentation?.highlights?.length || 0;
         if (hc === 0) throw new Error(mode + ": zero highlights generated");
         globalThis.fakeNow += 5000;
-        stepLivePlayback(globalThis.fakeNow); globalThis.fakeNow += 5000;
-        stepLivePlayback(globalThis.fakeNow); globalThis.fakeNow += 5000;
+        stepLivePlayback(globalThis.fakeNow); if (!match2dState?.complete) flushTimers(); globalThis.fakeNow += 5000;
+        stepLivePlayback(globalThis.fakeNow); if (!match2dState?.complete) flushTimers(); globalThis.fakeNow += 5000;
         let steps = 0;
         let lastMinute = livePlayback.minute;
         while (livePlayback && livePlayback.frame && !match2dState?.complete && livePlayback.minute < Math.min(targetMinute, livePlayback.maxMinute)) {
           globalThis.fakeNow += 5000;
           stepLivePlayback(globalThis.fakeNow);
+          if (!match2dState?.complete) flushTimers();
           steps += 1;
           if (steps > 5000) throw new Error(mode + ": exceeded 5000 steps at minute " + livePlayback.minute);
           if (livePlayback.minute === lastMinute && steps > 200) throw new Error(mode + ": clock stalled at minute " + livePlayback.minute + " after " + steps + " steps");
@@ -866,6 +1121,20 @@ assert.equal(legacyFitProof.wideEmergencyPenalty, 4, "A central attacker used on
 const legacyRespinProof = context.__legacyRespinProof();
 assert.notEqual(legacyRespinProof.firstYear, legacyRespinProof.secondYear, "The single Legacy respin should land on a different eligible World Cup year.");
 assert.equal(legacyRespinProof.respinsLeft, 0);
+const legacyLongShootoutProof = JSON.parse(JSON.stringify(context.__legacyLongShootoutProof()));
+const restoredLegacyPlayerSet = new Set(legacyLongShootoutProof.restoredPlayers);
+assert.ok(
+  legacyLongShootoutProof.homeTakers.every((player) => restoredLegacyPlayerSet.has(player)),
+  "A reloaded Legacy XI long shootout must only use players from the restored XI.",
+);
+assert.ok(
+  legacyLongShootoutProof.homeTakers.length >= 14,
+  "The Legacy long-shootout regression must reach at least the 14th home taker.",
+);
+assert.ok(
+  legacyLongShootoutProof.previousPlayers.some((player) => !restoredLegacyPlayerSet.has(player)),
+  "The Legacy cache regression must compare two different XIs with the same custom team id.",
+);
 for (const [index, formationId] of ["433", "442", "352", "532"].entries()) {
   const proof = context.__exerciseLegacyDraft(7410 + index, formationId);
   assert.equal(proof.complete, true, `${formationId}: automated Legacy Draft should fill all 11 positions.`);
@@ -885,15 +1154,18 @@ assert.ok(
   "Real-player-only mode must not replace entire guest squads with numbered placeholders.",
 );
 assert.equal(context.__manualPenaltyGoalChance(0.78, false), 1, "A manually aimed shot cannot go wide.");
+assert.equal(context.__manualPenaltyGoalChance(0.78, true), 0, "A keeper matching the chosen target must save a manual penalty.");
 assert.ok(context.__manualPenaltyGoalChance(0.78, true) < 0.5, "A keeper matching the chosen target can save the shot.");
+assert.doesNotMatch(appSource, /target === "middle" \|\| \(goalkeeperTarget !== target/,
+  "Manually chosen middle penalties must not auto-score when the goalkeeper stays central.");
 for (const target of ["top-left", "top-right", "middle", "bottom-left", "bottom-right"]) {
   const savedAttempt = context.__resolveManualPenaltyAttempt({
     conversionChance: 0.78,
     goalkeeperTarget: target,
     outcomeRoll: 0.99,
   }, target);
-  assert.equal(savedAttempt.scored, false);
-  assert.equal(savedAttempt.missType, "save", `${target}: a manually aimed miss must be a save.`);
+  assert.equal(savedAttempt.scored, false, `${target}: a matched goalkeeper must save a manually aimed penalty.`);
+  assert.equal(savedAttempt.missType, "save", `${target}: a matched manual penalty must be recorded as a save.`);
   assert.ok(!savedAttempt.direction.startsWith("wide"), `${target}: a manually aimed kick must stay on target.`);
   const goalAttempt = context.__resolveManualPenaltyAttempt({
     conversionChance: 0.78,
@@ -914,6 +1186,18 @@ const automaticPenaltyMisses = Array.from({ length: 80 }, (_, index) => context.
 ));
 assert.ok(automaticPenaltyMisses.some((attempt) => attempt.missType === "wide"),
   "Uncontrolled penalty takers must sometimes miss the target.");
+assert.equal(context.__keeperPenaltyGoalChance(0.745, true), 0,
+  "An exact five-way keeper read must save the penalty.");
+assert.ok(context.__keeperPenaltyGoalChance(0.745, false) < 1,
+  "A taker must retain a miss chance after sending the goalkeeper the wrong way.");
+const oppositionWideMiss = context.__resolveKeeperPenaltyAttempt({
+  shotTarget: "top-left",
+  conversionChance: 0.62,
+  outcomeRoll: 0.99,
+}, "middle");
+assert.equal(oppositionWideMiss.scored, false,
+  "A regular opposition penalty must sometimes miss despite beating the goalkeeper.");
+assert.equal(oppositionWideMiss.missType, "wide");
 assert.equal(context.__matchPenaltySceneTarget({ direction: "wide-right", missType: "wide" }, false), "",
   "An automatic wide miss must not inherit the middle target trajectory.");
 assert.equal(context.__matchPenaltySceneTarget({ target: null }, true), "middle",
@@ -922,6 +1206,14 @@ assert.equal(context.__matchPenaltySceneTarget({ target: "bottom-right" }, true)
   "A controlled penalty must retain the selected target trajectory.");
 assert.match(appSource, /function matchPenaltyAttempt[\s\S]*missedPenaltyVisual\(/,
   "AI normal-time penalty misses must use the deterministic saved-or-wide outcome.");
+assert.match(appSource, /function stepMatch2dViewer[\s\S]*matchPenaltyActive[\s\S]*matchPenaltyContext[\s\S]*has-match-penalty/,
+  "Realistic mode must pause the action loop while a penalty is being shown or chosen.");
+assert.match(appSource, /function processPossessionAction[\s\S]*isPenaltyGoal && action\.event && !livePlayback\.matchPenaltyActive[\s\S]*startMatchPenaltyAnimation\(action\.event, action\)[\s\S]*else \{[\s\S]*receivePresentationAction\(action, animate\)/,
+  "Regular penalty goals must start the cutscene before publishing the goal commentary and score.");
+assert.match(appSource, /function startMatchPenaltyAnimation[\s\S]*finishMatchPenaltyAnimation\([\s\S]*\(\) => receivePresentationAction\(action, true\)/,
+  "Automatic normal-time penalty goals must publish only after the cutscene completes.");
+assert.match(appSource, /function startLivePlayback\(match\)[\s\S]*presentationScheduler\?\.clear\("new-match"\)[\s\S]*commentaryFeed = \[\][\s\S]*match2dState = null/,
+  "Starting a new regular match must clear stale shootout commentary and playback timers.");
 const legacyPenaltyOrder = context.__shootoutTakerPool({
   id: "legacy-penalty-order-proof",
   name: "Spain Legacy XI",
@@ -935,7 +1227,27 @@ const legacyPenaltyOrder = context.__shootoutTakerPool({
   ],
 }, []);
 assert.equal(legacyPenaltyOrder[0], "David Villa", "A striker must take the first Legacy penalty.");
-assert.equal(legacyPenaltyOrder.at(-1), "Iker Casillas", "The goalkeeper must be last in the Legacy shootout order.");
+assert.equal(legacyPenaltyOrder.includes("Iker Casillas"), false, "A Legacy goalkeeper must not join the shootout order while outfield takers are available.");
+context.__runtimeTeams.forEach((team) => {
+  const takers = context.__shootoutTakerPool(team, []);
+  const profiles = context.__playerProfilesForTeam(team);
+  const outfieldProfiles = profiles.filter((profile) => profile.position !== "GK");
+  const firstProfile = profiles.find((profile) => profile.name === takers[0]);
+  if (outfieldProfiles.length) {
+    assert.notEqual(firstProfile?.position, "GK", `${team.name}: the first shootout taker must not be a goalkeeper.`);
+  }
+});
+assert.deepEqual(
+  JSON.parse(JSON.stringify(context.__shootoutTakerPool({
+    id: "legacy-keeper-fallback-proof",
+    name: "Keeper Fallback XI",
+    rating: 70,
+    players: ["Only Keeper"],
+    positionSuitability: [{ player: "Only Keeper", slot: "GK" }],
+  }, []))),
+  ["Only Keeper"],
+  "A goalkeeper can be used only as the last available Legacy taker fallback.",
+);
 const firstLegacyTournamentSeed = 1784567791;
 const secondLegacyTournamentSeed = context.__nextLegacyTournamentSeed(firstLegacyTournamentSeed);
 const thirdLegacyTournamentSeed = context.__nextLegacyTournamentSeed(secondLegacyTournamentSeed);
@@ -950,6 +1262,9 @@ const hiddenOnlineShootoutCard = context.__onlineSharedMatchState({
   penalty: { homeScore: 5, awayScore: 4 },
 }, 10000);
 assert.equal(hiddenOnlineShootoutCard.penaltyText, "", "Online cards must not spoil a shootout score before playback finishes.");
+const smoothedLaggedMinute = context.__smoothOnlineLiveMinute(80, 90, 100, 1);
+assert.ok(smoothedLaggedMinute > 80, "Lagged online live clock should continue moving forward.");
+assert.ok(smoothedLaggedMinute < 81, "Lagged online live clock must not jump from 80 straight to 90.");
 const englandForPenaltyControl = context.__runtimeTeams.find((team) => team.name === "England");
 context.__runtimeState.spectateTeamId = englandForPenaltyControl.id;
 assert.equal(
@@ -983,6 +1298,17 @@ const penaltyRandom = () => {
 const penaltyDirectionProof = context.__simulatePenaltyShootout(englandForFootCheck, franceForFootCheck, penaltyRandom).sequence;
 assert.ok(penaltyDirectionProof.some((attempt) => attempt.direction !== "centre"), "Automatic penalty takers must not always shoot down the middle.");
 assert.ok(new Set(penaltyDirectionProof.map((attempt) => attempt.target)).size > 1, "Shootout attempts must use varied target areas.");
+let stoppedShootout = null;
+for (let seed = 1; seed < 1000 && !stoppedShootout; seed += 1) {
+  let localSeed = seed;
+  const seededRandom = () => {
+    localSeed = (Math.imul(localSeed, 1664525) + 1013904223) >>> 0;
+    return localSeed / 4294967296;
+  };
+  const candidate = context.__simulatePenaltyShootout(englandForFootCheck, franceForFootCheck, seededRandom);
+  if (candidate.sequence.length < 10) stoppedShootout = candidate;
+}
+assert.ok(stoppedShootout, "Shootouts must be able to stop before all ten opening kicks.");
 assert.equal(context.__preferredPenaltyFoot(franceForFootCheck, "Michael Olise", () => 0.9), "left");
 assert.equal(context.__preferredPenaltyFoot(franceForFootCheck, "Kylian Mbappé", () => 0.1), "right");
 assert.equal(context.__preferredPenaltyFoot(spainForFootCheck, "Lamine Yamal", () => 0.9), "left");
@@ -1247,7 +1573,13 @@ assert.equal(fifaTeams.find((team) => team.name === "Brazil").officialFifaRank, 
 assert.equal(fifaTeams.find((team) => team.name === "Germany").officialFifaRank, 10);
 assert.equal(fifaTeams.find((team) => team.name === "Mexico").officialFifaRank, 14);
 assert.ok(fifaTeams.every((team) => team.rating >= 35 && team.rating <= 100));
-assert.ok(guestTeams.every((team) => team.rating >= 18 && team.rating <= 34));
+assert.ok(guestTeams.every((team) => team.rating >= 18 && team.rating <= 38));
+const kurdistanTeam = guestTeams.find((team) => team.name === "Kurdistan");
+assert.ok(kurdistanTeam, "Kurdistan should replace South Ossetia in the invited teams.");
+assert.equal(guestTeams.some((team) => team.name === "South Ossetia"), false);
+assert.equal(kurdistanTeam.rating, 38);
+assert.ok(kurdistanTeam.players.includes("Sarhang Muhsin"));
+assert.ok(kurdistanTeam.players.includes("Youssef Amyn"));
 const simulationRatingKeys = ["overall", "attack", "midfield", "defence", "goalkeeper", "squadDepth", "experience", "penalties", "discipline"];
 assert.ok(runtimeTeams.every((team) => simulationRatingKeys.every((key) => Number.isFinite(team.simulationRatings[key]))));
 assert.ok(runtimeTeams.every((team) => team.simulationRatings.discipline >= 35 && team.simulationRatings.discipline <= 95));
@@ -1268,6 +1600,51 @@ const moldova = runtimeTeams.find((team) => team.name === "Moldova");
 const israel = runtimeTeams.find((team) => team.name === "Israel");
 const italy = runtimeTeams.find((team) => team.name === "Italy");
 const ireland = runtimeTeams.find((team) => team.name === "Republic of Ireland");
+const longShootout = JSON.parse(JSON.stringify(context.__createShootoutSequence(
+  england,
+  sealand,
+  { home: 14, away: 13 },
+  () => 0.42,
+  [],
+  { home: [], away: [] },
+)));
+const longShootoutPools = {
+  home: new Set(JSON.parse(JSON.stringify(context.__shootoutTakerPool(england, [])))),
+  away: new Set(JSON.parse(JSON.stringify(context.__shootoutTakerPool(sealand, [])))),
+};
+const englandProfiles = context.__playerProfilesForTeam(england);
+const englandShootoutPool = JSON.parse(JSON.stringify(context.__shootoutTakerPool(england, [])));
+assert.equal(englandShootoutPool.length, 11, "Shootouts must use the match XI, not the full national squad.");
+assert.deepEqual(
+  new Set(englandShootoutPool),
+  new Set(englandProfiles.filter((profile) => profile.startingXI).map((profile) => profile.name)),
+  "Every eligible starter, and no bench player, must appear before the shootout order cycles.",
+);
+assert.equal(
+  englandProfiles.find((profile) => profile.name === englandShootoutPool.at(-1))?.position,
+  "GK",
+  "The goalkeeper must take the final kick in the first XI cycle.",
+);
+for (const year of [2010, 2014, 2018]) {
+  const proof = JSON.parse(JSON.stringify(context.__retroShootoutProof(year, "Germany")));
+  assert.equal(proof.pool.length, 11, `${year} retro shootouts must use exactly Germany's starting XI.`);
+  assert.deepEqual(
+    new Set(proof.pool),
+    new Set(proof.startingXI),
+    `${year} retro shootouts must exclude bench attackers and retain every eligible starter.`,
+  );
+  assert.equal(
+    proof.pool.at(-1),
+    proof.goalkeeper,
+    `${year} retro shootouts must include the goalkeeper after all ten outfield starters.`,
+  );
+}
+assert.equal(longShootout.filter((kick) => kick.side === "home").length, 14, "The long-shootout regression must reach the 14th home kick.");
+assert.equal(longShootout.filter((kick) => kick.side === "away").length, 14, "The long-shootout regression must reach the 14th away kick.");
+assert.ok(
+  longShootout.every((kick) => longShootoutPools[kick.side].has(kick.player)),
+  "Long shootouts must cycle through the exact team's verified taker pool.",
+);
 assert.deepEqual(
   JSON.parse(JSON.stringify(context.__applyScorelineCeiling(ireland, italy, 0, 8))),
   { homeGoals: 0, awayGoals: 5 },
@@ -1404,7 +1781,13 @@ for (let index = 0; index < 500; index += 1) {
     penaltyShootouts += 1;
     penaltyKicks += result.shootout.length;
     scoredPenaltyKicks += result.shootout.filter((kick) => kick.scored).length;
-    assert.ok(result.shootout.length >= 10 && result.shootout.length % 2 === 0);
+    assert.ok(result.shootout.length >= 6);
+    assert.ok(context.__standardShootoutWinner({
+      homeScore: result.penalties.home,
+      awayScore: result.penalties.away,
+      homeKicks: result.shootout.filter((kick) => kick.side === "home").length,
+      awayKicks: result.shootout.filter((kick) => kick.side === "away").length,
+    }));
     assert.ok(result.shootout.every((kick, kickIndex) => (
       kick.side === (kickIndex % 2 === 0 ? "home" : "away")
       && ["left", "centre", "right", "wide-left", "wide-right"].includes(kick.direction)
@@ -1418,7 +1801,7 @@ for (let index = 0; index < 500; index += 1) {
       assert.notEqual(
         kick.direction,
         kick.keeperDive,
-        "A successful penalty cannot show the keeper covering the shot direction.",
+        "Scored penalties must not show the goalkeeper covering the shot direction.",
       );
     });
     result.shootout.filter((kick) => !kick.scored).forEach((kick) => {
@@ -1488,9 +1871,9 @@ context.__setPenaltySceneElement(penaltySceneProof, {
 }, "result");
 assert.equal(penaltySceneProof.dataset.result, "save");
 context.__setPenaltySceneElement(penaltySceneProof, {
-  direction: "centre", keeperDive: "centre", foot: "right", scored: false, missType: "save",
+  direction: "centre", keeperDive: "centre", foot: "right", scored: true, missType: null,
 }, "flight");
-assert.equal(penaltySceneProof.dataset.result, "save", "A saved kick must use its save trajectory during ball flight.");
+assert.equal(penaltySceneProof.dataset.result, "goal", "A scored middle kick must still use the goal animation.");
 assert.equal(penaltySceneProof.dataset.direction, "centre");
 assert.equal(penaltySceneProof.dataset.dive, "centre");
 context.__setPenaltySceneElement(penaltySceneProof, {
@@ -1498,8 +1881,32 @@ context.__setPenaltySceneElement(penaltySceneProof, {
 }, "result");
 assert.equal(penaltySceneProof.dataset.result, "wide");
 assert.equal(penaltySceneProof.dataset.direction, "wide-right");
-assert.match(cleanCssSource, /data-state="flight"\]\[data-result="save"\]\[data-direction="centre"\]/,
-  "A middle save must visibly meet the goalkeeper instead of entering the net.");
+assert.equal(penaltySceneProof.dataset.target, "wide-right",
+  "Wide misses must not inherit the middle target during their flight animation.");
+const staleMiddleMiss = {
+  target: "middle", direction: "left", keeperDive: "left", foot: "right", scored: false, missType: "save",
+};
+context.__setPenaltySceneElement(penaltySceneProof, staleMiddleMiss, "result");
+assert.equal(penaltySceneProof.dataset.target, "bottom-left",
+  "A restored miss must not animate down the middle when its save occurred to the left.");
+assert.equal(penaltySceneProof.dataset.direction, "left");
+assert.equal(penaltySceneProof.dataset.dive, "left");
+const impossibleMiddleSave = {
+  target: "middle", direction: "centre", keeperDive: "right", foot: "right", scored: false, missType: "save",
+};
+context.__setPenaltySceneElement(penaltySceneProof, impossibleMiddleSave, "result");
+assert.equal(penaltySceneProof.dataset.target, "middle");
+assert.equal(penaltySceneProof.dataset.dive, "centre",
+  "A displayed middle save requires the goalkeeper to remain in the middle.");
+const middleGoal = context.__normalizePenaltyAttemptVisual({
+  target: "middle", direction: "centre", keeperDive: "left", scored: true, missType: null,
+});
+assert.equal(middleGoal.scored, true);
+assert.equal(middleGoal.target, "middle");
+assert.equal(middleGoal.keeperDive, "left",
+  "A middle kick remains a goal when the goalkeeper dives away.");
+assert.doesNotMatch(appSource, /attempt\.scored = middleTarget/,
+  "Manually aimed middle penalties must not bypass goalkeeper matching.");
 const deterministicMatch = { id: "same-seed-scorer-proof", homeId: franceForFootCheck.id, awayId: sealand.id };
 context.__runtimeState.drawSeed = 987654321;
 const deterministicA = context.__simulateMatch(deterministicMatch, 0);
@@ -1523,6 +1930,12 @@ assert.equal(playbackRegress.extendedAdvanced, true, "Extended mode must advance
 assert.equal(playbackRegress.pauseWorks, true, "Pausing must stop the playback frame.");
 assert.equal(playbackRegress.resumeWorks, true, "Resuming must restart from the paused position.");
 assert.equal(playbackRegress.errors.length, 0, "Playback regression test must produce zero errors.");
+assert.match(appSource, /function restoreOnlineMatchHistory[\s\S]*onlineViewedMatchId = null;[\s\S]*stopOnlineMatchPlayback\(\);[\s\S]*stopOnlineLivePresentation\(\);/,
+  "Entering a different online room must discard stale match selection and playback state.");
+assert.match(appSource, /function selectOnlineMatchFromList[\s\S]*stopOnlineMatchPlayback\(\);[\s\S]*stopOnlineLivePresentation\(\);/,
+  "Switching between online matches must stop both playback engines.");
+assert.match(appSource, /previousViewedMatchId !== onlineViewedMatchId[\s\S]*onlineLivePresentation\?\.matchId !== onlineViewedMatchId[\s\S]*stopOnlineLivePresentation\(\);/,
+  "Automatic online match changes must not retain another match's live timer.");
 
 console.log("256 TEAMS WC smoke test passed.");
 console.log("256 teams = 211 FIFA members + 45 guest sides.");

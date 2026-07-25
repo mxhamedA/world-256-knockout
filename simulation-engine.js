@@ -5,7 +5,7 @@ const SIMULATION_CONFIG = Object.freeze({
   modes: {
     realistic: {
       ratingScale: 27,
-      redCardChance: 0.015,
+      redCardChance: 0.01,
       shockChance: 0.0025,
       shockUnderdogBoost: 1.15,
       shockFavouriteReduction: 0.94,
@@ -17,7 +17,7 @@ const SIMULATION_CONFIG = Object.freeze({
     },
     balanced: {
       ratingScale: 36,
-      redCardChance: 0.024,
+      redCardChance: 0.018,
       shockChance: 0.006,
       shockUnderdogBoost: 1.20,
       shockFavouriteReduction: 0.91,
@@ -29,7 +29,7 @@ const SIMULATION_CONFIG = Object.freeze({
     },
     chaos: {
       ratingScale: 60,
-      redCardChance: 0.14,
+      redCardChance: 0.07,
       shockChance: 0.18,
       shockUnderdogBoost: 1.90,
       shockFavouriteReduction: 0.62,
@@ -319,24 +319,31 @@ function buildPlayerProfiles(team, names, generated = false) {
       : generated ? generatedMaximum : Math.min(93, team.rating + 4);
     const overallBase = generated ? teamOverall : team.rating;
     const overall = simulationClamp(
-      profileOverride.overall ?? overallBase + baseOffset + stableOverallVariation,
+      profileOverride.overall
+        ?? (sourceProfile.retroWorldCup ? sourceProfile.overall : null)
+        ?? overallBase + baseOffset + stableOverallVariation,
       20,
       overallMaximum,
     );
-    const attackingRole = profileOverride.attackingRole || roleForProfile(position, index);
+    const attackingRole = profileOverride.attackingRole
+      || (sourceProfile.retroWorldCup ? sourceProfile.attackingRole : null)
+      || roleForProfile(position, index);
     const finishingVariation = (stableHash(`${team.id}:${name}:finishing`) % 9) - 4;
     const finishingMaximum = profileOverride.finishing !== undefined
       ? 99
       : generated ? Math.min(94, generatedMaximum + 8) : Math.min(94, team.rating + 9);
     const finishing = simulationClamp(
       profileOverride.finishing
+        ?? (sourceProfile.retroWorldCup ? sourceProfile.finishing : null)
         ?? (position === "GK" ? 5 : overall + defaultFinishingOffset(position) + finishingVariation),
       5,
       finishingMaximum,
     );
     const penaltyTaker = profileOverride.penaltyTaker
+      ?? (sourceProfile.retroWorldCup && sourceProfile.penaltyTaker !== undefined ? sourceProfile.penaltyTaker : null)
       ?? (penaltyOverride ? name === penaltyOverride : index === 0);
     const expectedMinutesShare = profileOverride.expectedMinutesShare
+      ?? (sourceProfile.retroWorldCup ? sourceProfile.expectedMinutesShare : null)
       ?? expectedMinutesForProfile(attackingRole, position, index);
 
     return {
@@ -349,7 +356,18 @@ function buildPlayerProfiles(team, names, generated = false) {
       penaltyTaker,
       expectedMinutesShare,
       scoringEmphasis: profileOverride.scoringEmphasis ?? 1,
+      retroWorldCupGoals: sourceProfile.retroWorldCupGoals || 0,
+      retroWorldCup: Boolean(sourceProfile.retroWorldCup),
+      startingXI: sourceProfile.startingXI ?? (!sourceProfile.retroWorldCup && index < 11),
       preferredFoot: profileOverride.preferredFoot || sourceProfile.preferredFoot || null,
+      pace: sourceProfile.pace ?? null,
+      shooting: sourceProfile.shooting ?? null,
+      passing: sourceProfile.passing ?? null,
+      dribbling: sourceProfile.dribbling ?? null,
+      defending: sourceProfile.defending ?? null,
+      physical: sourceProfile.physical ?? null,
+      goalkeeping: sourceProfile.goalkeeping ?? null,
+      captain: Boolean(sourceProfile.captain),
       generated,
     };
   });
@@ -427,6 +445,13 @@ function teamGoalShareMultiplier(profile, playerGoals, teamGoals) {
 function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = {}) {
   const squad = context.squadProfiles || null;
   let weight = calculateScorerWeight(profile, context.team, squad);
+  if (context.team?.retroWorldCup && profile.retroWorldCup) {
+    const historicalGoals = profile.retroWorldCupGoals || 0;
+    const attackingPosition = ["ST", "CF", "SS", "LW", "RW", "CAM", "AM"].includes(profile.position);
+    weight *= historicalGoals
+      ? 1.25 + historicalGoals * 0.72
+      : attackingPosition ? 0.58 : 0.32;
+  }
   weight *= matchupScorerMultiplier(profile, context.team, context.opponent);
   weight *= teamGoalShareMultiplier(
     profile,
@@ -1222,7 +1247,7 @@ function createAuthoritativeMatchStats(options, random) {
   const redCards = result.redCards || [];
   const yellowCardsFor = (ratings, reds) => Math.max(
     reds,
-    Math.round(simulationClamp(1.4 + (72 - ratings.discipline) * 0.035 + random() * 2.1, 0, 6)),
+    Math.round(simulationClamp(1.0 + (72 - ratings.discipline) * 0.03 + random() * 1.7, 0, 5)),
   );
   const homeReds = redCards.filter((card) => card.side === "home").length;
   const awayReds = redCards.filter((card) => card.side === "away").length;
@@ -1245,8 +1270,15 @@ function createAuthoritativeMatchStats(options, random) {
 
 function highlightPlayerGroups(side) {
   const players = side.players;
+  const fallbackPlayer = players.find((player) => player.position !== "GK") || players[0] || {
+    id: `${side.id || side.name || side.side || "team"}:fallback-player`,
+    name: side.name || "A player",
+    position: "CM",
+    baseY: 50,
+  };
+  const idOf = (player) => player?.id || fallbackPlayer.id;
   const sortedByWidth = (pool) => [...pool].sort((left, right) => left.baseY - right.baseY);
-  const goalkeeper = players.find((player) => player.position === "GK") || players[0];
+  const goalkeeper = players.find((player) => player.position === "GK") || players[0] || fallbackPlayer;
   const defenders = sortedByWidth(players.filter((player) => possessionPositionGroup(player.position) === "defender"));
   const midfielders = sortedByWidth(players.filter((player) => possessionPositionGroup(player.position) === "midfielder"));
   const attackers = sortedByWidth(players.filter((player) => possessionPositionGroup(player.position) === "attacker"));
@@ -1262,23 +1294,23 @@ function highlightPlayerGroups(side) {
     .reverse()
     .find((player) => !excluded.includes(player?.id)) || fallback;
   const lb = byPosition(["LB", "LWB"], defenders) || left(defenders, goalkeeper);
-  const rb = byPosition(["RB", "RWB"], defenders) || right(defenders, goalkeeper, [lb.id]);
+  const rb = byPosition(["RB", "RWB"], defenders) || right(defenders, goalkeeper, [idOf(lb)]);
   const centreBacks = defenders.filter((player) => ["CB", "SW"].includes(player.position));
-  const lcb = left(centreBacks, left(defenders, goalkeeper, [lb.id, rb.id]));
-  const rcb = right(centreBacks, right(defenders, lcb, [lb.id, rb.id, lcb.id]));
+  const lcb = left(centreBacks, left(defenders, goalkeeper, [idOf(lb), idOf(rb)]));
+  const rcb = right(centreBacks, right(defenders, lcb, [idOf(lb), idOf(rb), idOf(lcb)]));
   const dm = byPosition(["CDM", "DM"], midfielders) || central(midfielders, lcb);
   const am = byPosition(["CAM", "AM"], midfielders)
-    || central(midfielders, central(attackers, dm), [dm.id]);
+    || central(midfielders, central(attackers, dm || fallbackPlayer), [idOf(dm)]);
   const lcm = byPosition(["LM", "LCM"], midfielders)
-    || left(midfielders, am, [dm.id, am.id]);
+    || left(midfielders, am || fallbackPlayer, [idOf(dm), idOf(am)]);
   const rcm = byPosition(["RM", "RCM"], midfielders)
-    || right(midfielders, lcm, [dm.id, am.id, lcm.id]);
+    || right(midfielders, lcm || fallbackPlayer, [idOf(dm), idOf(am), idOf(lcm)]);
   const lw = byPosition(["LW", "LF", "LM"], players)
-    || left([...attackers, ...midfielders], am, [dm.id, am.id]);
+    || left([...attackers, ...midfielders], am || fallbackPlayer, [idOf(dm), idOf(am)]);
   const rw = byPosition(["RW", "RF", "RM"], players)
-    || right([...attackers, ...midfielders], am, [dm.id, am.id, lw.id]);
+    || right([...attackers, ...midfielders], am || fallbackPlayer, [idOf(dm), idOf(am), idOf(lw)]);
   const st = byPosition(["ST", "CF", "SS"], attackers)
-    || central(attackers, am, [lw.id, rw.id]);
+    || central(attackers, am || fallbackPlayer, [idOf(lw), idOf(rw)]);
   return {
     gk: goalkeeper,
     lb,

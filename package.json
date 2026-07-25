@@ -2,6 +2,8 @@
   "scripts": {
     "build": "node scripts/build-cloudflare.mjs",
     "generate:legacy-data": "node scripts/generate-legacy-catalog.mjs",
+    "generate:retro-schedule": "node scripts/generate-retro-2014-schedule.mjs",
+    "generate:retro-2018": "python scripts/generate-retro-2018-squads.py && node scripts/generate-retro-2018-schedule.mjs",
     "predev": "node scripts/generate-legacy-catalog.mjs",
     "dev": "npx wrangler dev --var ONLINE_MODE_ENABLED:true --port 8787",
     "postinstall": "node scripts/build-cloudflare.mjs",
@@ -10,9 +12,13 @@
     "test:rosters": "node scripts/roster-data-test.mjs",
     "test:possession": "node scripts/possession-engine-test.mjs",
     "test:presentation": "node scripts/presentation-engine-test.mjs",
+    "test:penalties": "node scripts/penalty-visual-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/room-security-test.mjs",
+    "test:retro": "node scripts/retro-engine-test.mjs",
     "test:online": "node scripts/room-security-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/online-room-atomic-test.mjs",
     "test:online:integration": "node scripts/room-api-integration-test.mjs",
-    "test:online:load": "node scripts/online-opening-load-test.mjs"
+    "test:online:load": "node scripts/online-opening-load-test.mjs",
+    "test:challenge": "node scripts/challenge-engine-test.mjs && node scripts/challenge-auth-test.mjs && node scripts/challenge-google-auth-test.mjs && node scripts/challenge-registration-error-test.mjs",
+    "test:challenge:integration": "node scripts/challenge-api-integration-test.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1"

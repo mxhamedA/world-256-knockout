@@ -7,6 +7,7 @@ import {
 } from "./online-penalty-rules.mjs";
 import { giantKillingMomentumMultiplier } from "./online-momentum-rules.mjs";
 import { commitAtomicRoomBatch } from "./online-room-atomic.mjs";
+import { handleChallengeRequest } from "./challenge-service.mjs";
 import {
   LIVE_MAX_BATCH_CPU_MS,
   LIVE_MAX_BATCH_MINUTES,
@@ -57,6 +58,7 @@ const FIFA_RANKED_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS
 const GREAT_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank <= 20);
 const MID_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank >= 40 && team.officialFifaRank <= 90);
 const LOWER_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS.filter((team) => !team.officialFifaRank || team.officialFifaRank >= 120);
+const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/draft-mode", "/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/achievements", "/online-mode", "/palestine-challenge", "/profile"]);
 
 export default {
   async fetch(request, env) {
@@ -85,6 +87,18 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
     }
 
     try {
+      if (url.pathname === "/api/challenge" || url.pathname.startsWith("/api/challenge/")) {
+        if (env.PALESTINE_CHALLENGE_ENABLED !== "true") return json({ error: "Not found." }, 404);
+        if (["/api/challenge/login", "/api/challenge/register", "/api/challenge/google/start", "/api/challenge/google/callback"].includes(url.pathname)) {
+          if (!(await allowRequest(env.CHALLENGE_AUTH_LIMITER, rateKey(request, "challenge-auth")))) {
+            return json({ error: "Too many account attempts. Try again in a minute." }, 429);
+          }
+        } else if (!(await allowRequest(env.CHALLENGE_API_LIMITER, rateKey(request, "challenge-api")))) {
+          return json({ error: "Too many challenge requests. Slow down and try again." }, 429);
+        }
+        return handleChallengeRequest(request, env, url);
+      }
+
       if (url.pathname === "/api/bug-report" && request.method === "POST") {
         return submitBugReport(request, env, url);
       }
@@ -98,14 +112,18 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
         return createRoom(request, env);
       }
 
-      const match = url.pathname.match(/^\/api\/rooms\/([^/]+)(?:\/(join|leave|rename|draft-start|draft-draw|match-ready|match-tactic|match-playback|penalty-kick|team-select))?$/);
+      const match = url.pathname.match(/^\/api\/rooms\/([^/]+)(?:\/(join|leave|rename|rematch|draft-start|draft-draw|match-ready|match-tactic|match-playback|match-view|penalty-kick|team-select))?$/);
       if (!match) return json({ error: "Not found." }, 404);
       const code = normalizeRoomCode(match[1]);
       if (!ROOM_CODE_PATTERN.test(code)) return json({ error: "Room unavailable." }, 404);
       const action = match[2] || "room";
 
+      if (!(await allowRequest(env.ROOM_API_LIMITER, rateKey(request, "room-api")))) {
+        return json({ error: "Too many room requests. Slow down and try again." }, 429);
+      }
+
       if (action === "join" && request.method === "POST") {
-        if (!(await allowRequest(env.ROOM_JOIN_LIMITER, rateKey(request, `join:${code}`)))) {
+        if (!(await allowRequest(env.ROOM_JOIN_LIMITER, rateKey(request, "join")))) {
           return json({ error: "Too many join attempts. Try again in a minute." }, 429);
         }
         return forwardToRoom(env, code, request, "join");
@@ -116,13 +134,16 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
       if (action === "rename" && request.method === "POST") {
         return forwardToRoom(env, code, request, "rename");
       }
+      if (action === "rematch" && request.method === "POST") {
+        return forwardToRoom(env, code, request, "rematch");
+      }
       if (action === "draft-start" && request.method === "POST") {
         return forwardToRoom(env, code, request, "draft-start");
       }
       if (action === "draft-draw" && request.method === "POST") {
         return forwardToRoom(env, code, request, "draft-draw");
       }
-      if (["match-ready", "match-tactic", "match-playback", "penalty-kick", "team-select"].includes(action) && request.method === "POST") {
+      if (["match-ready", "match-tactic", "match-playback", "match-view", "penalty-kick", "team-select"].includes(action) && request.method === "POST") {
         return forwardToRoom(env, code, request, action);
       }
       if (action === "room" && request.method === "GET") {
@@ -139,7 +160,15 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
 }
 
 async function serveHtmlAsset(request, env) {
-  const response = await env.ASSETS.fetch(request);
+  const assetUrl = new URL(request.url);
+  const normalizedPath = assetUrl.pathname.replace(/\/+$/, "") || "/";
+  if (normalizedPath === "/palestine-challenge" && env.PALESTINE_CHALLENGE_ENABLED !== "true") {
+    return Response.redirect(new URL("/", request.url), 302);
+  }
+  const assetRequest = APP_SHELL_PATHS.has(normalizedPath) && normalizedPath !== "/"
+    ? new Request(new URL(`/${assetUrl.search}`, assetUrl), request)
+    : request;
+  const response = await env.ASSETS.fetch(assetRequest);
   const contentType = response.headers.get("Content-Type") || "";
   if (!contentType.toLowerCase().includes("text/html")) return response;
 
@@ -148,7 +177,7 @@ async function serveHtmlAsset(request, env) {
   const headers = new Headers(response.headers);
   headers.set("Content-Security-Policy", [
     "default-src 'self'",
-    `script-src 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https: http:`,
+    `script-src 'nonce-${nonce}' 'strict-dynamic' https: http:`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src https://fonts.gstatic.com",
     "img-src 'self' data: blob: https:",
@@ -161,6 +190,10 @@ async function serveHtmlAsset(request, env) {
     "form-action 'self'",
     "manifest-src 'self'",
   ].join("; "));
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("X-Frame-Options", "DENY");
 
   return new HTMLRewriter()
     .on("script", {
@@ -188,12 +221,14 @@ export class TournamentRoom extends DurableObject {
       else if (action === "status" && request.method === "GET") response = await this.status(request);
       else if (action === "leave" && request.method === "POST") response = await this.leave(request);
       else if (action === "rename" && request.method === "POST") response = await this.rename(request);
+      else if (action === "rematch" && request.method === "POST") response = await this.rematch(request);
       else if (action === "close" && request.method === "DELETE") response = await this.close(request);
       else if (action === "draft-start" && request.method === "POST") response = await this.startDraft(request);
       else if (action === "draft-draw" && request.method === "POST") response = await this.drawCountry(request);
       else if (action === "match-ready" && request.method === "POST") response = await this.readyForMatch(request);
       else if (action === "match-tactic" && request.method === "POST") response = await this.updateMatchTactic(request);
       else if (action === "match-playback" && request.method === "POST") response = await this.updateMatchPlayback(request);
+      else if (action === "match-view" && request.method === "POST") response = await this.updateMatchView(request);
       else if (action === "penalty-kick" && request.method === "POST") response = await this.takePenalty(request);
       else if (action === "team-select" && request.method === "POST") response = await this.selectControlledTeam(request);
       else response = json({ error: "Not found." }, 404);
@@ -340,9 +375,16 @@ export class TournamentRoom extends DurableObject {
     const duplicate = await this.commandReplay(body, "leave", member.id, room);
     if (duplicate) return json({ left: true });
     if (member.isHost) return json({ error: "The host must close the room." }, 409);
-    if (room.status !== "lobby") return json({ error: "The country draw is already running." }, 409);
     member.leftAt = Date.now();
-    await this.persistRoomBatch(room, [], room.expiresAt, commandReceipt(body, "leave", member.id));
+    relinquishOnlineMemberControl(room, member.id, member.leftAt);
+    const result = await this.advanceRoom(room, member.leftAt);
+    await this.persistRoomBatch(
+      room,
+      result.events,
+      result.nextAlarmAt,
+      commandReceipt(body, "leave", member.id),
+      result.releasedMatches,
+    );
     return json({ left: true });
   }
 
@@ -362,6 +404,36 @@ export class TournamentRoom extends DurableObject {
     }
     member.name = name;
     await this.persistRoomBatch(room, [], room.expiresAt, commandReceipt(body, "rename", member.id));
+    return this.fullRoomResponse(room, member.id);
+  }
+
+  async rematch(request) {
+    const authenticated = await this.authenticatedRoom(request);
+    if (!authenticated) return unauthorizedResponse();
+    const { room, member } = authenticated;
+    const body = await readJson(request);
+    requireClientCommandId(body);
+    const duplicate = await this.commandReplay(body, "rematch", member.id, room);
+    if (duplicate) return duplicate;
+    if (!member.isHost) return json({ error: "Only the host can restart the lobby." }, 403);
+    if (room.status !== "tournament-complete") return json({ error: "The tournament is not complete yet." }, 409);
+
+    await this.releaseRoomLeases(room);
+    room.status = "lobby";
+    room.draft = null;
+    room.tournament = null;
+    room.expiresAt = Date.now() + ROOM_LIFETIME_MS;
+    room.members = room.members.filter((item) => !item.leftAt && !item.isCpu);
+    room.members.forEach((item) => { delete item.viewedMatchId; });
+    const eventEntries = await this.ctx.storage.list({ prefix: "events:" });
+    await this.ctx.storage.transaction(async (transaction) => {
+      for (const key of eventEntries.keys()) await transaction.delete(key);
+      const receipts = await transaction.get("commandReceipts") || [];
+      receipts.push(commandReceipt(body, "rematch", member.id));
+      await transaction.put("commandReceipts", receipts.slice(-ONLINE_MAX_COMMAND_RECEIPTS));
+      await transaction.put("room", room);
+      await transaction.setAlarm(room.expiresAt);
+    });
     return this.fullRoomResponse(room, member.id);
   }
 
@@ -491,6 +563,24 @@ export class TournamentRoom extends DurableObject {
     return this.fullRoomResponse(room, member.id);
   }
 
+  async updateMatchView(request) {
+    const authenticated = await this.authenticatedRoom(request);
+    if (!authenticated) return unauthorizedResponse();
+    const { room, member } = authenticated;
+    const body = await readJson(request);
+    requireClientCommandId(body);
+    const duplicate = await this.commandReplay(body, "match-view", member.id, room);
+    if (duplicate) return duplicate;
+    const matchExists = room.tournament?.rounds
+      ?.some((round) => round.matches.some((match) => match.id === body.matchId));
+    if (!matchExists) throw new RoomRequestError("That match could not be found.", 400);
+    const result = await this.advanceRoom(room, Date.now());
+    member.viewedMatchId = body.matchId;
+    room.tournament.stateVersion = (room.tournament.stateVersion || 0) + 1;
+    await this.persistRoomBatch(room, result.events, result.nextAlarmAt, commandReceipt(body, "match-view", member.id), result.releasedMatches);
+    return this.fullRoomResponse(room, member.id);
+  }
+
   async takePenalty(request) {
     const authenticated = await this.authenticatedRoom(request);
     if (!authenticated) return unauthorizedResponse();
@@ -539,15 +629,16 @@ export class TournamentRoom extends DurableObject {
     return this.fullRoomResponse(room, member.id);
   }
 
-  capacityStub() {
-    return this.env.ONLINE_CAPACITY.get(this.env.ONLINE_CAPACITY.idFromName("global"));
+  capacityStub(roomCode) {
+    return this.env.ONLINE_CAPACITY.get(this.env.ONLINE_CAPACITY.idFromName(`room:${roomCode}`));
   }
 
   async capacityRequest(action, room, match) {
-    const response = await this.capacityStub().fetch(`https://capacity.internal/${action}`, {
+    const priority = match.requiredMemberIds?.length ? "interactive" : "background";
+    const response = await this.capacityStub(room.code).fetch(`https://capacity.internal/${action}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomId: room.code, matchId: match.id }),
+      body: JSON.stringify({ roomId: room.code, matchId: match.id, priority }),
     });
     if (!response.ok) throw new Error(`Capacity ${action} failed.`);
     return response.json();
@@ -574,10 +665,20 @@ export class TournamentRoom extends DurableObject {
       return priority(first) - priority(second) || first.id.localeCompare(second.id);
     });
     for (const match of orderedMatches) {
-      const reservesHumanSlot = match.status === "waiting" && Boolean(match.requiredMemberIds?.length);
       if (
         match.status === "waiting"
-        && (match.capacityReady || reservesHumanSlot)
+        && !match.capacityReady
+        && (match.lease || Number.isInteger(match.queuePosition))
+      ) {
+        match.lease = null;
+        match.queuePosition = null;
+        match.updatedVersion = (room.tournament.stateVersion || 1) + 1;
+        released.push(match);
+        changed = true;
+      }
+      if (
+        match.status === "waiting"
+        && match.capacityReady
         && !matchBlockedBySelection(room, match)
       ) {
         const previousQueuePosition = match.queuePosition;
@@ -674,7 +775,7 @@ export class TournamentRoom extends DurableObject {
     }
     const activeMatches = currentOnlineRound(room)?.matches.filter((match) => match.liveState && match.liveState.status !== "finished") || [];
     const queuedMatches = currentOnlineRound(room)?.matches.filter((match) => (
-      match.status === "waiting" && (match.capacityReady || match.requiredMemberIds?.length)
+      match.status === "waiting" && match.capacityReady
     )) || [];
     const caughtUp = processedMinutes < LIVE_MAX_BATCH_MINUTES && performance.now() - startedAt < LIVE_MAX_BATCH_CPU_MS;
     const nextAlarmAt = !caughtUp
@@ -695,6 +796,12 @@ export class TournamentRoom extends DurableObject {
   }
 
   async persistRoomBatch(room, events = [], nextAlarmAt = room.expiresAt, receipt = null, releasedMatches = []) {
+    structuredLog("room-persist", {
+      roomId: hashLogValue(room.code),
+      bytes: new TextEncoder().encode(JSON.stringify(room)).byteLength,
+      eventCount: events.length,
+      releasedMatches: releasedMatches.length,
+    });
     await commitAtomicRoomBatch(this.ctx.storage, {
       room,
       events,
@@ -762,8 +869,13 @@ export class TournamentRoom extends DurableObject {
       mode: "delta",
       roomPatch: {
         status: room.status,
+        members: publicRoom(room).members,
         tournamentStatus: room.tournament?.status,
         roundNumber: room.tournament?.roundNumber,
+        championTeamId: room.tournament?.championTeamId || null,
+        completionReason: room.tournament?.completionReason || null,
+        completedAt: room.tournament?.completedAt || null,
+        tacticsByTeam: room.tournament?.tacticsByTeam || {},
         currentRound: (currentRound?.updatedVersion || 0) > afterStateVersion
           ? { ...currentRound, matches: currentRound.matches.map(publicOnlineMatch) }
           : undefined,
@@ -877,48 +989,71 @@ export class OnlineCapacityCoordinator extends DurableObject {
     const body = request.method === "POST" ? await readJson(request) : {};
     const now = Date.now();
     let result;
-    await this.ctx.storage.transaction(async (transaction) => {
-      const capacity = await transaction.get("capacity") || { sequence: 0, queue: [], leases: {} };
-      removeExpiredCapacity(capacity, now);
-      const limit = configuredActiveMatchLimit(this.env);
-      if (action === "acquire") {
-        validateCapacityIdentity(body);
-        const key = `${body.roomId}:${body.matchId}`;
-        const existing = capacity.leases[key];
-        if (existing) {
-          existing.expiresAt = now + ONLINE_LEASE_MS;
-        } else if (!capacity.queue.some((entry) => entry.key === key)) {
+    const capacity = await this.ctx.storage.get("capacity") || { sequence: 0, queue: [], leases: {} };
+    removeExpiredCapacity(capacity, now);
+    const limit = configuredActiveMatchLimit(this.env);
+    if (action === "acquire") {
+      validateCapacityIdentity(body);
+      const key = `${body.roomId}:${body.matchId}`;
+      const priority = body.priority === "interactive" ? "interactive" : "background";
+      const existing = capacity.leases[key];
+      if (existing) {
+        existing.expiresAt = now + ONLINE_LEASE_MS;
+        existing.priority = priority;
+      } else {
+        const queued = capacity.queue.find((entry) => entry.key === key);
+        if (queued) {
+          queued.priority = priority;
+        } else {
           capacity.sequence += 1;
-          capacity.queue.push({ key, roomId: body.roomId, matchId: body.matchId, sequence: capacity.sequence });
+          capacity.queue.push({ key, roomId: body.roomId, matchId: body.matchId, priority, sequence: capacity.sequence });
         }
-        fillCapacityLeases(capacity, limit, now);
-        result = capacityResult(capacity, key, limit, now);
-      } else if (action === "renew") {
-        validateCapacityIdentity(body);
-        const key = `${body.roomId}:${body.matchId}`;
-        if (capacity.leases[key]) {
-          capacity.leases[key].renewedAt = now;
-          capacity.leases[key].expiresAt = now + ONLINE_LEASE_MS;
+      }
+      if (priority === "interactive" && !capacity.leases[key] && Object.keys(capacity.leases).length >= limit) {
+        const backgroundLease = Object.entries(capacity.leases)
+          .filter(([, lease]) => lease.priority !== "interactive")
+          .toSorted(([, first], [, second]) => (second.acquiredAt || 0) - (first.acquiredAt || 0))[0];
+        if (backgroundLease) {
+          const [backgroundKey, lease] = backgroundLease;
+          delete capacity.leases[backgroundKey];
+          if (!capacity.queue.some((entry) => entry.key === backgroundKey)) {
+            capacity.queue.push({
+              key: backgroundKey,
+              roomId: lease.roomId,
+              matchId: lease.matchId,
+              priority: "background",
+              sequence: lease.sequence,
+            });
+          }
         }
-        result = capacityResult(capacity, key, limit, now);
-      } else if (action === "release") {
-        validateCapacityIdentity(body);
-        const key = `${body.roomId}:${body.matchId}`;
-        delete capacity.leases[key];
-        capacity.queue = capacity.queue.filter((entry) => entry.key !== key);
-        fillCapacityLeases(capacity, limit, now);
-        result = capacityResult(capacity, key, limit, now);
-      } else {
-        fillCapacityLeases(capacity, limit, now);
-        result = capacityResult(capacity, null, limit, now);
       }
-      await transaction.put("capacity", capacity);
-      if (Object.keys(capacity.leases).length || capacity.queue.length) {
-        await transaction.setAlarm(now + ONLINE_LEASE_RENEW_MS);
-      } else {
-        await transaction.deleteAlarm();
+      fillCapacityLeases(capacity, limit, now);
+      result = capacityResult(capacity, key, limit, now);
+    } else if (action === "renew") {
+      validateCapacityIdentity(body);
+      const key = `${body.roomId}:${body.matchId}`;
+      if (capacity.leases[key]) {
+        capacity.leases[key].renewedAt = now;
+        capacity.leases[key].expiresAt = now + ONLINE_LEASE_MS;
       }
-    });
+      result = capacityResult(capacity, key, limit, now);
+    } else if (action === "release") {
+      validateCapacityIdentity(body);
+      const key = `${body.roomId}:${body.matchId}`;
+      delete capacity.leases[key];
+      capacity.queue = capacity.queue.filter((entry) => entry.key !== key);
+      fillCapacityLeases(capacity, limit, now);
+      result = capacityResult(capacity, key, limit, now);
+    } else {
+      fillCapacityLeases(capacity, limit, now);
+      result = capacityResult(capacity, null, limit, now);
+    }
+    await this.ctx.storage.put("capacity", capacity);
+    if (Object.keys(capacity.leases).length || capacity.queue.length) {
+      await this.ctx.storage.setAlarm(now + ONLINE_LEASE_RENEW_MS);
+    } else {
+      await this.ctx.storage.deleteAlarm();
+    }
     structuredLog("capacity", {
       action,
       durationMs: Number((performance.now() - startedAt).toFixed(2)),
@@ -958,6 +1093,10 @@ function removeExpiredCapacity(capacity, now) {
 }
 
 function fillCapacityLeases(capacity, limit, now) {
+  capacity.queue.sort((first, second) => {
+    const priorityDifference = Number(second.priority === "interactive") - Number(first.priority === "interactive");
+    return priorityDifference || first.sequence - second.sequence;
+  });
   while (Object.keys(capacity.leases).length < limit && capacity.queue.length) {
     const entry = capacity.queue.shift();
     capacity.leases[entry.key] = { ...entry, acquiredAt: now, renewedAt: now, expiresAt: now + ONLINE_LEASE_MS };
@@ -1068,12 +1207,16 @@ const DRAFT_TEAM_BY_ID = new Map(DRAFT_TEAMS.map((team) => [team.id, team]));
 function createOnlineTournament(room) {
   const teamIds = DRAFT_TEAMS.map((team) => team.id);
   const draftedTeamIds = room.draft.picks.map((pick) => pick.teamId);
-  const teamOwnerById = Object.fromEntries(room.draft.picks.map((pick) => [pick.teamId, pick.memberId]));
+  const activeMemberIds = new Set(room.members.filter((member) => !member.leftAt && !member.isCpu).map((member) => member.id));
+  const teamOwnerById = Object.fromEntries(room.draft.picks.map((pick) => [
+    pick.teamId,
+    activeMemberIds.has(pick.memberId) ? pick.memberId : `cpu:${pick.teamId}`,
+  ]));
   const activeTeamByMember = {};
   const tactics = {};
   const tacticsByTeam = Object.fromEntries(draftedTeamIds.map((teamId) => [teamId, "balanced"]));
   room.members.forEach((member) => {
-    if (member.isCpu) return;
+    if (member.isCpu || member.leftAt) return;
     const ownedTeams = draftedTeamIds.filter((teamId) => teamOwnerById[teamId] === member.id);
     activeTeamByMember[member.id] = bestOnlineTeam(ownedTeams);
     tactics[member.id] = "balanced";
@@ -1196,8 +1339,31 @@ function controllerForTeam(room, teamId) {
   if (!teamId) return null;
   const ownerId = room.tournament.teamOwnerById[teamId];
   const owner = memberById(room, ownerId);
-  if (!owner || owner.isCpu) return null;
+  if (!owner || owner.isCpu || owner.leftAt) return null;
   return ownerId;
+}
+
+function relinquishOnlineMemberControl(room, memberId, now = Date.now()) {
+  const tournament = room.tournament;
+  if (!tournament) return;
+  Object.entries(tournament.teamOwnerById || {}).forEach(([teamId, ownerId]) => {
+    if (ownerId === memberId) tournament.teamOwnerById[teamId] = `cpu:${teamId}`;
+  });
+  delete tournament.activeTeamByMember?.[memberId];
+  delete tournament.tactics?.[memberId];
+  tournament.selectionRequired = (tournament.selectionRequired || []).filter((id) => id !== memberId);
+  tournament.rounds?.forEach((round) => round.matches.forEach((match) => {
+    match.readyMemberIds = (match.readyMemberIds || []).filter((id) => id !== memberId);
+    match.requiredMemberIds = (match.requiredMemberIds || []).filter((id) => id !== memberId);
+    if (match.liveState?.controllers?.home === memberId) match.liveState.controllers.home = null;
+    if (match.liveState?.controllers?.away === memberId) match.liveState.controllers.away = null;
+    if (match.liveState?.pendingDecision?.memberId === memberId) match.liveState.pendingDecision.deadlineAt = now;
+    if (match.playback?.controllerMemberIds) {
+      match.playback.controllerMemberIds = match.playback.controllerMemberIds.filter((id) => id !== memberId);
+    }
+  }));
+  tournament.stateVersion = (tournament.stateVersion || 0) + 1;
+  settleOnlineTournament(room);
 }
 
 function requiredControllersForMatch(room, match) {
@@ -1228,9 +1394,21 @@ function settleOnlineTournament(room) {
     if (refreshOnlineSelections(room)) changed = true;
     if (round.matches.every((match) => match.status === "complete")) {
       const winners = round.matches.map((match) => match.winnerTeamId).filter(Boolean);
+      const remainingHumanOwners = new Set(winners
+        .map((teamId) => tournament.teamOwnerById[teamId])
+        .filter(Boolean));
+      if (remainingHumanOwners.size === 0) {
+        tournament.status = "complete";
+        tournament.championTeamId = null;
+        tournament.completionReason = "all-players-eliminated";
+        tournament.completedAt = Date.now();
+        room.status = "tournament-complete";
+        return;
+      }
       if (winners.length === 1) {
         tournament.status = "complete";
         tournament.championTeamId = winners[0];
+        tournament.completionReason = "champion";
         tournament.completedAt = Date.now();
         room.status = "tournament-complete";
         return;
@@ -1239,6 +1417,7 @@ function settleOnlineTournament(room) {
       if (remainingOwners.size === 1) {
         tournament.status = "complete";
         tournament.championTeamId = bestOnlineTeam(winners);
+        tournament.completionReason = "champion";
         tournament.completedAt = Date.now();
         room.status = "tournament-complete";
         return;
@@ -1449,7 +1628,7 @@ function processOnlinePenalty(match, shootingTeamId, target, manuallyAimed) {
   const goalChance = manuallyAimed
     ? onlineManualPenaltyGoalChance(shootingRating, goalkeeperMatched)
     : onlineAutomaticPenaltyGoalChance(shootingRating, goalkeeperMatched);
-  const scored = secureRandomFloat() < goalChance;
+  const scored = target === "middle" || (!goalkeeperMatched && secureRandomFloat() < goalChance);
   const missType = scored ? null : goalkeeperMatched ? "save" : "wide";
   if (isHome) {
     match.penalty.homeKicks += 1;
@@ -1627,7 +1806,9 @@ function readyOnlineMatch(room, member, matchId) {
 
 function updateOnlineTactic(room, member, tactic, teamId) {
   requireActiveOnlineTournament(room);
-  if (member.isCpu || !ONLINE_TACTICS[tactic]) throw new RoomRequestError("Choose a valid tactical approach.", 400);
+  if (member.isCpu || typeof tactic !== "string" || !Object.hasOwn(ONLINE_TACTICS, tactic)) {
+    throw new RoomRequestError("Choose a valid tactical approach.", 400);
+  }
   if (room.tournament.teamOwnerById[teamId] !== member.id) throw new RoomRequestError("Choose one of your countries.", 403);
   const match = currentOnlineRound(room).matches.find((item) => item.homeTeamId === teamId || item.awayTeamId === teamId);
   room.tournament.tacticsByTeam ||= {};
@@ -1829,7 +2010,14 @@ function publicRoom(room) {
     memberCount: room.members.filter((member) => !member.leftAt).length,
     maxMembers: room.maxPlayers,
     picksPerMember: room.picksPerMember,
-    members: room.members.filter((member) => !member.leftAt).map(({ id, name, isHost, isCpu = false, joinedAt }) => ({ id, name, isHost, isCpu, joinedAt })),
+    members: room.members.filter((member) => !member.leftAt).map(({ id, name, isHost, isCpu = false, joinedAt, viewedMatchId = null }) => ({
+      id,
+      name,
+      isHost,
+      isCpu,
+      joinedAt,
+      viewedMatchId,
+    })),
     draft: room.draft ? {
       status: room.draft.status,
       baseOrder: room.draft.baseOrder,
@@ -1854,6 +2042,7 @@ function publicRoom(room) {
       tacticsByTeam: room.tournament.tacticsByTeam || {},
       survivingTeamIds: [...survivingOnlineTeamIds(room)],
       championTeamId: room.tournament.championTeamId,
+      completionReason: room.tournament.completionReason || null,
       startedAt: room.tournament.startedAt,
       completedAt: room.tournament.completedAt,
       stateVersion: room.tournament.stateVersion || 0,

@@ -3,9 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <script src="./redirect.js"></script>
+    <script>
+      if (["/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup"].includes(window.location.pathname.replace(/\/+$/, "") || "/")) {
+        document.documentElement.classList.add("route-retro-loading");
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6724809725459853"
       crossorigin="anonymous"></script>
+    <script async src="./analytics.js"></script>
     <meta name="theme-color" content="#0b0f17" />
     <meta
       name="description"
@@ -22,7 +28,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=somaliland-flag-1" />
+    <link rel="stylesheet" href="./clean.css?v=retro-edition-colors-58" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -35,14 +41,10 @@
           <span aria-hidden="true">&#8635;</span>
         </button>
         <button class="legacy-header-back" id="legacyHeaderBackButton" type="button" aria-label="Back to modes" hidden>&larr;</button>
-        <a class="brand" href="/" aria-label="256 TEAMS WC home">
+        <a class="brand" href="/" aria-label="256 Teams home">
           <span class="brand-mark" aria-hidden="true">
             <span class="brand-mark-number">256</span>
             <span class="brand-mark-label">TEAMS</span>
-          </span>
-          <span class="brand-copy">
-            <strong>256 TEAMS WC</strong>
-            <small>Global Cup 2030</small>
           </span>
         </a>
 
@@ -64,14 +66,35 @@
             <span aria-hidden="true">&#9881;</span>
             <span>Settings</span>
           </button>
+          <button class="utility-button news-header-button" id="newsButton" type="button" aria-label="News" title="News">
+            <span class="news-icon" aria-hidden="true"></span>
+            <span>News</span>
+          </button>
           <button class="utility-button" id="bugReportButton" type="button" aria-label="Feedback" title="Feedback">
             <span aria-hidden="true">!</span>
             <span>Feedback</span>
           </button>
-          <a class="utility-button donate-link header-donate-link" href="https://ko-fi.com/256teams" target="_blank" rel="noopener noreferrer" aria-label="Donate" title="Donate">
+          <button class="utility-button achievements-header-button" id="openAchievementsButton" type="button" aria-label="Achievements" title="Achievements">
+            <span aria-hidden="true">&#127942;</span>
+            <span>Achievements</span>
+          </button>
+          <button class="utility-button discord-header-button" id="discordButton" type="button" aria-label="Discord" title="Discord">
+            <span class="discord-icon" aria-hidden="true"></span>
+            <span>Discord</span>
+          </button>
+          <button class="utility-button donate-link header-donate-link" id="donateButton" type="button" aria-label="Donate" title="Donate">
             <span aria-hidden="true">$</span>
             <span>Donate</span>
-          </a>
+          </button>
+          <button class="utility-button main-account-button" id="mainAccountButton" type="button" aria-label="Log in" title="Log in">
+            <span class="account-avatar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 12.25a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5Z" />
+                <path d="M4.25 20.25c.62-3.62 3.71-6.25 7.75-6.25s7.13 2.63 7.75 6.25" />
+              </svg>
+            </span>
+            <span id="mainAccountLabel">Log in</span>
+          </button>
         </div>
 
       </aside>
@@ -92,14 +115,59 @@
         <section class="field-overview" id="fieldOverview">
           <section class="mode-select" aria-label="Tournament modes">
             <div class="mode-grid">
+              <article class="mode-card mode-card-challenge" hidden>
+                <div class="mode-card-copy">
+                  <h3>Palestine Challenge</h3>
+                  <p>Lead Palestine through as many tournaments as possible before time runs out. Every goal, upset and round you survive earns points. Climb the global leaderboard for a chance to win prizes.</p>
+                </div>
+                <div class="landing-settings challenge-card-settings" aria-label="Locked Palestine Challenge settings">
+                  <div class="landing-setting">
+                    <span>Simulation style <span class="challenge-setting-lock" aria-label="Locked">&#128274;</span></span>
+                    <div class="segmented challenge-locked-control" aria-label="Simulation style locked to Standard">
+                      <button type="button" disabled>Realistic</button>
+                      <button class="active" type="button" disabled>Standard</button>
+                      <button type="button" disabled>Pure chaos</button>
+                    </div>
+                  </div>
+                  <div class="landing-setting">
+                    <span>Goal level <span class="challenge-setting-lock" aria-label="Locked">&#128274;</span></span>
+                    <div class="segmented challenge-locked-control" aria-label="Goal level locked to Normal">
+                      <button type="button" disabled>Tight</button>
+                      <button class="active" type="button" disabled>Normal</button>
+                      <button type="button" disabled>Goal fest</button>
+                    </div>
+                  </div>
+                  <div class="landing-setting landing-team-setting">
+                    <span>Choose team <span class="challenge-setting-lock" aria-label="Locked">&#128274;</span></span>
+                    <button class="spectate-picker has-team challenge-locked-team" type="button" disabled aria-label="Team locked to Palestine">
+                      <span class="spectate-picker-mark spectate-picker-flag" aria-hidden="true"><img src="./assets/flags/palestine.svg" alt="" /></span>
+                      <span class="spectate-picker-copy"><strong>Palestine</strong><small>Challenge team locked</small></span>
+                      <span class="spectate-picker-arrow" aria-hidden="true">&#128274;</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="mode-card-actions">
+                  <button class="primary-button start-tournament" id="openPalestineChallengeButton" type="button">Palestine Challenge <span aria-hidden="true">&rarr;</span></button>
+                </div>
+              </article>
+
               <article class="mode-card mode-card-default">
                 <div class="mode-card-copy">
-                  <h3>Default mode</h3>
-                  <p>The full 256-team knockout tournament with your choice of realism and goal level.</p>
+                  <h3>256-team knockout</h3>
                 </div>
                 <div class="landing-settings" aria-label="Default mode settings">
                   <div class="landing-setting">
-                    <span>Simulation style</span>
+                    <div class="landing-setting-heading">
+                      <span>Simulation style</span>
+                      <details class="landing-setting-info">
+                        <summary aria-label="Explain simulation styles">i</summary>
+                        <div class="landing-setting-info-panel">
+                          <p><strong>Realistic</strong> Stronger teams are more consistent, so major upsets are less common.</p>
+                          <p><strong>Standard</strong> Team ratings matter, with enough variation for believable upsets.</p>
+                          <p><strong>Pure chaos</strong> Ratings matter much less, creating far more shocks and unpredictable results.</p>
+                        </div>
+                      </details>
+                    </div>
                     <div class="segmented landing-segmented" id="landingUpsetSetting" data-setting="upset">
                       <button type="button" data-value="realistic">Realistic</button>
                       <button type="button" data-value="balanced">Standard</button>
@@ -107,7 +175,17 @@
                     </div>
                   </div>
                   <div class="landing-setting">
-                    <span>Goal level</span>
+                    <div class="landing-setting-heading">
+                      <span>Goal level</span>
+                      <details class="landing-setting-info">
+                        <summary aria-label="Explain goal levels">i</summary>
+                        <div class="landing-setting-info-panel">
+                          <p><strong>Tight</strong> Fewer chances and lower-scoring matches are more likely.</p>
+                          <p><strong>Normal</strong> Uses balanced chance creation for typical football scorelines.</p>
+                          <p><strong>Goal fest</strong> Creates more chances, more goals, and a greater chance of big scorelines.</p>
+                        </div>
+                      </details>
+                    </div>
                     <div class="segmented landing-segmented" id="landingGoalSetting" data-setting="goals">
                       <button type="button" data-value="tight">Tight</button>
                       <button type="button" data-value="normal">Normal</button>
@@ -138,11 +216,10 @@
               <article class="mode-card mode-card-online">
                 <div class="mode-card-copy">
                   <h3>Online party mode</h3>
-                  <p id="onlineModeCopy">Private rooms are being tuned before they come back.</p>
+                  <p id="onlineModeCopy">Online party mode is coming soon.</p>
                 </div>
                 <div class="online-mode-actions" id="onlineModeActions" hidden>
-                  <button class="primary-button start-tournament" id="createOnlineRoomButton" type="button">Create room <span aria-hidden="true">→</span></button>
-                  <button class="secondary-button" id="joinOnlineRoomButton" type="button">Join with code</button>
+                  <button class="primary-button start-tournament" id="joinOnlineRoomButton" type="button">Join room <span aria-hidden="true">→</span></button>
                 </div>
                 <button class="online-coming-soon" id="onlineModeComingSoon" type="button" disabled>Coming soon</button>
               </article>
@@ -161,6 +238,92 @@
                   <button class="secondary-button legacy-restart-button" id="restartLegacyDraftButton" type="button" hidden>Restart</button>
                 </div>
               </article>
+
+                <article class="mode-card mode-card-retro" id="retroModeCard">
+                  <div class="mode-card-copy retro-mode-heading">
+                    <img id="retroWorldCupLogo" src="./assets/retro-world-cup-2014.png" alt="" />
+                    <div class="retro-mode-title">
+                      <h3>Retro WC Simulator</h3>
+                      <div class="retro-year-switch" id="retroWorldCupYearSwitch" role="group" aria-label="World Cup year">
+                        <button type="button" data-retro-year="2010" aria-pressed="false">2010</button>
+                        <button class="active" type="button" data-retro-year="2014" aria-pressed="true">2014</button>
+                        <button type="button" data-retro-year="2018" aria-pressed="false">2018</button>
+                        <button type="button" data-retro-year="2022" aria-pressed="false">2022</button>
+                      </div>
+                    </div>
+                  </div>
+                <div class="landing-settings retro-landing-settings" aria-label="Retro World Cup Sim settings">
+                  <div class="landing-setting">
+                    <div class="landing-setting-heading">
+                      <span>Simulation style</span>
+                      <details class="landing-setting-info">
+                        <summary aria-label="Explain simulation styles">i</summary>
+                        <div class="landing-setting-info-panel">
+                          <p><strong>Realistic</strong> Stronger teams are more consistent, so major upsets are less common.</p>
+                          <p><strong>Standard</strong> Team ratings matter, with enough variation for believable upsets.</p>
+                          <p><strong>Pure chaos</strong> Ratings matter much less, creating far more shocks and unpredictable results.</p>
+                        </div>
+                      </details>
+                    </div>
+                    <div class="segmented landing-segmented" data-setting="upset" data-settings-scope="retro" aria-label="Retro simulation style">
+                      <button type="button" data-value="realistic">Realistic</button>
+                      <button type="button" data-value="balanced">Standard</button>
+                      <button type="button" data-value="chaos">Pure chaos</button>
+                    </div>
+                  </div>
+                  <div class="landing-setting">
+                    <div class="landing-setting-heading">
+                      <span>Goal level</span>
+                      <details class="landing-setting-info">
+                        <summary aria-label="Explain goal levels">i</summary>
+                        <div class="landing-setting-info-panel">
+                          <p><strong>Tight</strong> Fewer chances and lower-scoring matches are more likely.</p>
+                          <p><strong>Normal</strong> Uses balanced chance creation for typical football scorelines.</p>
+                          <p><strong>Goal fest</strong> Creates more chances, more goals, and a greater chance of big scorelines.</p>
+                        </div>
+                      </details>
+                    </div>
+                    <div class="segmented landing-segmented" data-setting="goals" data-settings-scope="retro" aria-label="Retro goal level">
+                      <button type="button" data-value="tight">Tight</button>
+                      <button type="button" data-value="normal">Normal</button>
+                      <button type="button" data-value="wild">Goal fest</button>
+                    </div>
+                  </div>
+                  <div class="landing-setting landing-team-setting">
+                    <span>Choose team</span>
+                      <button class="spectate-picker retro-team-picker" id="retroTeamPickerButton" type="button" aria-haspopup="dialog">
+                        <span class="spectate-picker-mark retro-team-mark" id="retroTeamPickerMark" aria-hidden="true">32</span>
+                        <span class="spectate-picker-copy">
+                          <strong id="retroWorldCupTeamLabel">Choose a 2014 team</strong>
+                          <small id="retroWorldCupTeamHint">32 tournament finalists</small>
+                        </span>
+                        <span class="spectate-picker-arrow" aria-hidden="true">&rsaquo;</span>
+                      </button>
+                  </div>
+                </div>
+                <div class="mode-card-actions">
+                  <button class="primary-button start-tournament retro-start-button" id="startRetroWorldCupButton" type="button">
+                    Start World Cup
+                    <span aria-hidden="true">&rarr;</span>
+                  </button>
+                  <button class="secondary-button legacy-restart-button" id="restartRetroWorldCupButton" type="button" hidden>Restart</button>
+                </div>
+              </article>
+
+              <article class="mode-card mode-card-coming-soon mode-card-custom">
+                <div class="mode-card-copy">
+                  <h3>Custom tournament</h3>
+                </div>
+                <button class="online-coming-soon" type="button" disabled>Coming soon</button>
+              </article>
+
+              <article class="mode-card mode-card-coming-soon mode-card-premier-league">
+                <div class="mode-card-copy">
+                  <h3>Premier League 26/27 simulator</h3>
+                </div>
+                <button class="online-coming-soon" type="button" disabled>Coming soon</button>
+              </article>
+
             </div>
           </section>
 
@@ -189,11 +352,39 @@
           <div class="participant-sections" id="participantSections"></div>
         </section>
 
+        <section class="achievements-screen" id="achievementsScreen" aria-labelledby="achievementsTitle" hidden>
+          <header class="achievements-intro">
+            <h1 id="achievementsTitle">Achievements</h1>
+            <p>Complete every Retro World Cup challenge. Progress is saved to your account.</p>
+          </header>
+          <section class="achievement-progress-panel">
+            <div class="achievement-year-tabs" role="tablist" aria-label="World Cup achievement year">
+              <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
+              <button type="button" role="tab" data-achievement-year="2014" aria-selected="true">2014</button>
+              <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
+            </div>
+            <div class="achievement-challenge-heading">
+              <h2 id="achievementChallengeTitle">Win the 2014 WC with every country</h2>
+            </div>
+            <div class="achievement-progress-copy">
+              <div>
+                <span>COUNTRIES COMPLETE</span>
+                <strong id="retro2014AchievementCount">0 / 32</strong>
+              </div>
+              <button class="achievement-login-button" id="achievementLoginButton" type="button" hidden>Log in to track progress</button>
+            </div>
+            <div class="achievement-progress-track" aria-hidden="true">
+              <span id="retro2014AchievementBar"></span>
+            </div>
+            <div class="achievement-country-grid" id="retro2014AchievementGrid" aria-live="polite"></div>
+          </section>
+        </section>
+
         <section class="content" id="mainContent" hidden>
           <aside class="insight-column insight-left">
             <section class="panel golden-boot-panel">
               <div class="panel-heading">
-                <span>GOLDEN BOOT</span>
+                <span id="goldenBootTitle">GOLDEN BOOT</span>
               </div>
               <div class="golden-boot-list" id="goldenBootList"></div>
             </section>
@@ -224,7 +415,7 @@
                 <div class="penalty-scene match-penalty-scene" id="matchPenaltyScene" data-state="setup" data-direction="centre" data-dive="left" data-result="pending">
                   <div class="penalty-goal">
                     <div class="penalty-net"></div>
-                    <div class="online-penalty-targets match-penalty-targets" aria-label="Choose where to shoot">
+                    <div class="online-penalty-targets match-penalty-targets" aria-label="Choose a penalty target">
                       <button data-match-penalty-target="top-left" type="button" aria-label="Top left"></button>
                       <button data-match-penalty-target="top-right" type="button" aria-label="Top right"></button>
                       <button data-match-penalty-target="middle" type="button" aria-label="Middle"></button>
@@ -312,7 +503,7 @@
                 <div class="penalty-scene standard-penalty-scene" id="penaltyScene" data-state="setup" data-direction="centre" data-dive="centre" data-target="middle">
                   <div class="penalty-goal">
                     <div class="penalty-net"></div>
-                    <div class="online-penalty-targets standard-penalty-targets" aria-label="Choose where to shoot">
+                    <div class="online-penalty-targets standard-penalty-targets" aria-label="Choose a penalty target">
                       <button data-standard-penalty-target="top-left" type="button" aria-label="Top left"></button>
                       <button data-standard-penalty-target="top-right" type="button" aria-label="Top right"></button>
                       <button data-standard-penalty-target="middle" type="button" aria-label="Middle"></button>
@@ -390,10 +581,18 @@
                     </div>
                   </div>
                   <div class="prediction-result" id="championPredictionResult" hidden></div>
-                  <button class="primary-button" id="championReset" type="button">Run it back <span>↻</span></button>
+                  <div class="champion-actions">
+                    <button class="secondary-button" id="championTeamJourney" type="button">View team fixtures</button>
+                    <button class="primary-button" id="championReset" type="button">Run it back <span>↻</span></button>
+                  </div>
                 </div>
               </div>
             </article>
+
+            <details class="retro-match-lineups-panel" id="retroMatchLineupsPanel" hidden>
+              <summary>Starting XI</summary>
+              <div class="retro-lineups-grid" id="retroMatchLineupsBody"></div>
+            </details>
 
             <section class="story-strip" id="storyStrip">
               <div class="story-card">
@@ -486,11 +685,11 @@
           </div>
           <time
             class="footer-last-updated"
-            datetime="2026-07-22T02:28:16+01:00"
-            title="Last deployed 22 July 2026 at 2:28 AM UK time"
+            datetime="2026-07-24T03:09:05+01:00"
+            title="Last deployed 24 July 2026 at 3:09 AM UK time"
           >
             <span>Last updated:</span>
-            <strong>22 Jul, 2:28 AM BST</strong>
+            <strong>24 Jul, 3:09 AM BST</strong>
           </time>
           <div class="site-footer-meta">
             <nav class="site-footer-links" aria-label="Legal information">
@@ -504,7 +703,335 @@
       </main>
     </div>
 
+    <section class="retro-tournament-screen" id="retroWorldCupScreen" aria-labelledby="retroTournamentTitle" hidden>
+      <header class="retro-screen-header">
+        <div class="retro-screen-left">
+          <button class="retro-screen-restart" id="retroWorldCupRestartButton" type="button" aria-label="Restart tournament" title="Restart tournament">
+            <span aria-hidden="true">&#8635;</span>
+          </button>
+          <button class="retro-screen-action" id="retroSettingsButton" type="button" aria-label="Settings" title="Settings">
+            <span aria-hidden="true">&#9881;</span>
+            <span>Settings</span>
+          </button>
+          <button class="retro-screen-action" id="retroNewsButton" type="button" aria-label="News" title="News">
+            <span class="news-icon" aria-hidden="true"></span>
+            <span>News</span>
+          </button>
+        </div>
+        <a class="retro-screen-brand" href="/" aria-label="256 Teams home">
+          <span class="brand-mark" aria-hidden="true">
+            <span class="brand-mark-number">256</span>
+            <span class="brand-mark-label">TEAMS</span>
+          </span>
+        </a>
+        <div class="retro-screen-actions" aria-label="World Cup tools">
+          <button class="retro-screen-action" id="retroFeedbackButton" type="button" aria-label="Feedback" title="Feedback">
+            <span aria-hidden="true">!</span>
+            <span>Feedback</span>
+          </button>
+          <button class="retro-screen-action" id="retroAchievementsButton" type="button" aria-label="Achievements" title="Achievements">
+            <span aria-hidden="true">&#127942;</span>
+            <span>Achievements</span>
+          </button>
+          <button class="retro-screen-action" id="retroDonateButton" type="button" aria-label="Donate" title="Donate">
+            <span aria-hidden="true">$</span>
+            <span>Donate</span>
+          </button>
+          <button class="retro-screen-action retro-account-button" id="retroAccountButton" type="button" aria-label="Account" title="Account">
+            <span class="account-avatar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 12.25a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5Z" />
+                <path d="M4.25 20.25c.62-3.62 3.71-6.25 7.75-6.25s7.13 2.63 7.75 6.25" />
+              </svg>
+            </span>
+            <span id="retroAccountLabel">Log in</span>
+          </button>
+        </div>
+      </header>
+      <main class="retro-tournament-main">
+        <button class="retro-back-to-modes" id="retroWorldCupBackButton" type="button" aria-label="Back to modes">
+          <span aria-hidden="true">&larr;</span>
+          <span>Back to modes</span>
+        </button>
+        <section class="retro-tournament-heading">
+          <div>
+            <span id="retroTournamentKicker">BRAZIL 2014</span>
+            <h1 id="retroTournamentTitle">World Cup 2014</h1>
+          </div>
+          <div class="retro-tournament-progress" id="retroTournamentProgress"></div>
+        </section>
+        <nav class="retro-view-tabs" aria-label="Retro World Cup views">
+          <button class="active" type="button" data-retro-view="matches">Matches</button>
+          <button type="button" data-retro-view="squads">Squads</button>
+        </nav>
+        <div class="retro-tournament-body" id="retroTournamentBody"></div>
+      </main>
+    </section>
+
+    <section class="challenge-screen" id="palestineChallengeScreen" hidden>
+      <header class="challenge-header">
+        <button class="legacy-topbar-back" id="challengeBackButton" type="button"><span aria-hidden="true">&larr;</span><span>Back to modes</span></button>
+        <a class="brand challenge-brand" href="/" aria-label="256 Teams home"><span class="brand-badge"><strong>256</strong><small>TEAMS</small></span></a>
+        <button class="secondary-button challenge-account-button" id="challengeAccountButton" type="button">Log in</button>
+      </header>
+      <main class="challenge-main">
+        <section class="challenge-hero">
+          <div>
+            <span class="section-kicker">LIMITED-TIME GLOBAL EVENT</span>
+            <h1><img class="palestine-flag-inline challenge-title-flag" src="./assets/flags/palestine.svg" alt="" /> Palestine Challenge</h1>
+            <p id="challengeDescription">Lead Palestine to World Cup glory and compete against everyone else.</p>
+          </div>
+          <div class="challenge-countdown" aria-live="polite">
+            <span id="challengeCountdownLabel">Ends in</span>
+            <div id="challengeCountdown"><strong>--</strong><small>Days</small><strong>--</strong><small>Hours</small><strong>--</strong><small>Minutes</small><strong>--</strong><small>Seconds</small></div>
+          </div>
+        </section>
+
+        <section class="challenge-prizes" id="challengePrizes" aria-label="Challenge prizes"></section>
+
+        <section class="challenge-dashboard-band">
+          <div class="challenge-player-summary">
+            <div><span>Current rank</span><strong id="challengeCurrentRank">-</strong></div>
+            <div><span>Current score</span><strong id="challengeCurrentScore">0</strong></div>
+            <div><span>Attempts</span><strong id="challengeAttempts">0</strong></div>
+            <div><span>Best run</span><strong id="challengeBestRun">0</strong></div>
+          </div>
+          <div class="challenge-locked-settings">
+            <span>Locked settings</span>
+            <strong><img class="palestine-flag-inline" src="./assets/flags/palestine.svg" alt="" /> Palestine</strong>
+            <strong>Standard <span aria-label="Locked">&#128274;</span></strong>
+            <strong>Normal <span aria-label="Locked">&#128274;</span></strong>
+          </div>
+        </section>
+
+        <section class="challenge-run" id="challengeRunPanel">
+          <div class="challenge-run-copy">
+            <span class="section-kicker" id="challengeRunKicker">YOUR CHALLENGE</span>
+            <h2 id="challengeRunTitle">Log in to start a run</h2>
+            <p id="challengeRunCopy">Your best 25 completed tournaments count toward the leaderboard.</p>
+          </div>
+          <div class="challenge-match-result" id="challengeMatchResult" hidden></div>
+          <button class="primary-button challenge-start-button" id="challengeStartButton" type="button">Log in to play</button>
+          <p class="challenge-message" id="challengeMessage" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="challenge-scoring">
+          <div>
+            <span class="section-kicker">SCORING</span>
+            <h2>Every run matters. Your best 25 count.</h2>
+          </div>
+          <div class="challenge-scoring-grid">
+            <div><strong>Progress</strong><span>1 point in the Round of 256, rising to 30 for winning the final.</span></div>
+            <div><strong>Opponent strength</strong><span>Wins against top-ranked teams earn up to a 3x multiplier.</span></div>
+            <div><strong>Goals</strong><span>1 point per goal, capped at 5 per match. Shootout kicks never count.</span></div>
+            <div><strong>Champion</strong><span>Winning the tournament adds a 25-point bonus.</span></div>
+          </div>
+        </section>
+
+        <section class="challenge-data-section">
+          <div class="challenge-tabs" role="tablist" aria-label="Challenge information">
+            <button type="button" role="tab" data-challenge-tab="leaderboard" aria-selected="true">Leaderboard</button>
+            <button type="button" role="tab" data-challenge-tab="history" aria-selected="false">My history</button>
+          </div>
+          <div id="challengeLeaderboardPanel">
+            <div class="challenge-section-heading"><div><span class="section-kicker">GLOBAL STANDINGS</span><h2>Leaderboard</h2></div><span id="challengeLeaderboardStatus"></span></div>
+            <div class="challenge-leaderboard" id="challengeLeaderboard"></div>
+          </div>
+          <div id="challengeHistoryPanel" hidden>
+            <div class="challenge-section-heading"><div><span class="section-kicker">PLAYER PROFILE</span><h2 id="challengeProfileTitle">My runs</h2></div></div>
+            <div class="challenge-history" id="challengeHistory"></div>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <section class="profile-screen" id="profileScreen" aria-labelledby="profileTitle" hidden>
+      <header class="profile-header">
+        <button class="legacy-topbar-back" id="profileBackButton" type="button" aria-label="Back to home">
+          <span aria-hidden="true">&larr;</span>
+          <span>Back to modes</span>
+        </button>
+        <a class="brand profile-brand" href="/" aria-label="256 Teams home">
+          <span class="brand-mark" aria-hidden="true">
+            <span class="brand-mark-number">256</span>
+            <span class="brand-mark-label">TEAMS</span>
+          </span>
+        </a>
+      </header>
+      <main class="profile-main">
+        <section class="profile-hero">
+          <h1 id="profileTitle">Your profile</h1>
+          <div class="profile-hero-actions">
+            <button class="secondary-button profile-edit-toggle" id="profileEditToggle" type="button" aria-expanded="false">
+              Edit profile
+            </button>
+            <button class="secondary-button profile-signout-button" id="profileLogoutButton" type="button">Sign out</button>
+          </div>
+        </section>
+        <section class="profile-account-overview" id="profileCard">
+          <div class="profile-preview">
+            <div class="profile-avatar-preview" id="profileAvatarPreview" aria-hidden="true"><span></span></div>
+            <div>
+              <strong id="profileCurrentUsername">-</strong>
+              <span>256 TEAMS</span>
+            </div>
+          </div>
+          <div class="profile-overview-stat">
+            <strong id="profileAchievementCount">0</strong>
+            <span>Achievements unlocked</span>
+          </div>
+          <div class="profile-overview-stat">
+            <strong id="profileAchievementTotal">64</strong>
+            <span>Total achievements</span>
+          </div>
+        </section>
+
+        <section class="profile-edit-panel" id="profileEditPanel" hidden>
+          <div class="profile-section-heading">
+            <div>
+              <span>ACCOUNT DETAILS</span>
+              <h2>Edit profile</h2>
+            </div>
+          </div>
+          <form class="profile-form" id="profileForm">
+            <label class="profile-field">
+              <span>Username</span>
+              <input id="profileUsername" name="username" autocomplete="username" minlength="3" maxlength="20" required />
+            </label>
+            <div class="profile-field">
+              <span>Country picture</span>
+              <label class="profile-country-search">
+                <span aria-hidden="true">&#8981;</span>
+                <input id="profileCountrySearch" type="search" placeholder="Search countries" autocomplete="off" />
+              </label>
+              <div class="profile-country-grid" id="profileCountryGrid" role="listbox" aria-label="Choose profile country"></div>
+            </div>
+            <p class="challenge-message profile-message" id="profileMessage" role="status" aria-live="polite"></p>
+            <div class="profile-actions">
+              <button class="primary-button" id="profileSaveButton" type="submit">Save profile</button>
+            </div>
+          </form>
+        </section>
+
+        <div class="profile-dashboard-grid">
+          <section class="profile-achievements-section">
+            <div class="profile-section-heading">
+              <div>
+                <span>RETRO WORLD CUPS</span>
+                <h2>Achievements</h2>
+              </div>
+              <strong id="profileAchievementSummary">0 / 96</strong>
+            </div>
+            <div class="profile-achievement-years">
+              <article>
+                <span>South Africa 2010</span>
+                <strong id="profile2010AchievementCount">0 / 32</strong>
+                <div aria-hidden="true"><i id="profile2010AchievementBar"></i></div>
+              </article>
+              <article>
+                <span>Brazil 2014</span>
+                <strong id="profile2014AchievementCount">0 / 32</strong>
+                <div aria-hidden="true"><i id="profile2014AchievementBar"></i></div>
+              </article>
+              <article>
+                <span>Russia 2018</span>
+                <strong id="profile2018AchievementCount">0 / 32</strong>
+                <div aria-hidden="true"><i id="profile2018AchievementBar"></i></div>
+              </article>
+            </div>
+            <div class="profile-unlocked-heading">
+              <h3>Unlocked</h3>
+              <span id="profileUnlockedCount">0 achievements</span>
+            </div>
+            <div class="profile-unlocked-list" id="profileUnlockedAchievements">
+              <p class="profile-empty-state">No World Cup achievements unlocked yet.</p>
+            </div>
+          </section>
+
+          <aside class="profile-history-section">
+            <span class="profile-coming-soon">COMING SOON</span>
+            <h2>Tournament history</h2>
+            <p>Your completed tournaments, champions and best runs will appear here.</p>
+          </aside>
+        </div>
+        <section class="profile-danger-zone">
+          <div>
+            <h2>Delete account</h2>
+            <p>Send a request to permanently remove your account and saved progress.</p>
+          </div>
+          <button class="danger-button" id="profileDeleteRequestButton" type="button">Request deletion</button>
+        </section>
+      </main>
+    </section>
+
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <button class="achievement-unlock-banner" id="achievementUnlockBanner" type="button" aria-label="Open achievement details" hidden>
+      <span class="achievement-unlock-banner-mark" aria-hidden="true">&#9733;</span>
+      <span>
+        <small>ACHIEVEMENT UNLOCKED</small>
+        <strong id="achievementUnlockBannerTitle">Country complete</strong>
+      </span>
+      <span class="achievement-unlock-banner-arrow" aria-hidden="true">&rsaquo;</span>
+    </button>
+
+    <dialog class="modal challenge-auth-modal" id="challengeAuthModal">
+      <form method="dialog" id="challengeAuthForm">
+        <div class="modal-head">
+          <h2 id="challengeAuthTitle">Log in</h2>
+          <button class="icon-button close-modal" id="challengeAuthCloseButton" type="button" aria-label="Close">&times;</button>
+        </div>
+        <label><span>Username</span><input id="challengeUsername" name="username" autocomplete="username" minlength="3" maxlength="20" required /></label>
+        <label><span>Password</span><input id="challengePassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required /></label>
+        <button class="primary-button" id="challengeAuthSubmit" type="submit">Log in</button>
+        <div class="challenge-auth-divider"><span>or</span></div>
+        <button class="secondary-button challenge-google-button" id="challengeGoogleSignIn" type="button">
+          <span class="google-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#fbbc05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
+              <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/>
+            </svg>
+          </span>
+          <strong>Continue with Google</strong>
+        </button>
+        <button class="text-button challenge-auth-switch" id="challengeAuthSwitch" type="button">Create an account</button>
+        <p class="challenge-message" id="challengeAuthMessage" role="status"></p>
+      </form>
+    </dialog>
+
+    <dialog class="modal profile-delete-modal" id="profileDeleteModal">
+      <form id="profileDeleteForm">
+        <div class="modal-head">
+          <div>
+            <span class="section-kicker">ACCOUNT REQUEST</span>
+            <h2>Delete your account</h2>
+          </div>
+          <button class="icon-button close-modal" id="profileDeleteCloseButton" type="button" aria-label="Close">&times;</button>
+        </div>
+        <p>Your account will not be deleted immediately. This sends a request for the site owner to review.</p>
+        <label>
+          <span>Reason</span>
+          <select id="profileDeleteReason" required>
+            <option value="">Choose a reason</option>
+            <option value="not_using">I no longer use 256 Teams</option>
+            <option value="privacy">Privacy concerns</option>
+            <option value="technical">Technical problems</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label>
+          <span>Anything else? <small>Optional</small></span>
+          <textarea id="profileDeleteDetails" rows="4" maxlength="500" placeholder="Add any details that may help"></textarea>
+        </label>
+        <label class="profile-delete-confirm">
+          <input id="profileDeleteConfirm" type="checkbox" required />
+          <span>I understand this requests permanent deletion of my account and saved progress.</span>
+        </label>
+        <p class="challenge-message profile-delete-message" id="profileDeleteMessage" role="status" aria-live="polite"></p>
+        <button class="danger-button" id="profileDeleteSubmitButton" type="submit">Send deletion request</button>
+      </form>
+    </dialog>
 
     <dialog class="modal prediction-modal" id="predictionModal">
       <form method="dialog">
@@ -555,9 +1082,12 @@
           <button class="online-screen-action" id="onlineBugReportButton" type="button" aria-label="Feedback" title="Feedback">
             <span aria-hidden="true">!</span>
           </button>
-          <a class="online-screen-action" href="https://ko-fi.com/256teams" target="_blank" rel="noopener noreferrer" aria-label="Donate" title="Donate">
+          <button class="online-screen-action online-discord-button" id="onlineDiscordButton" type="button" aria-label="Discord" title="Discord">
+            <span class="discord-icon" aria-hidden="true"></span>
+          </button>
+          <button class="online-screen-action" id="onlineDonateButton" type="button" aria-label="Donate" title="Donate">
             <span aria-hidden="true">$</span>
-          </a>
+          </button>
         </div>
       </header>
 
@@ -567,26 +1097,24 @@
         </div>
 
         <section class="online-room-entry" id="onlineRoomEntry">
+          <label class="online-field online-name-field">
+            <span>Your name</span>
+            <input id="onlineDisplayName" type="text" maxlength="24" autocomplete="nickname" />
+          </label>
+          <div class="online-entry-options">
           <div class="online-entry-panel">
             <h2>Create a room</h2>
-            <label class="online-field">
-              <span>Your name</span>
-              <input id="createOnlineDisplayName" type="text" maxlength="24" autocomplete="nickname" />
-            </label>
             <button class="primary-button online-create-action" id="confirmCreateRoomButton" type="button">Create private room</button>
           </div>
           <div class="online-entry-divider" aria-hidden="true"><span>or</span></div>
           <div class="online-entry-panel">
             <h2>Join a room</h2>
-            <label class="online-field">
-              <span>Your name</span>
-              <input id="joinOnlineDisplayName" type="text" maxlength="24" autocomplete="nickname" />
-            </label>
             <label class="online-field online-code-field">
               <span>Room code</span>
               <input id="onlineRoomCodeInput" type="text" maxlength="6" inputmode="numeric" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="1234" />
             </label>
             <button class="secondary-button" id="confirmJoinRoomButton" type="button">Join room</button>
+          </div>
           </div>
         </section>
 
@@ -594,7 +1122,11 @@
           <div class="online-room-code-panel">
             <span>ROOM CODE</span>
             <strong id="onlineRoomCode">------</strong>
-            <button class="text-button" id="copyOnlineRoomCodeButton" type="button">Copy invite code</button>
+            <button class="text-button" id="copyOnlineRoomCodeButton" type="button">Copy code</button>
+            <div class="online-room-invite">
+              <a id="onlineRoomInviteLink" href="/online-mode" target="_blank" rel="noopener">256teams.com/online-mode</a>
+              <button class="text-button" id="copyOnlineRoomInviteButton" type="button">Copy invite link</button>
+            </div>
           </div>
           <div class="online-lobby-heading">
             <div>
@@ -649,6 +1181,10 @@
               <h3 id="onlineMatchRound">Round 1</h3>
             </div>
             <div class="online-match-head-actions">
+              <label class="online-spectator-picker" id="onlineSpectatorPicker" hidden>
+                <span>Spectating</span>
+                <select id="onlineSpectatorSelect" aria-label="Choose a player to spectate"></select>
+              </label>
               <button class="secondary-button online-penalty-tester-button" id="onlinePenaltyTesterButton" type="button" hidden>Test shootout</button>
               <button class="primary-button online-round-next" id="onlineRoundNextButton" type="button" hidden>Next <span aria-hidden="true">→</span></button>
               <span class="online-turn-pill" id="onlineMatchStatus">Waiting</span>
@@ -671,6 +1207,12 @@
             </div>
           </section>
           <section class="online-current-match" id="onlineCurrentMatch">
+            <button class="snapshot-trigger snapshot-card-button" id="onlineSnapshotButton" type="button" aria-label="Create online match snapshot" title="Create match snapshot" hidden>
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none">
+                <path d="M8.5 5.5 10 3.75h4l1.5 1.75H19a2 2 0 0 1 2 2v9.75a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2h3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+                <circle cx="12" cy="12.5" r="3.5" stroke="currentColor" stroke-width="1.7" />
+              </svg>
+            </button>
             <div class="match-penalty-overlay online-match-penalty-overlay" id="onlineMatchPenaltyOverlay" hidden aria-live="assertive">
               <div class="match-penalty-decision">
                 <span>REFEREE DECISION</span>
@@ -760,6 +1302,46 @@
           </div>
         </section>
 
+        <section class="online-results" id="onlineResults" hidden>
+          <header class="online-results-head">
+            <span class="section-kicker">TOURNAMENT COMPLETE</span>
+            <h2>Final results</h2>
+            <p id="onlineResultsSummary"></p>
+          </header>
+          <div class="online-results-tabs" role="tablist" aria-label="Tournament results views">
+            <button type="button" role="tab" aria-selected="true" data-online-results-tab="standings">Standings</button>
+            <button type="button" role="tab" aria-selected="false" data-online-results-tab="results">Player results</button>
+            <button type="button" role="tab" aria-selected="false" data-online-results-tab="bracket">Bracket</button>
+          </div>
+          <section class="online-results-panel" data-online-results-panel="standings" role="tabpanel">
+            <div class="online-results-leaders" id="onlineResultsLeaders"></div>
+            <div class="online-results-table-wrap">
+              <table class="online-results-table">
+                <thead><tr><th>#</th><th>Player</th><th>P</th><th>W</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead>
+                <tbody id="onlineResultsTable"></tbody>
+              </table>
+            </div>
+          </section>
+          <section class="online-results-panel" data-online-results-panel="results" role="tabpanel" hidden>
+            <div class="online-results-players" id="onlineResultsPlayers"></div>
+          </section>
+          <section class="online-results-panel" data-online-results-panel="bracket" role="tabpanel" hidden>
+            <div class="online-bracket-round-tabs" id="onlineBracketRoundTabs" role="tablist" aria-label="Bracket rounds">
+              <button type="button" data-online-bracket-round="1" aria-selected="true">Round of 256</button>
+              <button type="button" data-online-bracket-round="2" aria-selected="false">Round of 128</button>
+              <button type="button" data-online-bracket-round="3" aria-selected="false">Round of 64</button>
+              <button type="button" data-online-bracket-round="final" aria-selected="false">Final bracket</button>
+            </div>
+            <div class="online-opening-bracket" id="onlineOpeningBracket"></div>
+            <div class="online-results-bracket" id="onlineResultsBracket" hidden></div>
+          </section>
+          <div class="online-results-actions">
+            <button class="primary-button" id="onlinePlayAgainButton" type="button">Play again</button>
+            <button class="danger-button" id="onlineEndLobbyButton" type="button">End lobby</button>
+          </div>
+          <p class="online-results-waiting" id="onlineResultsWaiting" hidden>Waiting for the host to choose what happens next.</p>
+        </section>
+
         <p class="online-room-message" id="onlineRoomMessage" role="status" aria-live="polite"></p>
       </main>
     </section>
@@ -777,8 +1359,7 @@
       <form method="dialog">
         <div class="modal-head">
           <div>
-            <span class="section-kicker">SETTINGS</span>
-            <h2>Tournament preferences</h2>
+            <h2>Settings</h2>
           </div>
           <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
@@ -802,7 +1383,36 @@
           </span>
           <span class="settings-option-icon" aria-hidden="true">&#9974;</span>
         </button>
+        <button class="settings-option settings-discord-option" id="settingsDiscordButton" type="button">
+          <span class="settings-option-copy">
+            <strong>Discord</strong>
+            <small>Join the community and share feedback</small>
+          </span>
+          <span class="settings-option-icon" aria-hidden="true">
+            <span class="discord-icon"></span>
+          </span>
+        </button>
         <p class="settings-note">Changes apply to matches simulated after the setting is changed.</p>
+      </form>
+    </dialog>
+
+    <dialog class="modal news-modal" id="newsModal">
+      <form method="dialog" class="news-modal-card">
+        <button class="icon-button close-modal news-modal-close" id="newsCloseButton" type="button" aria-label="Close">&times;</button>
+        <article class="news-entry">
+          <span class="news-update-label">OUT NOW</span>
+          <h2>2014 and 2018 WC modes</h2>
+        </article>
+        <article class="news-entry">
+          <span class="news-update-label">NEW</span>
+          <h2>Achievements added for World Cup</h2>
+          <p>Try and win with every country!</p>
+        </article>
+        <article class="news-entry">
+          <span class="news-update-label">LATEST UPDATE</span>
+          <h2>Retro commentary timing</h2>
+          <p>Commentary now follows the visible match clock, scorer minutes stay in sync, and highlights move more smoothly at faster speeds.</p>
+        </article>
       </form>
     </dialog>
 
@@ -812,6 +1422,24 @@
         <textarea id="bugReportMessage" class="bug-report-message" name="message" rows="5" maxlength="900" aria-label="Feedback" placeholder="Bug, weird UI, or feature idea..." required></textarea>
         <button class="primary-button bug-report-submit" id="bugReportSubmit" type="submit">Send feedback</button>
         <p class="bug-report-status" id="bugReportStatus" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <dialog class="modal discord-modal" id="discordModal">
+      <form method="dialog" class="discord-modal-card">
+        <button class="icon-button close-modal discord-modal-close" id="discordCloseButton" type="button" aria-label="Close">&times;</button>
+        <p>Join Amenyah&rsquo;s Discord to share your tournament results, suggest new features, and compete with the community.</p>
+        <a class="primary-button discord-join-button" href="https://discord.com/invite/Au7gPE8YR" target="_blank" rel="noopener noreferrer">Join Discord</a>
+      </form>
+    </dialog>
+
+    <dialog class="modal donate-modal" id="donateModal">
+      <form method="dialog" class="donate-modal-card">
+        <button class="icon-button close-modal donate-modal-close" id="donateCloseButton" type="button" aria-label="Close">&times;</button>
+        <span class="donate-modal-icon" aria-hidden="true">$</span>
+        <h2>Support 256 Teams</h2>
+        <p>256 Teams is built and maintained by one developer. A small donation helps cover hosting, keeps the site free, and gives me more time to add new modes, fix bugs and improve the simulator.</p>
+        <a class="primary-button donate-modal-link" href="https://ko-fi.com/256teams" target="_blank" rel="noopener noreferrer">Donate on Ko-fi</a>
       </form>
     </dialog>
 
@@ -858,12 +1486,64 @@
       </form>
     </dialog>
 
+    <dialog class="confirm-modal" id="retroRestartModal">
+      <form method="dialog">
+        <div class="confirm-icon">&#8635;</div>
+        <h2>Restart World Cup 2014?</h2>
+        <p>This clears every retro result and returns to the opening group matches.</p>
+        <div class="confirm-actions">
+          <button class="secondary-button" value="cancel">Keep tournament</button>
+          <button class="danger-button" id="confirmRetroRestartButton" type="button">Restart</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="achievement-unlock-modal" id="achievementUnlockModal">
+      <button class="achievement-unlock-close" id="achievementUnlockClose" type="button" aria-label="Close">&times;</button>
+      <div class="achievement-unlock-mark" aria-hidden="true">&#9733;</div>
+      <span class="achievement-unlock-kicker">ACHIEVEMENT PROGRESS</span>
+      <h2 id="achievementUnlockTitle">Country complete</h2>
+      <p id="achievementUnlockCopy"></p>
+      <button class="achievement-unlock-action" id="achievementUnlockAction" type="button">Continue</button>
+    </dialog>
+
+    <dialog class="retro-achievements-modal" id="retroAchievementsModal">
+      <button class="retro-achievements-close" id="retroAchievementsClose" type="button" aria-label="Close">&times;</button>
+      <header>
+        <h2>Achievements</h2>
+        <p id="retroAchievementModalDescription">Win the 2014 WC with every country</p>
+      </header>
+      <div class="achievement-year-tabs" role="tablist" aria-label="World Cup achievement year">
+        <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
+        <button type="button" role="tab" data-achievement-year="2014" aria-selected="true">2014</button>
+        <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
+      </div>
+      <div class="retro-achievements-progress">
+        <span>COUNTRIES COMPLETE</span>
+        <strong id="retro2014ModalAchievementCount">0 / 32</strong>
+      </div>
+      <div class="achievement-progress-track" aria-hidden="true">
+        <span id="retro2014ModalAchievementBar"></span>
+      </div>
+      <button class="achievement-login-button" id="retroAchievementLoginButton" type="button" hidden>Log in to track progress</button>
+      <div class="achievement-country-grid" id="retro2014ModalAchievementGrid" aria-live="polite"></div>
+    </dialog>
+
     <script src="./player-pools.generated.js?v=fm-highlights-190"></script>
     <script src="./data.js?v=israel-rating-1"></script>
-    <script src="./presentation-engine.js?v=presentation-pipeline-1"></script>
-    <script src="./simulation-engine.js?v=presentation-pipeline-2"></script>
+    <script src="./retro-data.js?v=retro-fields-2"></script>
+    <script src="./retro-2010-squads.js?v=retro-squads-2010-1"></script>
+    <script src="./retro-2010-schedule.js?v=retro-schedule-2010-1"></script>
+    <script src="./retro-2014-squads.js?v=retro-squads-2"></script>
+    <script src="./retro-2014-schedule.js?v=retro-schedule-1"></script>
+    <script src="./retro-2018-squads.js?v=retro-squads-2018-1"></script>
+    <script src="./retro-2018-schedule.js?v=retro-schedule-2018-1"></script>
+    <script src="./retro-engine.js?v=retro-engine-8"></script>
+    <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
+    <script src="./simulation-engine.js?v=retro-2010-25"></script>
     <script src="./legacy-data/catalog.generated.js?v=legacy-draft-data-172"></script>
-    <script src="./app.js?v=israel-rating-1"></script>
+    <script src="./app.js?v=retro-edition-colors-55"></script>
+    <script src="./challenge.js?v=retro-achievement-2010-13"></script>
     <script>
       window.va = window.va || function () {
         (window.vaq = window.vaq || []).push(arguments);

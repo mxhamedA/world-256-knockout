@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="title">
+  <title id="title">Flag of Palestine</title>
+  <path fill="#000" d="M0 0h1200v200H0z"/>
+  <path fill="#fff" d="M0 200h1200v200H0z"/>
+  <path fill="#149954" d="M0 400h1200v200H0z"/>
+  <path fill="#e4312b" d="M0 0v600l400-300z"/>
+</svg>

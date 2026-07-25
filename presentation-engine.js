@@ -168,16 +168,12 @@
         }
 
         const activePriority = active ? importanceValue(active.event.importance) : -1;
-        const shouldPreempt = priority > activePriority
-          || (priority >= IMPORTANCE.major && priority === activePriority);
+        const shouldPreempt = priority > activePriority;
         if (!active || now >= active.until || shouldPreempt) {
           show(event, now, context);
         } else {
           queue.push(event);
-          queue.sort((left, right) => (
-            importanceValue(right.importance) - importanceValue(left.importance)
-            || left.sequence - right.sequence
-          ));
+          queue.sort((left, right) => left.sequence - right.sequence);
         }
         return true;
       },
@@ -217,6 +213,10 @@
     let rate = 1;
     let paused = false;
     const maxMinute = Math.max(authoritative, Number(options.maxMinute) || 90);
+    const catchUpRate = () => {
+      const gap = Math.max(0, authoritative - displayed);
+      return Math.min(8 * speed, Math.max(0.9 * speed, gap / 2.4));
+    };
 
     const read = (now) => {
       const currentNow = Math.max(lastNow, Number(now) || lastNow);
@@ -230,16 +230,14 @@
       sync(minute, now) {
         read(now);
         authoritative = Math.min(maxMinute, Math.max(authoritative, Number(minute) || 0));
-        const gap = Math.max(0, authoritative - displayed);
-        rate = Math.max(0.75 * speed, gap / Math.max(0.12, 0.55 / speed));
+        rate = catchUpRate();
         return displayed;
       },
       read,
       setSpeed(nextSpeed, now) {
         read(now);
         speed = Math.max(0.5, Number(nextSpeed) || 1);
-        const gap = Math.max(0, authoritative - displayed);
-        rate = Math.max(0.75 * speed, gap / Math.max(0.12, 0.55 / speed));
+        rate = catchUpRate();
       },
       pause(now) {
         read(now);

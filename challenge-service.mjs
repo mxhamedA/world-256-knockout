@@ -1,0 +1,924 @@
+import { DRAFT_TEAMS } from "./draft-team-catalog.generated.mjs";
+import {
+  CHALLENGE_COUNTED_RUN_LIMIT,
+  CHALLENGE_MIN_MATCH_INTERVAL_MS,
+  CHALLENGE_ROUNDS,
+  createChallengeRunState,
+  countedRunIds,
+  furthestRoundLabel,
+  playChallengeRound,
+} from "./challenge-engine.mjs";
+import {
+  challengeSessionCookie,
+  challengeSessionTokenFromRequest,
+  clearChallengeSessionCookie,
+  hashChallengePassword,
+  hashChallengeSessionToken,
+  makeChallengeSessionToken,
+  normalizeChallengeUsername,
+  validChallengePassword,
+  verifyChallengePassword,
+} from "./challenge-auth.mjs";
+
+const SESSION_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
+const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
+const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
+const RETRO_2010_TEAMS = Object.freeze([
+  "South Africa", "Mexico", "Uruguay", "France",
+  "Argentina", "Nigeria", "South Korea", "Greece",
+  "England", "USA", "Algeria", "Slovenia",
+  "Germany", "Australia", "Serbia", "Ghana",
+  "Netherlands", "Denmark", "Japan", "Cameroon",
+  "Italy", "Paraguay", "New Zealand", "Slovakia",
+  "Brazil", "North Korea", "Ivory Coast", "Portugal",
+  "Spain", "Switzerland", "Honduras", "Chile",
+]);
+const RETRO_2014_TEAMS = Object.freeze([
+  "Brazil", "Croatia", "Mexico", "Cameroon",
+  "Spain", "Netherlands", "Chile", "Australia",
+  "Colombia", "Greece", "Ivory Coast", "Japan",
+  "Uruguay", "Costa Rica", "England", "Italy",
+  "Switzerland", "Ecuador", "France", "Honduras",
+  "Argentina", "Bosnia and Herzegovina", "Iran", "Nigeria",
+  "Germany", "Portugal", "Ghana", "USA",
+  "Belgium", "Algeria", "Russia", "South Korea",
+]);
+const RETRO_2018_TEAMS = Object.freeze([
+  "Russia", "Saudi Arabia", "Egypt", "Uruguay",
+  "Portugal", "Spain", "Morocco", "Iran",
+  "France", "Australia", "Peru", "Denmark",
+  "Argentina", "Iceland", "Croatia", "Nigeria",
+  "Brazil", "Switzerland", "Costa Rica", "Serbia",
+  "Germany", "Mexico", "Sweden", "South Korea",
+  "Belgium", "Panama", "Tunisia", "England",
+  "Poland", "Senegal", "Colombia", "Japan",
+]);
+const API_HEADERS = Object.freeze({
+  "Cache-Control": "no-store",
+  "Content-Type": "application/json; charset=utf-8",
+  "Referrer-Policy": "no-referrer",
+  "X-Content-Type-Options": "nosniff",
+});
+
+class ChallengeRequestError extends Error {
+  constructor(message, status = 400, details = null) {
+    super(message);
+    this.status = status;
+    this.details = details;
+  }
+}
+
+function responseJson(value, status = 200, headers = {}) {
+  return new Response(JSON.stringify(value), { status, headers: { ...API_HEADERS, ...headers } });
+}
+
+function redirectResponse(location, headers = {}) {
+  const responseHeaders = new Headers({ Location: location, "Cache-Control": "no-store" });
+  Object.entries(headers).forEach(([name, value]) => {
+    (Array.isArray(value) ? value : [value]).forEach((item) => responseHeaders.append(name, item));
+  });
+  return new Response(null, { status: 302, headers: responseHeaders });
+}
+
+function googleAuthEnabled(env) {
+  return Boolean(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET);
+}
+
+function oauthReturnPath(value) {
+  return value === "/palestine-challenge" || value === "/profile" ? value : "/";
+}
+
+function googleRedirectUri(env, url) {
+  return env.GOOGLE_REDIRECT_URI || `${url.origin}/api/challenge/google/callback`;
+}
+
+function requestCookie(request, name) {
+  const prefix = `${name}=`;
+  const part = (request.headers.get("Cookie") || "").split(";").map((value) => value.trim()).find((value) => value.startsWith(prefix));
+  return part ? part.slice(prefix.length) : null;
+}
+
+function oauthStateCookie(stateHash) {
+  return `google_oauth_state=${stateHash}; Path=/api/challenge/google/callback; HttpOnly; Secure; SameSite=Lax; Max-Age=600`;
+}
+
+function clearOauthStateCookie() {
+  return "google_oauth_state=; Path=/api/challenge/google/callback; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
+}
+
+function decodeBase64Url(value) {
+  const padded = value.replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+  return Uint8Array.from(atob(padded), (character) => character.charCodeAt(0));
+}
+
+function decodeJwtPart(value) {
+  return JSON.parse(new TextDecoder().decode(decodeBase64Url(value)));
+}
+
+export async function verifyGoogleIdToken(idToken, env, expectedNonce) {
+  const parts = String(idToken || "").split(".");
+  if (parts.length !== 3) throw new ChallengeRequestError("Google returned an invalid identity token.", 401);
+  const header = decodeJwtPart(parts[0]);
+  const claims = decodeJwtPart(parts[1]);
+  if (header.alg !== "RS256" || typeof header.kid !== "string") throw new ChallengeRequestError("Google returned an unsupported identity token.", 401);
+  const keysResponse = await fetch("https://www.googleapis.com/oauth2/v3/certs");
+  if (!keysResponse.ok) throw new ChallengeRequestError("Google sign-in could not be verified.", 502);
+  const jwk = (await keysResponse.json()).keys?.find((key) => key.kid === header.kid && key.kty === "RSA");
+  if (!jwk) throw new ChallengeRequestError("Google sign-in key was not found.", 401);
+  const key = await crypto.subtle.importKey("jwk", jwk, { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" }, false, ["verify"]);
+  const verified = await crypto.subtle.verify(
+    "RSASSA-PKCS1-v1_5",
+    key,
+    decodeBase64Url(parts[2]),
+    new TextEncoder().encode(`${parts[0]}.${parts[1]}`),
+  );
+  const audiences = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
+  const validIssuer = claims.iss === "https://accounts.google.com" || claims.iss === "accounts.google.com";
+  const validAudience = audiences.includes(env.GOOGLE_CLIENT_ID) && (audiences.length === 1 || claims.azp === env.GOOGLE_CLIENT_ID);
+  if (!verified || !validIssuer || !validAudience || Number(claims.exp || 0) * 1000 <= Date.now() || claims.nonce !== expectedNonce) {
+    throw new ChallengeRequestError("Google sign-in could not be verified.", 401);
+  }
+  if (!claims.sub || !claims.email || claims.email_verified !== true) {
+    throw new ChallengeRequestError("A verified Google email is required.", 401);
+  }
+  return claims;
+}
+
+async function uniqueGoogleUsername(db, claims) {
+  const source = String(claims.email).split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/^_+|_+$/g, "");
+  const base = (source.length >= 3 ? source : "player").slice(0, 13);
+  const suffix = (await hashChallengeSessionToken(claims.sub)).slice(0, 6).toLowerCase();
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const tail = attempt ? `${suffix}${attempt}` : suffix;
+    const candidate = `${base.slice(0, 19 - tail.length)}_${tail}`;
+    const exists = await db.prepare("SELECT 1 FROM accounts WHERE username = ? COLLATE NOCASE").bind(candidate).first();
+    if (!exists) return candidate;
+  }
+  throw new ChallengeRequestError("A username could not be created for this Google account.", 409);
+}
+
+async function accountForGoogleClaims(db, claims) {
+  let identity = await db.prepare(`
+    SELECT accounts.* FROM auth_identities JOIN accounts ON accounts.id = auth_identities.account_id
+    WHERE auth_identities.provider = 'google' AND auth_identities.provider_subject = ?
+  `).bind(claims.sub).first();
+  const now = Date.now();
+  if (identity) {
+    await db.prepare("UPDATE auth_identities SET last_login_at = ?, email = ? WHERE provider = 'google' AND provider_subject = ?")
+      .bind(now, claims.email, claims.sub).run();
+    return identity;
+  }
+  const matchingEmail = await db.prepare("SELECT * FROM accounts WHERE email = ? COLLATE NOCASE AND email_verified_at IS NOT NULL LIMIT 1")
+    .bind(claims.email).first();
+  const accountId = matchingEmail?.id || crypto.randomUUID();
+  const statements = [];
+  if (!matchingEmail) {
+    const username = await uniqueGoogleUsername(db, claims);
+    const impossiblePassword = {
+      hash: await hashChallengeSessionToken(`${crypto.randomUUID()}:${makeChallengeSessionToken()}`),
+      salt: makeChallengeSessionToken(),
+      iterations: 0,
+    };
+    statements.push(db.prepare(`
+      INSERT INTO accounts (id, username, password_hash, password_salt, password_iterations, email, email_verified_at, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).bind(accountId, username, impossiblePassword.hash, impossiblePassword.salt, impossiblePassword.iterations, claims.email, now, now));
+  }
+  statements.push(db.prepare(`
+    INSERT INTO auth_identities (provider, provider_subject, account_id, email, created_at, last_login_at)
+    VALUES ('google', ?, ?, ?, ?, ?)
+  `).bind(claims.sub, accountId, claims.email, now, now));
+  try {
+    await db.batch(statements);
+  } catch (error) {
+    identity = await db.prepare(`
+      SELECT accounts.* FROM auth_identities JOIN accounts ON accounts.id = auth_identities.account_id
+      WHERE auth_identities.provider = 'google' AND auth_identities.provider_subject = ?
+    `).bind(claims.sub).first();
+    if (identity) return identity;
+    throw error;
+  }
+  return matchingEmail || db.prepare("SELECT * FROM accounts WHERE id = ?").bind(accountId).first();
+}
+
+async function startGoogleLogin(request, env, url) {
+  if (!googleAuthEnabled(env)) throw new ChallengeRequestError("Google sign-in is not configured yet.", 503);
+  const state = makeChallengeSessionToken();
+  const verifier = makeChallengeSessionToken();
+  const nonce = makeChallengeSessionToken();
+  const now = Date.now();
+  const returnPath = oauthReturnPath(url.searchParams.get("returnTo"));
+  await env.CHALLENGE_DB.batch([
+    env.CHALLENGE_DB.prepare("DELETE FROM oauth_states WHERE expires_at <= ? OR used_at IS NOT NULL").bind(now),
+    env.CHALLENGE_DB.prepare(`
+      INSERT INTO oauth_states (state_hash, provider, code_verifier, nonce, return_path, expires_at)
+      VALUES (?, 'google', ?, ?, ?, ?)
+    `).bind(await hashChallengeSessionToken(state), verifier, nonce, returnPath, now + OAUTH_STATE_LIFETIME_MS),
+  ]);
+  const authorization = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  authorization.search = new URLSearchParams({
+    client_id: env.GOOGLE_CLIENT_ID,
+    redirect_uri: googleRedirectUri(env, url),
+    response_type: "code",
+    scope: "openid email profile",
+    state,
+    nonce,
+    code_challenge: await hashChallengeSessionToken(verifier),
+    code_challenge_method: "S256",
+    prompt: "select_account",
+  });
+  return redirectResponse(authorization.toString(), { "Set-Cookie": oauthStateCookie(await hashChallengeSessionToken(state)) });
+}
+
+async function completeGoogleLogin(request, env, url) {
+  const fallback = new URL("/", url.origin);
+  fallback.searchParams.set("authError", "google");
+  try {
+    if (!googleAuthEnabled(env)) throw new ChallengeRequestError("Google sign-in is not configured yet.", 503);
+    const code = url.searchParams.get("code") || "";
+    const state = url.searchParams.get("state") || "";
+    if (!code || !/^[A-Za-z0-9_-]{40,80}$/.test(state)) {
+      throw new ChallengeRequestError("Invalid Google sign-in response.", 400, { code: "invalid_callback" });
+    }
+    const stateHash = await hashChallengeSessionToken(state);
+    if (requestCookie(request, "google_oauth_state") !== stateHash) {
+      throw new ChallengeRequestError("Google sign-in did not start in this browser.", 400, { code: "state_cookie_missing" });
+    }
+    const stored = await env.CHALLENGE_DB.prepare("SELECT * FROM oauth_states WHERE state_hash = ? AND provider = 'google'").bind(stateHash).first();
+    if (!stored || stored.used_at || stored.expires_at <= Date.now()) {
+      throw new ChallengeRequestError("Google sign-in expired. Please try again.", 400, { code: "state_expired" });
+    }
+    const consumed = await env.CHALLENGE_DB.prepare("UPDATE oauth_states SET used_at = ? WHERE state_hash = ? AND used_at IS NULL AND expires_at > ?")
+      .bind(Date.now(), stateHash, Date.now()).run();
+    if (!consumed.meta.changes) throw new ChallengeRequestError("Google sign-in was already used.", 409, { code: "state_reused" });
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: env.GOOGLE_CLIENT_ID,
+        client_secret: env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: googleRedirectUri(env, url),
+        grant_type: "authorization_code",
+        code_verifier: stored.code_verifier,
+      }),
+    });
+    const tokens = await tokenResponse.json().catch(() => ({}));
+    if (!tokenResponse.ok || !tokens.id_token) {
+      console.error("Google token exchange failed", JSON.stringify({
+        status: tokenResponse.status,
+        error: tokens.error,
+        error_description: tokens.error_description,
+      }));
+      throw new ChallengeRequestError("Google sign-in could not be completed.", 502, { code: "token_exchange_failed" });
+    }
+    let claims;
+    try {
+      claims = await verifyGoogleIdToken(tokens.id_token, env, stored.nonce);
+    } catch (error) {
+      console.error("Google ID token verification failed", error instanceof Error ? error.message : String(error));
+      throw new ChallengeRequestError("Google sign-in could not be verified.", 401, { code: "id_token_verify_failed" });
+    }
+    let account;
+    try {
+      account = await accountForGoogleClaims(env.CHALLENGE_DB, claims);
+    } catch (error) {
+      console.error("Google account link failed", error instanceof Error ? error.message : String(error));
+      throw new ChallengeRequestError("Google account could not be linked.", 500, { code: "account_link_failed" });
+    }
+    let session;
+    try {
+      session = await createSession(env.CHALLENGE_DB, account.id, request);
+    } catch (error) {
+      console.error("Google session create failed", error instanceof Error ? error.message : String(error));
+      throw new ChallengeRequestError("Google session could not be created.", 500, { code: "session_create_failed" });
+    }
+    const destination = new URL(stored.return_path, url.origin);
+    destination.searchParams.set("auth", "success");
+    return redirectResponse(destination.toString(), { "Set-Cookie": [challengeSessionCookie(session), clearOauthStateCookie()] });
+  } catch (error) {
+    const failureCode = error instanceof ChallengeRequestError && error.details?.code
+      ? error.details.code
+      : "unknown_callback_error";
+    fallback.searchParams.set("authCode", failureCode);
+    console.error("Google sign-in failure", JSON.stringify({
+      code: failureCode || "unknown",
+      message: error instanceof Error ? error.message : String(error),
+    }));
+    return redirectResponse(fallback.toString(), { "Set-Cookie": clearOauthStateCookie() });
+  }
+}
+
+async function readJson(request, maxBytes = 2048) {
+  if (!(request.headers.get("Content-Type") || "").toLowerCase().startsWith("application/json")) {
+    throw new ChallengeRequestError("Requests must use JSON.", 415);
+  }
+  const declared = Number(request.headers.get("Content-Length") || 0);
+  if (declared > maxBytes) throw new ChallengeRequestError("Request is too large.", 413);
+  const text = await request.text();
+  if (text.length > maxBytes) throw new ChallengeRequestError("Request is too large.", 413);
+  try {
+    const value = JSON.parse(text || "{}");
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Object required");
+    return value;
+  } catch {
+    throw new ChallengeRequestError("Invalid JSON request.");
+  }
+}
+
+async function userAgentHash(request) {
+  const value = request.headers.get("User-Agent") || "unknown";
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function challengeStatus(challenge, now = Date.now()) {
+  if (now < challenge.starts_at) return "upcoming";
+  if (now >= challenge.ends_at) return "archived";
+  return "active";
+}
+
+function publicChallenge(challenge, now = Date.now()) {
+  return {
+    id: challenge.id,
+    title: challenge.title,
+    description: challenge.description,
+    startTime: challenge.starts_at,
+    endTime: challenge.ends_at,
+    serverTime: now,
+    status: challengeStatus(challenge, now),
+    prizes: JSON.parse(challenge.prize_json || "[]"),
+    locked: { teamId: challenge.locked_team_id, team: "Palestine", simulation: "Standard", goalLevel: "Normal" },
+  };
+}
+
+function publicAccount(account) {
+  if (!account) return null;
+  const country = DRAFT_TEAMS.find((team) => team.id === account.profile_country_id) || null;
+  return {
+    id: account.id,
+    username: account.username,
+    profileCountryId: country?.id || null,
+    profileCountryName: country?.name || null,
+  };
+}
+
+function validProfileCountryId(value) {
+  const countryId = typeof value === "string" ? value.trim() : "";
+  return DRAFT_TEAMS.some((team) => team.id === countryId) ? countryId : undefined;
+}
+
+async function currentChallenge(db, now = Date.now()) {
+  const challenge = await db.prepare(`
+    SELECT * FROM challenges
+    WHERE starts_at <= ?
+    ORDER BY starts_at DESC
+    LIMIT 1
+  `).bind(now).first() || await db.prepare("SELECT * FROM challenges ORDER BY starts_at ASC LIMIT 1").first();
+  if (!challenge) throw new ChallengeRequestError("No Palestine Challenge is configured.", 503);
+  return challenge;
+}
+
+async function authenticatedAccount(request, db, required = true) {
+  const token = challengeSessionTokenFromRequest(request);
+  if (!token) {
+    if (required) throw new ChallengeRequestError("Log in to continue.", 401);
+    return null;
+  }
+  const tokenHash = await hashChallengeSessionToken(token);
+  const account = await db.prepare(`
+    SELECT accounts.id, accounts.username, accounts.profile_country_id, accounts.created_at
+    FROM sessions
+    JOIN accounts ON accounts.id = sessions.account_id
+    WHERE sessions.token_hash = ? AND sessions.revoked_at IS NULL AND sessions.expires_at > ?
+  `).bind(tokenHash, Date.now()).first();
+  if (!account && required) throw new ChallengeRequestError("Your session has expired. Please log in again.", 401);
+  return account ? { ...account, tokenHash } : null;
+}
+
+async function createSession(db, accountId, request) {
+  const token = makeChallengeSessionToken();
+  const tokenHash = await hashChallengeSessionToken(token);
+  const now = Date.now();
+  await db.batch([
+    db.prepare("DELETE FROM sessions WHERE account_id = ? AND (expires_at <= ? OR revoked_at IS NOT NULL)").bind(accountId, now),
+    db.prepare(`
+      INSERT INTO sessions (token_hash, account_id, created_at, expires_at, user_agent_hash)
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(tokenHash, accountId, now, now + SESSION_LIFETIME_MS, await userAgentHash(request)),
+  ]);
+  return token;
+}
+
+async function register(request, env) {
+  const body = await readJson(request);
+  const username = normalizeChallengeUsername(body.username);
+  if (!username) throw new ChallengeRequestError("Use 3-20 lowercase letters, numbers or underscores for your username.");
+  if (!validChallengePassword(body.password)) throw new ChallengeRequestError("Password must be 10-128 characters.");
+  const accountId = crypto.randomUUID();
+  let password;
+  try {
+    password = await hashChallengePassword(body.password);
+  } catch (error) {
+    console.error("Account password hashing failed", error instanceof Error ? error.message : String(error));
+    throw new ChallengeRequestError("Your password could not be secured. Please try again.", 500, { code: "password_hash_failed" });
+  }
+  const now = Date.now();
+  try {
+    await env.CHALLENGE_DB.prepare(`
+      INSERT INTO accounts (id, username, password_hash, password_salt, password_iterations, created_at)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).bind(accountId, username, password.hash, password.salt, password.iterations, now).run();
+  } catch (error) {
+    if (String(error).toLowerCase().includes("unique")) throw new ChallengeRequestError("That username is already taken.", 409);
+    console.error("Account creation failed", error instanceof Error ? error.message : String(error));
+    throw new ChallengeRequestError("Your account could not be created because the account database rejected the request. Please try again.", 500, { code: "account_create_failed" });
+  }
+  let token;
+  try {
+    token = await createSession(env.CHALLENGE_DB, accountId, request);
+  } catch (error) {
+    console.error("Account session creation failed", error instanceof Error ? error.message : String(error));
+    throw new ChallengeRequestError(
+      "Your account was created, but automatic sign-in failed. Log in with your new username and password.",
+      500,
+      { code: "session_create_failed", accountCreated: true },
+    );
+  }
+  return responseJson({ account: { id: accountId, username, profileCountryId: null, profileCountryName: null } }, 201, { "Set-Cookie": challengeSessionCookie(token) });
+}
+
+async function login(request, env) {
+  const body = await readJson(request);
+  const username = normalizeChallengeUsername(body.username);
+  if (!username || !validChallengePassword(body.password)) throw new ChallengeRequestError("Invalid username or password.", 401);
+  const account = await env.CHALLENGE_DB.prepare("SELECT * FROM accounts WHERE username = ? COLLATE NOCASE").bind(username).first();
+  let passwordMatches = false;
+  if (account) passwordMatches = await verifyChallengePassword(body.password, account);
+  else await hashChallengePassword(body.password, new Uint8Array(16));
+  if (!account || !passwordMatches) {
+    throw new ChallengeRequestError("Invalid username or password.", 401);
+  }
+  const token = await createSession(env.CHALLENGE_DB, account.id, request);
+  return responseJson({ account: publicAccount(account) }, 200, { "Set-Cookie": challengeSessionCookie(token) });
+}
+
+async function logout(request, env) {
+  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false);
+  if (account) await env.CHALLENGE_DB.prepare("UPDATE sessions SET revoked_at = ? WHERE token_hash = ?").bind(Date.now(), account.tokenHash).run();
+  return responseJson({ ok: true }, 200, { "Set-Cookie": clearChallengeSessionCookie() });
+}
+
+async function profile(request, env, account) {
+  if (request.method === "GET") {
+    const deletionRequest = await env.CHALLENGE_DB.prepare(`
+      SELECT reason, details, status, requested_at, completed_at
+      FROM account_deletion_requests WHERE account_id = ?
+    `).bind(account.id).first();
+    return responseJson({
+      account: publicAccount(account),
+      countries: DRAFT_TEAMS.map(({ id, name }) => ({ id, name })),
+      deletionRequest: deletionRequest || null,
+    });
+  }
+  if (request.method !== "PATCH") return responseJson({ error: "Method not allowed." }, 405);
+  const body = await readJson(request);
+  const username = normalizeChallengeUsername(body.username);
+  if (!username) throw new ChallengeRequestError("Use 3-20 lowercase letters, numbers or underscores for your username.");
+  const countryId = validProfileCountryId(body.profileCountryId);
+  if (countryId === undefined) throw new ChallengeRequestError("Choose a valid country for your profile picture.");
+  const now = Date.now();
+  try {
+    await env.CHALLENGE_DB.prepare(`
+      UPDATE accounts SET username = ?, profile_country_id = ? WHERE id = ?
+    `).bind(username, countryId, account.id).run();
+  } catch (error) {
+    if (String(error).toLowerCase().includes("unique")) throw new ChallengeRequestError("That username is already taken.", 409);
+    throw error;
+  }
+  const updated = await env.CHALLENGE_DB.prepare("SELECT id, username, profile_country_id, created_at FROM accounts WHERE id = ?")
+    .bind(account.id).first();
+  return responseJson({ account: publicAccount(updated), updatedAt: now });
+}
+
+async function requestAccountDeletion(request, env, account) {
+  if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
+  const body = await readJson(request);
+  const reasons = new Set(["not_using", "privacy", "technical", "other"]);
+  const reason = typeof body.reason === "string" ? body.reason.trim() : "";
+  const details = typeof body.details === "string" ? body.details.trim() : "";
+  if (!reasons.has(reason)) throw new ChallengeRequestError("Choose a reason for deleting your account.");
+  if (details.length > 500) throw new ChallengeRequestError("Keep the additional details under 500 characters.");
+  const now = Date.now();
+  await env.CHALLENGE_DB.prepare(`
+    INSERT INTO account_deletion_requests (account_id, reason, details, status, requested_at, completed_at)
+    VALUES (?, ?, ?, 'pending', ?, NULL)
+    ON CONFLICT(account_id) DO UPDATE SET
+      reason = excluded.reason,
+      details = excluded.details,
+      status = 'pending',
+      requested_at = excluded.requested_at,
+      completed_at = NULL
+  `).bind(account.id, reason, details, now).run();
+  return responseJson({
+    deletionRequest: { reason, details, status: "pending", requested_at: now, completed_at: null },
+  }, 201);
+}
+
+function publicRun(row) {
+  if (!row) return null;
+  const state = JSON.parse(row.state_json);
+  const latest = state.rounds.at(-1) || null;
+  const scoreBreakdown = state.rounds.reduce((totals, round) => ({
+    progress: totals.progress + (round.breakdown?.progressPoints || 0),
+    goals: totals.goals + (round.breakdown?.goalPoints || 0),
+    champion: totals.champion + (round.breakdown?.championPoints || 0),
+  }), { progress: 0, goals: 0, champion: 0 });
+  return {
+    id: row.id,
+    status: row.status,
+    score: row.score,
+    goals: row.goals,
+    counted: Boolean(row.counted),
+    furthestRound: row.furthest_round,
+    tournamentWon: Boolean(row.tournament_won),
+    startedAt: row.started_at,
+    completedAt: row.completed_at,
+    nextActionAt: row.next_action_at,
+    roundIndex: state.roundIndex,
+    round: CHALLENGE_ROUNDS[state.roundIndex]?.label || "Complete",
+    latestMatch: latest ? { ...latest.palestineMatch, opponent: latest.opponent, breakdown: latest.breakdown } : null,
+    scoreBreakdown,
+    results: state.rounds.map((round) => ({
+      round: CHALLENGE_ROUNDS[round.roundIndex]?.label || "Round",
+      ...round.palestineMatch,
+      opponent: round.opponent,
+      points: round.breakdown?.total || 0,
+    })),
+  };
+}
+
+async function commandReceipt(db, accountId, commandId, action) {
+  if (!COMMAND_ID_PATTERN.test(commandId || "")) throw new ChallengeRequestError("Invalid command identifier.");
+  const existing = await db.prepare("SELECT action, response_json FROM challenge_commands WHERE account_id = ? AND command_id = ?")
+    .bind(accountId, commandId).first();
+  if (!existing) return null;
+  if (existing.action !== action) throw new ChallengeRequestError("That command identifier was already used.", 409);
+  return JSON.parse(existing.response_json);
+}
+
+async function startRun(request, env, account) {
+  const body = await readJson(request);
+  const receipt = await commandReceipt(env.CHALLENGE_DB, account.id, body.clientCommandId, "run-start");
+  if (receipt) return responseJson(receipt);
+  const challenge = await currentChallenge(env.CHALLENGE_DB);
+  if (challengeStatus(challenge) !== "active") throw new ChallengeRequestError("This challenge is not accepting new runs.", 409);
+  const forbidden = [
+    body.teamId && body.teamId !== challenge.locked_team_id,
+    body.simulation && body.simulation !== challenge.upset_mode,
+    body.goalLevel && body.goalLevel !== challenge.goal_level,
+  ].some(Boolean);
+  if (forbidden) throw new ChallengeRequestError("Palestine Challenge settings are locked by the server.", 403);
+  const existing = await env.CHALLENGE_DB.prepare(`
+    SELECT * FROM challenge_runs WHERE account_id = ? AND challenge_id = ? AND status = 'active'
+  `).bind(account.id, challenge.id).first();
+  if (existing) {
+    const payload = { run: publicRun(existing), resumed: true };
+    await env.CHALLENGE_DB.prepare(`INSERT INTO challenge_commands (account_id, command_id, action, response_json, created_at) VALUES (?, ?, ?, ?, ?)`)
+      .bind(account.id, body.clientCommandId, "run-start", JSON.stringify(payload), Date.now()).run();
+    return responseJson(payload);
+  }
+  const now = Date.now();
+  const runId = crypto.randomUUID();
+  const state = createChallengeRunState(DRAFT_TEAMS, `${runId}:${crypto.randomUUID()}`);
+  const payload = { run: { id: runId, status: "active", score: 0, goals: 0, counted: false, furthestRound: "Round of 256", tournamentWon: false, startedAt: now, completedAt: null, nextActionAt: now, roundIndex: 0, round: CHALLENGE_ROUNDS[0].label, latestMatch: null }, resumed: false };
+  try {
+    await env.CHALLENGE_DB.batch([
+      env.CHALLENGE_DB.prepare(`
+        INSERT INTO challenge_runs (id, challenge_id, account_id, status, state_json, started_at, next_action_at)
+        VALUES (?, ?, ?, 'active', ?, ?, ?)
+      `).bind(runId, challenge.id, account.id, JSON.stringify(state), now, now),
+      env.CHALLENGE_DB.prepare(`INSERT INTO challenge_commands (account_id, command_id, action, response_json, created_at) VALUES (?, ?, ?, ?, ?)`)
+        .bind(account.id, body.clientCommandId, "run-start", JSON.stringify(payload), now),
+    ]);
+  } catch (error) {
+    if (String(error).toLowerCase().includes("unique")) throw new ChallengeRequestError("You already have an active run.", 409);
+    throw error;
+  }
+  return responseJson(payload, 201);
+}
+
+async function recalculateLeaderboard(db, challengeId, accountId, now) {
+  const rows = (await db.prepare(`
+    SELECT id, score, goals, tournament_won, semi_final, strongest_opponent, strongest_opponent_rank, completed_at
+    FROM challenge_runs WHERE challenge_id = ? AND account_id = ? AND status = 'completed'
+    ORDER BY completed_at DESC
+  `).bind(challengeId, accountId).all()).results;
+  const counted = countedRunIds(rows.map((row) => ({ id: row.id, score: row.score, completedAt: row.completed_at })));
+  const countedRows = rows.filter((row) => counted.has(row.id));
+  const strongest = rows.filter((row) => row.strongest_opponent_rank).sort((a, b) => a.strongest_opponent_rank - b.strongest_opponent_rank)[0] || null;
+  const totalScore = countedRows.reduce((sum, row) => sum + row.score, 0);
+  const statements = [db.prepare("UPDATE challenge_runs SET counted = 0 WHERE challenge_id = ? AND account_id = ?").bind(challengeId, accountId)];
+  counted.forEach((runId) => statements.push(db.prepare("UPDATE challenge_runs SET counted = 1 WHERE id = ?").bind(runId)));
+  statements.push(db.prepare(`
+    INSERT INTO challenge_leaderboard (
+      challenge_id, account_id, total_score, best_run, attempts, tournament_wins,
+      semi_finals, goals, strongest_opponent, strongest_opponent_rank, latest_completion, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(challenge_id, account_id) DO UPDATE SET
+      total_score = excluded.total_score, best_run = excluded.best_run, attempts = excluded.attempts,
+      tournament_wins = excluded.tournament_wins, semi_finals = excluded.semi_finals,
+      goals = excluded.goals, strongest_opponent = excluded.strongest_opponent,
+      strongest_opponent_rank = excluded.strongest_opponent_rank,
+      latest_completion = excluded.latest_completion, updated_at = excluded.updated_at
+  `).bind(
+    challengeId,
+    accountId,
+    totalScore,
+    Math.max(0, ...rows.map((row) => row.score)),
+    rows.length,
+    rows.reduce((sum, row) => sum + row.tournament_won, 0),
+    rows.reduce((sum, row) => sum + row.semi_final, 0),
+    rows.reduce((sum, row) => sum + row.goals, 0),
+    strongest?.strongest_opponent || null,
+    strongest?.strongest_opponent_rank || null,
+    Math.max(0, ...rows.map((row) => row.completed_at || 0)),
+    now,
+  ));
+  await db.batch(statements);
+}
+
+async function playRun(request, env, account, runId) {
+  const body = await readJson(request);
+  const action = `run-play:${runId}`;
+  const receipt = await commandReceipt(env.CHALLENGE_DB, account.id, body.clientCommandId, action);
+  if (receipt) return responseJson(receipt);
+  const challenge = await currentChallenge(env.CHALLENGE_DB);
+  if (challengeStatus(challenge) !== "active") throw new ChallengeRequestError("The challenge has ended and the leaderboard is frozen.", 409);
+  const row = await env.CHALLENGE_DB.prepare("SELECT * FROM challenge_runs WHERE id = ? AND account_id = ?").bind(runId, account.id).first();
+  if (!row) throw new ChallengeRequestError("Run not found.", 404);
+  if (row.status !== "active") throw new ChallengeRequestError("This run is already complete.", 409);
+  const now = Date.now();
+  if (now < row.next_action_at) throw new ChallengeRequestError("The next tie is not ready yet.", 429, { retryAfterMs: row.next_action_at - now });
+  const played = playChallengeRound(JSON.parse(row.state_json), DRAFT_TEAMS);
+  const completed = played.state.status === "completed";
+  const nextActionAt = completed ? now : now + CHALLENGE_MIN_MATCH_INTERVAL_MS;
+  const furthestRound = furthestRoundLabel(played.state);
+  const payload = {
+    run: {
+      id: row.id,
+      status: played.state.status,
+      score: played.state.score,
+      goals: played.state.goals,
+      counted: false,
+      furthestRound,
+      tournamentWon: played.champion,
+      startedAt: row.started_at,
+      completedAt: completed ? now : null,
+      nextActionAt,
+      roundIndex: played.state.roundIndex,
+      round: CHALLENGE_ROUNDS[played.state.roundIndex]?.label || "Complete",
+      latestMatch: { ...played.match, opponent: { id: played.opponent.id, name: played.opponent.name, rank: played.opponent.officialFifaRank || null }, breakdown: played.breakdown },
+    },
+  };
+  const updated = await env.CHALLENGE_DB.prepare(`
+    UPDATE challenge_runs SET status = ?, state_json = ?, score = ?, goals = ?, furthest_round = ?,
+      tournament_won = ?, semi_final = ?, strongest_opponent = ?, strongest_opponent_rank = ?,
+      next_action_at = ?, completed_at = ?, version = version + 1
+    WHERE id = ? AND account_id = ? AND version = ? AND status = 'active'
+  `).bind(
+    played.state.status,
+    JSON.stringify(played.state),
+    played.state.score,
+    played.state.goals,
+    furthestRound,
+    played.champion ? 1 : 0,
+    played.state.roundIndex >= 7 ? 1 : 0,
+    played.state.strongestOpponent?.name || null,
+    played.state.strongestOpponent?.rank || null,
+    nextActionAt,
+    completed ? now : null,
+    row.id,
+    account.id,
+    row.version,
+  ).run();
+  if (!updated.meta.changes) throw new ChallengeRequestError("Run changed in another request. Refresh and try again.", 409);
+  await env.CHALLENGE_DB.batch([
+    env.CHALLENGE_DB.prepare(`
+      INSERT INTO challenge_run_matches (run_id, round_index, result_json, score_awarded, played_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).bind(row.id, played.state.roundIndex - 1, JSON.stringify(payload.run.latestMatch), played.breakdown.total, now),
+    env.CHALLENGE_DB.prepare(`INSERT INTO challenge_commands (account_id, command_id, action, response_json, created_at) VALUES (?, ?, ?, ?, ?)`)
+      .bind(account.id, body.clientCommandId, action, JSON.stringify(payload), now),
+  ]);
+  if (completed) {
+    await recalculateLeaderboard(env.CHALLENGE_DB, challenge.id, account.id, now);
+    const refreshed = await env.CHALLENGE_DB.prepare("SELECT counted FROM challenge_runs WHERE id = ?").bind(row.id).first();
+    payload.run.counted = Boolean(refreshed?.counted);
+    await env.CHALLENGE_DB.prepare(`
+      UPDATE challenge_commands SET response_json = ? WHERE account_id = ? AND command_id = ? AND action = ?
+    `).bind(JSON.stringify(payload), account.id, body.clientCommandId, action).run();
+  }
+  return responseJson(payload);
+}
+
+async function leaderboard(db, challenge, account) {
+  const rows = (await db.prepare(`
+    SELECT ROW_NUMBER() OVER (ORDER BY l.total_score DESC, l.best_run DESC, l.latest_completion ASC) AS position,
+      a.username, l.account_id, l.total_score, l.best_run, l.attempts, l.tournament_wins,
+      l.semi_finals, l.goals, l.strongest_opponent, l.latest_completion
+    FROM challenge_leaderboard l JOIN accounts a ON a.id = l.account_id
+    WHERE l.challenge_id = ?
+    ORDER BY position LIMIT 100
+  `).bind(challenge.id).all()).results;
+  let own = account ? rows.find((row) => row.account_id === account.id) : null;
+  if (account && !own) {
+    own = await db.prepare(`
+      SELECT * FROM (
+        SELECT ROW_NUMBER() OVER (ORDER BY l.total_score DESC, l.best_run DESC, l.latest_completion ASC) AS position,
+          a.username, l.account_id, l.total_score, l.best_run, l.attempts, l.tournament_wins,
+          l.semi_finals, l.goals, l.strongest_opponent, l.latest_completion
+        FROM challenge_leaderboard l JOIN accounts a ON a.id = l.account_id WHERE l.challenge_id = ?
+      ) WHERE account_id = ?
+    `).bind(challenge.id, account.id).first();
+  }
+  return { entries: rows.map(({ account_id, ...entry }) => entry), own: own ? Object.fromEntries(Object.entries(own).filter(([key]) => key !== "account_id")) : null };
+}
+
+async function dashboard(request, env) {
+  const now = Date.now();
+  const challenge = await currentChallenge(env.CHALLENGE_DB, now);
+  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false);
+  const board = await leaderboard(env.CHALLENGE_DB, challenge, account);
+  let activeRun = null;
+  let history = [];
+  if (account) {
+    activeRun = await env.CHALLENGE_DB.prepare(`SELECT * FROM challenge_runs WHERE account_id = ? AND challenge_id = ? AND status = 'active'`)
+      .bind(account.id, challenge.id).first();
+    history = (await env.CHALLENGE_DB.prepare(`
+      SELECT * FROM challenge_runs WHERE account_id = ? AND challenge_id = ? AND status = 'completed'
+      ORDER BY completed_at DESC LIMIT 100
+    `).bind(account.id, challenge.id).all()).results.map(publicRun);
+  }
+  return responseJson({
+    challenge: publicChallenge(challenge, now),
+    account: publicAccount(account),
+    activeRun: publicRun(activeRun),
+    history,
+    leaderboard: board,
+    auth: { googleEnabled: googleAuthEnabled(env) },
+  });
+}
+
+function retroAchievementConfig(year) {
+  if (Number(year) === 2010) {
+    return {
+      year: 2010,
+      table: "retro_2010_attempts",
+      teams: RETRO_2010_TEAMS,
+      id: "retro-2010-world-tour",
+      title: "South Africa 2010 World Tour",
+    };
+  }
+  if (Number(year) === 2018) {
+    return {
+      year: 2018,
+      table: "retro_2018_attempts",
+      teams: RETRO_2018_TEAMS,
+      id: "retro-2018-world-tour",
+      title: "Russia 2018 World Tour",
+    };
+  }
+  return {
+    year: 2014,
+    table: "retro_2014_attempts",
+    teams: RETRO_2014_TEAMS,
+    id: "retro-2014-world-tour",
+    title: "Brazil 2014 World Tour",
+  };
+}
+
+async function retroAchievementProgress(db, account, year) {
+  const config = retroAchievementConfig(year);
+  const rows = (await db.prepare(`
+    WITH account_attempts AS (
+      SELECT team_name, won, started_at, completed_at
+      FROM ${config.table}
+      WHERE account_id = ?
+    ),
+    first_wins AS (
+      SELECT team_name, MIN(COALESCE(completed_at, started_at)) AS first_win_at
+      FROM account_attempts
+      WHERE won = 1
+      GROUP BY team_name
+    )
+    SELECT attempts.team_name,
+      COUNT(*) AS attempts,
+      MAX(attempts.won) AS won,
+      SUM(CASE
+        WHEN first_wins.first_win_at IS NOT NULL AND attempts.started_at <= first_wins.first_win_at THEN 1
+        ELSE 0
+      END) AS won_on_attempt,
+      MAX(first_wins.first_win_at) AS unlocked_at
+    FROM account_attempts attempts
+    LEFT JOIN first_wins ON first_wins.team_name = attempts.team_name
+    GROUP BY attempts.team_name
+  `).bind(account.id).all()).results;
+  const byTeam = new Map(rows.map((row) => [row.team_name, row]));
+  const teams = config.teams.map((teamName) => {
+    const row = byTeam.get(teamName);
+    return {
+      teamName,
+      attempts: Number(row?.attempts || 0),
+      won: Number(row?.won || 0) === 1,
+      wonOnAttempt: Number(row?.won_on_attempt || 0) || null,
+      unlockedAt: Number(row?.unlocked_at || 0) || null,
+    };
+  });
+  const completed = teams.filter((team) => team.won).length;
+  return {
+    id: config.id,
+    title: config.title,
+    year: config.year,
+    completed,
+    total: config.teams.length,
+    unlocked: completed === config.teams.length,
+    teams,
+  };
+}
+
+async function retroAchievement(request, env, account, year) {
+  const config = retroAchievementConfig(year);
+  if (request.method === "GET") {
+    return responseJson({ achievement: await retroAchievementProgress(env.CHALLENGE_DB, account, config.year) });
+  }
+  if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
+
+  const body = await request.json().catch(() => ({}));
+  const teamName = typeof body.teamName === "string" ? body.teamName.trim() : "";
+  const seed = Number(body.seed);
+  const phase = body.phase === "complete" ? "complete" : "start";
+  if (!config.teams.includes(teamName) || !Number.isSafeInteger(seed) || seed < 0) {
+    throw new ChallengeRequestError(`Invalid ${config.year} World Cup tournament.`, 400);
+  }
+
+  const before = await retroAchievementProgress(env.CHALLENGE_DB, account, config.year);
+  const previousTeam = before.teams.find((team) => team.teamName === teamName);
+  const now = Date.now();
+  await env.CHALLENGE_DB.prepare(`
+    INSERT OR IGNORE INTO ${config.table}
+      (account_id, tournament_seed, team_name, won, started_at)
+    VALUES (?, ?, ?, 0, ?)
+  `).bind(account.id, seed, teamName, now).run();
+
+  if (phase === "complete") {
+    const won = body.champion === teamName ? 1 : 0;
+    await env.CHALLENGE_DB.prepare(`
+      UPDATE ${config.table}
+      SET won = MAX(won, ?), completed_at = COALESCE(completed_at, ?)
+      WHERE account_id = ? AND tournament_seed = ? AND team_name = ?
+    `).bind(won, now, account.id, seed, teamName).run();
+  }
+
+  const achievement = await retroAchievementProgress(env.CHALLENGE_DB, account, config.year);
+  const currentTeam = achievement.teams.find((team) => team.teamName === teamName);
+  return responseJson({
+    achievement,
+    countryUnlocked: !previousTeam?.won && currentTeam?.won === true,
+    challengeUnlocked: !before.unlocked && achievement.unlocked,
+    unlockedTeam: currentTeam,
+  });
+}
+
+export async function handleChallengeRequest(request, env, url) {
+  if (!env.CHALLENGE_DB) return responseJson({ error: "Palestine Challenge database is not configured." }, 503);
+  try {
+    if (url.pathname === "/api/challenge" && request.method === "GET") return await dashboard(request, env);
+    if (url.pathname === "/api/challenge/register" && request.method === "POST") return await register(request, env);
+    if (url.pathname === "/api/challenge/login" && request.method === "POST") return await login(request, env);
+    if (url.pathname === "/api/challenge/logout" && request.method === "POST") return await logout(request, env);
+    if (url.pathname === "/api/challenge/google/start" && request.method === "GET") return await startGoogleLogin(request, env, url);
+    if (url.pathname === "/api/challenge/google/callback" && request.method === "GET") return await completeGoogleLogin(request, env, url);
+    const account = await authenticatedAccount(request, env.CHALLENGE_DB);
+    if (url.pathname === "/api/challenge/profile") return await profile(request, env, account);
+    if (url.pathname === "/api/challenge/profile/deletion-request") return await requestAccountDeletion(request, env, account);
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2018)$/);
+    if (retroAchievementMatch) return await retroAchievement(request, env, account, Number(retroAchievementMatch[1]));
+    if (url.pathname === "/api/challenge/runs" && request.method === "POST") return await startRun(request, env, account);
+    const runMatch = url.pathname.match(/^\/api\/challenge\/runs\/([0-9a-f-]{36})\/play$/i);
+    if (runMatch && request.method === "POST") return await playRun(request, env, account, runMatch[1]);
+    return responseJson({ error: "Not found." }, 404);
+  } catch (error) {
+    if (error instanceof ChallengeRequestError) {
+      return responseJson({ error: error.message, ...(error.details || {}) }, error.status);
+    }
+    console.error("Palestine Challenge API failure", error instanceof Error ? error.stack || error.message : String(error));
+    const accountRequest = ["/api/challenge/register", "/api/challenge/login", "/api/challenge/profile"].includes(url.pathname);
+    return responseJson({
+      error: accountRequest
+        ? "The account request failed unexpectedly. Please try again."
+        : "The request failed unexpectedly. Please try again.",
+      code: "unexpected_request_failure",
+    }, 500);
+  }
+}

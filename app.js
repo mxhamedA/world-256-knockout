@@ -3,8 +3,44 @@ const LEGACY_TOURNAMENT_SESSION_KEY = "world-256-legacy-tournament-v1";
 const MATCH_SPEED_STORAGE_KEY = "world-256-match-speed";
 const MATCH_HIGHLIGHT_MODE_STORAGE_KEY = "world-256-highlight-mode";
 const ONLINE_ROOM_SESSION_KEY = "world-256-online-room-v1";
+const ONLINE_DISPLAY_NAME_KEY = "world-256-online-display-name-v1";
+const RETRO_WORLD_CUP_YEAR_KEY = "world-256-retro-world-cup-year";
+const RETRO_WORLD_CUP_TEAM_KEY_PREFIX = "world-256-retro-world-cup-team";
+const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
+const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
 const ONLINE_PARTY_MODE_ENABLED = false;
 const STATE_VERSION = 2;
+
+const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
+  2010: Object.freeze({
+    label: "South Africa 2010",
+    host: "South Africa",
+    logo: "./assets/retro-2010/worldcup-2010-logo.png",
+    accent: "#eb950e",
+    accentText: "#151006",
+  }),
+  2014: Object.freeze({
+    label: "Brazil 2014",
+    host: "Brazil",
+    logo: "./assets/retro-world-cup-2014.png",
+    accent: "#fcc40c",
+    accentText: "#151006",
+  }),
+  2018: Object.freeze({
+    label: "Russia 2018",
+    host: "Russia",
+    logo: "./assets/retro-world-cup-2018.png",
+    accent: "#a51a16",
+    accentText: "#ffffff",
+  }),
+  2022: Object.freeze({
+    label: "Qatar 2022",
+    host: "Qatar",
+    logo: "./assets/retro-world-cup-2022.png",
+    accent: "#9c143d",
+    accentText: "#ffffff",
+  }),
+});
 
 const STANDARD_TACTICS = Object.freeze({
   balanced: { name: "Balanced", passMs: 900, turnover: 0.14, width: 1, line: 0, directness: 0.48, ownXg: 1, opponentXg: 1 },
@@ -42,6 +78,7 @@ const els = {
   championTopScorerFlag: $("#championTopScorerFlag"),
   championTopScorerTeam: $("#championTopScorerTeam"),
   championTopScorerGoals: $("#championTopScorerGoals"),
+  championTeamJourney: $("#championTeamJourney"),
   matchNumber: $("#matchNumber"),
   stageRoundLabel: $("#stageRoundLabel"),
   homeSeed: $("#homeSeed"),
@@ -82,6 +119,8 @@ const els = {
   matchAnalysis: $("#matchAnalysis"),
   matchStatsGrid: $("#matchStatsGrid"),
   matchLineups: $("#matchLineups"),
+  retroMatchLineupsPanel: $("#retroMatchLineupsPanel"),
+  retroMatchLineupsBody: $("#retroMatchLineupsBody"),
   eventControls: $("#eventControls"),
   skipControl: $("#skipControl"),
   penaltyStage: $("#penaltyStage"),
@@ -110,6 +149,7 @@ const els = {
   unresolvedFilter: $("#unresolvedFilter"),
   tiesRemaining: $("#tiesRemaining"),
   matchQueue: $("#matchQueue"),
+  goldenBootTitle: $("#goldenBootTitle"),
   goldenBootList: $("#goldenBootList"),
   bugReportButton: $("#bugReportButton"),
   onlineBugReportButton: $("#onlineBugReportButton"),
@@ -119,10 +159,22 @@ const els = {
   bugReportMessage: $("#bugReportMessage"),
   bugReportSubmit: $("#bugReportSubmit"),
   bugReportStatus: $("#bugReportStatus"),
+  discordButton: $("#discordButton"),
+  onlineDiscordButton: $("#onlineDiscordButton"),
+  settingsDiscordButton: $("#settingsDiscordButton"),
+  discordModal: $("#discordModal"),
+  discordCloseButton: $("#discordCloseButton"),
+  donateButton: $("#donateButton"),
+  onlineDonateButton: $("#onlineDonateButton"),
+  donateModal: $("#donateModal"),
+  donateCloseButton: $("#donateCloseButton"),
   plotList: $("#plotList"),
   settingsModal: $("#settingsModal"),
   settingsButton: $("#settingsButton"),
   onlineSettingsButton: $("#onlineSettingsButton"),
+  newsButton: $("#newsButton"),
+  newsModal: $("#newsModal"),
+  newsCloseButton: $("#newsCloseButton"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   resetModal: $("#resetModal"),
   simulateRoundModal: $("#simulateRoundModal"),
@@ -141,12 +193,38 @@ const els = {
   toast: $("#toast"),
   sidebar: $("#sidebar"),
   fieldOverview: $("#fieldOverview"),
+  achievementsScreen: $("#achievementsScreen"),
+  openAchievementsButton: $("#openAchievementsButton"),
   mainContent: $("#mainContent"),
   appShell: $("#appShell"),
   startTournamentButton: $("#startTournamentButton"),
   homeRestartButton: $("#homeRestartButton"),
   startLegacyDraftButton: $("#startLegacyDraftButton"),
   restartLegacyDraftButton: $("#restartLegacyDraftButton"),
+  retroModeCard: $("#retroModeCard"),
+  retroWorldCupLogo: $("#retroWorldCupLogo"),
+  retroWorldCupYearSwitch: $("#retroWorldCupYearSwitch"),
+  retroWorldCupTeamLabel: $("#retroWorldCupTeamLabel"),
+  retroWorldCupTeamHint: $("#retroWorldCupTeamHint"),
+  retroTeamPickerButton: $("#retroTeamPickerButton"),
+  retroTeamPickerMark: $("#retroTeamPickerMark"),
+  startRetroWorldCupButton: $("#startRetroWorldCupButton"),
+  restartRetroWorldCupButton: $("#restartRetroWorldCupButton"),
+  retroWorldCupScreen: $("#retroWorldCupScreen"),
+  retroWorldCupBackButton: $("#retroWorldCupBackButton"),
+  retroWorldCupRestartButton: $("#retroWorldCupRestartButton"),
+  retroSettingsButton: $("#retroSettingsButton"),
+  retroNewsButton: $("#retroNewsButton"),
+  retroFeedbackButton: $("#retroFeedbackButton"),
+  retroAchievementsButton: $("#retroAchievementsButton"),
+  retroDonateButton: $("#retroDonateButton"),
+  retroAccountButton: $("#retroAccountButton"),
+  retroTournamentKicker: $("#retroTournamentKicker"),
+  retroTournamentTitle: $("#retroTournamentTitle"),
+  retroTournamentProgress: $("#retroTournamentProgress"),
+  retroTournamentBody: $("#retroTournamentBody"),
+  retroRestartModal: $("#retroRestartModal"),
+  confirmRetroRestartButton: $("#confirmRetroRestartButton"),
   legacyLandingSetup: $("#legacyLandingSetup"),
   legacyDraftScreen: $("#legacyDraftScreen"),
   legacyDraftBody: $("#legacyDraftBody"),
@@ -177,7 +255,6 @@ const els = {
   matchPenaltyOverlay: $("#matchPenaltyOverlay"),
   matchPenaltyScene: $("#matchPenaltyScene"),
   matchPenaltyPlayer: $("#matchPenaltyPlayer"),
-  createOnlineRoomButton: $("#createOnlineRoomButton"),
   joinOnlineRoomButton: $("#joinOnlineRoomButton"),
   onlineRoomScreen: $("#onlineRoomScreen"),
   closeOnlineScreenButton: $("#closeOnlineScreenButton"),
@@ -188,13 +265,25 @@ const els = {
   onlineRoomLobby: $("#onlineRoomLobby"),
   onlineDraft: $("#onlineDraft"),
   onlineMatches: $("#onlineMatches"),
-  createOnlineDisplayName: $("#createOnlineDisplayName"),
-  joinOnlineDisplayName: $("#joinOnlineDisplayName"),
+  onlineResults: $("#onlineResults"),
+  onlineResultsSummary: $("#onlineResultsSummary"),
+  onlineResultsLeaders: $("#onlineResultsLeaders"),
+  onlineResultsTable: $("#onlineResultsTable"),
+  onlineResultsPlayers: $("#onlineResultsPlayers"),
+  onlineBracketRoundTabs: $("#onlineBracketRoundTabs"),
+  onlineOpeningBracket: $("#onlineOpeningBracket"),
+  onlineResultsBracket: $("#onlineResultsBracket"),
+  onlinePlayAgainButton: $("#onlinePlayAgainButton"),
+  onlineEndLobbyButton: $("#onlineEndLobbyButton"),
+  onlineResultsWaiting: $("#onlineResultsWaiting"),
+  onlineDisplayName: $("#onlineDisplayName"),
   onlineRoomCodeInput: $("#onlineRoomCodeInput"),
   confirmCreateRoomButton: $("#confirmCreateRoomButton"),
   confirmJoinRoomButton: $("#confirmJoinRoomButton"),
   onlineRoomCode: $("#onlineRoomCode"),
   copyOnlineRoomCodeButton: $("#copyOnlineRoomCodeButton"),
+  onlineRoomInviteLink: $("#onlineRoomInviteLink"),
+  copyOnlineRoomInviteButton: $("#copyOnlineRoomInviteButton"),
   onlineRoomCount: $("#onlineRoomCount"),
   onlineLobbyDisplayName: $("#onlineLobbyDisplayName"),
   updateOnlineDisplayNameButton: $("#updateOnlineDisplayNameButton"),
@@ -214,6 +303,8 @@ const els = {
   leaveOnlineDraftRoomButton: $("#leaveOnlineDraftRoomButton"),
   onlineMatchRound: $("#onlineMatchRound"),
   onlineMatchStatus: $("#onlineMatchStatus"),
+  onlineSpectatorPicker: $("#onlineSpectatorPicker"),
+  onlineSpectatorSelect: $("#onlineSpectatorSelect"),
   onlinePenaltyTesterButton: $("#onlinePenaltyTesterButton"),
   onlineRoundNextButton: $("#onlineRoundNextButton"),
   onlineActiveTeam: $("#onlineActiveTeam"),
@@ -223,6 +314,7 @@ const els = {
   onlineTacticSlider: $("#onlineTacticSlider"),
   onlineTacticButtons: $("#onlineTacticButtons"),
   onlineCurrentMatch: $("#onlineCurrentMatch"),
+  onlineSnapshotButton: $("#onlineSnapshotButton"),
   onlineMatchHome: $("#onlineMatchHome"),
   onlineMatchAway: $("#onlineMatchAway"),
   onlineMatchScore: $("#onlineMatchScore"),
@@ -543,18 +635,41 @@ const FLAG_CODE_OVERRIDES = {
 };
 
 const FLAG_IMAGE_OVERRIDES = {
-  Somaliland: `data:image/svg+xml,${encodeURIComponent(`
+  Belarus: "./assets/flags/belarus.svg?v=3",
+  Kurdistan: `data:image/svg+xml,${encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
-      <rect width="300" height="200" fill="#fff"/>
-      <rect width="300" height="66.666" fill="#00843d"/>
-      <rect y="133.333" width="300" height="66.667" fill="#d21034"/>
-      <polygon fill="#111827" points="150,78 162,119 204,119 170,143 183,184 150,159 117,184 130,143 96,119 138,119"/>
-      <g fill="#fff" opacity=".92">
-        <rect x="56" y="27" width="188" height="8" rx="4"/>
-        <rect x="78" y="43" width="144" height="6" rx="3"/>
+      <rect width="300" height="66.667" fill="#ed1c24"/>
+      <rect y="66.667" width="300" height="66.666" fill="#fff"/>
+      <rect y="133.333" width="300" height="66.667" fill="#278e43"/>
+      <g fill="#f8d20f" transform="translate(150 100)">
+        <circle r="25"/>
+        <g>
+          <path d="M0,-55 5,-28 -5,-28z"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(17.142857)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(34.285714)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(51.428571)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(68.571429)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(85.714286)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(102.857143)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(120)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(137.142857)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(154.285714)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(171.428571)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(188.571429)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(205.714286)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(222.857143)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(240)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(257.142857)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(274.285714)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(291.428571)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(308.571429)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(325.714286)"/>
+          <path d="M0,-55 5,-28 -5,-28z" transform="rotate(342.857143)"/>
+        </g>
       </g>
     </svg>
   `)}`,
+  Somaliland: "./assets/flags/somaliland.svg",
 };
 
 const TOP_SHOOTOUT_TEAM_IDS = new Set(
@@ -660,21 +775,23 @@ function preferredPenaltyFoot(team, player, random) {
 
 function flagMarkup(team, className = "") {
   const imageOverride = FLAG_IMAGE_OVERRIDES[team.name];
+  const imageClassName = team.name === "Belarus" ? "flag-belarus" : "";
+  const classes = ["country-flag", className, imageClassName].filter(Boolean).join(" ");
   const code = FLAG_CODE_OVERRIDES[team.code] || team.code.toLowerCase();
   const fallback = `<span class="flag-fallback" aria-hidden="true">${team.flag}</span>`;
   if (imageOverride) {
     return `
-      <span class="country-flag ${className}" role="img" aria-label="${team.name} flag">
+      <span class="${classes}" role="img" aria-label="${team.name} flag">
         ${fallback}
         <img src="${imageOverride}" alt="" loading="lazy" />
       </span>
     `;
   }
   if (code === "xx") {
-    return `<span class="country-flag ${className}" role="img" aria-label="${team.name} flag">${fallback}</span>`;
+    return `<span class="${classes}" role="img" aria-label="${team.name} flag">${fallback}</span>`;
   }
   return `
-    <span class="country-flag ${className}" role="img" aria-label="${team.name} flag">
+    <span class="${classes}" role="img" aria-label="${team.name} flag">
       ${fallback}
       <img
         src="https://flagcdn.com/w160/${code}.png"
@@ -684,6 +801,16 @@ function flagMarkup(team, className = "") {
       />
     </span>
   `;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character]);
 }
 
 function measureTeamName(element) {
@@ -732,15 +859,27 @@ let livePlayback = null;
 let match2dState = null;
 const matchPresentationCache = new Map();
 let spectatePickerMode = "all";
+let retroTournament = readRetroTournamentState();
+let retroMenuSettings = readRetroWorldCupSettings();
+let retroTournamentView = "matches";
+let retroBottomGroupsVisible = false;
+let retroBottomGroupMatchesVisible = false;
+let retroSelectedMatchId = null;
+let retroSquadTeamName = retroTournament?.managedTeam || "Brazil";
 let onlineRoomSession = readOnlineRoomSession();
 let onlineRoomPollTimer = null;
+let onlineRoomRefreshPromise = null;
 let onlineRoomBusy = false;
+let onlineInviteAutoJoinAttempted = false;
 let latestOnlineRoom = null;
 let onlineRoomStateVersion = 0;
 let onlineLastSeenEventId = 0;
 const onlineRoomEvents = new Map();
 let onlineViewedMatchId = null;
 let onlineMatchSelectionManual = false;
+let onlineSpectatingMemberId = null;
+let onlineViewedMatchSyncTimer = null;
+let onlineLastSyncedViewedMatchId = null;
 let onlineMatchPlayback = null;
 let onlineMatchPlaybackTimer = null;
 let onlineLivePresentation = null;
@@ -748,6 +887,8 @@ let onlineLivePresentationTimer = null;
 let onlineServerOffsetMs = 0;
 let onlineServerOffsetReady = false;
 let onlineDisplayedRoundNumber = null;
+let onlineResultsActiveTab = "standings";
+let onlineResultsOpeningRound = 1;
 let onlineRoundScoreTimer = null;
 let onlineOtherMatchFilter = "friends";
 const onlinePlayedMatchIds = new Set();
@@ -776,7 +917,14 @@ const activeMatchSounds = new Set();
 function restoreOnlineMatchHistory(roomCode) {
   if (!roomCode || onlineHistoryRoomCode === roomCode) return;
   onlineHistoryRoomCode = roomCode;
+  onlineViewedMatchId = null;
   onlineMatchSelectionManual = false;
+  onlineSpectatingMemberId = null;
+  onlineLastSyncedViewedMatchId = null;
+  stopOnlineMatchPlayback();
+  stopOnlineLivePresentation();
+  clearTimeout(onlineViewedMatchSyncTimer);
+  onlineViewedMatchSyncTimer = null;
   onlinePlayedMatchIds.clear();
   onlineFinishedPlaybackIds.clear();
   try {
@@ -832,7 +980,6 @@ function saveOnlineRoomSession(session) {
 }
 
 function syncOnlineRoomCard() {
-  els.createOnlineRoomButton.innerHTML = `Create room <span aria-hidden="true">→</span>`;
   const enabled = onlineModeAvailableLocally();
   els.onlineModeActions.hidden = !enabled;
   els.onlineModeActions.classList.toggle("has-active-room", enabled && Boolean(onlineRoomSession));
@@ -841,8 +988,7 @@ function syncOnlineRoomCard() {
 }
 
 function onlineModeAvailableLocally() {
-  return ONLINE_PARTY_MODE_ENABLED && (["localhost", "127.0.0.1", "::1"].includes(window.location.hostname)
-    || new URLSearchParams(window.location.search).get("onlineDev") === "1");
+  return ONLINE_PARTY_MODE_ENABLED;
 }
 
 function configureOnlineModeAvailability() {
@@ -853,25 +999,54 @@ function configureOnlineModeAvailability() {
   const enabled = onlineModeAvailableLocally();
   els.onlineModeCopy.textContent = enabled
     ? "Create a private knockout room and manage matches together in real time."
-    : "Private rooms are being tuned before they come back.";
+    : "Online party mode is coming soon.";
   syncOnlineRoomCard();
 }
 
+const APP_MODE_PATHS = Object.freeze({
+  home: "/",
+  achievements: "/achievements",
+  challenge: "/palestine-challenge",
+  standard: "/default-mode",
+  legacy: "/draft-mode",
+  retro: "/retro-world-cup",
+  online: "/online-mode",
+});
+
+const RETRO_WORLD_CUP_PATHS = Object.freeze({
+  2010: "/retro-10-world-cup",
+  2014: "/retro-14-world-cup",
+  2018: "/retro-18-world-cup",
+});
+
+function retroWorldCupYearFromPath() {
+  const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+  return Object.entries(RETRO_WORLD_CUP_PATHS).find(([, path]) => path === pathname)?.[0] || null;
+}
+
 function currentAppMode() {
-  const mode = new URLSearchParams(window.location.search).get("mode");
-  return mode === "online" || mode === "standard" || mode === "legacy" ? mode : "home";
+  const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (retroWorldCupYearFromPath()) return "retro";
+  const pathMode = Object.entries(APP_MODE_PATHS).find(([, path]) => path === pathname)?.[0];
+  if (pathMode) return pathMode;
+  const legacyQueryMode = new URLSearchParams(window.location.search).get("mode");
+  return legacyQueryMode === "online" || legacyQueryMode === "standard" || legacyQueryMode === "legacy" || legacyQueryMode === "retro"
+    ? legacyQueryMode
+    : "home";
 }
 
 function setAppModeUrl(mode, { replace = false } = {}) {
   const url = new URL(window.location.href);
-  if (mode === "online" || mode === "standard" || mode === "legacy") url.searchParams.set("mode", mode);
-  else {
-    url.searchParams.delete("mode");
-    url.searchParams.delete("room");
-  }
+  const selectedMode = Object.hasOwn(APP_MODE_PATHS, mode) ? mode : "home";
+  const retroYear = String(retroTournament?.year || readRetroWorldCupYear());
+  url.pathname = selectedMode === "retro"
+    ? RETRO_WORLD_CUP_PATHS[retroYear] || RETRO_WORLD_CUP_PATHS[2014]
+    : APP_MODE_PATHS[selectedMode];
+  url.searchParams.delete("mode");
+  if (selectedMode !== "online") url.searchParams.delete("room");
   if (mode !== "standard") url.searchParams.delete("legacyTournament");
   const nextUrl = `${url.pathname}${url.search}${url.hash}`;
-  const nextState = { ...(window.history.state || {}), appMode: mode };
+  const nextState = { ...(window.history.state || {}), appMode: selectedMode };
   window.history[replace ? "replaceState" : "pushState"](nextState, "", nextUrl);
 }
 
@@ -885,7 +1060,8 @@ function setOnlineRoomBusy(busy) {
   [els.confirmCreateRoomButton, els.confirmJoinRoomButton, els.closeOnlineRoomButton, els.leaveOnlineRoomButton,
     els.closeOnlineDraftRoomButton, els.leaveOnlineDraftRoomButton, els.updateOnlineDisplayNameButton,
     els.onlineReadyButton, els.onlinePauseMatchButton, els.onlineMatchSpeedButton,
-    els.closeOnlineMatchRoomButton, els.leaveOnlineMatchRoomButton]
+    els.closeOnlineMatchRoomButton, els.leaveOnlineMatchRoomButton,
+    els.onlinePlayAgainButton, els.onlineEndLobbyButton]
     .forEach((button) => { button.disabled = busy; });
   els.onlineTacticSlider.disabled = busy;
   els.onlinePenaltyControl.querySelectorAll("button").forEach((button) => { button.disabled = busy; });
@@ -913,7 +1089,9 @@ function showOnlineRoomEntry(preferJoin = false) {
   els.onlineRoomTitle.textContent = "Create or join a room";
   const linkedCode = new URLSearchParams(window.location.search).get("room");
   if (linkedCode) els.onlineRoomCodeInput.value = normalizeOnlineRoomCode(linkedCode);
-  requestAnimationFrame(() => (preferJoin ? els.joinOnlineDisplayName : els.createOnlineDisplayName).focus());
+  requestAnimationFrame(() => (preferJoin && els.onlineRoomCodeInput.value
+    ? els.onlineRoomCodeInput
+    : els.onlineDisplayName).focus());
 }
 
 async function openOnlineRoom(preferJoin = false, { updateUrl = true } = {}) {
@@ -929,8 +1107,13 @@ async function openOnlineRoom(preferJoin = false, { updateUrl = true } = {}) {
   els.onlineRoomScreen.hidden = false;
   document.body.classList.add("online-screen-open");
   window.scrollTo({ top: 0, behavior: "auto" });
-  if (!onlineRoomSession) {
-    showOnlineRoomEntry(preferJoin);
+  const linkedCode = normalizeOnlineRoomCode(new URLSearchParams(window.location.search).get("room"));
+  if (!onlineRoomSession || (linkedCode && linkedCode !== onlineRoomSession.code)) {
+    showOnlineRoomEntry(preferJoin || Boolean(linkedCode));
+    if (linkedCode && els.onlineDisplayName.value.trim() && !onlineInviteAutoJoinAttempted) {
+      onlineInviteAutoJoinAttempted = true;
+      queueMicrotask(() => joinOnlineRoom());
+    }
     return;
   }
   showOnlineLobbyShell();
@@ -952,8 +1135,7 @@ function closeOnlineScreen({ updateUrl = true, force = false } = {}) {
   document.body.classList.remove("online-screen-open");
   if (updateUrl) setAppModeUrl("home", { replace: true });
   requestAnimationFrame(() => {
-    const returnButton = onlineRoomSession ? els.createOnlineRoomButton : els.joinOnlineRoomButton;
-    if (!returnButton.hidden) returnButton.focus();
+    if (!els.joinOnlineRoomButton.hidden) els.joinOnlineRoomButton.focus();
   });
 }
 
@@ -962,6 +1144,7 @@ function showOnlineLobbyShell() {
   els.onlineRoomLobby.hidden = false;
   els.onlineDraft.hidden = true;
   els.onlineMatches.hidden = true;
+  els.onlineResults.hidden = true;
   els.onlineScreenHeading.hidden = true;
   els.onlineRoomTitle.textContent = "Private tournament lobby";
   els.onlineRoomCode.textContent = onlineRoomSession?.code || "------";
@@ -969,7 +1152,11 @@ function showOnlineLobbyShell() {
 }
 
 function renderOnlineLobby(room, memberId) {
-  if (room.status === "matches" || room.status === "tournament-complete") {
+  if (room.status === "tournament-complete" && room.tournament?.status === "complete") {
+    renderOnlineResults(room, memberId);
+    return;
+  }
+  if (room.status === "matches") {
     renderOnlineMatches(room, memberId);
     return;
   }
@@ -981,7 +1168,11 @@ function renderOnlineLobby(room, memberId) {
   els.onlineRoomLobby.hidden = false;
   els.onlineDraft.hidden = true;
   els.onlineMatches.hidden = true;
+  els.onlineResults.hidden = true;
   els.onlineRoomCode.textContent = room.code;
+  const inviteUrl = onlineRoomInviteUrl(room.code);
+  els.onlineRoomInviteLink.href = inviteUrl;
+  els.onlineRoomInviteLink.textContent = inviteUrl.replace(/^https?:\/\//, "");
   els.onlineRoomCount.textContent = `${room.memberCount} / ${room.maxMembers} players`;
   const currentMember = room.members.find((member) => member.id === memberId);
   if (document.activeElement !== els.onlineLobbyDisplayName) {
@@ -1085,6 +1276,7 @@ function renderOnlineDraft(room, memberId) {
   latestOnlineRoom = room;
   els.onlineRoomLobby.hidden = true;
   els.onlineMatches.hidden = true;
+  els.onlineResults.hidden = true;
   els.onlineDraft.hidden = false;
   els.onlineScreenHeading.hidden = true;
   els.onlineRoomTitle.textContent = "Snake draft";
@@ -1165,6 +1357,10 @@ const ONLINE_TACTIC_OPTIONS = [
   { id: "defensive", name: "Defensive", copy: "A safer shape that concedes fewer chances but creates less going forward." },
 ];
 const ONLINE_SHARED_PLAYBACK_MS = 30000;
+const ONLINE_LIVE_MINUTE_MS = 667;
+const ONLINE_LIVE_MAX_FRAME_MS = 100;
+const ONLINE_LIVE_CATCHUP_FACTOR = 1.8;
+const ONLINE_LIVE_MAX_FRAME_MINUTES = 0.45;
 
 function onlineRoundName(tournament, roundNumber) {
   const totalTeams = tournament?.participantTeamIds?.length || 256;
@@ -1175,8 +1371,356 @@ function onlineRoundName(tournament, roundNumber) {
   return `Round of ${teamsRemaining}`;
 }
 
+function onlineMemberOwnsMatch(tournament, memberId, match) {
+  return Boolean(match && memberId && [match.homeTeamId, match.awayTeamId]
+    .some((teamId) => tournament?.teamOwnerById?.[teamId] === memberId));
+}
+
+function onlineMatchStillPlaying(match) {
+  if (!match?.awayTeamId) return false;
+  if (match.liveState) return !["waiting", "finished"].includes(match.liveState.status);
+  return ["live", "penalties"].includes(match.status)
+    || onlineSharedMatchState(match, onlineServerNow()).live
+    || onlineMatchPlayback?.matchId === match.id;
+}
+
+function onlineResultScore(match, teamId) {
+  const home = match.homeTeamId === teamId;
+  const goalsFor = Number(home ? match.homeScore : match.awayScore) || 0;
+  const goalsAgainst = Number(home ? match.awayScore : match.homeScore) || 0;
+  const opponentId = home ? match.awayTeamId : match.homeTeamId;
+  const opponent = TEAM_BY_ID.get(opponentId);
+  const penalty = match.penalty;
+  const penaltyCopy = penalty
+    ? ` (pens ${home ? penalty.homeScore : penalty.awayScore}-${home ? penalty.awayScore : penalty.homeScore})`
+    : "";
+  return {
+    match,
+    teamId,
+    opponentId,
+    won: match.winnerTeamId === teamId,
+    goalsFor,
+    goalsAgainst,
+    text: `${match.winnerTeamId === teamId ? "W" : "L"} ${goalsFor}-${goalsAgainst}${penaltyCopy} vs ${opponent?.name || "Opponent"}`,
+  };
+}
+
+function onlineTeamTournamentResult(tournament, teamId) {
+  const rounds = tournament.rounds || [];
+  const appearances = rounds.flatMap((round) => round.matches
+    .filter((match) => match.homeTeamId === teamId || match.awayTeamId === teamId)
+    .map((match) => ({ round, match })));
+  const played = appearances.filter(({ match }) => match.status === "complete" && match.awayTeamId);
+  const scores = played.map(({ match }) => onlineResultScore(match, teamId));
+  const furthestRound = Math.max(0, ...appearances.map(({ round }) => round.number));
+  const champion = tournament.championTeamId === teamId;
+  const reachedFinal = onlineRoundName(tournament, furthestRound || 1) === "Final";
+  const finish = champion
+    ? "Winners"
+    : reachedFinal && tournament.status === "complete"
+      ? "Runners-up"
+      : onlineRoundName(tournament, furthestRound || 1);
+  return {
+    teamId,
+    champion,
+    furthestRound,
+    finish,
+    goalsFor: scores.reduce((total, score) => total + score.goalsFor, 0),
+    goalsAgainst: scores.reduce((total, score) => total + score.goalsAgainst, 0),
+    scores,
+  };
+}
+
+function createOnlineResultScoreCard(score, tournament) {
+  const match = score.match;
+  const home = TEAM_BY_ID.get(match.homeTeamId);
+  const away = TEAM_BY_ID.get(match.awayTeamId);
+  const card = document.createElement("article");
+  card.className = "online-result-score-card";
+  const head = document.createElement("header");
+  const round = document.createElement("span");
+  round.textContent = onlineRoundName(tournament, match.roundNumber || 1);
+  const outcome = document.createElement("b");
+  outcome.textContent = score.won ? "WIN" : "LOSS";
+  outcome.className = score.won ? "is-win" : "is-loss";
+  head.append(round, outcome);
+  const teams = document.createElement("div");
+  [[home, match.homeScore, match.homeTeamId, match.penalty?.homeScore], [away, match.awayScore, match.awayTeamId, match.penalty?.awayScore]].forEach(([team, goals, teamId, penaltyScore]) => {
+    const row = document.createElement("div");
+    row.className = `online-result-score-team${match.winnerTeamId === teamId ? " is-winner" : ""}`;
+    const flag = document.createElement("span");
+    if (team) flag.innerHTML = flagMarkup(team, "online-result-score-flag");
+    const name = document.createElement("strong");
+    name.textContent = team?.name || "Bye";
+    const value = document.createElement("b");
+    value.textContent = penaltyScore === undefined ? (goals ?? "-") : `${goals ?? "-"} (${penaltyScore})`;
+    row.append(flag, name, value);
+    teams.append(row);
+  });
+  card.append(head, teams);
+  const footer = document.createElement("small");
+  footer.textContent = match.penalty ? "Decided on penalties" : "Full time";
+  card.append(footer);
+  return card;
+}
+
+function createOnlineBracketMatch(match) {
+  const card = document.createElement("article");
+  card.className = "online-bracket-match";
+  [[match.homeTeamId, match.homeScore, match.penalty?.homeScore], [match.awayTeamId, match.awayScore, match.penalty?.awayScore]].forEach(([teamId, score, penaltyScore]) => {
+    const team = TEAM_BY_ID.get(teamId);
+    const row = document.createElement("div");
+    row.className = match.winnerTeamId === teamId ? "is-winner" : "";
+    const flag = document.createElement("span");
+    if (team) flag.innerHTML = flagMarkup(team, "online-bracket-flag");
+    const name = document.createElement("strong");
+    name.textContent = team?.name || "Bye";
+    const value = document.createElement("b");
+    value.textContent = penaltyScore === undefined ? (score ?? "-") : `${score ?? "-"} (${penaltyScore})`;
+    row.append(flag, name, value);
+    card.append(row);
+  });
+  return card;
+}
+
+function setOnlineResultsTab(tabName) {
+  const selected = ["standings", "results", "bracket"].includes(tabName) ? tabName : "standings";
+  onlineResultsActiveTab = selected;
+  els.onlineResults.querySelectorAll("[data-online-results-tab]").forEach((button) => {
+    const active = button.dataset.onlineResultsTab === selected;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  els.onlineResults.querySelectorAll("[data-online-results-panel]").forEach((panel) => {
+    panel.hidden = panel.dataset.onlineResultsPanel !== selected;
+  });
+}
+
+function renderOnlineOpeningBracket(tournament) {
+  const finalSelected = onlineResultsOpeningRound === "final";
+  const selectedRound = (tournament.rounds || []).find((round) => round.number === onlineResultsOpeningRound)
+    || tournament.rounds?.[0];
+  els.onlineBracketRoundTabs.querySelectorAll("[data-online-bracket-round]").forEach((button) => {
+    const buttonRound = button.dataset.onlineBracketRound;
+    const active = finalSelected ? buttonRound === "final" : Number(buttonRound) === selectedRound?.number;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  els.onlineOpeningBracket.hidden = finalSelected;
+  els.onlineResultsBracket.hidden = !finalSelected;
+  if (finalSelected) return;
+  els.onlineOpeningBracket.replaceChildren(...(selectedRound?.matches || []).map(createOnlineBracketMatch));
+}
+
+function setOnlineBracketOpeningRound(roundNumber) {
+  const nextRound = roundNumber === "final" ? "final" : Number(roundNumber);
+  if (nextRound !== "final" && ![1, 2, 3].includes(nextRound)) return;
+  onlineResultsOpeningRound = nextRound;
+  if (latestOnlineRoom?.tournament) renderOnlineOpeningBracket(latestOnlineRoom.tournament);
+}
+
+function renderOnlineResults(room, memberId) {
+  latestOnlineRoom = room;
+  stopOnlineLivePresentation();
+  els.onlineRoomLobby.hidden = true;
+  els.onlineDraft.hidden = true;
+  els.onlineMatches.hidden = true;
+  els.onlineResults.hidden = false;
+  els.onlineScreenHeading.hidden = true;
+  els.onlineRoomTitle.textContent = "Tournament results";
+
+  const tournament = room.tournament;
+  const champion = TEAM_BY_ID.get(tournament.championTeamId);
+  const championOwnerId = tournament.teamOwnerById?.[tournament.championTeamId];
+  const championOwner = room.members.find((member) => member.id === championOwnerId);
+  els.onlineResultsSummary.textContent = tournament.completionReason === "all-players-eliminated"
+    ? "Every player-controlled country was eliminated. Here is how the lobby finished."
+    : championOwner
+    ? `${champion?.name || "The champion"} won the tournament for ${championOwner.name}.`
+    : `${champion?.name || "The champion"} won the tournament. None of the players' teams won.`;
+
+  const standings = room.members.filter((member) => !member.isCpu).map((member) => {
+    const teams = Object.entries(tournament.teamOwnerById || {})
+      .filter(([, ownerId]) => ownerId === member.id)
+      .map(([teamId]) => onlineTeamTournamentResult(tournament, teamId));
+    const furthestRound = Math.max(0, ...teams.map((team) => team.furthestRound));
+    return {
+      member,
+      teams,
+      furthestRound,
+      champion: teams.some((team) => team.champion),
+      goalsFor: teams.reduce((total, team) => total + team.goalsFor, 0),
+      goalsAgainst: teams.reduce((total, team) => total + team.goalsAgainst, 0),
+      played: teams.reduce((total, team) => total + team.scores.length, 0),
+      wins: teams.reduce((total, team) => total + team.scores.filter((score) => score.won).length, 0),
+    };
+  }).map((entry) => ({ ...entry, points: entry.wins * 3 }))
+    .toSorted((left, right) => (
+    right.points - left.points
+    || Number(right.champion) - Number(left.champion)
+    || right.furthestRound - left.furthestRound
+    || (right.goalsFor - right.goalsAgainst) - (left.goalsFor - left.goalsAgainst)
+    || right.goalsFor - left.goalsFor
+  ));
+
+  const championEntries = standings.filter((entry) => entry.champion);
+  const furthestRound = Math.max(0, ...standings.map((entry) => entry.furthestRound));
+  const leaders = championEntries.length
+    ? championEntries
+    : standings.filter((entry) => entry.furthestRound === furthestRound);
+  els.onlineResultsLeaders.replaceChildren();
+  if (leaders.length) {
+    const label = document.createElement("span");
+    label.textContent = leaders.length > 1 ? "Winners" : "Winner";
+    const value = document.createElement("strong");
+    value.textContent = leaders.map((entry) => entry.member.name).join(" & ");
+    els.onlineResultsLeaders.append(label, value);
+  }
+
+  els.onlineResultsTable.replaceChildren(...standings.map((entry, index) => {
+    const row = document.createElement("tr");
+    const values = [
+      index + 1,
+      entry.member.id === memberId ? `${entry.member.name} (You)` : entry.member.name,
+      entry.played,
+      entry.wins,
+      entry.played - entry.wins,
+      entry.goalsFor,
+      entry.goalsAgainst,
+      entry.goalsFor - entry.goalsAgainst,
+      entry.points,
+    ];
+    values.forEach((value, cellIndex) => {
+      const cell = document.createElement("td");
+      cell.textContent = cellIndex === 7 && Number(value) > 0 ? `+${value}` : value;
+      if (cellIndex === 1) cell.className = "is-player";
+      if (cellIndex === 8) cell.className = "is-points";
+      row.append(cell);
+    });
+    return row;
+  }));
+
+  els.onlineResultsPlayers.replaceChildren(...standings.map((entry, index) => {
+    const section = document.createElement("section");
+    section.className = "online-result-player";
+    const head = document.createElement("header");
+    const rank = document.createElement("span");
+    rank.textContent = String(index + 1).padStart(2, "0");
+    const title = document.createElement("div");
+    const name = document.createElement("strong");
+    name.textContent = entry.member.id === memberId ? `${entry.member.name} (You)` : entry.member.name;
+    const summary = document.createElement("small");
+    summary.textContent = `${entry.goalsFor} goals scored | ${entry.goalsAgainst} conceded`;
+    title.append(name, summary);
+    const furthest = document.createElement("b");
+    furthest.textContent = entry.champion ? "Winner" : onlineRoundName(tournament, entry.furthestRound || 1);
+    head.append(rank, title, furthest);
+
+    const teamList = document.createElement("div");
+    teamList.className = "online-result-team-list";
+    entry.teams.forEach((result) => {
+      const team = TEAM_BY_ID.get(result.teamId);
+      const row = document.createElement("article");
+      row.className = "online-result-team";
+      const identity = document.createElement("div");
+      const flag = document.createElement("span");
+      if (team) flag.innerHTML = flagMarkup(team, "online-result-flag");
+      const teamCopy = document.createElement("span");
+      const teamName = document.createElement("strong");
+      teamName.textContent = team?.name || result.teamId;
+      const finish = document.createElement("small");
+      finish.textContent = `${result.finish} | ${result.goalsFor} goals`;
+      teamCopy.append(teamName, finish);
+      identity.append(flag, teamCopy);
+      const scoreList = document.createElement("div");
+      scoreList.className = "online-result-score-list";
+      if (result.scores.length) result.scores.forEach((score) => scoreList.append(createOnlineResultScoreCard(score, tournament)));
+      else {
+        const bye = document.createElement("span");
+        bye.className = "online-result-bye";
+        bye.textContent = "No match played";
+        scoreList.append(bye);
+      }
+      row.append(identity, scoreList);
+      teamList.append(row);
+    });
+    section.append(head, teamList);
+    return section;
+  }));
+
+  renderOnlineOpeningBracket(tournament);
+  els.onlineResultsBracket.replaceChildren(...(tournament.rounds || []).filter((round) => round.number >= 4).map((round) => {
+    const column = document.createElement("section");
+    column.className = "online-bracket-round";
+    const title = document.createElement("h3");
+    title.textContent = onlineRoundName(tournament, round.number);
+    const matches = document.createElement("div");
+    matches.replaceChildren(...round.matches.map(createOnlineBracketMatch));
+    column.append(title, matches);
+    return column;
+  }));
+
+  setOnlineResultsTab(onlineResultsActiveTab);
+
+  const isHost = Boolean(onlineRoomSession?.isHost);
+  els.onlinePlayAgainButton.hidden = !isHost;
+  els.onlineEndLobbyButton.textContent = isHost ? "End lobby" : "Leave lobby";
+  els.onlineResultsWaiting.hidden = isHost;
+}
+
+function updateOnlineSpectatorMode(room, memberId, surviving) {
+  const tournament = room.tournament;
+  const ownedTeamIds = Object.entries(tournament?.teamOwnerById || {})
+    .filter(([, ownerId]) => ownerId === memberId)
+    .map(([teamId]) => teamId);
+  const eliminated = tournament?.status === "active"
+    && ownedTeamIds.length > 0
+    && ownedTeamIds.every((teamId) => !surviving.has(teamId));
+  const candidates = eliminated
+    ? (room.members || []).filter((member) => (
+      !member.isCpu
+      && member.id !== memberId
+      && Object.entries(tournament.teamOwnerById || {}).some(([teamId, ownerId]) => ownerId === member.id && surviving.has(teamId))
+    ))
+    : [];
+  els.onlineSpectatorPicker.hidden = !candidates.length;
+  if (!candidates.length) {
+    onlineSpectatingMemberId = null;
+    els.onlineSpectatorSelect.replaceChildren();
+    return null;
+  }
+  if (!candidates.some((member) => member.id === onlineSpectatingMemberId)) {
+    onlineSpectatingMemberId = candidates[0].id;
+    onlineViewedMatchId = null;
+    onlineMatchSelectionManual = false;
+  }
+  els.onlineSpectatorSelect.replaceChildren(...candidates.map((member) => {
+    const option = document.createElement("option");
+    option.value = member.id;
+    option.textContent = member.name;
+    option.selected = member.id === onlineSpectatingMemberId;
+    return option;
+  }));
+  return onlineSpectatingMemberId;
+}
+
+function queueOnlineViewedMatchSync(matchId) {
+  if (!matchId || onlineSpectatingMemberId || matchId === onlineLastSyncedViewedMatchId || !onlineRoomSession) return;
+  clearTimeout(onlineViewedMatchSyncTimer);
+  onlineViewedMatchSyncTimer = setTimeout(async () => {
+    if (!onlineRoomSession || onlineSpectatingMemberId || matchId === onlineLastSyncedViewedMatchId) return;
+    try {
+      await roomApi(`/api/rooms/${onlineRoomSession.code}/match-view`, { method: "POST", body: { matchId } });
+      onlineLastSyncedViewedMatchId = matchId;
+    } catch {
+      // Viewing remains usable locally if presence syncing is briefly unavailable.
+    }
+  }, 180);
+}
+
 function renderOnlineMatches(room, memberId) {
   restoreOnlineMatchHistory(room.code);
+  const previousViewedMatchId = onlineViewedMatchId;
   const previousRoom = latestOnlineRoom;
   latestOnlineRoom = room;
   notifyOnlineReadyWaiting(room, memberId);
@@ -1186,6 +1730,7 @@ function renderOnlineMatches(room, memberId) {
   }
   els.onlineRoomLobby.hidden = true;
   els.onlineDraft.hidden = true;
+  els.onlineResults.hidden = true;
   els.onlineScreenHeading.hidden = true;
   els.onlineRoomTitle.textContent = "Online knockout";
   stopOnlineDraftRun();
@@ -1202,10 +1747,15 @@ function renderOnlineMatches(room, memberId) {
   els.onlinePenaltyTesterButton.textContent = "Test shootout";
   const isComplete = tournament?.status === "complete" && currentRound?.number === latestRound?.number;
   const surviving = new Set(tournament?.survivingTeamIds || []);
+  const spectatedMemberId = updateOnlineSpectatorMode(room, memberId, surviving);
+  const displayMemberId = spectatedMemberId || memberId;
   const ownedTeamIds = Object.entries(tournament?.teamOwnerById || {})
-    .filter(([, ownerId]) => ownerId === memberId)
+    .filter(([, ownerId]) => ownerId === displayMemberId)
     .map(([teamId]) => teamId);
   const ownedTeamIdSet = new Set(ownedTeamIds);
+  const controlledTeamIdSet = new Set(Object.entries(tournament?.teamOwnerById || {})
+    .filter(([, ownerId]) => ownerId === memberId)
+    .map(([teamId]) => teamId));
   const ownedMatches = currentRound?.matches.filter((match) => (
     ownedTeamIdSet.has(match.homeTeamId) || ownedTeamIdSet.has(match.awayTeamId)
   )) || [];
@@ -1221,47 +1771,70 @@ function renderOnlineMatches(room, memberId) {
       && (previous?.status === "waiting" || (!previous && sharedPlaybackActive));
   });
   const penaltyMatch = ownedMatches.find((match) => (
-    match.status === "penalties" && tournament?.teamOwnerById?.[match.penalty?.currentTeamId] === memberId
+    !spectatedMemberId
+    && match.status === "penalties"
+    && tournament?.teamOwnerById?.[match.penalty?.currentTeamId] === memberId
   ));
   const nextOwnedMatch = penaltyMatch
     || ownedMatches.find((match) => match.status === "live")
     || ownedMatches.find((match) => match.status === "waiting")
     || ownedMatches[0]
     || null;
-  if (penaltyMatch) {
+  const unfinishedOwnedMatch = !spectatedMemberId
+    ? ownedMatches.find((match) => onlineMatchStillPlaying(match)) || null
+    : null;
+  const spectatedMember = room.members?.find((member) => member.id === spectatedMemberId);
+  const syncedSpectatedMatch = spectatedMember?.viewedMatchId
+    ? allMatches.find((match) => match.id === spectatedMember.viewedMatchId)
+    : null;
+  if (unfinishedOwnedMatch && onlineViewedMatchId && !ownedMatches.some((match) => match.id === onlineViewedMatchId)) {
+    onlineViewedMatchId = nextOwnedMatch?.id || unfinishedOwnedMatch.id;
+    onlineMatchSelectionManual = false;
+  } else if (spectatedMemberId && syncedSpectatedMatch) {
+    onlineViewedMatchId = syncedSpectatedMatch.id;
+  } else if (spectatedMemberId && (!onlineViewedMatchId || !ownedMatches.some((match) => match.id === onlineViewedMatchId))) {
+    onlineViewedMatchId = nextOwnedMatch?.id || null;
+  } else if (penaltyMatch) {
     onlineViewedMatchId = penaltyMatch.id;
   } else if (newlyResolvedControlledMatch) {
     onlineViewedMatchId = newlyResolvedControlledMatch.id;
-  } else if (!onlineMatchSelectionManual && nextOwnedMatch) {
+  } else if (!onlineMatchSelectionManual && !onlineViewedMatchId && nextOwnedMatch) {
     onlineViewedMatchId = nextOwnedMatch.id;
   } else if (!onlineViewedMatchId || !allMatches.some((match) => match.id === onlineViewedMatchId)) {
     onlineViewedMatchId = nextOwnedMatch?.id || allMatches[0]?.id || null;
   }
+  if (previousViewedMatchId !== onlineViewedMatchId) {
+    if (onlineMatchPlayback?.matchId !== onlineViewedMatchId) stopOnlineMatchPlayback();
+    if (onlineLivePresentation?.matchId !== onlineViewedMatchId) stopOnlineLivePresentation();
+  }
   const viewedMatch = allMatches.find((match) => match.id === onlineViewedMatchId) || nextOwnedMatch || null;
-  const controlledMatch = viewedMatch && (ownedTeamIdSet.has(viewedMatch.homeTeamId) || ownedTeamIdSet.has(viewedMatch.awayTeamId))
+  const controlledMatch = !spectatedMemberId && viewedMatch
+    && (controlledTeamIdSet.has(viewedMatch.homeTeamId) || controlledTeamIdSet.has(viewedMatch.awayTeamId))
     ? viewedMatch
     : null;
+  if (!spectatedMemberId) queueOnlineViewedMatchSync(onlineViewedMatchId);
 
   els.onlineMatchRound.textContent = isComplete ? "Tournament complete" : onlineRoundName(tournament, currentRound?.number || 1);
   els.onlineMatchStatus.hidden = true;
-  renderOnlineCountries(ownedTeamIds, surviving, currentRound, tournament?.championTeamId);
+  renderOnlineCountries(ownedTeamIds, surviving, currentRound, tournament?.championTeamId, tournament?.rounds || []);
+  const presentationMatch = spectatedMemberId ? viewedMatch : controlledMatch;
   const matchPresentationFinished = Boolean(
-    controlledMatch?.liveState?.status === "finished"
-    || controlledMatch?.status === "complete"
+    presentationMatch?.liveState?.status === "finished"
+    || presentationMatch?.status === "complete"
   );
-  const showTactics = Boolean(controlledMatch?.awayTeamId && !matchPresentationFinished);
-  const tacticsEditable = Boolean(
+  const showTactics = Boolean(presentationMatch?.awayTeamId && !matchPresentationFinished);
+  const tacticsEditable = !spectatedMemberId && Boolean(
     controlledMatch?.status === "waiting"
     || controlledMatch?.status === "live"
     || controlledMatch?.liveState?.status === "penalties"
     || onlineMatchPlayback?.matchId === controlledMatch?.id
   );
-  renderOnlineTactics(tournament, memberId, showTactics, controlledMatch, tacticsEditable);
+  renderOnlineTactics(tournament, displayMemberId, showTactics, presentationMatch, tacticsEditable);
   if (onlineMatchPlayback?.matchId === viewedMatch?.id) syncOnlinePlaybackFromMatch(viewedMatch);
-  renderOnlineCurrentMatch(room, memberId, viewedMatch, controlledMatch);
-  const startsPlaybackNow = newlyResolvedControlledMatch && newlyResolvedControlledMatch.simulationVersion !== 2;
+  renderOnlineCurrentMatch(room, memberId, viewedMatch, controlledMatch, displayMemberId);
+  const startsPlaybackNow = !spectatedMemberId && newlyResolvedControlledMatch && newlyResolvedControlledMatch.simulationVersion !== 2;
   if (!startsPlaybackNow) {
-    renderOnlineRoundMatches(tournament?.rounds || [], tournament, memberId, room.members);
+    renderOnlineRoundMatches(tournament?.rounds || [], tournament, displayMemberId, room.members, Boolean(unfinishedOwnedMatch));
   }
   if (startsPlaybackNow) {
     startOnlineMatchPlayback(newlyResolvedControlledMatch);
@@ -1385,16 +1958,18 @@ async function takeOnlineTesterPenalty(target, automatic = false) {
   if (onlinePenaltyTester.currentTeam !== "home" && !automatic) return;
   const targets = ["top-left", "top-right", "middle", "bottom-left", "bottom-right"];
   const goalkeeperTarget = targets[Math.floor(Math.random() * targets.length)];
-  const scored = Math.random() < (goalkeeperTarget === target ? 0.38 : 0.88);
+  const scored = target === "middle" || (goalkeeperTarget !== target && Math.random() < 0.88);
   const takingSide = onlinePenaltyTester.currentTeam;
   onlinePenaltyAnimation = { matchId: "penalty-tester", target };
   els.onlinePenaltyScene.dataset.target = target;
   els.onlinePenaltyPrompt.textContent = `${takingSide === "home" ? "France" : "Spain"} take`;
   els.onlinePenaltyFeedback.textContent = "The goalkeeper waits…";
   els.onlinePenaltyControl.querySelectorAll("[data-penalty-target]").forEach((button) => { button.disabled = true; });
+  const shotDirection = onlinePenaltyDirection(target);
+  const keeperDirection = onlinePenaltyDirection(goalkeeperTarget);
   const attempt = {
-    direction: onlinePenaltyDirection(target),
-    keeperDive: onlinePenaltyDirection(goalkeeperTarget),
+    direction: shotDirection,
+    keeperDive: scored ? distinctKeeperDiveForGoal(shotDirection, keeperDirection) : keeperDirection,
     foot: "right",
     scored,
     missType: scored ? null : "save",
@@ -1421,7 +1996,7 @@ async function takeOnlineTesterPenalty(target, automatic = false) {
   els.onlineMatchPenaltyScore.textContent = `PENS ${onlinePenaltyTester.homeScore}–${onlinePenaltyTester.awayScore}`;
   els.onlinePenaltyPrompt.textContent = scored ? "Goal" : "Saved";
   els.onlinePenaltyFeedback.textContent = scored ? "Perfectly placed." : "The goalkeeper got there.";
-  await waitForOnlinePenaltyFrame(760);
+  await waitForOnlinePenaltyFrame(1400);
   onlinePenaltyAnimation = null;
   if (!onlinePenaltyTester) return;
   setPenaltySceneElement(els.onlinePenaltyScene, { direction: "centre", keeperDive: "centre", foot: "right" }, "setup");
@@ -1507,7 +2082,14 @@ function updateOnlineRoundNextButton(round, tournament, memberId) {
     tournament?.teamOwnerById?.[match.homeTeamId] === memberId
     || tournament?.teamOwnerById?.[match.awayTeamId] === memberId
   )) || [];
-  const ownPlaybackFinished = ownedMatches.every((match) => !match.awayTeamId || onlinePlayedMatchIds.has(match.id));
+  const ownPlaybackFinished = ownedMatches.every((match) => (
+    !match.awayTeamId
+    || (
+      match.status === "complete"
+      && !onlineSharedMatchState(match).live
+      && onlineMatchPlayback?.matchId !== match.id
+    )
+  ));
   const nextRoundReady = (tournament?.roundNumber || 0) > (round?.number || 0);
   const roundVisuallyComplete = onlineRoundIsVisuallyComplete(round);
   const canAdvance = !onlineMatchPlayback
@@ -1534,14 +2116,27 @@ function advanceOnlineToAvailableRound() {
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-function renderOnlineCountries(teamIds, surviving, currentRound, championTeamId) {
+function renderOnlineCountries(teamIds, surviving, currentRound, championTeamId, rounds = []) {
   els.onlineActiveTeam.replaceChildren();
   teamIds.forEach((teamId) => {
     const team = TEAM_BY_ID.get(teamId);
     if (!team) return;
     const match = currentRound?.matches.find((item) => item.homeTeamId === teamId || item.awayTeamId === teamId);
+    const latestCompletedMatch = rounds
+      .flatMap((round) => round.matches || [])
+      .filter((item) => item.status === "complete" && (item.homeTeamId === teamId || item.awayTeamId === teamId))
+      .at(-1);
+    const completedResultVisible = Boolean(
+      latestCompletedMatch
+      && onlineMatchPlayback?.matchId !== latestCompletedMatch.id
+      && (
+        onlineFinishedPlaybackIds.has(latestCompletedMatch.id)
+        || latestCompletedMatch.liveState?.status === "finished"
+      )
+    );
+    const revealedLoss = completedResultVisible && latestCompletedMatch.winnerTeamId !== teamId;
     const resultVisible = !match?.awayTeamId || onlineFinishedPlaybackIds.has(match?.id);
-    const eliminated = resultVisible && !surviving.has(teamId);
+    const eliminated = revealedLoss || (resultVisible && !surviving.has(teamId));
     const champion = resultVisible && championTeamId === teamId;
     const card = document.createElement("div");
     card.className = "online-owned-country";
@@ -1590,11 +2185,17 @@ function renderOnlineTactics(tournament, memberId, visible, match = null, editab
 function onlineMatchTeamMarkup(teamId, isMine = false) {
   const team = TEAM_BY_ID.get(teamId);
   if (!team) return `<span class="online-match-bye">Bye</span>`;
-  return `${flagMarkup(team, "online-match-flag")}<strong${isMine ? " class=\"is-mine\"" : ""}>${team.name}</strong>`;
+  const nameClasses = [
+    isMine ? "is-mine" : "",
+    team.name.length >= 22 ? "is-very-long-name" : team.name.length >= 15 ? "is-long-name" : "",
+  ].filter(Boolean).join(" ");
+  return `${flagMarkup(team, "online-match-flag")}<strong${nameClasses ? ` class="${nameClasses}"` : ""}>${team.name}</strong>`;
 }
 
 function onlineReadyWaitingLabel(match) {
-  if ((match?.requiredMemberIds?.length || 0) > 1) return "Waiting for opponent";
+  const requiredMembers = match?.requiredMemberIds || [];
+  const readyMembers = new Set(match?.readyMemberIds || []);
+  if (!requiredMembers.every((memberId) => readyMembers.has(memberId))) return "Waiting for opponent";
   if (Number.isInteger(match?.queuePosition) && match.queuePosition > 0) return "Waiting for match slot";
   return "Starting match…";
 }
@@ -1654,9 +2255,12 @@ function renderOnlineRoundMatchesLegacy(matches) {
   }));
 }
 
-function renderOnlineCurrentMatch(room, memberId, viewedMatch, controlledMatch) {
+function renderOnlineCurrentMatch(room, memberId, viewedMatch, controlledMatch, displayMemberId = memberId) {
   const animatingPenalty = onlinePenaltyAnimation?.matchId === viewedMatch?.id;
   els.onlineCurrentMatch.hidden = !viewedMatch;
+  els.onlineSnapshotButton.hidden = !viewedMatch
+    || animatingPenalty
+    || !(viewedMatch.status === "complete" || viewedMatch.liveState?.status === "finished");
   els.onlineReadyPanel.hidden = true;
   els.onlinePenaltyControl.hidden = !animatingPenalty;
   if (!viewedMatch) {
@@ -1673,8 +2277,8 @@ function renderOnlineCurrentMatch(room, memberId, viewedMatch, controlledMatch) 
   const viewedIndex = viewedRound?.matches.findIndex((match) => match.id === viewedMatch.id) ?? 0;
   els.onlineCardRound.textContent = onlineRoundName(room.tournament, viewedRound?.number || 1).toUpperCase();
   els.onlineCardMatchNumber.textContent = `${viewedIndex + 1}/${viewedRound?.matches.length || 1}`;
-  const homeIsMine = room.tournament.teamOwnerById?.[viewedMatch.homeTeamId] === memberId;
-  const awayIsMine = room.tournament.teamOwnerById?.[viewedMatch.awayTeamId] === memberId;
+  const homeIsMine = room.tournament.teamOwnerById?.[viewedMatch.homeTeamId] === displayMemberId;
+  const awayIsMine = room.tournament.teamOwnerById?.[viewedMatch.awayTeamId] === displayMemberId;
   els.onlineMatchHome.innerHTML = onlineMatchTeamMarkup(viewedMatch.homeTeamId, homeIsMine);
   els.onlineMatchAway.innerHTML = onlineMatchTeamMarkup(viewedMatch.awayTeamId, awayIsMine);
   renderOnlineMatchResult(viewedMatch);
@@ -1748,7 +2352,6 @@ function renderOnlineCurrentMatch(room, memberId, viewedMatch, controlledMatch) 
 function renderOnlineMatchResult(match) {
   els.onlinePauseMatchButton.dataset.matchId = "";
   els.onlineMatchSpeedButton.dataset.matchId = "";
-  els.onlineMatchPenaltyScore.hidden = true;
   renderOnlinePenaltyMarkResults([], [], false);
   if (onlineMatchPlayback?.matchId === match.id) {
     renderOnlinePlaybackFrame();
@@ -1759,10 +2362,39 @@ function renderOnlineMatchResult(match) {
     syncOnlineLivePresentation(match);
     const finished = live.status === "finished";
     const displayMinute = projectedOnlineLiveMinute(live);
+    const queuedPenalty = onlineObservedPenaltyQueue.find((item) => item.matchId === match.id);
+    const hiddenScoreBefore = onlinePenaltyAnimation?.matchId === match.id && !onlinePenaltyAnimation.resultRevealed
+      ? onlinePenaltyAnimation.scoreBefore
+      : queuedPenalty?.event.scoreBefore;
+    const hiddenPenaltyResult = Boolean(hiddenScoreBefore);
+    const displayedHomeScore = hiddenPenaltyResult
+      ? hiddenScoreBefore?.home ?? live.homeScore
+      : live.homeScore;
+    const displayedAwayScore = hiddenPenaltyResult
+      ? hiddenScoreBefore?.away ?? live.awayScore
+      : live.awayScore;
+    const hiddenPenaltyEventKeys = onlineHiddenPenaltyEventKeys(match.id);
+    const displayedMatch = hiddenPenaltyEventKeys.size
+      ? {
+        ...match,
+        events: (match.events || []).filter((event) => !hiddenPenaltyEventKeys.has(onlineObservedPenaltyEventKey(match, event))),
+      }
+      : match;
     els.onlineMatchMinute.textContent = finished ? "FULL TIME" : live.status === "penalties" ? "PENALTIES" : "LIVE";
-    els.onlineMatchScore.textContent = live.status === "waiting" ? "– –" : `${live.homeScore}–${live.awayScore}`;
+    els.onlineMatchScore.textContent = live.status === "waiting" ? "– –" : `${displayedHomeScore}–${displayedAwayScore}`;
+    const penaltyPlaybackPending = onlinePenaltyAnimation?.matchId === match.id
+      || onlineObservedPenaltyQueue.some((item) => item.matchId === match.id);
+    const hiddenObservedKicks = onlineObservedPenaltyQueue.filter((item) => item.matchId === match.id).length
+      + Number(onlinePenaltyAnimation?.matchId === match.id && onlinePenaltyAnimation.observed);
+    const visiblePenaltyKicks = Math.max(0, (match.penalty?.kicks?.length || 0) - hiddenObservedKicks);
     els.onlineMatchPenaltyScore.hidden = !live.penalty;
-    els.onlineMatchPenaltyScore.textContent = live.penalty ? `PENS ${live.penalty.homeScore}–${live.penalty.awayScore}` : "";
+    if (!live.penalty) {
+      els.onlineMatchPenaltyScore.textContent = "";
+      delete els.onlineMatchPenaltyScore.dataset.homeScore;
+      delete els.onlineMatchPenaltyScore.dataset.awayScore;
+    } else if (!penaltyPlaybackPending) {
+      setOnlineDisplayedPenaltyScore(live.penalty.homeScore, live.penalty.awayScore);
+    }
     els.onlineMatchClock.textContent = clockText(displayMinute);
     els.onlineMatchPhase.textContent = phaseForLiveStatus(live.status);
     els.onlineLiveLabel.hidden = finished || live.status === "waiting";
@@ -1772,13 +2404,13 @@ function renderOnlineMatchResult(match) {
     els.onlineMatchSpeedButton.dataset.matchId = match.id;
     els.onlineMatchSpeedButton.textContent = `${live.clock?.effectiveSpeed || 1}×`;
     renderOnlinePauseState(live);
-    renderOnlineScorerTimelines(match, displayMinute);
-    renderOnlineMatchEvents(match, displayMinute, match.penalty?.kicks?.length || 0);
-    renderOnlinePenaltyLedgers(match, match.penalty?.kicks?.length || 0);
+    renderOnlineScorerTimelines(displayedMatch, displayMinute);
+    renderOnlineMatchEvents(displayedMatch, displayMinute, visiblePenaltyKicks);
+    renderOnlinePenaltyLedgers(displayedMatch, visiblePenaltyKicks);
     renderOnlineMatchStats(live);
     return;
   }
-  if (onlineLivePresentation?.matchId === match.id) stopOnlineLivePresentation();
+  stopOnlineLivePresentation();
   els.onlineMatchMinute.textContent = match.status === "complete" ? "FULL TIME" : match.status === "penalties" ? "PENALTIES" : "PRE-MATCH";
   els.onlineMatchScore.textContent = match.status === "waiting" || match.homeScore === null
     ? "– –"
@@ -1817,7 +2449,7 @@ function projectedOnlineLiveMinute(live) {
   const nextMinuteAt = Number(live.clock?.nextMinuteAt);
   if (!Number.isFinite(nextMinuteAt)) return live.minute || 0;
   const speed = [1, 2, 4].includes(live.clock?.effectiveSpeed) ? live.clock.effectiveSpeed : 1;
-  const minuteDuration = 667 / speed;
+  const minuteDuration = ONLINE_LIVE_MINUTE_MS / speed;
   const projected = (live.minute || 0) + Math.max(0, now - (nextMinuteAt - minuteDuration)) / minuteDuration;
   const cap = ({
     firstHalf: 45,
@@ -1828,6 +2460,18 @@ function projectedOnlineLiveMinute(live) {
     penalties: 120,
   })[live.status] || 120;
   return Math.min(cap, projected);
+}
+
+function smoothOnlineLiveMinute(current, target, elapsedMs, speed = 1) {
+  const from = Math.max(0, Number(current) || 0);
+  const to = Math.max(from, Number(target) || from);
+  const safeElapsed = Math.min(ONLINE_LIVE_MAX_FRAME_MS, Math.max(0, Number(elapsedMs) || 0));
+  const safeSpeed = [1, 2, 4].includes(speed) ? speed : 1;
+  const maxStep = Math.min(
+    ONLINE_LIVE_MAX_FRAME_MINUTES,
+    (safeElapsed / ONLINE_LIVE_MINUTE_MS) * safeSpeed * ONLINE_LIVE_CATCHUP_FACTOR,
+  );
+  return Math.min(to, from + maxStep);
 }
 
 function onlinePresentationType(event) {
@@ -1949,10 +2593,14 @@ function syncOnlineLivePresentation(match) {
       match,
       scheduler: createOnlinePresentationScheduler(match),
       lastEventId: events.at(-1)?.id || events.at(-1)?.sequence || 0,
-      displayedMinute: live.minute || 0,
+      displayedMinute: projectedOnlineLiveMinute(live),
+      lastFrameAt: performance.now(),
       goalFlashTimer: null,
     };
-    const latest = events.filter((event) => event.minute <= live.minute).at(-1);
+    const latest = events.filter((event) => (
+      event.minute <= live.minute
+      && !(event.type === "shootout-kick" && onlineObservedPenaltyIds.has(onlineObservedPenaltyEventKey(match, event)))
+    )).at(-1);
     if (latest) renderOnlineCommentaryEvent(match, latest);
     else if (els.onlineCommentaryFeed) els.onlineCommentaryFeed.innerHTML = '<div class="commentary-line"><span>Waiting for the opening passage of play.</span></div>';
   } else {
@@ -1961,12 +2609,25 @@ function syncOnlineLivePresentation(match) {
       .filter((event) => (event.id || event.sequence || 0) > onlineLivePresentation.lastEventId)
       .toSorted((a, b) => (a.id || a.sequence) - (b.id || b.sequence));
     fresh.forEach((event) => {
-      if (event.type === "shootout-kick") queueOnlineObservedPenalty(match, event);
-      onlineLivePresentation.scheduler.enqueue(onlinePresentationEvent(match, event), {
-        now: performance.now(),
-        speed: live.clock?.effectiveSpeed || 1,
-        reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-      });
+      const ownerId = latestOnlineRoom?.tournament?.teamOwnerById?.[event.teamId];
+      const penaltyEvent = ["penalty-kick", "shootout-kick"].includes(event.type);
+      const observedOpponentKick = penaltyEvent && ownerId !== onlineRoomSession?.memberId;
+      const ownPenaltyAnimation = penaltyEvent
+        && onlinePenaltyAnimation?.matchId === match.id
+        && !onlinePenaltyAnimation.resultRevealed;
+      const pairedPenaltyAward = event.type === "penalty-awarded" && fresh.some((candidate) => (
+        candidate.type === "penalty-kick"
+        && candidate.teamId === event.teamId
+        && (candidate.id || candidate.sequence || 0) > (event.id || event.sequence || 0)
+      ));
+      if (observedOpponentKick) queueOnlineObservedPenalty(match, event);
+      if (!observedOpponentKick && !ownPenaltyAnimation && !pairedPenaltyAward) {
+        onlineLivePresentation.scheduler.enqueue(onlinePresentationEvent(match, event), {
+          now: performance.now(),
+          speed: live.clock?.effectiveSpeed || 1,
+          reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+        });
+      }
       onlineLivePresentation.lastEventId = Math.max(onlineLivePresentation.lastEventId, event.id || event.sequence || 0);
     });
   }
@@ -1982,14 +2643,29 @@ function stepOnlineLivePresentation() {
   const live = presentation.match?.liveState;
   if (!live) return;
   const projected = projectedOnlineLiveMinute(live);
-  presentation.displayedMinute = Math.max(presentation.displayedMinute || 0, projected);
+  const now = performance.now();
+  const elapsed = presentation.lastFrameAt ? now - presentation.lastFrameAt : 0;
+  presentation.lastFrameAt = now;
+  const watchingOwnedMatch = onlineMemberOwnsMatch(
+    latestOnlineRoom?.tournament,
+    onlineRoomSession?.memberId,
+    presentation.match,
+  );
+  presentation.displayedMinute = watchingOwnedMatch
+    ? smoothOnlineLiveMinute(
+      presentation.displayedMinute || 0,
+      projected,
+      elapsed,
+      live.clock?.effectiveSpeed || 1,
+    )
+    : projected;
   const displayMinute = live.status === "finished" ? live.minute : presentation.displayedMinute;
   if (els.onlineMatchClock) els.onlineMatchClock.textContent = clockText(displayMinute);
   if (els.onlineMatchPhase) els.onlineMatchPhase.textContent = phaseForLiveStatus(live.status);
   renderOnlinePauseState(live);
   renderOnlineMatchStats(live);
   presentation.scheduler.tick({
-    now: performance.now(),
+    now,
     speed: live.clock?.effectiveSpeed || 1,
     reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   });
@@ -2066,8 +2742,8 @@ function onlineGoalEvents(match) {
 function renderOnlineScorerTimelines(match, minute) {
   const events = onlineGoalEvents(match)
     .filter((event) => event.minute <= minute && event.scored !== false)
-    .map((event) => ({ ...event, type: "goal", player: `${event.player}${event.type === "penalty" ? " (P)" : ""}` }));
-  const signature = `${match.id}:${events.map((event) => `${event.side}:${event.minute}:${event.player}`).join("|")}`;
+    .map((event) => ({ ...event, type: "goal" }));
+  const signature = `${match.id}:${events.map((event) => `${event.side}:${event.minute}:${event.player}:${isPenaltyGoalEvent(event)}`).join("|")}`;
   if (els.onlineHomeScorers.dataset.renderSignature === signature) return;
   els.onlineHomeScorers.dataset.renderSignature = signature;
   els.onlineAwayScorers.dataset.renderSignature = signature;
@@ -2130,7 +2806,7 @@ function renderOnlineMatchEvents(match, minute, penaltyKickCount) {
     const row = document.createElement("div");
     row.className = `online-match-event ${event.type === "penalty" ? "is-penalty" : "is-goal"} ${event.scored === false ? "is-missed" : ""}`;
     const eventMinute = document.createElement("span");
-    eventMinute.textContent = `${event.minute}'`;
+    eventMinute.textContent = goalMinuteText(event);
     const copy = document.createElement("strong");
     copy.textContent = event.type === "penalty"
       ? `Penalty — ${onlineGoalScorer(match, event, index)} — ${event.scored === false ? "Saved" : "Scored"}`
@@ -2158,11 +2834,18 @@ function renderOnlineMatchEvents(match, minute, penaltyKickCount) {
   els.onlineMatchEvents.scrollTop = els.onlineMatchEvents.scrollHeight;
 }
 
-function onlineCentreMatchCard(match, tournament, memberId, memberById) {
+function onlineCentreMatchCard(match, tournament, memberId, memberById, viewingLocked = false) {
     const isLive = onlineMatchPlayback?.matchId === match.id;
     const visibleEvents = isLive ? (match.events || []).filter((event) => event.minute <= onlineMatchPlayback.minute) : [];
     const liveScore = visibleEvents.at(-1) || { homeScore: 0, awayScore: 0 };
     const sharedState = onlineSharedMatchState(match);
+    const penaltyPlaybackPending = match.id === onlineViewedMatchId && (
+      onlinePenaltyAnimation?.matchId === match.id
+      || onlineObservedPenaltyQueue.some((item) => item.matchId === match.id)
+    );
+    const visiblePenaltyText = penaltyPlaybackPending
+      ? els.onlineMatchPenaltyScore.textContent
+      : sharedState.penaltyText;
     const cardIsLive = isLive || sharedState.live;
     const home = TEAM_BY_ID.get(match.homeTeamId);
     const away = TEAM_BY_ID.get(match.awayTeamId);
@@ -2190,11 +2873,14 @@ function onlineCentreMatchCard(match, tournament, memberId, memberById) {
     card.type = "button";
     card.dataset.matchId = match.id;
     card.className = "online-centre-match";
+    card.disabled = viewingLocked;
+    card.classList.toggle("is-viewing-locked", viewingLocked);
+    if (viewingLocked) card.title = "Finish your active match before watching another match";
     card.classList.toggle("is-selected", match.id === onlineViewedMatchId);
     card.innerHTML = `
       <span class="online-centre-head">
-        <span>${humanOwners.map((owner) => owner.name).join(" vs ") || "CPU match"}</span>
-        <small class="${cardIsLive ? "is-live" : ""}">${cardIsLive ? "<i></i>" : ""}${sharedState.penaltyText || status}</small>
+        <span>${humanOwners.map((owner) => escapeHtml(owner.name)).join(" vs ") || "CPU match"}</span>
+        <small class="${cardIsLive ? "is-live" : ""}">${cardIsLive ? "<i></i>" : ""}${visiblePenaltyText || status}</small>
       </span>
       <span class="online-centre-team">
         ${home ? flagMarkup(home, "online-centre-flag") : ""}
@@ -2217,7 +2903,7 @@ function onlineMatchListEmpty(copy) {
   return empty;
 }
 
-function renderOnlineRoundMatches(rounds, tournament, memberId, members = []) {
+function renderOnlineRoundMatches(rounds, tournament, memberId, members = [], friendViewingLocked = null) {
   clearTimeout(onlineRoundScoreTimer);
   onlineRoundScoreTimer = null;
   const currentRound = rounds.find((round) => round.number === onlineDisplayedRoundNumber) || rounds.at(-1);
@@ -2229,6 +2915,7 @@ function renderOnlineRoundMatches(rounds, tournament, memberId, members = []) {
   const memberById = new Map(members.map((member) => [member.id, member]));
   const isMine = (match) => [match.homeTeamId, match.awayTeamId]
     .some((teamId) => tournament?.teamOwnerById?.[teamId] === memberId);
+  const viewingLocked = friendViewingLocked ?? currentRound.matches.some((match) => isMine(match) && onlineMatchStillPlaying(match));
   let historyChanged = false;
   currentRound.matches.forEach((match) => {
     if (isMine(match) || match.status !== "complete" || onlineSharedMatchState(match).live) return;
@@ -2252,7 +2939,13 @@ function renderOnlineRoundMatches(rounds, tournament, memberId, members = []) {
     ? currentRound.matches
     : currentRound.matches.filter((match) => !isMine(match) && hasFriend(match));
   const myCards = myMatches.map((match) => onlineCentreMatchCard(match, tournament, memberId, memberById));
-  const otherCards = otherMatches.map((match) => onlineCentreMatchCard(match, tournament, memberId, memberById));
+  const otherCards = otherMatches.map((match) => onlineCentreMatchCard(
+    match,
+    tournament,
+    memberId,
+    memberById,
+    viewingLocked,
+  ));
   els.onlineMyMatches.replaceChildren(...(myCards.length ? myCards : [onlineMatchListEmpty("No matches to play in this round.")]));
   els.onlineRoundMatches.replaceChildren(...(otherCards.length ? otherCards : [onlineMatchListEmpty("No friends' matches in this round.")]));
   els.onlineRoundMatches.classList.toggle("is-all-matches", onlineOtherMatchFilter === "all");
@@ -2539,15 +3232,62 @@ function waitForOnlinePenaltyFrame(duration) {
   return new Promise((resolve) => setTimeout(resolve, duration));
 }
 
+function setOnlineDisplayedPenaltyScore(homeScore, awayScore) {
+  els.onlineMatchPenaltyScore.dataset.homeScore = String(homeScore);
+  els.onlineMatchPenaltyScore.dataset.awayScore = String(awayScore);
+  els.onlineMatchPenaltyScore.textContent = `PENS ${homeScore}–${awayScore}`;
+}
+
+function setOnlineDisplayedMatchScore(homeScore, awayScore) {
+  els.onlineMatchScore.textContent = `${homeScore}–${awayScore}`;
+}
+
+function revealOnlineObservedPenaltyScore(event) {
+  let homeScore = Number(els.onlineMatchPenaltyScore.dataset.homeScore || 0);
+  let awayScore = Number(els.onlineMatchPenaltyScore.dataset.awayScore || 0);
+  if (event.scored) {
+    if (event.side === "home") homeScore += 1;
+    else awayScore += 1;
+  }
+  setOnlineDisplayedPenaltyScore(homeScore, awayScore);
+}
+
+function onlineObservedPenaltyEventKey(match, event) {
+  return `${match.id}:${event.id ?? event.sequence ?? `${event.side}:${event.round}`}`;
+}
+
+function onlineHiddenPenaltyEventKeys(matchId) {
+  const keys = new Set(onlineObservedPenaltyQueue
+    .filter((item) => item.matchId === matchId)
+    .map((item) => onlineObservedPenaltyEventKey({ id: matchId }, item.event)));
+  if (
+    onlinePenaltyAnimation?.matchId === matchId
+    && !onlinePenaltyAnimation.resultRevealed
+    && onlinePenaltyAnimation.eventKey
+  ) keys.add(onlinePenaltyAnimation.eventKey);
+  return keys;
+}
+
 function queueOnlineObservedPenalty(match, event) {
   const memberId = onlineRoomSession?.memberId;
   const ownerId = latestOnlineRoom?.tournament?.teamOwnerById?.[event.teamId];
   if (!match || !event || ownerId === memberId) return;
-  const eventKey = `${match.id}:${event.id ?? event.sequence ?? `${event.side}:${event.round}`}`;
+  const eventKey = onlineObservedPenaltyEventKey(match, event);
   if (onlineObservedPenaltyIds.has(eventKey)) return;
   onlineObservedPenaltyIds.add(eventKey);
   onlineObservedPenaltyQueue.push({ matchId: match.id, event });
   void playOnlineObservedPenaltyQueue();
+}
+
+function onlinePenaltyAwardEvent(match, kickEvent) {
+  if (kickEvent.type !== "penalty-kick") return null;
+  const kickId = kickEvent.id || kickEvent.sequence || 0;
+  return meaningfulOnlineEvents(match).toReversed().find((event) => (
+    event.type === "penalty-awarded"
+    && event.teamId === kickEvent.teamId
+    && (event.id || event.sequence || 0) < kickId
+    && Math.abs((event.minute || 0) - (kickEvent.minute || 0)) <= 1
+  )) || null;
 }
 
 async function playOnlineObservedPenaltyQueue() {
@@ -2558,35 +3298,68 @@ async function playOnlineObservedPenaltyQueue() {
       const item = onlineObservedPenaltyQueue.shift();
       if (els.onlineCurrentMatch?.dataset.matchId !== item.matchId || els.onlineCurrentMatch.hidden) continue;
       const { event } = item;
+      const match = latestOnlineRoom?.tournament?.rounds
+        ?.flatMap((round) => round.matches)
+        .find((candidate) => candidate.id === item.matchId);
+      if (!match) continue;
       const target = event.target || "middle";
       const team = TEAM_BY_ID.get(event.teamId);
       const wideDirection = target.endsWith("right") ? "wide-right" : "wide-left";
+      const shotDirection = onlinePenaltyDirection(target);
+      const keeperDirection = onlinePenaltyDirection(event.goalkeeperTarget || "middle");
       const attempt = {
-        direction: event.missType === "wide" ? wideDirection : onlinePenaltyDirection(target),
-        keeperDive: onlinePenaltyDirection(event.goalkeeperTarget || "middle"),
+        direction: event.missType === "wide" ? wideDirection : shotDirection,
+        keeperDive: event.scored
+          ? distinctKeeperDiveForGoal(shotDirection, keeperDirection, event.round || 0)
+          : keeperDirection,
         foot: "right",
         scored: Boolean(event.scored),
         missType: event.missType || (event.scored ? null : "save"),
       };
-      onlinePenaltyAnimation = { matchId: item.matchId, target, observed: true };
+      onlinePenaltyAnimation = {
+        matchId: item.matchId,
+        target,
+        observed: true,
+        resultRevealed: false,
+        eventKey: onlineObservedPenaltyEventKey(match, event),
+        scoreBefore: event.scoreBefore || {
+          home: event.side === "home" && event.scored ? Math.max(0, (event.homeScore || 0) - 1) : event.homeScore || 0,
+          away: event.side === "away" && event.scored ? Math.max(0, (event.awayScore || 0) - 1) : event.awayScore || 0,
+        },
+      };
       els.onlinePenaltyControl.hidden = false;
       els.onlinePenaltyControl.classList.add("is-cpu-taking");
-      els.onlinePenaltyPrompt.textContent = `${team?.name || "Opponent"} take`;
-      els.onlinePenaltyFeedback.textContent = "Watch the penalty";
       els.onlinePenaltyScene.dataset.target = target;
       els.onlinePenaltyControl.querySelectorAll("[data-penalty-target]").forEach((button) => { button.disabled = true; });
       setPenaltySceneElement(els.onlinePenaltyScene, attempt, "setup");
-      await waitForOnlinePenaltyFrame(240);
+      const awardEvent = onlinePenaltyAwardEvent(match, event);
+      if (awardEvent) {
+        els.onlinePenaltyPrompt.textContent = `Penalty to ${team?.name || "the attacking team"}`;
+        els.onlinePenaltyFeedback.textContent = `${event.player || "The taker"} steps up`;
+        if (onlineLivePresentation?.matchId === item.matchId) {
+          renderOnlineCommentaryEvent(match, awardEvent);
+        }
+        await waitForOnlinePenaltyFrame(850);
+      }
+      els.onlinePenaltyPrompt.textContent = `${team?.name || "Opponent"} take`;
+      els.onlinePenaltyFeedback.textContent = "Watch the penalty";
+      await waitForOnlinePenaltyFrame(500);
       setPenaltySceneElement(els.onlinePenaltyScene, attempt, "flight");
-      await waitForOnlinePenaltyFrame(560);
+      await waitForOnlinePenaltyFrame(650);
       setPenaltySceneElement(els.onlinePenaltyScene, attempt, "result");
+      onlinePenaltyAnimation.resultRevealed = true;
+      if (event.type === "shootout-kick") revealOnlineObservedPenaltyScore(event);
+      else setOnlineDisplayedMatchScore(event.scoreAfter?.home ?? event.homeScore, event.scoreAfter?.away ?? event.awayScore);
+      if (onlineLivePresentation?.matchId === item.matchId) {
+        renderOnlineCommentaryEvent(onlineLivePresentation.match, event);
+      }
       els.onlinePenaltyPrompt.textContent = event.scored ? "Goal" : event.missType === "wide" ? "Missed" : "Saved";
       els.onlinePenaltyFeedback.textContent = event.scored
         ? `${team?.name || "The opponent"} score.`
         : event.missType === "wide"
           ? "The kick goes wide."
           : "The goalkeeper makes the save.";
-      await waitForOnlinePenaltyFrame(820);
+      await waitForOnlinePenaltyFrame(1600);
       onlinePenaltyAnimation = null;
       els.onlinePenaltyControl.querySelectorAll("[data-penalty-target]").forEach((button) => { button.disabled = onlineRoomBusy; });
       if (latestOnlineRoom && onlineRoomSession) renderOnlineLobby(latestOnlineRoom, onlineRoomSession.memberId);
@@ -2598,7 +3371,17 @@ async function playOnlineObservedPenaltyQueue() {
 
 async function takeOnlineInteractivePenalty(match, target) {
   if (onlineRoomBusy || !onlineRoomSession || onlinePenaltyAnimation) return;
-  onlinePenaltyAnimation = { matchId: match.id, target };
+  const takingTeamId = match.liveState?.pendingDecision?.teamId || match.penalty?.currentTeamId;
+  const knownEventIds = new Set((match.events || []).map((event) => event.id ?? event.sequence));
+  onlinePenaltyAnimation = {
+    matchId: match.id,
+    target,
+    resultRevealed: false,
+    scoreBefore: {
+      home: match.liveState?.homeScore ?? match.homeScore ?? 0,
+      away: match.liveState?.awayScore ?? match.awayScore ?? 0,
+    },
+  };
   setOnlineRoomBusy(true);
   setOnlineRoomMessage();
   els.onlinePenaltyPrompt.textContent = "Taking penalty";
@@ -2613,13 +3396,26 @@ async function takeOnlineInteractivePenalty(match, target) {
     const updatedMatch = payload.room.tournament?.rounds
       ?.flatMap((round) => round.matches)
       .find((item) => item.id === match.id);
-    const kick = [...(updatedMatch?.penalty?.kicks || [])]
-      .reverse()
-      .find((item) => item.target === target) || updatedMatch?.penalty?.kicks?.at(-1);
+    const freshPenaltyEvents = (updatedMatch?.events || []).filter((event) => (
+      ["penalty-kick", "shootout-kick"].includes(event.type)
+      && !knownEventIds.has(event.id ?? event.sequence)
+    ));
+    const kick = freshPenaltyEvents.find((event) => event.teamId === takingTeamId)
+      || [...(updatedMatch?.penalty?.kicks || [])]
+        .reverse()
+        .find((item) => item.teamId === takingTeamId)
+      || updatedMatch?.penalty?.kicks?.at(-1);
     if (!kick) throw new Error("The penalty result could not be loaded.");
+    onlinePenaltyAnimation.eventKey = onlineObservedPenaltyEventKey(updatedMatch, kick);
+    if (kick.scoreBefore) onlinePenaltyAnimation.scoreBefore = kick.scoreBefore;
+    const opponentEvents = freshPenaltyEvents.filter((event) => (
+      latestOnlineRoom?.tournament?.teamOwnerById?.[event.teamId] !== onlineRoomSession.memberId
+    ));
+    const shotDirection = onlinePenaltyDirection(kick.target);
+    const keeperDirection = onlinePenaltyDirection(kick.goalkeeperTarget);
     const attempt = {
-      direction: onlinePenaltyDirection(kick.target),
-      keeperDive: onlinePenaltyDirection(kick.goalkeeperTarget),
+      direction: shotDirection,
+      keeperDive: kick.scored ? distinctKeeperDiveForGoal(shotDirection, keeperDirection, kick.round || 0) : keeperDirection,
       foot: "right",
       scored: kick.scored,
       missType: kick.scored ? null : "save",
@@ -2629,9 +3425,17 @@ async function takeOnlineInteractivePenalty(match, target) {
     setPenaltySceneElement(els.onlinePenaltyScene, attempt, "flight");
     await waitForOnlinePenaltyFrame(560);
     setPenaltySceneElement(els.onlinePenaltyScene, attempt, "result");
+    onlinePenaltyAnimation.resultRevealed = true;
+    if (kick.type === "shootout-kick") revealOnlineObservedPenaltyScore(kick);
+    else setOnlineDisplayedMatchScore(
+      kick.scoreAfter?.home ?? updatedMatch.liveState?.homeScore ?? kick.homeScore,
+      kick.scoreAfter?.away ?? updatedMatch.liveState?.awayScore ?? kick.awayScore,
+    );
+    if (onlineLivePresentation?.matchId === match.id) renderOnlineCommentaryEvent(updatedMatch, kick);
+    opponentEvents.forEach((event) => queueOnlineObservedPenalty(updatedMatch, event));
     els.onlinePenaltyPrompt.textContent = kick.scored ? "Goal" : "Saved";
     els.onlinePenaltyFeedback.textContent = kick.scored ? "Perfectly placed." : "The goalkeeper got there.";
-    await waitForOnlinePenaltyFrame(760);
+    await waitForOnlinePenaltyFrame(1400);
     onlinePenaltyAnimation = null;
     renderOnlineLobby(payload.room, payload.memberId);
     void playOnlineObservedPenaltyQueue();
@@ -2671,10 +3475,37 @@ function showOnlineRouletteResult(member, team, pick) {
   els.onlineRoulette.classList.add("is-revealed");
 }
 
+const ONLINE_DRAFT_FRAME_MS = 72;
+const ONLINE_DRAFT_FRAME_COUNT = 11;
+const ONLINE_DRAFT_REVEAL_MS = 450;
+
+function onlineDraftTurnStart(draft) {
+  if (!draft?.turnIndex) return Number(draft?.startedAt) || onlineServerNow();
+  const previousPick = draft.picks?.[draft.turnIndex - 1];
+  return (Number(previousPick?.pickedAt) || onlineServerNow()) + ONLINE_DRAFT_REVEAL_MS;
+}
+
+function onlineDraftFrameTeam(available, roomCode, turnIndex, frame) {
+  if (!available.length) return TEAMS[0];
+  const seed = `${roomCode}:${turnIndex}:${frame}`;
+  let hash = 2166136261;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash ^= seed.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return available[(hash >>> 0) % available.length];
+}
+
+async function waitForOnlineDraftDeadline(deadline, runId) {
+  while (onlineServerNow() < deadline) {
+    if (runId !== onlineDraftRunId || els.onlineRoomScreen.hidden) return false;
+    await waitForDraftBeat(Math.min(80, Math.max(8, deadline - onlineServerNow())));
+  }
+  return runId === onlineDraftRunId && !els.onlineRoomScreen.hidden;
+}
+
 async function animateOnlineRoulette(member, room, draft, runId) {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const frames = reduceMotion ? 2 : 11;
-  const frameDelay = reduceMotion ? 70 : 72;
   const claimed = new Set((draft.picks || []).map((pick) => pick.teamId));
   const eligible = TEAMS;
   const ranked = eligible
@@ -2692,16 +3523,38 @@ async function animateOnlineRoulette(member, room, draft, runId) {
       : lowerTeams;
   const available = drawPool.filter((team) => !claimed.has(team.id));
   const roundNumber = Math.floor(draft.turnIndex / room.members.length) + 1;
+  const turnStartedAt = onlineDraftTurnStart(draft);
+  const animationEndsAt = turnStartedAt + (ONLINE_DRAFT_FRAME_COUNT * ONLINE_DRAFT_FRAME_MS);
   els.onlineRoulette.classList.remove("is-revealed");
   els.onlineRoulette.classList.add("is-spinning");
-  for (let frame = 0; frame < frames; frame += 1) {
-    if (runId !== onlineDraftRunId || els.onlineRoomScreen.hidden) return false;
-    showOnlineRouletteFrame(member, available[Math.floor(Math.random() * available.length)], roundNumber);
-    await waitForDraftBeat(frameDelay);
+  const firstFrame = Math.max(0, Math.floor((onlineServerNow() - turnStartedAt) / ONLINE_DRAFT_FRAME_MS));
+  for (let frame = firstFrame; frame < ONLINE_DRAFT_FRAME_COUNT; frame += 1) {
+    const frameAt = turnStartedAt + (frame * ONLINE_DRAFT_FRAME_MS);
+    if (!await waitForOnlineDraftDeadline(frameAt, runId)) return false;
+    if (!reduceMotion || frame === firstFrame || frame === ONLINE_DRAFT_FRAME_COUNT - 1) {
+      showOnlineRouletteFrame(member, onlineDraftFrameTeam(available, room.code, draft.turnIndex, frame), roundNumber);
+    }
   }
-  els.onlineRouletteTeam.textContent = "Locking in…";
-  els.onlineRouletteMeta.textContent = "Country selected securely by the room server";
+  if (!await waitForOnlineDraftDeadline(animationEndsAt, runId)) return false;
   return true;
+}
+
+async function commitOnlineDraftTurn(room) {
+  const expectedTurnIndex = room.draft.turnIndex;
+  const clientCommandId = makeOnlineCommandId();
+  try {
+    return await roomApi(`/api/rooms/${onlineRoomSession.code}/draft-draw`, {
+      method: "POST",
+      body: { expectedTurnIndex, clientCommandId },
+      timeoutMs: 12000,
+    });
+  } catch (drawError) {
+    // The pick may have committed even if its response was lost. Reconcile before retrying.
+    const snapshot = await roomApi(`/api/rooms/${onlineRoomSession.code}`, { timeoutMs: 8000 });
+    const serverDraft = snapshot.room.draft;
+    if (snapshot.room.status !== "draft" || serverDraft?.turnIndex > expectedTurnIndex) return snapshot;
+    throw drawError;
+  }
 }
 
 async function runOnlineSnakeDraft(initialRoom) {
@@ -2714,16 +3567,13 @@ async function runOnlineSnakeDraft(initialRoom) {
       const member = room.members.find((item) => item.id === room.draft.currentMemberId);
       const animated = await animateOnlineRoulette(member, room, room.draft, runId);
       if (!animated) break;
-      const payload = await roomApi(`/api/rooms/${onlineRoomSession.code}/draft-draw`, {
-        method: "POST",
-        body: { expectedTurnIndex: room.draft.turnIndex },
-      });
+      const payload = await commitOnlineDraftTurn(room);
       room = payload.room;
       latestOnlineRoom = room;
       const pick = room.draft.picks.at(-1);
       showOnlineRouletteResult(room.members.find((item) => item.id === pick.memberId), TEAM_BY_ID.get(pick.teamId), pick);
       renderOnlineDraft(room, payload.memberId);
-      await waitForDraftBeat(window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 90 : 450);
+      await waitForOnlineDraftDeadline(Number(pick.pickedAt) + ONLINE_DRAFT_REVEAL_MS, runId);
     }
     if (room.draft?.status === "complete") {
       showToast("Draft complete. Five countries each.");
@@ -2754,7 +3604,6 @@ async function runOnlineDraftSpectator(initialRoom) {
       let payload = await roomApi(`/api/rooms/${onlineRoomSession.code}`);
       room = payload.room;
       if (room.draft.turnIndex === watchedTurn) {
-        els.onlineRouletteTeam.textContent = "Waiting for the host…";
         await waitForDraftBeat(220);
         continue;
       }
@@ -2762,7 +3611,7 @@ async function runOnlineDraftSpectator(initialRoom) {
       const pick = room.draft.picks.at(-1);
       showOnlineRouletteResult(room.members.find((item) => item.id === pick.memberId), TEAM_BY_ID.get(pick.teamId), pick);
       renderOnlineDraft(room, payload.memberId);
-      await waitForDraftBeat(window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 90 : 450);
+      await waitForOnlineDraftDeadline(Number(pick.pickedAt) + ONLINE_DRAFT_REVEAL_MS, runId);
     }
     if (room.draft?.status === "complete") {
       await waitForDraftBeat(550);
@@ -2797,18 +3646,54 @@ async function startOnlineDraft() {
     setOnlineRoomBusy(false);
     renderOnlineLobby(payload.room, payload.memberId);
   } catch (error) {
+    if (error.status === 409) {
+      try {
+        const snapshot = await roomApi(`/api/rooms/${onlineRoomSession.code}`);
+        renderOnlineLobby(snapshot.room, snapshot.memberId);
+        return;
+      } catch {
+        // Show the original conflict when reconciliation also fails.
+      }
+    }
     setOnlineRoomMessage(error.message, true);
   } finally {
     setOnlineRoomBusy(false);
   }
 }
 
-async function roomApi(path, { method = "GET", body, token = onlineRoomSession?.token } = {}) {
+async function restartOnlineLobby() {
+  if (!onlineRoomSession?.isHost || onlineRoomBusy) return;
+  setOnlineRoomBusy(true);
+  setOnlineRoomMessage();
+  try {
+    const payload = await roomApi(`/api/rooms/${onlineRoomSession.code}/rematch`, { method: "POST" });
+    onlineRoomEvents.clear();
+    onlineRoomStateVersion = 0;
+    onlineLastSeenEventId = 0;
+    onlineViewedMatchId = null;
+    onlineSpectatingMemberId = null;
+    renderOnlineLobby(payload.room, payload.memberId);
+    showToast("Same lobby ready for a new tournament.");
+  } catch (error) {
+    setOnlineRoomMessage(error.message, true);
+  } finally {
+    setOnlineRoomBusy(false);
+  }
+}
+
+function leaveOrCloseCompletedOnlineRoom() {
+  if (onlineRoomSession?.isHost) closeOnlineRoom();
+  else leaveOnlineRoom();
+}
+
+async function roomApi(path, { method = "GET", body, token = onlineRoomSession?.token, timeoutMs = 15000 } = {}) {
   const mutating = !["GET", "HEAD"].includes(method);
   const requestBody = mutating ? { ...(body || {}), clientCommandId: body?.clientCommandId || makeOnlineCommandId() } : body;
   const headers = { Accept: "application/json" };
   if (requestBody) headers["Content-Type"] = "application/json";
   if (token) headers.Authorization = `Bearer ${token}`;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
   let response;
   try {
     response = await fetch(path, {
@@ -2817,9 +3702,12 @@ async function roomApi(path, { method = "GET", body, token = onlineRoomSession?.
       body: requestBody ? JSON.stringify(requestBody) : undefined,
       cache: "no-store",
       credentials: "same-origin",
+      signal: controller.signal,
     });
   } catch {
     throw new OnlineRoomError("Could not reach the room service. Check your connection.", 0);
+  } finally {
+    clearTimeout(timeout);
   }
   const isJson = (response.headers.get("Content-Type") || "").toLowerCase().includes("application/json");
   if (!isJson) {
@@ -2879,6 +3767,29 @@ function applyOnlineRoomPayload(payload) {
       : sampleOffset;
     onlineServerOffsetReady = true;
   }
+  const incomingStateVersion = Number(payload.stateVersion);
+  const incomingLastEventId = Number(payload.lastEventId);
+  const payloadRoomCode = payload.room?.code || latestOnlineRoom?.code;
+  const sameRoom = Boolean(latestOnlineRoom) && payloadRoomCode === latestOnlineRoom.code;
+  const stalePayload = sameRoom && (
+    (Number.isFinite(incomingStateVersion) && incomingStateVersion < onlineRoomStateVersion)
+    || (
+      Number.isFinite(incomingStateVersion)
+      && incomingStateVersion === onlineRoomStateVersion
+      && Number.isFinite(incomingLastEventId)
+      && incomingLastEventId < onlineLastSeenEventId
+    )
+  );
+  if (stalePayload) {
+    return {
+      ...payload,
+      mode: "noop",
+      room: latestOnlineRoom,
+      events: [],
+      stateVersion: onlineRoomStateVersion,
+      lastEventId: onlineLastSeenEventId,
+    };
+  }
   (payload.events || []).forEach((event) => {
     if (Number.isInteger(event.id)) onlineRoomEvents.set(event.id, event);
   });
@@ -2886,9 +3797,14 @@ function applyOnlineRoomPayload(payload) {
     latestOnlineRoom = payload.room;
   } else if (payload.mode === "delta" && latestOnlineRoom) {
     if (payload.roomPatch?.status) latestOnlineRoom.status = payload.roomPatch.status;
+    if (payload.roomPatch?.members) latestOnlineRoom.members = payload.roomPatch.members;
     if (latestOnlineRoom.tournament) {
       latestOnlineRoom.tournament.status = payload.roomPatch?.tournamentStatus || latestOnlineRoom.tournament.status;
       latestOnlineRoom.tournament.roundNumber = payload.roomPatch?.roundNumber || latestOnlineRoom.tournament.roundNumber;
+      if ("championTeamId" in (payload.roomPatch || {})) latestOnlineRoom.tournament.championTeamId = payload.roomPatch.championTeamId;
+      if ("completedAt" in (payload.roomPatch || {})) latestOnlineRoom.tournament.completedAt = payload.roomPatch.completedAt;
+      if ("completionReason" in (payload.roomPatch || {})) latestOnlineRoom.tournament.completionReason = payload.roomPatch.completionReason;
+      if (payload.roomPatch?.tacticsByTeam) latestOnlineRoom.tournament.tacticsByTeam = payload.roomPatch.tacticsByTeam;
       if (payload.roomPatch?.currentRound) {
         const roundIndex = latestOnlineRoom.tournament.rounds.findIndex((round) => round.number === payload.roomPatch.currentRound.number);
         if (roundIndex >= 0) latestOnlineRoom.tournament.rounds[roundIndex] = payload.roomPatch.currentRound;
@@ -2913,8 +3829,12 @@ function applyOnlineRoomPayload(payload) {
   } else if (payload.mode === "noop") {
     payload.room = latestOnlineRoom;
   }
-  onlineRoomStateVersion = Number(payload.stateVersion) || onlineRoomStateVersion;
-  onlineLastSeenEventId = Number(payload.lastEventId) || onlineLastSeenEventId;
+  onlineRoomStateVersion = Number.isFinite(incomingStateVersion)
+    ? Math.max(onlineRoomStateVersion, incomingStateVersion)
+    : onlineRoomStateVersion;
+  onlineLastSeenEventId = Number.isFinite(incomingLastEventId)
+    ? Math.max(onlineLastSeenEventId, incomingLastEventId)
+    : onlineLastSeenEventId;
   if (payload.room) hydrateOnlineRoomEvents(payload.room);
   return payload;
 }
@@ -2973,6 +3893,31 @@ function makeOnlineRoomCode() {
   return String(values[0] % 10_000).padStart(4, "0");
 }
 
+function onlineRoomInviteUrl(code) {
+  const inviteUrl = new URL(APP_MODE_PATHS.online, window.location.origin);
+  inviteUrl.searchParams.set("room", normalizeOnlineRoomCode(code));
+  return inviteUrl.href;
+}
+
+async function copyOnlineText(value, successMessage, fallbackMessage) {
+  try {
+    await navigator.clipboard.writeText(value);
+    showToast(successMessage);
+  } catch {
+    const input = document.createElement("input");
+    input.value = value;
+    input.setAttribute("readonly", "");
+    input.style.position = "fixed";
+    input.style.left = "-9999px";
+    document.body.append(input);
+    input.select();
+    const copied = document.execCommand("copy");
+    input.remove();
+    if (copied) showToast(successMessage);
+    else setOnlineRoomMessage(fallbackMessage, true);
+  }
+}
+
 function onlineRoomErrorMessage(error) {
   if (typeof error === "string" && error.trim()) return error;
   if (error && typeof error.message === "string" && error.message.trim()) return error.message;
@@ -2980,8 +3925,26 @@ function onlineRoomErrorMessage(error) {
 }
 
 function setOnlineDisplayNames(name) {
-  els.createOnlineDisplayName.value = name;
-  els.joinOnlineDisplayName.value = name;
+  els.onlineDisplayName.value = name;
+  els.onlineLobbyDisplayName.value = name;
+  saveOnlineDisplayName(name);
+}
+
+function saveOnlineDisplayName(name) {
+  try {
+    if (name) localStorage.setItem(ONLINE_DISPLAY_NAME_KEY, name);
+    else localStorage.removeItem(ONLINE_DISPLAY_NAME_KEY);
+  } catch {
+    // The room flow still works when persistent storage is unavailable.
+  }
+}
+
+function readSavedOnlineDisplayName() {
+  try {
+    return localStorage.getItem(ONLINE_DISPLAY_NAME_KEY) || "";
+  } catch {
+    return "";
+  }
 }
 
 function readOnlineDisplayName(input) {
@@ -3006,8 +3969,9 @@ function readOnlineDisplayName(input) {
 
 async function createOnlineRoom() {
   if (onlineRoomBusy) return;
-  const name = readOnlineDisplayName(els.createOnlineDisplayName);
+  const name = readOnlineDisplayName(els.onlineDisplayName);
   if (!name) return;
+  setOnlineDisplayNames(name);
   setOnlineRoomBusy(true);
   setOnlineRoomMessage();
   try {
@@ -3045,8 +4009,9 @@ async function createOnlineRoom() {
 
 async function joinOnlineRoom() {
   if (onlineRoomBusy) return;
-  const name = readOnlineDisplayName(els.joinOnlineDisplayName);
+  const name = readOnlineDisplayName(els.onlineDisplayName);
   if (!name) return;
+  setOnlineDisplayNames(name);
   const code = normalizeOnlineRoomCode(els.onlineRoomCodeInput.value);
   els.onlineRoomCodeInput.value = code;
   if (!/^(?:\d{4}|[A-HJ-NP-Z2-9]{6})$/.test(code)) {
@@ -3100,23 +4065,35 @@ async function updateOnlineDisplayName() {
 
 async function refreshOnlineRoom({ quiet = false } = {}) {
   if (!onlineRoomSession) return;
-  try {
-    const query = onlineRoomStateVersion
-      ? `?afterStateVersion=${onlineRoomStateVersion}&lastSeenEventId=${onlineLastSeenEventId}`
-      : "";
-    const payload = await roomApi(`/api/rooms/${onlineRoomSession.code}${query}`);
-    if (payload.room) renderOnlineLobby(payload.room, payload.memberId);
-  } catch (error) {
-    if ([401, 404].includes(error.status)) {
-      const previousName = onlineRoomSession.name || "";
-      saveOnlineRoomSession(null);
-      setOnlineDisplayNames(previousName);
-      showOnlineRoomEntry(true);
-      setOnlineRoomMessage("That room has closed or expired.", true);
-      return;
+  if (onlineRoomRefreshPromise) return onlineRoomRefreshPromise;
+  const session = { ...onlineRoomSession };
+  onlineRoomRefreshPromise = (async () => {
+    try {
+      const query = onlineRoomStateVersion
+        ? `?afterStateVersion=${onlineRoomStateVersion}&lastSeenEventId=${onlineLastSeenEventId}`
+        : "";
+      const payload = await roomApi(`/api/rooms/${session.code}${query}`, { token: session.token });
+      if (
+        payload.room
+        && onlineRoomSession?.code === session.code
+        && onlineRoomSession?.token === session.token
+        && !els.onlineRoomScreen.hidden
+      ) renderOnlineLobby(payload.room, payload.memberId);
+    } catch (error) {
+      if ([401, 404].includes(error.status) && onlineRoomSession?.code === session.code) {
+        const previousName = session.name || "";
+        saveOnlineRoomSession(null);
+        setOnlineDisplayNames(previousName);
+        showOnlineRoomEntry(true);
+        setOnlineRoomMessage("That room has closed or expired.", true);
+        return;
+      }
+      if (!quiet) setOnlineRoomMessage(error.message, true);
     }
-    if (!quiet) setOnlineRoomMessage(error.message, true);
-  }
+  })().finally(() => {
+    onlineRoomRefreshPromise = null;
+  });
+  return onlineRoomRefreshPromise;
 }
 
 function startOnlineRoomPolling() {
@@ -3130,8 +4107,16 @@ function startOnlineRoomPolling() {
 }
 
 function onlinePollingInterval() {
+  if (latestOnlineRoom?.status === "draft") return 300;
+  if (!latestOnlineRoom || latestOnlineRoom.status === "lobby") return 750;
   const matches = latestOnlineRoom?.tournament?.rounds
     ?.flatMap((round) => round.matches) || [];
+  const viewedMatch = matches.find((match) => match.id === onlineViewedMatchId);
+  if (
+    viewedMatch?.liveState
+    && !["waiting", "finished"].includes(viewedMatch.liveState.status)
+    && !onlineMemberOwnsMatch(latestOnlineRoom?.tournament, onlineRoomSession?.memberId, viewedMatch)
+  ) return 250;
   const pending = matches
     .some((match) => match.liveState?.pendingDecision?.memberId === onlineRoomSession?.memberId);
   if (pending) return 400;
@@ -3151,19 +4136,20 @@ function stopOnlineRoomPolling() {
 
 async function leaveOnlineRoom() {
   if (!onlineRoomSession || onlineRoomBusy) return;
+  const session = { ...onlineRoomSession };
   setOnlineRoomBusy(true);
+  let leaveError = null;
   try {
-    await roomApi(`/api/rooms/${onlineRoomSession.code}/leave`, { method: "POST" });
-    const previousName = onlineRoomSession.name || "";
-    saveOnlineRoomSession(null);
-    setOnlineDisplayNames(previousName);
-    showOnlineRoomEntry();
-    showToast("You left the online room.");
+    await roomApi(`/api/rooms/${session.code}/leave`, { method: "POST", token: session.token });
   } catch (error) {
-    setOnlineRoomMessage(error.message, true);
+    leaveError = error;
   } finally {
+    saveOnlineRoomSession(null);
+    setOnlineDisplayNames(session.name || "");
+    showOnlineRoomEntry();
     setOnlineRoomBusy(false);
   }
+  showToast(leaveError ? "Left this room on this device." : "You left the online room.");
 }
 
 async function closeOnlineRoom() {
@@ -3599,9 +4585,7 @@ function nextLegacyTournamentSeed(previousSeed) {
 function createLegacyTournamentState() {
   const customTeam = legacyDraftTeam();
   TEAM_BY_ID.set(customTeam.id, customTeam);
-  [...playerProfileCache.keys()]
-    .filter((key) => key.startsWith(`${customTeam.id}:`))
-    .forEach((key) => playerProfileCache.delete(key));
+  clearPlayerProfileCacheForTeam(customTeam.id);
   const tournamentSeed = Number(legacyDraft.tournamentSeed) || legacyDraft.seed;
   const random = mulberry32(tournamentSeed + 77);
   const eliteNames = new Set(["Brazil", "France", "Germany", "Argentina", "Italy", "Netherlands", "Portugal", "Spain", "England"]);
@@ -3770,6 +4754,334 @@ function loadState() {
 }
 
 let state = loadState();
+let standardTournamentState = state;
+let retroSimulatorState = null;
+let standardTournamentUiState = null;
+let retroTournamentUiState = {
+  fixtureLimit: DEFAULT_FIXTURE_LIMIT,
+  filterUnresolved: false,
+  teamFilterId: null,
+  teamFilterReturn: null,
+};
+const sharedMainContentHome = els.mainContent.parentElement;
+const sharedMainContentMarker = document.createComment("shared-main-content-home");
+els.mainContent.after(sharedMainContentMarker);
+const snapshotButtonHome = els.snapshotButton.parentElement;
+const snapshotButtonMarker = document.createComment("snapshot-button-home");
+els.snapshotButton.after(snapshotButtonMarker);
+
+function placeSnapshotButtonOnChampionScreen(championScreen) {
+  if (championScreen) {
+    if (els.snapshotButton.parentElement !== els.championStage) {
+      els.championStage.append(els.snapshotButton);
+    }
+    return;
+  }
+  if (els.snapshotButton.parentElement !== snapshotButtonHome) {
+    snapshotButtonMarker.parentNode?.insertBefore(els.snapshotButton, snapshotButtonMarker);
+  }
+}
+
+function isRetroSimulatorState(candidate = state) {
+  return candidate?.retroWorldCup === true;
+}
+
+function retroRoundNames() {
+  return [
+    "Group stage - Matchday 1",
+    "Group stage - Matchday 2",
+    "Group stage - Matchday 3",
+    "Round of 16",
+    "Quarter-Final",
+    "Semi-Final",
+    "Finals",
+  ];
+}
+
+function tournamentRoundNames() {
+  return isRetroSimulatorState() ? retroRoundNames() : ROUND_NAMES;
+}
+
+function tournamentRoundName(index = state.activeRound) {
+  return tournamentRoundNames()[index] || "World Cup";
+}
+
+function tournamentMatchRoundName(match, index = state.activeRound) {
+  if (isRetroSimulatorState() && match?.id === "ko-third-place") return "Third-place play-off";
+  return tournamentRoundName(index);
+}
+
+function tournamentFinalRoundIndex() {
+  return isRetroSimulatorState() ? 6 : 7;
+}
+
+function retroSquadsForYear(year = retroTournament?.year || Number(readRetroWorldCupYear())) {
+  if (Number(year) === 2010) return RETRO_2010_SQUADS;
+  if (Number(year) === 2018) return RETRO_2018_SQUADS;
+  return RETRO_2014_SQUADS;
+}
+
+function retroTeamId(name, year = retroTournament?.year || Number(readRetroWorldCupYear())) {
+  return `retro-${year}-${String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+}
+
+function installRetroTeams(year = retroTournament?.year || Number(readRetroWorldCupYear())) {
+  const squads = retroSquadsForYear(year);
+  RETRO_WORLD_CUPS[year].teams.forEach((entry) => {
+    const id = retroTeamId(entry.name, year);
+    if (TEAM_BY_ID.has(id)) return;
+    const current = TEAMS.find((team) => team.name === entry.name);
+    const squad = squads[entry.name];
+    const startingNumbers = new Set(
+      RETRO_WORLD_CUP_ENGINE.startingXI(year, entry.name).players.map((player) => player.number),
+    );
+    let defenderIndex = 0;
+    const playerProfiles = (squad?.players || []).map((player) => {
+      let position = player.positions?.[0] || player.position;
+      if (position === "DF") {
+        position = ["CB", "CB", "LB", "RB"][defenderIndex % 4];
+        defenderIndex += 1;
+      } else if (position === "MF") {
+        position = player.internationalGoals >= 8 ? "CAM" : "CM";
+      } else if (position === "FW") {
+        position = player.positions?.some((role) => ["LW", "RW"].includes(role)) ? player.positions.find((role) => ["LW", "RW"].includes(role)) : "ST";
+      }
+      return {
+        name: player.name,
+        position,
+        overall: player.overall,
+        finishing: player.attributes?.shooting || player.overall,
+        pace: player.attributes?.pace,
+        shooting: player.attributes?.shooting,
+        passing: player.attributes?.passing,
+        dribbling: player.attributes?.dribbling,
+        defending: player.attributes?.defending,
+        physical: player.attributes?.physic,
+        goalkeeping: player.position === "GK"
+          ? Math.round([
+            player.attributes?.goalkeeping_diving,
+            player.attributes?.goalkeeping_handling,
+            player.attributes?.goalkeeping_kicking,
+            player.attributes?.goalkeeping_positioning,
+            player.attributes?.goalkeeping_reflexes,
+          ].filter(Number.isFinite).reduce((sum, value) => sum + value, 0) / 5)
+          : 5,
+        attackingRole: ["ST", "CF", "LW", "RW", "CAM"].includes(position)
+          ? "primary"
+          : ["LM", "RM", "CM"].includes(position) ? "support" : "defensive",
+        expectedMinutesShare: startingNumbers.has(player.number) ? 0.9 : 0.24,
+        startingXI: startingNumbers.has(player.number),
+        penaltyTaker: Boolean(squad?.penaltyTakers?.includes(player.name)),
+        captain: Boolean(player.captain),
+        retroWorldCup: true,
+        retroYear: year,
+        retroWorldCupGoals: RETRO_WORLD_CUP_ENGINE.historicalGoals(year, player),
+        preferredFoot: player.preferredFoot,
+      };
+    });
+    const rating = entry.rating;
+    TEAM_BY_ID.set(id, {
+      ...(current || {}),
+      id,
+      name: entry.name,
+      strength: rating,
+      rating,
+      simulationRatings: squad?.teamRatings
+        ? { ...squad.teamRatings }
+        : deriveTeamSimulationRatings(id, entry.name, rating, current?.fifaRank || null),
+      players: playerProfiles.map((player) => player.name),
+      playerProfiles,
+      retroWorldCup: true,
+      retroYear: year,
+    });
+  });
+}
+
+function repairRetroResultPlayers(match) {
+  if (!match?.result) return;
+  const result = match.result;
+  const squads = retroSquadsForYear(retroTournament?.year);
+  const rosterFor = (teamName, outfieldOnly = false) => (
+    (squads[teamName]?.players || [])
+      .filter((player) => !outfieldOnly || player.position !== "GK")
+      .map((player) => player.name)
+  );
+  const replacement = (teamName, key, outfieldOnly = false) => {
+    const roster = rosterFor(teamName, outfieldOnly);
+    return roster[stableHash(`${match.id}:${key}`) % roster.length] || null;
+  };
+
+  [["home", match.home], ["away", match.away]].forEach(([side, teamName]) => {
+    const officialNames = new Set(rosterFor(teamName));
+    (result[`${side}Events`] || []).forEach((event, index) => {
+      if (!officialNames.has(event.scorer)) {
+        event.scorer = replacement(teamName, `${side}:goal:${event.minute}:${index}`, true);
+      }
+    });
+  });
+  (result.redCards || []).forEach((card, index) => {
+    const teamName = card.side === "away" ? match.away : match.home;
+    if (!new Set(rosterFor(teamName)).has(card.player)) {
+      card.player = replacement(teamName, `${card.side}:red:${card.minute}:${index}`, true);
+    }
+  });
+  (result.shootout || []).forEach((attempt, index) => {
+    const teamName = attempt.side === "away" ? match.away : match.home;
+    if (!new Set(rosterFor(teamName)).has(attempt.player)) {
+      attempt.player = replacement(teamName, `${attempt.side}:shootout:${index}`, true);
+    }
+  });
+}
+
+function adaptRetroMatch(match) {
+  match.homeId = retroTeamId(match.home, retroTournament.year);
+  match.awayId = retroTeamId(match.away, retroTournament.year);
+  match.allowDraw = match.stage === "group";
+  if (match.schedule && (!match.schedule.dateLabel || !match.schedule.timeLabel)) {
+    const details = retroScheduleDetails(match);
+    match.schedule = {
+      ...match.schedule,
+      dateLabel: details?.date || "",
+      timeLabel: details?.time ? `${details.time} BST` : "",
+    };
+  }
+  if (match.result) {
+    if (match.allowDraw) {
+      match.result.homeEvents = (match.result.homeEvents || []).filter((event) => event.minute <= 90);
+      match.result.awayEvents = (match.result.awayEvents || []).filter((event) => event.minute <= 90);
+      match.result.redCards = (match.result.redCards || []).filter((event) => event.minute <= 90);
+      match.result.homeGoals = match.result.homeEvents.length;
+      match.result.awayGoals = match.result.awayEvents.length;
+      match.result.regulationHome = match.result.homeGoals;
+      match.result.regulationAway = match.result.awayGoals;
+      match.result.extraTime = false;
+      match.result.penalties = null;
+      match.result.shootout = null;
+      match.result.winnerId = match.result.homeGoals === match.result.awayGoals
+        ? null
+        : match.result.homeGoals > match.result.awayGoals ? match.homeId : match.awayId;
+    }
+    repairRetroResultPlayers(match);
+    const legacyRetroResult = match.result.engineVersion !== 2 && Object.hasOwn(match.result, "winner");
+    if (legacyRetroResult) {
+      match.result.winnerId = match.result.winner ? retroTeamId(match.result.winner, retroTournament.year) : null;
+    } else if (!Object.hasOwn(match.result, "winner")) {
+      match.result.winner = match.result.winnerId ? teamById(match.result.winnerId)?.name || null : null;
+    }
+    match.result.revealed = match.result.revealed !== false;
+  }
+  return match;
+}
+
+function retroSimulatorRounds() {
+  const groupRounds = [1, 2, 3].map((matchday) => (
+    retroTournament.groupMatches.filter((match) => match.matchday === matchday).map(adaptRetroMatch)
+  ));
+  const knockoutRounds = retroTournament.knockoutRounds.map((round) => round.matches.map(adaptRetroMatch));
+  return [...groupRounds, ...knockoutRounds];
+}
+
+function retroTournamentRoundIndex() {
+  if (retroTournament.phase === "complete") return tournamentFinalRoundIndex();
+  if (retroTournament.phase === "group") {
+    const nextGroupMatch = retroTournament.groupMatches.find((match) => !match.result);
+    return Math.max(0, (nextGroupMatch?.matchday || 3) - 1);
+  }
+  return Math.min(
+    tournamentFinalRoundIndex(),
+    3 + Math.max(0, retroTournament.knockoutRounds.length - 1),
+  );
+}
+
+function activateRetroSimulatorState() {
+  installRetroTeams(retroTournament.year);
+  if (!isRetroSimulatorState()) {
+    standardTournamentState = state;
+    standardTournamentUiState = {
+      fixtureLimit,
+      filterUnresolved,
+      teamFilterId,
+      teamFilterReturn,
+    };
+    ({ fixtureLimit, filterUnresolved, teamFilterId, teamFilterReturn } = retroTournamentUiState);
+    state = retroSimulatorState || {};
+  }
+  const rounds = retroSimulatorRounds();
+  const previous = state;
+  const wasRetroWorldCup = Boolean(previous?.retroWorldCup);
+  const previousSpectateTeamId = previous?.spectateTeamId || null;
+  const activeRound = previous?.retroWorldCup
+    ? previous.activeRound
+    : retroTournamentRoundIndex();
+  Object.assign(state, {
+    version: STATE_VERSION,
+    retroWorldCup: true,
+    drawSeed: retroTournament.seed,
+    settings: {
+      ...defaultSettings,
+      ...(previous?.settings || standardTournamentState.settings || {}),
+      ...retroMenuSettings,
+      realNames: true,
+      realPlayersOnly: true,
+    },
+    rounds,
+    activeRound: Math.min(activeRound ?? 0, Math.max(0, rounds.length - 1)),
+    selectedMatch: previous.selectedMatch ?? 0,
+    championView: previous?.retroWorldCup
+      ? Boolean(previous.championView)
+      : retroTournament.phase === "complete",
+    started: true,
+    predictionTeamId: null,
+    spectateTeamId: retroTournament.managedTeam ? retroTeamId(retroTournament.managedTeam, retroTournament.year) : null,
+    neutralView: !retroTournament.managedTeam,
+    standardTactic: previous.standardTactic || "balanced",
+  });
+  retroSimulatorState = state;
+  const round = selectedRound();
+  const managedTeamId = retroTournament.managedTeam
+    ? retroTeamId(retroTournament.managedTeam, retroTournament.year)
+    : null;
+  const managedTeamChanged = previousSpectateTeamId !== managedTeamId;
+  if (!wasRetroWorldCup || managedTeamChanged) {
+    const managedMatchIndex = managedTeamId
+      ? round.findIndex((match) => (
+          !match.result
+          && (match.homeId === managedTeamId || match.awayId === managedTeamId)
+        ))
+      : -1;
+    const managedPlayedMatchIndex = managedTeamId
+      ? round.findIndex((match) => match.homeId === managedTeamId || match.awayId === managedTeamId)
+      : -1;
+    const nextUnplayedMatchIndex = round.findIndex((match) => !match.result);
+    state.selectedMatch = managedMatchIndex >= 0
+      ? managedMatchIndex
+      : managedPlayedMatchIndex >= 0
+        ? managedPlayedMatchIndex
+        : Math.max(0, nextUnplayedMatchIndex);
+  } else if (!round[state.selectedMatch]) {
+    state.selectedMatch = Math.max(0, round.findIndex((match) => !match.result?.revealed));
+  }
+}
+
+function restoreStandardTournamentState() {
+  if (!isRetroSimulatorState()) return;
+  retroSimulatorState = state;
+  retroTournamentUiState = {
+    fixtureLimit,
+    filterUnresolved,
+    teamFilterId,
+    teamFilterReturn,
+  };
+  state = standardTournamentState;
+  if (standardTournamentUiState) {
+    ({ fixtureLimit, filterUnresolved, teamFilterId, teamFilterReturn } = standardTournamentUiState);
+  }
+}
+
+function restoreSharedMainContent() {
+  if (els.mainContent.parentElement === sharedMainContentHome) return;
+  sharedMainContentMarker.parentNode?.insertBefore(els.mainContent, sharedMainContentMarker);
+}
 
 const startupMode = currentAppMode();
 const legacyTournamentMarker = new URLSearchParams(window.location.search).has("legacyTournament");
@@ -3815,13 +5127,38 @@ if (state.legacyTournament && state.spectateTeamId?.startsWith("legacy-")) {
     } catch { /* cannot recover */ }
   }
 }
+standardTournamentState = state;
 
 function saveState() {
+  if (isRetroSimulatorState()) {
+    saveRetroTournamentState();
+    return;
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   if (isValidLegacyTournamentState(state)) {
     localStorage.setItem(LEGACY_TOURNAMENT_SESSION_KEY, JSON.stringify(state));
   }
 }
+
+function settleInterruptedLocalMatches() {
+  let settled = false;
+  state.rounds.forEach((round) => {
+    (round || []).forEach((match) => {
+      if (match.result?.engineVersion === 2 && !match.result.revealed) {
+        match.result.revealed = true;
+        settled = true;
+      }
+    });
+  });
+  if (!settled) return false;
+  state.rounds.forEach((round, roundIndex) => {
+    if (round?.length && round.every((match) => match.result?.revealed)) buildNextRound(roundIndex);
+  });
+  saveState();
+  return true;
+}
+
+const interruptedLocalMatchSettled = settleInterruptedLocalMatches();
 
 function teamById(id) {
   return TEAM_BY_ID.get(id);
@@ -3847,6 +5184,8 @@ function teamElimination(teamId) {
   for (let roundIndex = 0; roundIndex < state.rounds.length; roundIndex += 1) {
     const match = (state.rounds[roundIndex] || []).find((item) => (
       item.result?.revealed
+      && item.result.winnerId
+      && !item.allowDraw
       && (item.homeId === teamId || item.awayId === teamId)
       && item.result.winnerId !== teamId
     ));
@@ -3901,6 +5240,10 @@ function compareTeamsByOfficialFifaRank(a, b) {
 }
 
 function renderSpectateList(query = "") {
+  if (spectatePickerMode === "retro") {
+    renderRetroWorldCupTeamList(query);
+    return;
+  }
   const normalized = query.trim().toLowerCase();
   const onlyAlive = spectatePickerMode === "alive";
   const selectedTeamId = state.spectateTeamId?.startsWith("legacy-") ? null : state.spectateTeamId;
@@ -3927,8 +5270,91 @@ function renderSpectateList(query = "") {
 
 function openSpectatePicker(mode = "all") {
   spectatePickerMode = mode;
+  els.spectateModalTitle.textContent = mode === "alive" ? "Choose a team still in the tournament" : "Pick a country to manage";
+  els.spectateSearch.placeholder = "Search all 256 teams";
   els.spectateSearch.value = "";
   renderSpectateList();
+  els.spectateModal.showModal();
+  requestAnimationFrame(() => els.spectateSearch.focus());
+}
+
+function retroWorldCupTeamStorageKey(year) {
+  return `${RETRO_WORLD_CUP_TEAM_KEY_PREFIX}-${year}`;
+}
+
+function readRetroWorldCupTeam(year) {
+  try {
+    const name = localStorage.getItem(retroWorldCupTeamStorageKey(year));
+    return RETRO_WORLD_CUPS[year]?.teams.some((team) => team.name === name) ? name : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveRetroWorldCupTeam(year, name) {
+  try {
+    if (name) localStorage.setItem(retroWorldCupTeamStorageKey(year), name);
+    else localStorage.removeItem(retroWorldCupTeamStorageKey(year));
+  } catch {
+    // Selection remains usable for the current page when storage is unavailable.
+  }
+}
+
+function retroWorldCupTeamData(year, name) {
+  return RETRO_WORLD_CUPS[year]?.teams.find((team) => team.name === name) || null;
+}
+
+function renderRetroWorldCupTeamPicker(year) {
+  const selected = retroWorldCupTeamData(year, readRetroWorldCupTeam(year));
+  const team = selected ? TEAMS.find((candidate) => candidate.name === selected.name) : null;
+  els.retroTeamPickerButton?.classList.toggle("has-team", Boolean(team));
+  if (!team || !selected) {
+    if (els.retroTeamPickerMark) els.retroTeamPickerMark.textContent = "◎";
+    if (els.retroWorldCupTeamLabel) els.retroWorldCupTeamLabel.textContent = "Neutral";
+    if (els.retroWorldCupTeamHint) els.retroWorldCupTeamHint.textContent = "Show every match as normal";
+    els.retroTeamPickerButton?.setAttribute("aria-label", `Choose a team from the ${year} World Cup. Current view: Neutral`);
+    return;
+  }
+  els.retroTeamPickerMark.innerHTML = flagMarkup(team, "spectate-picker-flag");
+  els.retroWorldCupTeamLabel.textContent = team.name;
+  els.retroWorldCupTeamHint.textContent = `Group ${selected.group}`;
+  els.retroTeamPickerButton.setAttribute("aria-label", `Change ${team.name} as your ${year} World Cup team`);
+}
+
+function renderRetroWorldCupTeamList(query = "") {
+  const year = readRetroWorldCupYear();
+  const selectedName = readRetroWorldCupTeam(year);
+  const normalized = query.trim().toLowerCase();
+  const teams = RETRO_WORLD_CUPS[year].teams
+    .filter((entry) => entry.name.toLowerCase().includes(normalized))
+    .map((entry) => ({
+      ...entry,
+      team: TEAMS.find((candidate) => candidate.name === entry.name),
+    }))
+    .filter((entry) => entry.team);
+  const neutralOption = normalized ? "" : `
+    <button class="prediction-option spectate-neutral-option ${selectedName ? "" : "selected"}" type="button" data-retro-team-name="">
+      <span class="spectate-neutral-mark" aria-hidden="true">◎</span>
+      <span><strong>Neutral</strong><small>Show every match as normal</small></span>
+      <i aria-hidden="true">${selectedName ? "" : "✓"}</i>
+    </button>
+  `;
+  els.spectateList.innerHTML = neutralOption + teams.map((entry) => `
+    <button class="prediction-option ${entry.name === selectedName ? "selected" : ""}" type="button" data-retro-team-name="${entry.name}">
+      ${flagMarkup(entry.team, "prediction-option-flag")}
+      <span><strong>${entry.name}</strong><small>Group ${entry.group}</small></span>
+      <i aria-hidden="true">${entry.name === selectedName ? "✓" : ""}</i>
+    </button>
+  `).join("") || `<div class="overview-empty">No ${year} team matches that search.</div>`;
+}
+
+function openRetroWorldCupTeamPicker() {
+  const year = readRetroWorldCupYear();
+  spectatePickerMode = "retro";
+  els.spectateModalTitle.textContent = `Choose a ${year} World Cup team`;
+  els.spectateSearch.placeholder = `Search ${year} teams`;
+  els.spectateSearch.value = "";
+  renderRetroWorldCupTeamList();
   els.spectateModal.showModal();
   requestAnimationFrame(() => els.spectateSearch.focus());
 }
@@ -4108,14 +5534,19 @@ function snapshotGoalLines(events) {
   const scorerMinutes = new Map();
   goals.forEach((event) => {
     if (!scorerMinutes.has(event.scorer)) scorerMinutes.set(event.scorer, []);
-    scorerMinutes.get(event.scorer).push(`${event.minute}'`);
+    scorerMinutes.get(event.scorer).push(goalMinuteText(event));
   });
   return [...scorerMinutes].map(([scorer, minutes]) => `${scorer}  ${minutes.join(", ")}`);
 }
 
 function snapshotMatchContext() {
-  const roundIndex = state.championView ? 7 : state.activeRound;
-  const match = state.championView ? state.rounds[7]?.[0] : selectedMatch();
+  const roundIndex = state.championView ? tournamentFinalRoundIndex() : state.activeRound;
+  const finalRound = state.rounds[roundIndex] || [];
+  const match = state.championView
+    ? isRetroSimulatorState()
+      ? finalRound.find((candidate) => candidate.id === "ko-final")
+      : finalRound[0]
+    : selectedMatch();
   if (!match) return null;
   return {
     match,
@@ -4125,14 +5556,14 @@ function snapshotMatchContext() {
   };
 }
 
-function drawSnapshotGoalLines(context, lines, x, y, align, maximumWidth = 420) {
+function drawSnapshotGoalLines(context, lines, x, y, align, maximumWidth = 420, color = "#aab4c4") {
   const spacing = lines.length > 6 ? 20 : lines.length > 4 ? 24 : 29;
   const fontSize = lines.length > 6 ? 15 : lines.length > 4 ? 17 : 19;
   lines.forEach((line, index) => snapshotText(context, line, x, y + index * spacing, maximumWidth, fontSize, {
     minimumSize: 13,
     weight: 600,
     align,
-    color: "#aab4c4",
+    color,
     family: "Manrope, Arial, sans-serif",
   }));
   return lines.length ? y + (lines.length - 1) * spacing : y;
@@ -4188,19 +5619,67 @@ function drawSnapshotConfetti(context, championId) {
   context.restore();
 }
 
-function drawSnapshotGoldenBoot(context, scorer, y = 438) {
+function retroSnapshotPalette(year) {
+  if (Number(year) === 2010) {
+    return {
+      accent: "#ffd34f",
+      backgroundStart: "#eb950e",
+      backgroundMiddle: "#b84d0b",
+      backgroundEnd: "#49230f",
+      panel: "rgba(74, 35, 16, 0.94)",
+      award: "rgba(57, 27, 14, 0.96)",
+      flagBacking: "#6e3518",
+      primaryText: "#fff7dd",
+      secondaryText: "#f3d9a5",
+      glow: "rgba(255, 211, 79, 0.28)",
+      footer: "RETRO 10 WORLD CUP",
+    };
+  }
+  if (Number(year) === 2018) {
+    return {
+      accent: "#e9c477",
+      backgroundStart: "#a51a16",
+      backgroundMiddle: "#86141b",
+      backgroundEnd: "#54101a",
+      panel: "rgba(7, 61, 112, 0.94)",
+      award: "rgba(6, 52, 95, 0.96)",
+      flagBacking: "#0969aa",
+      primaryText: "#fff4d6",
+      secondaryText: "#f3dcc0",
+      glow: "rgba(233, 196, 119, 0.24)",
+      footer: "RETRO 18 WORLD CUP",
+    };
+  }
+  return {
+    accent: "#f6d12a",
+    backgroundStart: "#0a8b50",
+    backgroundMiddle: "#067344",
+    backgroundEnd: "#034c38",
+    panel: "rgba(0, 82, 52, 0.88)",
+    award: "rgba(0, 74, 47, 0.94)",
+    flagBacking: "#00643f",
+    primaryText: "#fff9d6",
+    secondaryText: "#fff7cf",
+    glow: "rgba(246, 209, 42, 0.3)",
+    footer: "RETRO 14 WORLD CUP",
+  };
+}
+
+function drawSnapshotGoldenBoot(context, scorer, y = 438, retroTheme = null) {
   if (!scorer) return;
   const scorerTeam = teamById(scorer.teamId);
   snapshotRoundedRect(context, 414, y, 372, 116, 18);
-  context.fillStyle = "rgba(17, 24, 36, 0.92)";
+  context.fillStyle = retroTheme?.award || "rgba(17, 24, 36, 0.92)";
   context.fill();
-  context.strokeStyle = "rgba(118, 145, 196, 0.24)";
-  context.lineWidth = 1.5;
-  context.stroke();
+  if (!retroTheme) {
+    context.strokeStyle = "rgba(118, 145, 196, 0.24)";
+    context.lineWidth = 1.5;
+    context.stroke();
+  }
   snapshotText(context, "GOLDEN BOOT", 600, y + 21, 300, 14, {
     minimumSize: 12,
     weight: 800,
-    color: "#779cff",
+    color: retroTheme?.accent || "#779cff",
   });
   snapshotText(context, scorer.player, 600, y + 51, 330, 25, {
     minimumSize: 18,
@@ -4209,7 +5688,7 @@ function drawSnapshotGoldenBoot(context, scorer, y = 438) {
   snapshotText(context, `${scorerTeam.name} · ${scorer.goals} ${scorer.goals === 1 ? "GOAL" : "GOALS"}`, 600, y + 86, 330, 15, {
     minimumSize: 12,
     weight: 700,
-    color: "#aab4c4",
+    color: retroTheme?.secondaryText || "#aab4c4",
   });
 }
 
@@ -4234,21 +5713,34 @@ function loadSnapshotFlag(team) {
   });
 }
 
-function drawSnapshotFlag(context, image, team, x, y) {
+function drawSnapshotFlag(context, image, team, x, y, retroTheme = null) {
   snapshotRoundedRect(context, x - 82, y - 57, 164, 114, 13);
-  context.fillStyle = "#192232";
+  context.fillStyle = retroTheme?.flagBacking || "#192232";
   context.fill();
   if (image) {
     context.save();
-    snapshotRoundedRect(context, x - 75, y - 50, 150, 100, 8);
+    snapshotRoundedRect(
+      context,
+      retroTheme ? x - 82 : x - 75,
+      retroTheme ? y - 57 : y - 50,
+      retroTheme ? 164 : 150,
+      retroTheme ? 114 : 100,
+      retroTheme ? 13 : 8,
+    );
     context.clip();
-    context.drawImage(image, x - 75, y - 50, 150, 100);
+    context.drawImage(
+      image,
+      retroTheme ? x - 82 : x - 75,
+      retroTheme ? y - 57 : y - 50,
+      retroTheme ? 164 : 150,
+      retroTheme ? 114 : 100,
+    );
     context.restore();
   } else {
     snapshotText(context, team.code === "XX" ? "W256" : team.code, x, y, 125, 42, {
       minimumSize: 30,
       weight: 800,
-      color: "#8aa9ff",
+      color: retroTheme ? retroTheme.primaryText : "#8aa9ff",
       family: "Manrope, Arial, sans-serif",
     });
   }
@@ -4260,6 +5752,8 @@ async function createMatchSnapshotCanvas() {
   const { match, roundIndex, home, away } = snapshot;
   const result = match.result;
   const revealed = Boolean(result?.revealed);
+  const retroSnapshot = isRetroSimulatorState();
+  const retroTheme = retroSnapshot ? retroSnapshotPalette(retroTournament?.year || 2014) : null;
   const championSnapshot = Boolean(state.championView && revealed);
   const championId = championSnapshot ? result.winnerId : null;
   const goldenBootWinner = championSnapshot ? calculateTopGoalscorer() : null;
@@ -4304,39 +5798,46 @@ async function createMatchSnapshotCanvas() {
   if (!context) throw new Error("Image creation is not supported in this browser.");
 
   const background = context.createLinearGradient(0, 0, 1200, canvasHeight);
-  background.addColorStop(0, "#0b1018");
-  background.addColorStop(0.55, "#111925");
-  background.addColorStop(1, "#0b111b");
+  background.addColorStop(0, retroTheme?.backgroundStart || "#0b1018");
+  background.addColorStop(0.55, retroTheme?.backgroundMiddle || "#111925");
+  background.addColorStop(1, retroTheme?.backgroundEnd || "#0b111b");
   context.fillStyle = background;
   context.fillRect(0, 0, 1200, canvasHeight);
 
   const glow = context.createRadialGradient(600, 250, 0, 600, 250, 530);
-  glow.addColorStop(0, "rgba(31, 94, 255, 0.18)");
-  glow.addColorStop(1, "rgba(31, 94, 255, 0)");
+  glow.addColorStop(0, retroTheme?.glow || "rgba(31, 94, 255, 0.18)");
+  glow.addColorStop(1, retroTheme ? "rgba(0, 0, 0, 0)" : "rgba(31, 94, 255, 0)");
   context.fillStyle = glow;
   context.fillRect(0, 0, 1200, canvasHeight);
 
   snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, 28);
-  context.fillStyle = "rgba(17, 24, 36, 0.88)";
+  context.fillStyle = retroTheme?.panel || "rgba(17, 24, 36, 0.88)";
   context.fill();
-  context.strokeStyle = "rgba(118, 145, 196, 0.24)";
-  context.lineWidth = 2;
-  context.stroke();
+  if (!retroSnapshot) {
+    context.strokeStyle = "rgba(118, 145, 196, 0.24)";
+    context.lineWidth = 2;
+    context.stroke();
+  }
 
   if (championSnapshot) drawSnapshotConfetti(context, championId);
 
-  snapshotText(context, championSnapshot ? "256 TEAMS WC CHAMPIONS" : ROUND_NAMES[roundIndex].toUpperCase(), 1110, 88, 360, 18, {
+  const snapshotHeading = championSnapshot
+    ? retroTheme
+      ? `${RETRO_WORLD_CUP_EDITIONS[retroTournament?.year || 2014].host.toUpperCase()} ${retroTournament?.year || 2014} WORLD CHAMPIONS`
+      : "256 TEAMS WC CHAMPIONS"
+    : tournamentMatchRoundName(match, roundIndex).toUpperCase();
+  snapshotText(context, snapshotHeading, 1110, 88, 440, 18, {
     minimumSize: 14,
     weight: 700,
     align: "right",
-    color: "#779cff",
+    color: retroTheme?.accent || "#779cff",
     family: "Manrope, Arial, sans-serif",
   });
 
-  drawSnapshotFlag(context, homeFlagImage, home, 270, 205);
-  drawSnapshotFlag(context, awayFlagImage, away, 930, 205);
-  snapshotText(context, home.name, 270, 292, 390, 42, { minimumSize: 24, weight: 800 });
-  snapshotText(context, away.name, 930, 292, 390, 42, { minimumSize: 24, weight: 800 });
+  drawSnapshotFlag(context, homeFlagImage, home, 270, 205, retroTheme);
+  drawSnapshotFlag(context, awayFlagImage, away, 930, 205, retroTheme);
+  snapshotText(context, home.name, 270, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
+  snapshotText(context, away.name, 930, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
 
   if (revealed) {
     snapshotText(context, String(result.homeGoals), 505, 300, 120, 88, {
@@ -4354,27 +5855,27 @@ async function createMatchSnapshotCanvas() {
     snapshotText(context, resultLabel, 600, 370, 380, 24, {
       minimumSize: 20,
       weight: 700,
-      color: "#7e8ca3",
+      color: retroTheme?.accent || "#7e8ca3",
       family: "Manrope, Arial, sans-serif",
     });
-    drawSnapshotGoalLines(context, homeGoalLines, 188, detailStartY, "left", championSnapshot ? 290 : 420);
-    drawSnapshotGoalLines(context, awayGoalLines, 1012, detailStartY, "right", championSnapshot ? 290 : 420);
+    drawSnapshotGoalLines(context, homeGoalLines, 188, detailStartY, "left", championSnapshot ? 290 : 420, retroTheme?.secondaryText || "#aab4c4");
+    drawSnapshotGoalLines(context, awayGoalLines, 1012, detailStartY, "right", championSnapshot ? 290 : 420, retroTheme?.secondaryText || "#aab4c4");
     if (homeShootoutY !== null) {
       drawSnapshotShootout(context, homeShootout, 188, homeShootoutY, "left", championSnapshot ? 290 : 420);
     }
     if (awayShootoutY !== null) {
       drawSnapshotShootout(context, awayShootout, 1012, awayShootoutY, "right", championSnapshot ? 290 : 420);
     }
-    if (championSnapshot) drawSnapshotGoldenBoot(context, goldenBootWinner, goldenBootY);
+    if (championSnapshot) drawSnapshotGoldenBoot(context, goldenBootWinner, goldenBootY, retroTheme);
   } else {
     snapshotText(context, "VS", 600, 307, 180, 52, {
       weight: 800,
-      color: "#789cff",
+      color: retroTheme?.accent || "#789cff",
       family: "Manrope, Arial, sans-serif",
     });
     snapshotText(context, result ? "RESULT HIDDEN" : "UPCOMING FIXTURE", 600, 370, 320, 18, {
       weight: 700,
-      color: "#7e8ca3",
+      color: retroTheme?.secondaryText || "#7e8ca3",
       family: "Manrope, Arial, sans-serif",
     });
   }
@@ -4383,16 +5884,139 @@ async function createMatchSnapshotCanvas() {
   snapshotText(context, `${mode} · ${state.settings.goals.toUpperCase()} GOALS`, 84, canvasHeight - 43, 420, 15, {
     weight: 600,
     align: "left",
-    color: "#69778e",
+    color: retroTheme?.accent || "#69778e",
     family: "Manrope, Arial, sans-serif",
+  });
+  if (retroTheme) {
+    snapshotText(context, retroTheme.footer, 600, canvasHeight - 43, 360, 17, {
+      minimumSize: 14,
+      weight: 800,
+      color: retroTheme.primaryText,
+      family: "Manrope, Arial, sans-serif",
+    });
+  }
+  snapshotText(context, "256teams.com", 1116, canvasHeight - 43, 420, 15, {
+    weight: 600,
+    align: "right",
+    color: retroTheme?.secondaryText || "#69778e",
+    family: "Manrope, Arial, sans-serif",
+  });
+  return canvas;
+}
+
+async function createOnlineMatchSnapshotCanvas() {
+  const tournament = latestOnlineRoom?.tournament;
+  const round = tournament?.rounds?.find((item) => item.matches.some((match) => match.id === onlineViewedMatchId));
+  const match = round?.matches.find((item) => item.id === onlineViewedMatchId);
+  if (!match || !(match.status === "complete" || match.liveState?.status === "finished")) {
+    throw new Error("Finish the online match before taking a snapshot.");
+  }
+  const home = TEAM_BY_ID.get(match.homeTeamId);
+  const away = TEAM_BY_ID.get(match.awayTeamId);
+  if (!home || !away) throw new Error("The match teams could not be loaded.");
+  const goals = onlineGoalEvents(match);
+  const homeGoalLines = snapshotGoalLines(goals.filter((event) => event.side === "home").map((event) => ({
+    scorer: event.player,
+    minute: event.minute,
+  })));
+  const awayGoalLines = snapshotGoalLines(goals.filter((event) => event.side === "away").map((event) => ({
+    scorer: event.player,
+    minute: event.minute,
+  })));
+  const shootout = (match.events || []).filter((event) => event.type === "shootout-kick").map((event, index) => ({
+    ...event,
+    side: event.side || (event.teamId === match.homeTeamId ? "home" : "away"),
+    player: onlineGoalScorer(match, event, index),
+  }));
+  const homeShootout = shootout.filter((attempt) => attempt.side === "home");
+  const awayShootout = shootout.filter((attempt) => attempt.side === "away");
+  const detailStartY = 390;
+  const detailRows = Math.max(
+    homeGoalLines.length + homeShootout.length,
+    awayGoalLines.length + awayShootout.length,
+    1,
+  );
+  const canvasHeight = Math.max(675, 500 + detailRows * 28);
+  const [homeFlagImage, awayFlagImage] = await Promise.all([loadSnapshotFlag(home), loadSnapshotFlag(away)]);
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = canvasHeight;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Image creation is not supported in this browser.");
+
+  const background = context.createLinearGradient(0, 0, 1200, canvasHeight);
+  background.addColorStop(0, "#0b1018");
+  background.addColorStop(0.55, "#111925");
+  background.addColorStop(1, "#0b111b");
+  context.fillStyle = background;
+  context.fillRect(0, 0, 1200, canvasHeight);
+  snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, 28);
+  context.fillStyle = "rgba(17, 24, 36, 0.9)";
+  context.fill();
+  context.strokeStyle = "rgba(118, 145, 196, 0.24)";
+  context.lineWidth = 2;
+  context.stroke();
+
+  snapshotText(context, onlineRoundName(tournament, round.number).toUpperCase(), 1110, 88, 420, 18, {
+    minimumSize: 14,
+    weight: 700,
+    align: "right",
+    color: "#779cff",
+  });
+  drawSnapshotFlag(context, homeFlagImage, home, 270, 205);
+  drawSnapshotFlag(context, awayFlagImage, away, 930, 205);
+  snapshotText(context, home.name, 270, 292, 390, 42, { minimumSize: 20, weight: 800 });
+  snapshotText(context, away.name, 930, 292, 390, 42, { minimumSize: 20, weight: 800 });
+  snapshotText(context, String(match.liveState?.homeScore ?? match.homeScore ?? 0), 505, 300, 120, 88, { weight: 800 });
+  snapshotText(context, "-", 600, 300, 80, 52, { color: "#65728a", weight: 400 });
+  snapshotText(context, String(match.liveState?.awayScore ?? match.awayScore ?? 0), 695, 300, 120, 88, { weight: 800 });
+  const penalty = match.liveState?.penalty || match.penalty;
+  snapshotText(context, penalty ? `PENALTIES ${penalty.homeScore}-${penalty.awayScore}` : "FULL TIME", 600, 370, 380, 24, {
+    minimumSize: 20,
+    weight: 700,
+    color: "#7e8ca3",
+  });
+  const homeGoalsBottom = drawSnapshotGoalLines(context, homeGoalLines, 188, detailStartY, "left");
+  const awayGoalsBottom = drawSnapshotGoalLines(context, awayGoalLines, 1012, detailStartY, "right");
+  if (homeShootout.length) drawSnapshotShootout(context, homeShootout, 188, homeGoalsBottom + (homeGoalLines.length ? 38 : 0), "left");
+  if (awayShootout.length) drawSnapshotShootout(context, awayShootout, 1012, awayGoalsBottom + (awayGoalLines.length ? 38 : 0), "right");
+  snapshotText(context, "ONLINE MODE", 84, canvasHeight - 43, 420, 15, {
+    weight: 700,
+    align: "left",
+    color: "#69778e",
   });
   snapshotText(context, "256teams.com", 1116, canvasHeight - 43, 420, 15, {
     weight: 600,
     align: "right",
     color: "#69778e",
-    family: "Manrope, Arial, sans-serif",
   });
   return canvas;
+}
+
+async function openOnlineSnapshotModal() {
+  if (!els.onlineSnapshotButton || els.onlineSnapshotButton.disabled) return;
+  els.onlineSnapshotButton.disabled = true;
+  try {
+    const match = latestOnlineRoom?.tournament?.rounds
+      ?.flatMap((round) => round.matches)
+      .find((item) => item.id === onlineViewedMatchId);
+    const home = TEAM_BY_ID.get(match?.homeTeamId);
+    const away = TEAM_BY_ID.get(match?.awayTeamId);
+    els.snapshotModalKicker.textContent = "SHARE THE RESULT";
+    els.snapshotModalTitle.textContent = "Online match snapshot";
+    snapshotBlob = await canvasPngBlob(await createOnlineMatchSnapshotCanvas());
+    if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
+    snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
+    els.snapshotImage.src = snapshotObjectUrl;
+    snapshotFilename = `world-256-online-${home?.name || "home"}-vs-${away?.name || "away"}`
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + ".png";
+    els.shareSnapshotButton.hidden = typeof navigator.share !== "function";
+    els.snapshotModal.showModal();
+  } catch (error) {
+    showToast(error.message || "The snapshot could not be created.");
+  } finally {
+    els.onlineSnapshotButton.disabled = false;
+  }
 }
 
 function drawLegacySnapshotPitch(context, formation, x, y, width, height, expert) {
@@ -4662,10 +6286,18 @@ function neutralPlayerLabels() {
   return Array.from({ length: 11 }, (_, index) => `Player ${index + 1}`);
 }
 
-const playerProfileCache = new Map();
+var playerProfileCache = new Map();
+
+function clearPlayerProfileCacheForTeam(teamId) {
+  if (!(playerProfileCache instanceof Map)) return;
+  [...playerProfileCache.keys()]
+    .filter((key) => key.startsWith(`${teamId}:`))
+    .forEach((key) => playerProfileCache.delete(key));
+}
 
 function playerProfilesForTeam(team) {
-  const useRealPlayers = Boolean(state.settings.realNames && team.players);
+  const officialRetroSquad = Boolean(team.retroWorldCup && team.playerProfiles?.length);
+  const useRealPlayers = Boolean((state.settings.realNames || officialRetroSquad) && team.players);
   const realPlayersOnly = state.settings.realPlayersOnly !== false;
   const playerMode = `${useRealPlayers ? "real" : "generated"}:${realPlayersOnly ? "real-only" : "all"}`;
   const cacheKey = `${team.id}:${playerMode}`;
@@ -4689,7 +6321,7 @@ function playerProfilesForTeam(team) {
       inputs = [{ name: "Wroetoshaw", position: "ST" }, ...inputs];
     }
     let profiles = buildPlayerProfiles(team, inputs, !useRealPlayers);
-    if (useRealPlayers) {
+    if (useRealPlayers && !officialRetroSquad) {
       const requiredPositions = ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CAM", "LW", "ST", "RW"];
       const requiredGroups = requiredPositions.reduce((counts, position) => {
         const group = possessionPositionGroup(position);
@@ -4712,6 +6344,10 @@ function playerProfilesForTeam(team) {
         }
       });
       if (supplements.length) profiles = [...profiles, ...buildPlayerProfiles(team, supplements, true)];
+    }
+    if (officialRetroSquad) {
+      const officialNames = new Set(team.players);
+      profiles = profiles.filter((profile) => officialNames.has(profile.name));
     }
     profiles = profiles.map((profile, index) => {
       const preferredFoot = profile.preferredFoot
@@ -4765,14 +6401,65 @@ function shootoutPositionPriority(position) {
   return 6;
 }
 
-function shootoutTakerPool(team, excludedPlayers = []) {
-  const excluded = new Set(excludedPlayers);
-  return playerProfilesForTeam(team)
-    .filter((profile) => !excluded.has(profile.name))
-    .map((profile, index) => ({
-      profile,
+function shootoutTakerPool(team, unavailablePlayers = [], dismissedPlayers = []) {
+  const unavailable = new Set(unavailablePlayers);
+  const dismissed = new Set(dismissedPlayers);
+  const excluded = new Set([...unavailable, ...dismissed]);
+  const legacyLineup = team.id?.startsWith("legacy-") && Array.isArray(team.positionSuitability)
+    ? team.positionSuitability
+      .filter((entry) => entry?.player && !excluded.has(entry.player))
+      .map((entry, index) => ({
+        profile: {
+          name: entry.player,
+          position: entry.slot,
+          finishing: entry.finishing ?? entry.overall ?? team.rating,
+          overall: entry.overall ?? team.rating,
+          penaltyTaker: entry.slot !== "GK" && index === 0,
+        },
+        index,
+        priority: shootoutPositionPriority(entry.slot),
+      }))
+    : null;
+  const candidates = legacyLineup?.length
+    ? legacyLineup
+    : playerProfilesForTeam(team)
+      .filter((profile) => !excluded.has(profile.name))
+      .map((profile, index) => ({
+        profile,
+        index,
+        priority: shootoutPositionPriority(shootoutPosition(team, profile)),
+      }));
+  const markedStarters = candidates.filter(({ profile }) => profile.startingXI);
+  const eligiblePlayerCount = Math.max(1, 11 - dismissed.size);
+  const eligible = markedStarters.length
+    ? [
+      ...markedStarters,
+      ...candidates
+        .filter(({ profile }) => !profile.startingXI)
+        .slice(0, Math.max(0, eligiblePlayerCount - markedStarters.length)),
+    ]
+    : candidates;
+  const fallback = candidates.length
+    ? candidates
+    : Array.from({ length: 11 }, (_, index) => ({
+      profile: {
+        name: `${team.name || "Team"} Player ${index + 1}`,
+        position: "CM",
+        finishing: team.rating || 60,
+        overall: team.rating || 60,
+        penaltyTaker: index === 0,
+      },
       index,
-      priority: shootoutPositionPriority(shootoutPosition(team, profile)),
+      priority: shootoutPositionPriority("CM"),
+    }));
+  const pool = eligible.length ? eligible : fallback;
+  const outfield = pool.filter(({ profile }) => profile.position !== "GK");
+  const goalkeepers = pool.filter(({ profile }) => profile.position === "GK");
+  return [...outfield, ...goalkeepers]
+    .map((profile, index) => ({
+      profile: profile.profile,
+      index,
+      priority: profile.priority,
     }))
     .sort((left, right) => (
       left.priority - right.priority
@@ -4814,7 +6501,7 @@ function selectWeightedProfile(profiles, random, weightForProfile) {
 
 function eligibleScorerProfiles(team, minute, cards = [], suspendedPlayers = []) {
   const dismissed = new Set(
-    cards.filter((card) => card.minute < minute).map((card) => card.player),
+    cards.filter((card) => card.minute <= minute).map((card) => card.player),
   );
   const unavailable = new Set([...suspendedPlayers, ...dismissed]);
   const profiles = playerProfilesForTeam(team).filter((profile) => (
@@ -4907,10 +6594,17 @@ function missedPenaltyVisual(side, team, player, round, direction, keeperDive) {
       missType: "wide",
     };
   }
+  if (direction === "centre") {
+    const savedDirection = visualSeed % 2 === 0 ? "left" : "right";
+    return { direction: savedDirection, keeperDive: savedDirection, missType: "save" };
+  }
   return { direction, keeperDive: direction, missType: "save" };
 }
 
 function distinctKeeperDiveForGoal(direction, keeperDive, variation = 0) {
+  if (direction === "centre") return keeperDive === "centre"
+    ? (Math.abs(variation) % 2 === 0 ? "left" : "right")
+    : keeperDive;
   if (keeperDive !== direction) return keeperDive;
   const alternatives = ["left", "centre", "right"].filter((candidate) => candidate !== direction);
   return alternatives[Math.abs(variation) % alternatives.length];
@@ -4924,12 +6618,10 @@ function createShootoutSequence(home, away, penalties, random, cards = [], suspe
   const pools = {
     home: shootoutTakerPool(home, [
       ...(suspendedPlayers.home || []),
-      ...cards.filter((card) => card.side === "home").map((card) => card.player),
-    ]),
+    ], cards.filter((card) => card.side === "home").map((card) => card.player)),
     away: shootoutTakerPool(away, [
       ...(suspendedPlayers.away || []),
-      ...cards.filter((card) => card.side === "away").map((card) => card.player),
-    ]),
+    ], cards.filter((card) => card.side === "away").map((card) => card.player)),
   };
   const directions = ["left", "centre", "right"];
   const sequence = [];
@@ -5005,19 +6697,13 @@ function createInteractiveShootoutSequence(match, controlledSide, startRound = 1
   const away = teamById(match.awayId);
   const result = match.result;
   const random = mulberry32(state.drawSeed + stableHash(`${match.id}-interactive-shootout-${startRound}`));
-  const excluded = {
-    home: [
-      ...(result.suspendedPlayers?.home || []),
-      ...(result.redCards || []).filter((card) => card.side === "home").map((card) => card.player),
-    ],
-    away: [
-      ...(result.suspendedPlayers?.away || []),
-      ...(result.redCards || []).filter((card) => card.side === "away").map((card) => card.player),
-    ],
+  const dismissed = {
+    home: (result.redCards || []).filter((card) => card.side === "home").map((card) => card.player),
+    away: (result.redCards || []).filter((card) => card.side === "away").map((card) => card.player),
   };
   const pools = {
-    home: shootoutTakerPool(home, excluded.home),
-    away: shootoutTakerPool(away, excluded.away),
+    home: shootoutTakerPool(home, result.suspendedPlayers?.home || [], dismissed.home),
+    away: shootoutTakerPool(away, result.suspendedPlayers?.away || [], dismissed.away),
   };
   const conversion = {
     home: shootoutConversionChance(home, away, state.settings.upset),
@@ -5028,8 +6714,25 @@ function createInteractiveShootoutSequence(match, controlledSide, startRound = 1
     for (const side of ["home", "away"]) {
       const team = side === "home" ? home : away;
       const player = pools[side][(round - 1) % pools[side].length];
+      const roundConversion = shootoutRoundConversionChance(conversion[side], round);
       if (side !== controlledSide) {
-        sequence.push(createShootoutAttempt(side, team, player, random() < conversion[side], round, random));
+        const shotTarget = STANDARD_PENALTY_TARGETS[Math.floor(random() * STANDARD_PENALTY_TARGETS.length)];
+        sequence.push({
+          side,
+          player,
+          foot: preferredPenaltyFoot(team, player, random),
+          direction: "centre",
+          keeperDive: "centre",
+          goalkeeperTarget: null,
+          shotTarget,
+          conversionChance: roundConversion,
+          target: null,
+          scored: null,
+          missType: null,
+          interactive: true,
+          interactionRole: "keeper",
+          round,
+        });
         continue;
       }
       const goalkeeperTarget = STANDARD_PENALTY_TARGETS[Math.floor(random() * STANDARD_PENALTY_TARGETS.length)];
@@ -5040,12 +6743,13 @@ function createInteractiveShootoutSequence(match, controlledSide, startRound = 1
         direction: "centre",
         keeperDive: onlinePenaltyDirection(goalkeeperTarget),
         goalkeeperTarget,
-        conversionChance: conversion[side],
+        conversionChance: roundConversion,
         outcomeRoll: random(),
         target: null,
         scored: null,
         missType: null,
         interactive: true,
+        interactionRole: "taker",
         round,
       });
     }
@@ -5061,24 +6765,14 @@ function simulatePenaltyShootout(
   suspendedPlayers = { home: [], away: [] },
   modeName = "balanced",
 ) {
-  const excluded = {
-    home: new Set([
-      ...(suspendedPlayers.home || []),
-      ...cards.filter((card) => card.side === "home").map((card) => card.player),
-    ]),
-    away: new Set([
-      ...(suspendedPlayers.away || []),
-      ...cards.filter((card) => card.side === "away").map((card) => card.player),
-    ]),
+  const dismissed = {
+    home: cards.filter((card) => card.side === "home").map((card) => card.player),
+    away: cards.filter((card) => card.side === "away").map((card) => card.player),
   };
-  const orderedTakers = (team, side) => {
-    const squadProfiles = playerProfilesForTeam(team);
-    return squadProfiles
-      .filter((profile) => !excluded[side].has(profile.name))
-      .sort((a, b) => Number(b.penaltyTaker) - Number(a.penaltyTaker)
-        || calculateScorerWeight(b, team, squadProfiles) - calculateScorerWeight(a, team, squadProfiles));
+  const pools = {
+    home: shootoutTakerPool(home, suspendedPlayers.home || [], dismissed.home),
+    away: shootoutTakerPool(away, suspendedPlayers.away || [], dismissed.away),
   };
-  const pools = { home: orderedTakers(home, "home"), away: orderedTakers(away, "away") };
   const conversion = {
     home: shootoutConversionChance(home, away, modeName),
     away: shootoutConversionChance(away, home, modeName),
@@ -5089,14 +6783,26 @@ function simulatePenaltyShootout(
   const takeKick = (side, round) => {
     const team = side === "home" ? home : away;
     const pool = pools[side];
-    const player = pool[(round - 1) % pool.length].name;
-    const scored = random() < conversion[side];
+    const player = pool[(round - 1) % pool.length];
+    const scored = random() < shootoutRoundConversionChance(conversion[side], round);
     if (scored) penalties[side] += 1;
     sequence.push(createShootoutAttempt(side, team, player, scored, round, random));
   };
 
   for (let round = 1; round <= 5; round += 1) {
+    if (standardShootoutWinner({
+      homeScore: penalties.home,
+      awayScore: penalties.away,
+      homeKicks: sequence.filter((attempt) => attempt.side === "home").length,
+      awayKicks: sequence.filter((attempt) => attempt.side === "away").length,
+    })) break;
     takeKick("home", round);
+    if (standardShootoutWinner({
+      homeScore: penalties.home,
+      awayScore: penalties.away,
+      homeKicks: sequence.filter((attempt) => attempt.side === "home").length,
+      awayKicks: sequence.filter((attempt) => attempt.side === "away").length,
+    })) break;
     takeKick("away", round);
   }
   let round = 6;
@@ -5118,8 +6824,8 @@ function simulatePenaltyShootout(
     const finalRound = 21;
     const loserTeam = loserSide === "home" ? home : away;
     const winnerTeam = winnerSide === "home" ? home : away;
-    const loserPlayer = pools[loserSide][(finalRound - 1) % pools[loserSide].length].name;
-    const winnerPlayer = pools[winnerSide][(finalRound - 1) % pools[winnerSide].length].name;
+    const loserPlayer = pools[loserSide][(finalRound - 1) % pools[loserSide].length];
+    const winnerPlayer = pools[winnerSide][(finalRound - 1) % pools[winnerSide].length];
     sequence.push(createShootoutAttempt(loserSide, loserTeam, loserPlayer, false, finalRound, random));
     sequence.push(createShootoutAttempt(winnerSide, winnerTeam, winnerPlayer, true, finalRound, random));
     penalties[winnerSide] += 1;
@@ -5298,6 +7004,25 @@ function opponentStandardTactic(match, controlledSide) {
   return candidates[stableHash(`${match.id}-opponent-tactic`) % candidates.length];
 }
 
+function managedRetroTacticalBoost(ratingGap, edge) {
+  if (!isRetroSimulatorState() || !retroTournament?.managedTeam || edge <= 0) {
+    return { attack: 1, defence: 1, comebackFloor: null, favouriteCeiling: null };
+  }
+
+  const execution = Math.min(1, edge / 0.2);
+  const underdogScale = Math.min(1, Math.max(0, ratingGap) / 18);
+  const attack = 1 + (0.04 + underdogScale * 0.11) * execution;
+  const defence = 1 - (0.03 + underdogScale * 0.08) * execution;
+  const comebackFloor = ratingGap >= 10 && edge >= 0.14
+    ? 0.82 + edge * 1.8 + Math.min(0.28, ratingGap * 0.006)
+    : null;
+  const favouriteCeiling = ratingGap >= 10 && edge >= 0.14
+    ? 2.85 - edge * 1.5
+    : null;
+
+  return { attack, defence, comebackFloor, favouriteCeiling };
+}
+
 function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
   const tacticKey = STANDARD_TACTICS[state.standardTactic] ? state.standardTactic : "balanced";
   const opponentTacticKey = opponentStandardTactic(match, controlledSide);
@@ -5309,8 +7034,11 @@ function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
   const ratingGap = Math.max(0, teamSimulationRatings(opponentTeam).overall - teamSimulationRatings(controlledTeam).overall);
   const underdogAttackBoost = edge > 0 ? 1 + Math.min(0.38, ratingGap * 0.012) * Math.min(1, edge / 0.2) : 1;
   const underdogDefenceBoost = edge > 0 ? 1 - Math.min(0.28, ratingGap * 0.008) * Math.min(1, edge / 0.2) : 1;
-  const ownMultiplier = tactic.ownXg * opponentTactic.opponentXg * (1 + edge) * underdogAttackBoost;
-  const opponentMultiplier = tactic.opponentXg * opponentTactic.ownXg * (1 - edge * 0.72) * underdogDefenceBoost;
+  const managedBoost = managedRetroTacticalBoost(ratingGap, edge);
+  const ownMultiplier = tactic.ownXg * opponentTactic.opponentXg * (1 + edge)
+    * underdogAttackBoost * managedBoost.attack;
+  const opponentMultiplier = tactic.opponentXg * opponentTactic.ownXg * (1 - edge * 0.72)
+    * underdogDefenceBoost * managedBoost.defence;
 
   if (controlledSide === "home") {
     adjustedXG.homeXG *= ownMultiplier;
@@ -5320,8 +7048,14 @@ function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
     adjustedXG.homeXG *= opponentMultiplier;
   }
   if (ratingGap >= 15 && edge >= 0.14) {
-    const comebackFloor = 0.65 + edge * 2 + Math.min(0.35, ratingGap * 0.005);
-    const favouriteCeiling = 3.2 - edge * 2;
+    const comebackFloor = Math.max(
+      0.65 + edge * 2 + Math.min(0.35, ratingGap * 0.005),
+      managedBoost.comebackFloor || 0,
+    );
+    const favouriteCeiling = Math.min(
+      3.2 - edge * 2,
+      managedBoost.favouriteCeiling || Number.POSITIVE_INFINITY,
+    );
     if (controlledSide === "home") {
       adjustedXG.homeXG = Math.max(adjustedXG.homeXG, comebackFloor);
       adjustedXG.awayXG = Math.min(adjustedXG.awayXG, favouriteCeiling);
@@ -5330,7 +7064,7 @@ function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
       adjustedXG.homeXG = Math.min(adjustedXG.homeXG, favouriteCeiling);
     }
   }
-  return { adjustedXG, tacticKey, opponentTacticKey, edge };
+  return { adjustedXG, tacticKey, opponentTacticKey, edge, managedBoost };
 }
 
 function simulateMatch(match, roundIndex) {
@@ -5410,7 +7144,7 @@ function simulateMatch(match, roundIndex) {
   let penalties = null;
   let shootout = null;
 
-  if (homeGoals === awayGoals) {
+  if (!match.allowDraw && homeGoals === awayGoals) {
     extraTime = true;
     const homeDepth = teamSimulationRatings(home).squadDepth;
     const awayDepth = teamSimulationRatings(away).squadDepth;
@@ -5420,7 +7154,7 @@ function simulateMatch(match, roundIndex) {
     awayGoals += poisson(adjustedXG.awayXG * 0.32 * awayExtraTimeFactor, random);
   }
 
-  if (homeGoals === awayGoals) {
+  if (!match.allowDraw && homeGoals === awayGoals) {
     const penaltyResult = simulatePenaltyShootout(
       home,
       away,
@@ -5435,7 +7169,7 @@ function simulateMatch(match, roundIndex) {
 
   const winnerId = penalties
     ? penalties.home > penalties.away ? home.id : away.id
-    : homeGoals > awayGoals ? home.id : away.id;
+    : homeGoals === awayGoals ? null : homeGoals > awayGoals ? home.id : away.id;
 
   const usedGoalMinutes = new Set();
   const homeEvents = goalEvents(
@@ -5497,6 +7231,18 @@ function createLiveMatchResult(match, roundIndex) {
 }
 
 function buildNextRound(roundIndex) {
+  if (isRetroSimulatorState()) {
+    const round = state.rounds[roundIndex];
+    if (!round?.every((match) => match.result?.revealed)) return;
+    round.forEach((match) => {
+      if (!match.result) return;
+      match.result.winner = match.result.winnerId ? teamById(match.result.winnerId)?.name || null : null;
+    });
+    if (roundIndex === 2 || roundIndex >= 3) RETRO_WORLD_CUP_ENGINE.advanceTournament(retroTournament);
+    state.rounds = retroSimulatorRounds();
+    saveRetroTournamentState();
+    return;
+  }
   if (roundIndex >= 7 || state.rounds[roundIndex + 1]) return;
   const round = state.rounds[roundIndex];
   if (!round.every((match) => match.result?.revealed)) return;
@@ -5551,7 +7297,7 @@ function advanceSpectatedRun() {
   const team = spectatedTeam();
   if (!team) return false;
   if (!teamIsAlive(team.id)) {
-    return true;
+    return false;
   }
 
   const matchIndex = teamMatchIndex(state.activeRound, team.id);
@@ -5571,14 +7317,27 @@ function advanceSpectatedRun() {
   });
   buildNextRound(state.activeRound);
 
-  if (state.activeRound < 7) {
+  if (state.activeRound < tournamentFinalRoundIndex()) {
+    const completedRound = state.activeRound;
     state.activeRound += 1;
     const nextMatchIndex = teamMatchIndex(state.activeRound, team.id);
+    if (isRetroSimulatorState() && completedRound === 2 && nextMatchIndex < 0) {
+      state.selectedMatch = 0;
+      state.neutralView = true;
+      state.championView = false;
+      fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+      filterUnresolved = false;
+      showToast(`${team.name} are out after the group stage. Continuing neutrally.`);
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return true;
+    }
     state.selectedMatch = Math.max(0, nextMatchIndex);
     state.championView = false;
     fixtureLimit = DEFAULT_FIXTURE_LIMIT;
     filterUnresolved = false;
-    showToast(`${team.name}'s ${ROUND_NAMES[state.activeRound]} match is ready.`);
+    showToast(`${team.name}'s ${tournamentRoundName()} match is ready.`);
   } else {
     state.championView = true;
   }
@@ -5589,13 +7348,17 @@ function advanceSpectatedRun() {
 }
 
 function goToNextTie() {
-  if (state.spectateTeamId && !state.neutralView && advanceSpectatedRun()) return;
+  const currentMatch = selectedMatch();
+  const selectedIsSpectatedMatch = state.spectateTeamId
+    && currentMatch
+    && (currentMatch.homeId === state.spectateTeamId || currentMatch.awayId === state.spectateTeamId);
+  if (selectedIsSpectatedMatch && !state.neutralView && advanceSpectatedRun()) return;
   const round = selectedRound();
-  const next = round.findIndex((match) => !match.result);
+  const next = round.findIndex((match) => !match.result?.revealed);
   if (next >= 0) {
     state.selectedMatch = next;
     state.championView = false;
-  } else if (state.activeRound < 7) {
+  } else if (state.activeRound < tournamentFinalRoundIndex()) {
     buildNextRound(state.activeRound);
     if (state.rounds[state.activeRound + 1]) {
       state.activeRound += 1;
@@ -5604,7 +7367,7 @@ function goToNextTie() {
       fixtureLimit = DEFAULT_FIXTURE_LIMIT;
       filterUnresolved = false;
       window.scrollTo({ top: 0, behavior: "smooth" });
-      showToast(`${ROUND_NAMES[state.activeRound]} is ready.`);
+      showToast(`${tournamentRoundName()} is ready.`);
     }
   } else {
     state.championView = true;
@@ -5706,6 +7469,7 @@ function createMatch2dState(match) {
     activeHighlight: null,
     actionIndex: 0,
     leadInRemaining: 0,
+    fullTimeClockQueued: false,
     complete: false,
     playedEventKeys: new Set(),
     nextAction: performance.now() + 450,
@@ -5726,9 +7490,11 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
   let homeEvents = mergeEvents("homeEvents");
   let awayEvents = mergeEvents("awayEvents");
   let redCards = mergeEvents("redCards");
+  homeEvents = removeDismissedPlayersFromFutureGoals(homeEvents, "home", redCards, match);
+  awayEvents = removeDismissedPlayersFromFutureGoals(awayEvents, "away", redCards, match);
   const regulationHome = homeEvents.filter((event) => event.minute <= 90).length;
   const regulationAway = awayEvents.filter((event) => event.minute <= 90).length;
-  const extraTime = regulationHome === regulationAway;
+  const extraTime = !match.allowDraw && regulationHome === regulationAway;
 
   if (!extraTime) {
     homeEvents = homeEvents.filter((event) => event.minute <= 90);
@@ -5741,7 +7507,7 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
   let penalties = null;
   let shootout = null;
   let winnerId;
-  if (homeGoals === awayGoals) {
+  if (!match.allowDraw && homeGoals === awayGoals) {
     const shootoutRandom = mulberry32(
       state.drawSeed + stableHash(`${match.id}-${state.standardTactic}-live-tactical-shootout`),
     );
@@ -5758,6 +7524,7 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
     winnerId = penalties.home > penalties.away ? match.homeId : match.awayId;
   } else {
     winnerId = homeGoals > awayGoals ? match.homeId : match.awayId;
+    if (homeGoals === awayGoals) winnerId = null;
   }
 
   return {
@@ -5786,6 +7553,34 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
   };
 }
 
+function removeDismissedPlayersFromFutureGoals(events, side, redCards, match) {
+  const team = teamById(side === "home" ? match.homeId : match.awayId);
+  if (!team) return events;
+  return events.map((event, index) => {
+    const dismissed = new Set(redCards
+      .filter((card) => card.side === side && card.minute <= event.minute)
+      .map((card) => card.player));
+    if (!dismissed.has(event.scorer) && !dismissed.has(event.assist)) return event;
+    const eligible = eligibleScorerProfiles(team, event.minute, redCards.filter((card) => card.side === side));
+    if (!eligible.length) return event;
+    const start = stableHash(`${match.id}:${side}:${event.minute}:${index}:dismissal-replacement`) % eligible.length;
+    const replacement = eligible[start];
+    const assistPool = eligible.filter((profile) => profile.name !== replacement.name);
+    return {
+      ...event,
+      scorer: dismissed.has(event.scorer) ? replacement.name : event.scorer,
+      assist: dismissed.has(event.assist)
+        ? (assistPool.length ? assistPool[start % assistPool.length].name : null)
+        : event.assist,
+    };
+  });
+}
+
+function displayedLiveMinute(playback = livePlayback) {
+  const displayed = Number(playback?.presentationClock?.snapshot().displayed);
+  return Number.isFinite(displayed) ? displayed : Number(playback?.minute) || 0;
+}
+
 function rebuildLiveMatchAfterTacticChange(match) {
   if (!livePlayback || !match2dState || livePlayback.matchId !== match.id) return false;
   if (match2dState.activeHighlight) {
@@ -5793,13 +7588,13 @@ function rebuildLiveMatchAfterTacticChange(match) {
     return true;
   }
   livePlayback.pendingTacticChange = false;
-  const cutoff = Math.max(
+  const displayedCutoff = displayedLiveMinute();
+  const resultCutoff = Math.max(
     Number(livePlayback.minute) || 0,
-    Number(livePlayback.presentationClock?.snapshot().displayed) || 0,
-    Number(match2dState.activeHighlight?.minute) || 0,
+    displayedCutoff,
   );
   const candidate = createLiveMatchResult(match, livePlayback.roundIndex);
-  match.result = mergeLiveTacticalResult(match.result, candidate, cutoff, match);
+  match.result = mergeLiveTacticalResult(match.result, candidate, resultCutoff, match);
   const controlledSide = state.spectateTeamId === match.homeId ? "home" : "away";
   const opponentKey = match.result.tacticalMatchup?.opponent || opponentStandardTactic(match, controlledSide);
   const presentation = createMatchHighlightPresentation({
@@ -5815,16 +7610,17 @@ function rebuildLiveMatchAfterTacticChange(match) {
   match.result.matchStats = presentation.stats;
   match2dState.presentation = presentation;
   match2dState.engine = presentation;
-  match2dState.cursor = presentation.highlights.findLastIndex((highlight) => highlight.minute <= cutoff);
+  match2dState.cursor = presentation.highlights.findLastIndex((highlight) => highlight.minute <= resultCutoff);
   match2dState.activeHighlight = null;
   match2dState.actionIndex = 0;
+  match2dState.fullTimeClockQueued = false;
   match2dState.complete = false;
   match2dState.nextAction = performance.now() + 180;
   livePlayback.maxMinute = match.result.extraTime ? 120 : 90;
-  livePlayback.visibleStats = matchStatsAtMinute(presentation.stats, cutoff);
+  livePlayback.visibleStats = matchStatsAtMinute(presentation.stats, displayedCutoff);
   livePlayback.presentationScheduler.clear("live-tactic-change");
   livePlayback.presentationClock = MatchPresentation.createClock({
-    initialMinute: cutoff,
+    initialMinute: displayedCutoff,
     maxMinute: livePlayback.maxMinute,
     speed: livePlayback.speed,
     now: performance.now(),
@@ -5976,21 +7772,21 @@ function processPossessionAction(action, timestamp, animate = true) {
   const isGoal = action.outcome === "goal" || action.event?.type === "goal";
   const isPenaltyGoal = isGoal && (action.event?.goalType === "penalty" || action.outcome === "penalty");
   const interactivePenalty = isPenaltyGoal && action.event && isControlledMatchPenalty(action.event);
-  if (interactivePenalty) {
-    const penaltyEvent = MatchPresentation.createEvent({
-      ...action.presentationEvent,
-      id: `${action.presentationEvent.id}:awarded`,
-      type: "penalty-awarded",
-      importance: "major",
-      scoreAfter: action.presentationEvent.scoreBefore,
-      metadata: { ...action.presentationEvent.metadata, commentary: `PENALTY TO ${teamById(action.event.teamId)?.name || "THE ATTACKING TEAM"}!` },
-    });
-    receivePresentationEvent(penaltyEvent, penaltyEvent.metadata.commentary, animate);
+  if (isPenaltyGoal && action.event && !livePlayback.matchPenaltyActive) {
+    if (interactivePenalty) {
+      const penaltyEvent = MatchPresentation.createEvent({
+        ...action.presentationEvent,
+        id: `${action.presentationEvent.id}:awarded`,
+        type: "penalty-awarded",
+        importance: "major",
+        scoreAfter: action.presentationEvent.scoreBefore,
+        metadata: { ...action.presentationEvent.metadata, commentary: `PENALTY TO ${teamById(action.event.teamId)?.name || "THE ATTACKING TEAM"}!` },
+      });
+      receivePresentationEvent(penaltyEvent, penaltyEvent.metadata.commentary, animate);
+    }
+    startMatchPenaltyAnimation(action.event, action);
   } else {
     receivePresentationAction(action, animate);
-  }
-  if (isPenaltyGoal && action.event && !livePlayback.matchPenaltyActive) {
-    startMatchPenaltyAnimation(action.event, action);
   }
   match2dState.nextAction = timestamp + duration + 90 / speed;
   els.match2dTacticLabel.textContent = match2dTacticSummary(match);
@@ -6034,8 +7830,10 @@ function beginMatchHighlight(highlight, timestamp) {
   match2dState.cursor = highlight.timelineIndex;
   match2dState.activeHighlight = highlight;
   match2dState.actionIndex = 0;
+  livePlayback.presentationClock.sync(highlight.minute, timestamp);
+  livePlayback.minute = Math.max(livePlayback.minute, highlight.minute);
   livePlayback.visibleStats = matchStatsAtMinute(match2dState.presentation.stats, highlight.minute);
-  els.livePhase.textContent = phaseForMinute(Math.floor(livePlayback.minute), selectedMatch().result);
+  els.livePhase.textContent = phaseForMinute(displayedLiveMinute(), selectedMatch().result);
   els.match2dViewer.hidden = true;
   els.matchCommentaryView.hidden = false;
   renderMatchAnalysis(selectedMatch(), true);
@@ -6129,8 +7927,18 @@ function createLivePresentationScheduler() {
 
 function receivePresentationEvent(baseEvent, commentary, animate = false) {
   if (!livePlayback) return "silent";
+  const scoreCorrection = livePlayback.penaltyScoreCorrections || { home: 0, away: 0 };
+  const correctScore = (score) => {
+    if (!score || baseEvent.metadata?.scoreCorrected) return score;
+    return {
+      home: Math.max(0, score.home - scoreCorrection.home),
+      away: Math.max(0, score.away - scoreCorrection.away),
+    };
+  };
   const event = MatchPresentation.createEvent({
     ...baseEvent,
+    scoreBefore: correctScore(baseEvent.scoreBefore),
+    scoreAfter: correctScore(baseEvent.scoreAfter),
     metadata: {
       ...baseEvent.metadata,
       commentary: commentary || baseEvent.metadata.commentary || baseEvent.type,
@@ -6300,13 +8108,28 @@ function getTeamColorCSS(team) {
 
 function stepMatch2dViewer(timestamp) {
   if (!match2dState || !livePlayback || match2dState.matchId !== livePlayback.matchId) return;
-  if (livePlayback.matchPenaltyActive && livePlayback.matchPenaltyContext) return;
+  if (livePlayback.matchPenaltyActive || livePlayback.matchPenaltyContext || els.matchStage.classList.contains("has-match-penalty")) return;
   if (timestamp < match2dState.nextAction || timestamp < match2dState.lockUntil) return;
   const speed = Math.max(0.5, livePlayback.speed || 1);
   const active = match2dState.activeHighlight;
-  // Process multiple cheap actions per frame, stop only for goals/major events
+  // Keep commentary tied to the match clock, while letting routine play flow smoothly.
   while (active && match2dState.actionIndex < active.actions.length) {
     const action = active.actions[match2dState.actionIndex];
+    const actionMinute = Number(
+      action.presentationEvent?.minute
+      ?? action.event?.minute
+      ?? active.minute,
+    );
+    const eventType = action.presentationEvent?.type || action.event?.type || "";
+    const timingSensitive = action.outcome === "goal"
+      || action.outcome === "penalty"
+      || Boolean(action.penalty)
+      || ["goal", "red", "penalty", "penalty-kick", "penalty-miss", "disallowed-goal"].includes(eventType);
+    const visibleMinute = livePlayback.presentationClock?.read(timestamp) ?? displayedLiveMinute();
+    if (timingSensitive && visibleMinute + 0.02 < actionMinute) {
+      match2dState.nextAction = timestamp + Math.max(8, 16 / speed);
+      return;
+    }
     match2dState.actionIndex += 1;
     const matchesMode = highlightMatchesMode(active);
     if (matchesMode) {
@@ -6332,6 +8155,18 @@ function stepMatch2dViewer(timestamp) {
   }
   const highlight = nextMatchHighlight();
   if (!highlight) {
+    const finalMinute = livePlayback.maxMinute;
+    if (!match2dState.fullTimeClockQueued) {
+      livePlayback.presentationClock.sync(finalMinute, timestamp);
+      match2dState.fullTimeClockQueued = true;
+    }
+    const visibleMinute = livePlayback.presentationClock.read(timestamp);
+    livePlayback.minute = Math.max(livePlayback.minute, visibleMinute);
+    livePlayback.visibleStats = matchStatsAtMinute(match2dState.presentation.stats, visibleMinute);
+    if (visibleMinute + 0.02 < finalMinute) {
+      match2dState.nextAction = timestamp + Math.max(8, 24 / speed);
+      return;
+    }
     match2dState.complete = true;
     return;
   }
@@ -6353,14 +8188,25 @@ function showMatch2dEvent(event) {
   }, event.goalType === "penalty" ? 1200 : 760);
 }
 
+function isPenaltyGoalEvent(event) {
+  return event?.goalType === "penalty"
+    || event?.metadata?.goalType === "penalty"
+    || ["penalty", "penalty-kick"].includes(event?.type);
+}
+
+function goalMinuteText(event) {
+  return `${event.minute}'${isPenaltyGoalEvent(event) ? " (P)" : ""}`;
+}
+
 function timelineEventMarkup(event, away = false, animate = false) {
   if (!["goal", "red"].includes(event.type)) return "";
   const marker = event.type === "red" ? "<i></i>" : "";
+  const minute = event.type === "goal" ? goalMinuteText(event) : `${event.minute}'`;
   return `
     <div class="event timeline-event ${event.type === "red" ? "red-event" : "goal-event"} ${animate ? "event-enter" : ""}">
       ${away
-    ? `<b>${event.minute}'</b><span>${event.player}</span>${marker}`
-    : `${marker}<span>${event.player}</span><b>${event.minute}'</b>`}
+    ? `<b>${minute}</b><span>${event.player}</span>${marker}`
+    : `${marker}<span>${event.player}</span><b>${minute}</b>`}
     </div>
   `;
 }
@@ -6427,6 +8273,9 @@ function applyLiveEvent(event, animate = true) {
   els.homeDiscipline.innerHTML = disciplineMarkup(livePlayback.homeReds);
   els.awayDiscipline.innerHTML = disciplineMarkup(livePlayback.awayReds);
   appendLiveTimelineEvent(event, animate);
+  if (isRetroSimulatorState() && retroGroupStageDisplayActive()) {
+    renderGoldenBoot();
+  }
 }
 
 function ensureShootoutSequence(match) {
@@ -6442,6 +8291,78 @@ function ensureShootoutSequence(match) {
   );
 }
 
+function repairSavedShootoutSequence(match) {
+  const sequence = match?.result?.shootout;
+  if (!Array.isArray(sequence) || !sequence.length) return;
+  const home = teamById(match.homeId);
+  const away = teamById(match.awayId);
+  const cards = match.result.redCards || [];
+  const suspendedPlayers = match.result.suspendedPlayers || { home: [], away: [] };
+  const validTakers = {
+    home: new Set(shootoutTakerPool(
+      home,
+      suspendedPlayers.home || [],
+      cards.filter((card) => card.side === "home").map((card) => card.player),
+    )),
+    away: new Set(shootoutTakerPool(
+      away,
+      suspendedPlayers.away || [],
+      cards.filter((card) => card.side === "away").map((card) => card.player),
+    )),
+  };
+  if (sequence.some((attempt) => !validTakers[attempt.side]?.has(attempt.player))) {
+    const random = mulberry32(state.drawSeed + stableHash(`${match.id}-shootout`));
+    match.result.shootout = createShootoutSequence(
+      home,
+      away,
+      match.result.penalties,
+      random,
+      cards,
+      suspendedPlayers,
+    );
+    return;
+  }
+  let repaired = false;
+  sequence.forEach((attempt) => {
+    if (
+      attempt?.scored === false
+      && attempt.missType !== "wide"
+      && attempt.direction === "centre"
+      && attempt.keeperDive !== "centre"
+    ) {
+      attempt.scored = true;
+      attempt.missType = null;
+      repaired = true;
+    }
+  });
+  if (!repaired) return;
+
+  let homeScore = 0;
+  let awayScore = 0;
+  let homeKicks = 0;
+  let awayKicks = 0;
+  let winnerSide = null;
+  let finalIndex = sequence.length - 1;
+  sequence.some((attempt, index) => {
+    if (attempt.side === "home") {
+      homeKicks += 1;
+      if (attempt.scored) homeScore += 1;
+    } else {
+      awayKicks += 1;
+      if (attempt.scored) awayScore += 1;
+    }
+    winnerSide = standardShootoutWinner({ homeScore, awayScore, homeKicks, awayKicks });
+    if (!winnerSide) return false;
+    finalIndex = index;
+    return true;
+  });
+  match.result.shootout = sequence.slice(0, finalIndex + 1);
+  match.result.penalties = { home: homeScore, away: awayScore };
+  if (winnerSide) {
+    match.result.winnerId = winnerSide === "home" ? match.homeId : match.awayId;
+  }
+}
+
 function penaltyDirectionCopy(direction) {
   if (direction === "wide-left") return "towards the left post";
   if (direction === "wide-right") return "towards the right post";
@@ -6451,7 +8372,34 @@ function penaltyDirectionCopy(direction) {
 function penaltyDirectionTarget(direction, random) {
   if (direction === "left") return random() < 0.5 ? "bottom-left" : "top-left";
   if (direction === "right") return random() < 0.5 ? "bottom-right" : "top-right";
+  if (direction === "wide-left" || direction === "wide-right") return direction;
   return "middle";
+}
+
+function normalizePenaltyAttemptVisual(attempt) {
+  if (!attempt) return attempt;
+  const saved = attempt.scored === false && attempt.missType !== "wide";
+  if (saved) {
+    attempt.keeperDive = attempt.direction;
+  } else if (attempt.scored && !attempt.preserveKeeperDive) {
+    attempt.keeperDive = distinctKeeperDiveForGoal(
+      attempt.direction,
+      attempt.keeperDive,
+      attempt.round || 0,
+    );
+  }
+
+  if (String(attempt.direction || "").startsWith("wide")) {
+    attempt.target = attempt.direction;
+  } else if (typeof attempt.scored === "boolean") {
+    const targetDirection = STANDARD_PENALTY_TARGETS.includes(attempt.target)
+      ? onlinePenaltyDirection(attempt.target)
+      : null;
+    if (!targetDirection || targetDirection !== attempt.direction) {
+      attempt.target = penaltyDirectionTarget(attempt.direction || "centre", () => 0);
+    }
+  }
+  return attempt;
 }
 
 function penaltyMissCopy(attempt) {
@@ -6505,6 +8453,9 @@ function penaltyMarksMarkup(side) {
 
 function setPenaltySceneElement(scene, attempt, step) {
   if (!attempt) return;
+  normalizePenaltyAttemptVisual(attempt);
+  scene.dataset.target = attempt.target || "middle";
+  scene.dataset.keeperTarget = attempt.goalkeeperTarget || attempt.keeperDive || "centre";
   if (step === "setup") {
     scene.classList.add("is-resetting");
     scene.dataset.state = "setup";
@@ -6572,7 +8523,8 @@ function chooseStandardPenaltyTarget(target) {
   if (!STANDARD_PENALTY_TARGETS.includes(target)) return;
   const attempt = livePlayback.shootout[livePlayback.shootoutIndex];
   if (!attempt?.interactive || attempt.target || livePlayback.shootoutStep !== "setup") return;
-  resolveManualPenaltyAttempt(attempt, target);
+  if (attempt.interactionRole === "keeper") resolveKeeperPenaltyAttempt(attempt, target);
+  else resolveManualPenaltyAttempt(attempt, target);
   renderPenaltyStage();
   schedulePenaltyStep(120);
 }
@@ -6583,16 +8535,55 @@ function resolveManualPenaltyAttempt(attempt, target) {
   attempt.target = target;
   attempt.direction = onlinePenaltyDirection(target);
   attempt.keeperDive = onlinePenaltyDirection(attempt.goalkeeperTarget);
-  attempt.scored = !goalkeeperMatched || attempt.outcomeRoll < goalChance;
+  attempt.scored = attempt.outcomeRoll < goalChance;
   attempt.missType = attempt.scored ? null : "save";
-  if (!attempt.scored) attempt.keeperDive = attempt.direction;
+  attempt.keeperDive = attempt.scored
+    ? distinctKeeperDiveForGoal(attempt.direction, attempt.keeperDive, attempt.round || 0)
+    : attempt.direction;
   return attempt;
 }
 
 function manualPenaltyGoalChance(conversionChance, goalkeeperMatched) {
   return goalkeeperMatched
-    ? simulationClamp(conversionChance * 0.15, 0.05, 0.15)
+    ? 0
     : 1;
+}
+
+function keeperPenaltyGoalChance(conversionChance, goalkeeperMatched) {
+  if (goalkeeperMatched) return 0;
+  const baseChance = Number.isFinite(Number(conversionChance))
+    ? Number(conversionChance)
+    : 0.745;
+  return simulationClamp(baseChance / 0.8, 0.72, 0.985);
+}
+
+function resolveKeeperPenaltyAttempt(attempt, goalkeeperTarget) {
+  const shotTarget = STANDARD_PENALTY_TARGETS.includes(attempt.shotTarget)
+    ? attempt.shotTarget
+    : "middle";
+  const goalkeeperMatched = goalkeeperTarget === shotTarget;
+  const goalChance = keeperPenaltyGoalChance(attempt.conversionChance, goalkeeperMatched);
+  const outcomeRoll = Number.isFinite(Number(attempt.outcomeRoll))
+    ? Number(attempt.outcomeRoll)
+    : 0;
+  attempt.target = shotTarget;
+  attempt.direction = onlinePenaltyDirection(shotTarget);
+  attempt.goalkeeperTarget = goalkeeperTarget;
+  attempt.keeperDive = onlinePenaltyDirection(goalkeeperTarget);
+  attempt.scored = outcomeRoll < goalChance;
+  attempt.missType = attempt.scored ? null : goalkeeperMatched ? "save" : "wide";
+  if (attempt.missType === "wide") {
+    attempt.direction = `wide-${outcomeRoll * 1000 % 2 < 1 ? "left" : "right"}`;
+    attempt.target = attempt.direction;
+  }
+  attempt.preserveKeeperDive = true;
+  return attempt;
+}
+
+function shootoutRoundConversionChance(conversionChance, round) {
+  const suddenDeathRounds = Math.max(0, Number(round || 1) - 5);
+  const fatiguePenalty = Math.min(0.16, suddenDeathRounds * 0.015);
+  return Math.max(0.58, Number(conversionChance || 0.74) - fatiguePenalty);
 }
 
 function clearMatchPenaltyAnimation() {
@@ -6602,15 +8593,15 @@ function clearMatchPenaltyAnimation() {
   livePlayback.matchPenaltyActive = false;
   livePlayback.matchPenaltyContext = null;
   els.matchPenaltyOverlay.hidden = true;
-  els.matchPenaltyOverlay.classList.remove("is-awaiting-choice");
+  els.matchPenaltyOverlay.classList.remove("is-awaiting-choice", "is-keeper-choice");
   els.matchStage.classList.remove("has-match-penalty");
 }
 
-function matchPenaltyAttempt(event, interactive = false) {
+function matchPenaltyAttempt(event, interactionRole = null) {
   const team = teamById(event.teamId);
   const opponent = teamById(event.side === "home" ? selectedMatch().awayId : selectedMatch().homeId);
   const random = mulberry32(state.drawSeed + stableHash(`${livePlayback.matchId}-${event.side}-${event.minute}-${event.player}-match-penalty`));
-  if (interactive) {
+  if (interactionRole === "taker") {
     const goalkeeperTarget = STANDARD_PENALTY_TARGETS[Math.floor(random() * STANDARD_PENALTY_TARGETS.length)];
     return {
       player: event.player,
@@ -6623,33 +8614,37 @@ function matchPenaltyAttempt(event, interactive = false) {
       outcomeRoll: random(),
       target: null,
       interactive: true,
+      interactionRole,
+      foot: preferredPenaltyFoot(team, event.player, random),
+    };
+  }
+  if (interactionRole === "keeper") {
+    const shotTarget = STANDARD_PENALTY_TARGETS[Math.floor(random() * STANDARD_PENALTY_TARGETS.length)];
+    return {
+      player: event.player,
+      side: event.side,
+      scored: null,
+      direction: "centre",
+      keeperDive: "centre",
+      goalkeeperTarget: null,
+      shotTarget,
+      conversionChance: shootoutConversionChance(team, opponent, state.settings.upset),
+      outcomeRoll: random(),
+      target: null,
+      interactive: true,
+      interactionRole,
       foot: preferredPenaltyFoot(team, event.player, random),
     };
   }
   const directions = ["left", "centre", "right"];
-  if (event.authoritative) {
-    const direction = directions[Math.floor(random() * directions.length)];
-    const keeperDive = distinctKeeperDiveForGoal(
-      direction,
-      directions[Math.floor(random() * directions.length)],
-      event.minute,
-    );
-    return {
-      player: event.player,
-      side: event.side,
-      scored: true,
-      direction,
-      keeperDive,
-      missType: null,
-      foot: preferredPenaltyFoot(team, event.player, random),
-    };
-  }
+  const conversionChance = shootoutConversionChance(team, opponent, state.settings.upset);
+  const scored = random() < conversionChance;
   let direction = directions[Math.floor(random() * directions.length)];
   let keeperDive = directions[Math.floor(random() * directions.length)];
-  const conversionChance = shootoutConversionChance(team, opponent, state.settings.upset);
-  const scored = random() < (keeperDive === direction ? conversionChance * 0.5 : conversionChance);
   let missType = null;
-  if (!scored) {
+  if (scored) {
+    keeperDive = distinctKeeperDiveForGoal(direction, keeperDive, event.minute);
+  } else {
     ({ direction, keeperDive, missType } = missedPenaltyVisual(
       event.side,
       team,
@@ -6666,13 +8661,14 @@ function matchPenaltyAttempt(event, interactive = false) {
     direction,
     keeperDive,
     missType,
+    target: penaltyDirectionTarget(direction, random),
     foot: preferredPenaltyFoot(team, event.player, random),
   };
 }
 
 function removeSavedPenaltyGoal(event) {
   const match = selectedMatch();
-  if (!match?.result || !["home", "away"].includes(event.side)) return;
+  if (!match?.result || !["home", "away"].includes(event.side)) return false;
   const eventsKey = event.side === "home" ? "homeEvents" : "awayEvents";
   const goalsKey = event.side === "home" ? "homeGoals" : "awayGoals";
   const regulationKey = event.side === "home" ? "regulationHome" : "regulationAway";
@@ -6682,16 +8678,53 @@ function removeSavedPenaltyGoal(event) {
     && stored.scorer === event.player
     && stored.goalType === "penalty"
   ));
-  if (storedIndex < 0) return;
+  if (storedIndex < 0) return false;
   storedEvents.splice(storedIndex, 1);
   match.result[goalsKey] = Math.max(0, match.result[goalsKey] - 1);
   if (event.minute <= 90) {
     match.result[regulationKey] = Math.max(0, match.result[regulationKey] - 1);
   }
+  if (livePlayback) {
+    livePlayback.penaltyScoreCorrections ||= { home: 0, away: 0 };
+    livePlayback.penaltyScoreCorrections[event.side] += 1;
+  }
+  return true;
+}
+
+function matchPenaltyResultPublisher(playback, event, attempt, action) {
+  if (attempt.scored) return () => receivePresentationAction(action, true);
+  removeSavedPenaltyGoal(event);
+  const score = { home: playback.homeScore, away: playback.awayScore };
+  const missedEvent = MatchPresentation.createEvent({
+    ...event,
+    id: `${event.id}:miss`,
+    type: "penalty-miss",
+    importance: "major",
+    scoreBefore: score,
+    scoreAfter: score,
+    metadata: {
+      ...event.metadata,
+      scorer: event.player,
+      goalType: "penalty",
+      scored: false,
+      scoreCorrected: true,
+    },
+  });
+  const commentary = attempt.missType === "wide"
+    ? `${event.player} sends the penalty wide.`
+    : `${event.player}'s penalty is saved.`;
+  return () => receivePresentationEvent(missedEvent, commentary, true);
+}
+
+function controlledMatchPenaltyRole(event) {
+  if (!state.spectateTeamId) return null;
+  const match = selectedMatch();
+  if (![match?.homeId, match?.awayId].includes(state.spectateTeamId)) return null;
+  return event.teamId === state.spectateTeamId ? "taker" : "keeper";
 }
 
 function isControlledMatchPenalty(event) {
-  return Boolean(state.spectateTeamId && event.teamId === state.spectateTeamId);
+  return Boolean(controlledMatchPenaltyRole(event));
 }
 
 function finishMatchPenaltyAnimation(playback, event, attempt, startDelay = 0, onDismiss = null) {
@@ -6729,14 +8762,14 @@ function finishMatchPenaltyAnimation(playback, event, attempt, startDelay = 0, o
     playback.matchPenaltyTimers = [];
     playback.matchPenaltyContext = null;
     els.matchPenaltyOverlay.hidden = true;
-    els.matchPenaltyOverlay.classList.remove("is-awaiting-choice");
+    els.matchPenaltyOverlay.classList.remove("is-awaiting-choice", "is-keeper-choice");
     els.matchStage.classList.remove("has-match-penalty");
     if (typeof onDismiss === "function") onDismiss();
-  }, resultAt + delay(630)));
+  }, resultAt + delay(1300)));
 }
 
 function matchPenaltySceneTarget(attempt, interactive) {
-  return interactive ? attempt?.target || "middle" : "";
+  return attempt?.target || (interactive ? "middle" : penaltyDirectionTarget(attempt?.direction || "centre", () => 0));
 }
 
 function chooseMatchPenaltyTarget(target) {
@@ -6744,30 +8777,13 @@ function chooseMatchPenaltyTarget(target) {
   if (!context || !STANDARD_PENALTY_TARGETS.includes(target)) return;
   const { playback, event, attempt, action } = context;
   if (livePlayback !== playback || !attempt.interactive || attempt.target) return;
-  resolveManualPenaltyAttempt(attempt, target);
-  let publishResult;
-  if (attempt.scored) {
-    publishResult = () => receivePresentationAction(action, true);
-  } else {
-    removeSavedPenaltyGoal(event);
-    const score = { home: playback.homeScore, away: playback.awayScore };
-    const missedEvent = MatchPresentation.createEvent({
-      ...event,
-      id: `${event.id}:miss`,
-      type: "penalty-miss",
-      importance: "major",
-      scoreBefore: score,
-      scoreAfter: score,
-      metadata: { ...event.metadata, scorer: event.player, goalType: "penalty", scored: false },
-    });
-    publishResult = () => receivePresentationEvent(
-      missedEvent,
-      `${event.player} misses from the spot.`,
-      true,
-    );
-  }
+  if (attempt.interactionRole === "keeper") resolveKeeperPenaltyAttempt(attempt, target);
+  else resolveManualPenaltyAttempt(attempt, target);
+  const publishResult = matchPenaltyResultPublisher(playback, event, attempt, action);
   els.matchPenaltyScene.dataset.target = target;
-  els.matchPenaltyPlayer.textContent = `${event.player} shoots`;
+  els.matchPenaltyPlayer.textContent = attempt.interactionRole === "keeper"
+    ? `${event.player} takes the penalty`
+    : `${event.player} shoots`;
   els.matchPenaltyOverlay.classList.remove("is-awaiting-choice");
   playback.matchPenaltyContext = null;
   saveState();
@@ -6777,8 +8793,9 @@ function chooseMatchPenaltyTarget(target) {
 function startMatchPenaltyAnimation(event, action) {
   if (!livePlayback || livePlayback.matchPenaltyActive) return;
   const playback = livePlayback;
-  const interactive = isControlledMatchPenalty(event);
-  const attempt = matchPenaltyAttempt(event, interactive);
+  const interactionRole = controlledMatchPenaltyRole(event);
+  const interactive = Boolean(interactionRole);
+  const attempt = matchPenaltyAttempt(event, interactionRole);
   const motionScale = playback.reducedMotion ? 0.15 : 1;
   const delay = (duration) => Math.max(40, duration * motionScale);
   const whistleLeadIn = 1050;
@@ -6787,7 +8804,9 @@ function startMatchPenaltyAnimation(event, action) {
   playback.matchPenaltyTimers = [];
   playback.matchPenaltyContext = interactive ? { playback, event, attempt, action } : null;
   els.matchPenaltyPlayer.textContent = interactive
-    ? `${event.player}: choose your target`
+    ? interactionRole === "keeper"
+      ? `${event.player}: choose where to dive`
+      : `${event.player}: choose your target`
     : `${event.player} steps up`;
   playWhistleSound();
 
@@ -6795,13 +8814,23 @@ function startMatchPenaltyAnimation(event, action) {
     if (livePlayback !== playback) return;
     els.matchPenaltyOverlay.hidden = false;
     els.matchPenaltyOverlay.classList.toggle("is-awaiting-choice", interactive);
+    els.matchPenaltyOverlay.classList.toggle("is-keeper-choice", interactionRole === "keeper");
+    els.matchPenaltyOverlay.querySelector(".match-penalty-targets")
+      ?.setAttribute("aria-label", interactionRole === "keeper" ? "Choose where to dive" : "Choose where to shoot");
     els.matchStage.classList.add("has-match-penalty");
     els.matchPenaltyScene.dataset.target = matchPenaltySceneTarget(attempt, interactive);
     setPenaltySceneElement(els.matchPenaltyScene, attempt, "setup");
   }, whistleLeadIn));
 
   if (!interactive) {
-    finishMatchPenaltyAnimation(playback, event, attempt, whistleLeadIn + setupHold);
+    const publishResult = matchPenaltyResultPublisher(playback, event, attempt, action);
+    finishMatchPenaltyAnimation(
+      playback,
+      event,
+      attempt,
+      whistleLeadIn + setupHold,
+      publishResult,
+    );
   }
 }
 
@@ -6813,9 +8842,13 @@ function renderPenaltyStage() {
   const attempt = livePlayback.shootout[livePlayback.shootoutIndex];
   const step = livePlayback.shootoutStep;
   const awaitingChoice = Boolean(attempt?.interactive && !attempt.target && step === "setup");
+  const keeperChoice = awaitingChoice && attempt.interactionRole === "keeper";
   const motionScale = livePlayback.reducedMotion ? 0.02 : 1 / livePlayback.speed;
 
   els.penaltyStage.classList.toggle("is-awaiting-choice", awaitingChoice);
+  els.penaltyStage.classList.toggle("is-keeper-choice", keeperChoice);
+  els.penaltyStage.querySelector(".standard-penalty-targets")
+    ?.setAttribute("aria-label", keeperChoice ? "Choose where to dive" : "Choose where to shoot");
   els.penaltyStage.querySelectorAll("[data-standard-penalty-target]").forEach((button) => {
     button.disabled = !awaitingChoice || livePlayback.paused;
   });
@@ -6843,8 +8876,11 @@ function renderPenaltyStage() {
   }
 
   els.penaltyPlayer.textContent = attempt.player;
+  const choiceCopy = keeperChoice
+    ? `${attempt.side === "home" ? home.name : away.name} · pick your save`
+    : `${attempt.side === "home" ? home.name : away.name} · pick your spot`;
   els.penaltyOutcome.textContent = awaitingChoice
-    ? `${attempt.side === "home" ? home.name : away.name} · pick your spot`
+    ? choiceCopy
     : step === "setup"
       ? `${attempt.side === "home" ? home.name : away.name} · steps up · ${attempt.foot || "right"}-footed`
     : step === "flight"
@@ -6931,18 +8967,16 @@ function advancePenaltyShootout() {
     const score = attempt.side === "home" ? els.penaltyHomeScore : els.penaltyAwayScore;
     score.classList.add("score-pop");
     setTimeout(() => score.classList.remove("score-pop"), penaltyStepDelay(230));
-    schedulePenaltyStep(900);
+    schedulePenaltyStep(1500);
     return;
   }
 
-  if (livePlayback.interactiveShootout) {
-    const shootoutState = completedInteractiveShootoutState(livePlayback);
-    const winnerSide = standardShootoutWinner(shootoutState);
-    if (winnerSide) {
-      finalizeInteractiveShootout(winnerSide);
-      finishPenaltyShootout();
-      return;
-    }
+  const shootoutState = completedInteractiveShootoutState(livePlayback);
+  const winnerSide = standardShootoutWinner(shootoutState);
+  if (winnerSide) {
+    if (livePlayback.interactiveShootout) finalizeInteractiveShootout(winnerSide);
+    finishPenaltyShootout();
+    return;
   }
 
   if (livePlayback.shootoutIndex >= livePlayback.shootout.length - 1) {
@@ -6970,6 +9004,7 @@ function startPenaltyShootout() {
   if (!livePlayback) return;
   const match = state.rounds[livePlayback.roundIndex]?.[livePlayback.matchIndex];
   ensureShootoutSequence(match);
+  repairSavedShootoutSequence(match);
   const controlledSide = controlledStandardShootoutSide(match);
   if (controlledSide) {
     match.result.shootout = createInteractiveShootoutSequence(match, controlledSide);
@@ -7013,7 +9048,11 @@ function finishLivePlayback() {
   saveState();
   render();
 
-  const winner = teamById(match.result.winnerId);
+  const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
+  if (!winner) {
+    showToast(`${teamById(match.homeId).name} and ${teamById(match.awayId).name} share the points.`);
+    return;
+  }
   const loser = winner.id === match.homeId ? teamById(match.awayId) : teamById(match.homeId);
   const isShock = loser.strength - winner.strength > 12;
   showToast(isShock ? `Giant-killing! ${winner.name} send ${loser.name} home.` : `${winner.name} advance.`);
@@ -7040,6 +9079,19 @@ function resolveInteractiveExtraTime(match, playback) {
   result.awayGoals = (result.awayEvents || []).length;
   result.regulationHome = (result.homeEvents || []).filter((event) => event.minute <= 90).length;
   result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
+  if (match.allowDraw) {
+    result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
+    result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
+    result.homeGoals = result.regulationHome;
+    result.awayGoals = result.regulationAway;
+    result.extraTime = false;
+    result.penalties = null;
+    result.shootout = null;
+    result.winnerId = result.homeGoals === result.awayGoals
+      ? null
+      : result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
+    return;
+  }
   if (result.regulationHome !== result.regulationAway) {
     result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
     result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
@@ -7115,7 +9167,12 @@ function stepLivePlayback(timestamp) {
       reducedMotion: livePlayback.reducedMotion,
     });
     const displayedMinute = livePlayback.presentationClock.read(timestamp);
-    els.liveClock.textContent = clockText(displayedMinute);
+    const displayedClock = clockText(displayedMinute);
+    if (displayedClock !== livePlayback.lastClockText) {
+      els.liveClock.textContent = displayedClock;
+      els.livePhase.textContent = phaseForMinute(displayedMinute, selectedMatch().result);
+      livePlayback.lastClockText = displayedClock;
+    }
     if (match2dState?.complete) {
       const match = selectedMatch();
       finalizeHighlightResult(match, livePlayback);
@@ -7146,6 +9203,16 @@ function stepLivePlayback(timestamp) {
 
 function startLivePlayback(match) {
   try {
+  if (livePlayback) {
+    cancelAnimationFrame(livePlayback.frame);
+    clearTimeout(livePlayback.finishTimer);
+    clearTimeout(livePlayback.penaltyTimer);
+    livePlayback.matchPenaltyTimers?.forEach((timer) => clearTimeout(timer));
+    livePlayback.presentationScheduler?.clear("new-match");
+    livePlayback.commentaryFeed = [];
+  }
+  if (match2dState?.eventTimer) clearTimeout(match2dState.eventTimer);
+  match2dState = null;
   window.__playbackDebug = {
     startCalled: true,
     rafRequested: false,
@@ -7190,9 +9257,16 @@ function startLivePlayback(match) {
     reducedMotion,
     paused: false,
     highlightMode: preferredHighlightMode,
-    commentaryFeed: [],
+    commentaryFeed: [{
+      minute: 0,
+      text: `${teamById(match.homeId).name} get the match under way against ${teamById(match.awayId).name}.`,
+      type: "kickoff",
+      emphasis: "normal",
+      eventId: `${match.id}:kickoff`,
+    }],
     _goalFlashTimer: null,
     visibleStats: null,
+    lastClockText: "",
     lastTimestamp: 0,
     ending: false,
     fullTimeWhistlePlayed: false,
@@ -7202,6 +9276,7 @@ function startLivePlayback(match) {
     matchPenaltyActive: false,
     matchPenaltyTimers: [],
     matchPenaltyContext: null,
+    penaltyScoreCorrections: { home: 0, away: 0 },
     pendingTacticChange: false,
     presentationClock: null,
     presentationScheduler: null,
@@ -7397,7 +9472,11 @@ function revealSelected() {
   saveState();
   render();
 
-  const winner = teamById(match.result.winnerId);
+  const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
+  if (!winner) {
+    showToast("The points are shared.");
+    return;
+  }
   const loser = winner.id === match.homeId ? teamById(match.awayId) : teamById(match.homeId);
   const gap = loser.strength - winner.strength;
   showToast(gap > 12 ? `Huge upset — ${winner.name} knock out ${loser.name}!` : `${winner.name} advance.`);
@@ -7420,7 +9499,7 @@ function simulateCurrentRound() {
     state.championView = false;
     saveState();
     render();
-    showToast(`Other ${ROUND_NAMES[state.activeRound]} ties simulated. Your team's match is ready.`);
+    showToast(`Other ${tournamentRoundName()} ties simulated. Your team's match is ready.`);
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
@@ -7431,13 +9510,13 @@ function simulateCurrentRound() {
   });
   buildNextRound(state.activeRound);
 
-  if (state.activeRound < 7) {
+  if (state.activeRound < tournamentFinalRoundIndex()) {
     state.activeRound += 1;
     state.selectedMatch = 0;
     state.championView = false;
     fixtureLimit = DEFAULT_FIXTURE_LIMIT;
     filterUnresolved = false;
-    showToast(`${ROUND_NAMES[state.activeRound - 1]} complete. The next draw is ready.`);
+    showToast(`${tournamentRoundName(state.activeRound - 1)} complete. The next fixtures are ready.`);
   } else {
     state.championView = true;
   }
@@ -7454,10 +9533,10 @@ function requestRoundSimulation() {
   }
   const watchedMatchIndex = teamMatchIndex(state.activeRound);
   const watchingActiveTeam = watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed;
-  const matchLabel = state.activeRound === 7 ? "match" : "matches";
+  const matchLabel = state.activeRound === tournamentFinalRoundIndex() ? "match" : "matches";
   els.simulateRoundConfirmCopy.textContent = watchingActiveTeam
-    ? `Simulate every ${ROUND_NAMES[state.activeRound]} tie except your team's match?`
-    : `Simulate the ${ROUND_NAMES[state.activeRound]} ${matchLabel}?`;
+    ? `Simulate every ${tournamentRoundName()} tie except your team's match?`
+    : `Simulate the ${tournamentRoundName()} ${matchLabel}?`;
   els.simulateRoundModal.showModal();
 }
 
@@ -7523,7 +9602,10 @@ function matchStatValue(value, suffix = "") {
 
 function renderMatchAnalysis(match, isLive = false) {
   if (!els.matchStatsGrid) return;
-  if (!match?.result) { els.matchStatsGrid.innerHTML = '<div class="match-stat-row"><span style="grid-column:1/-1;color:#4a6080">No match selected</span></div>'; return; }
+  if (!match?.result) {
+    els.matchStatsGrid.innerHTML = '<div class="match-stat-row match-stats-empty"><span>No match selected</span></div>';
+    return;
+  }
   const visible = isLive || match.result.revealed;
   if (!visible) { els.matchStatsGrid.innerHTML = ""; return; }
   const presentation = analysisPresentationForMatch(match);
@@ -7625,6 +9707,8 @@ function clearChampionConfetti() {
 }
 
 function renderStage() {
+  placeSnapshotButtonOnChampionScreen(false);
+  els.stageRoundLabel.hidden = Boolean(state.championView);
   els.penaltyStage.hidden = true;
   els.standardMatchTactics.hidden = true;
   els.standardMatchTactics.closest(".insight-right")?.classList.add("tactics-hidden");
@@ -7633,14 +9717,31 @@ function renderStage() {
   els.matchPenaltyOverlay.hidden = !livePlayback?.matchPenaltyActive;
   els.matchStage.classList.remove("is-shootout");
   els.snapshotButton.hidden = true;
+  if (els.retroMatchLineupsPanel) els.retroMatchLineupsPanel.hidden = true;
   els.spectateEliminationActions.hidden = true;
   els.stageAction.classList.remove("has-elimination-actions");
   els.playButton.hidden = false;
   if (state.championView) {
-    const final = state.rounds[7]?.[0];
+    const finalRound = state.rounds[tournamentFinalRoundIndex()] || [];
+    const final = isRetroSimulatorState()
+      ? finalRound.find((match) => match.id === "ko-final")
+      : finalRound[0];
     const champion = final?.result ? teamById(final.result.winnerId) : null;
     if (champion) {
       const topScorer = calculateTopGoalscorer();
+      placeSnapshotButtonOnChampionScreen(true);
+      const trophy = els.championStage.querySelector(".trophy");
+      const summary = els.championStage.querySelector(".champion-content > p");
+      if (trophy) {
+        trophy.textContent = isRetroSimulatorState()
+          ? `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
+          : "256 TEAMS WC CHAMPIONS";
+      }
+      if (summary) {
+        summary.textContent = isRetroSimulatorState()
+          ? "Seven matches. One unforgettable World Cup."
+          : "Eight wins. A field of 256 conquered.";
+      }
       els.matchContent.hidden = true;
       els.championStage.hidden = false;
       els.championFlag.innerHTML = flagMarkup(champion, "hero-flag");
@@ -7696,10 +9797,20 @@ function renderStage() {
   });
   els.match2dTacticLabel.textContent = match2dTacticSummary(match);
   els.snapshotButton.hidden = !revealed || Boolean(isLive);
+  if (els.retroMatchLineupsPanel && els.retroMatchLineupsBody && isRetroSimulatorState()) {
+    const matchChanged = els.retroMatchLineupsPanel.dataset.matchId !== match.id;
+    els.retroMatchLineupsPanel.hidden = false;
+    els.retroMatchLineupsPanel.dataset.matchId = match.id;
+    els.retroMatchLineupsBody.innerHTML = `
+      ${retroLineupSideMarkup(home.name)}
+      ${retroLineupSideMarkup(away.name)}
+    `;
+    if (matchChanged || isLive || result) els.retroMatchLineupsPanel.open = false;
+  }
   renderMatchAnalysis(match, Boolean(isLive));
 
   els.matchNumber.textContent = `${state.selectedMatch + 1}/${selectedRound().length}`;
-  els.stageRoundLabel.textContent = ROUND_NAMES[state.activeRound].toUpperCase();
+  els.stageRoundLabel.textContent = tournamentMatchRoundName(match).toUpperCase();
   els.homeSeed.textContent = "";
   els.awaySeed.textContent = "";
   els.homeFlag.innerHTML = flagMarkup(home, "hero-flag");
@@ -7727,13 +9838,14 @@ function renderStage() {
     isLive ? livePlayback.awayReds : revealed ? (result.redCards || []).filter((card) => card.side === "away") : [],
   );
   if (isLive) {
+    const displayedMinute = displayedLiveMinute();
     els.homeEventSide.hidden = false;
     els.awayEventSide.hidden = false;
     els.eventLiveClock.hidden = isShootout;
     els.eventControls.hidden = false;
     els.skipControl.hidden = isShootout;
-    els.liveClock.textContent = clockText(livePlayback.minute);
-    els.livePhase.textContent = phaseForMinute(livePlayback.minute, result);
+    els.liveClock.textContent = clockText(displayedMinute);
+    els.livePhase.textContent = phaseForMinute(displayedMinute, result);
     els.pauseLiveButton.setAttribute("aria-pressed", String(livePlayback.paused));
     els.pauseLiveButton.textContent = livePlayback.paused ? "Resume" : "Pause";
     els.speedButton.disabled = false;
@@ -7743,11 +9855,18 @@ function renderStage() {
   }
   const isSpectatedMatch = state.spectateTeamId && !state.neutralView
     && (match.homeId === state.spectateTeamId || match.awayId === state.spectateTeamId);
+  const isThirdPlacePlayoff = isRetroSimulatorState() && match.id === "ko-third-place";
   const spectatedWon = isSpectatedMatch && revealed && result.winnerId === state.spectateTeamId;
-  const spectatedLost = isSpectatedMatch && revealed && result.winnerId !== state.spectateTeamId;
-  const revealedAction = spectatedWon
-    ? state.activeRound === 7 ? "Crown champion" : `Next ${spectatedTeam().name} match`
-    : state.activeRound === 7 ? "Crown champion" : "Next game";
+  const spectatedLost = isSpectatedMatch
+    && revealed
+    && !isThirdPlacePlayoff
+    && !match.allowDraw
+    && result.winnerId !== state.spectateTeamId;
+  const revealedAction = isThirdPlacePlayoff
+    ? "Next game"
+    : spectatedWon
+    ? state.activeRound === tournamentFinalRoundIndex() ? "Crown champion" : `Next ${spectatedTeam().name} match`
+    : state.activeRound === tournamentFinalRoundIndex() ? "Crown champion" : "Next game";
   els.playButton.innerHTML = revealed
     ? `${revealedAction} <span>→</span>`
     : `<span class="play-icon">▶</span> Play this tie`;
@@ -7764,7 +9883,7 @@ function renderStage() {
 }
 
 function renderRoundNav() {
-  els.roundNav.innerHTML = ROUND_NAMES.map((name, index) => {
+  els.roundNav.innerHTML = tournamentRoundNames().map((name, index) => {
     const round = state.rounds[index];
     const available = Boolean(round);
     const complete = available && round.every((match) => match.result?.revealed);
@@ -7807,7 +9926,9 @@ function roundHistoryTargets() {
 }
 
 function roundHistoryLabel(roundIndex) {
-  return roundIndex >= 4 ? "View knockout bracket" : `View ${ROUND_NAMES[roundIndex]}`;
+  return roundIndex >= (isRetroSimulatorState() ? 3 : 4)
+    ? "View knockout bracket"
+    : `View ${tournamentRoundName(roundIndex)}`;
 }
 
 function renderRoundHistoryControl() {
@@ -7816,6 +9937,23 @@ function renderRoundHistoryControl() {
     els.newerRoundButton.hidden = true;
     return;
   }
+  if (isRetroSimulatorState()) {
+    els.historyRoundButton.hidden = false;
+    els.historyRoundButton.textContent = retroBottomGroupsVisible ? "Matches" : "Groups";
+    els.historyRoundButton.dataset.retroGroups = retroBottomGroupsVisible ? "close" : "open";
+    const knockoutStarted = retroTournament?.phase === "knockout" || retroTournament?.phase === "complete";
+    els.newerRoundButton.hidden = retroBottomGroupsVisible || !knockoutStarted;
+    if (knockoutStarted && !retroBottomGroupsVisible) {
+      const viewingGroupHistory = retroBottomGroupMatchesVisible || state.activeRound < 3;
+      els.newerRoundButton.textContent = viewingGroupHistory
+        ? "Knockout bracket"
+        : "Group matches";
+      els.newerRoundButton.dataset.retroGroupMatches = viewingGroupHistory ? "close" : "open";
+    }
+    return;
+  }
+  delete els.historyRoundButton.dataset.retroGroups;
+  delete els.newerRoundButton.dataset.retroGroupMatches;
   const { older, newer } = roundHistoryTargets();
 
   els.historyRoundButton.hidden = older === null;
@@ -7877,7 +10015,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
     >
       ${options.bracket ? "" : `
         <span class="fixture-card-head">
-          <span>${ROUND_NAMES[roundIndex]}</span>
+          <span>${tournamentMatchRoundName(match, roundIndex)}</span>
           <small>${fixtureStatus(result, revealed, index)}</small>
         </span>
       `}
@@ -7895,25 +10033,35 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
           <i class="fixture-winner-marker" aria-hidden="true"></i>
         </span>
       </span>
+      ${isRetroSimulatorState() && match?.schedule ? `
+        <span class="retro-standard-fixture-meta">
+          ${escapeHtml(match.schedule.dateLabel)} · ${escapeHtml(match.schedule.stadium)}, ${escapeHtml(match.schedule.city)}
+        </span>
+      ` : ""}
     </button>
   `;
 }
 
 function bracketMarkup() {
-  const roundIndexes = [4, 5, 6, 7];
+  const finalRoundIndex = tournamentFinalRoundIndex();
+  const roundIndexes = Array.from({ length: 4 }, (_, index) => finalRoundIndex - 3 + index);
+  const roundNames = tournamentRoundNames();
   const heads = roundIndexes
-    .map((roundIndex) => `<span>${ROUND_NAMES[roundIndex]}</span>`)
+    .map((roundIndex) => `<span>${roundNames[roundIndex]}</span>`)
     .join("");
   const cards = [];
   const connectors = [];
 
   roundIndexes.forEach((roundIndex, offset) => {
     const matches = state.rounds[roundIndex] || [];
-    const matchCount = 2 ** (7 - roundIndex);
+    const matchCount = 2 ** (finalRoundIndex - roundIndex);
     const baseRow = 2 ** offset;
     const rowStep = 2 ** (offset + 1);
     for (let index = 0; index < matchCount; index += 1) {
-      cards.push(fixtureMarkup(matches[index], index, roundIndex, {
+      const matchIndex = isRetroSimulatorState() && roundIndex === finalRoundIndex
+        ? Math.max(0, matches.findIndex((match) => match.id === "ko-final"))
+        : index;
+      cards.push(fixtureMarkup(matches[matchIndex], matchIndex, roundIndex, {
         bracket: true,
         column: offset + 1,
         connects: offset < roundIndexes.length - 1,
@@ -7937,10 +10085,28 @@ function bracketMarkup() {
     }
   });
 
+  const thirdPlaceIndex = isRetroSimulatorState()
+    ? (state.rounds[finalRoundIndex] || []).findIndex((match) => match.id === "ko-third-place")
+    : -1;
+  const thirdPlaceMatch = thirdPlaceIndex >= 0 ? state.rounds[finalRoundIndex][thirdPlaceIndex] : null;
   return `
     <div class="bracket-shell">
       <div class="bracket-heads">${heads}</div>
-      <div class="bracket-canvas">${cards.join("")}${connectors.join("")}</div>
+      <div class="bracket-canvas">
+        ${cards.join("")}${connectors.join("")}
+        ${thirdPlaceMatch ? `
+          <section class="retro-third-place-playoff">
+            <span>THIRD-PLACE PLAY-OFF</span>
+            <div class="retro-third-place-card">
+              ${fixtureMarkup(thirdPlaceMatch, thirdPlaceIndex, finalRoundIndex, {
+                bracket: true,
+                column: 1,
+                row: 1,
+              })}
+            </div>
+          </section>
+        ` : ""}
+      </div>
     </div>
   `;
 }
@@ -7979,7 +10145,7 @@ function renderFixtures() {
   }
 
   els.fixtureGrid.classList.remove("team-journey-mode");
-  const bracketMode = state.activeRound >= 4;
+  const bracketMode = state.activeRound >= tournamentFinalRoundIndex() - 3;
   const historyMode = viewingRoundHistory();
   els.fixtureGrid.classList.toggle("bracket-mode", bracketMode);
   els.unresolvedFilter.hidden = bracketMode || historyMode;
@@ -8053,7 +10219,15 @@ function storylineFor(match) {
   if (!match.result?.revealed) return null;
   const home = teamById(match.homeId);
   const away = teamById(match.awayId);
-  const winner = teamById(match.result.winnerId);
+  const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
+  if (!winner) {
+    return {
+      icon: "=",
+      title: `${home.name} and ${away.name} draw`,
+      copy: `The points are shared after a level group-stage match.`,
+      priority: 1,
+    };
+  }
   const loser = winner.id === home.id ? away : home;
   const goals = match.result.homeGoals + match.result.awayGoals;
 
@@ -8128,7 +10302,124 @@ function renderStorylines() {
   `).join("");
 }
 
+function applyRetroGroupScore(table, match, homeGoals, awayGoals) {
+  const home = table.get(match.home);
+  const away = table.get(match.away);
+  if (!home || !away) return;
+  home.played += 1;
+  away.played += 1;
+  home.gf += homeGoals;
+  home.ga += awayGoals;
+  away.gf += awayGoals;
+  away.ga += homeGoals;
+  if (homeGoals > awayGoals) {
+    home.won += 1;
+    away.lost += 1;
+    home.points += 3;
+  } else if (awayGoals > homeGoals) {
+    away.won += 1;
+    home.lost += 1;
+    away.points += 3;
+  } else {
+    home.drawn += 1;
+    away.drawn += 1;
+    home.points += 1;
+    away.points += 1;
+  }
+}
+
+function retroVisibleGroupStandings(group) {
+  const teams = RETRO_WORLD_CUPS[retroTournament.year].teams.filter((team) => team.group === group);
+  const seedOrder = new Map(teams.map((team, index) => [team.name, index]));
+  const table = new Map(teams.map((team) => [team.name, {
+    name: team.name,
+    played: 0,
+    won: 0,
+    drawn: 0,
+    lost: 0,
+    gf: 0,
+    ga: 0,
+    gd: 0,
+    points: 0,
+  }]));
+
+  retroTournament.groupMatches
+    .filter((match) => match.group === group && match.result?.revealed)
+    .forEach((match) => {
+      applyRetroGroupScore(table, match, match.result.homeGoals, match.result.awayGoals);
+    });
+
+  const liveMatch = livePlayback ? retroMatchById(livePlayback.matchId) : null;
+  if (
+    liveMatch?.stage === "group"
+    && liveMatch.group === group
+    && !liveMatch.result?.revealed
+  ) {
+    applyRetroGroupScore(
+      table,
+      liveMatch,
+      Number(livePlayback.homeScore) || 0,
+      Number(livePlayback.awayScore) || 0,
+    );
+  }
+
+  return [...table.values()]
+    .map((row) => ({ ...row, gd: row.gf - row.ga }))
+    .sort((left, right) => (
+      right.points - left.points
+      || right.gd - left.gd
+      || right.gf - left.gf
+      || seedOrder.get(left.name) - seedOrder.get(right.name)
+    ));
+}
+
+function retroActiveGroup() {
+  const liveMatch = livePlayback ? retroMatchById(livePlayback.matchId) : null;
+  if (liveMatch?.stage === "group") return liveMatch.group;
+  const match = selectedMatch();
+  if (match?.stage === "group") return match.group;
+  const managedTeam = RETRO_WORLD_CUPS[retroTournament.year].teams
+    .find((team) => team.name === retroTournament.managedTeam);
+  return managedTeam?.group || "A";
+}
+
+function renderRetroLiveGroupTable() {
+  const group = retroActiveGroup();
+  const rows = retroVisibleGroupStandings(group);
+  const isLive = Boolean(livePlayback && retroMatchById(livePlayback.matchId)?.group === group);
+  els.goldenBootTitle.textContent = `GROUP ${group}${isLive ? " · LIVE" : ""}`;
+  els.goldenBootList.innerHTML = `
+    <div class="retro-live-table-head">
+      <span>Team</span><b>P</b><b>GD</b><b>Pts</b>
+    </div>
+    ${rows.map((row, index) => `
+      <div class="retro-live-table-row ${index < 2 ? "qualification-place" : ""}">
+        <span>
+          <em>${index + 1}</em>
+          ${retroFlag(row.name, "retro-live-table-flag")}
+          <strong>${escapeHtml(row.name)}</strong>
+        </span>
+        <b>${row.played}</b>
+        <b>${row.gd > 0 ? `+${row.gd}` : row.gd}</b>
+        <b>${row.points}</b>
+      </div>
+    `).join("")}
+  `;
+}
+
+function retroGroupStageDisplayActive() {
+  return Boolean(
+    retroTournament
+    && retroTournament.groupMatches.some((match) => !match.result?.revealed),
+  );
+}
+
 function renderGoldenBoot() {
+  if (isRetroSimulatorState() && retroGroupStageDisplayActive()) {
+    renderRetroLiveGroupTable();
+    return;
+  }
+  els.goldenBootTitle.textContent = "GOLDEN BOOT";
   const rankedScorers = calculateGoalscorerTable().map((leader, index) => ({
     ...leader,
     goldenBootRank: index + 1,
@@ -8473,7 +10764,27 @@ function renderLegacyDraftMode() {
 }
 
 function render() {
+  if (currentAppMode() === "retro") {
+    document.body.classList.remove("legacy-mode-active", "achievements-mode-active");
+    els.legacyDraftScreen.hidden = true;
+    els.achievementsScreen.hidden = true;
+    renderRetroWorldCupMode();
+    return;
+  }
+  if (isRetroSimulatorState() && livePlayback) stopStandardPlaybackForNavigation();
+  restoreSharedMainContent();
+  restoreStandardTournamentState();
+  retroBottomGroupsVisible = false;
+  retroBottomGroupMatchesVisible = false;
+  els.fixtureGrid.classList.remove("retro-group-tables");
+  els.fixtureGrid.classList.remove("retro-group-match-history");
+  els.teamFilterControl.hidden = false;
+  els.unresolvedFilter.hidden = false;
+  document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-2018-active");
+  els.retroWorldCupScreen.hidden = true;
   if (currentAppMode() === "legacy") {
+    document.body.classList.remove("achievements-mode-active");
+    els.achievementsScreen.hidden = true;
     renderLegacyDraftMode();
     return;
   }
@@ -8481,23 +10792,33 @@ function render() {
   els.legacyDraftScreen.hidden = true;
   els.legacyDraftBackButton.hidden = false;
   els.legacyHeaderBackButton.hidden = false;
-  const beforeStart = currentAppMode() !== "standard" || !state.started;
+  const mode = currentAppMode();
+  const achievementsMode = mode === "achievements";
+  const beforeStart = mode !== "standard" || !state.started;
   els.pageHeading.hidden = !beforeStart;
   renderSpectatePicker();
   syncSoundToggle();
   document.body.classList.toggle("before-start", beforeStart);
-  els.fieldOverview.hidden = !beforeStart;
+  document.body.classList.toggle("achievements-mode-active", achievementsMode);
+  els.fieldOverview.hidden = !beforeStart || achievementsMode;
+  els.achievementsScreen.hidden = !achievementsMode;
   els.mainContent.hidden = beforeStart;
 
   if (beforeStart) {
     els.legacyHeaderBackButton.hidden = true;
     els.legacyDraftBackButton.hidden = true;
+  if (achievementsMode) {
+    els.pageHeading.hidden = true;
+    renderProgress();
+    return;
+  }
     const standardTournamentActive = state.started && !state.legacyTournament;
     els.startTournamentButton.innerHTML = `${standardTournamentActive ? "Resume tournament" : "Start tournament"} <span aria-hidden="true">→</span>`;
     els.homeRestartButton.hidden = !standardTournamentActive;
     const activeLegacySession = Boolean(legacyDraft) || Boolean(state.legacyTournament && state.started);
     els.startLegacyDraftButton.innerHTML = `${activeLegacySession ? "Resume tournament" : "Start draft"} <span aria-hidden="true">→</span>`;
     els.restartLegacyDraftButton.hidden = !activeLegacySession;
+    syncRetroWorldCupCardAction();
     els.pageKicker.textContent = "256 TEAMS WC · NEW TOURNAMENT";
     els.pageTitle.textContent = "Choose your mode";
     syncLandingSettings();
@@ -8552,10 +10873,589 @@ function syncSoundToggle() {
 function syncLandingSettings() {
   document.querySelectorAll(".landing-segmented").forEach((group) => {
     const setting = group.dataset.setting;
+    const settings = group.dataset.settingsScope === "retro" ? retroMenuSettings : state.settings;
     group.querySelectorAll("button").forEach((button) => {
-      button.classList.toggle("active", button.dataset.value === state.settings[setting]);
+      button.classList.toggle("active", button.dataset.value === settings[setting]);
     });
   });
+}
+
+function readRetroWorldCupSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(RETRO_SETTINGS_STORAGE_KEY) || "null");
+    return {
+      upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : defaultSettings.upset,
+      goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : defaultSettings.goals,
+    };
+  } catch {
+    return { upset: defaultSettings.upset, goals: defaultSettings.goals };
+  }
+}
+
+function saveRetroWorldCupSettings() {
+  try {
+    localStorage.setItem(RETRO_SETTINGS_STORAGE_KEY, JSON.stringify(retroMenuSettings));
+  } catch {
+    // The controls remain usable when storage is unavailable.
+  }
+}
+
+function readRetroWorldCupYear() {
+  try {
+    const year = localStorage.getItem(RETRO_WORLD_CUP_YEAR_KEY);
+    return RETRO_WORLD_CUP_EDITIONS[year] ? year : "2014";
+  } catch {
+    return "2014";
+  }
+}
+
+function setRetroWorldCupYear(year) {
+  const selectedYear = RETRO_WORLD_CUP_EDITIONS[year] ? year : "2014";
+  const edition = RETRO_WORLD_CUP_EDITIONS[selectedYear];
+  els.retroModeCard?.style.setProperty("--retro-accent", edition.accent);
+  els.retroModeCard?.style.setProperty("--retro-accent-text", edition.accentText);
+  if (els.retroWorldCupLogo) els.retroWorldCupLogo.src = edition.logo;
+  if (els.retroTeamPickerButton) els.retroTeamPickerButton.disabled = !RETRO_WORLD_CUPS[selectedYear];
+  renderRetroWorldCupTeamPicker(selectedYear);
+  els.retroWorldCupYearSwitch?.querySelectorAll("[data-retro-year]").forEach((button) => {
+    const isActive = button.dataset.retroYear === selectedYear;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  try {
+    localStorage.setItem(RETRO_WORLD_CUP_YEAR_KEY, selectedYear);
+  } catch {
+    // The selector still works when storage is unavailable.
+  }
+  if (els.retroWorldCupScreen?.hidden !== false) {
+    retroTournament = readRetroTournamentState(selectedYear);
+    retroSquadTeamName = retroTournament?.managedTeam || edition.host;
+  }
+  syncRetroWorldCupCardAction(selectedYear);
+}
+
+function retroTournamentStorageKey(year) {
+  return Number(year) === 2014
+    ? RETRO_TOURNAMENT_STORAGE_KEY
+    : `${RETRO_TOURNAMENT_STORAGE_KEY}-${year}`;
+}
+
+function readRetroTournamentState(year = readRetroWorldCupYear()) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(retroTournamentStorageKey(year)) || "null");
+    return typeof RETRO_WORLD_CUP_ENGINE !== "undefined" && RETRO_WORLD_CUP_ENGINE.validate(saved) ? saved : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveRetroTournamentState() {
+  try {
+    const year = retroTournament?.year || Number(readRetroWorldCupYear());
+    const key = retroTournamentStorageKey(year);
+    if (retroTournament) localStorage.setItem(key, JSON.stringify(retroTournament));
+    else localStorage.removeItem(key);
+  } catch {
+    // The current tournament remains playable when storage is unavailable.
+  }
+  if (retroTournament) window.AccountAchievements?.trackRetroTournament(retroTournament);
+}
+
+window.getRetroAchievementTournamentStates = () => [2010, 2014, 2018]
+  .map((year) => readRetroTournamentState(year))
+  .filter(Boolean);
+
+function retroTournamentHasProgress() {
+  return Boolean(
+    retroTournament
+    && RETRO_WORLD_CUP_ENGINE.allMatches(retroTournament).some((match) => match.result),
+  );
+}
+
+function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
+  if (!els.startRetroWorldCupButton) return;
+  const playable = ["2010", "2014", "2018"].includes(String(year));
+  const savedTournament = playable ? readRetroTournamentState(year) : null;
+  els.startRetroWorldCupButton.disabled = !playable;
+  els.startRetroWorldCupButton.innerHTML = playable
+    ? `${savedTournament ? "Resume World Cup" : "Start World Cup"} <span aria-hidden="true">&rarr;</span>`
+    : "Coming soon";
+  els.restartRetroWorldCupButton.hidden = !playable || !savedTournament
+    || !RETRO_WORLD_CUP_ENGINE.allMatches(savedTournament).some((match) => match.result);
+}
+
+function retroTeamForFlag(name) {
+  return TEAMS.find((team) => team.name === name) || { name, code: "XX", flag: "" };
+}
+
+function retroFlag(name, className = "") {
+  return flagMarkup(retroTeamForFlag(name), className);
+}
+
+function retroMatchById(matchId) {
+  return retroTournament ? RETRO_WORLD_CUP_ENGINE.allMatches(retroTournament).find((match) => match.id === matchId) : null;
+}
+
+function retroMatchStageLabel(match) {
+  if (match.label) return match.label;
+  if (match.stage === "group") return `Group ${match.group} · Matchday ${match.matchday}`;
+  return retroTournament.knockoutRounds.find((round) => round.matches.some((candidate) => candidate.id === match.id))?.name || "Knockout";
+}
+
+function retroScheduleDetails(match) {
+  if (!match?.schedule) return null;
+  const kickoff = new Date(`${match.schedule.date}T${match.schedule.localTime}:00${match.schedule.utcOffset}`);
+  return {
+    date: new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(kickoff),
+    time: new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).format(kickoff),
+    stadium: match.schedule.stadium,
+    city: match.schedule.city,
+  };
+}
+
+function retroScheduleMarkup(match, compact = false) {
+  const details = retroScheduleDetails(match);
+  if (!details) return "";
+  if (compact) {
+    return `<small class="retro-fixture-details">
+      <span>${escapeHtml(details.date)}</span>
+      <span>${escapeHtml(details.stadium)} · ${escapeHtml(details.city)}</span>
+    </small>`;
+  }
+  return `<div class="retro-match-schedule">
+    <span><b>${escapeHtml(details.date)}</b></span>
+    <span><b>${escapeHtml(details.stadium)}</b><small>${escapeHtml(details.city)}</small></span>
+  </div>`;
+}
+
+function retroScoreLabel(match) {
+  if (!match.result) return "–";
+  const penalties = match.result.penalties
+    ? ` <small>(${match.result.penalties.home}-${match.result.penalties.away} pens)</small>`
+    : "";
+  return `${match.result.homeGoals}-${match.result.awayGoals}${penalties}`;
+}
+
+function retroScorersMarkup(events = []) {
+  if (!events.length) return `<span class="retro-no-scorers">No goals</span>`;
+  return events.map((event) => `
+    <span>${escapeHtml(event.scorer)} <b>${event.minute}'${event.penalty ? " (P)" : ""}</b></span>
+  `).join("");
+}
+
+function retroCurrentMatch() {
+  const selected = retroMatchById(retroSelectedMatchId);
+  if (selected) return selected;
+  const next = RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament);
+  if (next) {
+    retroSelectedMatchId = next.id;
+    return next;
+  }
+  const matches = RETRO_WORLD_CUP_ENGINE.allMatches(retroTournament);
+  const latest = [...matches].reverse().find((match) => match.result) || matches[0] || null;
+  retroSelectedMatchId = latest?.id || null;
+  return latest;
+}
+
+function retroMatchStageMarkup(match) {
+  if (!match && retroTournament.phase === "complete") {
+    return `
+      <section class="retro-champion">
+        ${retroFlag(retroTournament.champion, "retro-champion-flag")}
+        <span>WORLD CHAMPIONS</span>
+        <h2>${escapeHtml(retroTournament.champion)}</h2>
+      </section>`;
+  }
+  if (!match) return "";
+  const result = match.result;
+  const nextMatch = result ? RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament) : null;
+  return `
+    <section class="retro-match-stage">
+      <span class="retro-stage-label">${retroMatchStageLabel(match)}</span>
+      ${retroScheduleMarkup(match)}
+      <div class="retro-match-teams">
+        <div class="retro-match-team">
+          ${retroFlag(match.home, "retro-stage-flag")}
+          <h2>${escapeHtml(match.home)}</h2>
+          <div class="retro-scorers">${result ? retroScorersMarkup(result.homeEvents) : ""}</div>
+        </div>
+        <div class="retro-match-score">
+          <strong>${retroScoreLabel(match)}</strong>
+          <span>${result ? result.penalties ? "After penalties" : result.extraTime ? "After extra time" : "Full time" : "Pre-match"}</span>
+        </div>
+        <div class="retro-match-team">
+          ${retroFlag(match.away, "retro-stage-flag")}
+          <h2>${escapeHtml(match.away)}</h2>
+          <div class="retro-scorers">${result ? retroScorersMarkup(result.awayEvents) : ""}</div>
+        </div>
+      </div>
+      <div class="retro-stage-actions">
+        ${result
+          ? nextMatch ? `<button class="primary-button" type="button" data-retro-action="next-match">Next match <span aria-hidden="true">&rarr;</span></button>` : ""
+          : `<button class="primary-button" type="button" data-retro-action="simulate-match">Simulate match</button>`}
+      </div>
+      ${result ? `
+        <div class="retro-match-stats">
+          <div><strong>${result.stats.possession[0]}%</strong><span>Possession</span><strong>${result.stats.possession[1]}%</strong></div>
+          <div><strong>${result.stats.expectedGoals[0]}</strong><span>xG</span><strong>${result.stats.expectedGoals[1]}</strong></div>
+          <div><strong>${result.stats.shots[0]}</strong><span>Shots</span><strong>${result.stats.shots[1]}</strong></div>
+          <div><strong>${result.stats.onTarget[0]}</strong><span>On target</span><strong>${result.stats.onTarget[1]}</strong></div>
+        </div>` : ""}
+    </section>`;
+}
+
+function retroFixtureButtonMarkup(match) {
+  return `
+    <button class="retro-fixture ${match.id === retroSelectedMatchId ? "selected" : ""}" type="button" data-retro-match-id="${match.id}">
+      <span>${retroFlag(match.home, "retro-fixture-flag")}<strong>${escapeHtml(match.home)}</strong></span>
+      <b>${retroScoreLabel(match)}</b>
+      <span>${retroFlag(match.away, "retro-fixture-flag")}<strong>${escapeHtml(match.away)}</strong></span>
+      ${retroScheduleMarkup(match, true)}
+    </button>`;
+}
+
+function renderRetroMatchesView() {
+  const selectedMatch = retroCurrentMatch();
+  const activeMatches = RETRO_WORLD_CUP_ENGINE.activeMatches(retroTournament);
+  const unresolved = activeMatches.filter((match) => !match.result);
+  const boot = RETRO_WORLD_CUP_ENGINE.goldenBoot(retroTournament).slice(0, 5);
+  els.retroTournamentBody.innerHTML = `
+    <div class="retro-match-layout">
+      <div class="retro-match-primary">
+        ${retroMatchStageMarkup(selectedMatch)}
+        ${retroTournament.phase !== "complete" ? `
+          <section class="retro-active-fixtures">
+            <div class="retro-section-heading">
+              <h2>${retroTournament.phase === "group" ? `Matchday ${activeMatches[0]?.matchday || 3}` : retroTournament.knockoutRounds.at(-1)?.name}</h2>
+              ${unresolved.length ? `<button class="secondary-button" type="button" data-retro-action="simulate-stage">Simulate ${retroTournament.phase === "group" ? "matchday" : "round"}</button>` : ""}
+            </div>
+            <div class="retro-fixture-list">${activeMatches.map(retroFixtureButtonMarkup).join("")}</div>
+          </section>` : ""}
+      </div>
+      <aside class="retro-golden-boot">
+        <span>GOLDEN BOOT</span>
+        ${boot.length ? boot.map((entry, index) => `
+          <div><b>${index + 1}</b>${retroFlag(entry.team, "retro-boot-flag")}<span><strong>${escapeHtml(entry.player)}</strong><small>${escapeHtml(entry.team)}</small></span><em>${entry.goals}</em></div>
+        `).join("") : `<p>The race starts with the first goal.</p>`}
+      </aside>
+    </div>`;
+}
+
+function retroGroupTableMarkup(group) {
+  const rows = retroVisibleGroupStandings(group);
+  const complete = rows.every((row) => row.played === 3);
+  return `
+    <section class="retro-group-table">
+      <h2>Group ${group}</h2>
+      <div class="retro-table-head"><span>Team</span><b>P</b><b>GD</b><b>Pts</b></div>
+      ${rows.map((row, index) => `
+        <div class="retro-table-row ${complete && index < 2 ? "qualified" : ""}">
+          <span>${retroFlag(row.name, "retro-table-flag")}<strong>${escapeHtml(row.name)}</strong></span>
+          <b>${row.played}</b><b>${row.gd > 0 ? `+${row.gd}` : row.gd}</b><b>${row.points}</b>
+        </div>
+      `).join("")}
+    </section>`;
+}
+
+function renderRetroGroupsView() {
+  restoreSharedMainContent();
+  els.retroTournamentBody.innerHTML = `
+    <div class="retro-groups-grid">${[..."ABCDEFGH"].map(retroGroupTableMarkup).join("")}</div>`;
+}
+
+function renderRetroSquadsView() {
+  restoreSharedMainContent();
+  const year = retroTournament.year;
+  const available = RETRO_WORLD_CUPS[year].teams;
+  const squads = retroSquadsForYear(year);
+  if (!squads[retroSquadTeamName]) retroSquadTeamName = retroTournament.managedTeam || available[0].name;
+  const squad = squads[retroSquadTeamName];
+  const positionGroups = [
+    ["Goalkeepers", "GK"],
+    ["Defenders", "DF"],
+    ["Midfielders", "MF"],
+    ["Attackers", "FW"],
+  ];
+  els.retroTournamentBody.innerHTML = `
+    <section class="retro-squad-view">
+      <div class="retro-squad-heading">
+        <div>${retroFlag(retroSquadTeamName, "retro-squad-flag")}<span><small>Coach · ${squad.players.length}-player official squad</small><strong>${escapeHtml(squad.coach)}</strong></span></div>
+        <label>
+          <span>Country</span>
+          <select id="retroSquadTeamSelect">${available.map((team) => `<option value="${escapeHtml(team.name)}" ${team.name === retroSquadTeamName ? "selected" : ""}>${escapeHtml(team.name)}</option>`).join("")}</select>
+        </label>
+      </div>
+      <div class="retro-squad-groups">
+        ${positionGroups.map(([label, position]) => {
+          const players = squad.players.filter((player) => player.position === position);
+          return `
+            <section class="retro-squad-position-group">
+              <h2><span>${label}</span><b>${players.length}</b></h2>
+              <div class="retro-squad-list">
+                ${players.map((player) => `
+                  <div class="retro-squad-row">
+                    <b class="retro-squad-number">${player.number}</b>
+                    <span>
+                      <strong>${escapeHtml(player.name)}</strong>
+                      <small>${escapeHtml(player.club)}</small>
+                    </span>
+                  </div>
+                `).join("")}
+              </div>
+            </section>`;
+        }).join("")}
+      </div>
+    </section>`;
+}
+
+function retroLineupSideMarkup(teamName) {
+  const lineup = RETRO_WORLD_CUP_ENGINE.startingXI(retroTournament.year, teamName);
+  const positionOrder = { GK: 0, DF: 1, MF: 2, FW: 3 };
+  const players = [...lineup.players].sort((left, right) =>
+    (positionOrder[left.position] ?? 4) - (positionOrder[right.position] ?? 4)
+    || left.number - right.number
+  );
+  return `
+    <section class="retro-lineup-side">
+      <header>
+        ${retroFlag(teamName, "retro-lineup-flag")}
+        <span><small>${lineup.formation}</small><strong>${escapeHtml(teamName)}</strong></span>
+      </header>
+      <ol>
+        ${players.map((player) => `
+          <li>
+            <b>${player.number}</b>
+            <span><strong>${escapeHtml(player.name)}</strong><small>${escapeHtml(player.club)}</small></span>
+            <em>${player.position}</em>
+          </li>
+        `).join("")}
+      </ol>
+    </section>`;
+}
+
+function retroFormationSideMarkup(teamName) {
+  const lineup = RETRO_WORLD_CUP_ENGINE.startingXI(retroTournament.year, teamName);
+  const rows = {
+    GK: [{ x: 50, y: 88 }],
+    DF: [{ x: 16, y: 67 }, { x: 39, y: 67 }, { x: 61, y: 67 }, { x: 84, y: 67 }],
+    MF: [{ x: 24, y: 43 }, { x: 50, y: 49 }, { x: 76, y: 43 }],
+    FW: [{ x: 22, y: 18 }, { x: 50, y: 13 }, { x: 78, y: 18 }],
+  };
+  const used = { GK: 0, DF: 0, MF: 0, FW: 0 };
+  const players = lineup.players.map((player) => {
+    const group = rows[player.position] ? player.position : "MF";
+    const slots = rows[group];
+    const slot = slots[Math.min(used[group], slots.length - 1)];
+    used[group] += 1;
+    return { player, ...slot };
+  });
+  return `
+    <section class="retro-formation-side">
+      <header>
+        ${retroFlag(teamName, "retro-lineup-flag")}
+        <span><strong>${escapeHtml(teamName)}</strong><small>${lineup.formation}</small></span>
+      </header>
+      <div class="retro-formation-pitch">
+        ${players.map(({ player, x, y }) => `
+          <div class="retro-formation-player" style="--player-x:${x}%;--player-y:${y}%">
+            <b>${player.number}</b>
+            <span>${escapeHtml(player.name)}</span>
+          </div>
+        `).join("")}
+      </div>
+    </section>`;
+}
+
+function renderRetroLineupsView() {
+  restoreSharedMainContent();
+  const match = retroCurrentMatch();
+  if (!match) {
+    els.retroTournamentBody.innerHTML = "";
+    return;
+  }
+  els.retroTournamentBody.innerHTML = `
+    <section class="retro-lineups-view">
+      <div class="retro-lineups-heading">
+        <span>${retroMatchStageLabel(match)}</span>
+        <h2>Starting XI</h2>
+        ${retroScheduleMarkup(match)}
+      </div>
+      <div class="retro-lineups-grid">
+        ${retroLineupSideMarkup(match.home)}
+        ${retroLineupSideMarkup(match.away)}
+      </div>
+    </section>`;
+}
+
+function renderRetroTournamentProgress() {
+  const allMatches = RETRO_WORLD_CUP_ENGINE.allMatches(retroTournament);
+  const played = allMatches.filter((match) => match.result).length;
+  if (retroTournament.phase === "complete") {
+    els.retroTournamentProgress.innerHTML = `<span>Champion</span><strong>${escapeHtml(retroTournament.champion)}</strong>`;
+    return;
+  }
+  if (retroTournament.phase === "group") {
+    const next = retroTournament.groupMatches.find((match) => !match.result);
+    els.retroTournamentProgress.innerHTML = `<span>Group stage</span><strong>Matchday ${next?.matchday || 3} · ${played}/48 played</strong>`;
+    return;
+  }
+  const round = retroTournament.knockoutRounds.at(-1);
+  els.retroTournamentProgress.innerHTML = `<span>Knockout stage</span><strong>${round.name} · ${round.matches.filter((match) => match.result).length}/${round.matches.length}</strong>`;
+}
+
+function renderRetroSharedMatchesView() {
+  els.retroTournamentBody.replaceChildren(els.mainContent);
+  els.mainContent.hidden = false;
+  els.boardTitle.textContent = state.activeRound >= tournamentFinalRoundIndex() - 3
+    ? "Knockout bracket"
+    : `${tournamentRoundName()} fixtures`;
+  els.simulateRoundButton.textContent = state.activeRound < 3 ? "Simulate matchday" : "Simulate round";
+  els.simulateRoundButton.hidden = viewingRoundHistory();
+  renderTeamFilter();
+  renderRoundHistoryControl();
+  renderSettingsSummary();
+  renderStage();
+  els.fixtureGrid.classList.toggle("retro-group-tables", retroBottomGroupsVisible);
+  els.fixtureGrid.classList.toggle("retro-group-match-history", retroBottomGroupMatchesVisible);
+  els.teamFilterControl.hidden = retroBottomGroupsVisible;
+  els.unresolvedFilter.hidden = retroBottomGroupsVisible;
+  if (retroBottomGroupsVisible) {
+    els.boardTitle.textContent = "Group tables";
+    els.fixtureGrid.innerHTML = `
+      <div class="retro-groups-grid">${[..."ABCDEFGH"].map(retroGroupTableMarkup).join("")}</div>
+    `;
+    els.loadMoreButton.hidden = true;
+    els.simulateRoundButton.hidden = true;
+  } else if (retroBottomGroupMatchesVisible) {
+    els.boardTitle.textContent = "Group stage matches";
+    els.fixtureGrid.classList.remove("bracket-mode", "team-journey-mode");
+    els.fixtureGrid.innerHTML = state.rounds.slice(0, 3).flatMap((round, roundIndex) => (
+      round.map((match, matchIndex) => fixtureMarkup(match, matchIndex, roundIndex))
+    )).join("");
+    els.loadMoreButton.hidden = true;
+    els.simulateRoundButton.hidden = true;
+    els.unresolvedFilter.hidden = true;
+    bindFixtureNavigation();
+  } else {
+    renderFixtures();
+  }
+  renderQueue();
+  renderGoldenBoot();
+  renderStorylines();
+  els.unresolvedFilter.classList.toggle("active", filterUnresolved);
+}
+
+function renderRetroWorldCupMode() {
+  if (!retroTournament) {
+    setAppModeUrl("home", { replace: true });
+    render();
+    return;
+  }
+  activateRetroSimulatorState();
+  document.body.classList.add("retro-mode-active");
+  document.body.classList.toggle("retro-2010-active", Number(retroTournament.year) === 2010);
+  document.body.classList.toggle("retro-2018-active", Number(retroTournament.year) === 2018);
+  els.retroWorldCupScreen.hidden = false;
+  els.retroTournamentKicker.textContent = RETRO_WORLD_CUP_EDITIONS[retroTournament.year].label.toUpperCase();
+  els.retroTournamentTitle.textContent = `World Cup ${retroTournament.year}`;
+  els.retroWorldCupRestartButton.hidden = !retroTournamentHasProgress();
+  document.querySelectorAll("[data-retro-view]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.retroView === retroTournamentView);
+  });
+  renderRetroTournamentProgress();
+  if (retroTournamentView === "groups") renderRetroGroupsView();
+  else if (retroTournamentView === "lineups") renderRetroLineupsView();
+  else if (retroTournamentView === "squads") renderRetroSquadsView();
+  else renderRetroSharedMatchesView();
+}
+
+function startRetroWorldCup() {
+  const year = Number(readRetroWorldCupYear());
+  if (![2010, 2014, 2018].includes(year)) {
+    showToast(`World Cup ${year} is coming soon.`);
+    return;
+  }
+  const managedTeam = readRetroWorldCupTeam(String(year));
+  retroTournament = readRetroTournamentState(year);
+  if (!retroTournament) {
+    retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
+      year,
+      seed: Date.now(),
+      managedTeam,
+    });
+    saveRetroTournamentState();
+  } else {
+    retroTournament.managedTeam = managedTeam;
+    saveRetroTournamentState();
+  }
+  retroTournamentView = "matches";
+  retroBottomGroupsVisible = false;
+  retroBottomGroupMatchesVisible = false;
+  retroSelectedMatchId = RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament)?.id || null;
+  setAppModeUrl("retro");
+  render();
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+
+function restartRetroWorldCup() {
+  stopStandardPlaybackForNavigation();
+  const returnHome = els.retroRestartModal.dataset.returnHome === "true";
+  delete els.retroRestartModal.dataset.returnHome;
+  els.retroRestartModal.close();
+  if (isRetroSimulatorState()) restoreStandardTournamentState();
+
+  if (returnHome) {
+    const resetYear = retroTournament?.year || Number(readRetroWorldCupYear());
+    restoreSharedMainContent();
+    retroTournament = null;
+    retroSimulatorState = null;
+    retroTournamentView = "matches";
+    retroBottomGroupsVisible = false;
+    retroBottomGroupMatchesVisible = false;
+    retroSelectedMatchId = null;
+    saveRetroTournamentState();
+    syncRetroWorldCupCardAction(String(resetYear));
+    setAppModeUrl("home", { replace: true });
+    render();
+    window.scrollTo({ top: 0, behavior: "auto" });
+    showToast(`World Cup ${resetYear} reset.`);
+    return;
+  }
+
+  const year = retroTournament?.year || Number(readRetroWorldCupYear());
+  const managedTeam = readRetroWorldCupTeam(String(year));
+  retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
+    year,
+    seed: Date.now(),
+    managedTeam,
+  });
+  retroSimulatorState = null;
+  retroTournamentUiState = {
+    fixtureLimit: DEFAULT_FIXTURE_LIMIT,
+    filterUnresolved: false,
+    teamFilterId: null,
+    teamFilterReturn: null,
+  };
+  retroTournamentView = "matches";
+  retroBottomGroupsVisible = false;
+  retroBottomGroupMatchesVisible = false;
+  retroSelectedMatchId = RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament)?.id || null;
+  retroSquadTeamName = managedTeam || RETRO_WORLD_CUPS[year].teams[0].name;
+  saveRetroTournamentState();
+  syncRetroWorldCupCardAction(String(year));
+  render();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  showToast(`World Cup ${year} restarted.`);
 }
 
 function syncSettingsDialog() {
@@ -8627,7 +11527,14 @@ function closeSearch() {
 function renderSearchResults(query) {
   closeSearch();
   if (!query.trim()) return;
-  const results = TEAMS.filter((team) => team.name.toLowerCase().includes(query.toLowerCase())).slice(0, 8);
+  const searchableTeams = isRetroSimulatorState()
+    ? RETRO_WORLD_CUPS[retroTournament.year].teams
+      .map((entry) => teamById(retroTeamId(entry.name, retroTournament.year)))
+      .filter(Boolean)
+    : TEAMS;
+  const results = searchableTeams
+    .filter((team) => team.name.toLowerCase().includes(query.toLowerCase()))
+    .slice(0, 8);
   searchPopover = document.createElement("div");
   searchPopover.className = "search-result-popover";
   searchPopover.innerHTML = results.length
@@ -8715,11 +11622,43 @@ els.historyRoundButton.addEventListener("click", () => {
     showToast("Finish or skip the live tie before changing rounds.");
     return;
   }
+  if (isRetroSimulatorState() && els.historyRoundButton.dataset.retroGroups) {
+    const closingGroups = retroBottomGroupsVisible;
+    retroBottomGroupsVisible = !closingGroups;
+    retroBottomGroupMatchesVisible = false;
+    if (closingGroups && (retroTournament.phase === "knockout" || retroTournament.phase === "complete")) {
+      state.activeRound = retroTournamentRoundIndex();
+      state.selectedMatch = Math.min(
+        state.selectedMatch,
+        Math.max(0, (state.rounds[state.activeRound]?.length || 1) - 1),
+      );
+      state.championView = retroTournament.phase === "complete";
+    }
+    renderRetroWorldCupMode();
+    els.roundBoard.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
   openRound(Number(els.historyRoundButton.dataset.round), true);
 });
 els.newerRoundButton.addEventListener("click", () => {
   if (livePlayback) {
     showToast("Finish or skip the live tie before changing rounds.");
+    return;
+  }
+  if (isRetroSimulatorState() && els.newerRoundButton.dataset.retroGroupMatches) {
+    const openingGroupMatches = els.newerRoundButton.dataset.retroGroupMatches === "open";
+    retroBottomGroupMatchesVisible = openingGroupMatches;
+    retroBottomGroupsVisible = false;
+    if (!openingGroupMatches) {
+      state.activeRound = retroTournamentRoundIndex();
+      state.selectedMatch = Math.min(
+        state.selectedMatch,
+        Math.max(0, (state.rounds[state.activeRound]?.length || 1) - 1),
+      );
+      state.championView = retroTournament.phase === "complete";
+    }
+    renderRetroWorldCupMode();
+    els.roundBoard.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
   openRound(Number(els.newerRoundButton.dataset.round), true);
@@ -8736,6 +11675,7 @@ els.unresolvedFilter.addEventListener("click", () => {
 });
 
 els.snapshotButton.addEventListener("click", openSnapshotModal);
+els.onlineSnapshotButton.addEventListener("click", openOnlineSnapshotModal);
 els.copySnapshotButton.addEventListener("click", copySnapshotImage);
 els.shareSnapshotButton.addEventListener("click", shareSnapshotImage);
 els.saveSnapshotButton.addEventListener("click", saveSnapshotImage);
@@ -8752,14 +11692,34 @@ els.settingsButton.addEventListener("click", () => {
   els.settingsModal.showModal();
 });
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
+els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
+els.newsCloseButton?.addEventListener("click", () => els.newsModal?.close());
+els.retroSettingsButton?.addEventListener("click", () => els.settingsButton.click());
+els.retroNewsButton?.addEventListener("click", () => els.newsButton.click());
+els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.click());
+els.retroAchievementsButton?.addEventListener("click", () => {
+  if ([2010, 2014, 2018].includes(Number(retroTournament?.year))) {
+    window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
+    return;
+  }
+  els.openAchievementsButton.click();
+});
+els.retroDonateButton?.addEventListener("click", () => els.donateButton.click());
+els.retroAccountButton?.addEventListener("click", () => document.querySelector("#mainAccountButton")?.click());
 els.realPlayersOnlySetting.addEventListener("click", () => {
   state.settings.realPlayersOnly = state.settings.realPlayersOnly === false;
   saveState();
   syncSettingsDialog();
 });
 
-els.createOnlineRoomButton.addEventListener("click", () => openOnlineRoom(false));
 els.joinOnlineRoomButton.addEventListener("click", () => openOnlineRoom(true));
+els.openAchievementsButton?.addEventListener("click", () => {
+  stopStandardPlaybackForNavigation();
+  setAppModeUrl("achievements");
+  render();
+  window.AccountAchievements?.load();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 els.confirmCreateRoomButton.addEventListener("click", createOnlineRoom);
 els.confirmJoinRoomButton.addEventListener("click", joinOnlineRoom);
 els.updateOnlineDisplayNameButton.addEventListener("click", updateOnlineDisplayName);
@@ -8770,6 +11730,14 @@ els.leaveOnlineDraftRoomButton.addEventListener("click", leaveOnlineRoom);
 els.closeOnlineDraftRoomButton.addEventListener("click", closeOnlineRoom);
 els.leaveOnlineMatchRoomButton.addEventListener("click", leaveOnlineRoom);
 els.closeOnlineMatchRoomButton.addEventListener("click", closeOnlineRoom);
+els.onlinePlayAgainButton.addEventListener("click", restartOnlineLobby);
+els.onlineEndLobbyButton.addEventListener("click", leaveOrCloseCompletedOnlineRoom);
+els.onlineResults.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-online-results-tab]");
+  if (button) setOnlineResultsTab(button.dataset.onlineResultsTab);
+  const roundButton = event.target.closest("[data-online-bracket-round]");
+  if (roundButton) setOnlineBracketOpeningRound(roundButton.dataset.onlineBracketRound);
+});
 els.onlinePenaltyTesterButton.addEventListener("click", () => {
   if (onlinePenaltyTester) {
     onlinePenaltyTester = null;
@@ -8784,6 +11752,12 @@ els.onlinePenaltyTesterButton.addEventListener("click", () => {
 els.onlineRoundNextButton.addEventListener("click", () => {
   if (els.onlineRoundNextButton.disabled) return;
   advanceOnlineToAvailableRound();
+});
+els.onlineSpectatorSelect.addEventListener("change", () => {
+  onlineSpectatingMemberId = els.onlineSpectatorSelect.value || null;
+  onlineViewedMatchId = null;
+  onlineMatchSelectionManual = false;
+  if (latestOnlineRoom && onlineRoomSession) renderOnlineMatches(latestOnlineRoom, onlineRoomSession.memberId);
 });
 els.onlineReadyButton.addEventListener("click", () => {
   const matchId = els.onlineReadyButton.dataset.matchId;
@@ -8838,10 +11812,11 @@ els.onlineTeamSelectList.addEventListener("click", (event) => {
 });
 function selectOnlineMatchFromList(event) {
   const button = event.target.closest("[data-match-id]");
-  if (!button || !latestOnlineRoom) return;
+  if (!button || button.disabled || !latestOnlineRoom) return;
   onlineMatchSelectionManual = true;
   onlineViewedMatchId = button.dataset.matchId;
   stopOnlineMatchPlayback();
+  stopOnlineLivePresentation();
   renderOnlineMatches(latestOnlineRoom, onlineRoomSession.memberId);
 }
 els.onlineMyMatches.addEventListener("click", selectOnlineMatchFromList);
@@ -8910,13 +11885,10 @@ els.onlineRoomCodeInput.addEventListener("keydown", (event) => {
     joinOnlineRoom();
   }
 });
-els.createOnlineDisplayName.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    event.preventDefault();
-    createOnlineRoom();
-  }
+els.onlineDisplayName.addEventListener("input", () => {
+  saveOnlineDisplayName(els.onlineDisplayName.value);
 });
-els.joinOnlineDisplayName.addEventListener("keydown", (event) => {
+els.onlineDisplayName.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
     if (els.onlineRoomCodeInput.value) joinOnlineRoom();
@@ -8931,23 +11903,12 @@ els.onlineLobbyDisplayName.addEventListener("keydown", (event) => {
 });
 els.copyOnlineRoomCodeButton.addEventListener("click", async () => {
   if (!onlineRoomSession) return;
-  const code = onlineRoomSession.code;
-  try {
-    await navigator.clipboard.writeText(code);
-    showToast("Room code copied.");
-  } catch {
-    const input = document.createElement("input");
-    input.value = code;
-    input.setAttribute("readonly", "");
-    input.style.position = "fixed";
-    input.style.left = "-9999px";
-    document.body.append(input);
-    input.select();
-    const copied = document.execCommand("copy");
-    input.remove();
-    if (copied) showToast("Room code copied.");
-    else setOnlineRoomMessage(`Room code: ${code}`);
-  }
+  await copyOnlineText(onlineRoomSession.code, "Room code copied.", `Room code: ${onlineRoomSession.code}`);
+});
+els.copyOnlineRoomInviteButton.addEventListener("click", async () => {
+  if (!onlineRoomSession) return;
+  const inviteUrl = onlineRoomInviteUrl(onlineRoomSession.code);
+  await copyOnlineText(inviteUrl, "Invite link copied.", inviteUrl);
 });
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden && onlineRoomSession && !els.onlineRoomScreen.hidden) {
@@ -8973,10 +11934,21 @@ els.clearPredictionButton.addEventListener("click", () => {
 });
 
 els.spectatePickerButton.addEventListener("click", () => openSpectatePicker("all"));
+els.retroTeamPickerButton?.addEventListener("click", openRetroWorldCupTeamPicker);
 els.spectateSearch.addEventListener("input", (event) => renderSpectateList(event.target.value));
 els.spectateList.addEventListener("click", (event) => {
   const option = event.target.closest(".prediction-option");
   if (!option) return;
+  if (spectatePickerMode === "retro") {
+    const year = readRetroWorldCupYear();
+    const name = option.dataset.retroTeamName;
+    if (name && !retroWorldCupTeamData(year, name)) return;
+    saveRetroWorldCupTeam(year, name);
+    renderRetroWorldCupTeamPicker(year);
+    els.spectateModal.close();
+    showToast(name ? `${name} selected for the ${year} World Cup.` : "Neutral view selected.");
+    return;
+  }
   const teamId = option.dataset.teamId || null;
   state.spectateTeamId = teamId;
   state.neutralView = !teamId;
@@ -8990,10 +11962,10 @@ els.spectateList.addEventListener("click", (event) => {
 });
 
 els.continueNeutralButton.addEventListener("click", () => {
+  if (isRetroSimulatorState()) retroTournament.managedTeam = null;
   state.spectateTeamId = null;
   state.neutralView = true;
-  saveState();
-  render();
+  goToNextTie();
   showToast("Neutral view restored. Keep the tournament going.");
 });
 
@@ -9001,6 +11973,39 @@ els.replaySpectatedButton.addEventListener("click", () => {
   const team = spectatedTeam();
   if (!team) return;
   const previousSettings = { ...state.settings };
+
+  if (isRetroSimulatorState()) {
+    stopStandardPlaybackForNavigation();
+    const year = retroTournament.year;
+    retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
+      year,
+      seed: Date.now(),
+      managedTeam: team.name,
+    });
+    retroSimulatorState = null;
+    retroTournamentUiState = {
+      fixtureLimit: DEFAULT_FIXTURE_LIMIT,
+      filterUnresolved: false,
+      teamFilterId: null,
+      teamFilterReturn: null,
+    };
+    ({ fixtureLimit, filterUnresolved, teamFilterId, teamFilterReturn } = retroTournamentUiState);
+    retroTournamentView = "matches";
+    retroSelectedMatchId = RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament)?.id || null;
+    retroSquadTeamName = team.name;
+    saveRetroTournamentState();
+    syncRetroWorldCupCardAction(String(year));
+    activateRetroSimulatorState();
+    state.settings = previousSettings;
+    state.spectateTeamId = retroTeamId(team.name, year);
+    state.neutralView = false;
+    focusSpectatedTeam(0);
+    retroSimulatorState = state;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    showToast(`Fresh World Cup. ${team.name}'s opening match is ready.`);
+    return;
+  }
 
   if (team.id.startsWith("legacy-")) {
     if (!legacyDraft?.complete) {
@@ -9040,7 +12045,21 @@ els.replaySpectatedButton.addEventListener("click", () => {
 });
 
 $("#newTournamentButton").addEventListener("click", () => els.resetModal.showModal());
-$("#championReset").addEventListener("click", () => els.resetModal.showModal());
+$("#championReset").addEventListener("click", () => {
+  if (isRetroSimulatorState()) {
+    const year = retroTournament?.year || Number(readRetroWorldCupYear());
+    const title = els.retroRestartModal.querySelector("h2");
+    if (title) title.textContent = `Restart World Cup ${year}?`;
+    els.retroRestartModal.dataset.returnHome = "false";
+    els.retroRestartModal.showModal();
+    return;
+  }
+  els.resetModal.showModal();
+});
+els.championTeamJourney?.addEventListener("click", () => {
+  els.roundBoard.scrollIntoView({ behavior: "smooth", block: "start" });
+  requestAnimationFrame(() => els.teamSearch.focus({ preventScroll: true }));
+});
 els.homeRestartButton?.addEventListener("click", () => els.resetModal.showModal());
 $("#confirmResetButton").addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
@@ -9073,9 +12092,97 @@ document.querySelectorAll(".landing-segmented").forEach((group) => {
   group.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
-    state.settings[group.dataset.setting] = button.dataset.value;
-    saveState();
+    if (group.dataset.settingsScope === "retro") {
+      retroMenuSettings[group.dataset.setting] = button.dataset.value;
+      if (retroSimulatorState?.settings) {
+        retroSimulatorState.settings[group.dataset.setting] = button.dataset.value;
+      }
+      saveRetroWorldCupSettings();
+    } else {
+      state.settings[group.dataset.setting] = button.dataset.value;
+      saveState();
+    }
+    syncLandingSettings();
   });
+});
+
+document.querySelectorAll(".landing-setting-info").forEach((details) => {
+  details.addEventListener("toggle", () => {
+    if (!details.open) return;
+    document.querySelectorAll(".landing-setting-info[open]").forEach((other) => {
+      if (other !== details) other.open = false;
+    });
+  });
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".landing-setting-info")) return;
+  document.querySelectorAll(".landing-setting-info[open]").forEach((details) => {
+    details.open = false;
+  });
+});
+
+els.retroWorldCupYearSwitch?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-retro-year]");
+  if (button) setRetroWorldCupYear(button.dataset.retroYear);
+});
+
+els.startRetroWorldCupButton?.addEventListener("click", startRetroWorldCup);
+els.restartRetroWorldCupButton?.addEventListener("click", () => {
+  const year = Number(readRetroWorldCupYear());
+  const title = els.retroRestartModal.querySelector("h2");
+  if (title) title.textContent = `Restart World Cup ${year}?`;
+  els.retroRestartModal.dataset.returnHome = "true";
+  els.retroRestartModal.showModal();
+});
+els.retroWorldCupRestartButton?.addEventListener("click", () => {
+  const title = els.retroRestartModal.querySelector("h2");
+  if (title) title.textContent = `Restart World Cup ${retroTournament?.year || 2014}?`;
+  els.retroRestartModal.dataset.returnHome = "false";
+  els.retroRestartModal.showModal();
+});
+els.confirmRetroRestartButton?.addEventListener("click", restartRetroWorldCup);
+document.querySelectorAll("[data-retro-view]").forEach((button) => {
+  button.addEventListener("click", () => {
+    retroTournamentView = button.dataset.retroView;
+    if (retroTournamentView !== "matches") {
+      retroBottomGroupsVisible = false;
+      retroBottomGroupMatchesVisible = false;
+    }
+    renderRetroWorldCupMode();
+  });
+});
+els.retroTournamentBody?.addEventListener("click", (event) => {
+  const matchButton = event.target.closest("[data-retro-match-id]");
+  if (matchButton) {
+    retroSelectedMatchId = matchButton.dataset.retroMatchId;
+    retroTournamentView = "matches";
+    retroBottomGroupsVisible = false;
+    retroBottomGroupMatchesVisible = false;
+    renderRetroWorldCupMode();
+    return;
+  }
+  const action = event.target.closest("[data-retro-action]")?.dataset.retroAction;
+  if (!action || !retroTournament) return;
+  if (action === "simulate-match") {
+    const match = retroCurrentMatch();
+    if (match && !match.result) RETRO_WORLD_CUP_ENGINE.simulateMatch(retroTournament, match);
+  } else if (action === "simulate-stage") {
+    const stageMatches = RETRO_WORLD_CUP_ENGINE.activeMatches(retroTournament);
+    RETRO_WORLD_CUP_ENGINE.simulateActiveStage(retroTournament);
+    if (retroTournament.phase === "complete") {
+      retroSelectedMatchId = stageMatches.at(-1)?.id || retroSelectedMatchId;
+    }
+  } else if (action === "next-match") {
+    retroSelectedMatchId = RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament)?.id || retroSelectedMatchId;
+  }
+  saveRetroTournamentState();
+  renderRetroWorldCupMode();
+});
+els.retroTournamentBody?.addEventListener("change", (event) => {
+  if (event.target.id !== "retroSquadTeamSelect") return;
+  retroSquadTeamName = event.target.value;
+  renderRetroSquadsView();
 });
 
 els.overviewSearch.addEventListener("input", (event) => renderParticipantOverview(event.target.value));
@@ -9089,6 +12196,21 @@ els.bugReportButton?.addEventListener("click", () => {
 els.onlineBugReportButton?.addEventListener("click", () => els.bugReportButton.click());
 els.bugReportCloseButton?.addEventListener("click", () => els.bugReportModal.close());
 els.bugReportForm?.addEventListener("submit", submitBugReport);
+const openDiscordModal = () => {
+  if (els.settingsModal?.open) els.settingsModal.close();
+  els.discordModal.showModal();
+};
+els.discordButton?.addEventListener("click", openDiscordModal);
+els.settingsDiscordButton?.addEventListener("click", openDiscordModal);
+els.onlineDiscordButton?.addEventListener("click", openDiscordModal);
+els.discordCloseButton?.addEventListener("click", () => els.discordModal.close());
+const openDonateModal = () => {
+  if (els.settingsModal?.open) els.settingsModal.close();
+  els.donateModal?.showModal();
+};
+els.donateButton?.addEventListener("click", openDonateModal);
+els.onlineDonateButton?.addEventListener("click", openDonateModal);
+els.donateCloseButton?.addEventListener("click", () => els.donateModal?.close());
 $("#goToTopButton").addEventListener("click", () => {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
@@ -9150,6 +12272,7 @@ els.startLegacyDraftButton?.addEventListener("click", () => {
         state = savedLegacyTournament;
         const customTeam = legacyDraftTeam();
         TEAM_BY_ID.set(customTeam.id, customTeam);
+        clearPlayerProfileCacheForTeam(customTeam.id);
         setAppModeUrl("standard");
         render();
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -9200,6 +12323,13 @@ els.legacyHeaderBackButton.addEventListener("click", () => {
   render();
 });
 
+els.retroWorldCupBackButton?.addEventListener("click", () => {
+  stopStandardPlaybackForNavigation();
+  setAppModeUrl("home");
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
 document.querySelector(".brand").addEventListener("click", (event) => {
   event.preventDefault();
   setMobileMenu(false);
@@ -9213,11 +12343,18 @@ function stopStandardPlaybackForNavigation() {
   if (!livePlayback) return;
   clearMatchPenaltyAnimation();
   livePlayback.presentationScheduler?.clear("navigation");
+  clearTimeout(livePlayback._goalFlashTimer);
+  livePlayback.matchPenaltyTimers?.forEach((timer) => clearTimeout(timer));
   if (match2dState?.eventTimer) clearTimeout(match2dState.eventTimer);
   match2dState = null;
   cancelAnimationFrame(livePlayback.frame);
   clearTimeout(livePlayback.finishTimer);
   clearTimeout(livePlayback.penaltyTimer);
+  if (els.matchCommentaryFeed) {
+    els.matchCommentaryFeed.replaceChildren();
+    els.matchCommentaryFeed.removeAttribute("style");
+    els.matchCommentaryFeed.classList.remove("is-goal", "is-major", "is-goal-flashing");
+  }
   livePlayback = null;
 }
 
@@ -9268,6 +12405,14 @@ window.addEventListener("keydown", (event) => {
 
 window.addEventListener("popstate", () => {
   const mode = currentAppMode();
+  const routedRetroYear = retroWorldCupYearFromPath();
+  if (mode === "retro" && routedRetroYear) {
+    setRetroWorldCupYear(routedRetroYear);
+    retroTournament = readRetroTournamentState(routedRetroYear);
+    retroSelectedMatchId = retroTournament
+      ? RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament)?.id || null
+      : null;
+  }
   if (mode === "online") {
     if (onlineModeAvailableLocally()) {
       openOnlineRoom(false, { updateUrl: false });
@@ -9284,18 +12429,21 @@ window.addEventListener("popstate", () => {
   window.scrollTo({ top: 0, behavior: "auto" });
 });
 
-if (onlineRoomSession?.name) setOnlineDisplayNames(onlineRoomSession.name);
+setOnlineDisplayNames(onlineRoomSession?.name || readSavedOnlineDisplayName());
 const initialUrlParams = new URLSearchParams(window.location.search);
 const linkedOnlineRoomCode = initialUrlParams.get("room");
 if (linkedOnlineRoomCode) els.onlineRoomCodeInput.value = normalizeOnlineRoomCode(linkedOnlineRoomCode);
 let initialAppMode = currentAppMode();
-if (initialAppMode === "home" && state.started && !state.legacyTournament) {
-  setAppModeUrl("standard", { replace: true });
-  initialAppMode = "standard";
-} else if (initialAppMode === "standard" && !state.started) {
+const legacyModeQuery = initialUrlParams.get("mode");
+const initialRetroYear = retroWorldCupYearFromPath();
+if (initialRetroYear) setRetroWorldCupYear(initialRetroYear);
+if (legacyModeQuery) {
+  setAppModeUrl(initialAppMode, { replace: true });
+}
+if (initialAppMode === "standard" && !state.started) {
   setAppModeUrl("home", { replace: true });
   initialAppMode = "home";
-} else {
+} else if (!legacyModeQuery) {
   window.history.replaceState(
     { ...(window.history.state || {}), appMode: initialAppMode },
     "",
@@ -9304,7 +12452,15 @@ if (initialAppMode === "home" && state.started && !state.legacyTournament) {
 }
 configureOnlineModeAvailability();
 syncOnlineRoomCard();
+setRetroWorldCupYear(initialRetroYear || readRetroWorldCupYear());
+if (initialAppMode === "retro" && !initialRetroYear) {
+  setAppModeUrl("retro", { replace: true });
+}
 render();
+document.documentElement.classList.remove("route-retro-loading");
+if (interruptedLocalMatchSettled && initialAppMode === "standard") {
+  showToast("Interrupted match finalized from its saved result.");
+}
 if (initialAppMode === "online") {
   if (onlineModeAvailableLocally()) openOnlineRoom(false, { updateUrl: false });
   else setAppModeUrl("home", { replace: true });

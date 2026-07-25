@@ -1,0 +1,201 @@
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = drukmde5c8a02ef9mpgvouje Error[0m
+
+      at alarm (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:256:32)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = drukmde5c8a02ef9mpgvouje [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 8qubo6c0h72g9oinvogdsl97 Error[0m
+
+      at alarm (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:256:32)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 8qubo6c0h72g9oinvogdsl97 [0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mBuild failed with 1 error:[0m
+
+  [31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not resolve "C:\\Users\\moham\\Documents\\256 team wc tourney\\.wrangler\\tmp\\bundle-jNKMhI\\middleware-loader.entry.ts"[0m
+  
+  
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mCould not access `api.cloudflare.com`. Make sure the domain is set up to be proxied by Cloudflare.[0m
+
+  For more details, refer to [4mhttps://developers.cloudflare.com/workers/configuration/routing/routes/#set-up-a-route[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = q6npccj6udasqupjgvb9mfe1 Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = q6npccj6udasqupjgvb9mfe1 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = q6npccj6udasqupjgvb9mfe1 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = q6npccj6udasqupjgvb9mfe1 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 8evftkv8ccecoqu45a1raf3d Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 8evftkv8ccecoqu45a1raf3d [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 8evftkv8ccecoqu45a1raf3d [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 8evftkv8ccecoqu45a1raf3d [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = pq0hhsr82ic3ltqkfur8lelg Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = pq0hhsr82ic3ltqkfur8lelg [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = pq0hhsr82ic3ltqkfur8lelg [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = pq0hhsr82ic3ltqkfur8lelg [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = k9714a5ntj4bbqr9tdljlj20 Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = k9714a5ntj4bbqr9tdljlj20 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = k9714a5ntj4bbqr9tdljlj20 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = k9714a5ntj4bbqr9tdljlj20 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 9k24qltflm178lg3cbmsgfte Error[0m
+
+      at alarm (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:256:32)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 9k24qltflm178lg3cbmsgfte [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = g5h91d2atr7lhi98nelvo6uf Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = g5h91d2atr7lhi98nelvo6uf [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = cvo7g2cn149hpm796pmscmuo Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = cvo7g2cn149hpm796pmscmuo [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = ssjtto9cib3kd0ks1amu5f8v Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = ssjtto9cib3kd0ks1amu5f8v [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 5jsa54c19u2jcea46ceobu0v Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 5jsa54c19u2jcea46ceobu0v [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = bne967m26gtdoha0gu0r3gl2 Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = bne967m26gtdoha0gu0r3gl2 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = s9g5epgu6bqga0vm3rltfdp4 Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = s9g5epgu6bqga0vm3rltfdp4 [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = j37j42jpp56lnk46tsmf87kb Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = j37j42jpp56lnk46tsmf87kb [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 92h2q75nh9dsu7il13dcme5l Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = 92h2q75nh9dsu7il13dcme5l [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = jq04vmcsodasra2f0c4k871s Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/Documents/256%20team%20wc%20tourney/worker.mjs:1046:25)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: internal error; reference = jq04vmcsodasra2f0c4k871s [0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: NOSENTRY database is locked: SQLITE_BUSY Error[0m
+
+      at null.<anonymous> (file:///C:/Users/moham/AppData/Local/npm-cache/_npx/32026684e21afda6/node_modules/miniflare/src/workers/core/do-wrapper.worker.ts:37:11)
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mUncaught Error: NOSENTRY database is locked: SQLITE_BUSY [0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mMissing required secrets: GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET. Add them to .dev.vars, .env, or set as environment variables.[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mThe Workers runtime failed to start. There was likely a problem with the workerd binary or your configuration.[0m
+
+  Runtime stderr:
+  *** std::terminate() called with no exception
+  stack: 7ffc2e231239 7ff7ac9363a5 7ffc2e2404ff 7ffc2e233a90 7ffc2e23f977 7ffc2e232c77 7ffc2e240310 7ffc44de481e 7ffc44cc2102 7ffc2e23fe75 7ffc2e2318f1 7ffc2e231d16 7ffc2e232d60 7ffc2e240310 7ffc44de479e 7ffc44cc5e96 7ffc44d0d010 7ffc420d1ad9 7ffc2e235276 7ff7adfc045f 7ff7ac935f63 7ff7adfc5512 7ff7adfcc416 7ff7adfc5a6b 7ff7adfcc416 7ff7adfc2fbb 7ff7ac921e77 7ff7afdf219e 7ffc435fe956
+
+
+🪵  Logs were written to "C:\Users\moham\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-07-22_21-57-59_127.log"

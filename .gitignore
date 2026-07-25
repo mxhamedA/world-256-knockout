@@ -2,5 +2,11 @@
 .wrangler/
 .wrangler-online-*.log
 .wrangler-online-*.pid
+.dev.vars
+.env
 node_modules/
 dist/
+
+tmp/
+
+tmp/

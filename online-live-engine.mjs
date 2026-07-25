@@ -405,7 +405,6 @@ function queueShootoutDecision(state, events, makeDecisionId = defaultDecisionId
   const event = resolvePenaltyAttempt(state, side, randomTarget(state), false, "shootout");
   events.push(event);
   advanceShootoutState(state, events);
-  if (state.status === "penalties") queueShootoutDecision(state, events, makeDecisionId, now);
 }
 
 function resolvePenaltyAttempt(state, side, target, manual, kind, round = null) {
@@ -417,11 +416,14 @@ function resolvePenaltyAttempt(state, side, target, manual, kind, round = null) 
   const shooterRating = state.ratings[side];
   const keeperRating = state.ratings[other];
   const qualityAdjustment = clamp((keeperRating - shooterRating) / 250, -0.12, 0.12);
-  const baseSaveChance = exact ? 0.62 : adjacent ? 0.18 : 0;
-  const wideChance = manual ? 0 : clamp(0.09 - (shooterRating - 50) / 900, 0.025, 0.12);
-  const wentWide = nextRandom(state) < wideChance;
-  const saved = !wentWide && nextRandom(state) < clamp(baseSaveChance + qualityAdjustment, 0, 0.82);
-  const scored = !wentWide && !saved;
+  const baseSaveChance = adjacent ? 0.18 : 0;
+  const middleTarget = target === "middle";
+  const wideChance = manual || middleTarget ? 0 : clamp(0.09 - (shooterRating - 50) / 900, 0.025, 0.12);
+  const wentWide = !middleTarget && nextRandom(state) < wideChance;
+  const saved = !middleTarget
+    && !wentWide
+    && (exact || (!manual && nextRandom(state) < clamp(baseSaveChance + qualityAdjustment, 0, 0.82)));
+  const scored = middleTarget || (!wentWide && !saved);
   const scoreBefore = { home: state.homeScore, away: state.awayScore };
   if (kind === "regulation") {
     state.shots[side] += 1;

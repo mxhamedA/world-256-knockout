@@ -241,7 +241,7 @@ Guernsey|GG|INVITED
 Sealand|XX|INVITED
 Sápmi|XX|INVITED
 Abkhazia|XX|INVITED
-South Ossetia|XX|INVITED
+Kurdistan|KUR|INVITED
 Artsakh|XX|INVITED
 Transnistria|MD|INVITED
 Somaliland|SO|INVITED
@@ -711,6 +711,7 @@ const TEAM_STRENGTH_ADJUSTMENTS = new Map([
   ["Iran", -1.24],
   ["Denmark", -0.74],
   ["Ecuador", 0.66],
+  ["Kurdistan", 12],
   ["Israel", -32],
 ]);
 
@@ -760,6 +761,13 @@ const REAL_PLAYERS = {
   Sweden: ["Alexander Isak", "Viktor Gyökeres", "Dejan Kulusevski", "Anthony Elanga", "Emil Forsberg"],
   Hungary: ["Dominik Szoboszlai", "Barnabás Varga", "Roland Sallai", "Martin Ádám", "Dániel Gazdag"],
   Georgia: ["Khvicha Kvaratskhelia", "Georges Mikautadze", "Budu Zivzivadze", "Zuriko Davitashvili", "Giorgi Chakvetadze"],
+  Kurdistan: [
+    "Merchas Doski", "Akam Hashim", "Youssef Amyn", "Marko Farji", "Sarhang Muhsin", "Znar Faizi",
+    "Rebaz Abdulla", "Bayar Abubakir", "Herdi Siamand", "Jassim Mohammed Haji", "Aras Mustafa",
+    "Hawkar Latif", "Khalid Mushir", "Kamaran Ali", "Niaz Muhamad", "Hawre Jalal",
+    "Muhamad Sabir", "Diyar Rahman", "Ali Aziz", "Ahmet Isik", "Abdulla Kaifi",
+    "Kosrat Baiz", "Rekar Hashim", "Hunar Ahmad", "Ayub Ayad", "Farhang Wriya",
+  ],
 };
 
 const GENERATED_FIRST_NAMES = [
@@ -828,6 +836,10 @@ const CULTURAL_NAME_POOLS = {
     first: ["Mohamed", "Abdi", "Yusuf", "Ahmed", "Ismail", "Hassan", "Mahdi", "Bilal"],
     last: ["Warsame", "Farah", "Ali", "Hersi", "Hassan", "Omar", "Nur", "Abdi"],
   },
+  kurdish: {
+    first: ["Ari", "Dilan", "Hawar", "Baran", "Rojhat", "Alan", "Soran", "Zana"],
+    last: ["Barzani", "Hamad", "Karim", "Rashid", "Aziz", "Hussein", "Qadir", "Saeed"],
+  },
 };
 
 const TEAM_NAME_CULTURE = {
@@ -840,7 +852,7 @@ const TEAM_NAME_CULTURE = {
   Bonaire: "dutchCaribbean", Saba: "dutchCaribbean", "Sint Eustatius": "dutchCaribbean",
   "Saint Pierre and Miquelon": "french", "Falkland Islands": "british", "Isle of Man": "british",
   Jersey: "british", Guernsey: "british", "Åland Islands": "nordic", Sealand: "british", Sápmi: "nordic",
-  Abkhazia: "caucasus", "South Ossetia": "caucasus", Artsakh: "caucasus", Transnistria: "easternEuropean",
+  Abkhazia: "caucasus", Kurdistan: "kurdish", Artsakh: "caucasus", Transnistria: "easternEuropean",
   Somaliland: "hornAfrican", "Western Sahara": "hornAfrican", "Chagos Islands": "eastAfrican",
   "Christmas Island": "british", "Cocos Islands": "british", "Norfolk Island": "british",
   "Pitcairn Islands": "british", Niue: "pacific", Tokelau: "pacific", "Wallis and Futuna": "pacific",

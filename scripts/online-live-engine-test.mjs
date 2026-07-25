@@ -259,4 +259,98 @@ function match(seed = 1234) {
   assert.equal(state.penalty.homeKicks, 1, "A duplicate decision cannot add another kick.");
 }
 
+{
+  const state = match(4444);
+  state.status = "penalties";
+  state.controllers.home = "member-home";
+  state.penalty = { homeScore: 0, awayScore: 0, homeKicks: 0, awayKicks: 0, currentSide: "home", kicks: [] };
+  state.goalkeeperTendencies.away = { primaryTarget: "middle", weights: [0, 0, 1, 0, 0] };
+  state.pendingDecision = {
+    id: "decision-middle",
+    kind: "shootout",
+    side: "home",
+    memberId: "member-home",
+    openedAt: 1_000,
+    deadlineAt: 16_000,
+    round: 1,
+  };
+  const accepted = resolveLivePenaltyDecision(state, { decisionId: "decision-middle", target: "middle", now: 2_000 });
+  assert.equal(accepted.accepted, true);
+  assert.equal(state.penalty.homeScore, 1, "A live middle penalty must count even if the goalkeeper stays middle.");
+  assert.equal(state.penalty.kicks[0].goalkeeperTarget, "middle");
+  assert.equal(state.penalty.kicks[0].scored, true);
+}
+
+{
+  const state = match(4545);
+  state.status = "penalties";
+  state.controllers.home = "member-home";
+  state.penalty = { homeScore: 0, awayScore: 0, homeKicks: 0, awayKicks: 0, currentSide: "home", kicks: [] };
+  state.goalkeeperTendencies.away = { primaryTarget: "bottom-left", weights: [0, 0, 0, 1, 0] };
+  state.pendingDecision = {
+    id: "decision-middle-keeper-away",
+    kind: "shootout",
+    side: "home",
+    memberId: "member-home",
+    openedAt: 1_000,
+    deadlineAt: 16_000,
+    round: 1,
+  };
+  const accepted = resolveLivePenaltyDecision(state, {
+    decisionId: "decision-middle-keeper-away",
+    target: "middle",
+    now: 2_000,
+  });
+  assert.equal(accepted.accepted, true);
+  assert.equal(state.penalty.kicks[0].goalkeeperTarget, "bottom-left");
+  assert.equal(state.penalty.kicks[0].scored, true, "A middle penalty must score when the goalkeeper dives away.");
+}
+
+{
+  const state = match(4646);
+  state.status = "penalties";
+  state.controllers.home = "member-home";
+  state.penalty = { homeScore: 0, awayScore: 0, homeKicks: 0, awayKicks: 0, currentSide: "home", kicks: [] };
+  state.goalkeeperTendencies.away = { primaryTarget: "bottom-left", weights: [0, 0, 0, 1, 0] };
+  state.pendingDecision = {
+    id: "decision-opposite-height",
+    kind: "shootout",
+    side: "home",
+    memberId: "member-home",
+    openedAt: 1_000,
+    deadlineAt: 16_000,
+    round: 1,
+  };
+  const accepted = resolveLivePenaltyDecision(state, {
+    decisionId: "decision-opposite-height",
+    target: "top-left",
+    now: 2_000,
+  });
+  assert.equal(accepted.accepted, true);
+  assert.equal(state.penalty.kicks[0].goalkeeperTarget, "bottom-left");
+  assert.equal(state.penalty.kicks[0].scored, true, "A manually aimed penalty must score when the keeper picks another target.");
+}
+
+{
+  const state = match(5555);
+  state.status = "penalties";
+  state.controllers.home = "member-home";
+  state.penalty = { homeScore: 0, awayScore: 0, homeKicks: 0, awayKicks: 0, currentSide: "home", kicks: [] };
+  state.goalkeeperTendencies.away = { primaryTarget: "bottom-left", weights: [0, 0, 0, 1, 0] };
+  state.pendingDecision = {
+    id: "decision-bottom-left",
+    kind: "shootout",
+    side: "home",
+    memberId: "member-home",
+    openedAt: 1_000,
+    deadlineAt: 16_000,
+    round: 1,
+  };
+  const accepted = resolveLivePenaltyDecision(state, { decisionId: "decision-bottom-left", target: "bottom-left", now: 2_000 });
+  assert.equal(accepted.accepted, true);
+  assert.equal(state.penalty.kicks[0].goalkeeperTarget, "bottom-left");
+  assert.equal(state.penalty.kicks[0].scored, false, "An exact non-middle goalkeeper dive must save the penalty.");
+  assert.equal(state.penalty.kicks[0].missType, "save");
+}
+
 console.log("Progressive online live engine tests passed.");
