@@ -3503,3 +3503,194 @@ Useful routes:
 ⎔ Reloading local server...
 [wrangler:info] ✨ Parsed 3 valid header rules.
 ⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T19:14:25.117Z","requestId":"77997df2-d9b3-485b-a92a-170987b5278d","method":"GET","route":"/retro-14-world-cup"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:25.124Z","requestId":"77997df2-d9b3-485b-a92a-170987b5278d","method":"GET","route":"/retro-14-world-cup","status":200,"elapsedMs":7}
+[wrangler:info] GET /retro-14-world-cup 200 OK (15ms)
+[wrangler:info] GET /clean.css 200 OK (6ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (7ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (10ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (11ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (5ms)
+[wrangler:info] GET /data.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (8ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (12ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (17ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (15ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (16ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (16ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (19ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (22ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (23ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (26ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (28ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (31ms)
+[wrangler:info] GET /app.js 304 Not Modified (26ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (28ms)
+[wrangler:info] GET /site.webmanifest 304 Not Modified (31ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (27ms)
+[wrangler:info] GET /assets/retro-2014/brazil-watercolor-ipad.webp 304 Not Modified (14ms)
+[wrangler:info] GET /assets/retro-2014/brazil-watercolor-stadium.webp 304 Not Modified (20ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:25.471Z","requestId":"4303d391-024a-44cb-a7e4-81d92d978177","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:25.502Z","requestId":"4303d391-024a-44cb-a7e4-81d92d978177","method":"GET","route":"/api/challenge","status":200,"elapsedMs":31}
+[wrangler:info] GET /api/challenge 200 OK (33ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (17ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (18ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:25.535Z","requestId":"7ba30b24-6368-4cba-b2e6-79c684a8385f","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request","timestamp":"2026-07-26T19:14:25.541Z","requestId":"6d6468a7-7371-4c96-be43-443cdcf8143d","method":"POST","route":"/api/challenge/achievements/retro-2022"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:25.552Z","requestId":"7ba30b24-6368-4cba-b2e6-79c684a8385f","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":17}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (23ms)
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:25.562Z","requestId":"6d6468a7-7371-4c96-be43-443cdcf8143d","method":"POST","route":"/api/challenge/achievements/retro-2022","status":200,"elapsedMs":21}
+[wrangler:info] POST /api/challenge/achievements/retro-2022 200 OK (31ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:44.875Z","requestId":"09dc402e-674d-420b-8f96-1ce7407284cf","method":"GET","route":"/"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:44.877Z","requestId":"09dc402e-674d-420b-8f96-1ce7407284cf","method":"GET","route":"/","status":200,"elapsedMs":2}
+[wrangler:info] GET / 200 OK (5ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (9ms)
+[wrangler:info] GET /clean.css 304 Not Modified (11ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (14ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (14ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (5ms)
+[wrangler:info] GET /data.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (8ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (11ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (13ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (9ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (11ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (22ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (15ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (15ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (18ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (23ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (30ms)
+[wrangler:info] GET /app.js 304 Not Modified (38ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (30ms)
+[wrangler:info] GET /site.webmanifest 304 Not Modified (42ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:45.174Z","requestId":"1f68cb11-3257-4d3c-bc6f-4a89e1314c41","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:45.199Z","requestId":"1f68cb11-3257-4d3c-bc6f-4a89e1314c41","method":"GET","route":"/api/challenge","status":200,"elapsedMs":25}
+[wrangler:info] GET /api/challenge 200 OK (30ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (9ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:45.214Z","requestId":"d31c70a9-3271-4d93-b0de-f38743cef607","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request","timestamp":"2026-07-26T19:14:45.218Z","requestId":"2a6e193f-ec8e-4358-b81b-89fef2cac2b9","method":"POST","route":"/api/challenge/achievements/retro-2022"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:45.226Z","requestId":"d31c70a9-3271-4d93-b0de-f38743cef607","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":12}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (16ms)
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:45.232Z","requestId":"2a6e193f-ec8e-4358-b81b-89fef2cac2b9","method":"POST","route":"/api/challenge/achievements/retro-2022","status":200,"elapsedMs":14}
+[wrangler:info] POST /api/challenge/achievements/retro-2022 200 OK (22ms)
+[wrangler:info] GET /assets/retro-world-cup-2018.png 304 Not Modified (11ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:50.862Z","requestId":"a3820533-c8d4-4ccb-8c28-2a0e6f44b429","method":"GET","route":"/"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:50.864Z","requestId":"a3820533-c8d4-4ccb-8c28-2a0e6f44b429","method":"GET","route":"/","status":200,"elapsedMs":2}
+[wrangler:info] GET / 200 OK (7ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (6ms)
+[wrangler:info] GET /clean.css 304 Not Modified (6ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (7ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (7ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (7ms)
+[wrangler:info] GET /data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (9ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (12ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (15ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (20ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (15ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (23ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (26ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (33ms)
+[wrangler:info] GET /site.webmanifest 304 Not Modified (19ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (26ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (21ms)
+[wrangler:info] GET /app.js 304 Not Modified (43ms)
+[wrangler:info] GET /assets/retro-world-cup-2018.png 304 Not Modified (3ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:51.197Z","requestId":"5af6c8d1-11a3-4a6e-946c-5ebce874c598","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:51.217Z","requestId":"5af6c8d1-11a3-4a6e-946c-5ebce874c598","method":"GET","route":"/api/challenge","status":200,"elapsedMs":20}
+[wrangler:info] GET /api/challenge 200 OK (28ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (10ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:51.229Z","requestId":"9d678e07-9db0-4ea5-a4be-e567e62ceaec","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request","timestamp":"2026-07-26T19:14:51.234Z","requestId":"4570ee27-3f50-4695-b936-d3634cd8fa71","method":"POST","route":"/api/challenge/achievements/retro-2022"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:51.243Z","requestId":"9d678e07-9db0-4ea5-a4be-e567e62ceaec","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":14}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (17ms)
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:51.252Z","requestId":"4570ee27-3f50-4695-b936-d3634cd8fa71","method":"POST","route":"/api/challenge/achievements/retro-2022","status":200,"elapsedMs":18}
+[wrangler:info] POST /api/challenge/achievements/retro-2022 200 OK (26ms)
+[wrangler:info] GET /assets/retro-world-cup-2006.png 304 Not Modified (11ms)
+[wrangler:info] GET /assets/retro-2010/worldcup-2010-logo.png 304 Not Modified (12ms)
+[wrangler:info] GET /assets/retro-2010/south-africa-sunburst-desktop.webp 304 Not Modified (14ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:54.375Z","requestId":"3ca40c67-52e3-4b9d-912a-711323f03035","method":"GET","route":"/"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:54.378Z","requestId":"3ca40c67-52e3-4b9d-912a-711323f03035","method":"GET","route":"/","status":200,"elapsedMs":3}
+[wrangler:info] GET / 200 OK (9ms)
+[wrangler:info] GET /clean.css 304 Not Modified (8ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (7ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (10ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (12ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (5ms)
+[wrangler:info] GET /data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (12ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (12ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (12ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (13ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (16ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (8ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (7ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (13ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (18ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (20ms)
+[wrangler:info] GET /site.webmanifest 304 Not Modified (13ms)
+[wrangler:info] GET /app.js 304 Not Modified (20ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (20ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (32ms)
+[wrangler:info] GET /assets/retro-2010/worldcup-2010-logo.png 304 Not Modified (6ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:54.671Z","requestId":"9e8ccb36-0822-47c6-808c-9a454f695034","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:54.695Z","requestId":"9e8ccb36-0822-47c6-808c-9a454f695034","method":"GET","route":"/api/challenge","status":200,"elapsedMs":24}
+[wrangler:info] GET /api/challenge 200 OK (34ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (25ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:14:54.714Z","requestId":"9c951fe3-9e4b-489a-a064-9904c490a935","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request","timestamp":"2026-07-26T19:14:54.717Z","requestId":"c892d253-fcd7-4f0d-9e4c-d4f44097925c","method":"POST","route":"/api/challenge/achievements/retro-2022"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:54.724Z","requestId":"9c951fe3-9e4b-489a-a064-9904c490a935","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":10}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (14ms)
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:14:54.730Z","requestId":"c892d253-fcd7-4f0d-9e4c-d4f44097925c","method":"POST","route":"/api/challenge/achievements/retro-2022","status":200,"elapsedMs":13}
+[wrangler:info] POST /api/challenge/achievements/retro-2022 200 OK (18ms)
+[wrangler:info] GET /assets/retro-world-cup-2022.png 304 Not Modified (4ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 200 OK (11ms)
+[wrangler:info] GET /assets/retro-2022/qatar-night-landscape.png 304 Not Modified (6ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T19:21:01.699Z","requestId":"2ef759cb-1a4c-4f5f-8ed3-12c02b4ee472","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:21:01.740Z","requestId":"2ef759cb-1a4c-4f5f-8ed3-12c02b4ee472","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":41}
+[wrangler:info] GET /custom-tournament 200 OK (47ms)
+[wrangler:info] GET /clean.css 200 OK (39ms)
+[wrangler:info] GET /redirect.js 200 OK (36ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (47ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (69ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (104ms)
+[wrangler:info] GET /data.js 304 Not Modified (124ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (145ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (193ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (191ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (308ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (235ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (236ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (219ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (198ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (203ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (190ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (242ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (251ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (254ms)
+[wrangler:info] GET /app.js 200 OK (384ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (398ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (372ms)
+[wrangler:info] GET /assets/retro-world-cup-2022.png 304 Not Modified (8ms)
+{"type":"worker-request","timestamp":"2026-07-26T19:21:03.162Z","requestId":"146c1af6-c2d9-489f-ba0c-cc20a39aca96","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T19:21:03.173Z","requestId":"146c1af6-c2d9-489f-ba0c-cc20a39aca96","method":"GET","route":"/api/challenge","status":200,"elapsedMs":11}
+[wrangler:info] GET /api/challenge 200 OK (15ms)
