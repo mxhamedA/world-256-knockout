@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { fileURLToPath } from "node:url";
-import { accountForGoogleClaims, handleChallengeRequest } from "../challenge-service.mjs";
+import { accountForGoogleClaims, handleChallengeRequest, retroAchievementPoints } from "../challenge-service.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sqlite = new DatabaseSync(":memory:");
@@ -58,6 +58,11 @@ const db = {
 
 const env = { CHALLENGE_DB: db };
 let sessionCookie = "";
+
+assert.equal(retroAchievementPoints(2010, "Spain"), 1);
+assert.equal(retroAchievementPoints(2010, "North Korea"), 10);
+assert.equal(retroAchievementPoints(2022, "France"), 1);
+assert.equal(retroAchievementPoints(2022, "Qatar"), 8);
 
 async function request(pathname, { method = "GET", body, session = true } = {}) {
   const url = new URL(`https://example.com/api/challenge${pathname}`);
@@ -141,6 +146,27 @@ assert.equal(completed.payload.unlockedTeam.won, true);
 assert.equal(completed.payload.achievement.id, "retro-2022-world-tour");
 assert.equal(completed.payload.achievement.completed, 1);
 assert.equal(completed.payload.achievement.total, 32);
+assert.equal(completed.payload.unlockedTeam.points, 8);
+assert.equal(completed.payload.achievement.completedPoints, completed.payload.unlockedTeam.points);
+
+const achievementBoard = await request("/achievements/leaderboard");
+assert.equal(achievementBoard.response.status, 200);
+assert.equal(achievementBoard.payload.leaderboard[0].username, username);
+assert.equal(achievementBoard.payload.leaderboard[0].achievements, 1);
+assert.equal(achievementBoard.payload.leaderboard[0].points, completed.payload.unlockedTeam.points);
+assert.equal(achievementBoard.payload.currentUser.rank, 1);
+
+const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
+assert.equal(publicAchievementBoard.response.status, 200);
+assert.equal(publicAchievementBoard.payload.currentUser, null);
+
+const publicAchievementPoints = await request("/achievements/retro-2010", { session: false });
+assert.equal(publicAchievementPoints.response.status, 200);
+assert.equal(publicAchievementPoints.payload.achievement.completed, 0);
+assert.equal(
+  publicAchievementPoints.payload.achievement.teams.find((team) => team.teamName === "North Korea").points,
+  10,
+);
 
 const storedEmail = sqlite.prepare("SELECT email FROM accounts WHERE username = ?").get(username);
 assert.equal(storedEmail.email, email);

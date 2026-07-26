@@ -362,6 +362,17 @@
             </div>
           </section>
 
+          <section class="home-achievement-leaderboard" aria-labelledby="homeAchievementLeaderboardTitle">
+            <header>
+              <h2 id="homeAchievementLeaderboardTitle">Leaderboard</h2>
+              <button class="home-achievement-action" id="homeAchievementAction" type="button">View achievements</button>
+            </header>
+            <div class="home-achievement-table" id="homeAchievementLeaderboard" aria-live="polite">
+              <p class="home-achievement-empty">Loading standings...</p>
+            </div>
+            <div class="home-achievement-own" id="homeAchievementOwn" hidden></div>
+          </section>
+
           <div class="overview-intro">
             <div>
               <span class="section-kicker">THE COMPLETE FIELD</span>
@@ -931,10 +942,36 @@
             <span class="brand-mark-label">TEAMS</span>
           </span>
         </a>
+        <nav class="profile-header-actions" aria-label="Profile navigation">
+          <button class="utility-button" id="profileSettingsButton" type="button" aria-label="Settings" title="Settings">
+            <span aria-hidden="true">&#9881;</span><span>Settings</span>
+          </button>
+          <button class="utility-button" id="profileFeedbackButton" type="button" aria-label="Feedback" title="Feedback">
+            <span aria-hidden="true">&#9888;</span><span>Feedback</span>
+          </button>
+          <button class="utility-button" id="profileAchievementsButton" type="button" aria-label="Achievements" title="Achievements">
+            <span aria-hidden="true">&#127942;</span><span>Achievements</span>
+          </button>
+          <button class="utility-button" id="profileDiscordButton" type="button" aria-label="Discord" title="Discord">
+            <span class="discord-icon" aria-hidden="true"></span><span>Discord</span>
+          </button>
+          <button class="utility-button donate-link header-donate-link" id="profileDonateButton" type="button" aria-label="Donate" title="Donate">
+            <span aria-hidden="true">$</span><span>Donate</span>
+          </button>
+          <button class="utility-button profile-current-button" id="profileCurrentButton" type="button" aria-label="Profile" title="Profile" aria-current="page">
+            <span class="account-avatar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 12.25a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5Z" />
+                <path d="M4.25 20.25c.62-3.62 3.71-6.25 7.75-6.25s7.13 2.63 7.75 6.25" />
+              </svg>
+            </span>
+            <span>Profile</span>
+          </button>
+        </nav>
       </header>
       <main class="profile-main">
         <section class="profile-hero">
-          <h1 id="profileTitle">Your profile</h1>
+          <h1 id="profileTitle">Profile</h1>
           <div class="profile-hero-actions">
             <button class="secondary-button profile-edit-toggle" id="profileEditToggle" type="button" aria-expanded="false">
               Edit profile
@@ -947,16 +984,18 @@
             <div class="profile-avatar-preview" id="profileAvatarPreview" aria-hidden="true"><span></span></div>
             <div>
               <strong id="profileCurrentUsername">-</strong>
-              <span>256 TEAMS</span>
+              <span>256 Teams member</span>
             </div>
           </div>
-          <div class="profile-overview-stat">
-            <strong id="profileAchievementCount">0</strong>
-            <span>Achievements unlocked</span>
-          </div>
-          <div class="profile-overview-stat">
-            <strong id="profileAchievementTotal">64</strong>
-            <span>Total achievements</span>
+          <div class="profile-achievement-total">
+            <div>
+              <span>Points</span>
+              <strong id="profileAchievementPoints">0</strong>
+            </div>
+            <div>
+              <span>Achievements</span>
+              <p><strong id="profileAchievementCount">0</strong><i>/</i><strong id="profileAchievementTotal">128</strong></p>
+            </div>
           </div>
         </section>
 
@@ -989,38 +1028,8 @@
 
         <div class="profile-dashboard-grid">
           <section class="profile-achievements-section">
-            <div class="profile-section-heading">
-              <div>
-                <span>RETRO WORLD CUPS</span>
-                <h2>Achievements</h2>
-              </div>
-              <strong id="profileAchievementSummary">0 / 128</strong>
-            </div>
-            <div class="profile-achievement-years">
-              <article>
-                <span>South Africa 2010</span>
-                <strong id="profile2010AchievementCount">0 / 32</strong>
-                <div aria-hidden="true"><i id="profile2010AchievementBar"></i></div>
-              </article>
-              <article>
-                <span>Brazil 2014</span>
-                <strong id="profile2014AchievementCount">0 / 32</strong>
-                <div aria-hidden="true"><i id="profile2014AchievementBar"></i></div>
-              </article>
-              <article>
-                <span>Russia 2018</span>
-                <strong id="profile2018AchievementCount">0 / 32</strong>
-                <div aria-hidden="true"><i id="profile2018AchievementBar"></i></div>
-              </article>
-              <article>
-                <span>Qatar 2022</span>
-                <strong id="profile2022AchievementCount">0 / 32</strong>
-                <div aria-hidden="true"><i id="profile2022AchievementBar"></i></div>
-              </article>
-            </div>
             <div class="profile-unlocked-heading">
-              <h3>Unlocked</h3>
-              <span id="profileUnlockedCount">0 achievements</span>
+              <h2>Unlocked achievements</h2>
             </div>
             <div class="profile-unlocked-list" id="profileUnlockedAchievements">
               <p class="profile-empty-state">No World Cup achievements unlocked yet.</p>
@@ -1028,9 +1037,9 @@
           </section>
 
           <aside class="profile-history-section">
-            <span class="profile-coming-soon">COMING SOON</span>
             <h2>Tournament history</h2>
             <p>Your completed tournaments, champions and best runs will appear here.</p>
+            <span class="profile-coming-soon">Coming soon</span>
           </aside>
         </div>
         <section class="profile-danger-zone">

@@ -96,6 +96,8 @@ assert.equal(southAfricaCompleted.payload.achievement.title, "South Africa 2010 
 assert.equal(southAfricaCompleted.payload.achievement.year, 2010);
 assert.equal(southAfricaCompleted.payload.achievement.completed, 1);
 assert.equal(southAfricaCompleted.payload.achievement.total, 32);
+assert.equal(southAfricaCompleted.payload.unlockedTeam.points, 10);
+assert.equal(southAfricaCompleted.payload.achievement.completedPoints, southAfricaCompleted.payload.unlockedTeam.points);
 
 const southAfricaProgress = await request("/achievements/retro-2010");
 assert.equal(southAfricaProgress.response.status, 200);
@@ -170,6 +172,11 @@ assert.equal(qatarCompleted.payload.unlockedTeam.won, true);
 assert.equal(qatarCompleted.payload.achievement.id, "retro-2022-world-tour");
 assert.equal(qatarCompleted.payload.achievement.year, 2022);
 assert.equal(qatarCompleted.payload.achievement.total, 32);
+
+const achievementBoard = await request("/achievements/leaderboard");
+assert.equal(achievementBoard.response.status, 200);
+assert.equal(achievementBoard.payload.currentUser.achievements, 4);
+assert.equal(achievementBoard.payload.leaderboard.some((entry) => entry.username === updatedUsername), true);
 
 const tampered = await request("/runs", {
   method: "POST",

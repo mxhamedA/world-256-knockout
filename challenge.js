@@ -67,6 +67,7 @@
     profileDeleteSubmit: $("#profileDeleteSubmitButton"),
     profileAchievementCount: $("#profileAchievementCount"),
     profileAchievementTotal: $("#profileAchievementTotal"),
+    profileAchievementPoints: $("#profileAchievementPoints"),
     profileAchievementSummary: $("#profileAchievementSummary"),
     profile2010AchievementCount: $("#profile2010AchievementCount"),
     profile2014AchievementCount: $("#profile2014AchievementCount"),
@@ -97,6 +98,9 @@
     retroAchievementModalGrid: $("#retro2014ModalAchievementGrid"),
     retroAchievementLogin: $("#retroAchievementLoginButton"),
     retroAchievementModalDescription: $("#retroAchievementModalDescription"),
+    homeAchievementLeaderboard: $("#homeAchievementLeaderboard"),
+    homeAchievementOwn: $("#homeAchievementOwn"),
+    homeAchievementAction: $("#homeAchievementAction"),
   };
   let dashboard = null;
   let authMode = "login";
@@ -115,6 +119,7 @@
   let achievementBannerTimer = null;
   let pendingAchievementUnlock = null;
   const trackedRetroRequests = new Map();
+  let achievementLeaderboardPayload = null;
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
@@ -398,10 +403,12 @@
       syncGoogleButton();
       handleAuthReturn();
       await syncStoredRetroAchievements();
+      await loadAchievementLeaderboard();
       if (achievementsRouteActive()) await loadAchievements();
     } catch {
       syncMainAccount();
       syncGoogleButton();
+      await loadAchievementLeaderboard();
       if (achievementsRouteActive()) renderAchievements();
     }
   }
@@ -434,6 +441,7 @@
         <article class="achievement-country${progress.won ? " is-complete" : ""}">
           ${profileFlagMarkup(team, "achievement-country-flag")}
           <span><strong>${escapeHtml(progress.teamName)}</strong><small>${escapeHtml(status)}</small></span>
+          ${Number(progress.points) ? `<b>${Number(progress.points)} pts</b>` : ""}
         </article>
       `;
     }).join("");
@@ -457,11 +465,6 @@
   async function loadAchievements(year = activeAchievementYear) {
     if (!elements.achievementGrid) return;
     activeAchievementYear = [2010, 2014, 2018, 2022].includes(Number(year)) ? Number(year) : 2014;
-    if (!dashboard?.account) {
-      achievementPayloads.delete(activeAchievementYear);
-      renderAchievements();
-      return;
-    }
     try {
       achievementPayloads.set(activeAchievementYear, await challengeApi(`/achievements/retro-${activeAchievementYear}`));
     } catch (error) {
@@ -487,8 +490,8 @@
     const year = Number(payload.achievement?.year) || 2014;
     elements.achievementModalTitle.textContent = grandUnlock ? `${year} World Cup mastered` : `${payload.unlockedTeam.teamName} complete`;
     elements.achievementModalCopy.textContent = grandUnlock
-      ? `You have won the ${year} World Cup with all 32 countries.`
-      : `World Cup won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. ${payload.achievement.completed} of 32 countries complete.`;
+      ? `You have won the ${year} World Cup with all 32 countries. ${payload.achievement.completedPoints} points earned in this World Cup.`
+      : `World Cup won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of 32 countries complete.`;
     if (!elements.achievementModal.open) elements.achievementModal.showModal();
   }
 
@@ -497,7 +500,9 @@
     const grandUnlock = payload.challengeUnlocked === true;
     const year = Number(payload.achievement?.year) || 2014;
     pendingAchievementUnlock = payload;
-    elements.achievementBannerTitle.textContent = grandUnlock ? `${year} World Cup mastered` : `${payload.unlockedTeam.teamName} complete`;
+    elements.achievementBannerTitle.textContent = grandUnlock
+      ? `${year} World Cup mastered`
+      : `${payload.unlockedTeam.teamName} complete · +${payload.unlockedTeam.points} pts`;
     clearTimeout(achievementBannerTimer);
     elements.achievementBanner.hidden = false;
     requestAnimationFrame(() => elements.achievementBanner.classList.add("is-visible"));
@@ -583,14 +588,18 @@
     });
     const completed = achievements.reduce((sum, achievement) => sum + Number(achievement.completed || 0), 0);
     const total = achievements.reduce((sum, achievement) => sum + Number(achievement.total || 32), 0);
+    const points = achievements.reduce((sum, achievement) => sum + Number(achievement.completedPoints || 0), 0);
     const unlocked = achievements.flatMap((achievement) => (achievement.teams || [])
       .filter((team) => team.won)
       .map((team) => ({ ...team, year: Number(achievement.year) })));
 
     elements.profileAchievementCount.textContent = String(completed);
     elements.profileAchievementTotal.textContent = String(total);
-    elements.profileAchievementSummary.textContent = `${completed} / ${total}`;
-    elements.profileUnlockedCount.textContent = `${unlocked.length} ${unlocked.length === 1 ? "achievement" : "achievements"}`;
+    if (elements.profileAchievementPoints) elements.profileAchievementPoints.textContent = points.toLocaleString();
+    if (elements.profileAchievementSummary) elements.profileAchievementSummary.textContent = `${completed} / ${total}`;
+    if (elements.profileUnlockedCount) {
+      elements.profileUnlockedCount.textContent = `${unlocked.length} ${unlocked.length === 1 ? "achievement" : "achievements"}`;
+    }
 
     achievements.forEach((achievement) => {
       const year = Number(achievement.year);
@@ -608,8 +617,8 @@
         2018: elements.profile2018AchievementBar,
         2022: elements.profile2022AchievementBar,
       }[year];
-      countElement.textContent = `${yearCompleted} / ${yearTotal}`;
-      barElement.style.width = `${Math.min(100, (yearCompleted / yearTotal) * 100)}%`;
+      if (countElement) countElement.textContent = `${yearCompleted} / ${yearTotal}`;
+      if (barElement) barElement.style.width = `${Math.min(100, (yearCompleted / yearTotal) * 100)}%`;
     });
 
     elements.profileUnlockedAchievements.innerHTML = unlocked.length
@@ -625,11 +634,46 @@
               <small>${achievement.year} World Cup · Won in ${tries} ${tries === 1 ? "try" : "tries"}</small>
               ${unlockedAt ? `<time datetime="${new Date(Number(achievement.unlockedAt)).toISOString()}">Unlocked ${escapeHtml(unlockedAt)}</time>` : ""}
             </span>
-            <b aria-label="Unlocked">&#10003;</b>
+            <b aria-label="${Number(achievement.points || 0)} points">${Number(achievement.points || 0)} pts</b>
           </article>
         `;
       }).join("")
       : '<p class="profile-empty-state">No World Cup achievements unlocked yet.</p>';
+  }
+
+  function renderAchievementLeaderboard() {
+    if (!elements.homeAchievementLeaderboard) return;
+    const entries = achievementLeaderboardPayload?.leaderboard || [];
+    elements.homeAchievementLeaderboard.innerHTML = entries.length ? `
+      <div class="home-achievement-row is-heading">
+        <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
+      </div>
+      ${entries.slice(0, 10).map((entry) => `
+          <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}">
+            <strong>${entry.rank}</strong>
+            <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
+            <strong>${Number(entry.points || 0).toLocaleString()}</strong>
+            <span>${Number(entry.achievements || 0)} / ${Number(achievementLeaderboardPayload.totalAchievements || 128)}</span>
+          </div>
+        `).join("")}
+    ` : '<p class="home-achievement-empty">No achievements unlocked yet. The first points are waiting.</p>';
+    const own = achievementLeaderboardPayload?.currentUser;
+    if (elements.homeAchievementOwn) {
+      elements.homeAchievementOwn.hidden = !own;
+      elements.homeAchievementOwn.innerHTML = own
+        ? `<span>Your standing</span><strong>${own.rank ? `#${own.rank}` : "Unranked"}</strong><b>${Number(own.points || 0).toLocaleString()} pts · ${Number(own.achievements || 0)} achievements</b>`
+        : "";
+    }
+  }
+
+  async function loadAchievementLeaderboard() {
+    if (!elements.homeAchievementLeaderboard) return;
+    try {
+      achievementLeaderboardPayload = await challengeApi("/achievements/leaderboard");
+      renderAchievementLeaderboard();
+    } catch {
+      elements.homeAchievementLeaderboard.innerHTML = '<p class="home-achievement-empty">Standings could not be loaded.</p>';
+    }
   }
 
   function renderProfileCountries() {
@@ -887,6 +931,7 @@
   });
   elements.retroAchievementModalClose?.addEventListener("click", () => elements.retroAchievementModal.close());
   elements.retroAchievementLogin?.addEventListener("click", () => openAuth("login"));
+  elements.homeAchievementAction?.addEventListener("click", () => document.querySelector("#openAchievementsButton")?.click());
   document.querySelectorAll("[data-achievement-year]").forEach((button) => {
     button.addEventListener("click", () => void loadAchievements(Number(button.dataset.achievementYear)));
   });

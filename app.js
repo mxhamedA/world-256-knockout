@@ -14423,6 +14423,7 @@ els.settingsButton.addEventListener("click", () => {
   els.settingsModal.showModal();
 });
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
+$("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.click());
 els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
 function openCustomTournamentSettings() {
   stopStandardPlaybackForNavigation();
@@ -14436,6 +14437,8 @@ els.newsCloseButton?.addEventListener("click", () => els.newsModal?.close());
 els.retroSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 els.retroNewsButton?.addEventListener("click", () => els.newsButton.click());
 els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.click());
+$("#profileFeedbackButton")?.addEventListener("click", () => els.bugReportButton.click());
+$("#profileAchievementsButton")?.addEventListener("click", () => els.openAchievementsButton.click());
 els.retroAchievementsButton?.addEventListener("click", () => {
   if ([2010, 2014, 2018, 2022].includes(Number(retroTournament?.year))) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
@@ -14978,6 +14981,7 @@ const openDiscordModal = () => {
 els.discordButton?.addEventListener("click", openDiscordModal);
 els.settingsDiscordButton?.addEventListener("click", openDiscordModal);
 els.onlineDiscordButton?.addEventListener("click", openDiscordModal);
+$("#profileDiscordButton")?.addEventListener("click", openDiscordModal);
 els.discordCloseButton?.addEventListener("click", () => els.discordModal.close());
 const openDonateModal = () => {
   if (els.settingsModal?.open) els.settingsModal.close();
@@ -14985,7 +14989,11 @@ const openDonateModal = () => {
 };
 els.donateButton?.addEventListener("click", openDonateModal);
 els.onlineDonateButton?.addEventListener("click", openDonateModal);
+$("#profileDonateButton")?.addEventListener("click", openDonateModal);
 els.donateCloseButton?.addEventListener("click", () => els.donateModal?.close());
+$("#profileCurrentButton")?.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 $("#goToTopButton").addEventListener("click", () => {
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });

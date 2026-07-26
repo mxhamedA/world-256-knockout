@@ -64,6 +64,33 @@ const RETRO_2022_TEAMS = Object.freeze([
   "Brazil", "Serbia", "Switzerland", "Cameroon",
   "Portugal", "Ghana", "Uruguay", "South Korea",
 ]);
+const RETRO_TEAM_RATINGS = Object.freeze({
+  2010: Object.freeze([
+    71, 78, 83, 82, 87, 76, 75, 77,
+    83, 77, 72, 73, 87, 74, 78, 80,
+    87, 77, 75, 77, 82, 78, 68, 74,
+    88, 65, 80, 84, 90, 76, 69, 80,
+  ]),
+  2014: Object.freeze([
+    88, 81, 80, 74, 91, 87, 83, 72,
+    85, 77, 78, 76, 86, 78, 83, 84,
+    80, 77, 85, 69, 90, 78, 71, 76,
+    92, 84, 78, 77, 84, 74, 79, 72,
+  ]),
+  2018: Object.freeze([
+    81, 71, 74, 86, 86, 89, 75, 73,
+    92, 75, 78, 81, 87, 77, 87, 77,
+    91, 82, 76, 79, 90, 82, 81, 76,
+    90, 69, 74, 86, 82, 79, 84, 78,
+  ]),
+  2022: Object.freeze([
+    72, 78, 82, 87, 89, 77, 80, 77,
+    92, 72, 80, 81, 92, 76, 82, 75,
+    87, 76, 87, 80, 86, 77, 83, 86,
+    91, 80, 82, 77, 88, 76, 84, 79,
+  ]),
+});
+const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2010, 2014, 2018, 2022]);
 const API_HEADERS = Object.freeze({
   "Cache-Control": "no-store",
   "Content-Type": "application/json; charset=utf-8",
@@ -839,9 +866,25 @@ function retroAchievementConfig(year) {
   };
 }
 
+export function retroAchievementPoints(year, teamName) {
+  const config = retroAchievementConfig(year);
+  const ratings = RETRO_TEAM_RATINGS[config.year];
+  const teamIndex = config.teams.indexOf(teamName);
+  if (teamIndex < 0 || !ratings || ratings.length !== config.teams.length) return 0;
+  const rating = ratings[teamIndex];
+  if (rating >= 90) return 1;
+  if (rating >= 87) return 2;
+  if (rating >= 84) return 3;
+  if (rating >= 81) return 4;
+  if (rating >= 78) return 5;
+  if (rating >= 75) return 6;
+  if (rating >= 72) return 8;
+  return 10;
+}
+
 async function retroAchievementProgress(db, account, year) {
   const config = retroAchievementConfig(year);
-  const rows = (await db.prepare(`
+  const rows = account ? (await db.prepare(`
     WITH account_attempts AS (
       SELECT team_name, won, started_at, completed_at
       FROM ${config.table}
@@ -864,12 +907,13 @@ async function retroAchievementProgress(db, account, year) {
     FROM account_attempts attempts
     LEFT JOIN first_wins ON first_wins.team_name = attempts.team_name
     GROUP BY attempts.team_name
-  `).bind(account.id).all()).results;
+  `).bind(account.id).all()).results : [];
   const byTeam = new Map(rows.map((row) => [row.team_name, row]));
   const teams = config.teams.map((teamName) => {
     const row = byTeam.get(teamName);
     return {
       teamName,
+      points: retroAchievementPoints(config.year, teamName),
       attempts: Number(row?.attempts || 0),
       won: Number(row?.won || 0) === 1,
       wonOnAttempt: Number(row?.won_on_attempt || 0) || null,
@@ -877,15 +921,83 @@ async function retroAchievementProgress(db, account, year) {
     };
   });
   const completed = teams.filter((team) => team.won).length;
+  const completedPoints = teams.reduce((sum, team) => sum + (team.won ? team.points : 0), 0);
   return {
     id: config.id,
     title: config.title,
     year: config.year,
     completed,
+    completedPoints,
+    totalPoints: teams.reduce((sum, team) => sum + team.points, 0),
     total: config.teams.length,
     unlocked: completed === config.teams.length,
     teams,
   };
+}
+
+async function achievementLeaderboard(request, env) {
+  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false);
+  const rows = (await env.CHALLENGE_DB.prepare(`
+    SELECT accounts.id AS account_id, accounts.username, accounts.profile_country_id,
+      wins.year, wins.team_name, wins.unlocked_at
+    FROM accounts
+    LEFT JOIN (
+      SELECT account_id, 2010 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2010_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
+      SELECT account_id, 2014 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2014_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
+      SELECT account_id, 2018 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2018_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
+      SELECT account_id, 2022 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2022_attempts WHERE won = 1 GROUP BY account_id, team_name
+    ) wins ON wins.account_id = accounts.id
+  `).all()).results;
+  const byAccount = new Map();
+  rows.forEach((row) => {
+    const entry = byAccount.get(row.account_id) || {
+      accountId: row.account_id,
+      username: row.username,
+      profileCountryId: row.profile_country_id || null,
+      points: 0,
+      achievements: 0,
+      latestUnlock: 0,
+    };
+    if (row.year && row.team_name) {
+      entry.points += retroAchievementPoints(Number(row.year), row.team_name);
+      entry.achievements += 1;
+      entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
+    }
+    byAccount.set(row.account_id, entry);
+  });
+  const ranked = [...byAccount.values()]
+    .sort((left, right) => right.points - left.points
+      || right.achievements - left.achievements
+      || left.latestUnlock - right.latestUnlock
+      || left.username.localeCompare(right.username))
+    .map((entry, index) => ({
+      rank: index + 1,
+      username: entry.username,
+      profileCountryId: entry.profileCountryId,
+      points: entry.points,
+      achievements: entry.achievements,
+      isCurrentUser: entry.accountId === account?.id,
+    }));
+  const currentUser = account ? ranked.find((entry) => entry.isCurrentUser) || {
+    rank: null,
+    username: account.username,
+    profileCountryId: account.profile_country_id || null,
+    points: 0,
+    achievements: 0,
+    isCurrentUser: true,
+  } : null;
+  return responseJson({
+    leaderboard: ranked.slice(0, 100),
+    currentUser,
+    totalAchievements: RETRO_ACHIEVEMENT_YEARS.length * 32,
+  });
 }
 
 async function retroAchievement(request, env, account, year) {
@@ -940,11 +1052,17 @@ export async function handleChallengeRequest(request, env, url) {
     if (url.pathname === "/api/challenge/logout" && request.method === "POST") return await logout(request, env);
     if (url.pathname === "/api/challenge/google/start" && request.method === "GET") return await startGoogleLogin(request, env, url);
     if (url.pathname === "/api/challenge/google/callback" && request.method === "GET") return await completeGoogleLogin(request, env, url);
+    if (url.pathname === "/api/challenge/achievements/leaderboard" && request.method === "GET") {
+      return await achievementLeaderboard(request, env);
+    }
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2018|2022)$/);
+    if (retroAchievementMatch) {
+      const achievementAccount = await authenticatedAccount(request, env.CHALLENGE_DB, request.method !== "GET");
+      return await retroAchievement(request, env, achievementAccount, Number(retroAchievementMatch[1]));
+    }
     const account = await authenticatedAccount(request, env.CHALLENGE_DB);
     if (url.pathname === "/api/challenge/profile") return await profile(request, env, account);
     if (url.pathname === "/api/challenge/profile/deletion-request") return await requestAccountDeletion(request, env, account);
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2018|2022)$/);
-    if (retroAchievementMatch) return await retroAchievement(request, env, account, Number(retroAchievementMatch[1]));
     if (url.pathname === "/api/challenge/runs" && request.method === "POST") return await startRun(request, env, account);
     const runMatch = url.pathname.match(/^\/api\/challenge\/runs\/([0-9a-f-]{36})\/play$/i);
     if (runMatch && request.method === "POST") return await playRun(request, env, account, runMatch[1]);
