@@ -9,7 +9,7 @@ const RETRO_WORLD_CUP_TEAM_KEY_PREFIX = "world-256-retro-world-cup-team";
 const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
 const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
 const CUSTOM_TOURNAMENT_SETUP_KEY = "world-256-custom-tournament-setup-v1";
-const CUSTOM_TOURNAMENT_TEAM_COUNTS = Object.freeze([8, 16, 24, 32, 64, 128, 256]);
+const CUSTOM_TOURNAMENT_TEAM_COUNTS = Object.freeze([8, 16, 24, 32, 48, 64, 128, 256]);
 const ONLINE_PARTY_MODE_ENABLED = false;
 const STATE_VERSION = 2;
 
@@ -5024,7 +5024,13 @@ function customTournamentBracketSize(teamCount = state?.customTournament?.teamCo
 }
 
 function customGroupQualifierCount(teamCount) {
-  return Number(teamCount) === 24 ? 16 : Math.max(4, Number(teamCount) / 2);
+  if (Number(teamCount) === 24) return 16;
+  if (Number(teamCount) === 48) return 32;
+  return Math.max(4, Number(teamCount) / 2);
+}
+
+function customTournamentRequiresGroups(teamCount) {
+  return Number(teamCount) === 24;
 }
 
 function customRoundNames(teamCount = 32, structure = "knockout") {
@@ -10614,11 +10620,21 @@ function renderStage() {
       if (trophy) {
         trophy.textContent = isRetroSimulatorState()
           ? `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
+          : isValidCustomTournamentState(state)
+            ? `${state.customTournament.teamCount} TEAM CUSTOM TOURNAMENT CHAMPIONS`
           : "256 TEAMS WC CHAMPIONS";
       }
       if (summary) {
+        const customChampionMatches = isValidCustomTournamentState(state)
+          ? state.rounds.flat().filter((match) => (
+            match?.result
+            && (match.homeId === champion.id || match.awayId === champion.id)
+          )).length
+          : 0;
         summary.textContent = isRetroSimulatorState()
           ? "Seven matches. One unforgettable World Cup."
+          : isValidCustomTournamentState(state)
+            ? `${customChampionMatches} ${customChampionMatches === 1 ? "match" : "matches"}. A field of ${state.customTournament.teamCount} conquered.`
           : "Eight wins. A field of 256 conquered.";
       }
       els.matchContent.hidden = true;
@@ -11728,7 +11744,7 @@ function defaultCustomTournamentSetup(teamCount = 32) {
   return {
     setupVersion: 2,
     teamCount,
-    structure: teamCount === 24 ? "groups" : "knockout",
+    structure: customTournamentRequiresGroups(teamCount) ? "groups" : "knockout",
     thirdPlace: false,
     format: "full",
     upset: "balanced",
@@ -11758,9 +11774,9 @@ function readCustomTournamentSetup() {
     return {
       setupVersion: 2,
       teamCount,
-      structure: teamCount === 24 || saved?.structure === "groups" ? "groups" : "knockout",
+      structure: customTournamentRequiresGroups(teamCount) || saved?.structure === "groups" ? "groups" : "knockout",
       thirdPlace: saved?.thirdPlace === true,
-      format: teamCount === 24 || saved?.structure === "groups" ? "full" : saved?.format === "penalties" ? "penalties" : "full",
+      format: customTournamentRequiresGroups(teamCount) || saved?.structure === "groups" ? "full" : saved?.format === "penalties" ? "penalties" : "full",
       upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : "balanced",
       goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : "normal",
       sourceFilter: ["current", "2010", "2014", "2018", "2022", "all-retro"].includes(String(saved?.sourceFilter))
@@ -11918,9 +11934,9 @@ function importCustomTournamentPreset(payload) {
   customTournamentSetup = {
     setupVersion: 2,
     teamCount,
-    structure: teamCount === 24 || payload.structure === "groups" ? "groups" : "knockout",
+    structure: customTournamentRequiresGroups(teamCount) || payload.structure === "groups" ? "groups" : "knockout",
     thirdPlace: payload.thirdPlace === true,
-    format: teamCount === 24 || payload.structure === "groups" ? "full" : payload.format === "penalties" ? "penalties" : "full",
+    format: customTournamentRequiresGroups(teamCount) || payload.structure === "groups" ? "full" : payload.format === "penalties" ? "penalties" : "full",
     upset: SIMULATION_CONFIG.modes[payload.upset] ? payload.upset : "balanced",
     goals: SIMULATION_CONFIG.goals[payload.goals] ? payload.goals : "normal",
     sourceFilter: ["current", "2010", "2014", "2018", "2022", "all-retro"].includes(String(payload.sourceFilter))
@@ -11929,7 +11945,7 @@ function importCustomTournamentPreset(payload) {
     managedTeamId: selectedIds.includes(managedTeamId) ? managedTeamId : null,
     selectedIds,
     abilityOverrides,
-    scripts: sanitizeImportedCustomScripts(payload.scripts, teamCount, teamCount === 24 || payload.structure === "groups" ? "groups" : "knockout"),
+    scripts: sanitizeImportedCustomScripts(payload.scripts, teamCount, customTournamentRequiresGroups(teamCount) || payload.structure === "groups" ? "groups" : "knockout"),
   };
   customTournamentUi = {
     tab: "bracket",
@@ -12020,7 +12036,7 @@ function customPresetPool(preset) {
 function setCustomTeamCount(teamCount) {
   const current = customTournamentSetup.selectedIds.filter((id) => TEAM_BY_ID.has(id));
   customTournamentSetup.teamCount = teamCount;
-  if (teamCount === 24) {
+  if (customTournamentRequiresGroups(teamCount)) {
     customTournamentSetup.structure = "groups";
     customTournamentSetup.format = "full";
   }
@@ -12061,18 +12077,27 @@ function customSlotMarkup(teamId, index, locationLabel) {
   `;
 }
 
-function customOpeningMatchDefinitions() {
+function customOpeningMatchDefinitions(teamCount = customTournamentSetup.teamCount) {
   const definitions = [];
-  if (customTournamentSetup.teamCount === 24) {
-    [0, 12].forEach((sideStart) => {
-      for (let index = 0; index < 4; index += 1) {
+  const bracketSize = customTournamentBracketSize(teamCount);
+  const byeCount = bracketSize - teamCount;
+  if (byeCount > 0) {
+    const teamsPerSide = teamCount / 2;
+    const byesPerSide = byeCount / 2;
+    [0, teamsPerSide].forEach((sideStart) => {
+      const openingTeamStart = sideStart + byesPerSide;
+      for (let index = 0; index < byesPerSide; index += 1) {
         definitions.push({ homeIndex: sideStart + index, awayIndex: null, bye: true });
-        definitions.push({ homeIndex: sideStart + 4 + index * 2, awayIndex: sideStart + 5 + index * 2, bye: false });
+        definitions.push({
+          homeIndex: openingTeamStart + index * 2,
+          awayIndex: openingTeamStart + index * 2 + 1,
+          bye: false,
+        });
       }
     });
     return definitions;
   }
-  for (let index = 0; index < customTournamentSetup.teamCount; index += 2) {
+  for (let index = 0; index < teamCount; index += 2) {
     definitions.push({ homeIndex: index, awayIndex: index + 1, bye: false });
   }
   return definitions;
@@ -12363,7 +12388,7 @@ function customRoundMatchCount(teamCount, roundIndex) {
 }
 
 function customMatchIsBye(teamCount, roundIndex, matchIndex) {
-  return teamCount === 24 && roundIndex === 0 && matchIndex % 2 === 0;
+  return roundIndex === 0 && customOpeningMatchDefinitions(teamCount)[matchIndex]?.bye === true;
 }
 
 function customScriptPanelMarkup() {
@@ -12542,18 +12567,24 @@ function customInlineMatchEditorMarkup() {
 function renderCustomTournamentSetup() {
   if (!els.customTournamentBody) return;
   const selectedCount = customTournamentSetup.selectedIds.filter(Boolean).length;
+  const activeTournament = isValidCustomTournamentState(state) && state.started;
   const selectedTeams = customTournamentSetup.selectedIds.map(customSetupTeam).filter(Boolean);
   const managedTeamId = selectedTeams.some((team) => team.id === customTournamentSetup.managedTeamId)
     ? customTournamentSetup.managedTeamId
     : "";
   if (els.customHeaderTeamCount) els.customHeaderTeamCount.textContent = `${selectedCount}/${customTournamentSetup.teamCount} teams`;
-  if (els.customHeaderStartButton) els.customHeaderStartButton.disabled = selectedCount !== customTournamentSetup.teamCount;
+  if (els.customHeaderStartButton) {
+    els.customHeaderStartButton.disabled = !activeTournament && selectedCount !== customTournamentSetup.teamCount;
+    els.customHeaderStartButton.innerHTML = activeTournament
+      ? 'Return to tournament <span aria-hidden="true">&rarr;</span>'
+      : 'Start tournament <span aria-hidden="true">&rarr;</span>';
+  }
   els.customTournamentBody.innerHTML = `
     <section class="custom-config-bar">
       <div class="custom-config-group"><span>Teams</span><div class="custom-segmented custom-team-count-control">${CUSTOM_TOURNAMENT_TEAM_COUNTS.map((count) => `<button type="button" data-custom-action="team-count" data-count="${count}" class="${count === customTournamentSetup.teamCount ? "active" : ""}">${count}</button>`).join("")}</div></div>
       <div class="custom-config-group custom-format-config">
         <span>Format</span>
-        <div class="custom-segmented"><button type="button" data-custom-action="structure" data-structure="knockout" class="${customTournamentSetup.structure === "knockout" ? "active" : ""}" ${customTournamentSetup.teamCount === 24 ? "disabled title=\"24 teams uses the Euros group format\"" : ""}>Knockout</button><button type="button" data-custom-action="structure" data-structure="groups" class="${customTournamentSetup.structure === "groups" ? "active" : ""}">${customTournamentSetup.teamCount === 24 ? "Euros format" : "Groups"}</button></div>
+        <div class="custom-segmented"><button type="button" data-custom-action="structure" data-structure="knockout" class="${customTournamentSetup.structure === "knockout" ? "active" : ""}" ${customTournamentRequiresGroups(customTournamentSetup.teamCount) ? `disabled title="${customTournamentSetup.teamCount}-team tournaments use a group stage"` : ""}>Knockout</button><button type="button" data-custom-action="structure" data-structure="groups" class="${customTournamentSetup.structure === "groups" ? "active" : ""}">${customTournamentSetup.teamCount === 24 ? "Euros format" : customTournamentSetup.teamCount === 48 ? "World Cup format" : "Groups"}</button></div>
         ${customTournamentSetup.structure === "knockout" ? `
           <button class="custom-third-place-toggle ${customTournamentSetup.thirdPlace ? "active" : ""}" type="button" data-custom-action="third-place" aria-pressed="${customTournamentSetup.thirdPlace}">
             <i aria-hidden="true"></i>
@@ -12714,8 +12745,10 @@ function handleCustomTournamentAction(button) {
   }
   if (action === "team-count") return setCustomTeamCount(Number(button.dataset.count));
   if (action === "structure") {
-    if (customTournamentSetup.teamCount === 24 && button.dataset.structure !== "groups") {
-      showToast("The 24-team option uses the Euros group format.");
+    if (customTournamentRequiresGroups(customTournamentSetup.teamCount) && button.dataset.structure !== "groups") {
+      showToast(customTournamentSetup.teamCount === 24
+        ? "The 24-team option uses the Euros group format."
+        : "The 48-team option uses the World Cup group format.");
       return;
     }
     customTournamentSetup.structure = button.dataset.structure === "groups" ? "groups" : "knockout";
@@ -13009,7 +13042,7 @@ function handleCustomTournamentAction(button) {
     renderCustomTournamentSetup();
     return;
   }
-  if (action === "start-custom") startCustomTournament();
+  if (action === "start-custom") handleCustomTournamentStartAction();
 }
 
 function createCustomGroupRound(selectedIds) {
@@ -13078,11 +13111,12 @@ function customGroupQualifiers() {
   const groupCount = state.customTournament.teamCount / 4;
   const tables = Array.from({ length: groupCount }, (_, groupIndex) => customGroupStandings(groupIndex));
   const qualifiers = tables.flatMap((table) => table.slice(0, 2).map((row, position) => ({ ...row, position })));
-  if (state.customTournament.teamCount === 24) {
+  if ([24, 48].includes(state.customTournament.teamCount)) {
+    const bestThirdPlaceCount = customGroupQualifierCount(state.customTournament.teamCount) - groupCount * 2;
     qualifiers.push(...tables
       .map((table) => ({ ...table[2], position: 2 }))
       .sort((left, right) => right.points - left.points || right.gd - left.gd || right.gf - left.gf)
-      .slice(0, 4));
+      .slice(0, bestThirdPlaceCount));
   }
   return qualifiers.sort((left, right) => (
     left.position - right.position
@@ -13126,6 +13160,34 @@ function customEuroKnockoutPairings(tables) {
   ];
 }
 
+function customWorldCup48KnockoutPairings(tables) {
+  const thirdPlaceTeams = customGroupQualifiers().filter((entry) => entry.position === 2);
+  const winnersFacingThirds = tables.slice(0, 8).map((table) => table[0]);
+  const assignThirdPlaceTeams = (winnerIndex, available, assigned = []) => {
+    if (winnerIndex >= winnersFacingThirds.length) return assigned;
+    const winner = winnersFacingThirds[winnerIndex];
+    for (let index = 0; index < available.length; index += 1) {
+      if (available[index].groupIndex === winner.groupIndex) continue;
+      const result = assignThirdPlaceTeams(
+        winnerIndex + 1,
+        available.filter((_, candidateIndex) => candidateIndex !== index),
+        [...assigned, available[index]],
+      );
+      if (result) return result;
+    }
+    return null;
+  };
+  const assignedThirds = assignThirdPlaceTeams(0, thirdPlaceTeams) || thirdPlaceTeams;
+  const winnerThirdPairings = winnersFacingThirds.map((winner, index) => [winner, assignedThirds[index]]);
+  const remainingWinnerPairings = tables.slice(8, 12).map((table, index) => [table[0], tables[index][1]]);
+  const remainingRunners = tables.slice(4, 12).map((table) => table[1]);
+  const runnerPairings = [];
+  for (let index = 0; index < remainingRunners.length; index += 2) {
+    runnerPairings.push([remainingRunners[index], remainingRunners[index + 1]]);
+  }
+  return [...winnerThirdPairings, ...remainingWinnerPairings, ...runnerPairings];
+}
+
 function customStandardGroupKnockoutPairings(tables) {
   const firstHalf = [];
   const secondHalf = [];
@@ -13141,7 +13203,9 @@ function customGroupKnockoutRound() {
   const tables = Array.from({ length: groupCount }, (_, groupIndex) => customGroupStandings(groupIndex));
   const pairings = state.customTournament.teamCount === 24
     ? customEuroKnockoutPairings(tables)
-    : customStandardGroupKnockoutPairings(tables);
+    : state.customTournament.teamCount === 48
+      ? customWorldCup48KnockoutPairings(tables)
+      : customStandardGroupKnockoutPairings(tables);
   return pairings.map(([home, away], index) => ({
     id: `r1-m${index}`,
     homeId: home.teamId,
@@ -13159,16 +13223,13 @@ function createCustomTournamentState() {
   const firstRound = [];
   if (customTournamentSetup.structure === "groups") {
     firstRound.push(...createCustomGroupRound(selectedIds));
-  } else if (customTournamentSetup.teamCount === 24) {
-    const half = selectedIds.length / 2;
-    [selectedIds.slice(0, half), selectedIds.slice(half)].forEach((sideTeams) => {
-      const byeTeams = sideTeams.slice(0, 4);
-      const openingTeams = sideTeams.slice(4);
-      byeTeams.forEach((teamId, index) => {
-        const byeMatchIndex = firstRound.length;
+  } else {
+    customOpeningMatchDefinitions().forEach((definition, index) => {
+      const homeId = selectedIds[definition.homeIndex];
+      if (definition.bye) {
         firstRound.push({
-          id: `r0-m${byeMatchIndex}`,
-          homeId: teamId,
+          id: `r0-m${index}`,
+          homeId,
           awayId: null,
           result: {
             homeGoals: 0,
@@ -13178,7 +13239,7 @@ function createCustomTournamentState() {
             extraTime: false,
             penalties: null,
             shootout: null,
-            winnerId: teamId,
+            winnerId: homeId,
             homeEvents: [],
             awayEvents: [],
             redCards: [],
@@ -13190,23 +13251,15 @@ function createCustomTournamentState() {
             revealed: true,
           },
         });
-        firstRound.push({
-          id: `r0-m${firstRound.length}`,
-          homeId: openingTeams[index * 2],
-          awayId: openingTeams[index * 2 + 1],
-          result: null,
-        });
-      });
-    });
-  } else {
-    for (let index = 0; index < selectedIds.length; index += 2) {
+        return;
+      }
       firstRound.push({
-        id: `r0-m${index / 2}`,
-        homeId: selectedIds[index],
-        awayId: selectedIds[index + 1],
+        id: `r0-m${index}`,
+        homeId,
+        awayId: selectedIds[definition.awayIndex],
         result: null,
       });
-    }
+    });
   }
   const managedOpeningIndex = managedTeamId
     ? firstRound.findIndex((match) => !match.result && [match.homeId, match.awayId].includes(managedTeamId))
@@ -13260,6 +13313,19 @@ function startCustomTournament() {
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
   showToast(`${customTournamentSetup.teamCount}-team custom tournament is ready.`);
+}
+
+function handleCustomTournamentStartAction() {
+  if (isValidCustomTournamentState(state) && state.started) {
+    stopStandardPlaybackForNavigation();
+    customTournamentSetupViewOpen = false;
+    saveState();
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    showToast("Tournament resumed.");
+    return;
+  }
+  startCustomTournament();
 }
 
 function render() {
@@ -15016,7 +15082,7 @@ els.customTournamentBackButton?.addEventListener("click", () => {
 
 document.querySelector("[data-custom-header-action='save-preset']")?.addEventListener("click", downloadCustomTournamentPreset);
 document.querySelector("[data-custom-header-action='import-preset']")?.addEventListener("click", () => els.customPresetFile?.click());
-els.customHeaderStartButton?.addEventListener("click", startCustomTournament);
+els.customHeaderStartButton?.addEventListener("click", handleCustomTournamentStartAction);
 els.customPresetFile?.addEventListener("change", (event) => readCustomTournamentPresetFile(event.target.files?.[0]));
 
 els.startTournamentButton.addEventListener("click", () => {

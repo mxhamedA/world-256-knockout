@@ -58,5 +58,8 @@ assert.match(authUi, /id="challengeIdentifierLabel">Username or email/);
 assert.match(authClient, /elements\.email\.required = !isLogin/);
 assert.match(authClient, /\? \{ identifier: elements\.username\.value, password: elements\.password\.value \}/);
 assert.match(authClient, /: \{ email: elements\.email\.value, username: elements\.username\.value, password: elements\.password\.value \}/);
+assert.match(authUi, /id="usernameReviewModal"/);
+assert.match(authClient, /account\?\.usernameNeedsReview/);
+assert.match(authClient, /body: \{ username: elements\.usernameReviewInput\.value \}/);
 
 console.log("Palestine Challenge authentication tests passed.");

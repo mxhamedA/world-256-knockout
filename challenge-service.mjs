@@ -183,13 +183,26 @@ export async function verifyGoogleIdToken(idToken, env, expectedNonce) {
   return { ...claims, email: verifiedEmail };
 }
 
-async function uniqueGoogleUsername(db, claims) {
-  const source = String(claims.email).split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/^_+|_+$/g, "");
+export async function generatedGoogleUsername(email, subject, attempt = 0) {
+  const source = String(email).split("@")[0].toLowerCase().replace(/[^a-z0-9_]/g, "_").replace(/^_+|_+$/g, "");
   const base = (source.length >= 3 ? source : "player").slice(0, 13);
-  const suffix = (await hashChallengeSessionToken(claims.sub)).slice(0, 6).toLowerCase();
+  const suffix = (await hashChallengeSessionToken(subject)).slice(0, 6).toLowerCase();
+  const tail = attempt ? `${suffix}${attempt}` : suffix;
+  return `${base.slice(0, 19 - tail.length)}_${tail}`;
+}
+
+export async function generatedGoogleUsernameNeedsReview(account) {
+  if (!account?.google_subject) return false;
+  const candidates = await Promise.all(Array.from(
+    { length: 20 },
+    (_, attempt) => generatedGoogleUsername(account.email, account.google_subject, attempt),
+  ));
+  return candidates.includes(account.username);
+}
+
+async function uniqueGoogleUsername(db, claims) {
   for (let attempt = 0; attempt < 20; attempt += 1) {
-    const tail = attempt ? `${suffix}${attempt}` : suffix;
-    const candidate = `${base.slice(0, 19 - tail.length)}_${tail}`;
+    const candidate = await generatedGoogleUsername(claims.email, claims.sub, attempt);
     const exists = await db.prepare("SELECT 1 FROM accounts WHERE username = ? COLLATE NOCASE").bind(candidate).first();
     if (!exists) return candidate;
   }
@@ -403,6 +416,7 @@ function publicAccount(account) {
     username: account.username,
     profileCountryId: country?.id || null,
     profileCountryName: country?.name || null,
+    usernameNeedsReview: account.usernameNeedsReview === true,
   };
 }
 
@@ -430,13 +444,20 @@ async function authenticatedAccount(request, db, required = true) {
   }
   const tokenHash = await hashChallengeSessionToken(token);
   const account = await db.prepare(`
-    SELECT accounts.id, accounts.username, accounts.profile_country_id, accounts.created_at
+    SELECT accounts.id, accounts.username, accounts.email, accounts.profile_country_id, accounts.created_at,
+      (
+        SELECT provider_subject FROM auth_identities
+        WHERE account_id = accounts.id AND provider = 'google'
+        LIMIT 1
+      ) AS google_subject
     FROM sessions
     JOIN accounts ON accounts.id = sessions.account_id
     WHERE sessions.token_hash = ? AND sessions.revoked_at IS NULL AND sessions.expires_at > ?
   `).bind(tokenHash, Date.now()).first();
   if (!account && required) throw new ChallengeRequestError("Your session has expired. Please log in again.", 401);
-  return account ? { ...account, tokenHash } : null;
+  if (!account) return null;
+  const usernameNeedsReview = await generatedGoogleUsernameNeedsReview(account);
+  return { ...account, tokenHash, usernameNeedsReview };
 }
 
 async function createSession(db, accountId, request) {
@@ -544,7 +565,9 @@ async function profile(request, env, account) {
   const body = await readJson(request);
   const username = normalizeChallengeUsername(body.username);
   if (!username) throw new ChallengeRequestError("Use 3-20 lowercase letters, numbers or underscores for your username.");
-  const countryId = validProfileCountryId(body.profileCountryId);
+  const countryId = Object.prototype.hasOwnProperty.call(body, "profileCountryId")
+    ? validProfileCountryId(body.profileCountryId)
+    : account.profile_country_id || null;
   if (countryId === undefined) throw new ChallengeRequestError("Choose a valid country for your profile picture.");
   const now = Date.now();
   try {

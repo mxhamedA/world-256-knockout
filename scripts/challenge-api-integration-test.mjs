@@ -55,6 +55,11 @@ assert.equal(profile.response.status, 200);
 assert.equal(profile.payload.account.username, username);
 assert.ok(profile.payload.countries.some((country) => country.id === "team-131"));
 
+const usernameOnly = `${username}_r`.slice(0, 20);
+const usernameOnlyProfile = await request("/profile", { method: "PATCH", body: { username: usernameOnly } });
+assert.equal(usernameOnlyProfile.response.status, 200);
+assert.equal(usernameOnlyProfile.payload.account.username, usernameOnly);
+
 const updatedUsername = `${username}_x`.slice(0, 20);
 const updatedProfile = await request("/profile", { method: "PATCH", body: { username: updatedUsername, profileCountryId: "team-131" } });
 assert.equal(updatedProfile.response.status, 200);

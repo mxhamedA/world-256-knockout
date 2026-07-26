@@ -17414,6 +17414,90 @@ body.profile-mode-active #retroWorldCupScreen { display: none !important; }
 .challenge-auth-switch { justify-self: center; }
 .challenge-auth-divider { display: flex; align-items: center; gap: 10px; color: #708198; font-size: 11px; text-transform: uppercase; }
 .challenge-auth-divider::before, .challenge-auth-divider::after { content: ""; height: 1px; flex: 1; background: #26364d; }
+
+.username-review-modal {
+  width: min(470px, calc(100vw - 28px));
+  padding: 0;
+  border: 1px solid #293a50;
+  border-radius: 6px;
+  color: #f4f7fc;
+  background: #0d1723;
+}
+
+.username-review-modal::backdrop {
+  background: rgba(2, 7, 12, .78);
+}
+
+.username-review-modal form {
+  display: grid;
+  gap: 18px;
+  padding: 28px;
+}
+
+.username-review-modal .modal-head {
+  margin: 0;
+}
+
+.username-review-modal h2 {
+  margin: 4px 0 0;
+  font-size: 27px;
+}
+
+.username-review-modal p {
+  margin: 0;
+  color: #9aa9bd;
+  line-height: 1.5;
+}
+
+.username-review-modal label > span {
+  display: block;
+  margin-bottom: 7px;
+  color: #aebacd;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.username-review-modal input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 13px;
+  border: 1px solid #2b3c53;
+  border-radius: 4px;
+  color: #f5f8fd;
+  background: #08111b;
+  font: inherit;
+}
+
+.username-review-message {
+  min-height: 20px;
+  color: #e58c97 !important;
+}
+
+.username-review-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.username-review-actions .primary-button {
+  min-height: 48px;
+}
+
+@media (max-width: 480px) {
+  .username-review-modal form {
+    padding: 22px;
+  }
+
+  .username-review-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+
+  .username-review-actions button {
+    width: 100%;
+  }
+}
 .challenge-google-button { display: flex; min-height: 50px; align-items: center; justify-content: center; gap: 10px; }
 .challenge-google-button .google-icon { display: grid; width: 22px; height: 22px; place-items: center; }
 .challenge-google-button .google-icon svg { display: block; width: 22px; height: 22px; }
@@ -24945,7 +25029,7 @@ body.custom-tournament-mode-active #mainContent {
 
   .custom-team-count-control {
     grid-auto-flow: column;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(8, minmax(0, 1fr));
     width: 100%;
   }
 

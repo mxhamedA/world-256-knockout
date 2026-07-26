@@ -1089,6 +1089,28 @@
       </form>
     </dialog>
 
+    <dialog class="modal username-review-modal" id="usernameReviewModal">
+      <form id="usernameReviewForm">
+        <div class="modal-head">
+          <div>
+            <span class="section-kicker">YOUR ACCOUNT</span>
+            <h2>Choose your username</h2>
+          </div>
+          <button class="icon-button close-modal" id="usernameReviewCloseButton" type="button" aria-label="Not now">&times;</button>
+        </div>
+        <p>Your current name was generated automatically. Pick one that looks like you.</p>
+        <label>
+          <span>Username</span>
+          <input id="usernameReviewInput" name="username" autocomplete="username" minlength="3" maxlength="20" required />
+        </label>
+        <p class="challenge-message username-review-message" id="usernameReviewMessage" role="status" aria-live="polite"></p>
+        <div class="username-review-actions">
+          <button class="text-button" id="usernameReviewLaterButton" type="button">Not now</button>
+          <button class="primary-button" id="usernameReviewSaveButton" type="submit">Save username</button>
+        </div>
+      </form>
+    </dialog>
+
     <dialog class="modal profile-delete-modal" id="profileDeleteModal">
       <form id="profileDeleteForm">
         <div class="modal-head">

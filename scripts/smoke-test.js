@@ -35,8 +35,33 @@ vm.runInContext(
 
 const teams = context.__teams;
 assert.equal(teams.length, 256, "The tournament must contain exactly 256 teams.");
+assert.match(
+  appSource,
+  /CUSTOM_TOURNAMENT_TEAM_COUNTS = Object\.freeze\(\[8, 16, 24, 32, 48, 64, 128, 256\]\)/,
+  "Custom tournaments must offer a 48-team field.",
+);
+assert.match(
+  appSource,
+  /function customWorldCup48KnockoutPairings\([\s\S]*?winnerThirdPairings[\s\S]*?remainingWinnerPairings[\s\S]*?runnerPairings/,
+  "The 48-team group format must generate a complete 32-team knockout field.",
+);
 assert.doesNotMatch(appSource, /â€“|Ã—/, "Visible score and speed labels must not contain mojibake.");
 assert.doesNotMatch(draftCatalogSource, /CÃ©dric|NathanaÃ«l/, "Generated player names must preserve Unicode.");
+assert.match(
+  appSource,
+  /function handleCustomTournamentStartAction\(\)[\s\S]*?isValidCustomTournamentState\(state\) && state\.started[\s\S]*?customTournamentSetupViewOpen = false;[\s\S]*?Tournament resumed\./,
+  "Returning from custom tournament settings must resume the saved bracket instead of rebuilding it.",
+);
+assert.match(
+  appSource,
+  /isValidCustomTournamentState\(state\)[\s\S]*?`\$\{state\.customTournament\.teamCount\} TEAM CUSTOM TOURNAMENT CHAMPIONS`[\s\S]*?A field of \$\{state\.customTournament\.teamCount\} conquered\./,
+  "The custom tournament champion screen must use the configured field size instead of the default 256-team copy.",
+);
+assert.match(
+  appSource,
+  /activeTournament[\s\S]*?Return to tournament[\s\S]*?Start tournament/,
+  "The custom setup header must expose a clear return action while a tournament is active.",
+);
 const drCongo = teams.find((team) => team.name === "DR Congo");
 assert.equal(drCongo.playerProfiles.length, 26, "Recognised teams should expose a complete 26-player squad.");
 assert.deepEqual(

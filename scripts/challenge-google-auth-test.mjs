@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { verifyGoogleIdToken } from "../challenge-service.mjs";
+import {
+  generatedGoogleUsername,
+  generatedGoogleUsernameNeedsReview,
+  verifyGoogleIdToken,
+} from "../challenge-service.mjs";
 
 const encoder = new TextEncoder();
 const originalFetch = globalThis.fetch;
@@ -45,6 +49,18 @@ try {
   const claims = await verifyGoogleIdToken(await token(), { GOOGLE_CLIENT_ID: clientId }, nonce);
   assert.equal(claims.sub, "google-subject-123");
   assert.equal(claims.email, "player@example.com");
+  const generatedUsername = await generatedGoogleUsername(claims.email, claims.sub);
+  assert.match(generatedUsername, /^player_[a-z0-9_-]{6}$/);
+  assert.equal(await generatedGoogleUsernameNeedsReview({
+    username: generatedUsername,
+    email: claims.email,
+    google_subject: claims.sub,
+  }), true);
+  assert.equal(await generatedGoogleUsernameNeedsReview({
+    username: "player",
+    email: claims.email,
+    google_subject: claims.sub,
+  }), false);
   await assert.rejects(async () => verifyGoogleIdToken(await token({ aud: "attacker-client" }), { GOOGLE_CLIENT_ID: clientId }, nonce));
   await assert.rejects(async () => verifyGoogleIdToken(await token(), { GOOGLE_CLIENT_ID: clientId }, "wrong-nonce"));
   await assert.rejects(async () => verifyGoogleIdToken(await token({ exp: 1 }), { GOOGLE_CLIENT_ID: clientId }, nonce));

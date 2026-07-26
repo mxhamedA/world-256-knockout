@@ -44,6 +44,13 @@
     identifierLabel: $("#challengeIdentifierLabel"),
     username: $("#challengeUsername"),
     password: $("#challengePassword"),
+    usernameReviewModal: $("#usernameReviewModal"),
+    usernameReviewForm: $("#usernameReviewForm"),
+    usernameReviewInput: $("#usernameReviewInput"),
+    usernameReviewMessage: $("#usernameReviewMessage"),
+    usernameReviewSave: $("#usernameReviewSaveButton"),
+    usernameReviewClose: $("#usernameReviewCloseButton"),
+    usernameReviewLater: $("#usernameReviewLaterButton"),
     profileBack: $("#profileBackButton"),
     profileForm: $("#profileForm"),
     profileUsername: $("#profileUsername"),
@@ -120,6 +127,7 @@
   let pendingAchievementUnlock = null;
   const trackedRetroRequests = new Map();
   let achievementLeaderboardPayload = null;
+  let reviewedUsernameAccountId = null;
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
@@ -210,6 +218,23 @@
     const enabled = dashboard?.auth?.googleEnabled === true;
     elements.googleSignIn.disabled = !enabled;
     elements.googleSignIn.title = enabled ? "Continue with Google" : "Google sign-in needs to be configured";
+  }
+
+  function promptForGeneratedUsername() {
+    const account = dashboard?.account;
+    if (!elements.usernameReviewModal || !account?.usernameNeedsReview || reviewedUsernameAccountId === account.id) return;
+    reviewedUsernameAccountId = account.id;
+    elements.usernameReviewInput.value = account.username;
+    elements.usernameReviewMessage.textContent = "";
+    if (!elements.usernameReviewModal.open) elements.usernameReviewModal.showModal();
+    requestAnimationFrame(() => {
+      elements.usernameReviewInput.focus();
+      elements.usernameReviewInput.select();
+    });
+  }
+
+  function queueGeneratedUsernamePrompt() {
+    window.setTimeout(promptForGeneratedUsername, 0);
   }
 
   function handleAuthReturn() {
@@ -386,6 +411,7 @@
       serverOffset = payload.challenge.serverTime - Date.now();
       renderDashboard();
       handleAuthReturn();
+      queueGeneratedUsernamePrompt();
       await syncStoredRetroAchievements();
       clearInterval(countdownTimer);
       countdownTimer = setInterval(renderCountdown, 1000);
@@ -402,6 +428,7 @@
       syncMainAccount();
       syncGoogleButton();
       handleAuthReturn();
+      queueGeneratedUsernamePrompt();
       await syncStoredRetroAchievements();
       await loadAchievementLeaderboard();
       if (achievementsRouteActive()) await loadAchievements();
@@ -734,6 +761,7 @@
       }
       renderProfile();
       handleAuthReturn();
+      queueGeneratedUsernamePrompt();
     } catch (error) {
       try {
         dashboard = await challengeApi();
@@ -787,6 +815,7 @@
   async function logout() {
     try { await challengeApi("/logout", { method: "POST", body: {} }); } catch {}
     dashboard = dashboard ? { ...dashboard, account: null } : null;
+    reviewedUsernameAccountId = null;
     syncMainAccount();
     if (challengeRouteActive()) await loadDashboard();
     else if (profileRouteActive()) setProfileRoute(false, true);
@@ -820,6 +849,28 @@
       elements.profileMessage.textContent = error.message;
     } finally {
       elements.profileSave.disabled = false;
+    }
+  }
+
+  async function saveReviewedUsername(event) {
+    event.preventDefault();
+    elements.usernameReviewSave.disabled = true;
+    elements.usernameReviewMessage.textContent = "";
+    try {
+      const payload = await challengeApi("/profile", {
+        method: "PATCH",
+        body: { username: elements.usernameReviewInput.value },
+      });
+      if (profilePayload) profilePayload = { ...profilePayload, account: payload.account };
+      dashboard = { ...(dashboard || {}), account: payload.account };
+      syncMainAccount();
+      if (profileRouteActive()) renderProfile();
+      elements.usernameReviewModal.close();
+    } catch (error) {
+      elements.usernameReviewMessage.textContent = error.message;
+      elements.usernameReviewInput.focus();
+    } finally {
+      elements.usernameReviewSave.disabled = false;
     }
   }
 
@@ -909,6 +960,9 @@
   elements.retroAccount?.addEventListener("click", () => dashboard?.account ? setProfileRoute(true) : openAuth());
   elements.start.addEventListener("click", runAction);
   elements.profileForm?.addEventListener("submit", saveProfile);
+  elements.usernameReviewForm?.addEventListener("submit", saveReviewedUsername);
+  elements.usernameReviewClose?.addEventListener("click", () => elements.usernameReviewModal.close());
+  elements.usernameReviewLater?.addEventListener("click", () => elements.usernameReviewModal.close());
   elements.profileEditToggle?.addEventListener("click", () => {
     const willOpen = elements.profileEditPanel.hidden;
     elements.profileEditPanel.hidden = !willOpen;
