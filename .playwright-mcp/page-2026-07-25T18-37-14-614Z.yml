@@ -1,0 +1,163 @@
+- generic [active] [ref=f10e1]:
+  - generic [ref=f10e2]:
+    - complementary [ref=f10e3]:
+      - link "256 Teams home" [ref=f10e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f10e5]:
+          - generic [ref=f10e6]: "256"
+          - generic [ref=f10e7]: TEAMS
+      - generic:
+        - button "Settings" [ref=f10e8] [cursor=pointer]:
+          - generic [ref=f10e9]: ⚙
+        - button "News" [ref=f10e11] [cursor=pointer]
+        - button "Feedback" [ref=f10e14] [cursor=pointer]:
+          - generic [ref=f10e15]: "!"
+        - button "Achievements" [ref=f10e17] [cursor=pointer]:
+          - generic [ref=f10e18]: 🏆
+        - button "Donate" [ref=f10e20] [cursor=pointer]:
+          - generic [ref=f10e21]: $
+        - button "Log in" [ref=f10e23] [cursor=pointer]
+    - main [ref=f10e29]:
+      - region "Tournament modes" [ref=f10e32]:
+        - generic [ref=f10e33]:
+          - article [ref=f10e34]:
+            - heading "256-team knockout" [level=3] [ref=f10e36]
+            - generic "Default mode settings" [ref=f10e37]:
+              - generic [ref=f10e38]:
+                - generic [ref=f10e39]:
+                  - generic [ref=f10e40]: Simulation style
+                  - group [ref=f10e41]:
+                    - generic "Explain simulation styles" [ref=f10e42] [cursor=pointer]: i
+                - generic [ref=f10e43]:
+                  - button "Realistic" [ref=f10e44] [cursor=pointer]
+                  - button "Standard" [ref=f10e45] [cursor=pointer]
+                  - button "Pure chaos" [ref=f10e46] [cursor=pointer]
+              - generic [ref=f10e47]:
+                - generic [ref=f10e48]:
+                  - generic [ref=f10e49]: Goal level
+                  - group [ref=f10e50]:
+                    - generic "Explain goal levels" [ref=f10e51] [cursor=pointer]: i
+                - generic [ref=f10e52]:
+                  - button "Tight" [ref=f10e53] [cursor=pointer]
+                  - button "Normal" [ref=f10e54] [cursor=pointer]
+                  - button "Goal fest" [ref=f10e55] [cursor=pointer]
+              - generic [ref=f10e56]:
+                - generic [ref=f10e57]: Choose team
+                - 'button "Choose a team to spectate. Current view: Neutral" [ref=f10e58]':
+                  - generic [ref=f10e59]: ◎
+                  - generic [ref=f10e60]:
+                    - strong [ref=f10e61]: Neutral
+                    - generic [ref=f10e62]: Show every match as normal
+                  - generic [ref=f10e63]: ›
+            - button "Start tournament" [ref=f10e65] [cursor=pointer]:
+              - text: Start tournament
+              - generic [ref=f10e66]: →
+          - article [ref=f10e67]:
+            - generic [ref=f10e68]:
+              - heading "Online party mode" [level=3] [ref=f10e69]
+              - paragraph [ref=f10e70]: Online party mode is coming soon.
+            - button "Coming soon" [disabled] [ref=f10e71]
+          - article [ref=f10e72]:
+            - generic [ref=f10e73]:
+              - heading "World Cup Legacy Draft" [level=3] [ref=f10e74]
+              - paragraph [ref=f10e75]: Draft an XI from classic World Cup squads, then enter them into a 16-team knockout.
+            - generic "Legacy Draft settings" [ref=f10e76]:
+              - generic [ref=f10e77]:
+                - generic [ref=f10e78]: Draft mode
+                - generic [ref=f10e79]:
+                  - button "Classic" [ref=f10e80] [cursor=pointer]
+                  - button "Expert" [ref=f10e81] [cursor=pointer]
+              - generic [ref=f10e82]:
+                - generic [ref=f10e83]: Nation
+                - generic [ref=f10e84]:
+                  - img "England flag" [ref=f10e85]:
+                    - generic [ref=f10e86]: 🏴
+                  - combobox "Draft nation" [ref=f10e87]:
+                    - option "Argentina"
+                    - option "Belgium"
+                    - option "Brazil"
+                    - option "England" [selected]
+                    - option "France"
+                    - option "Germany"
+                    - option "Italy"
+                    - option "Netherlands"
+                    - option "Portugal"
+                    - option "Spain"
+                  - button "Random nation" [ref=f10e88] [cursor=pointer]: ↻
+              - generic [ref=f10e89]:
+                - generic [ref=f10e90]: Formation
+                - generic [ref=f10e91]:
+                  - combobox "Draft formation" [ref=f10e108]:
+                    - option "3-4-3"
+                    - option "3-5-2"
+                    - option "4-3-3" [selected]
+                    - option "4-4-2"
+                    - option "5-3-2"
+                    - option "4-2-3-1"
+                    - option "4-3-2-1"
+                    - option "4-1-2-1-2"
+                  - button "Random formation" [ref=f10e109] [cursor=pointer]: ↻
+            - button "Start draft" [ref=f10e111] [cursor=pointer]:
+              - text: Start draft
+              - generic [ref=f10e112]: →
+          - article [ref=f10e113]:
+            - generic [ref=f10e115]:
+              - heading "Retro WC Simulator" [level=3] [ref=f10e116]
+              - group "World Cup year" [ref=f10e117]:
+                - button "2010" [ref=f10e118] [cursor=pointer]
+                - button "2014" [ref=f10e119] [cursor=pointer]
+                - button "2018" [ref=f10e120] [cursor=pointer]
+                - button "2022" [pressed] [ref=f10e121] [cursor=pointer]
+            - generic "Retro World Cup Sim settings" [ref=f10e122]:
+              - generic [ref=f10e123]:
+                - generic [ref=f10e124]:
+                  - generic [ref=f10e125]: Simulation style
+                  - group [ref=f10e126]:
+                    - generic "Explain simulation styles" [ref=f10e127] [cursor=pointer]: i
+                - generic "Retro simulation style" [ref=f10e128]:
+                  - button "Realistic" [ref=f10e129] [cursor=pointer]
+                  - button "Standard" [ref=f10e130] [cursor=pointer]
+                  - button "Pure chaos" [ref=f10e131] [cursor=pointer]
+              - generic [ref=f10e132]:
+                - generic [ref=f10e133]:
+                  - generic [ref=f10e134]: Goal level
+                  - group [ref=f10e135]:
+                    - generic "Explain goal levels" [ref=f10e136] [cursor=pointer]: i
+                - generic "Retro goal level" [ref=f10e137]:
+                  - button "Tight" [ref=f10e138] [cursor=pointer]
+                  - button "Normal" [ref=f10e139] [cursor=pointer]
+                  - button "Goal fest" [ref=f10e140] [cursor=pointer]
+              - generic [ref=f10e141]:
+                - generic [ref=f10e142]: Choose team
+                - 'button "Choose a team from the 2022 World Cup. Current view: Neutral" [ref=f10e143]':
+                  - generic [ref=f10e144]: ◎
+                  - generic [ref=f10e145]:
+                    - strong [ref=f10e146]: Neutral
+                    - generic [ref=f10e147]: Show every match as normal
+                  - generic [ref=f10e148]: ›
+            - button "Start World Cup" [ref=f10e150] [cursor=pointer]:
+              - text: Start World Cup
+              - generic [ref=f10e151]: →
+          - article [ref=f10e152]:
+            - heading "Custom tournament" [level=3] [ref=f10e154]
+            - button "Coming soon" [disabled] [ref=f10e155]
+          - article [ref=f10e156]:
+            - heading "Premier League 26/27 simulator" [level=3] [ref=f10e158]
+            - button "Coming soon" [disabled] [ref=f10e159]
+      - generic [ref=f10e160]:
+        - generic [ref=f10e161]:
+          - strong [ref=f10e162]: 256 TEAMS WC
+          - generic [ref=f10e163]: An unofficial football tournament simulator built for entertainment.
+        - time [ref=f10e164]:
+          - generic [ref=f10e165]: "Last updated:"
+          - strong [ref=f10e166]: 24 Jul, 3:09 AM BST
+        - generic [ref=f10e167]:
+          - navigation "Legal information" [ref=f10e168]:
+            - link "Privacy" [ref=f10e169] [cursor=pointer]:
+              - /url: ./privacy.html
+            - link "Terms" [ref=f10e170] [cursor=pointer]:
+              - /url: ./terms.html
+            - link "Disclaimer" [ref=f10e171] [cursor=pointer]:
+              - /url: ./disclaimer.html
+          - generic [ref=f10e172]: © 2026 256 TEAMS WC
+  - status

@@ -4,9 +4,28 @@
     <meta charset="UTF-8" />
     <script src="./redirect.js"></script>
     <script>
-      if (["/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup"].includes(window.location.pathname.replace(/\/+$/, "") || "/")) {
+      const initialPath = window.location.pathname.replace(/\/+$/, "") || "/";
+      if (["/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup"].includes(initialPath)) {
         document.documentElement.classList.add("route-retro-loading");
+        if (initialPath === "/retro-22-world-cup") document.documentElement.classList.add("route-retro-2022-loading");
       }
+    </script>
+    <script>
+      (function () {
+        const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+        if (pathname === "/palestine-challenge" || pathname === "/profile") return;
+        const isRetroRoute = ["/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup"].includes(pathname);
+        const clearRetroLoading = () => {
+          document.documentElement.classList.remove("route-retro-loading", "route-retro-2022-loading");
+          const appShell = document.getElementById("appShell");
+          if (appShell) appShell.hidden = false;
+        };
+        if (!isRetroRoute) {
+          clearRetroLoading();
+          return;
+        }
+        setTimeout(clearRetroLoading, 4000);
+      })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6724809725459853"
@@ -28,7 +47,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=retro-edition-colors-58" />
+    <link rel="stylesheet" href="./clean.css?v=custom-tournament-builder-17" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -71,7 +90,7 @@
             <span>News</span>
           </button>
           <button class="utility-button" id="bugReportButton" type="button" aria-label="Feedback" title="Feedback">
-            <span aria-hidden="true">!</span>
+            <span aria-hidden="true">&#9888;</span>
             <span>Feedback</span>
           </button>
           <button class="utility-button achievements-header-button" id="openAchievementsButton" type="button" aria-label="Achievements" title="Achievements">
@@ -243,16 +262,18 @@
                   <div class="mode-card-copy retro-mode-heading">
                     <img id="retroWorldCupLogo" src="./assets/retro-world-cup-2014.png" alt="" />
                     <div class="retro-mode-title">
-                      <h3>Retro WC Simulator</h3>
+                      <h3>WC Simulator</h3>
                       <div class="retro-year-switch" id="retroWorldCupYearSwitch" role="group" aria-label="World Cup year">
+                        <button type="button" data-retro-year="2006" aria-pressed="false">2006</button>
                         <button type="button" data-retro-year="2010" aria-pressed="false">2010</button>
                         <button class="active" type="button" data-retro-year="2014" aria-pressed="true">2014</button>
                         <button type="button" data-retro-year="2018" aria-pressed="false">2018</button>
                         <button type="button" data-retro-year="2022" aria-pressed="false">2022</button>
+                        <button type="button" data-retro-year="2026" aria-pressed="false">2026</button>
                       </div>
                     </div>
                   </div>
-                <div class="landing-settings retro-landing-settings" aria-label="Retro World Cup Sim settings">
+                <div class="landing-settings retro-landing-settings" aria-label="World Cup Simulator settings">
                   <div class="landing-setting">
                     <div class="landing-setting-heading">
                       <span>Simulation style</span>
@@ -310,16 +331,30 @@
                 </div>
               </article>
 
-              <article class="mode-card mode-card-coming-soon mode-card-custom">
+              <article class="mode-card mode-card-custom">
                 <div class="mode-card-copy">
                   <h3>Custom tournament</h3>
+                  <p>Build the field, tune team strength and script individual matches.</p>
                 </div>
-                <button class="online-coming-soon" type="button" disabled>Coming soon</button>
+                <div class="mode-card-actions">
+                  <button class="primary-button start-tournament" id="openCustomTournamentButton" type="button">
+                    Build tournament
+                    <span aria-hidden="true">&rarr;</span>
+                  </button>
+                  <button class="secondary-button legacy-restart-button" id="restartCustomTournamentButton" type="button" hidden>Restart</button>
+                </div>
               </article>
 
               <article class="mode-card mode-card-coming-soon mode-card-premier-league">
                 <div class="mode-card-copy">
                   <h3>Premier League 26/27 simulator</h3>
+                </div>
+                <button class="online-coming-soon" type="button" disabled>Coming soon</button>
+              </article>
+
+              <article class="mode-card mode-card-coming-soon mode-card-ucl">
+                <div class="mode-card-copy">
+                  <h3>UCL simulator</h3>
                 </div>
                 <button class="online-coming-soon" type="button" disabled>Coming soon</button>
               </article>
@@ -352,6 +387,33 @@
           <div class="participant-sections" id="participantSections"></div>
         </section>
 
+        <section class="custom-tournament-screen" id="customTournamentScreen" aria-label="Custom tournament" hidden>
+          <header class="custom-tournament-header">
+            <div class="custom-header-toolbar">
+              <button class="custom-back-button" id="customTournamentBackButton" type="button" aria-label="Back to modes">
+                <span aria-hidden="true">&larr;</span>
+                <span>Back to modes</span>
+              </button>
+              <div class="custom-preset-actions">
+                <button type="button" data-custom-header-action="save-preset">
+                  <span aria-hidden="true">&darr;</span>
+                  Save preset
+                </button>
+                <button type="button" data-custom-header-action="import-preset">
+                  <span aria-hidden="true">&uarr;</span>
+                  Import preset
+                </button>
+                <span class="custom-header-team-count" id="customHeaderTeamCount">0/32 teams</span>
+                <button class="primary-button custom-header-start" id="customHeaderStartButton" type="button" disabled>
+                  Start tournament <span aria-hidden="true">&rarr;</span>
+                </button>
+                <input id="customPresetFile" type="file" accept="application/json,.json" hidden />
+              </div>
+            </div>
+          </header>
+          <div class="custom-tournament-body" id="customTournamentBody"></div>
+        </section>
+
         <section class="achievements-screen" id="achievementsScreen" aria-labelledby="achievementsTitle" hidden>
           <header class="achievements-intro">
             <h1 id="achievementsTitle">Achievements</h1>
@@ -362,6 +424,7 @@
               <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
               <button type="button" role="tab" data-achievement-year="2014" aria-selected="true">2014</button>
               <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
+              <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
             </div>
             <div class="achievement-challenge-heading">
               <h2 id="achievementChallengeTitle">Win the 2014 WC with every country</h2>
@@ -409,7 +472,7 @@
 
               <div class="match-penalty-overlay" id="matchPenaltyOverlay" hidden aria-live="assertive">
                 <div class="match-penalty-decision">
-                  <strong>PENALTY</strong>
+                  <strong id="matchPenaltyTitle">PENALTY</strong>
                   <small id="matchPenaltyPlayer">Player steps up</small>
                 </div>
                 <div class="penalty-scene match-penalty-scene" id="matchPenaltyScene" data-state="setup" data-direction="centre" data-dive="left" data-result="pending">
@@ -455,6 +518,9 @@
                     </div>
                     <button class="live-control pause-control" id="pauseLiveButton" type="button" aria-pressed="false">Pause</button>
                     <button class="live-control" id="speedButton" type="button">1×</button>
+                    <div class="shootout-skip-control" id="shootoutSkipControl" hidden>
+                      <button class="live-control skip-control" id="skipShootoutButton" type="button">Skip shootout</button>
+                    </div>
                   </div>
                   <div class="result-note" id="resultNote" hidden></div>
                 </div>
@@ -685,11 +751,11 @@
           </div>
           <time
             class="footer-last-updated"
-            datetime="2026-07-24T03:09:05+01:00"
-            title="Last deployed 24 July 2026 at 3:09 AM UK time"
+            datetime="2026-07-25T22:43:41+01:00"
+            title="Last deployed 25 July 2026 at 10:43 PM UK time"
           >
             <span>Last updated:</span>
-            <strong>24 Jul, 3:09 AM BST</strong>
+            <strong>25 Jul, 10:43 PM BST</strong>
           </time>
           <div class="site-footer-meta">
             <nav class="site-footer-links" aria-label="Legal information">
@@ -726,7 +792,7 @@
         </a>
         <div class="retro-screen-actions" aria-label="World Cup tools">
           <button class="retro-screen-action" id="retroFeedbackButton" type="button" aria-label="Feedback" title="Feedback">
-            <span aria-hidden="true">!</span>
+            <span aria-hidden="true">&#9888;</span>
             <span>Feedback</span>
           </button>
           <button class="retro-screen-action" id="retroAchievementsButton" type="button" aria-label="Achievements" title="Achievements">
@@ -920,7 +986,7 @@
                 <span>RETRO WORLD CUPS</span>
                 <h2>Achievements</h2>
               </div>
-              <strong id="profileAchievementSummary">0 / 96</strong>
+              <strong id="profileAchievementSummary">0 / 128</strong>
             </div>
             <div class="profile-achievement-years">
               <article>
@@ -937,6 +1003,11 @@
                 <span>Russia 2018</span>
                 <strong id="profile2018AchievementCount">0 / 32</strong>
                 <div aria-hidden="true"><i id="profile2018AchievementBar"></i></div>
+              </article>
+              <article>
+                <span>Qatar 2022</span>
+                <strong id="profile2022AchievementCount">0 / 32</strong>
+                <div aria-hidden="true"><i id="profile2022AchievementBar"></i></div>
               </article>
             </div>
             <div class="profile-unlocked-heading">
@@ -980,7 +1051,8 @@
           <h2 id="challengeAuthTitle">Log in</h2>
           <button class="icon-button close-modal" id="challengeAuthCloseButton" type="button" aria-label="Close">&times;</button>
         </div>
-        <label><span>Username</span><input id="challengeUsername" name="username" autocomplete="username" minlength="3" maxlength="20" required /></label>
+        <label id="challengeEmailField" hidden><span>Email</span><input id="challengeEmail" name="email" type="email" autocomplete="email" maxlength="254" /></label>
+        <label><span id="challengeIdentifierLabel">Username or email</span><input id="challengeUsername" name="identifier" autocomplete="username" minlength="3" maxlength="254" required /></label>
         <label><span>Password</span><input id="challengePassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required /></label>
         <button class="primary-button" id="challengeAuthSubmit" type="submit">Log in</button>
         <div class="challenge-auth-divider"><span>or</span></div>
@@ -1080,7 +1152,7 @@
             <span aria-hidden="true">&#9881;</span>
           </button>
           <button class="online-screen-action" id="onlineBugReportButton" type="button" aria-label="Feedback" title="Feedback">
-            <span aria-hidden="true">!</span>
+            <span aria-hidden="true">&#9888;</span>
           </button>
           <button class="online-screen-action online-discord-button" id="onlineDiscordButton" type="button" aria-label="Discord" title="Discord">
             <span class="discord-icon" aria-hidden="true"></span>
@@ -1376,6 +1448,43 @@
           </span>
           <span class="settings-switch" aria-hidden="true"><i></i></span>
         </button>
+        <button class="settings-option" id="keybindsToggleButton" type="button" aria-pressed="true">
+          <span class="settings-option-copy">
+            <strong>Keyboard shortcuts</strong>
+            <small id="keybindsToggleLabel">Shortcuts on</small>
+          </span>
+          <span class="settings-switch" aria-hidden="true"><i></i></span>
+        </button>
+        <div class="settings-keybind-list" id="keybindSettingsList" aria-label="Keyboard shortcut bindings">
+          <div class="settings-keybind-row">
+            <span>
+              <strong>Next match</strong>
+              <small>Play, reveal, or move to the next game</small>
+            </span>
+            <button class="settings-keybind-button" type="button" data-keybind-action="nextMatch" aria-label="Set shortcut for next match">Enter</button>
+          </div>
+          <div class="settings-keybind-row">
+            <span>
+              <strong>Resume / pause</strong>
+              <small>Toggle live match playback</small>
+            </span>
+            <button class="settings-keybind-button" type="button" data-keybind-action="pauseResume" aria-label="Set shortcut for resume or pause">Space</button>
+          </div>
+          <div class="settings-keybind-row">
+            <span>
+              <strong>Skip to full time</strong>
+              <small>Finish the current live match</small>
+            </span>
+            <button class="settings-keybind-button" type="button" data-keybind-action="skipToFullTime" aria-label="Set shortcut for skip to full time">Enter</button>
+          </div>
+          <div class="settings-keybind-row">
+            <span>
+              <strong>Restart tournament</strong>
+              <small>Open the restart confirmation</small>
+            </span>
+            <button class="settings-keybind-button" type="button" data-keybind-action="restartTournament" aria-label="Set shortcut for restart tournament">R</button>
+          </div>
+        </div>
         <button class="settings-option" id="fullscreenButton" type="button">
           <span class="settings-option-copy">
             <strong>Fullscreen</strong>
@@ -1517,6 +1626,7 @@
         <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
         <button type="button" role="tab" data-achievement-year="2014" aria-selected="true">2014</button>
         <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
+        <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
       </div>
       <div class="retro-achievements-progress">
         <span>COUNTRIES COMPLETE</span>
@@ -1538,12 +1648,14 @@
     <script src="./retro-2014-schedule.js?v=retro-schedule-1"></script>
     <script src="./retro-2018-squads.js?v=retro-squads-2018-1"></script>
     <script src="./retro-2018-schedule.js?v=retro-schedule-2018-1"></script>
-    <script src="./retro-engine.js?v=retro-engine-8"></script>
+    <script src="./retro-2022-squads.js?v=retro-squads-2022-1"></script>
+    <script src="./retro-2022-schedule.js?v=retro-schedule-2022-1"></script>
+    <script src="./retro-engine.js?v=retro-engine-10"></script>
     <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
     <script src="./simulation-engine.js?v=retro-2010-25"></script>
     <script src="./legacy-data/catalog.generated.js?v=legacy-draft-data-172"></script>
-    <script src="./app.js?v=retro-edition-colors-55"></script>
-    <script src="./challenge.js?v=retro-achievement-2010-13"></script>
+    <script src="./app.js?v=custom-tournament-builder-16"></script>
+    <script src="./challenge.js?v=account-email-retro-2022-14"></script>
     <script>
       window.va = window.va || function () {
         (window.vaq = window.vaq || []).push(arguments);

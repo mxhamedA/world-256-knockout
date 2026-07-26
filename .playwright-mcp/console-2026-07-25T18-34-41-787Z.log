@@ -1,0 +1,5 @@
+[    2575ms] ReferenceError: Cannot access 'RETRO_WORLD_CUP_PATHS' before initialization
+    at retroWorldCupYearFromPath (http://localhost:8793/app.js?v=qatar-2022-60:1186:25)
+    at readRetroWorldCupYear (http://localhost:8793/app.js?v=qatar-2022-60:11147:20)
+    at readRetroTournamentState (http://localhost:8793/app.js?v=qatar-2022-60:11188:42)
+    at http://localhost:8793/app.js?v=qatar-2022-60:1022:23

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 
 const baseUrl = process.env.CHALLENGE_TEST_URL || "http://127.0.0.1:8793";
 const username = `player_${Date.now().toString(36)}`;
+const email = `${username}@example.com`;
 const password = "a-secure-test-password";
 let cookie = "";
 
@@ -31,13 +32,20 @@ if (!publicDashboard.payload.auth.googleEnabled) {
   assert.equal(googleUnavailable.response.status, 503);
 }
 
-const registered = await request("/register", { method: "POST", body: { username, password }, session: false });
+const registered = await request("/register", { method: "POST", body: { email, username, password }, session: false });
 assert.equal(registered.response.status, 201);
 assert.equal(registered.payload.account.username, username);
 assert.match(cookie, /^palestine_session=[A-Za-z0-9_-]{43}$/);
 
-const duplicate = await request("/register", { method: "POST", body: { username, password }, session: false });
+const duplicate = await request("/register", { method: "POST", body: { email: `other-${email}`, username, password }, session: false });
 assert.equal(duplicate.response.status, 409);
+const duplicateEmail = await request("/register", {
+  method: "POST",
+  body: { email: email.toUpperCase(), username: `${username}_2`.slice(0, 20), password },
+  session: false,
+});
+assert.equal(duplicateEmail.response.status, 409);
+assert.match(duplicateEmail.payload.error, /email/i);
 
 const authenticatedDashboard = await request();
 assert.equal(authenticatedDashboard.payload.account.username, username);
@@ -144,6 +152,25 @@ assert.equal(russiaCompleted.response.status, 200);
 assert.equal(russiaCompleted.payload.unlockedTeam.teamName, "Russia");
 assert.equal(russiaCompleted.payload.unlockedTeam.won, true);
 
+const qatarSeed = retroSeed + 3;
+const qatarStarted = await request("/achievements/retro-2022", {
+  method: "POST",
+  body: { seed: qatarSeed, teamName: "Qatar", phase: "start", champion: null },
+});
+assert.equal(qatarStarted.response.status, 200);
+assert.equal(qatarStarted.payload.unlockedTeam.teamName, "Qatar");
+assert.equal(qatarStarted.payload.unlockedTeam.attempts, 1);
+
+const qatarCompleted = await request("/achievements/retro-2022", {
+  method: "POST",
+  body: { seed: qatarSeed, teamName: "Qatar", phase: "complete", champion: "Qatar" },
+});
+assert.equal(qatarCompleted.response.status, 200);
+assert.equal(qatarCompleted.payload.unlockedTeam.won, true);
+assert.equal(qatarCompleted.payload.achievement.id, "retro-2022-world-tour");
+assert.equal(qatarCompleted.payload.achievement.year, 2022);
+assert.equal(qatarCompleted.payload.achievement.total, 32);
+
 const tampered = await request("/runs", {
   method: "POST",
   body: { clientCommandId: crypto.randomUUID(), teamId: "team-1", simulation: "chaos", goalLevel: "wild" },
@@ -179,9 +206,9 @@ assert.equal(loggedOut.response.status, 200);
 const loggedOutDashboard = await request();
 assert.equal(loggedOutDashboard.payload.account, null);
 
-const badLogin = await request("/login", { method: "POST", body: { username: updatedUsername, password: "incorrect-password" }, session: false });
+const badLogin = await request("/login", { method: "POST", body: { identifier: email, password: "incorrect-password" }, session: false });
 assert.equal(badLogin.response.status, 401);
-const login = await request("/login", { method: "POST", body: { username: updatedUsername, password }, session: false });
+const login = await request("/login", { method: "POST", body: { identifier: email.toUpperCase(), password }, session: false });
 assert.equal(login.response.status, 200);
 assert.equal(login.payload.account.username, updatedUsername);
 

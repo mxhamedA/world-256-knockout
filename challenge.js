@@ -39,6 +39,9 @@
     authClose: $("#challengeAuthCloseButton"),
     googleSignIn: $("#challengeGoogleSignIn"),
     authMessage: $("#challengeAuthMessage"),
+    emailField: $("#challengeEmailField"),
+    email: $("#challengeEmail"),
+    identifierLabel: $("#challengeIdentifierLabel"),
     username: $("#challengeUsername"),
     password: $("#challengePassword"),
     profileBack: $("#profileBackButton"),
@@ -68,9 +71,11 @@
     profile2010AchievementCount: $("#profile2010AchievementCount"),
     profile2014AchievementCount: $("#profile2014AchievementCount"),
     profile2018AchievementCount: $("#profile2018AchievementCount"),
+    profile2022AchievementCount: $("#profile2022AchievementCount"),
     profile2010AchievementBar: $("#profile2010AchievementBar"),
     profile2014AchievementBar: $("#profile2014AchievementBar"),
     profile2018AchievementBar: $("#profile2018AchievementBar"),
+    profile2022AchievementBar: $("#profile2022AchievementBar"),
     profileUnlockedCount: $("#profileUnlockedCount"),
     profileUnlockedAchievements: $("#profileUnlockedAchievements"),
     achievementCount: $("#retro2014AchievementCount"),
@@ -156,7 +161,7 @@
   function setProfileRoute(active = true, replace = false) {
     if (active && !profileRouteActive()) {
       const currentPath = `${window.location.pathname}${window.location.search}`;
-      profileReturnPath = /^\/retro-(10|14|18)-world-cup(?:\?|$)/.test(currentPath) ? currentPath : "/";
+      profileReturnPath = /^\/retro-(10|14|18|22)-world-cup(?:\?|$)/.test(currentPath) ? currentPath : "/";
     }
     const path = active ? "/profile" : profileReturnPath;
     window.history[replace ? "replaceState" : "pushState"]({ appMode: active ? "profile" : "home" }, "", path);
@@ -451,7 +456,7 @@
 
   async function loadAchievements(year = activeAchievementYear) {
     if (!elements.achievementGrid) return;
-    activeAchievementYear = [2010, 2014, 2018].includes(Number(year)) ? Number(year) : 2014;
+    activeAchievementYear = [2010, 2014, 2018, 2022].includes(Number(year)) ? Number(year) : 2014;
     if (!dashboard?.account) {
       achievementPayloads.delete(activeAchievementYear);
       renderAchievements();
@@ -514,7 +519,7 @@
 
   async function trackRetroTournament(tournament) {
     const year = Number(tournament?.year);
-    if (![2010, 2014, 2018].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
+    if (![2010, 2014, 2018, 2022].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
     const phase = tournament.phase === "complete" || tournament.champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}`;
     if (trackedRetroRequests.has(key)) return trackedRetroRequests.get(key);
@@ -569,7 +574,7 @@
   }
 
   function renderProfileAchievements() {
-    const years = [2010, 2014, 2018];
+    const years = [2010, 2014, 2018, 2022];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
@@ -591,12 +596,18 @@
       const year = Number(achievement.year);
       const yearCompleted = Number(achievement.completed || 0);
       const yearTotal = Number(achievement.total || 32);
-      const countElement = year === 2010
-        ? elements.profile2010AchievementCount
-        : year === 2018 ? elements.profile2018AchievementCount : elements.profile2014AchievementCount;
-      const barElement = year === 2010
-        ? elements.profile2010AchievementBar
-        : year === 2018 ? elements.profile2018AchievementBar : elements.profile2014AchievementBar;
+      const countElement = {
+        2010: elements.profile2010AchievementCount,
+        2014: elements.profile2014AchievementCount,
+        2018: elements.profile2018AchievementCount,
+        2022: elements.profile2022AchievementCount,
+      }[year];
+      const barElement = {
+        2010: elements.profile2010AchievementBar,
+        2014: elements.profile2014AchievementBar,
+        2018: elements.profile2018AchievementBar,
+        2022: elements.profile2022AchievementBar,
+      }[year];
       countElement.textContent = `${yearCompleted} / ${yearTotal}`;
       barElement.style.width = `${Math.min(100, (yearCompleted / yearTotal) * 100)}%`;
     });
@@ -669,7 +680,7 @@
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([2010, 2014, 2018].map(async (year) => {
+        await Promise.all([2010, 2014, 2018, 2022].map(async (year) => {
           try {
             achievementPayloads.set(year, await challengeApi(`/achievements/retro-${year}`));
           } catch {
@@ -691,10 +702,17 @@
 
   function openAuth(mode = "login") {
     authMode = mode;
+    const isLogin = mode === "login";
     elements.authTitle.textContent = mode === "login" ? "Log in" : "Create account";
     elements.authSubmit.textContent = mode === "login" ? "Log in" : "Register";
     elements.authSwitch.textContent = mode === "login" ? "Create an account" : "I already have an account";
     elements.password.autocomplete = mode === "login" ? "current-password" : "new-password";
+    elements.emailField.hidden = isLogin;
+    elements.email.required = !isLogin;
+    elements.identifierLabel.textContent = isLogin ? "Username or email" : "Username";
+    elements.username.name = isLogin ? "identifier" : "username";
+    elements.username.autocomplete = "username";
+    elements.username.maxLength = isLogin ? 254 : 20;
     elements.authMessage.textContent = "";
     syncGoogleButton();
     if (!authModal.open) authModal.showModal();
@@ -706,7 +724,10 @@
     elements.authSubmit.disabled = true;
     elements.authMessage.textContent = "";
     try {
-      await challengeApi(`/${authMode}`, { method: "POST", body: { username: elements.username.value, password: elements.password.value } });
+      const body = authMode === "login"
+        ? { identifier: elements.username.value, password: elements.password.value }
+        : { email: elements.email.value, username: elements.username.value, password: elements.password.value };
+      await challengeApi(`/${authMode}`, { method: "POST", body });
       authModal.close();
       authForm.reset();
       if (challengeRouteActive()) await loadDashboard();
@@ -884,6 +905,9 @@
   document.querySelectorAll("[data-challenge-tab]").forEach((button) => button.addEventListener("click", () => setTab(button.dataset.challengeTab)));
   window.addEventListener("popstate", syncRoute);
   window.addEventListener("online", () => void syncStoredRetroAchievements());
+  window.addEventListener("retro-tournament-saved", (event) => {
+    void trackRetroTournament(event.detail);
+  });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") void syncStoredRetroAchievements();
   });

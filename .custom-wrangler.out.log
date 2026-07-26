@@ -1,0 +1,872 @@
+
+ ⛅️ wrangler 4.114.0
+────────────────────
+Using secrets defined in process.env
+Your Worker has access to the following bindings:
+Binding                                                          Resource                      Mode
+env.TOURNAMENT_ROOMS (TournamentRoom)                            Durable Object                local
+env.ONLINE_CAPACITY (OnlineCapacityCoordinator)                  Durable Object                local
+env.CHALLENGE_DB (256teams-accounts)                             D1 Database                   local
+env.ONLINE_ANALYTICS (world_256_online)                          Analytics Engine Dataset      local
+env.ROOM_CREATE_LIMITER (6 requests/60s)                         Rate Limit                    local
+env.ROOM_JOIN_LIMITER (20 requests/60s)                          Rate Limit                    local
+env.ROOM_API_LIMITER (300 requests/60s)                          Rate Limit                    local
+env.BUG_REPORT_LIMITER (5 requests/60s)                          Rate Limit                    local
+env.CHALLENGE_AUTH_LIMITER (10 requests/60s)                     Rate Limit                    local
+env.CHALLENGE_API_LIMITER (120 requests/60s)                     Rate Limit                    local
+env.ASSETS                                                       Assets                        local
+env.ONLINE_MODE_ENABLED ("(hidden)")                             Environment Variable          local
+env.ONLINE_MAX_ACTIVE_MATCHES ("64")                             Environment Variable          local
+env.PALESTINE_CHALLENGE_ENABLED ("true")                         Environment Variable          local
+
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://127.0.0.1:8787/cdn-cgi/explorer/api
+Useful routes:
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api - OpenAPI schema
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/d1/database - D1 databases
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/local/workers - local Workers and bindings
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/r2/buckets - R2 buckets
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/workflows - Workflows
+⎔ Starting local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+[wrangler:info] Ready on http://127.0.0.1:8787
+{"type":"worker-request","timestamp":"2026-07-26T00:55:45.129Z","requestId":"e3de6177-91dc-4785-8eb4-4b30bc9e9563","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:55:45.326Z","requestId":"e3de6177-91dc-4785-8eb4-4b30bc9e9563","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":196}
+[wrangler:info] GET /custom-tournament 200 OK (207ms)
+{"type":"worker-request","timestamp":"2026-07-26T00:55:55.392Z","requestId":"b0538974-a273-4097-9d03-b2a8b4b4618d","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:55:55.419Z","requestId":"b0538974-a273-4097-9d03-b2a8b4b4618d","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":27}
+[wrangler:info] GET /custom-tournament 200 OK (32ms)
+[wrangler:info] GET /clean.css 200 OK (41ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (20ms)
+[wrangler:info] GET /app.js 200 OK (227ms)
+{"type":"worker-request","timestamp":"2026-07-26T00:55:56.713Z","requestId":"5db57474-c05f-4fdd-bbb6-76f6751cefc6","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:55:56.775Z","requestId":"5db57474-c05f-4fdd-bbb6-76f6751cefc6","method":"GET","route":"/api/challenge","status":200,"elapsedMs":62}
+[wrangler:info] GET /api/challenge 200 OK (68ms)
+{"type":"worker-request","timestamp":"2026-07-26T00:55:56.786Z","requestId":"b7fc3b65-9a51-4f75-ab2b-faf844e8b825","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:55:56.801Z","requestId":"b7fc3b65-9a51-4f75-ab2b-faf844e8b825","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":15}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (20ms)
+{"type":"worker-request","timestamp":"2026-07-26T00:56:52.458Z","requestId":"a44aa31e-1cd7-4dd1-886f-3832078608b3","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:56:52.460Z","requestId":"a44aa31e-1cd7-4dd1-886f-3832078608b3","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":2}
+[wrangler:info] GET /custom-tournament 200 OK (7ms)
+[wrangler:info] GET /clean.css 304 Not Modified (5ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (6ms)
+[wrangler:info] GET /app.js 304 Not Modified (10ms)
+{"type":"worker-request","timestamp":"2026-07-26T00:56:52.728Z","requestId":"cb59acc9-c467-470f-824b-187972348609","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:56:52.772Z","requestId":"cb59acc9-c467-470f-824b-187972348609","method":"GET","route":"/api/challenge","status":200,"elapsedMs":44}
+[wrangler:info] GET /api/challenge 200 OK (48ms)
+{"type":"worker-request","timestamp":"2026-07-26T00:56:52.785Z","requestId":"e1aff1c9-6c1f-4f49-94fa-72f50767aeca","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T00:56:52.811Z","requestId":"e1aff1c9-6c1f-4f49-94fa-72f50767aeca","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":26}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (35ms)
+[wrangler:info] GET /assets/flags/belarus.svg 200 OK (25ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:04:31.340Z","requestId":"3db981fe-b2ca-4037-a4f2-702b5b355487","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:04:31.377Z","requestId":"3db981fe-b2ca-4037-a4f2-702b5b355487","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":37}
+[wrangler:info] GET /custom-tournament 200 OK (43ms)
+[wrangler:info] GET /clean.css 200 OK (12ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (14ms)
+[wrangler:info] GET /app.js 200 OK (84ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:04:31.936Z","requestId":"e8b25a7d-cd11-46a9-a739-aacc2aa8a6d2","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:04:31.953Z","requestId":"e8b25a7d-cd11-46a9-a739-aacc2aa8a6d2","method":"GET","route":"/api/challenge","status":200,"elapsedMs":17}
+[wrangler:info] GET /api/challenge 200 OK (20ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:05:19.248Z","requestId":"cf1391b4-0573-4bd7-ba8a-eddc0a10d260","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:05:19.282Z","requestId":"cf1391b4-0573-4bd7-ba8a-eddc0a10d260","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":34}
+[wrangler:info] GET /custom-tournament 200 OK (41ms)
+[wrangler:info] GET /clean.css 304 Not Modified (17ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (29ms)
+[wrangler:info] GET /app.js 200 OK (107ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:05:19.459Z","requestId":"7e23b742-a78a-4787-a2bf-330b3e5986c4","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:05:19.474Z","requestId":"7e23b742-a78a-4787-a2bf-330b3e5986c4","method":"GET","route":"/api/challenge","status":200,"elapsedMs":15}
+[wrangler:info] GET /api/challenge 200 OK (19ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:06:26.803Z","requestId":"e4e997d7-f20e-4b79-aa24-cb3f7f6e7363","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:06:26.804Z","requestId":"e4e997d7-f20e-4b79-aa24-cb3f7f6e7363","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":1}
+[wrangler:info] GET /custom-tournament 200 OK (5ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:07:37.190Z","requestId":"ce174c47-a5f8-424c-9d8d-f994b6be4f4a","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:07:37.192Z","requestId":"ce174c47-a5f8-424c-9d8d-f994b6be4f4a","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":2}
+[wrangler:info] GET /custom-tournament 200 OK (8ms)
+[wrangler:info] GET /clean.css 200 OK (4ms)
+[wrangler:info] GET /app.js 200 OK (8ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (13ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:07:38.394Z","requestId":"8aa5bd69-2c34-48dd-ad9d-3184e5a9e94f","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:07:38.481Z","requestId":"8aa5bd69-2c34-48dd-ad9d-3184e5a9e94f","method":"GET","route":"/api/challenge","status":200,"elapsedMs":87}
+[wrangler:info] GET /api/challenge 200 OK (93ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:07:38.491Z","requestId":"6f341054-b259-452a-bd46-b47032dac178","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:07:38.506Z","requestId":"6f341054-b259-452a-bd46-b47032dac178","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":15}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (18ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:16:44.890Z","requestId":"0f6a2dc7-385f-4f1d-b743-8451848dbac4","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:16:44.965Z","requestId":"0f6a2dc7-385f-4f1d-b743-8451848dbac4","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":75}
+[wrangler:info] GET /custom-tournament 200 OK (89ms)
+[wrangler:info] GET /clean.css 200 OK (50ms)
+[wrangler:info] GET /retro-data.js 200 OK (82ms)
+[wrangler:info] GET /app.js 200 OK (307ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (337ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 200 OK (20ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:16:45.750Z","requestId":"e0b6c990-d7c3-408e-bea8-5ac357f852c4","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:16:45.820Z","requestId":"e0b6c990-d7c3-408e-bea8-5ac357f852c4","method":"GET","route":"/api/challenge","status":200,"elapsedMs":70}
+[wrangler:info] GET /api/challenge 200 OK (75ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:17:04.298Z","requestId":"5daffac7-8489-46d5-ac00-2603688625ea","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:17:04.301Z","requestId":"5daffac7-8489-46d5-ac00-2603688625ea","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":3}
+[wrangler:info] GET /custom-tournament 200 OK (9ms)
+[wrangler:info] GET /clean.css 200 OK (11ms)
+[wrangler:info] GET /retro-data.js 200 OK (14ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (12ms)
+[wrangler:info] GET /app.js 200 OK (15ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:17:05.515Z","requestId":"52e4914e-ca7a-40af-9e3a-772bfe4897f5","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:17:05.592Z","requestId":"52e4914e-ca7a-40af-9e3a-772bfe4897f5","method":"GET","route":"/api/challenge","status":200,"elapsedMs":77}
+[wrangler:info] GET /api/challenge 200 OK (82ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:17:05.611Z","requestId":"96d765ce-2730-4db3-825b-4e3a65e7c236","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:17:05.633Z","requestId":"96d765ce-2730-4db3-825b-4e3a65e7c236","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":22}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (26ms)
+[wrangler:info] GET /assets/audio/penalty-whistle.mp3 304 Not Modified (21ms)
+[wrangler:info] GET /assets/audio/full-time-whistle.mp3 304 Not Modified (36ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:18:41.381Z","requestId":"053bc8ff-cb8c-4743-a504-4cb9bc35a69d","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:18:41.418Z","requestId":"053bc8ff-cb8c-4743-a504-4cb9bc35a69d","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":37}
+[wrangler:info] GET /custom-tournament 200 OK (44ms)
+[wrangler:info] GET /clean.css 304 Not Modified (21ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (29ms)
+[wrangler:info] GET /retro-2022-squads.js 200 OK (113ms)
+[wrangler:info] GET /retro-2022-schedule.js 200 OK (142ms)
+[wrangler:info] GET /retro-engine.js 200 OK (186ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (205ms)
+[wrangler:info] GET /app.js 200 OK (399ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (13ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:18:42.073Z","requestId":"0fcf0ec9-1267-4898-b6e6-83f18d811293","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:18:42.138Z","requestId":"0fcf0ec9-1267-4898-b6e6-83f18d811293","method":"GET","route":"/api/challenge","status":200,"elapsedMs":65}
+[wrangler:info] GET /api/challenge 200 OK (100ms)
+[wrangler:info] GET /assets/flags/belarus.svg 304 Not Modified (9ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:22:21.427Z","requestId":"13a2b9fc-11b1-4980-9f42-20b1d478c415","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:22:21.462Z","requestId":"13a2b9fc-11b1-4980-9f42-20b1d478c415","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":35}
+[wrangler:info] GET /custom-tournament 200 OK (42ms)
+[wrangler:info] GET /clean.css 200 OK (16ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (21ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (40ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (53ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (59ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (101ms)
+[wrangler:info] GET /app.js 200 OK (271ms)
+[wrangler:info] GET /challenge.js 200 OK (309ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (10ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:22:21.914Z","requestId":"3da8308a-763d-4c6f-ae4a-034a0e89424f","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:22:21.931Z","requestId":"3da8308a-763d-4c6f-ae4a-034a0e89424f","method":"GET","route":"/api/challenge","status":200,"elapsedMs":17}
+[wrangler:info] GET /api/challenge 200 OK (21ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:22:36.118Z","requestId":"e5dbe488-70ad-49c3-bb4a-9327175b862d","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:22:36.121Z","requestId":"e5dbe488-70ad-49c3-bb4a-9327175b862d","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":3}
+[wrangler:info] GET /custom-tournament 200 OK (10ms)
+[wrangler:info] GET /clean.css 304 Not Modified (20ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (28ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (31ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (8ms)
+[wrangler:info] GET /app.js 304 Not Modified (13ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (22ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (16ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:22:36.533Z","requestId":"92dde1a9-6cad-401d-8786-35f83a5f5b33","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:22:36.578Z","requestId":"92dde1a9-6cad-401d-8786-35f83a5f5b33","method":"GET","route":"/api/challenge","status":200,"elapsedMs":45}
+[wrangler:info] GET /api/challenge 200 OK (49ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:23:34.954Z","requestId":"17b4c257-49ae-4dd3-8a27-88e7a83981f3","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:23:34.958Z","requestId":"17b4c257-49ae-4dd3-8a27-88e7a83981f3","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":4}
+[wrangler:info] GET /custom-tournament 200 OK (10ms)
+[wrangler:info] GET /clean.css 304 Not Modified (6ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (18ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (30ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (36ms)
+[wrangler:info] GET /simulation-engine.js 200 OK (132ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (136ms)
+[wrangler:info] GET /app.js 304 Not Modified (142ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (139ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (6ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:23:35.340Z","requestId":"90af01e7-ee8a-4ee2-aca5-b6678cf0944c","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:23:35.382Z","requestId":"90af01e7-ee8a-4ee2-aca5-b6678cf0944c","method":"GET","route":"/api/challenge","status":200,"elapsedMs":42}
+[wrangler:info] GET /api/challenge 200 OK (50ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:25:30.849Z","requestId":"9fc2765e-e00b-4216-ba47-a48a9415df2c","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:25:31.429Z","requestId":"9fc2765e-e00b-4216-ba47-a48a9415df2c","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":580}
+[wrangler:info] GET /custom-tournament 200 OK (618ms)
+[wrangler:info] GET /clean.css 200 OK (63ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (59ms)
+[wrangler:info] GET /retro-2022-squads.js 200 OK (132ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (119ms)
+[wrangler:info] GET /retro-2022-schedule.js 200 OK (351ms)
+[wrangler:info] GET /retro-engine.js 200 OK (554ms)
+[wrangler:info] GET /simulation-engine.js 200 OK (813ms)
+[wrangler:info] GET /app.js 200 OK (1685ms)
+[wrangler:info] GET /challenge.js 200 OK (1079ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:25:33.890Z","requestId":"feffd2a9-8760-4f10-9d1f-7e8d4b0fb4c3","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:25:34.144Z","requestId":"feffd2a9-8760-4f10-9d1f-7e8d4b0fb4c3","method":"GET","route":"/api/challenge","status":200,"elapsedMs":254}
+[wrangler:info] GET /api/challenge 200 OK (259ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:25:34.164Z","requestId":"65e366d7-cfcc-40c9-8e89-4da52205c311","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:25:34.236Z","requestId":"65e366d7-cfcc-40c9-8e89-4da52205c311","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":72}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (95ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:32:00.657Z","requestId":"8a02fb13-828c-4565-bd3d-e1d7208c9b25","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:32:00.718Z","requestId":"8a02fb13-828c-4565-bd3d-e1d7208c9b25","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":60}
+[wrangler:info] GET /custom-tournament 200 OK (75ms)
+[wrangler:info] GET /clean.css 200 OK (37ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (79ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (126ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (107ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (216ms)
+[wrangler:info] GET /app.js 200 OK (321ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (476ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (323ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (595ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (17ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:32:01.697Z","requestId":"e023631c-2768-4e58-8631-eee508f2c242","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:32:01.771Z","requestId":"e023631c-2768-4e58-8631-eee508f2c242","method":"GET","route":"/api/challenge","status":200,"elapsedMs":73}
+[wrangler:info] GET /api/challenge 200 OK (80ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:32:54.081Z","requestId":"08ccbaee-5d1e-412c-8d66-da8b8de462b8","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:32:54.083Z","requestId":"08ccbaee-5d1e-412c-8d66-da8b8de462b8","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":2}
+[wrangler:info] GET /custom-tournament 200 OK (8ms)
+[wrangler:info] GET /clean.css 200 OK (5ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (11ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (10ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (7ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (15ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (19ms)
+[wrangler:info] GET /app.js 200 OK (18ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (17ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:32:55.282Z","requestId":"60eb142b-4e47-4195-9328-70ba0ec783ec","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:32:55.332Z","requestId":"60eb142b-4e47-4195-9328-70ba0ec783ec","method":"GET","route":"/api/challenge","status":200,"elapsedMs":50}
+[wrangler:info] GET /api/challenge 200 OK (55ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:32:55.346Z","requestId":"f104779b-a0fc-4701-b086-4cab38ca08f7","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:32:55.365Z","requestId":"f104779b-a0fc-4701-b086-4cab38ca08f7","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":19}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (26ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:34:49.538Z","requestId":"d4405286-3649-4e4d-ab5f-141c7948f468","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:34:49.540Z","requestId":"d4405286-3649-4e4d-ab5f-141c7948f468","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":2}
+[wrangler:info] GET /custom-tournament 200 OK (10ms)
+[wrangler:info] GET /clean.css 304 Not Modified (15ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (7ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (16ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (56ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (83ms)
+[wrangler:info] GET /app.js 304 Not Modified (44ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (34ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (8ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:34:50.059Z","requestId":"3c16c1f0-27bd-4de3-856f-5ec3f6d04ad0","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:34:50.078Z","requestId":"3c16c1f0-27bd-4de3-856f-5ec3f6d04ad0","method":"GET","route":"/api/challenge","status":200,"elapsedMs":19}
+[wrangler:info] GET /api/challenge 200 OK (23ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:36:21.277Z","requestId":"8f9b77d5-3653-4430-a7dc-b35af9670ea1","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:36:21.324Z","requestId":"8f9b77d5-3653-4430-a7dc-b35af9670ea1","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":47}
+[wrangler:info] GET /custom-tournament 200 OK (53ms)
+[wrangler:info] GET /clean.css 200 OK (17ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (35ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (50ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (64ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (105ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (102ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (198ms)
+[wrangler:info] GET /app.js 200 OK (367ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (471ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (9ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:36:21.947Z","requestId":"823867e9-e671-4125-8e68-62c877ddf644","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:36:21.975Z","requestId":"823867e9-e671-4125-8e68-62c877ddf644","method":"GET","route":"/api/challenge","status":200,"elapsedMs":28}
+[wrangler:info] GET /api/challenge 200 OK (30ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:37:18.117Z","requestId":"299280ce-fd1a-427d-9a05-7507eb698581","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:37:18.122Z","requestId":"299280ce-fd1a-427d-9a05-7507eb698581","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":5}
+[wrangler:info] GET /custom-tournament 200 OK (21ms)
+[wrangler:info] GET /clean.css 200 OK (8ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (49ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (26ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (25ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (36ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (35ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (45ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (40ms)
+[wrangler:info] GET /app.js 200 OK (54ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:37:19.462Z","requestId":"a7af5f7b-c5e5-4c1a-bab0-610c4baeefdd","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:37:19.592Z","requestId":"a7af5f7b-c5e5-4c1a-bab0-610c4baeefdd","method":"GET","route":"/api/challenge","status":200,"elapsedMs":130}
+[wrangler:info] GET /api/challenge 200 OK (135ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:37:19.604Z","requestId":"18f56ee0-76b8-42e1-9645-39516a1cb3a4","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:37:19.626Z","requestId":"18f56ee0-76b8-42e1-9645-39516a1cb3a4","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":22}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (29ms)
+[wrangler:info] GET /assets/flags/belarus.svg 304 Not Modified (15ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:44:43.258Z","requestId":"1852d539-0237-4163-8e24-dec622942ceb","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:44:43.357Z","requestId":"1852d539-0237-4163-8e24-dec622942ceb","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":99}
+[wrangler:info] GET /custom-tournament 200 OK (126ms)
+[wrangler:info] GET /clean.css 200 OK (47ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (129ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (130ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (132ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (395ms)
+[wrangler:info] GET /app.js 200 OK (532ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (720ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (448ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (889ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (36ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:44:44.892Z","requestId":"26bd0e32-b3ca-4df1-a277-7b878d9e5a44","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:44:45.006Z","requestId":"26bd0e32-b3ca-4df1-a277-7b878d9e5a44","method":"GET","route":"/api/challenge","status":200,"elapsedMs":114}
+[wrangler:info] GET /api/challenge 200 OK (127ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:45:22.474Z","requestId":"acc6c998-1891-4098-b747-2f3829bb6376","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:45:22.488Z","requestId":"acc6c998-1891-4098-b747-2f3829bb6376","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":14}
+[wrangler:info] GET /custom-tournament 200 OK (23ms)
+[wrangler:info] GET /clean.css 304 Not Modified (8ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (20ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (36ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (9ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (12ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (44ms)
+[wrangler:info] GET /app.js 304 Not Modified (57ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (55ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (7ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:45:23.231Z","requestId":"dae4afb6-68b6-4798-ae4c-49528596f1d2","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:45:23.264Z","requestId":"dae4afb6-68b6-4798-ae4c-49528596f1d2","method":"GET","route":"/api/challenge","status":200,"elapsedMs":33}
+[wrangler:info] GET /api/challenge 200 OK (44ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:46:14.500Z","requestId":"f584edd5-43d9-49f8-9204-a5c7f2f60378","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:46:14.601Z","requestId":"f584edd5-43d9-49f8-9204-a5c7f2f60378","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":101}
+[wrangler:info] GET /custom-tournament 200 OK (118ms)
+[wrangler:info] GET /clean.css 200 OK (22ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (47ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (172ms)
+[wrangler:info] GET /app.js 200 OK (317ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (420ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (315ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (539ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (607ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (640ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:46:15.776Z","requestId":"6a548c2d-5c2b-44b5-9d23-dc72c474e5a1","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:46:16.016Z","requestId":"6a548c2d-5c2b-44b5-9d23-dc72c474e5a1","method":"GET","route":"/api/challenge","status":200,"elapsedMs":240}
+[wrangler:info] GET /api/challenge 200 OK (247ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:46:16.028Z","requestId":"04454751-1cc6-45bc-ab3a-3cb66ce18f1a","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:46:16.054Z","requestId":"04454751-1cc6-45bc-ab3a-3cb66ce18f1a","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":26}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (32ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:53:08.116Z","requestId":"77b97e7a-cc10-48f4-b6ca-fa25d219833e","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:53:08.159Z","requestId":"77b97e7a-cc10-48f4-b6ca-fa25d219833e","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":43}
+[wrangler:info] GET /custom-tournament 200 OK (51ms)
+[wrangler:info] GET /clean.css 200 OK (18ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (29ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (47ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (50ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (81ms)
+[wrangler:info] GET /app.js 200 OK (230ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (317ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (304ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (436ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (12ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:53:08.835Z","requestId":"e8f96583-48b4-4fdb-9125-2058c163a403","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:53:08.864Z","requestId":"e8f96583-48b4-4fdb-9125-2058c163a403","method":"GET","route":"/api/challenge","status":200,"elapsedMs":29}
+[wrangler:info] GET /api/challenge 200 OK (33ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:53:32.225Z","requestId":"9bb14c6a-519e-49ae-98db-96d9afb00a84","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:53:32.226Z","requestId":"9bb14c6a-519e-49ae-98db-96d9afb00a84","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":1}
+[wrangler:info] GET /custom-tournament 200 OK (4ms)
+[wrangler:info] GET /clean.css 304 Not Modified (9ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (3ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (7ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (5ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (7ms)
+[wrangler:info] GET /app.js 304 Not Modified (8ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (5ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (3ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:53:32.438Z","requestId":"e75a923b-72ee-4d08-bb3c-d2733364d295","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:53:32.448Z","requestId":"e75a923b-72ee-4d08-bb3c-d2733364d295","method":"GET","route":"/api/challenge","status":200,"elapsedMs":10}
+[wrangler:info] GET /api/challenge 200 OK (13ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T01:56:12.798Z","requestId":"78d61b2b-fb6e-4464-8bfa-8da116f2cd8e","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:56:12.927Z","requestId":"78d61b2b-fb6e-4464-8bfa-8da116f2cd8e","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":129}
+[wrangler:info] GET /custom-tournament 200 OK (150ms)
+[wrangler:info] GET /clean.css 200 OK (36ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (35ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (113ms)
+[wrangler:info] GET /app.js 200 OK (303ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (385ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (327ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (479ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (530ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (556ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:56:14.239Z","requestId":"3959c84a-4840-436a-861e-4dd07a33eb49","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:56:14.381Z","requestId":"3959c84a-4840-436a-861e-4dd07a33eb49","method":"GET","route":"/api/challenge","status":200,"elapsedMs":142}
+[wrangler:info] GET /api/challenge 200 OK (157ms)
+{"type":"worker-request","timestamp":"2026-07-26T01:56:14.417Z","requestId":"dad566b4-f132-4038-8489-3db5166ac5f5","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T01:56:14.564Z","requestId":"dad566b4-f132-4038-8489-3db5166ac5f5","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":147}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (166ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T02:02:49.446Z","requestId":"2d78986d-b8f4-4385-ae02-c40f7a7ef87c","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:02:49.698Z","requestId":"2d78986d-b8f4-4385-ae02-c40f7a7ef87c","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":252}
+[wrangler:info] GET /custom-tournament 200 OK (279ms)
+[wrangler:info] GET /clean.css 200 OK (54ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (54ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (83ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (229ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (384ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (492ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (463ms)
+[wrangler:info] GET /app.js 200 OK (688ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (734ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (32ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:02:51.438Z","requestId":"63adf123-91fb-4f30-94a7-fa1a6d5557a3","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:02:51.514Z","requestId":"63adf123-91fb-4f30-94a7-fa1a6d5557a3","method":"GET","route":"/api/challenge","status":200,"elapsedMs":76}
+[wrangler:info] GET /api/challenge 200 OK (82ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:05:01.607Z","requestId":"c1a5c12a-f2a8-400c-8aab-48cb26cc440b","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:05:01.611Z","requestId":"c1a5c12a-f2a8-400c-8aab-48cb26cc440b","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":4}
+[wrangler:info] GET /custom-tournament 200 OK (10ms)
+[wrangler:info] GET /clean.css 200 OK (9ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (39ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (21ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (38ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (53ms)
+[wrangler:info] GET /app.js 200 OK (41ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (75ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (75ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (101ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:05:02.988Z","requestId":"e675e185-01a1-435a-ba7b-c3267f6f0ee5","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:05:03.066Z","requestId":"e675e185-01a1-435a-ba7b-c3267f6f0ee5","method":"GET","route":"/api/challenge","status":200,"elapsedMs":78}
+[wrangler:info] GET /api/challenge 200 OK (84ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:05:03.081Z","requestId":"68ec591f-2b52-4902-b55a-2e74e706fe6d","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:05:03.111Z","requestId":"68ec591f-2b52-4902-b55a-2e74e706fe6d","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":30}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (35ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T02:08:22.842Z","requestId":"b06d248b-2699-45a0-8c31-f7f1a78c9178","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:08:22.884Z","requestId":"b06d248b-2699-45a0-8c31-f7f1a78c9178","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":42}
+[wrangler:info] GET /custom-tournament 200 OK (51ms)
+[wrangler:info] GET /clean.css 200 OK (20ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (23ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (39ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (72ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (108ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (129ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (221ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (246ms)
+[wrangler:info] GET /app.js 200 OK (454ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (13ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:08:23.534Z","requestId":"748fd9c1-5ee6-410b-a826-f7d5096dfa03","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:08:23.554Z","requestId":"748fd9c1-5ee6-410b-a826-f7d5096dfa03","method":"GET","route":"/api/challenge","status":200,"elapsedMs":20}
+[wrangler:info] GET /api/challenge 200 OK (26ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:09:24.008Z","requestId":"10a5c60c-c541-4928-91db-2b19b4a417fe","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:09:24.011Z","requestId":"10a5c60c-c541-4928-91db-2b19b4a417fe","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":3}
+[wrangler:info] GET /custom-tournament 200 OK (11ms)
+[wrangler:info] GET /clean.css 200 OK (9ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (21ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (23ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (23ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (29ms)
+[wrangler:info] GET /app.js 200 OK (26ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (29ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (27ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:09:25.280Z","requestId":"9ce9cd34-e4a4-48d5-936b-985e42da1780","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:09:25.379Z","requestId":"9ce9cd34-e4a4-48d5-936b-985e42da1780","method":"GET","route":"/api/challenge","status":200,"elapsedMs":99}
+[wrangler:info] GET /api/challenge 200 OK (106ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:09:25.394Z","requestId":"b12b5ebd-644f-4ee1-8a4f-9f4bd629f1fa","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:09:25.413Z","requestId":"b12b5ebd-644f-4ee1-8a4f-9f4bd629f1fa","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":19}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (24ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T02:17:38.466Z","requestId":"9f5e03d2-93c1-47bb-8663-45db849984c4","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:17:38.513Z","requestId":"9f5e03d2-93c1-47bb-8663-45db849984c4","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":47}
+[wrangler:info] GET /custom-tournament 200 OK (54ms)
+[wrangler:info] GET /clean.css 200 OK (20ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (26ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (49ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (61ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (104ms)
+[wrangler:info] GET /app.js 200 OK (256ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (364ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (314ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (476ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (10ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:17:39.206Z","requestId":"ef0a1b27-1fd2-4a87-bfe1-19f39c196ea2","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:17:39.235Z","requestId":"ef0a1b27-1fd2-4a87-bfe1-19f39c196ea2","method":"GET","route":"/api/challenge","status":200,"elapsedMs":29}
+[wrangler:info] GET /api/challenge 200 OK (33ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:18:19.675Z","requestId":"e2d539f6-737f-41de-a8bd-64f91bc43fe1","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:18:19.684Z","requestId":"e2d539f6-737f-41de-a8bd-64f91bc43fe1","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":9}
+[wrangler:info] GET /custom-tournament 200 OK (23ms)
+[wrangler:info] GET /clean.css 200 OK (7ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (8ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (24ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (30ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (19ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (17ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (19ms)
+[wrangler:info] GET /app.js 200 OK (23ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:18:21.055Z","requestId":"c533cd9e-ee76-42c3-bc20-1e2f2289fe9e","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:18:21.168Z","requestId":"c533cd9e-ee76-42c3-bc20-1e2f2289fe9e","method":"GET","route":"/api/challenge","status":200,"elapsedMs":113}
+[wrangler:info] GET /api/challenge 200 OK (121ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:18:21.180Z","requestId":"29aa16e5-fbf2-49b5-bd8e-334b907fd7d2","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:18:21.200Z","requestId":"29aa16e5-fbf2-49b5-bd8e-334b907fd7d2","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":20}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (26ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T02:23:01.369Z","requestId":"1f796c12-ae15-4405-aaa8-0c510c2512ff","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:23:01.783Z","requestId":"1f796c12-ae15-4405-aaa8-0c510c2512ff","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":414}
+[wrangler:info] GET /custom-tournament 200 OK (481ms)
+[wrangler:info] GET /clean.css 200 OK (71ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (133ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (148ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (144ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (349ms)
+[wrangler:info] GET /app.js 200 OK (486ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (693ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (442ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (870ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (37ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:23:03.404Z","requestId":"46ff38ff-76cc-4177-bc29-26221a97a346","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:23:03.485Z","requestId":"46ff38ff-76cc-4177-bc29-26221a97a346","method":"GET","route":"/api/challenge","status":200,"elapsedMs":81}
+[wrangler:info] GET /api/challenge 200 OK (94ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:24:21.181Z","requestId":"f8504b31-68d3-40e9-900d-47adb5beaafc","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:24:21.189Z","requestId":"f8504b31-68d3-40e9-900d-47adb5beaafc","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":8}
+[wrangler:info] GET /custom-tournament 200 OK (18ms)
+[wrangler:info] GET /clean.css 200 OK (12ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (38ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (52ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (99ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (122ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (65ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (148ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (73ms)
+[wrangler:info] GET /app.js 200 OK (102ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:24:21.980Z","requestId":"da382d69-89be-4f37-897b-eb0c23b58d94","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:24:22.056Z","requestId":"da382d69-89be-4f37-897b-eb0c23b58d94","method":"GET","route":"/api/challenge","status":200,"elapsedMs":76}
+[wrangler:info] GET /api/challenge 200 OK (81ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:24:22.069Z","requestId":"843b45f8-5743-41fe-8557-f6c7ce1ce510","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:24:22.093Z","requestId":"843b45f8-5743-41fe-8557-f6c7ce1ce510","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":24}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (30ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T02:25:24.289Z","requestId":"a2251862-3c9f-4f6d-926b-80ca73642559","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:25:24.746Z","requestId":"a2251862-3c9f-4f6d-926b-80ca73642559","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":457}
+[wrangler:info] GET /custom-tournament 200 OK (488ms)
+[wrangler:info] GET /clean.css 304 Not Modified (48ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (176ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (233ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (371ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (512ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (398ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (739ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (782ms)
+[wrangler:info] GET /app.js 200 OK (1936ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (15ms)
+{"type":"worker-request","timestamp":"2026-07-26T02:25:27.851Z","requestId":"9c872cde-aaad-41b9-b0b0-1b513d1490b3","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T02:25:28.194Z","requestId":"9c872cde-aaad-41b9-b0b0-1b513d1490b3","method":"GET","route":"/api/challenge","status":200,"elapsedMs":343}
+[wrangler:info] GET /api/challenge 200 OK (361ms)
+[wrangler:info] GET /assets/audio/penalty-whistle.mp3 304 Not Modified (36ms)
+[wrangler:info] GET /assets/audio/full-time-whistle.mp3 304 Not Modified (49ms)
+[wrangler:info] GET /assets/audio/penalty-whistle.mp3 304 Not Modified (9ms)
+[wrangler:info] GET /assets/audio/full-time-whistle.mp3 304 Not Modified (23ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T14:18:23.910Z","requestId":"ba63fc94-aeab-4540-baac-c500edd39aa6","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:18:23.952Z","requestId":"ba63fc94-aeab-4540-baac-c500edd39aa6","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":42}
+[wrangler:info] GET /custom-tournament 200 OK (47ms)
+[wrangler:info] GET /clean.css 304 Not Modified (14ms)
+[wrangler:info] GET /assets/flags/palestine.svg 200 OK (30ms)
+[wrangler:info] GET /player-pools.generated.js 200 OK (53ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 200 OK (79ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (97ms)
+[wrangler:info] GET /data.js 200 OK (130ms)
+[wrangler:info] GET /retro-2014-squads.js 200 OK (80ms)
+[wrangler:info] GET /retro-2010-squads.js 200 OK (224ms)
+[wrangler:info] GET /retro-2010-schedule.js 200 OK (166ms)
+[wrangler:info] GET /retro-2014-schedule.js 200 OK (36ms)
+[wrangler:info] GET /retro-2018-schedule.js 200 OK (61ms)
+[wrangler:info] GET /retro-2018-squads.js 200 OK (115ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (82ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (112ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (149ms)
+[wrangler:info] GET /presentation-engine.js 200 OK (170ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (121ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (169ms)
+[wrangler:info] GET /app.js 200 OK (309ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (316ms)
+[wrangler:info] GET /analytics.js 200 OK (221ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (11ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:18:24.991Z","requestId":"d434bd74-53f1-4e2a-a3be-021afb0ef99e","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:18:25.002Z","requestId":"d434bd74-53f1-4e2a-a3be-021afb0ef99e","method":"GET","route":"/api/challenge","status":200,"elapsedMs":11}
+[wrangler:info] GET /api/challenge 200 OK (14ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:18:28.001Z","requestId":"53c9ff66-3f26-46ec-818f-b83494cc7d80","method":"GET","route":"/"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:18:28.002Z","requestId":"53c9ff66-3f26-46ec-818f-b83494cc7d80","method":"GET","route":"/","status":200,"elapsedMs":1}
+[wrangler:info] GET / 200 OK (6ms)
+[wrangler:info] GET /clean.css 304 Not Modified (6ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (7ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (17ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (18ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (8ms)
+[wrangler:info] GET /data.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (8ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (5ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (4ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (3ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (6ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (9ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (10ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (5ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (11ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (18ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (22ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (18ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (14ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (25ms)
+[wrangler:info] GET /app.js 304 Not Modified (22ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (3ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:18:28.170Z","requestId":"c9516be7-c5fa-4d75-92b5-1101ea0e6477","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:18:28.176Z","requestId":"c9516be7-c5fa-4d75-92b5-1101ea0e6477","method":"GET","route":"/api/challenge","status":200,"elapsedMs":6}
+[wrangler:info] GET /api/challenge 200 OK (9ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:20:21.811Z","requestId":"65905176-dc35-4d6e-bdb7-ced16e674078","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:20:21.812Z","requestId":"65905176-dc35-4d6e-bdb7-ced16e674078","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":1}
+[wrangler:info] GET /custom-tournament 200 OK (5ms)
+[wrangler:info] GET /clean.css 304 Not Modified (10ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 200 OK (9ms)
+[wrangler:info] GET /assets/flags/palestine.svg 200 OK (11ms)
+[wrangler:info] GET /player-pools.generated.js 200 OK (7ms)
+[wrangler:info] GET /data.js 200 OK (13ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-2010-squads.js 200 OK (16ms)
+[wrangler:info] GET /retro-2010-schedule.js 200 OK (20ms)
+[wrangler:info] GET /retro-2014-schedule.js 200 OK (12ms)
+[wrangler:info] GET /retro-2014-squads.js 200 OK (29ms)
+[wrangler:info] GET /retro-2018-squads.js 200 OK (13ms)
+[wrangler:info] GET /retro-2018-schedule.js 200 OK (13ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (13ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (19ms)
+[wrangler:info] GET /presentation-engine.js 200 OK (8ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (12ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (11ms)
+[wrangler:info] GET /app.js 200 OK (7ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (11ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (12ms)
+[wrangler:info] GET /analytics.js 200 OK (18ms)
+[wrangler:info] GET /assets/retro-world-cup-2018.png 200 OK (20ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:20:23.091Z","requestId":"fec8426c-a062-451d-b97c-680bfffb5faa","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:20:23.129Z","requestId":"fec8426c-a062-451d-b97c-680bfffb5faa","method":"GET","route":"/api/challenge","status":200,"elapsedMs":38}
+[wrangler:info] GET /api/challenge 200 OK (43ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:20:23.174Z","requestId":"13506ba2-a8ed-48ee-b50c-a13072cdf8d6","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:20:23.191Z","requestId":"13506ba2-a8ed-48ee-b50c-a13072cdf8d6","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":17}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (23ms)
+[wrangler:info] GET /assets/flags/belarus.svg 304 Not Modified (7ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T14:35:16.182Z","requestId":"0ca6c9a9-e24b-4961-8900-6189698d2d5f","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:35:16.254Z","requestId":"0ca6c9a9-e24b-4961-8900-6189698d2d5f","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":72}
+[wrangler:info] GET /custom-tournament 200 OK (85ms)
+[wrangler:info] GET /clean.css 200 OK (48ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (58ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (82ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (54ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (104ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (98ms)
+[wrangler:info] GET /data.js 304 Not Modified (167ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (160ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (136ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (305ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (225ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (212ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (207ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (209ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (181ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (167ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (196ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (165ms)
+[wrangler:info] GET /app.js 200 OK (316ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (284ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (330ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (15ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:35:17.348Z","requestId":"12f5f1e0-32dd-4ca3-bb74-addfc09a6d29","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:35:17.377Z","requestId":"12f5f1e0-32dd-4ca3-bb74-addfc09a6d29","method":"GET","route":"/api/challenge","status":200,"elapsedMs":29}
+[wrangler:info] GET /api/challenge 200 OK (35ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:35:37.284Z","requestId":"d97a5ca7-2572-4121-b563-e0501ca23c1d","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:35:37.285Z","requestId":"d97a5ca7-2572-4121-b563-e0501ca23c1d","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":1}
+[wrangler:info] GET /custom-tournament 200 OK (5ms)
+[wrangler:info] GET /clean.css 200 OK (4ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (18ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (17ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (7ms)
+[wrangler:info] GET /data.js 304 Not Modified (43ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (37ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (45ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (35ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (25ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (14ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (15ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (22ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (22ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (13ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (15ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (21ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (21ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (15ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (23ms)
+[wrangler:info] GET /app.js 200 OK (24ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (24ms)
+[wrangler:info] GET /assets/retro-world-cup-2018.png 304 Not Modified (10ms)
+[wrangler:info] GET /assets/flags/belarus.svg 304 Not Modified (7ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:35:37.795Z","requestId":"bcfb94e2-f4f3-4905-8566-90b14ee7810c","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:35:37.845Z","requestId":"bcfb94e2-f4f3-4905-8566-90b14ee7810c","method":"GET","route":"/api/challenge","status":200,"elapsedMs":50}
+[wrangler:info] GET /api/challenge 200 OK (57ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:35:37.853Z","requestId":"caa45184-a2fc-4973-94a3-4f5797ece0e2","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:35:37.869Z","requestId":"caa45184-a2fc-4973-94a3-4f5797ece0e2","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":16}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (19ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-07-26T14:54:40.602Z","requestId":"2de6e4f8-842b-4f31-af35-5298462fffc2","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:54:40.660Z","requestId":"2de6e4f8-842b-4f31-af35-5298462fffc2","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":58}
+[wrangler:info] GET /custom-tournament 200 OK (67ms)
+[wrangler:info] GET /clean.css 200 OK (52ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (66ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (75ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (59ms)
+[wrangler:info] GET /data.js 304 Not Modified (84ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (129ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (160ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (97ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (149ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (254ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (178ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (201ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (255ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (207ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (205ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (178ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (216ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (226ms)
+[wrangler:info] GET /app.js 200 OK (321ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (345ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (341ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (12ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:54:41.770Z","requestId":"e5a4c37c-6ba3-4afb-bfbc-5dedbe912a7a","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:54:41.795Z","requestId":"e5a4c37c-6ba3-4afb-bfbc-5dedbe912a7a","method":"GET","route":"/api/challenge","status":200,"elapsedMs":25}
+[wrangler:info] GET /api/challenge 200 OK (31ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:55:10.727Z","requestId":"85056333-68da-4ee2-a51b-f8ac9688fd93","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:55:10.728Z","requestId":"85056333-68da-4ee2-a51b-f8ac9688fd93","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":1}
+[wrangler:info] GET /custom-tournament 200 OK (8ms)
+[wrangler:info] GET /clean.css 200 OK (10ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (24ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (27ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (13ms)
+[wrangler:info] GET /data.js 304 Not Modified (20ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (15ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (15ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (19ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (38ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (34ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (49ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (33ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (41ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (31ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (47ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (33ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (27ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (24ms)
+[wrangler:info] GET /app.js 200 OK (25ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (25ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (18ms)
+[wrangler:info] GET /assets/retro-world-cup-2018.png 304 Not Modified (15ms)
+[wrangler:info] GET /assets/flags/belarus.svg 304 Not Modified (19ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:55:11.942Z","requestId":"a12f028f-36e5-4612-92dd-ad0768f87057","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:55:11.990Z","requestId":"a12f028f-36e5-4612-92dd-ad0768f87057","method":"GET","route":"/api/challenge","status":200,"elapsedMs":48}
+[wrangler:info] GET /api/challenge 200 OK (54ms)
+{"type":"worker-request","timestamp":"2026-07-26T14:55:11.998Z","requestId":"7a3897ce-4d2a-45c2-937d-e9aef0311a38","method":"POST","route":"/api/challenge/achievements/retro-2014"}
+{"type":"worker-request-complete","timestamp":"2026-07-26T14:55:12.010Z","requestId":"7a3897ce-4d2a-45c2-937d-e9aef0311a38","method":"POST","route":"/api/challenge/achievements/retro-2014","status":200,"elapsedMs":12}
+[wrangler:info] POST /api/challenge/achievements/retro-2014 200 OK (16ms)

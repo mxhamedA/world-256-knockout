@@ -20,8 +20,10 @@ function mockElement() {
     textContent: "",
     value: "",
     checked: false,
+    parentElement: null,
+    parentNode: null,
     dataset: {},
-    style: { setProperty() {} },
+    style: { setProperty() {}, removeProperty() {} },
     classList: { add() {}, remove() {}, toggle() {}, contains() { return false; } },
     addEventListener() {},
     setAttribute() {},
@@ -29,13 +31,46 @@ function mockElement() {
     querySelector() { return mockElement(); },
     appendChild() {},
     insertAdjacentHTML() {},
+    after() {},
+    before() {},
+    insertBefore() {},
     remove() {},
+    replaceChildren() {},
     scrollIntoView() {},
     showModal() {},
+    close() {},
+    focus() {},
+    click() {},
   };
 }
 
-const context = { console };
+const context = {
+  console,
+  URL,
+  URLSearchParams,
+  Object,
+  Array,
+  Map,
+  Set,
+  Math,
+  Date,
+  JSON,
+  isNaN,
+  parseInt,
+  parseFloat,
+  Number,
+  String,
+  Boolean,
+  Error,
+  TypeError,
+  ReferenceError,
+  Promise,
+  setTimeout,
+  clearTimeout,
+  setInterval,
+  clearInterval,
+  Intl,
+};
 vm.createContext(context);
 const elements = new Map();
 context.document = {
@@ -45,13 +80,14 @@ context.document = {
   },
   querySelectorAll() { return []; },
   createElement() { return mockElement(); },
+  createComment() { return mockElement(); },
   addEventListener() {},
   body: mockElement(),
   documentElement: mockElement(),
   activeElement: { tagName: "BODY" },
   fullscreenElement: null,
 };
-context.window = { addEventListener() {}, scrollTo() {}, matchMedia() { return { matches: false }; } };
+context.window = { addEventListener() {}, scrollTo() {}, matchMedia() { return { matches: false }; }, location: { pathname: "/", search: "", hash: "" }, history: { replaceState() {}, pushState() {} } };
 context.localStorage = { getItem() { return null; }, setItem() {} };
 context.requestAnimationFrame = () => 1;
 context.cancelAnimationFrame = () => {};
@@ -61,6 +97,10 @@ context.clearTimeout = () => {};
 const sources = [
   "player-pools.generated.js",
   "data.js",
+  "retro-data.js",
+  "retro-2014-squads.js",
+  "retro-2014-schedule.js",
+  "retro-engine.js",
   "presentation-engine.js",
   "simulation-engine.js",
   "app.js",

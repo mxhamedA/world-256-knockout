@@ -15,6 +15,7 @@ import {
   hashChallengePassword,
   hashChallengeSessionToken,
   makeChallengeSessionToken,
+  normalizeChallengeEmail,
   normalizeChallengeUsername,
   validChallengePassword,
   verifyChallengePassword,
@@ -52,6 +53,16 @@ const RETRO_2018_TEAMS = Object.freeze([
   "Germany", "Mexico", "Sweden", "South Korea",
   "Belgium", "Panama", "Tunisia", "England",
   "Poland", "Senegal", "Colombia", "Japan",
+]);
+const RETRO_2022_TEAMS = Object.freeze([
+  "Qatar", "Ecuador", "Senegal", "Netherlands",
+  "England", "Iran", "USA", "Wales",
+  "Argentina", "Saudi Arabia", "Mexico", "Poland",
+  "France", "Australia", "Denmark", "Tunisia",
+  "Spain", "Costa Rica", "Germany", "Japan",
+  "Belgium", "Canada", "Morocco", "Croatia",
+  "Brazil", "Serbia", "Switzerland", "Cameroon",
+  "Portugal", "Ghana", "Uruguay", "South Korea",
 ]);
 const API_HEADERS = Object.freeze({
   "Cache-Control": "no-store",
@@ -138,10 +149,11 @@ export async function verifyGoogleIdToken(idToken, env, expectedNonce) {
   if (!verified || !validIssuer || !validAudience || Number(claims.exp || 0) * 1000 <= Date.now() || claims.nonce !== expectedNonce) {
     throw new ChallengeRequestError("Google sign-in could not be verified.", 401);
   }
-  if (!claims.sub || !claims.email || claims.email_verified !== true) {
+  const verifiedEmail = normalizeChallengeEmail(claims.email);
+  if (!claims.sub || !verifiedEmail || claims.email_verified !== true) {
     throw new ChallengeRequestError("A verified Google email is required.", 401);
   }
-  return claims;
+  return { ...claims, email: verifiedEmail };
 }
 
 async function uniqueGoogleUsername(db, claims) {
@@ -157,7 +169,7 @@ async function uniqueGoogleUsername(db, claims) {
   throw new ChallengeRequestError("A username could not be created for this Google account.", 409);
 }
 
-async function accountForGoogleClaims(db, claims) {
+export async function accountForGoogleClaims(db, claims) {
   let identity = await db.prepare(`
     SELECT accounts.* FROM auth_identities JOIN accounts ON accounts.id = auth_identities.account_id
     WHERE auth_identities.provider = 'google' AND auth_identities.provider_subject = ?
@@ -168,7 +180,7 @@ async function accountForGoogleClaims(db, claims) {
       .bind(now, claims.email, claims.sub).run();
     return identity;
   }
-  const matchingEmail = await db.prepare("SELECT * FROM accounts WHERE email = ? COLLATE NOCASE AND email_verified_at IS NOT NULL LIMIT 1")
+  const matchingEmail = await db.prepare("SELECT * FROM accounts WHERE email = ? COLLATE NOCASE LIMIT 1")
     .bind(claims.email).first();
   const accountId = matchingEmail?.id || crypto.randomUUID();
   const statements = [];
@@ -183,6 +195,10 @@ async function accountForGoogleClaims(db, claims) {
       INSERT INTO accounts (id, username, password_hash, password_salt, password_iterations, email, email_verified_at, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(accountId, username, impossiblePassword.hash, impossiblePassword.salt, impossiblePassword.iterations, claims.email, now, now));
+  } else {
+    statements.push(db.prepare(`
+      UPDATE accounts SET email = ?, email_verified_at = COALESCE(email_verified_at, ?) WHERE id = ?
+    `).bind(claims.email, now, accountId));
   }
   statements.push(db.prepare(`
     INSERT INTO auth_identities (provider, provider_subject, account_id, email, created_at, last_login_at)
@@ -412,7 +428,9 @@ async function createSession(db, accountId, request) {
 
 async function register(request, env) {
   const body = await readJson(request);
+  const email = normalizeChallengeEmail(body.email);
   const username = normalizeChallengeUsername(body.username);
+  if (!email) throw new ChallengeRequestError("Enter a valid email address.");
   if (!username) throw new ChallengeRequestError("Use 3-20 lowercase letters, numbers or underscores for your username.");
   if (!validChallengePassword(body.password)) throw new ChallengeRequestError("Password must be 10-128 characters.");
   const accountId = crypto.randomUUID();
@@ -421,16 +439,24 @@ async function register(request, env) {
     password = await hashChallengePassword(body.password);
   } catch (error) {
     console.error("Account password hashing failed", error instanceof Error ? error.message : String(error));
-    throw new ChallengeRequestError("Your password could not be secured. Please try again.", 500, { code: "password_hash_failed" });
+    throw new ChallengeRequestError(
+      "Account signup is temporarily unavailable because secure password processing failed. Please try again shortly.",
+      503,
+      { code: "password_hash_failed" },
+    );
   }
   const now = Date.now();
   try {
     await env.CHALLENGE_DB.prepare(`
-      INSERT INTO accounts (id, username, password_hash, password_salt, password_iterations, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).bind(accountId, username, password.hash, password.salt, password.iterations, now).run();
+      INSERT INTO accounts (id, username, password_hash, password_salt, password_iterations, email, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).bind(accountId, username, password.hash, password.salt, password.iterations, email, now).run();
   } catch (error) {
-    if (String(error).toLowerCase().includes("unique")) throw new ChallengeRequestError("That username is already taken.", 409);
+    const message = String(error).toLowerCase();
+    if (message.includes("unique") && message.includes("email")) {
+      throw new ChallengeRequestError("An account already uses that email address. Log in instead.", 409);
+    }
+    if (message.includes("unique")) throw new ChallengeRequestError("That username is already taken.", 409);
     console.error("Account creation failed", error instanceof Error ? error.message : String(error));
     throw new ChallengeRequestError("Your account could not be created because the account database rejected the request. Please try again.", 500, { code: "account_create_failed" });
   }
@@ -450,14 +476,20 @@ async function register(request, env) {
 
 async function login(request, env) {
   const body = await readJson(request);
-  const username = normalizeChallengeUsername(body.username);
-  if (!username || !validChallengePassword(body.password)) throw new ChallengeRequestError("Invalid username or password.", 401);
-  const account = await env.CHALLENGE_DB.prepare("SELECT * FROM accounts WHERE username = ? COLLATE NOCASE").bind(username).first();
+  const rawIdentifier = typeof body.identifier === "string" ? body.identifier : body.username;
+  const email = normalizeChallengeEmail(rawIdentifier);
+  const username = normalizeChallengeUsername(rawIdentifier);
+  if ((!email && !username) || !validChallengePassword(body.password)) {
+    throw new ChallengeRequestError("Invalid username/email or password.", 401);
+  }
+  const account = email
+    ? await env.CHALLENGE_DB.prepare("SELECT * FROM accounts WHERE email = ? COLLATE NOCASE").bind(email).first()
+    : await env.CHALLENGE_DB.prepare("SELECT * FROM accounts WHERE username = ? COLLATE NOCASE").bind(username).first();
   let passwordMatches = false;
   if (account) passwordMatches = await verifyChallengePassword(body.password, account);
   else await hashChallengePassword(body.password, new Uint8Array(16));
   if (!account || !passwordMatches) {
-    throw new ChallengeRequestError("Invalid username or password.", 401);
+    throw new ChallengeRequestError("Invalid username/email or password.", 401);
   }
   const token = await createSession(env.CHALLENGE_DB, account.id, request);
   return responseJson({ account: publicAccount(account) }, 200, { "Set-Cookie": challengeSessionCookie(token) });
@@ -789,6 +821,15 @@ function retroAchievementConfig(year) {
       title: "Russia 2018 World Tour",
     };
   }
+  if (Number(year) === 2022) {
+    return {
+      year: 2022,
+      table: "retro_2022_attempts",
+      teams: RETRO_2022_TEAMS,
+      id: "retro-2022-world-tour",
+      title: "Qatar 2022 World Tour",
+    };
+  }
   return {
     year: 2014,
     table: "retro_2014_attempts",
@@ -891,7 +932,7 @@ async function retroAchievement(request, env, account, year) {
 }
 
 export async function handleChallengeRequest(request, env, url) {
-  if (!env.CHALLENGE_DB) return responseJson({ error: "Palestine Challenge database is not configured." }, 503);
+  if (!env.CHALLENGE_DB) return responseJson({ error: "The account service is not configured." }, 503);
   try {
     if (url.pathname === "/api/challenge" && request.method === "GET") return await dashboard(request, env);
     if (url.pathname === "/api/challenge/register" && request.method === "POST") return await register(request, env);
@@ -902,7 +943,7 @@ export async function handleChallengeRequest(request, env, url) {
     const account = await authenticatedAccount(request, env.CHALLENGE_DB);
     if (url.pathname === "/api/challenge/profile") return await profile(request, env, account);
     if (url.pathname === "/api/challenge/profile/deletion-request") return await requestAccountDeletion(request, env, account);
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2018)$/);
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2018|2022)$/);
     if (retroAchievementMatch) return await retroAchievement(request, env, account, Number(retroAchievementMatch[1]));
     if (url.pathname === "/api/challenge/runs" && request.method === "POST") return await startRun(request, env, account);
     const runMatch = url.pathname.match(/^\/api\/challenge\/runs\/([0-9a-f-]{36})\/play$/i);

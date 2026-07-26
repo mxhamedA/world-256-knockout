@@ -58,7 +58,7 @@ const FIFA_RANKED_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS
 const GREAT_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank <= 20);
 const MID_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank >= 40 && team.officialFifaRank <= 90);
 const LOWER_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS.filter((team) => !team.officialFifaRank || team.officialFifaRank >= 120);
-const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/draft-mode", "/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/achievements", "/online-mode", "/palestine-challenge", "/profile"]);
+const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/draft-mode", "/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/achievements", "/online-mode", "/palestine-challenge", "/profile"]);
 
 export default {
   async fetch(request, env) {

@@ -7,7 +7,7 @@ function registrationRequest(username) {
   return new Request(requestUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password: "a-secure-test-password" }),
+    body: JSON.stringify({ email: `${username}@example.com`, username, password: "a-secure-test-password" }),
   });
 }
 

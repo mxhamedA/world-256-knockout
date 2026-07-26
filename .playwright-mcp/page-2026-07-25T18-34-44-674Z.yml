@@ -1,0 +1,128 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "256 Teams home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]:
+          - generic [ref=e6]: "256"
+          - generic [ref=e7]: TEAMS
+      - generic:
+        - button "Settings" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: ⚙
+        - button "News" [ref=e11] [cursor=pointer]
+        - button "Feedback" [ref=e14] [cursor=pointer]:
+          - generic [ref=e15]: "!"
+        - button "Achievements" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: 🏆
+        - button "Donate" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: $
+        - button "Log in" [ref=e23] [cursor=pointer]
+    - main [ref=e29]:
+      - region "Tournament modes" [ref=e32]:
+        - generic [ref=e33]:
+          - article [ref=e34]:
+            - heading "256-team knockout" [level=3] [ref=e36]
+            - generic "Default mode settings" [ref=e37]:
+              - generic [ref=e38]:
+                - generic [ref=e39]:
+                  - generic [ref=e40]: Simulation style
+                  - group [ref=e41]:
+                    - generic "Explain simulation styles" [ref=e42] [cursor=pointer]: i
+                - generic [ref=e43]:
+                  - button "Realistic" [ref=e44] [cursor=pointer]
+                  - button "Standard" [ref=e45] [cursor=pointer]
+                  - button "Pure chaos" [ref=e46] [cursor=pointer]
+              - generic [ref=e47]:
+                - generic [ref=e48]:
+                  - generic [ref=e49]: Goal level
+                  - group [ref=e50]:
+                    - generic "Explain goal levels" [ref=e51] [cursor=pointer]: i
+                - generic [ref=e52]:
+                  - button "Tight" [ref=e53] [cursor=pointer]
+                  - button "Normal" [ref=e54] [cursor=pointer]
+                  - button "Goal fest" [ref=e55] [cursor=pointer]
+              - generic [ref=e56]:
+                - generic [ref=e57]: Choose team
+                - button "Neutral Show every match as normal" [ref=e58]:
+                  - generic [ref=e59]: ◎
+                  - generic [ref=e60]:
+                    - strong [ref=e61]: Neutral
+                    - generic [ref=e62]: Show every match as normal
+                  - generic [ref=e63]: ›
+            - button "Start tournament →" [ref=e65] [cursor=pointer]:
+              - text: Start tournament
+              - generic [ref=e66]: →
+          - article [ref=e67]:
+            - generic [ref=e68]:
+              - heading "Online party mode" [level=3] [ref=e69]
+              - paragraph [ref=e70]: Online party mode is coming soon.
+            - button "Coming soon" [disabled] [ref=e71]
+          - article [ref=e72]:
+            - generic [ref=e73]:
+              - heading "World Cup Legacy Draft" [level=3] [ref=e74]
+              - paragraph [ref=e75]: Draft an XI from classic World Cup squads, then enter them into a 16-team knockout.
+            - generic "Legacy Draft settings"
+            - button "Start draft" [ref=e77] [cursor=pointer]:
+              - text: Start draft
+              - generic [ref=e78]: →
+          - article [ref=e79]:
+            - generic [ref=e81]:
+              - heading "Retro WC Simulator" [level=3] [ref=e82]
+              - group "World Cup year" [ref=e83]:
+                - button "2010" [ref=e84] [cursor=pointer]
+                - button "2014" [pressed] [ref=e85] [cursor=pointer]
+                - button "2018" [ref=e86] [cursor=pointer]
+                - button "2022" [ref=e87] [cursor=pointer]
+            - generic "Retro World Cup Sim settings" [ref=e88]:
+              - generic [ref=e89]:
+                - generic [ref=e90]:
+                  - generic [ref=e91]: Simulation style
+                  - group [ref=e92]:
+                    - generic "Explain simulation styles" [ref=e93] [cursor=pointer]: i
+                - generic "Retro simulation style" [ref=e94]:
+                  - button "Realistic" [ref=e95] [cursor=pointer]
+                  - button "Standard" [ref=e96] [cursor=pointer]
+                  - button "Pure chaos" [ref=e97] [cursor=pointer]
+              - generic [ref=e98]:
+                - generic [ref=e99]:
+                  - generic [ref=e100]: Goal level
+                  - group [ref=e101]:
+                    - generic "Explain goal levels" [ref=e102] [cursor=pointer]: i
+                - generic "Retro goal level" [ref=e103]:
+                  - button "Tight" [ref=e104] [cursor=pointer]
+                  - button "Normal" [ref=e105] [cursor=pointer]
+                  - button "Goal fest" [ref=e106] [cursor=pointer]
+              - generic [ref=e107]:
+                - generic [ref=e108]: Choose team
+                - button "Choose a 2014 team 32 tournament finalists" [ref=e109]:
+                  - generic [ref=e110]: "32"
+                  - generic [ref=e111]:
+                    - strong [ref=e112]: Choose a 2014 team
+                    - generic [ref=e113]: 32 tournament finalists
+                  - generic [ref=e114]: ›
+            - button "Start World Cup" [ref=e116] [cursor=pointer]:
+              - text: Start World Cup
+              - generic [ref=e117]: →
+          - article [ref=e118]:
+            - heading "Custom tournament" [level=3] [ref=e120]
+            - button "Coming soon" [disabled] [ref=e121]
+          - article [ref=e122]:
+            - heading "Premier League 26/27 simulator" [level=3] [ref=e124]
+            - button "Coming soon" [disabled] [ref=e125]
+      - generic [ref=e126]:
+        - generic [ref=e127]:
+          - strong [ref=e128]: 256 TEAMS WC
+          - generic [ref=e129]: An unofficial football tournament simulator built for entertainment.
+        - time [ref=e130]:
+          - generic [ref=e131]: "Last updated:"
+          - strong [ref=e132]: 24 Jul, 3:09 AM BST
+        - generic [ref=e133]:
+          - navigation "Legal information" [ref=e134]:
+            - link "Privacy" [ref=e135] [cursor=pointer]:
+              - /url: ./privacy.html
+            - link "Terms" [ref=e136] [cursor=pointer]:
+              - /url: ./terms.html
+            - link "Disclaimer" [ref=e137] [cursor=pointer]:
+              - /url: ./disclaimer.html
+          - generic [ref=e138]: © 2026 256 TEAMS WC
+  - status

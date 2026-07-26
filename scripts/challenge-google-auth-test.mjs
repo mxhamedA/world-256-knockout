@@ -27,7 +27,7 @@ async function token(overrides = {}) {
     aud: clientId,
     exp: Math.floor(Date.now() / 1000) + 300,
     sub: "google-subject-123",
-    email: "player@example.com",
+    email: "Player@Example.COM",
     email_verified: true,
     nonce,
     ...overrides,
@@ -44,6 +44,7 @@ globalThis.fetch = async () => new Response(JSON.stringify({ keys: [publicJwk] }
 try {
   const claims = await verifyGoogleIdToken(await token(), { GOOGLE_CLIENT_ID: clientId }, nonce);
   assert.equal(claims.sub, "google-subject-123");
+  assert.equal(claims.email, "player@example.com");
   await assert.rejects(async () => verifyGoogleIdToken(await token({ aud: "attacker-client" }), { GOOGLE_CLIENT_ID: clientId }, nonce));
   await assert.rejects(async () => verifyGoogleIdToken(await token(), { GOOGLE_CLIENT_ID: clientId }, "wrong-nonce"));
   await assert.rejects(async () => verifyGoogleIdToken(await token({ exp: 1 }), { GOOGLE_CLIENT_ID: clientId }, nonce));

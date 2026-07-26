@@ -154,6 +154,35 @@ const substituteResult = {
 };
 const substituteHighlight = createFor(substituteResult, 983144).highlights.find((highlight) => highlight.event?.scorer === "Impact Substitute");
 assert.equal(substituteHighlight.actions.findLast((action) => action.type === "shot").actor.name, "Impact Substitute");
+
+const rapidGoalResult = {
+  ...result,
+  homeGoals: 2,
+  awayGoals: 2,
+  regulationHome: 2,
+  regulationAway: 2,
+  homeEvents: [
+    { minute: 33, scorer: "home ST 10", goalType: "openPlay", type: "goal" },
+    { minute: 67, scorer: "home RW 11", goalType: "openPlay", type: "goal" },
+  ],
+  awayEvents: [
+    { minute: 34, scorer: "away LW 9", goalType: "openPlay", type: "goal" },
+    { minute: 82, scorer: "away ST 18", goalType: "openPlay", type: "goal" },
+  ],
+  redCards: [],
+};
+const rapidGoalPresentation = createFor(rapidGoalResult, 334482);
+const rapidGoalEvents = rapidGoalPresentation.highlights
+  .flatMap((highlight) => highlight.actions.map((action) => action.presentationEvent))
+  .filter((event) => event.type === "goal");
+assert.equal(rapidGoalEvents.length, 4, "Rapid consecutive goals must remain distinct authoritative events.");
+assert.equal(new Set(rapidGoalEvents.map((event) => event.id)).size, 4, "Rapid consecutive goals must have unique event IDs.");
+assert.deepEqual(
+  JSON.parse(JSON.stringify(rapidGoalEvents.map((event) => [event.minute, event.scoreAfter.home, event.scoreAfter.away]))),
+  [[33, 1, 0], [34, 1, 1], [67, 2, 1], [82, 2, 2]],
+  "Rapid consecutive goals must preserve the complete running score.",
+);
+
 if (process.env.HIGHLIGHT_REPORT === "1") {
   const balancedSequence = first.highlights.find((highlight) => highlight.sequenceType === "patient-build-up");
   console.log(`Balanced sequence: ${balancedSequence.minute}' ${balancedSequence.heading}`);

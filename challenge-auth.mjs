@@ -1,7 +1,9 @@
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_MAX_LENGTH = 254;
 const PASSWORD_MIN_LENGTH = 10;
 const PASSWORD_MAX_LENGTH = 128;
-const PBKDF2_ITERATIONS = 210_000;
+const PBKDF2_ITERATIONS = 100_000;
 
 function bytesToBase64Url(bytes) {
   let binary = "";
@@ -20,6 +22,14 @@ export function normalizeChallengeUsername(value) {
   return USERNAME_PATTERN.test(username) ? username : null;
 }
 
+export function normalizeChallengeEmail(value) {
+  const email = typeof value === "string" ? value.trim().toLowerCase() : "";
+  if (!email || email.length > EMAIL_MAX_LENGTH || !EMAIL_PATTERN.test(email)) return null;
+  const [localPart, domain] = email.split("@");
+  if (!localPart || localPart.length > 64 || !domain || domain.length > 253 || domain.includes("..")) return null;
+  return email;
+}
+
 export function validChallengePassword(value) {
   return typeof value === "string" && value.length >= PASSWORD_MIN_LENGTH && value.length <= PASSWORD_MAX_LENGTH;
 }
@@ -33,7 +43,14 @@ export async function hashChallengeSessionToken(token) {
   return bytesToBase64Url(new Uint8Array(digest));
 }
 
-export async function hashChallengePassword(password, salt = crypto.getRandomValues(new Uint8Array(16))) {
+export async function hashChallengePassword(
+  password,
+  salt = crypto.getRandomValues(new Uint8Array(16)),
+  iterations = PBKDF2_ITERATIONS,
+) {
+  const safeIterations = Number.isInteger(Number(iterations)) && Number(iterations) > 0
+    ? Number(iterations)
+    : PBKDF2_ITERATIONS;
   const material = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(password),
@@ -41,17 +58,21 @@ export async function hashChallengePassword(password, salt = crypto.getRandomVal
     false,
     ["deriveBits"],
   );
-  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: PBKDF2_ITERATIONS }, material, 256);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: safeIterations }, material, 256);
   return {
     hash: bytesToBase64Url(new Uint8Array(bits)),
     salt: bytesToBase64Url(salt),
-    iterations: PBKDF2_ITERATIONS,
+    iterations: safeIterations,
   };
 }
 
 export async function verifyChallengePassword(password, record) {
   if (!record?.password_salt || !record?.password_hash) return false;
-  const candidate = await hashChallengePassword(password, base64UrlToBytes(record.password_salt));
+  const candidate = await hashChallengePassword(
+    password,
+    base64UrlToBytes(record.password_salt),
+    Number(record.password_iterations) || PBKDF2_ITERATIONS,
+  );
   const left = new TextEncoder().encode(candidate.hash);
   const right = new TextEncoder().encode(record.password_hash);
   if (left.length !== right.length) return false;

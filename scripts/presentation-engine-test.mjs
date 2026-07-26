@@ -104,6 +104,44 @@ pacedNow = engine.displayDuration("major", 1);
 pacedScheduler.tick({ now: pacedNow, speed: 1 });
 assert.deepEqual(pacedShown, ["first-major", "second-major"], "Queued commentary must remain in match order.");
 
+let rapidNow = 0;
+const rapidAccepted = [];
+const rapidShown = [];
+const rapidScheduler = engine.createScheduler({
+  now: () => rapidNow,
+  onAccept: (event) => rapidAccepted.push(event.id),
+  onShow: (event) => rapidShown.push(event.id),
+});
+const rapidGoal33 = goalEvent({
+  id: "rapid-goal-33",
+  minute: 33,
+  before: [0, 0],
+  after: [1, 0],
+});
+const rapidGoal34 = goalEvent({
+  id: "rapid-goal-34",
+  minute: 34,
+  side: "away",
+  before: [1, 0],
+  after: [1, 1],
+});
+rapidScheduler.enqueue(rapidGoal33, { now: rapidNow, speed: 5 });
+rapidNow = 100;
+rapidScheduler.enqueue(rapidGoal34, { now: rapidNow, speed: 5 });
+assert.deepEqual(
+  rapidAccepted,
+  ["rapid-goal-33", "rapid-goal-34"],
+  "Consecutive goals must both update the score at 5x even while the first celebration is active.",
+);
+assert.deepEqual(rapidShown, ["rapid-goal-33"], "The second rapid goal should wait behind the active celebration.");
+rapidNow = engine.displayDuration("goal", 5);
+rapidScheduler.tick({ now: rapidNow, speed: 5 });
+assert.deepEqual(
+  rapidShown,
+  ["rapid-goal-33", "rapid-goal-34"],
+  "Consecutive goals must both be presented at 5x.",
+);
+
 const clock = engine.createClock({ initialMinute: 0, maxMinute: 90, speed: 1, now: 0 });
 clock.sync(30, 0);
 const clockSamples = [clock.read(100), clock.read(200), clock.read(300), clock.read(400)];

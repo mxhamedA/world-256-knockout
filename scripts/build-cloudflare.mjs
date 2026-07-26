@@ -9,6 +9,7 @@ const outputRoot = join(projectRoot, "dist");
 const staticFiles = [
   "_headers",
   "ads.txt",
+  "analytics.js",
   "app.js",
   "retro-data.js",
   "retro-2010-squads.js",
@@ -17,6 +18,8 @@ const staticFiles = [
   "retro-2014-schedule.js",
   "retro-2018-squads.js",
   "retro-2018-schedule.js",
+  "retro-2022-squads.js",
+  "retro-2022-schedule.js",
   "retro-engine.js",
   "challenge.js",
   "clean.css",
@@ -34,9 +37,11 @@ const staticFiles = [
     "assets/audio/penalty-whistle.mp3",
     "assets/audio/achievement-unlock.mp3",
     "assets/256-teams-icon.svg",
+    "assets/retro-world-cup-2006.png",
     "assets/retro-world-cup-2014.png",
     "assets/retro-world-cup-2018.png",
     "assets/retro-world-cup-2022.png",
+    "assets/world-cup-2026-logo.png",
     "assets/retro-2010/south-africa-sunburst-desktop.webp",
     "assets/retro-2010/south-africa-sunburst-portrait.webp",
     "assets/retro-2010/south-africa-football-emblem.webp",
@@ -46,6 +51,8 @@ const staticFiles = [
     "assets/retro-2014/brazil-watercolor-mobile.webp",
     "assets/retro-2014/brazil-watercolor-ipad.webp",
     "assets/retro-2014/brazil-watercolor-iphone.webp",
+    "assets/retro-2022/qatar-night-landscape.png",
+    "assets/retro-2022/qatar-night-portrait.png",
     "site.webmanifest",
 ];
 

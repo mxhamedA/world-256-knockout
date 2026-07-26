@@ -10,6 +10,8 @@ const retroDataSource = fs.readFileSync(path.join(root, "retro-data.js"), "utf8"
 const retro2010SquadsSource = fs.readFileSync(path.join(root, "retro-2010-squads.js"), "utf8");
 const retro2014SquadsSource = fs.readFileSync(path.join(root, "retro-2014-squads.js"), "utf8");
 const retro2018SquadsSource = fs.readFileSync(path.join(root, "retro-2018-squads.js"), "utf8");
+const retro2022SquadsSource = fs.readFileSync(path.join(root, "retro-2022-squads.js"), "utf8");
+const retro2022ScheduleSource = fs.readFileSync(path.join(root, "retro-2022-schedule.js"), "utf8");
 const retroEngineSource = fs.readFileSync(path.join(root, "retro-engine.js"), "utf8");
 const presentationEngineSource = fs.readFileSync(path.join(root, "presentation-engine.js"), "utf8");
 const simulationEngineSource = fs.readFileSync(path.join(root, "simulation-engine.js"), "utf8");
@@ -459,17 +461,36 @@ assert.match(appSource, /function closeOnlineScreen/);
 assert.match(appSource, /function readOnlineDisplayName/);
 assert.match(appSource, /Enter a display name for this player\./);
 assert.match(appSource, /standard: "\/default-mode"/);
+assert.match(appSource, /custom: "\/custom-tournament"/);
 assert.match(appSource, /legacy: "\/draft-mode"/);
 assert.match(appSource, /online: "\/online-mode"/);
 assert.match(appSource, /2014: "\/retro-14-world-cup"/);
 assert.match(appSource, /2018: "\/retro-18-world-cup"/);
 assert.match(appSource, /2010: "\/retro-10-world-cup"/);
+assert.match(appSource, /2022: "\/retro-22-world-cup"/);
+assert.match(
+  appSource,
+  /dispatchEvent\(new CustomEvent\("retro-tournament-saved"/,
+  "Every retro tournament save must notify the achievement tracker, including Qatar 2022.",
+);
+assert.match(
+  challengeSource,
+  /addEventListener\("retro-tournament-saved"[\s\S]*trackRetroTournament\(event\.detail\)/,
+  "The account layer must track retro tournament saves even when it loads after the simulator.",
+);
+assert.match(
+  challengeSource,
+  /retro-\(10\|14\|18\|22\)-world-cup/,
+  "Profile navigation must return to the Qatar 2022 simulator route.",
+);
 assert.match(appSource, /selectedMode === "retro"[\s\S]*RETRO_WORLD_CUP_PATHS/);
 assert.match(workerSource, /APP_SHELL_PATHS\.has\(normalizedPath\)/,
   "Cloudflare must serve the app shell for clean mode routes.");
 assert.match(workerSource, /"\/retro-14-world-cup"/);
 assert.match(workerSource, /"\/retro-18-world-cup"/);
 assert.match(workerSource, /"\/retro-10-world-cup"/);
+assert.match(workerSource, /"\/retro-22-world-cup"/);
+assert.match(workerSource, /"\/custom-tournament"/);
 assert.match(wranglerSource, /"\/default-mode"[\s\S]*"\/draft-mode"[\s\S]*"\/online-mode"[\s\S]*"\/palestine-challenge"/,
   "Clean mode routes must run through the Worker before static asset lookup.");
 assert.match(appSource, /setAppModeUrl\("standard"\)/);
@@ -695,7 +716,7 @@ context.Audio = class { play() { return Promise.resolve(); } pause() {} load() {
 context.Promise = Promise;
 
 vm.runInContext(
-  `${presentationEngineSource}\n${simulationEngineSource}\n${legacyEnglandSource}\n${retroDataSource}\n${retro2010SquadsSource}\n${retro2014SquadsSource}\n${retro2018SquadsSource}\n${retroEngineSource}\n${appSource}
+  `${presentationEngineSource}\n${simulationEngineSource}\n${legacyEnglandSource}\n${retroDataSource}\n${retro2010SquadsSource}\n${retro2014SquadsSource}\n${retro2018SquadsSource}\n${retro2022SquadsSource}\n${retro2022ScheduleSource}\n${retroEngineSource}\n${appSource}
   ;globalThis.__simulateMatch = simulateMatch;
   globalThis.__weightedScorer = weightedScorer;
   globalThis.__scoringRunBrake = scoringRunBrake;
@@ -1214,6 +1235,16 @@ assert.match(appSource, /function startMatchPenaltyAnimation[\s\S]*finishMatchPe
   "Automatic normal-time penalty goals must publish only after the cutscene completes.");
 assert.match(appSource, /function startLivePlayback\(match\)[\s\S]*presentationScheduler\?\.clear\("new-match"\)[\s\S]*commentaryFeed = \[\][\s\S]*match2dState = null/,
   "Starting a new regular match must clear stale shootout commentary and playback timers.");
+assert.match(htmlSource, /id="shootoutSkipControl" hidden[\s\S]*id="skipShootoutButton"[^>]*>Skip shootout<\/button>/,
+  "Neutral shootouts need a dedicated skip control.");
+assert.match(appSource, /function canSkipNeutralShootout\(\)[\s\S]*phase === "shootout"[\s\S]*!livePlayback\.interactiveShootout/,
+  "Shootout skipping must be restricted to non-interactive neutral matches.");
+assert.match(appSource, /function skipNeutralShootout\(\)[\s\S]*penaltyHomeScore = match\.result\.penalties\.home[\s\S]*penaltyAwayScore = match\.result\.penalties\.away[\s\S]*finishPenaltyShootout\(220\)/,
+  "Skipping a neutral shootout must reveal its authoritative result without resimulation.");
+assert.match(appSource, /if \(livePlayback\.phase === "shootout"\) \{[\s\S]*if \(skipNeutralShootout\(\)\) return;/,
+  "The skip-to-full-time keyboard action must route neutral shootouts through the shootout skipper.");
+assert.match(appSource, /if \(key === "Enter" && canSkipNeutralShootout\(\)\)[\s\S]*skipNeutralShootout\(\)[\s\S]*if \(keybinds\.enabled === false\)/,
+  "Enter must skip a neutral shootout even when configurable shortcuts are disabled or remapped.");
 const legacyPenaltyOrder = context.__shootoutTakerPool({
   id: "legacy-penalty-order-proof",
   name: "Spain Legacy XI",
@@ -1625,9 +1656,9 @@ assert.equal(
   "GK",
   "The goalkeeper must take the final kick in the first XI cycle.",
 );
-for (const year of [2010, 2014, 2018]) {
-  const proof = JSON.parse(JSON.stringify(context.__retroShootoutProof(year, "Germany")));
-  assert.equal(proof.pool.length, 11, `${year} retro shootouts must use exactly Germany's starting XI.`);
+for (const [year, teamName] of [[2010, "Germany"], [2014, "Germany"], [2018, "Germany"], [2022, "Qatar"]]) {
+  const proof = JSON.parse(JSON.stringify(context.__retroShootoutProof(year, teamName)));
+  assert.equal(proof.pool.length, 11, `${year} retro shootouts must use exactly ${teamName}'s starting XI.`);
   assert.deepEqual(
     new Set(proof.pool),
     new Set(proof.startingXI),

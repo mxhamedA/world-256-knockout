@@ -14,6 +14,8 @@ const sources = [
   "retro-2014-schedule.js",
   "retro-2018-squads.js",
   "retro-2018-schedule.js",
+  "retro-2022-squads.js",
+  "retro-2022-schedule.js",
   "retro-engine.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
 
@@ -22,12 +24,14 @@ globalThis.__retroData = RETRO_WORLD_CUPS;
 globalThis.__retro2010Squads = RETRO_2010_SQUADS;
 globalThis.__retroSquads = RETRO_2014_SQUADS;
 globalThis.__retro2018Squads = RETRO_2018_SQUADS;
+globalThis.__retro2022Squads = RETRO_2022_SQUADS;
 globalThis.__retroEngine = RETRO_WORLD_CUP_ENGINE;`, context);
 
 const data = context.__retroData;
 const squads2010 = context.__retro2010Squads;
 const squads = context.__retroSquads;
 const squads2018 = context.__retro2018Squads;
+const squads2022 = context.__retro2022Squads;
 const engine = context.__retroEngine;
 
 const expectedGroups = {
@@ -134,6 +138,21 @@ Object.entries(squads2018).forEach(([team, squad]) => {
   assert.equal(lineup.formation, squad.formation, `${team} should use its sourced 2018 formation`);
   assert.equal(lineup.players.length, 11, `${team} should have a complete 2018 starting XI`);
   assert.equal(new Set(lineup.players.map((player) => player.number)).size, 11, `${team} 2018 starting XI should not repeat players`);
+});
+
+assert.equal(Object.keys(squads2022).length, 32);
+assert.equal(Object.values(squads2022).reduce((sum, squad) => sum + squad.players.length, 0), 831);
+Object.entries(squads2022).forEach(([team, squad]) => {
+  assert.equal(squad.players.length, team === "Iran" ? 25 : 26, `${team} should preserve its official 2022 squad size`);
+  const expectedGoalkeepers = ["Iran", "Switzerland", "Tunisia"].includes(team) ? 4 : 3;
+  assert.equal(squad.players.filter((player) => player.position === "GK").length, expectedGoalkeepers, `${team} should preserve its official 2022 goalkeeper count`);
+  assert.equal(squad.startingXI.length, 11, `${team} should have a sourced 2022 opening-match XI`);
+  assert.equal(new Set(squad.startingXI).size, 11, `${team} 2022 opening-match XI should not repeat players`);
+  assert.ok(squad.formation, `${team} should have a sourced 2022 formation`);
+  const lineup = engine.startingXI(2022, team);
+  assert.equal(lineup.formation, squad.formation, `${team} should use its sourced 2022 formation`);
+  assert.equal(lineup.players.length, 11, `${team} should have a complete 2022 starting XI`);
+  assert.equal(new Set(lineup.players.map((player) => player.number)).size, 11, `${team} 2022 starting XI should not repeat players`);
 });
 
 const tournament = engine.createTournament({ year: 2014, seed: 2014, managedTeam: "Brazil" });
@@ -246,3 +265,54 @@ engine.allMatches(tournament2018).forEach((match) => {
 });
 
 console.log(`Retro 2018 passed: ${Object.keys(squads2018).length} squads, 736 players, 64-match tournament.`);
+
+const tournament2022 = engine.createTournament({ year: 2022, seed: 2022, managedTeam: "Argentina" });
+assert.equal(tournament2022.groupMatches.length, 48);
+assert.equal(engine.nextUnplayedMatch(tournament2022).home, "Argentina");
+assert.equal(engine.nextUnplayedMatch(tournament2022).away, "Saudi Arabia");
+assert.ok(tournament2022.groupMatches.every((match) => match.schedule?.stadium && match.schedule?.city));
+assert.equal(new Set(tournament2022.groupMatches.map((match) => match.schedule.matchNumber)).size, 48);
+while (tournament2022.phase !== "complete") engine.simulateActiveStage(tournament2022);
+assert.ok(tournament2022.champion);
+assert.equal(engine.allMatches(tournament2022).length, 64);
+assert.equal(new Set(engine.allMatches(tournament2022).map((match) => match.schedule?.matchNumber)).size, 64);
+assert.ok(tournament2022.knockoutRounds.at(-1).matches.some((match) => match.id === "ko-third-place"));
+engine.allMatches(tournament2022).forEach((match) => {
+  [["home", match.home], ["away", match.away]].forEach(([side, team]) => {
+    const squadNames = new Set(squads2022[team].players.map((player) => player.name));
+    match.result[`${side}Events`].forEach((event) => {
+      assert.ok(squadNames.has(event.scorer), `${event.scorer} must belong to 2022 ${team}`);
+    });
+  });
+});
+
+const goldenBootSample2022 = Array.from({ length: 100 }, (_, index) => {
+  const sample = engine.createTournament({ year: 2022, seed: 2022001 + index * 7919 });
+  while (sample.phase !== "complete") engine.simulateActiveStage(sample);
+  const winner = engine.goldenBoot(sample)[0];
+  const player = squads2022[winner.team].players.find((candidate) => candidate.name === winner.player);
+  return {
+    ...winner,
+    position: player?.positions?.[0] || player?.position,
+    overall: player?.overall || 0,
+  };
+});
+assert.ok(
+  goldenBootSample2022.every((winner) => plausibleGoldenBootPositions.has(winner.position)),
+  "2022 Golden Boot samples must not be won by goalkeepers, defenders or central midfielders",
+);
+const implausibleGoldenBootWinners2022 = goldenBootSample2022.filter((winner) => winner.overall < 72);
+assert.ok(
+  implausibleGoldenBootWinners2022.length === 0,
+  `2022 Golden Boot samples must be won by credible tournament-level attackers: ${JSON.stringify(implausibleGoldenBootWinners2022)}`,
+);
+assert.ok(
+  new Set(goldenBootSample2022.map((winner) => winner.player)).size >= 12,
+  "2022 Golden Boot samples should have credible scorer variety",
+);
+assert.ok(
+  Math.max(...goldenBootSample2022.map((winner) => winner.goals)) <= 12,
+  "2022 Golden Boot totals should remain historically plausible",
+);
+
+console.log(`Retro 2022 passed: ${Object.keys(squads2022).length} squads, 831 players, 64-match tournament.`);
