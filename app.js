@@ -5186,6 +5186,11 @@ function tournamentFinalRoundIndex() {
   return 7;
 }
 
+function tournamentFinalMatch(finalRound = state.rounds[tournamentFinalRoundIndex()] || []) {
+  if (isRetroSimulatorState()) return finalRound.find((match) => match.id === "ko-final") || null;
+  return finalRound.find((match) => !isThirdPlacePlayoff(match)) || null;
+}
+
 function retroSquadsForYear(year = retroTournament?.year || Number(readRetroWorldCupYear())) {
   if (Number(year) === 2010) return RETRO_2010_SQUADS;
   if (Number(year) === 2018) return RETRO_2018_SQUADS;
@@ -5600,6 +5605,17 @@ function tournamentThirdPlaceMatch(teamId = null) {
     isThirdPlacePlayoff(match)
     && (!teamId || match.homeId === teamId || match.awayId === teamId)
   )) || null;
+}
+
+function finalBlockedByThirdPlace(match, roundIndex = state.activeRound) {
+  if (
+    isRetroSimulatorState()
+    || roundIndex !== tournamentFinalRoundIndex()
+    || !match
+    || isThirdPlacePlayoff(match)
+  ) return false;
+  const thirdPlaceMatch = tournamentThirdPlaceMatch();
+  return Boolean(thirdPlaceMatch && !thirdPlaceMatch.result?.revealed);
 }
 
 function teamHasPendingThirdPlace(teamId) {
@@ -6032,9 +6048,7 @@ function snapshotMatchContext() {
   const roundIndex = state.championView ? tournamentFinalRoundIndex() : state.activeRound;
   const finalRound = state.rounds[roundIndex] || [];
   const match = state.championView
-    ? isRetroSimulatorState()
-      ? finalRound.find((candidate) => candidate.id === "ko-final")
-      : finalRound[0]
+    ? tournamentFinalMatch(finalRound)
     : selectedMatch();
   if (!match) return null;
   return {
@@ -7885,7 +7899,7 @@ function buildNextRound(roundIndex) {
     const semiFinalLosers = round.map((match) => (
       match.result.winnerId === match.homeId ? match.awayId : match.homeId
     ));
-    targetRound.push({
+    targetRound.unshift({
       id: `r${roundIndex + 1}-third-place`,
       homeId: semiFinalLosers[0],
       awayId: semiFinalLosers[1],
@@ -7895,7 +7909,7 @@ function buildNextRound(roundIndex) {
     });
     if (completedExistingFinal) {
       state.activeRound = tournamentFinalRoundIndex();
-      state.selectedMatch = targetRound.length - 1;
+      state.selectedMatch = 0;
       state.championView = false;
     }
   };
@@ -7925,11 +7939,32 @@ function ensureThirdPlacePlayoffForSavedTournament() {
   const semiFinalIndex = tournamentFinalRoundIndex() - 1;
   const semiFinals = state.rounds[semiFinalIndex];
   const finalRound = state.rounds[tournamentFinalRoundIndex()];
+  const existingThirdPlaceIndex = finalRound?.findIndex((match) => isThirdPlacePlayoff(match)) ?? -1;
+  if (existingThirdPlaceIndex >= 0) {
+    const selected = state.activeRound === tournamentFinalRoundIndex()
+      ? finalRound[state.selectedMatch]
+      : null;
+    let changed = false;
+    if (existingThirdPlaceIndex !== 0) {
+      const [thirdPlaceMatch] = finalRound.splice(existingThirdPlaceIndex, 1);
+      finalRound.unshift(thirdPlaceMatch);
+      changed = true;
+    }
+    if (!finalRound[0].result?.revealed && state.championView) {
+      state.activeRound = tournamentFinalRoundIndex();
+      state.selectedMatch = 0;
+      state.championView = false;
+      changed = true;
+    } else if (selected) {
+      state.selectedMatch = finalRound.indexOf(selected);
+    }
+    if (changed) saveState();
+    return;
+  }
   if (
     semiFinals?.length !== 2
     || !semiFinals.every((match) => match.result?.revealed)
     || !finalRound?.length
-    || finalRound.some((match) => isThirdPlacePlayoff(match))
   ) return;
   const previousLength = finalRound.length;
   buildNextRound(semiFinalIndex);
@@ -8049,7 +8084,12 @@ function advanceSpectatedRun() {
   if (state.activeRound < tournamentFinalRoundIndex()) {
     const completedRound = state.activeRound;
     state.activeRound += 1;
-    const nextMatchIndex = teamMatchIndex(state.activeRound, team.id);
+    const pendingThirdPlaceIndex = state.activeRound === tournamentFinalRoundIndex()
+      ? selectedRound().findIndex((match) => isThirdPlacePlayoff(match) && !match.result?.revealed)
+      : -1;
+    const nextMatchIndex = pendingThirdPlaceIndex >= 0
+      ? pendingThirdPlaceIndex
+      : teamMatchIndex(state.activeRound, team.id);
     if (isRetroSimulatorState() && completedRound === 2 && nextMatchIndex < 0) {
       state.selectedMatch = 0;
       state.neutralView = true;
@@ -10204,6 +10244,10 @@ function playSelected() {
   const match = selectedMatch();
   if (!match) return;
   if (livePlayback) return;
+  if (finalBlockedByThirdPlace(match)) {
+    showToast("Play the third-place play-off before the final.");
+    return;
+  }
   if (match.result?.revealed) {
     goToNextTie();
     return;
@@ -10510,7 +10554,7 @@ function clearChampionConfetti() {
 
 function completedTournamentHonours() {
   const finalRound = state.rounds[tournamentFinalRoundIndex()] || [];
-  const final = finalRound.find((match) => !isThirdPlacePlayoff(match));
+  const final = tournamentFinalMatch(finalRound);
   const thirdPlacePlayoff = finalRound.find((match) => isThirdPlacePlayoff(match));
   if (!final?.result?.winnerId || !thirdPlacePlayoff?.result?.winnerId) return null;
 
@@ -10608,9 +10652,7 @@ function renderStage() {
   els.playButton.hidden = false;
   if (state.championView) {
     const finalRound = state.rounds[tournamentFinalRoundIndex()] || [];
-    const final = isRetroSimulatorState()
-      ? finalRound.find((match) => match.id === "ko-final")
-      : finalRound[0];
+    const final = tournamentFinalMatch(finalRound);
     const champion = final?.result ? teamById(final.result.winnerId) : null;
     if (champion) {
       const topScorer = calculateTopGoalscorer();
@@ -10761,6 +10803,7 @@ function renderStage() {
   const spectatedLost = isSpectatedMatch
     && revealed
     && !thirdPlacePlayoff
+    && state.activeRound !== tournamentFinalRoundIndex()
     && !spectatedHasThirdPlace
     && !match.allowDraw
     && result.winnerId !== state.spectateTeamId;
@@ -10896,6 +10939,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
   const away = placeholder ? null : teamById(match.awayId);
   const result = match?.result;
   const revealed = result?.revealed;
+  const chronologyBlocked = finalBlockedByThirdPlace(match, roundIndex);
   const winner = revealed ? result.winnerId : null;
   const selected = !placeholder
     && !result?.bye
@@ -10920,7 +10964,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
       data-round="${roundIndex}"
       ${connection}
       ${style}
-      ${placeholder || result?.bye ? "disabled" : ""}
+      ${placeholder || result?.bye || chronologyBlocked ? "disabled" : ""}
     >
       ${options.bracket ? "" : `
         <span class="fixture-card-head">
@@ -10971,8 +11015,8 @@ function bracketMarkup() {
     const baseRow = 2 ** offset;
     const rowStep = 2 ** (offset + 1);
     for (let index = 0; index < matchCount; index += 1) {
-      const matchIndex = isRetroSimulatorState() && roundIndex === finalRoundIndex
-        ? Math.max(0, matches.findIndex((match) => match.id === "ko-final"))
+      const matchIndex = roundIndex === finalRoundIndex
+        ? Math.max(0, matches.indexOf(tournamentFinalMatch(matches)))
         : index;
       cards.push(fixtureMarkup(matches[matchIndex], matchIndex, roundIndex, {
         bracket: true,

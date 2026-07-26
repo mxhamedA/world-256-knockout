@@ -45,6 +45,21 @@ assert.match(
   /function customWorldCup48KnockoutPairings\([\s\S]*?winnerThirdPairings[\s\S]*?remainingWinnerPairings[\s\S]*?runnerPairings/,
   "The 48-team group format must generate a complete 32-team knockout field.",
 );
+assert.match(
+  appSource,
+  /targetRound\.unshift\(\{[\s\S]*?thirdPlacePlayoff:[\s\S]*?state\.selectedMatch = 0/,
+  "The third-place play-off must be placed before the final.",
+);
+assert.match(
+  appSource,
+  /const spectatedLost =[\s\S]*?state\.activeRound !== tournamentFinalRoundIndex\(\)/,
+  "A managed-team defeat in the final must still allow the complete champion honours screen.",
+);
+assert.match(
+  appSource,
+  /function finalBlockedByThirdPlace\([\s\S]*?Play the third-place play-off before the final\./,
+  "The final must remain unavailable until the third-place play-off has finished.",
+);
 assert.doesNotMatch(appSource, /â€“|Ã—/, "Visible score and speed labels must not contain mojibake.");
 assert.doesNotMatch(draftCatalogSource, /CÃ©dric|NathanaÃ«l/, "Generated player names must preserve Unicode.");
 assert.match(
