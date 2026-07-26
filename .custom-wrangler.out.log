@@ -5838,3 +5838,15 @@ Useful routes:
 {"type":"worker-request","timestamp":"2026-07-26T21:03:37.853Z","requestId":"74a7cbb3-735a-407c-ae9b-c9d2afffaaab","method":"GET","route":"/api/challenge/achievements/leaderboard"}
 {"type":"worker-request-complete","timestamp":"2026-07-26T21:03:37.864Z","requestId":"74a7cbb3-735a-407c-ae9b-c9d2afffaaab","method":"GET","route":"/api/challenge/achievements/leaderboard","status":200,"elapsedMs":11}
 [wrangler:info] GET /api/challenge/achievements/leaderboard 200 OK (15ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
