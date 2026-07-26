@@ -47,7 +47,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=custom-tournament-builder-17" />
+    <link rel="stylesheet" href="./clean.css?v=custom-tournament-builder-43" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -75,7 +75,7 @@
           <div class="progress-track">
             <span id="progressBar"></span>
           </div>
-          <p id="progressCopy">256 teams. 255 ties. One champion.</p>
+          <p id="progressCopy">256 teams. 256 ties. One champion.</p>
         </div>
 
         <nav class="round-nav" id="roundNav" aria-label="Tournament rounds"></nav>
@@ -454,6 +454,10 @@
           </aside>
 
           <div class="stage-column">
+            <button class="custom-live-back-button" id="customLiveBackButton" type="button" hidden>
+              <span aria-hidden="true">&larr;</span>
+              <span>Back to settings</span>
+            </button>
             <div class="stage-topline">
               <div class="stage-round" id="stageRoundLabel">ROUND OF 256</div>
               <div class="match-number" id="matchNumber" style="display:none">1/128</div>
@@ -634,17 +638,21 @@
                   <div class="flag-orb" id="championFlag">🏆</div>
                   <h2 id="championName">Champion</h2>
                   <p>Eight wins. A field of 256 conquered.</p>
-                  <div class="champion-award" id="championTopScorerAward">
-                    <div class="champion-award-mark" aria-hidden="true">&#9917;</div>
-                    <div class="champion-award-copy">
-                      <span>GOLDEN BOOT</span>
-                      <strong id="championTopScorerName">Top goalscorer</strong>
-                      <small>
-                        <span class="champion-award-flag" id="championTopScorerFlag"></span>
-                        <span id="championTopScorerTeam">Country</span>
-                        <b id="championTopScorerGoals">0 goals</b>
-                      </small>
+                  <section class="champion-podium" id="championPodium" aria-label="Tournament final standings" hidden></section>
+                  <div class="champion-awards-grid" id="championAwardsGrid">
+                    <div class="champion-award" id="championTopScorerAward">
+                      <div class="champion-award-mark" aria-hidden="true">&#9917;</div>
+                      <div class="champion-award-copy">
+                        <span>GOLDEN BOOT</span>
+                        <strong id="championTopScorerName">Top goalscorer</strong>
+                        <small>
+                          <span class="champion-award-flag" id="championTopScorerFlag"></span>
+                          <span id="championTopScorerTeam">Country</span>
+                          <b id="championTopScorerGoals">0 goals</b>
+                        </small>
+                      </div>
                     </div>
+                    <div class="champion-extra-awards" id="championExtraAwards" hidden></div>
                   </div>
                   <div class="prediction-result" id="championPredictionResult" hidden></div>
                   <div class="champion-actions">
@@ -751,11 +759,11 @@
           </div>
           <time
             class="footer-last-updated"
-            datetime="2026-07-25T22:43:41+01:00"
-            title="Last deployed 25 July 2026 at 10:43 PM UK time"
+            datetime="2026-07-26T19:18:03+01:00"
+            title="Last deployed 26 July 2026 at 7:18 PM UK time"
           >
             <span>Last updated:</span>
-            <strong>25 Jul, 10:43 PM BST</strong>
+            <strong>26 Jul, 7:18 PM BST</strong>
           </time>
           <div class="site-footer-meta">
             <nav class="site-footer-links" aria-label="Legal information">
@@ -1654,7 +1662,7 @@
     <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
     <script src="./simulation-engine.js?v=retro-2010-25"></script>
     <script src="./legacy-data/catalog.generated.js?v=legacy-draft-data-172"></script>
-    <script src="./app.js?v=custom-tournament-builder-16"></script>
+    <script src="./app.js?v=custom-tournament-builder-41"></script>
     <script src="./challenge.js?v=account-email-retro-2022-14"></script>
     <script>
       window.va = window.va || function () {

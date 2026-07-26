@@ -101,6 +101,8 @@ const els = {
   championTopScorerFlag: $("#championTopScorerFlag"),
   championTopScorerTeam: $("#championTopScorerTeam"),
   championTopScorerGoals: $("#championTopScorerGoals"),
+  championPodium: $("#championPodium"),
+  championExtraAwards: $("#championExtraAwards"),
   championTeamJourney: $("#championTeamJourney"),
   matchNumber: $("#matchNumber"),
   stageRoundLabel: $("#stageRoundLabel"),
@@ -229,6 +231,7 @@ const els = {
   customPresetFile: $("#customPresetFile"),
   customHeaderTeamCount: $("#customHeaderTeamCount"),
   customHeaderStartButton: $("#customHeaderStartButton"),
+  customLiveBackButton: $("#customLiveBackButton"),
   achievementsScreen: $("#achievementsScreen"),
   openAchievementsButton: $("#openAchievementsButton"),
   mainContent: $("#mainContent"),
@@ -949,6 +952,8 @@ function clearRetroRouteLoadingState() {
 
 function enforceModeScreenVisibility(mode = currentAppMode()) {
   const activeRetroYear = Number(retroTournament?.year || retroWorldCupYearFromPath() || readRetroWorldCupYear());
+  document.body.classList.toggle("standard-mode-active", mode === "standard");
+  if (els.newsButton) els.newsButton.hidden = mode === "standard" || mode === "custom";
   if (mode !== "retro") {
     if (els.appShell) {
       els.appShell.style.removeProperty("display");
@@ -5151,8 +5156,16 @@ function tournamentRoundName(index = state.activeRound) {
   return tournamentRoundNames()[index] || "World Cup";
 }
 
+function isThirdPlacePlayoff(match) {
+  return Boolean(match && (
+    match.id === "ko-third-place"
+    || match.customThirdPlace
+    || match.thirdPlacePlayoff
+  ));
+}
+
 function tournamentMatchRoundName(match, index = state.activeRound) {
-  if (isRetroSimulatorState() && match?.id === "ko-third-place") return "Third-place play-off";
+  if (isThirdPlacePlayoff(match)) return "Third-place play-off";
   if (state.customTournament?.structure === "groups" && index === 0 && match?.customGroupLabel) {
     return match.customGroupLabel;
   }
@@ -5565,7 +5578,35 @@ function teamElimination(teamId) {
 }
 
 function teamIsAlive(teamId) {
-  return !teamElimination(teamId);
+  return !teamElimination(teamId) || teamHasPendingThirdPlace(teamId);
+}
+
+function tournamentHasThirdPlacePlayoff() {
+  if (isRetroSimulatorState()) return true;
+  if (!state.customTournament) return true;
+  return state.customTournament.structure === "knockout" && state.customTournament.thirdPlace === true;
+}
+
+function tournamentThirdPlaceMatch(teamId = null) {
+  if (!tournamentHasThirdPlacePlayoff()) return null;
+  const finalRound = state.rounds[tournamentFinalRoundIndex()] || [];
+  return finalRound.find((match) => (
+    isThirdPlacePlayoff(match)
+    && (!teamId || match.homeId === teamId || match.awayId === teamId)
+  )) || null;
+}
+
+function teamHasPendingThirdPlace(teamId) {
+  if (!tournamentHasThirdPlacePlayoff()) return false;
+  const thirdPlaceMatch = tournamentThirdPlaceMatch(teamId);
+  if (thirdPlaceMatch) return !thirdPlaceMatch.result?.revealed;
+  const semiFinals = state.rounds[tournamentFinalRoundIndex() - 1] || [];
+  return semiFinals.some((match) => (
+    match.result?.revealed
+    && match.result.winnerId
+    && (match.homeId === teamId || match.awayId === teamId)
+    && match.result.winnerId !== teamId
+  ));
 }
 
 function teamMatchIndex(roundIndex, teamId = state.spectateTeamId) {
@@ -6332,6 +6373,13 @@ async function createMatchSnapshotCanvas() {
       minimumSize: 14,
       weight: 800,
       color: retroTheme.primaryText,
+      family: "Manrope, Arial, sans-serif",
+    });
+  } else if (state.customTournament) {
+    snapshotText(context, "CUSTOM TOURNAMENT", 600, canvasHeight - 43, 360, 17, {
+      minimumSize: 14,
+      weight: 800,
+      color: "#8aa9ff",
       family: "Manrope, Arial, sans-serif",
     });
   }
@@ -7793,9 +7841,39 @@ function buildNextRound(roundIndex) {
     saveRetroTournamentState();
     return;
   }
-  if (roundIndex >= tournamentFinalRoundIndex() || state.rounds[roundIndex + 1]) return;
+  if (roundIndex >= tournamentFinalRoundIndex()) return;
   const round = state.rounds[roundIndex];
   if (!round.every((match) => match.result?.revealed)) return;
+  const appendThirdPlacePlayoff = (targetRound) => {
+    if (
+      !tournamentHasThirdPlacePlayoff()
+      || roundIndex + 1 !== tournamentFinalRoundIndex()
+      || round.length !== 2
+      || targetRound.some((match) => isThirdPlacePlayoff(match))
+    ) return;
+    const completedExistingFinal = targetRound.length > 0
+      && targetRound.every((match) => match.result?.revealed);
+    const semiFinalLosers = round.map((match) => (
+      match.result.winnerId === match.homeId ? match.awayId : match.homeId
+    ));
+    targetRound.push({
+      id: `r${roundIndex + 1}-third-place`,
+      homeId: semiFinalLosers[0],
+      awayId: semiFinalLosers[1],
+      customThirdPlace: Boolean(state.customTournament),
+      thirdPlacePlayoff: !state.customTournament,
+      result: null,
+    });
+    if (completedExistingFinal) {
+      state.activeRound = tournamentFinalRoundIndex();
+      state.selectedMatch = targetRound.length - 1;
+      state.championView = false;
+    }
+  };
+  if (state.rounds[roundIndex + 1]) {
+    appendThirdPlacePlayoff(state.rounds[roundIndex + 1]);
+    return;
+  }
   if (state.customTournament?.structure === "groups" && roundIndex === 0) {
     state.rounds[1] = customGroupKnockoutRound();
     return;
@@ -7809,7 +7887,24 @@ function buildNextRound(roundIndex) {
       result: null,
     });
   }
+  appendThirdPlacePlayoff(next);
   state.rounds[roundIndex + 1] = next;
+}
+
+function ensureThirdPlacePlayoffForSavedTournament() {
+  if (!state.started || isRetroSimulatorState() || !tournamentHasThirdPlacePlayoff()) return;
+  const semiFinalIndex = tournamentFinalRoundIndex() - 1;
+  const semiFinals = state.rounds[semiFinalIndex];
+  const finalRound = state.rounds[tournamentFinalRoundIndex()];
+  if (
+    semiFinals?.length !== 2
+    || !semiFinals.every((match) => match.result?.revealed)
+    || !finalRound?.length
+    || finalRound.some((match) => isThirdPlacePlayoff(match))
+  ) return;
+  const previousLength = finalRound.length;
+  buildNextRound(semiFinalIndex);
+  if (finalRound.length !== previousLength) saveState();
 }
 
 function firstUnplayedIndex(roundIndex = state.activeRound) {
@@ -10111,7 +10206,9 @@ function requestRoundSimulation() {
   }
   const watchedMatchIndex = teamMatchIndex(state.activeRound);
   const watchingActiveTeam = watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed;
-  const matchLabel = state.activeRound === tournamentFinalRoundIndex() ? "match" : "matches";
+  const matchLabel = state.activeRound === tournamentFinalRoundIndex() && selectedRound().length === 1
+    ? "match"
+    : "matches";
   els.simulateRoundConfirmCopy.textContent = watchingActiveTeam
     ? `Simulate every ${tournamentRoundName()} tie except your team's match?`
     : `Simulate the ${tournamentRoundName()} ${matchLabel}?`;
@@ -10284,6 +10381,89 @@ function clearChampionConfetti() {
   els.championConfetti.replaceChildren();
 }
 
+function completedTournamentHonours() {
+  const finalRound = state.rounds[tournamentFinalRoundIndex()] || [];
+  const final = finalRound.find((match) => !isThirdPlacePlayoff(match));
+  const thirdPlacePlayoff = finalRound.find((match) => isThirdPlacePlayoff(match));
+  if (!final?.result?.winnerId || !thirdPlacePlayoff?.result?.winnerId) return null;
+
+  const loserId = final.result.winnerId === final.homeId ? final.awayId : final.homeId;
+  const goalkeeperRows = new Map();
+  allMatches().filter((match) => match?.result?.revealed && !match.result.bye).forEach((match) => {
+    [[match.homeId, match.result.awayGoals], [match.awayId, match.result.homeGoals]].forEach(([teamId, conceded]) => {
+      if (!teamId) return;
+      const row = goalkeeperRows.get(teamId) || { teamId, cleanSheets: 0, conceded: 0, appearances: 0 };
+      row.appearances += 1;
+      row.conceded += Number(conceded) || 0;
+      if (conceded === 0) row.cleanSheets += 1;
+      goalkeeperRows.set(teamId, row);
+    });
+  });
+  const goldenGlove = [...goalkeeperRows.values()]
+    .sort((left, right) => (
+      right.cleanSheets - left.cleanSheets
+      || left.conceded - right.conceded
+      || right.appearances - left.appearances
+      || (teamById(right.teamId)?.rating || 0) - (teamById(left.teamId)?.rating || 0)
+      || (teamById(left.teamId)?.name || "").localeCompare(teamById(right.teamId)?.name || "")
+    ))[0];
+  if (!goldenGlove) return null;
+  const goalkeeperTeam = teamById(goldenGlove.teamId);
+  const goalkeeper = playerProfilesForTeam(goalkeeperTeam)
+    .filter((player) => player.position === "GK")
+    .sort((left, right) => right.overall - left.overall || left.name.localeCompare(right.name))[0];
+
+  return {
+    podium: [
+      { place: 1, label: "Champions", team: teamById(final.result.winnerId) },
+      { place: 2, label: "Runners-up", team: teamById(loserId) },
+      { place: 3, label: "Third place", team: teamById(thirdPlacePlayoff.result.winnerId) },
+    ],
+    goldenGlove: {
+      player: goalkeeper?.name || `${goalkeeperTeam.name} goalkeeper`,
+      team: goalkeeperTeam,
+      ...goldenGlove,
+    },
+  };
+}
+
+function renderChampionHonours() {
+  const honours = completedTournamentHonours();
+  els.championPodium.hidden = !honours;
+  els.championExtraAwards.hidden = !honours;
+  if (!honours) {
+    els.championPodium.replaceChildren();
+    els.championExtraAwards.replaceChildren();
+    return;
+  }
+
+  els.championPodium.innerHTML = `
+    <span class="champion-section-label">FINAL STANDINGS</span>
+    <div class="champion-podium-grid">
+      ${honours.podium.map((entry) => `
+        <article class="champion-place place-${entry.place}">
+          <b>${entry.place}</b>
+          ${flagMarkup(entry.team, "champion-place-flag")}
+          <span><strong>${escapeHtml(entry.team.name)}</strong><small>${entry.label}</small></span>
+        </article>
+      `).join("")}
+    </div>`;
+
+  els.championExtraAwards.innerHTML = `
+    <article class="champion-award champion-glove-award">
+      <div class="champion-award-mark" aria-hidden="true">&#129508;</div>
+      <div class="champion-award-copy">
+        <span>GOLDEN GLOVE</span>
+        <strong>${escapeHtml(honours.goldenGlove.player)}</strong>
+        <small>
+          <span class="champion-award-flag">${flagMarkup(honours.goldenGlove.team, "award-flag")}</span>
+          <span>${escapeHtml(honours.goldenGlove.team.name)}</span>
+          <b>${honours.goldenGlove.cleanSheets} clean sheets</b>
+        </small>
+      </div>
+    </article>`;
+}
+
 function renderStage() {
   placeSnapshotButtonOnChampionScreen(false);
   els.stageRoundLabel.hidden = Boolean(state.championView);
@@ -10335,6 +10515,7 @@ function renderStage() {
         els.championTopScorerTeam.textContent = scorerTeam.name;
         els.championTopScorerGoals.textContent = `${topScorer.goals} ${topScorer.goals === 1 ? "goal" : "goals"}`;
       }
+      renderChampionHonours();
       renderChampionPrediction(champion);
       return;
     }
@@ -10342,6 +10523,7 @@ function renderStage() {
 
   els.matchContent.hidden = false;
   els.championStage.hidden = true;
+  renderChampionHonours();
   clearChampionConfetti();
   const match = selectedMatch();
   if (!match) return;
@@ -10434,16 +10616,20 @@ function renderStage() {
   }
   const isSpectatedMatch = state.spectateTeamId && !state.neutralView
     && (match.homeId === state.spectateTeamId || match.awayId === state.spectateTeamId);
-  const isThirdPlacePlayoff = isRetroSimulatorState() && match.id === "ko-third-place";
+  const thirdPlacePlayoff = isThirdPlacePlayoff(match);
   const spectatedWon = isSpectatedMatch && revealed && result.winnerId === state.spectateTeamId;
+  const spectatedHasThirdPlace = isSpectatedMatch
+    && revealed
+    && teamHasPendingThirdPlace(state.spectateTeamId);
   const spectatedLost = isSpectatedMatch
     && revealed
-    && !isThirdPlacePlayoff
+    && !thirdPlacePlayoff
+    && !spectatedHasThirdPlace
     && !match.allowDraw
     && result.winnerId !== state.spectateTeamId;
-  const revealedAction = isThirdPlacePlayoff
+  const revealedAction = thirdPlacePlayoff
     ? "Next game"
-    : spectatedWon
+    : spectatedWon || spectatedHasThirdPlace
     ? state.activeRound === tournamentFinalRoundIndex() ? "Crown champion" : `Next ${spectatedTeam().name} match`
     : state.activeRound === tournamentFinalRoundIndex() ? "Crown champion" : "Next game";
   els.playButton.innerHTML = revealed
@@ -10675,9 +10861,8 @@ function bracketMarkup() {
     }
   });
 
-  const thirdPlaceIndex = isRetroSimulatorState()
-    ? (state.rounds[finalRoundIndex] || []).findIndex((match) => match.id === "ko-third-place")
-    : -1;
+  const thirdPlaceIndex = (state.rounds[finalRoundIndex] || [])
+    .findIndex((match) => isThirdPlacePlayoff(match));
   const thirdPlaceMatch = thirdPlaceIndex >= 0 ? state.rounds[finalRoundIndex][thirdPlaceIndex] : null;
   return `
     <div class="bracket-shell">
@@ -10725,24 +10910,26 @@ function customGroupTablesMarkup() {
   const complete = roundIsComplete(0);
   const qualifiedIds = complete ? new Set(customGroupQualifiers().map((row) => row.teamId)) : new Set();
   return `
-    <div class="custom-live-groups">
-      ${Array.from({ length: groupCount }, (_, groupIndex) => {
-        const table = customGroupStandings(groupIndex);
-        return `<section class="custom-live-group">
-          <header><strong>${customGroupLabel(groupIndex)}</strong><span>P</span><span>GD</span><span>PTS</span></header>
-          ${table.map((row, position) => {
-            const team = teamById(row.teamId);
-            return `<div class="${qualifiedIds.has(row.teamId) ? "qualified" : ""}">
-              <b>${position + 1}</b>
-              ${flagMarkup(team, "custom-group-flag")}
-              <span>${escapeHtml(team.name)}</span>
-              <i>${row.played}</i>
-              <i>${row.gd > 0 ? "+" : ""}${row.gd}</i>
-              <strong>${row.points}</strong>
-            </div>`;
-          }).join("")}
-        </section>`;
-      }).join("")}
+    <div class="custom-live-groups-shell ${customGroupTablesCollapsed ? "is-collapsed" : ""}">
+      <div class="custom-live-groups">
+        ${Array.from({ length: groupCount }, (_, groupIndex) => {
+          const table = customGroupStandings(groupIndex);
+          return `<section class="custom-live-group">
+            <header><strong>${customGroupLabel(groupIndex)}</strong><span>P</span><span>GD</span><span>PTS</span></header>
+            ${table.map((row, position) => {
+              const team = teamById(row.teamId);
+              return `<div class="${qualifiedIds.has(row.teamId) ? "qualified" : ""}">
+                <b>${position + 1}</b>
+                ${flagMarkup(team, "custom-group-flag")}
+                <span>${escapeHtml(team.name)}</span>
+                <i>${row.played}</i>
+                <i>${row.gd > 0 ? "+" : ""}${row.gd}</i>
+                <strong>${row.points}</strong>
+              </div>`;
+            }).join("")}
+          </section>`;
+        }).join("")}
+      </div>
     </div>
     <div class="custom-group-fixture-heading"><strong>Group fixtures</strong><span>${state.rounds[0].filter((match) => match.result?.revealed).length}/${state.rounds[0].length} played</span></div>
   `;
@@ -10770,13 +10957,22 @@ function renderFixtures() {
   const historyMode = viewingRoundHistory();
   els.fixtureGrid.classList.toggle("bracket-mode", bracketMode);
   els.fixtureGrid.classList.toggle("custom-group-stage-mode", customGroupStage);
-  els.unresolvedFilter.hidden = bracketMode || historyMode;
+  if (customGroupStage) {
+    els.unresolvedFilter.hidden = false;
+    els.unresolvedFilter.textContent = customGroupTablesCollapsed ? "Show groups" : "Hide groups";
+    els.unresolvedFilter.setAttribute("aria-expanded", String(!customGroupTablesCollapsed));
+    els.unresolvedFilter.classList.toggle("active", customGroupTablesCollapsed);
+  } else {
+    els.unresolvedFilter.hidden = bracketMode || historyMode;
+    els.unresolvedFilter.textContent = "Unplayed only";
+    els.unresolvedFilter.removeAttribute("aria-expanded");
+    els.unresolvedFilter.classList.toggle("active", filterUnresolved);
+  }
 
   if (customGroupStage) {
     const round = selectedRound();
     const indexed = round.map((match, index) => ({ match, index }));
-    const filtered = filterUnresolved ? indexed.filter(({ match }) => !match.result?.revealed) : indexed;
-    els.fixtureGrid.innerHTML = `${customGroupTablesMarkup()}<div class="custom-group-fixtures">${filtered.map(({ match, index }) => fixtureMarkup(match, index)).join("")}</div>`;
+    els.fixtureGrid.innerHTML = `${customGroupTablesMarkup()}<div class="custom-group-fixtures">${indexed.map(({ match, index }) => fixtureMarkup(match, index)).join("")}</div>`;
     els.loadMoreButton.hidden = true;
     bindFixtureNavigation();
     return;
@@ -11091,13 +11287,15 @@ function renderGoldenBoot() {
 
 function renderProgress() {
   const complete = completedCount();
-  const total = state.legacyTournament
-    ? 15
-    : state.customTournament
+  const total = isRetroSimulatorState()
+    ? 64
+    : state.legacyTournament
+      ? 15
+      : state.customTournament
       ? state.customTournament.structure === "groups"
         ? (state.customTournament.teamCount / 4) * 6 + customGroupQualifierCount(state.customTournament.teamCount) - 1
-        : state.customTournament.teamCount - 1
-      : 255;
+        : state.customTournament.teamCount - 1 + Number(state.customTournament.thirdPlace === true)
+      : 256;
   const percent = Math.round((complete / total) * 100);
   els.progressPercent.textContent = `${percent}%`;
   els.progressBar.style.width = `${percent}%`;
@@ -11107,7 +11305,7 @@ function renderProgress() {
       ? "16 teams. 15 ties. One champion."
       : state.customTournament
         ? `${state.customTournament.teamCount} teams. ${total} ties. One champion.`
-        : "256 teams. 255 ties. One champion.";
+        : "256 teams. 256 ties. One champion.";
 }
 
 function renderSettingsSummary() {
@@ -11410,7 +11608,10 @@ function defaultCustomTournamentSetup(teamCount = 32) {
     setupVersion: 2,
     teamCount,
     structure: teamCount === 24 ? "groups" : "knockout",
+    thirdPlace: false,
     format: "full",
+    upset: "balanced",
+    goals: "normal",
     sourceFilter: "current",
     managedTeamId: null,
     selectedIds: Array(teamCount).fill(null),
@@ -11437,7 +11638,10 @@ function readCustomTournamentSetup() {
       setupVersion: 2,
       teamCount,
       structure: teamCount === 24 || saved?.structure === "groups" ? "groups" : "knockout",
+      thirdPlace: saved?.thirdPlace === true,
       format: teamCount === 24 || saved?.structure === "groups" ? "full" : saved?.format === "penalties" ? "penalties" : "full",
+      upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : "balanced",
+      goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : "normal",
       sourceFilter: ["current", "2010", "2014", "2018", "2022", "all-retro"].includes(String(saved?.sourceFilter))
         ? String(saved.sourceFilter)
         : "current",
@@ -11453,6 +11657,8 @@ function readCustomTournamentSetup() {
 
 [2010, 2014, 2018, 2022].forEach((year) => installRetroTeams(year));
 let customTournamentSetup = readCustomTournamentSetup();
+let customTournamentSetupViewOpen = false;
+let customGroupTablesCollapsed = false;
 let customTournamentUi = {
   tab: "bracket",
   search: "",
@@ -11483,7 +11689,10 @@ function customTournamentPresetPayload() {
     savedAt: new Date().toISOString(),
     teamCount: customTournamentSetup.teamCount,
     structure: customTournamentSetup.structure,
+    thirdPlace: customTournamentSetup.thirdPlace === true,
     format: customTournamentSetup.format,
+    upset: customTournamentSetup.upset,
+    goals: customTournamentSetup.goals,
     sourceFilter: customTournamentSetup.sourceFilter,
     managedTeam: (() => {
       const team = TEAM_BY_ID.get(customTournamentSetup.managedTeamId);
@@ -11588,7 +11797,10 @@ function importCustomTournamentPreset(payload) {
     setupVersion: 2,
     teamCount,
     structure: teamCount === 24 || payload.structure === "groups" ? "groups" : "knockout",
+    thirdPlace: payload.thirdPlace === true,
     format: teamCount === 24 || payload.structure === "groups" ? "full" : payload.format === "penalties" ? "penalties" : "full",
+    upset: SIMULATION_CONFIG.modes[payload.upset] ? payload.upset : "balanced",
+    goals: SIMULATION_CONFIG.goals[payload.goals] ? payload.goals : "normal",
     sourceFilter: ["current", "2010", "2014", "2018", "2022", "all-retro"].includes(String(payload.sourceFilter))
       ? String(payload.sourceFilter)
       : "current",
@@ -11808,17 +12020,22 @@ function customBracketPanelMarkup() {
             return customSlotMarkup(customTournamentSetup.selectedIds[index], index, label);
           }).join("")}</div>
           <div class="custom-group-fixture-editor">
-            ${customGroupFixturePairs().map(([homeOffset, awayOffset], fixtureIndex) => {
-              const matchIndex = groupIndex * 6 + fixtureIndex;
-              const home = customSetupTeam(customTournamentSetup.selectedIds[groupStart + homeOffset]);
-              const away = customSetupTeam(customTournamentSetup.selectedIds[groupStart + awayOffset]);
-              return `<article>
-                <header><span>Match ${fixtureIndex + 1}</span><button type="button" data-custom-action="open-match-rules" data-round="0" data-match="${matchIndex}">Edit match</button></header>
-                <div>${home ? flagMarkup(home, "custom-fixture-flag") : ""}<span>${home ? escapeHtml(customTeamDisplayName(home)) : `Group slot ${homeOffset + 1}`}</span></div>
-                <div>${away ? flagMarkup(away, "custom-fixture-flag") : ""}<span>${away ? escapeHtml(customTeamDisplayName(away)) : `Group slot ${awayOffset + 1}`}</span></div>
-                <footer>${escapeHtml(customMatchRuleSummary(0, matchIndex))}</footer>
-              </article>`;
-            }).join("")}
+            ${[[0, 1], [2, 3], [4, 5]].map((fixtureRow) => `
+              <div class="custom-group-fixture-row">
+                ${fixtureRow.map((fixtureIndex) => {
+                  const [homeOffset, awayOffset] = customGroupFixturePairs()[fixtureIndex];
+                  const matchIndex = groupIndex * 6 + fixtureIndex;
+                  const home = customSetupTeam(customTournamentSetup.selectedIds[groupStart + homeOffset]);
+                  const away = customSetupTeam(customTournamentSetup.selectedIds[groupStart + awayOffset]);
+                  return `<article>
+                    <header><span>Match ${fixtureIndex + 1}</span><button type="button" data-custom-action="open-match-rules" data-round="0" data-match="${matchIndex}">Edit match</button></header>
+                    <div>${home ? flagMarkup(home, "custom-fixture-flag") : ""}<span>${home ? escapeHtml(customTeamDisplayName(home)) : `Group slot ${homeOffset + 1}`}</span></div>
+                    <div>${away ? flagMarkup(away, "custom-fixture-flag") : ""}<span>${away ? escapeHtml(customTeamDisplayName(away)) : `Group slot ${awayOffset + 1}`}</span></div>
+                    <footer>${escapeHtml(customMatchRuleSummary(0, matchIndex))}</footer>
+                  </article>`;
+                }).join("")}
+              </div>
+            `).join("")}
           </div>
         </section>`;
       }).join("")}
@@ -11848,6 +12065,15 @@ function customBracketPanelMarkup() {
         </section>`;
       }).join("")}
     </div>
+    ${customTournamentSetup.thirdPlace ? `
+      <section class="custom-third-place-preview" aria-label="Third-place play-off">
+        <header><strong>Third-place play-off</strong><span>After the semi-finals</span></header>
+        <div>
+          <span>Semi-final loser</span>
+          <span>Semi-final loser</span>
+        </div>
+      </section>
+    ` : ""}
   `;
   return `
     <section class="custom-workspace-panel custom-bracket-panel">
@@ -12202,12 +12428,23 @@ function renderCustomTournamentSetup() {
   els.customTournamentBody.innerHTML = `
     <section class="custom-config-bar">
       <div class="custom-config-group"><span>Teams</span><div class="custom-segmented custom-team-count-control">${CUSTOM_TOURNAMENT_TEAM_COUNTS.map((count) => `<button type="button" data-custom-action="team-count" data-count="${count}" class="${count === customTournamentSetup.teamCount ? "active" : ""}">${count}</button>`).join("")}</div></div>
-      <div class="custom-config-group"><span>Format</span><div class="custom-segmented"><button type="button" data-custom-action="structure" data-structure="knockout" class="${customTournamentSetup.structure === "knockout" ? "active" : ""}" ${customTournamentSetup.teamCount === 24 ? "disabled title=\"24 teams uses the Euros group format\"" : ""}>Knockout</button><button type="button" data-custom-action="structure" data-structure="groups" class="${customTournamentSetup.structure === "groups" ? "active" : ""}">${customTournamentSetup.teamCount === 24 ? "Euros format" : "Groups"}</button></div></div>
+      <div class="custom-config-group custom-format-config">
+        <span>Format</span>
+        <div class="custom-segmented"><button type="button" data-custom-action="structure" data-structure="knockout" class="${customTournamentSetup.structure === "knockout" ? "active" : ""}" ${customTournamentSetup.teamCount === 24 ? "disabled title=\"24 teams uses the Euros group format\"" : ""}>Knockout</button><button type="button" data-custom-action="structure" data-structure="groups" class="${customTournamentSetup.structure === "groups" ? "active" : ""}">${customTournamentSetup.teamCount === 24 ? "Euros format" : "Groups"}</button></div>
+        ${customTournamentSetup.structure === "knockout" ? `
+          <button class="custom-third-place-toggle ${customTournamentSetup.thirdPlace ? "active" : ""}" type="button" data-custom-action="third-place" aria-pressed="${customTournamentSetup.thirdPlace}">
+            <i aria-hidden="true"></i>
+            <span>Third-place play-off</span>
+          </button>
+        ` : ""}
+      </div>
       <details class="custom-setup-more">
         <summary>Role &amp; match settings</summary>
         <div>
           <div class="custom-config-group"><span>Match type</span><div class="custom-segmented"><button type="button" data-custom-action="format" data-format="full" class="${customTournamentSetup.format === "full" ? "active" : ""}">Full match</button><button type="button" data-custom-action="format" data-format="penalties" class="${customTournamentSetup.format === "penalties" ? "active" : ""}" ${customTournamentSetup.structure === "groups" ? "disabled title=\"Penalty-only tournaments use knockout format\"" : ""}>Penalties only</button></div></div>
-          <div class="custom-config-group custom-manager-control"><span>Your role</span><button type="button" data-custom-action="open-manager-picker">${managedTeamId ? `${flagMarkup(customSetupTeam(managedTeamId), "custom-manager-button-flag")}<span><strong>${escapeHtml(customTeamDisplayName(customSetupTeam(managedTeamId)))}</strong><small>Manage team</small></span>` : `<span class="custom-manager-neutral" aria-hidden="true">N</span><span><strong>Neutral</strong><small>Spectate every match</small></span>`}<i aria-hidden="true">&rsaquo;</i></button></div>
+          <div class="custom-config-group"><span>Sim style</span><div class="custom-segmented"><button type="button" data-custom-action="sim-style" data-value="realistic" class="${customTournamentSetup.upset === "realistic" ? "active" : ""}">Realistic</button><button type="button" data-custom-action="sim-style" data-value="balanced" class="${customTournamentSetup.upset === "balanced" ? "active" : ""}">Standard</button><button type="button" data-custom-action="sim-style" data-value="chaos" class="${customTournamentSetup.upset === "chaos" ? "active" : ""}">Pure chaos</button></div></div>
+          <div class="custom-config-group"><span>Goal level</span><div class="custom-segmented"><button type="button" data-custom-action="goal-level" data-value="tight" class="${customTournamentSetup.goals === "tight" ? "active" : ""}">Tight</button><button type="button" data-custom-action="goal-level" data-value="normal" class="${customTournamentSetup.goals === "normal" ? "active" : ""}">Normal</button><button type="button" data-custom-action="goal-level" data-value="wild" class="${customTournamentSetup.goals === "wild" ? "active" : ""}">Goal fest</button></div></div>
+          <div class="custom-config-group custom-manager-control"><span>Choose team</span><button type="button" data-custom-action="open-manager-picker">${managedTeamId ? `${flagMarkup(customSetupTeam(managedTeamId), "custom-manager-button-flag")}<span><strong>${escapeHtml(customTeamDisplayName(customSetupTeam(managedTeamId)))}</strong><small>Manage team</small></span>` : `<span class="custom-manager-neutral" aria-hidden="true">N</span><span><strong>Neutral</strong><small>Spectate every match</small></span>`}<i aria-hidden="true">&rsaquo;</i></button></div>
         </div>
       </details>
     </section>
@@ -12375,6 +12612,24 @@ function handleCustomTournamentAction(button) {
   }
   if (action === "format") {
     customTournamentSetup.format = button.dataset.format;
+    saveCustomTournamentSetup();
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "third-place") {
+    customTournamentSetup.thirdPlace = !customTournamentSetup.thirdPlace;
+    saveCustomTournamentSetup();
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "sim-style") {
+    customTournamentSetup.upset = SIMULATION_CONFIG.modes[button.dataset.value] ? button.dataset.value : "balanced";
+    saveCustomTournamentSetup();
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "goal-level") {
+    customTournamentSetup.goals = SIMULATION_CONFIG.goals[button.dataset.value] ? button.dataset.value : "normal";
     saveCustomTournamentSetup();
     renderCustomTournamentSetup();
     return;
@@ -12707,24 +12962,60 @@ function customGroupQualifiers() {
   ));
 }
 
-function customGroupKnockoutRound() {
-  const seeded = customGroupQualifiers();
-  const half = seeded.length / 2;
-  const top = seeded.slice(0, half);
-  const bottom = seeded.slice(half).reverse();
-  for (let index = 0; index < half; index += 1) {
-    if (top[index].groupIndex !== bottom[index].groupIndex) continue;
-    const swapIndex = bottom.findIndex((candidate, candidateIndex) => (
-      candidateIndex > index
-      && candidate.groupIndex !== top[index].groupIndex
-      && bottom[index].groupIndex !== top[candidateIndex].groupIndex
-    ));
-    if (swapIndex >= 0) [bottom[index], bottom[swapIndex]] = [bottom[swapIndex], bottom[index]];
+function customEuroKnockoutPairings(tables) {
+  const thirdPlaceTeams = customGroupQualifiers().filter((entry) => entry.position === 2);
+  const winnerGroups = [3, 1, 2, 0];
+  const assignThirdPlaceTeams = (winnerIndex, available, assigned = []) => {
+    if (winnerIndex >= winnerGroups.length) return assigned;
+    const winnerGroup = winnerGroups[winnerIndex];
+    for (let index = 0; index < available.length; index += 1) {
+      if (available[index].groupIndex === winnerGroup) continue;
+      const result = assignThirdPlaceTeams(
+        winnerIndex + 1,
+        available.filter((_, candidateIndex) => candidateIndex !== index),
+        [...assigned, available[index]],
+      );
+      if (result) return result;
+    }
+    return null;
+  };
+  const assignedThirds = assignThirdPlaceTeams(0, thirdPlaceTeams) || thirdPlaceTeams;
+  const thirdPlacePairings = winnerGroups.map((groupIndex, index) => [
+    tables[groupIndex][0],
+    assignedThirds[index],
+  ]);
+  return [
+    [tables[0][1], tables[2][1]],
+    thirdPlacePairings[0],
+    thirdPlacePairings[1],
+    [tables[5][0], tables[4][1]],
+    thirdPlacePairings[2],
+    [tables[4][0], tables[3][1]],
+    thirdPlacePairings[3],
+    [tables[1][1], tables[5][1]],
+  ];
+}
+
+function customStandardGroupKnockoutPairings(tables) {
+  const firstHalf = [];
+  const secondHalf = [];
+  for (let groupIndex = 0; groupIndex < tables.length; groupIndex += 2) {
+    firstHalf.push([tables[groupIndex][0], tables[groupIndex + 1][1]]);
+    secondHalf.push([tables[groupIndex + 1][0], tables[groupIndex][1]]);
   }
-  return top.map((entry, index) => ({
+  return [...firstHalf, ...secondHalf];
+}
+
+function customGroupKnockoutRound() {
+  const groupCount = state.customTournament.teamCount / 4;
+  const tables = Array.from({ length: groupCount }, (_, groupIndex) => customGroupStandings(groupIndex));
+  const pairings = state.customTournament.teamCount === 24
+    ? customEuroKnockoutPairings(tables)
+    : customStandardGroupKnockoutPairings(tables);
+  return pairings.map(([home, away], index) => ({
     id: `r1-m${index}`,
-    homeId: entry.teamId,
-    awayId: bottom[index].teamId,
+    homeId: home.teamId,
+    awayId: away.teamId,
     result: null,
   }));
 }
@@ -12794,7 +13085,11 @@ function createCustomTournamentState() {
   return {
     version: STATE_VERSION,
     drawSeed,
-    settings: normalizeSettings(state?.settings),
+    settings: normalizeSettings({
+      ...state?.settings,
+      upset: customTournamentSetup.upset,
+      goals: customTournamentSetup.goals,
+    }),
     rounds: [firstRound],
     activeRound: 0,
     selectedMatch: managedOpeningIndex >= 0 ? managedOpeningIndex : Math.max(0, firstUnplayedIndex),
@@ -12808,7 +13103,10 @@ function createCustomTournamentState() {
       active: true,
       teamCount: customTournamentSetup.teamCount,
       structure: customTournamentSetup.structure,
+      thirdPlace: customTournamentSetup.structure === "knockout" && customTournamentSetup.thirdPlace === true,
       format: customTournamentSetup.format,
+      upset: customTournamentSetup.upset,
+      goals: customTournamentSetup.goals,
       abilityOverrides: structuredClone(customTournamentSetup.abilityOverrides),
       scripts: structuredClone(customTournamentSetup.scripts),
     },
@@ -12822,6 +13120,7 @@ function startCustomTournament() {
     return;
   }
   stopStandardPlaybackForNavigation();
+  customTournamentSetupViewOpen = false;
   state = createCustomTournamentState();
   standardTournamentState = state;
   fixtureLimit = DEFAULT_FIXTURE_LIMIT;
@@ -12851,6 +13150,7 @@ function render() {
   if (isRetroSimulatorState() && livePlayback) stopStandardPlaybackForNavigation();
   restoreSharedMainContent();
   restoreStandardTournamentState();
+  ensureThirdPlacePlayoffForSavedTournament();
   retroBottomGroupsVisible = false;
   retroBottomGroupMatchesVisible = false;
   els.fixtureGrid.classList.remove("retro-group-tables");
@@ -12860,9 +13160,24 @@ function render() {
   document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-2018-active", "retro-2022-active");
   els.retroWorldCupScreen.hidden = true;
   const mode = currentAppMode();
-  const customTournamentActive = mode === "custom" && isValidCustomTournamentState(state) && state.started;
+  if (mode !== "custom") customTournamentSetupViewOpen = false;
+  const customTournamentActive = mode === "custom"
+    && isValidCustomTournamentState(state)
+    && state.started
+    && !customTournamentSetupViewOpen;
+  const sharedBackLabel = els.legacyDraftBackButton.querySelector(".legacy-back-label");
+  if (customTournamentActive) {
+    els.legacyDraftBackButton.dataset.customSettings = "true";
+    els.legacyDraftBackButton.setAttribute("aria-label", "Back to settings");
+    if (sharedBackLabel) sharedBackLabel.textContent = "Back to settings";
+  } else {
+    delete els.legacyDraftBackButton.dataset.customSettings;
+    els.legacyDraftBackButton.setAttribute("aria-label", "Back to modes");
+    if (sharedBackLabel) sharedBackLabel.textContent = "Back to modes";
+  }
   els.customTournamentScreen.hidden = mode !== "custom" || customTournamentActive;
   document.body.classList.toggle("custom-tournament-mode-active", mode === "custom");
+  if (els.customLiveBackButton) els.customLiveBackButton.hidden = !customTournamentActive;
   if (mode === "custom" && !customTournamentActive) {
     els.pageHeading.hidden = true;
     els.fieldOverview.hidden = true;
@@ -12941,15 +13256,18 @@ function render() {
   els.boardTitle.textContent = historyMode
     ? roundName
     : state.customTournament?.structure === "groups" && state.activeRound === 0
-      ? "Group tables & fixtures"
+      ? "Group tables"
       : state.activeRound >= Math.max(state.customTournament?.structure === "groups" ? 1 : 0, tournamentFinalRoundIndex() - 3)
         ? "Knockout bracket"
         : `${roundName} fixtures`;
   if (teamFilterId) els.boardTitle.textContent = `${teamById(teamFilterId).name} matches`;
   const watchedMatchIndex = teamMatchIndex(state.activeRound);
+  const finalRoundIncludesThirdPlace = state.activeRound === tournamentFinalRoundIndex()
+    && selectedRound().some((match) => isThirdPlacePlayoff(match));
   els.simulateRoundButton.textContent = watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed
     ? "Simulate other ties"
-    : state.activeRound === tournamentFinalRoundIndex() ? "Simulate final" : "Simulate round";
+    : finalRoundIncludesThirdPlace ? "Simulate final round"
+      : state.activeRound === tournamentFinalRoundIndex() ? "Simulate final" : "Simulate round";
   els.simulateRoundButton.hidden = historyMode || Boolean(teamFilterId);
   renderRoundNav();
   renderRoundHistoryControl();
@@ -12961,7 +13279,12 @@ function render() {
   renderQueue();
   renderGoldenBoot();
   renderStorylines();
-  els.unresolvedFilter.classList.toggle("active", filterUnresolved);
+  els.unresolvedFilter.classList.toggle(
+    "active",
+    state.customTournament?.structure === "groups" && state.activeRound === 0
+      ? customGroupTablesCollapsed
+      : filterUnresolved,
+  );
 }
 
 function syncSoundToggle() {
@@ -13940,6 +14263,11 @@ els.loadMoreButton.addEventListener("click", () => {
   renderFixtures();
 });
 els.unresolvedFilter.addEventListener("click", () => {
+  if (state.customTournament?.structure === "groups" && state.activeRound === 0 && !teamFilterId) {
+    customGroupTablesCollapsed = !customGroupTablesCollapsed;
+    renderFixtures();
+    return;
+  }
   filterUnresolved = !filterUnresolved;
   fixtureLimit = DEFAULT_FIXTURE_LIMIT;
   renderFixtures();
@@ -13965,6 +14293,14 @@ els.settingsButton.addEventListener("click", () => {
 });
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
+function openCustomTournamentSettings() {
+  stopStandardPlaybackForNavigation();
+  customTournamentSetupViewOpen = true;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+els.customLiveBackButton?.addEventListener("click", openCustomTournamentSettings);
 els.newsCloseButton?.addEventListener("click", () => els.newsModal?.close());
 els.retroSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 els.retroNewsButton?.addEventListener("click", () => els.newsButton.click());
@@ -14642,6 +14978,10 @@ els.restartLegacyDraftButton?.addEventListener("click", () => {
 });
 
 els.legacyDraftBackButton.addEventListener("click", () => {
+  if (els.legacyDraftBackButton.dataset.customSettings === "true") {
+    openCustomTournamentSettings();
+    return;
+  }
   setAppModeUrl("home");
   render();
 });
