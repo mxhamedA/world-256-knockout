@@ -161,8 +161,8 @@ assert.equal(heightMismatchScene.dataset.keeperTarget, "bottom-left");
 assert.equal(heightMismatchScene.dataset.dive, "left",
   "A keeper choosing the right side but wrong height must keep that visible dive.");
 
-assert.match(appSource, /const ONLINE_PARTY_MODE_ENABLED = false;/,
-  "Online Party Mode must remain in its Coming Soon state.");
+assert.match(appSource, /const ONLINE_PARTY_MODE_ENABLED = true;/,
+  "Online Party Mode must remain available from the mode picker.");
 assert.match(appSource, /interactionRole: "keeper"/,
   "Opposition shootout attempts must pause for a keeper choice.");
 assert.match(appSource, /controlledMatchPenaltyRole\(event\)[\s\S]*"taker" : "keeper"/,

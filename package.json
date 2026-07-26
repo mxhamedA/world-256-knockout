@@ -18,6 +18,7 @@
     "test:presentation": "node scripts/presentation-engine-test.mjs",
     "test:penalties": "node scripts/penalty-visual-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/room-security-test.mjs",
     "test:retro": "node scripts/retro-engine-test.mjs",
+    "test:retro-elimination": "node scripts/retro-elimination-ui-test.mjs",
     "test:online": "node scripts/room-security-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/online-room-atomic-test.mjs",
     "test:online:integration": "node scripts/room-api-integration-test.mjs",
     "test:online:load": "node scripts/online-opening-load-test.mjs",

@@ -77,6 +77,15 @@ try {
   assert.equal(joined.payload.room.memberCount, 2);
   assert.notEqual(joined.accessToken, hostSession.token);
 
+  const sharedIpPolling = await Promise.all(Array.from({ length: 320 }, (_, index) => request(
+    `/api/rooms/${hostSession.code}`,
+    { token: index % 2 ? hostSession.token : joined.accessToken },
+  )));
+  assert.ok(
+    sharedIpPolling.every(({ response }) => response.status === 200),
+    "Players sharing one IP address must have independent authenticated polling limits.",
+  );
+
   const renamed = await request(`/api/rooms/${hostSession.code}/rename`, {
     method: "POST",
     token: joined.accessToken,

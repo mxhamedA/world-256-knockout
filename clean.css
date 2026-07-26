@@ -15753,6 +15753,60 @@ body.retro-mode-active .snapshot-actions button:hover {
   overflow-wrap: anywhere;
 }
 
+/* The elimination decision belongs to the active World Cup's visual system. */
+.retro-mode-active #mainContent .inline-elimination {
+  border-top-color: rgba(246, 211, 42, 0.46);
+}
+
+.retro-mode-active #mainContent .inline-elimination h3 {
+  color: #f9d632;
+  text-shadow: 0 2px rgba(0, 54, 38, 0.62);
+}
+
+.retro-mode-active #mainContent .inline-elimination p {
+  color: #dff0bf;
+}
+
+.retro-2010-active #mainContent .inline-elimination {
+  border-top-color: rgba(255, 211, 79, 0.5);
+}
+
+.retro-2010-active #mainContent .inline-elimination h3 {
+  color: var(--retro-2010-gold);
+  text-shadow: 0 2px rgba(73, 30, 10, 0.55);
+}
+
+.retro-2010-active #mainContent .inline-elimination p {
+  color: var(--retro-2010-muted);
+}
+
+.retro-2018-active #mainContent .inline-elimination {
+  border-top-color: rgba(233, 196, 119, 0.58);
+}
+
+.retro-2018-active #mainContent .inline-elimination h3 {
+  color: var(--retro-2018-gold);
+  font-family: "Neucha", "Manrope", sans-serif;
+  text-shadow: 0 2px rgba(61, 5, 18, 0.7);
+}
+
+.retro-2018-active #mainContent .inline-elimination p {
+  color: #f3d9b4;
+}
+
+.retro-2022-active #mainContent .inline-elimination {
+  border-top-color: var(--q22-line);
+}
+
+.retro-2022-active #mainContent .inline-elimination h3 {
+  color: var(--q22-gold);
+  text-shadow: none;
+}
+
+.retro-2022-active #mainContent .inline-elimination p {
+  color: #c3aaa7;
+}
+
 .elimination-actions {
   display: grid;
   width: 100%;

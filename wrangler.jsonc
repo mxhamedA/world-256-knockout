@@ -106,7 +106,15 @@
 			"name": "ROOM_API_LIMITER",
 			"namespace_id": "25604",
 			"simple": {
-				"limit": 300,
+				"limit": 120,
+				"period": 60
+			}
+		},
+		{
+			"name": "ROOM_STATUS_LIMITER",
+			"namespace_id": "25607",
+			"simple": {
+				"limit": 360,
 				"period": 60
 			}
 		},

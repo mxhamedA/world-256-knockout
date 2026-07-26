@@ -169,12 +169,22 @@ assert.match(workerSource, /Object\.hasOwn\(ONLINE_TACTICS, tactic\)/,
   "Online tactics must reject inherited object properties.");
 assert.match(workerSource, /ROOM_API_LIMITER/,
   "Online room routes must have a general abuse rate limit.");
+assert.match(workerSource, /ROOM_STATUS_LIMITER/,
+  "Online room polling must have a separate read limit.");
+assert.match(workerSource, /roomActorRateKey\(request, limiterAction\)/,
+  "Authenticated room limits must follow the player session instead of a shared IP.");
 assert.doesNotMatch(workerSource, /reservesHumanSlot/,
   "Unready online ties must not reserve scarce match capacity.");
 assert.match(workerSource, /match\.status === "waiting"\s*&& match\.capacityReady/,
   "Only ready online ties may enter the match-capacity queue.");
-assert.match(workerSource, /priority === "interactive"[\s\S]*backgroundLease/,
-  "Ready player ties must take priority over background simulations.");
+assert.doesNotMatch(workerSource, /backgroundLease/,
+  "Capacity must never silently revoke a lease that a room still considers active.");
+assert.match(workerSource, /ONLINE_CAPACITY_SHARDS = 8/,
+  "The global online match budget must be deterministically sharded.");
+assert.match(workerSource, /ONLINE_MAX_RESERVED_MATCHES_PER_ROOM = 16/,
+  "One busy room must not monopolize global live-match capacity.");
+assert.match(workerSource, /compactFinishedLiveState\(live\)/,
+  "Completed matches must discard heavyweight simulation-only state.");
 assert.doesNotMatch(workerSource, /\["lobby", "tournament-complete"\]\.includes\(room\.status\)/,
   "Guests must always be able to leave an active online room.");
 assert.match(workerSource, /function relinquishOnlineMemberControl\(/,
@@ -243,8 +253,9 @@ assert.match(htmlSource, /id="onlineReadyButtonLabel"/);
 assert.match(htmlSource, /id="onlineTeamSelectDialog"/);
 assert.doesNotMatch(htmlSource, /id="onlineDraftOrder"/);
 assert.doesNotMatch(htmlSource, /id="onlineModeFeatures"/);
-assert.match(htmlSource, /Private rooms are being tuned before they come back\./);
-assert.match(htmlSource, /id="onlineModeComingSoon"[^>]*>Coming soon<\/button>/);
+assert.match(htmlSource, /Create or join a private knockout room, draft your countries, and play every match together in real time\./);
+assert.match(htmlSource, /id="joinOnlineRoomButton"[^>]*>Play online/);
+assert.doesNotMatch(htmlSource, /id="onlineModeComingSoon"/);
 assert.match(htmlSource, /https:\/\/ko-fi\.com\/256teams/);
 assert.ok(
   publicHtmlSources.every((source) => source.includes("ca-pub-6724809725459853")),

@@ -10,7 +10,7 @@ const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
 const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
 const CUSTOM_TOURNAMENT_SETUP_KEY = "world-256-custom-tournament-setup-v1";
 const CUSTOM_TOURNAMENT_TEAM_COUNTS = Object.freeze([8, 16, 24, 32, 48, 64, 128, 256]);
-const ONLINE_PARTY_MODE_ENABLED = false;
+const ONLINE_PARTY_MODE_ENABLED = true;
 const STATE_VERSION = 2;
 
 const RETRO_WORLD_CUP_PATHS = Object.freeze({
@@ -402,7 +402,6 @@ const els = {
   onlineModeStatus: $("#onlineModeStatus"),
   onlineModeCopy: $("#onlineModeCopy"),
   onlineModeActions: $("#onlineModeActions"),
-  onlineModeComingSoon: $("#onlineModeComingSoon"),
 };
 
 if (typeof els.onlineMatchSidebar?.append === "function") {
@@ -1264,7 +1263,6 @@ function syncOnlineRoomCard() {
   els.onlineModeActions.hidden = !enabled;
   els.onlineModeActions.classList.toggle("has-active-room", enabled && Boolean(onlineRoomSession));
   els.joinOnlineRoomButton.hidden = !enabled;
-  els.onlineModeComingSoon.hidden = enabled;
 }
 
 function onlineModeAvailableLocally() {
@@ -1276,10 +1274,7 @@ function configureOnlineModeAvailability() {
     els.onlineModeStatus.textContent = "Online knockout";
     els.onlineModeStatus.classList.add("mode-status-online");
   }
-  const enabled = onlineModeAvailableLocally();
-  els.onlineModeCopy.textContent = enabled
-    ? "Create a private knockout room and manage matches together in real time."
-    : "Online party mode is coming soon.";
+  els.onlineModeCopy.textContent = "Create or join a private knockout room, draft your countries, and play every match together in real time.";
   syncOnlineRoomCard();
 }
 
@@ -1370,12 +1365,6 @@ function showOnlineRoomEntry(preferJoin = false) {
 }
 
 async function openOnlineRoom(preferJoin = false, { updateUrl = true } = {}) {
-  if (!onlineModeAvailableLocally()) {
-    if (updateUrl || currentAppMode() === "online") setAppModeUrl("home", { replace: true });
-    configureOnlineModeAvailability();
-    showToast("Online party mode is coming soon.");
-    return;
-  }
   if (updateUrl && currentAppMode() !== "online") setAppModeUrl("online");
   setOnlineRoomMessage();
   els.appShell.hidden = true;
@@ -4382,8 +4371,8 @@ function startOnlineRoomPolling() {
 }
 
 function onlinePollingInterval() {
-  if (latestOnlineRoom?.status === "draft") return 300;
-  if (!latestOnlineRoom || latestOnlineRoom.status === "lobby") return 750;
+  if (latestOnlineRoom?.status === "draft") return 600;
+  if (!latestOnlineRoom || latestOnlineRoom.status === "lobby") return 1500;
   const matches = latestOnlineRoom?.tournament?.rounds
     ?.flatMap((round) => round.matches) || [];
   const viewedMatch = matches.find((match) => match.id === onlineViewedMatchId);
@@ -4391,17 +4380,17 @@ function onlinePollingInterval() {
     viewedMatch?.liveState
     && !["waiting", "finished"].includes(viewedMatch.liveState.status)
     && !onlineMemberOwnsMatch(latestOnlineRoom?.tournament, onlineRoomSession?.memberId, viewedMatch)
-  ) return 250;
+  ) return 500;
   const pending = matches
     .some((match) => match.liveState?.pendingDecision?.memberId === onlineRoomSession?.memberId);
-  if (pending) return 400;
+  if (pending) return 500;
   const hasActiveProgressiveMatch = matches.some((match) => (
     match.simulationVersion === 2
     && match.liveState
     && !["waiting", "finished"].includes(match.liveState.status)
   ));
-  if (onlineMatchPlayback || hasActiveProgressiveMatch) return 500;
-  return 3000;
+  if (onlineMatchPlayback || hasActiveProgressiveMatch) return 750;
+  return 4000;
 }
 
 function stopOnlineRoomPolling() {
@@ -5388,6 +5377,7 @@ function activateRetroSimulatorState() {
   const previous = state;
   const wasRetroWorldCup = Boolean(previous?.retroWorldCup);
   const previousSpectateTeamId = previous?.spectateTeamId || null;
+  const savedNeutralView = retroTournament.neutralView === true;
   const activeRound = previous?.retroWorldCup
     ? previous.activeRound
     : retroTournamentRoundIndex();
@@ -5410,10 +5400,30 @@ function activateRetroSimulatorState() {
       : retroTournament.phase === "complete",
     started: true,
     predictionTeamId: null,
-    spectateTeamId: retroTournament.managedTeam ? retroTeamId(retroTournament.managedTeam, retroTournament.year) : null,
-    neutralView: !retroTournament.managedTeam,
+    spectateTeamId: wasRetroWorldCup
+      ? previous.spectateTeamId || null
+      : savedNeutralView || !retroTournament.managedTeam
+        ? null
+        : retroTeamId(retroTournament.managedTeam, retroTournament.year),
+    neutralView: wasRetroWorldCup ? Boolean(previous.neutralView) : savedNeutralView || !retroTournament.managedTeam,
     standardTactic: previous.standardTactic || "balanced",
   });
+  const pendingElimination = retroTournament.pendingEliminationDecision;
+  if (
+    pendingElimination
+    && pendingElimination.teamName === retroTournament.managedTeam
+    && Number.isInteger(pendingElimination.roundIndex)
+  ) {
+    const decisionRound = state.rounds[pendingElimination.roundIndex] || [];
+    const decisionMatchIndex = decisionRound.findIndex((match) => match.id === pendingElimination.matchId);
+    if (decisionMatchIndex >= 0) {
+      state.activeRound = pendingElimination.roundIndex;
+      state.selectedMatch = decisionMatchIndex;
+      state.championView = false;
+      state.spectateTeamId = retroTeamId(pendingElimination.teamName, retroTournament.year);
+      state.neutralView = false;
+    }
+  }
   retroSimulatorState = state;
   const round = selectedRound();
   const managedTeamId = retroTournament.managedTeam
@@ -8091,12 +8101,25 @@ function advanceSpectatedRun() {
       ? pendingThirdPlaceIndex
       : teamMatchIndex(state.activeRound, team.id);
     if (isRetroSimulatorState() && completedRound === 2 && nextMatchIndex < 0) {
-      state.selectedMatch = 0;
-      state.neutralView = true;
+      const decisionRound = state.rounds[completedRound] || [];
+      const decisionMatchIndex = decisionRound.findIndex((item) => item.id === selected?.id);
+      retroTournament.pendingEliminationDecision = {
+        teamName: team.name,
+        matchId: selected?.id || decisionRound.findLast((item) => (
+          item.homeId === team.id || item.awayId === team.id
+        ))?.id || null,
+        roundIndex: completedRound,
+      };
+      state.activeRound = completedRound;
+      state.selectedMatch = decisionMatchIndex >= 0
+        ? decisionMatchIndex
+        : Math.max(0, decisionRound.findLastIndex((item) => (
+            item.homeId === team.id || item.awayId === team.id
+          )));
+      state.neutralView = false;
       state.championView = false;
       fixtureLimit = DEFAULT_FIXTURE_LIMIT;
       filterUnresolved = false;
-      showToast(`${team.name} are out after the group stage. Continuing neutrally.`);
       saveState();
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -10800,13 +10823,21 @@ function renderStage() {
   const spectatedHasThirdPlace = isSpectatedMatch
     && revealed
     && teamHasPendingThirdPlace(state.spectateTeamId);
-  const spectatedLost = isSpectatedMatch
+  const retroGroupEliminationPending = Boolean(
+    isRetroSimulatorState()
+    && retroTournament?.pendingEliminationDecision
+    && retroTournament.pendingEliminationDecision.teamName === spectatedTeam()?.name
+    && retroTournament.pendingEliminationDecision.matchId === match.id,
+  );
+  const spectatedLost = retroGroupEliminationPending || (
+    isSpectatedMatch
     && revealed
     && !thirdPlacePlayoff
     && state.activeRound !== tournamentFinalRoundIndex()
     && !spectatedHasThirdPlace
     && !match.allowDraw
-    && result.winnerId !== state.spectateTeamId;
+    && result.winnerId !== state.spectateTeamId
+  );
   const revealedAction = thirdPlacePlayoff
     ? "Next game"
     : spectatedWon || spectatedHasThirdPlace
@@ -14839,6 +14870,23 @@ els.spectateList.addEventListener("click", (event) => {
 });
 
 els.continueNeutralButton.addEventListener("click", () => {
+  if (isRetroSimulatorState() && retroTournament?.pendingEliminationDecision) {
+    delete retroTournament.pendingEliminationDecision;
+    retroTournament.neutralView = true;
+    state.spectateTeamId = null;
+    state.neutralView = true;
+    state.activeRound = Math.min(3, Math.max(0, state.rounds.length - 1));
+    state.selectedMatch = Math.max(0, firstUnplayedIndex(state.activeRound));
+    state.championView = false;
+    fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+    filterUnresolved = false;
+    saveRetroTournamentState();
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    showToast("Neutral view restored. Keep the tournament going.");
+    return;
+  }
+  if (isRetroSimulatorState() && retroTournament) retroTournament.neutralView = true;
   state.spectateTeamId = null;
   state.neutralView = true;
   goToNextTie();

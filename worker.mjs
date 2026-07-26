@@ -49,6 +49,8 @@ const ONLINE_MAX_COMMAND_RECEIPTS = 512;
 const ONLINE_LEASE_MS = 30_000;
 const ONLINE_LEASE_RENEW_MS = 10_000;
 const ONLINE_DEFAULT_ACTIVE_MATCH_LIMIT = 64;
+const ONLINE_CAPACITY_SHARDS = 8;
+const ONLINE_MAX_RESERVED_MATCHES_PER_ROOM = 16;
 const ONLINE_SHORT_ALARM_CONTINUATION_MS = 50;
 const ONLINE_CONTROLLED_MATCH_CATCHUP_MINUTES = 3;
 const DRAFT_ELIGIBLE_TEAMS = DRAFT_TEAMS;
@@ -118,15 +120,18 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
       if (!ROOM_CODE_PATTERN.test(code)) return json({ error: "Room unavailable." }, 404);
       const action = match[2] || "room";
 
-      if (!(await allowRequest(env.ROOM_API_LIMITER, rateKey(request, "room-api")))) {
-        return json({ error: "Too many room requests. Slow down and try again." }, 429);
-      }
-
       if (action === "join" && request.method === "POST") {
         if (!(await allowRequest(env.ROOM_JOIN_LIMITER, rateKey(request, "join")))) {
           return json({ error: "Too many join attempts. Try again in a minute." }, 429);
         }
         return forwardToRoom(env, code, request, "join");
+      }
+      const limiter = request.method === "GET" ? env.ROOM_STATUS_LIMITER : env.ROOM_API_LIMITER;
+      const limiterAction = request.method === "GET" ? "room-status" : "room-command";
+      if (!(await allowRequest(limiter, roomActorRateKey(request, limiterAction)))) {
+        return json({ error: request.method === "GET"
+          ? "Room updates are arriving too quickly. Try again in a moment."
+          : "Too many room actions. Slow down and try again." }, 429);
       }
       if (action === "leave" && request.method === "POST") {
         return forwardToRoom(env, code, request, "leave");
@@ -629,13 +634,14 @@ export class TournamentRoom extends DurableObject {
     return this.fullRoomResponse(room, member.id);
   }
 
-  capacityStub(roomCode) {
-    return this.env.ONLINE_CAPACITY.get(this.env.ONLINE_CAPACITY.idFromName(`room:${roomCode}`));
+  capacityStub(roomCode, matchId) {
+    const shard = parseInt(hashLogValue(`${roomCode}:${matchId}`), 36) % ONLINE_CAPACITY_SHARDS;
+    return this.env.ONLINE_CAPACITY.get(this.env.ONLINE_CAPACITY.idFromName(`capacity:${shard}`));
   }
 
   async capacityRequest(action, room, match) {
     const priority = match.requiredMemberIds?.length ? "interactive" : "background";
-    const response = await this.capacityStub(room.code).fetch(`https://capacity.internal/${action}`, {
+    const response = await this.capacityStub(room.code, match.id).fetch(`https://capacity.internal/${action}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ roomId: room.code, matchId: match.id, priority }),
@@ -649,27 +655,37 @@ export class TournamentRoom extends DurableObject {
     const released = [];
     let changed = false;
     let processedMinutes = 0;
-    const startedAt = performance.now();
     const round = currentOnlineRound(room);
+    const startedAt = performance.now();
     if (!round || room.tournament?.status !== "active") {
       return { changed: false, events, nextAlarmAt: room.expiresAt, releasedMatches: [] };
     }
+    let reservedRoomMatches = round.matches.filter((match) => (
+      (match.liveState && match.liveState.status !== "finished")
+      || match.lease
+      || Number.isInteger(match.queuePosition)
+    )).length;
 
     settleOnlineTournament(room);
     const orderedMatches = [...round.matches].toSorted((first, second) => {
-      const priority = (match) => match.liveState && match.liveState.status !== "finished"
-        ? 0
-        : match.status === "waiting" && match.requiredMemberIds?.length
-          ? 1
-          : 2;
+      const priority = (match) => {
+        const isLive = match.liveState && match.liveState.status !== "finished";
+        const isInteractive = liveHasHumanController(match.liveState) || match.requiredMemberIds?.length;
+        if (isLive && isInteractive) return 0;
+        if (match.status === "waiting" && isInteractive) return 1;
+        if (isLive) return 2;
+        return 3;
+      };
       return priority(first) - priority(second) || first.id.localeCompare(second.id);
     });
     for (const match of orderedMatches) {
+      if (processedMinutes >= LIVE_MAX_BATCH_MINUTES || performance.now() - startedAt >= LIVE_MAX_BATCH_CPU_MS) break;
       if (
         match.status === "waiting"
         && !match.capacityReady
         && (match.lease || Number.isInteger(match.queuePosition))
       ) {
+        reservedRoomMatches = Math.max(0, reservedRoomMatches - 1);
         match.lease = null;
         match.queuePosition = null;
         match.updatedVersion = (room.tournament.stateVersion || 1) + 1;
@@ -679,10 +695,26 @@ export class TournamentRoom extends DurableObject {
       if (
         match.status === "waiting"
         && match.capacityReady
+        && !match.requiredMemberIds?.length
+        && !matchBlockedBySelection(room, match)
+      ) {
+        simulateOnlineRegulation(room, match);
+        if (match.status === "penalties") advanceAutomaticPenalties(room, match);
+        match.events = [];
+        match.playback = null;
+        match.updatedVersion = (room.tournament.stateVersion || 1) + 1;
+        changed = true;
+        continue;
+      }
+      if (
+        match.status === "waiting"
+        && match.capacityReady
         && !matchBlockedBySelection(room, match)
       ) {
         const previousQueuePosition = match.queuePosition;
         const previousLease = match.lease;
+        const alreadyReserved = Boolean(previousLease) || Number.isInteger(previousQueuePosition);
+        if (!alreadyReserved && reservedRoomMatches >= ONLINE_MAX_RESERVED_MATCHES_PER_ROOM) continue;
         const needsCapacityRequest = !previousLease
           || previousLease.expiresAt <= now + ONLINE_LEASE_RENEW_MS;
         const capacity = needsCapacityRequest
@@ -690,6 +722,10 @@ export class TournamentRoom extends DurableObject {
           : { granted: true, leaseExpiresAt: previousLease.expiresAt, queuePosition: null };
         match.lease = capacity.granted ? { expiresAt: capacity.leaseExpiresAt, renewedAt: now } : null;
         match.queuePosition = capacity.queuePosition;
+        if (
+          !alreadyReserved
+          && (Boolean(match.lease) || Number.isInteger(match.queuePosition))
+        ) reservedRoomMatches += 1;
         if (capacity.granted && match.capacityReady) {
           match.liveState = createOnlineLiveState(room, match, now);
           match.simulationVersion = LIVE_SIMULATION_VERSION;
@@ -762,6 +798,8 @@ export class TournamentRoom extends DurableObject {
       if (live.status === "finished") {
         recordOnlineSuspensions(room, match);
         projectLiveMatch(match);
+        match.liveState = compactFinishedLiveState(live);
+        reservedRoomMatches = Math.max(0, reservedRoomMatches - 1);
         match.updatedVersion = (room.tournament.stateVersion || 0) + 1;
         released.push(match);
       }
@@ -991,7 +1029,7 @@ export class OnlineCapacityCoordinator extends DurableObject {
     let result;
     const capacity = await this.ctx.storage.get("capacity") || { sequence: 0, queue: [], leases: {} };
     removeExpiredCapacity(capacity, now);
-    const limit = configuredActiveMatchLimit(this.env);
+    const limit = configuredCapacityShardLimit(this.env);
     if (action === "acquire") {
       validateCapacityIdentity(body);
       const key = `${body.roomId}:${body.matchId}`;
@@ -1007,24 +1045,6 @@ export class OnlineCapacityCoordinator extends DurableObject {
         } else {
           capacity.sequence += 1;
           capacity.queue.push({ key, roomId: body.roomId, matchId: body.matchId, priority, sequence: capacity.sequence });
-        }
-      }
-      if (priority === "interactive" && !capacity.leases[key] && Object.keys(capacity.leases).length >= limit) {
-        const backgroundLease = Object.entries(capacity.leases)
-          .filter(([, lease]) => lease.priority !== "interactive")
-          .toSorted(([, first], [, second]) => (second.acquiredAt || 0) - (first.acquiredAt || 0))[0];
-        if (backgroundLease) {
-          const [backgroundKey, lease] = backgroundLease;
-          delete capacity.leases[backgroundKey];
-          if (!capacity.queue.some((entry) => entry.key === backgroundKey)) {
-            capacity.queue.push({
-              key: backgroundKey,
-              roomId: lease.roomId,
-              matchId: lease.matchId,
-              priority: "background",
-              sequence: lease.sequence,
-            });
-          }
         }
       }
       fillCapacityLeases(capacity, limit, now);
@@ -1075,9 +1095,10 @@ export class OnlineCapacityCoordinator extends DurableObject {
   }
 }
 
-function configuredActiveMatchLimit(env) {
+function configuredCapacityShardLimit(env) {
   const configured = Number(env?.ONLINE_MAX_ACTIVE_MATCHES);
-  return Number.isInteger(configured) && configured > 0 ? configured : ONLINE_DEFAULT_ACTIVE_MATCH_LIMIT;
+  const globalLimit = Number.isInteger(configured) && configured > 0 ? configured : ONLINE_DEFAULT_ACTIVE_MATCH_LIMIT;
+  return Math.max(1, Math.floor(globalLimit / ONLINE_CAPACITY_SHARDS));
 }
 
 function validateCapacityIdentity(body) {
@@ -1690,6 +1711,56 @@ function projectLiveMatch(match) {
   }
 }
 
+function compactFinishedLiveState(live) {
+  return {
+    simulationVersion: live.simulationVersion,
+    matchId: live.matchId,
+    homeTeamId: live.homeTeamId,
+    awayTeamId: live.awayTeamId,
+    status: "finished",
+    minute: live.minute,
+    addedTime: live.addedTime,
+    homeScore: live.homeScore,
+    awayScore: live.awayScore,
+    homeTactic: live.homeTactic,
+    awayTactic: live.awayTactic,
+    homeMomentum: live.homeMomentum,
+    awayMomentum: live.awayMomentum,
+    homeFatigue: live.homeFatigue,
+    awayFatigue: live.awayFatigue,
+    homeRedCards: live.homeRedCards,
+    awayRedCards: live.awayRedCards,
+    homeXG: live.homeXG,
+    awayXG: live.awayXG,
+    shots: live.shots,
+    shotsOnTarget: live.shotsOnTarget,
+    possession: live.possession,
+    substitutions: live.substitutions,
+    goalkeeperTendencies: live.goalkeeperTendencies,
+    pendingDecision: null,
+    penalty: live.penalty ? {
+      homeScore: live.penalty.homeScore,
+      awayScore: live.penalty.awayScore,
+      homeKicks: live.penalty.homeKicks,
+      awayKicks: live.penalty.awayKicks,
+      currentSide: live.penalty.currentSide,
+    } : null,
+    clock: {
+      lastAdvancedAt: live.clock.lastAdvancedAt,
+      nextMinuteAt: live.clock.nextMinuteAt,
+      pausedUntil: null,
+      pauseStartedAt: null,
+      effectiveSpeed: live.clock.effectiveSpeed,
+      speedByMemberId: {},
+    },
+    completedAt: live.completedAt,
+    winnerTeamId: live.winnerTeamId,
+    controllers: { home: null, away: null },
+    suspensionPlayerIds: [],
+    suspensionsCommitted: true,
+  };
+}
+
 function publicOnlineMatch(match) {
   const live = match.liveState;
   const safeLive = live ? {
@@ -2099,6 +2170,13 @@ function sameOriginRequest(request, url) {
 function rateKey(request, action) {
   const client = request.headers.get("CF-Connecting-IP") || "local";
   return `${action}:${client}`;
+}
+
+function roomActorRateKey(request, action) {
+  const token = bearerToken(request);
+  return token
+    ? `${action}:session:${token}`
+    : rateKey(request, action);
 }
 
 async function allowRequest(binding, key) {
