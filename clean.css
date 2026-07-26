@@ -9906,6 +9906,13 @@ body.retro-2018-active .achievement-unlock-action {
   background: var(--retro-accent);
 }
 
+@media (min-width: 901px) and (max-width: 1500px) {
+  .mode-card-default .landing-settings,
+  .mode-card-retro .retro-landing-settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 640px) {
   .retro-year-switch {
     width: 100%;
