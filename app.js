@@ -11783,6 +11783,7 @@ let customGroupTablesCollapsed = false;
 let customTournamentUi = {
   tab: "bracket",
   search: "",
+  quickFillPreset: "top",
   targetIndex: null,
   ratingTeamId: customTournamentSetup.selectedIds[0] || null,
   ratingEditorOpen: false,
@@ -11933,6 +11934,7 @@ function importCustomTournamentPreset(payload) {
   customTournamentUi = {
     tab: "bracket",
     search: "",
+    quickFillPreset: "top",
     targetIndex: null,
     ratingTeamId: selectedIds[0],
     ratingEditorOpen: false,
@@ -12203,12 +12205,12 @@ function customBracketPanelMarkup() {
           <label class="custom-quick-fill">
             <span>Quick fill</span>
             <select id="customQuickFill" aria-label="Choose a quick fill preset">
-              <option value="top">Top ranked</option>
-              <option value="random">Random</option>
-              <option value="europe">Only Europe</option>
-              <option value="africa">Only Africa</option>
-              <option value="underdogs">Only underdogs</option>
-              <option value="guests">Only guest nations</option>
+              <option value="top" ${customTournamentUi.quickFillPreset === "top" ? "selected" : ""}>Top ranked</option>
+              <option value="random" ${customTournamentUi.quickFillPreset === "random" ? "selected" : ""}>Random</option>
+              <option value="europe" ${customTournamentUi.quickFillPreset === "europe" ? "selected" : ""}>Only Europe</option>
+              <option value="africa" ${customTournamentUi.quickFillPreset === "africa" ? "selected" : ""}>Only Africa</option>
+              <option value="underdogs" ${customTournamentUi.quickFillPreset === "underdogs" ? "selected" : ""}>Only underdogs</option>
+              <option value="guests" ${customTournamentUi.quickFillPreset === "guests" ? "selected" : ""}>Only guest nations</option>
             </select>
           </label>
           <button type="button" data-custom-action="apply-quick-fill">Fill</button>
@@ -12584,6 +12586,9 @@ function customGoalRowsFromForm() {
 
 function bindCustomTournamentSetup() {
   const body = els.customTournamentBody;
+  body.querySelector("#customQuickFill")?.addEventListener("change", (event) => {
+    customTournamentUi.quickFillPreset = event.target.value;
+  });
   body.querySelector("#customManagedTeam")?.addEventListener("change", (event) => {
     customTournamentSetup.managedTeamId = customTournamentSetup.selectedIds.includes(event.target.value)
       ? event.target.value
@@ -12757,16 +12762,17 @@ function handleCustomTournamentAction(button) {
   }
   if (action === "apply-quick-fill") {
     const preset = els.customTournamentBody.querySelector("#customQuickFill")?.value || "top";
+    customTournamentUi.quickFillPreset = preset;
     if (preset === "top" || preset === "random") {
       const sourcePool = customTeamSourcePool();
       if (sourcePool.length < customTournamentSetup.teamCount) {
         showToast(`This team source only has ${sourcePool.length} teams. Choose a smaller field.`);
         return;
       }
-      const pool = preset === "random"
-        ? shuffle([...sourcePool], mulberry32(Date.now() % 2147483647))
-        : [...sourcePool];
-      customTournamentSetup.selectedIds = pool.slice(0, customTournamentSetup.teamCount).map((team) => team.id);
+      const selectedTeams = preset === "random"
+        ? shuffle(sourcePool, Math.random).slice(0, customTournamentSetup.teamCount)
+        : sourcePool.slice(0, customTournamentSetup.teamCount);
+      customTournamentSetup.selectedIds = shuffle(selectedTeams, Math.random).map((team) => team.id);
       customTournamentSetup.managedTeamId = null;
       customTournamentSetup.scripts = {};
       customTournamentUi.targetIndex = null;
@@ -12784,7 +12790,10 @@ function handleCustomTournamentAction(button) {
       return;
     }
     customTournamentSetup.sourceFilter = "current";
-    customTournamentSetup.selectedIds = pool.slice(0, customTournamentSetup.teamCount).map((team) => team.id);
+    customTournamentSetup.selectedIds = shuffle(
+      pool.slice(0, customTournamentSetup.teamCount),
+      Math.random,
+    ).map((team) => team.id);
     customTournamentSetup.managedTeamId = null;
     customTournamentSetup.scripts = {};
     customTournamentUi.targetIndex = null;
