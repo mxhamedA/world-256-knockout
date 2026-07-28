@@ -1,0 +1,2305 @@
+.pl-season-screen {
+  --pl-bg: #1e0021;
+  --pl-surface: #28002d;
+  --pl-surface-light: #381d53;
+  --pl-line: rgba(255, 255, 255, 0.1);
+  --pl-muted: rgba(255, 255, 255, 0.64);
+  --pl-soft: rgba(255, 255, 255, 0.08);
+  min-height: 100vh;
+  color: #fff;
+  background:
+    radial-gradient(circle at 80% -10%, rgba(104, 45, 132, 0.34), transparent 38rem),
+    var(--pl-bg);
+}
+
+.pl-season-open #appShell {
+  display: none !important;
+}
+
+.pl-season-screen[hidden] {
+  display: none;
+}
+
+.pl-season-header {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  min-height: 82px;
+  align-items: center;
+  gap: 20px;
+  padding: 14px clamp(18px, 4vw, 56px);
+  border-bottom: 1px solid var(--pl-line);
+  background: rgba(30, 0, 33, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.pl-back-button,
+.pl-quiet-button,
+.pl-primary-button,
+.pl-season-tabs button,
+.pl-matchweek-nav button,
+.pl-squad-card,
+.pl-table-row {
+  font: inherit;
+}
+
+.pl-back-button,
+.pl-quiet-button,
+.pl-primary-button,
+.pl-season-tabs button,
+.pl-matchweek-nav button {
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1),
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.pl-back-button:active,
+.pl-quiet-button:active,
+.pl-primary-button:active,
+.pl-season-tabs button:active,
+.pl-matchweek-nav button:active {
+  transform: scale(0.97);
+}
+
+.pl-back-button {
+  display: inline-flex;
+  width: max-content;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 0;
+  color: var(--pl-muted);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pl-season-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pl-season-brand img {
+  width: 40px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.pl-season-brand div {
+  display: grid;
+}
+
+.pl-season-brand span {
+  color: var(--pl-muted);
+  font: 800 9px "DM Mono", monospace;
+  letter-spacing: 1.5px;
+}
+
+.pl-season-brand strong {
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+
+.pl-season-header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.pl-quiet-button,
+.pl-primary-button {
+  min-height: 42px;
+  padding: 0 17px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pl-quiet-button {
+  border: 1px solid var(--pl-line);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.pl-primary-button {
+  color: #1e0021;
+  background: #fff;
+}
+
+.pl-primary-button:disabled {
+  color: rgba(30, 0, 33, 0.52);
+  cursor: default;
+  opacity: 0.72;
+}
+
+.pl-season-main {
+  width: min(1180px, calc(100% - 36px));
+  margin: 0 auto;
+  padding: clamp(36px, 6vw, 76px) 0 80px;
+}
+
+.pl-season-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  align-items: end;
+  gap: 42px;
+}
+
+.pl-season-kicker,
+.pl-season-progress-card > span,
+.pl-panel-heading span,
+.pl-squad-rating span {
+  color: #c8a8d2;
+  font: 800 10px "DM Mono", monospace;
+  letter-spacing: 1.2px;
+}
+
+.pl-season-hero h1 {
+  max-width: 780px;
+  margin: 10px 0 10px;
+  font-size: clamp(36px, 6vw, 72px);
+  line-height: 0.98;
+  letter-spacing: clamp(-3px, -0.055em, -1.2px);
+}
+
+.pl-season-hero p {
+  margin: 0;
+  color: var(--pl-muted);
+  font-size: 16px;
+}
+
+.pl-season-progress-card {
+  padding: 22px;
+  border: 1px solid var(--pl-line);
+  border-radius: 18px;
+  background: linear-gradient(135deg, var(--pl-surface-light), rgba(56, 29, 83, 0.55));
+}
+
+.pl-season-progress-card strong {
+  display: block;
+  margin: 9px 0 16px;
+  font-size: 18px;
+}
+
+.pl-season-progress-card > div {
+  overflow: hidden;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.pl-season-progress-card i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: #fff;
+  transition: width 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.pl-season-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 42px 0 24px;
+  padding: 6px;
+  border: 1px solid var(--pl-line);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.pl-season-tabs button {
+  min-height: 40px;
+  flex: 1;
+  border-radius: 9px;
+  color: var(--pl-muted);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pl-season-tabs button.active {
+  color: #fff;
+  background: var(--pl-surface-light);
+}
+
+.pl-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(390px, 0.9fr);
+  gap: 20px;
+}
+
+.pl-panel {
+  overflow: hidden;
+  border: 1px solid var(--pl-line);
+  border-radius: 22px;
+  background: var(--pl-surface);
+}
+
+.pl-panel-heading {
+  display: flex;
+  min-height: 74px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--pl-line);
+}
+
+.pl-panel-heading div {
+  display: grid;
+  gap: 4px;
+}
+
+.pl-panel-heading h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.6px;
+}
+
+.pl-panel-heading button {
+  padding: 8px 0;
+  border: 0;
+  color: #d6b8df;
+  background: transparent;
+  font: 800 11px "Manrope", sans-serif;
+  cursor: pointer;
+}
+
+.pl-fixture-list {
+  display: grid;
+  padding: 0 24px;
+}
+
+.pl-fixture-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 66px minmax(0, 1fr) auto;
+  min-height: 86px;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--pl-line);
+}
+
+.pl-fixture-play {
+  min-width: 88px;
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 9px;
+  color: #fff;
+  background: #381d53;
+  font: 800 11px "Manrope", sans-serif;
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 160ms ease;
+}
+
+.pl-fixture-play:hover {
+  background: #4a2869;
+}
+
+.pl-fixture-play:active {
+  transform: scale(0.97);
+}
+
+body.pl-match-mode-active {
+  --bg: #1e0021;
+  --surface: #28002d;
+  --surface-2: #381d53;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --muted: rgba(255, 255, 255, 0.58);
+  --soft: rgba(255, 255, 255, 0.72);
+  color: #fff;
+  background: #1e0021;
+}
+
+body.pl-match-mode-active #appShell {
+  display: grid !important;
+  background:
+    radial-gradient(circle at 74% 0%, rgba(96, 53, 126, 0.26), transparent 34rem),
+    #1e0021;
+}
+
+body.pl-match-mode-active #legacyDraftBackButton,
+body.pl-match-mode-active #legacyHeaderBackButton,
+body.pl-match-mode-active #newTournamentButton,
+body.pl-match-mode-active #storyStrip,
+body.pl-match-mode-active .plot-panel {
+  display: none !important;
+}
+
+body.pl-match-mode-active .pl-live-back-button {
+  display: inline-flex;
+}
+
+body.pl-match-mode-active .match-stage {
+  border-color: rgba(255, 255, 255, 0.14);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at 50% 28%, rgba(85, 34, 112, 0.38), transparent 18rem),
+    #28002d;
+}
+
+body.pl-match-mode-active .primary-button,
+body.pl-match-mode-active .round-link.active,
+body.pl-match-mode-active .secondary-button:hover {
+  color: #fff;
+  background: #381d53;
+}
+
+body.pl-match-mode-active .round-nav {
+  max-height: min(62vh, 620px);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-color: #381d53 transparent;
+}
+
+body.pl-match-mode-active .pl-club-flag img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pl-engine-table-panel {
+  overflow: hidden;
+}
+
+.pl-engine-table-head,
+.pl-engine-table-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 34px 34px;
+  align-items: center;
+  gap: 7px;
+}
+
+.pl-engine-table-head {
+  padding: 10px 12px;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pl-engine-table-row {
+  min-height: 43px;
+  padding: 6px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 11px;
+}
+
+.pl-engine-table-row.is-selected {
+  background: rgba(96, 53, 126, 0.32);
+}
+
+.pl-engine-table-row > span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+}
+
+.pl-engine-table-row > span strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-engine-table-row img,
+.pl-engine-table-row .pl-club-code {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  object-fit: contain;
+}
+
+.pl-engine-table-row i {
+  color: rgba(255, 255, 255, 0.64);
+  font-style: normal;
+}
+
+.pl-engine-full-table {
+  width: calc(100% - 24px);
+  margin: 10px 12px 12px;
+  color: #d9bce7;
+}
+
+.pl-fixture-row:last-child {
+  border-bottom: 0;
+}
+
+.pl-fixture-team {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pl-fixture-team.home {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.pl-fixture-team span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-fixture-team img,
+.pl-table-team img,
+.pl-squad-card img {
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.pl-fixture-team img {
+  width: 34px;
+  height: 34px;
+}
+
+.pl-club-code {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  color: #fff;
+  background: var(--pl-surface-light);
+  font: 800 8px "DM Mono", monospace;
+}
+
+.pl-fixture-score {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.pl-fixture-score strong {
+  font-size: 17px;
+  letter-spacing: -0.4px;
+}
+
+.pl-fixture-score small {
+  margin-top: 3px;
+  color: var(--pl-muted);
+  font: 700 8px "DM Mono", monospace;
+  letter-spacing: 0.7px;
+}
+
+.pl-table {
+  padding: 4px 14px 14px;
+}
+
+.pl-table-head,
+.pl-table-row {
+  display: grid;
+  grid-template-columns: 38px minmax(180px, 1fr) repeat(8, 48px);
+  min-height: 52px;
+  align-items: center;
+  gap: 4px;
+}
+
+.pl-table-head {
+  min-height: 45px;
+  color: #c7a7d1;
+  font-size: 10px;
+}
+
+.pl-table-head span:not(:nth-child(2)),
+.pl-table-row > span:not(.pl-table-team) {
+  text-align: center;
+}
+
+.pl-table-row {
+  position: relative;
+  border-top: 1px solid var(--pl-line);
+  font-size: 12px;
+}
+
+.pl-table-row.is-selected {
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.pl-table-row.is-champions-league::before,
+.pl-table-row.is-relegation::before {
+  position: absolute;
+  left: -8px;
+  width: 3px;
+  height: 24px;
+  border-radius: 99px;
+  content: "";
+}
+
+.pl-table-row.is-champions-league::before {
+  background: #9a7cff;
+}
+
+.pl-table-row.is-relegation::before {
+  background: #ff5b77;
+}
+
+.pl-table-row > span:first-child,
+.pl-table-row > strong {
+  font-weight: 800;
+}
+
+.pl-table-team {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+  font-weight: 800;
+}
+
+.pl-table-team img {
+  width: 28px;
+  height: 28px;
+}
+
+.pl-table-team b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-table-row > strong {
+  text-align: center;
+  font-size: 13px;
+}
+
+.pl-full-table-panel .pl-table-row {
+  min-height: 62px;
+}
+
+.pl-matchweek-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.pl-matchweek-toolbar > div {
+  display: grid;
+  gap: 3px;
+}
+
+.pl-matchweek-toolbar span {
+  color: var(--pl-muted);
+  font: 700 10px "DM Mono", monospace;
+}
+
+.pl-matchweek-toolbar h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.pl-matchweek-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.pl-matchweek-nav button {
+  min-width: 42px;
+  min-height: 42px;
+  border: 1px solid var(--pl-line);
+  border-radius: 10px;
+  background: var(--pl-soft);
+}
+
+.pl-matchweek-nav button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.pl-matches-panel .pl-fixture-row {
+  min-height: 92px;
+}
+
+.pl-squad-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.pl-squad-card {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--pl-line);
+  border-radius: 18px;
+  color: #fff;
+  background: var(--pl-surface);
+  text-align: left;
+}
+
+.pl-squad-card img {
+  width: 50px;
+  height: 50px;
+}
+
+.pl-squad-card-copy {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.pl-squad-card-copy strong {
+  overflow: hidden;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-squad-card-copy small {
+  color: var(--pl-muted);
+  font-size: 11px;
+}
+
+.pl-squad-rating {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+.pl-squad-rating strong {
+  font-size: 22px;
+}
+
+.pl-squad-detail {
+  grid-column: 1 / -1;
+  padding-top: 18px;
+  border-top: 1px solid var(--pl-line);
+}
+
+.pl-squad-detail[hidden] {
+  display: none;
+}
+
+.pl-squad-arrivals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.pl-squad-arrivals span {
+  padding: 6px 8px;
+  border-radius: 7px;
+  color: #e8d8ed;
+  background: var(--pl-surface-light);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.pl-player-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 14px;
+}
+
+.pl-player-list span {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 0;
+  color: var(--pl-muted);
+  font-size: 10px;
+}
+
+.pl-player-list b {
+  overflow: hidden;
+  color: #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-season-champion {
+  margin-bottom: 20px;
+  padding: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 22px;
+  background: linear-gradient(135deg, #381d53, #4d1760);
+}
+
+.pl-season-champion span {
+  color: #d9bddf;
+  font: 800 10px "DM Mono", monospace;
+  letter-spacing: 1px;
+}
+
+.pl-season-champion div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.pl-season-champion img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.pl-season-champion strong {
+  font-size: 27px;
+}
+
+.mode-card-premier-league .premier-league-coming-soon {
+  cursor: pointer;
+  transition:
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 160ms ease;
+}
+
+.mode-card-premier-league .premier-league-coming-soon:active {
+  transform: scale(0.98);
+}
+
+.mode-card-premier-league .premier-league-coming-soon:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pl-back-button:hover {
+    color: #fff;
+  }
+
+  .pl-quiet-button:hover,
+  .pl-matchweek-nav button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .pl-primary-button:hover:not(:disabled) {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  }
+
+  .pl-season-tabs button:hover:not(.active) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .pl-squad-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .mode-card-premier-league .premier-league-coming-soon:hover {
+    box-shadow: 0 10px 28px rgba(12, 2, 18, 0.22);
+  }
+}
+
+@media (max-width: 900px) {
+  .pl-season-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .pl-season-brand {
+    display: none;
+  }
+
+  .pl-season-hero,
+  .pl-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-season-progress-card {
+    width: min(100%, 390px);
+  }
+
+  .pl-table-head,
+  .pl-table-row {
+    grid-template-columns: 34px minmax(150px, 1fr) 38px 38px 38px 42px;
+  }
+
+  .pl-table-head > :nth-child(5),
+  .pl-table-head > :nth-child(6),
+  .pl-table-head > :nth-child(7),
+  .pl-table-head > :nth-child(8),
+  .pl-table-row > :nth-child(5),
+  .pl-table-row > :nth-child(6),
+  .pl-table-row > :nth-child(7),
+  .pl-table-row > :nth-child(8) {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .pl-season-header {
+    min-height: auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .pl-back-button span:last-child,
+  .pl-quiet-button {
+    display: none;
+  }
+
+  .pl-back-button {
+    width: 42px;
+    height: 42px;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid var(--pl-line);
+    border-radius: 10px;
+  }
+
+  .pl-primary-button {
+    padding: 0 14px;
+    font-size: 11px;
+  }
+
+  .pl-season-main {
+    width: min(100% - 24px, 1180px);
+    padding-top: 34px;
+  }
+
+  .pl-season-hero h1 {
+    font-size: 42px;
+  }
+
+  .pl-season-tabs {
+    overflow-x: auto;
+  }
+
+  .pl-season-tabs button {
+    min-width: 92px;
+  }
+
+  .pl-panel-heading,
+  .pl-fixture-list {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .pl-fixture-row {
+    grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr);
+    gap: 6px;
+    padding: 12px 0;
+  }
+
+  .pl-fixture-play {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  .pl-fixture-team {
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .pl-fixture-team img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .pl-table {
+    overflow-x: auto;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .pl-table-head,
+  .pl-table-row {
+    min-width: 455px;
+    grid-template-columns: 30px minmax(148px, 1fr) 34px 38px 42px 40px;
+  }
+
+  .pl-squad-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-player-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-season-progress-card i,
+  .pl-back-button,
+  .pl-quiet-button,
+  .pl-primary-button,
+  .pl-season-tabs button,
+  .pl-matchweek-nav button,
+  .mode-card-premier-league .premier-league-coming-soon {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* Compact season workspace */
+.pl-season-header {
+  min-height: 70px;
+  padding-block: 10px;
+}
+
+.pl-season-main {
+  width: min(1120px, calc(100% - 40px));
+  padding: 30px 0 64px;
+}
+
+.pl-season-hero {
+  grid-template-columns: minmax(0, 1fr) 250px;
+  align-items: center;
+  gap: 28px;
+}
+
+.pl-season-hero h1 {
+  margin: 5px 0 3px;
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+}
+
+.pl-season-hero p {
+  font-size: 13px;
+}
+
+.pl-season-progress-card {
+  padding: 15px 17px;
+  border-radius: 13px;
+}
+
+.pl-season-progress-card strong {
+  margin: 5px 0 10px;
+  font-size: 14px;
+}
+
+.pl-season-tabs {
+  margin: 24px 0 18px;
+}
+
+.pl-matchweek-toolbar {
+  min-height: 64px;
+}
+
+.pl-matchweek-toolbar h2 {
+  font-size: 25px;
+}
+
+.pl-matches-panel,
+.pl-full-table-panel,
+.pl-overview-grid .pl-panel {
+  border-radius: 15px;
+}
+
+.pl-fixture-row {
+  min-height: 72px;
+}
+
+/* Premier League match screen: one clean broadcast-style matchup */
+body.pl-match-mode-active #appShell {
+  display: block !important;
+}
+
+body.pl-match-mode-active .sidebar,
+body.pl-match-mode-active .topbar,
+body.pl-match-mode-active .site-footer,
+body.pl-match-mode-active .insight-left,
+body.pl-match-mode-active #roundBoard,
+body.pl-match-mode-active #plEngineTablePanel,
+body.pl-match-mode-active .plot-panel,
+body.pl-match-mode-active #storyStrip {
+  display: none !important;
+}
+
+body.pl-match-mode-active .main {
+  min-width: 0;
+  min-height: 100vh;
+}
+
+body.pl-match-mode-active .content {
+  display: block !important;
+  width: min(1060px, calc(100% - 40px));
+  max-width: none;
+  gap: 18px;
+  margin: 0 auto;
+  padding: 42px 0 72px;
+}
+
+body.pl-match-mode-active .stage-column {
+  grid-area: stage;
+  width: 100%;
+}
+
+body.pl-match-mode-active .pl-live-back-button {
+  margin-bottom: 24px;
+  border-color: rgba(255, 255, 255, 0.14);
+  background: transparent;
+}
+
+body.pl-match-mode-active .stage-topline {
+  display: none;
+}
+
+body.pl-match-mode-active .match-stage {
+  min-height: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.pl-match-mode-active .match-stage::after {
+  display: none;
+}
+
+body.pl-match-mode-active .matchup,
+body.pl-match-mode-active .match-stage.is-live .matchup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 3vw, 38px);
+  min-height: 116px;
+  padding: 24px 0;
+}
+
+body.pl-match-mode-active .team {
+  display: flex;
+  min-width: 0;
+  flex-direction: row;
+  gap: 16px;
+  text-align: left;
+}
+
+body.pl-match-mode-active .team-home {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  text-align: right;
+}
+
+body.pl-match-mode-active .team-away {
+  justify-content: flex-start;
+}
+
+body.pl-match-mode-active .team .seed {
+  display: none;
+}
+
+body.pl-match-mode-active .flag-orb {
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.pl-match-mode-active .flag-orb .country-flag {
+  width: 100%;
+  height: 100%;
+}
+
+body.pl-match-mode-active .team h2 {
+  max-width: min(270px, 22vw);
+  margin: 0;
+  color: #fff;
+  font-size: clamp(20px, 2.2vw, 30px);
+  line-height: 1.05;
+  letter-spacing: -1px;
+}
+
+body.pl-match-mode-active .score-zone {
+  min-width: 126px;
+  min-height: 0;
+  gap: 8px;
+}
+
+body.pl-match-mode-active .scoreline {
+  min-width: 126px;
+  transform: none;
+}
+
+body.pl-match-mode-active .match-score {
+  font-family: "DM Mono", monospace;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -3px;
+}
+
+body.pl-match-mode-active .match-stage.pl-prematch .scoreline {
+  display: flex;
+  min-width: auto;
+  justify-content: center;
+}
+
+body.pl-match-mode-active .match-stage.pl-prematch .match-score:first-child {
+  font-size: clamp(24px, 2.6vw, 34px);
+  letter-spacing: -1px;
+  text-align: center;
+}
+
+body.pl-match-mode-active .match-stage.pl-prematch .match-score:last-child,
+body.pl-match-mode-active .match-stage.pl-prematch .score-separator {
+  display: none;
+}
+
+body.pl-match-mode-active .stage-action {
+  padding: 8px 0 0;
+}
+
+body.pl-match-mode-active .play-button {
+  min-width: 156px;
+  color: #fff;
+  background: #381d53;
+}
+
+body.pl-match-mode-active .match-commentary-view {
+  max-width: 680px;
+}
+
+body.pl-match-mode-active .match-commentary-feed {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #28002d;
+}
+
+body.pl-match-mode-active .insight-right {
+  display: none;
+}
+
+body.pl-match-mode-active.pl-match-detail-active .insight-right {
+  display: block;
+  width: min(760px, 100%);
+  margin: 4px auto 0;
+}
+
+body.pl-match-mode-active #matchAnalysis,
+body.pl-match-mode-active .insight-right.tactics-hidden {
+  display: none !important;
+}
+
+body.pl-match-mode-active .standard-match-tactics {
+  width: 100%;
+  margin-inline: 0;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #28002d;
+}
+
+@media (max-width: 760px) {
+  .pl-season-main {
+    width: min(100% - 24px, 1120px);
+    padding-top: 22px;
+  }
+
+  .pl-season-hero {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .pl-season-progress-card {
+    display: none;
+  }
+
+  body.pl-match-mode-active .content {
+    width: min(100% - 24px, 1060px);
+    padding-top: 24px;
+  }
+
+  body.pl-match-mode-active .matchup,
+  body.pl-match-mode-active .match-stage.is-live .matchup {
+    grid-template-columns: minmax(0, 1fr) 68px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  body.pl-match-mode-active .team {
+    gap: 8px;
+  }
+
+  body.pl-match-mode-active .flag-orb {
+    width: 42px;
+    height: 42px;
+    flex-basis: 42px;
+  }
+
+  body.pl-match-mode-active .team h2 {
+    max-width: 105px;
+    font-size: 14px;
+  }
+
+  body.pl-match-mode-active .match-score {
+    font-size: 26px;
+  }
+}
+
+/* Final Premier League workspace: WC structure, Premier League theme */
+.pl-season-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 76px;
+  place-items: center;
+  padding: 10px 24px;
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+  background: #381d53;
+}
+
+.pl-season-brand {
+  justify-self: center;
+}
+
+.pl-season-main {
+  padding-top: 22px;
+}
+
+.pl-season-action-row {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.pl-season-action-row .pl-back-button,
+.pl-season-action-row .pl-quiet-button {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.pl-season-action-row .pl-primary-button {
+  color: #fff;
+  background: #381d53;
+}
+
+.pl-season-tabs {
+  margin-top: 18px;
+}
+
+.pl-fixture-row {
+  position: relative;
+}
+
+.pl-fixture-row.is-managed-match {
+  margin-inline: -1px;
+  padding-inline: 13px;
+  border: 1px solid rgba(165, 111, 207, 0.48);
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(91, 48, 126, 0.38), rgba(56, 29, 83, 0.08));
+}
+
+.pl-your-match-label {
+  position: absolute;
+  top: 6px;
+  left: 13px;
+  color: #d9b6ed;
+  font: 800 8px "DM Mono", monospace;
+  letter-spacing: 1px;
+}
+
+.pl-fixture-row.is-managed-match .pl-fixture-team,
+.pl-fixture-row.is-managed-match .pl-fixture-score {
+  padding-top: 9px;
+}
+
+.pl-fixture-row.is-managed-match .pl-fixture-play {
+  color: #1e0021;
+  background: #fff;
+}
+
+.pl-fixture-team img,
+.pl-table-team img,
+.pl-squad-card img,
+.pl-engine-table-row img {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.pl-match-mode-active {
+  --bg: #1e0021;
+  --surface: #28002d;
+  --surface-2: #381d53;
+  --text: #fff;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --muted: rgba(255, 255, 255, 0.58);
+  --soft: rgba(255, 255, 255, 0.75);
+}
+
+body.pl-match-mode-active #appShell {
+  display: grid !important;
+  grid-template-columns: 210px minmax(0, 1fr);
+}
+
+body.pl-match-mode-active .sidebar {
+  display: flex !important;
+  border-right-color: rgba(255, 255, 255, 0.1);
+  background: #170019;
+}
+
+body.pl-match-mode-active .topbar {
+  display: flex !important;
+  min-height: 72px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #381d53;
+}
+
+body.pl-match-mode-active .site-footer {
+  display: block !important;
+}
+
+body.pl-match-mode-active .content {
+  display: grid !important;
+  grid-template-columns: minmax(170px, 185px) minmax(600px, 1fr) minmax(185px, 205px);
+  grid-template-areas:
+    "next stage boot"
+    "board board board";
+  align-items: start;
+  justify-content: center;
+  width: auto;
+  max-width: 1600px;
+  gap: 16px;
+  margin: 0 auto;
+  padding: 26px 16px 64px;
+}
+
+body.pl-match-mode-active .stage-column {
+  grid-area: stage;
+}
+
+body.pl-match-mode-active .insight-right {
+  display: grid !important;
+  grid-area: next;
+  gap: 16px;
+  width: auto;
+  margin: 0;
+}
+
+body.pl-match-mode-active .insight-left {
+  display: grid !important;
+  grid-area: boot;
+  gap: 16px;
+}
+
+body.pl-match-mode-active #roundBoard {
+  display: block !important;
+  grid-area: board;
+}
+
+body.pl-match-mode-active .plot-panel,
+body.pl-match-mode-active #storyStrip {
+  display: none !important;
+}
+
+body.pl-match-mode-active #matchAnalysis {
+  display: block !important;
+  width: 100%;
+  margin: 0;
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #28002d;
+}
+
+body.pl-match-mode-active .standard-match-tactics {
+  width: 100%;
+  margin: 0;
+}
+
+body.pl-match-mode-active .golden-boot-panel,
+body.pl-match-mode-active .pl-engine-table-panel,
+body.pl-match-mode-active .round-board {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #28002d;
+}
+
+body.pl-match-mode-active .pl-engine-table-panel {
+  display: block;
+}
+
+body.pl-match-mode-active #plEngineTablePanel {
+  display: block !important;
+}
+
+body.pl-match-mode-active .pl-live-back-button {
+  margin: 0 0 16px;
+}
+
+body.pl-match-mode-active .stage-topline {
+  display: flex;
+  color: #d2afd9;
+}
+
+body.pl-match-mode-active .match-stage {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 50% 32%, rgba(103, 54, 135, 0.28), transparent 20rem),
+    #240027;
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.2);
+}
+
+body.pl-match-mode-active .matchup,
+body.pl-match-mode-active .match-stage.is-live .matchup {
+  min-height: 232px;
+  padding-inline: clamp(22px, 4vw, 58px);
+}
+
+body.pl-match-mode-active .team h2.team-name,
+body.pl-match-mode-active .team h2.team-name.is-long {
+  width: max-content;
+  max-width: none;
+  overflow: visible;
+  font-size: clamp(16px, 1.25vw, 21px);
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+body.pl-match-mode-active .team {
+  position: relative;
+  overflow: visible !important;
+}
+
+body.pl-match-mode-active .team h2.team-name > span,
+body.pl-match-mode-active .team h2.team-name.is-overflowing > span {
+  width: max-content;
+  min-width: 0;
+  overflow: visible;
+  animation: none;
+  text-overflow: clip;
+  transform: none;
+  white-space: nowrap;
+}
+
+body.pl-match-mode-active .team-match-events {
+  position: absolute;
+  top: calc(50% + 44px);
+  display: grid !important;
+  width: min(100%, 260px);
+  min-height: 0;
+  gap: 6px;
+  margin: 0;
+  overflow: visible;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+body.pl-match-mode-active .team-match-events[hidden] {
+  display: none !important;
+}
+
+body.pl-match-mode-active .team-home .team-match-events {
+  right: 0;
+  justify-items: end;
+  text-align: right;
+}
+
+body.pl-match-mode-active .team-away .team-match-events {
+  left: 0;
+  justify-items: start;
+  text-align: left;
+}
+
+body.pl-match-mode-active .team-match-events .timeline-event {
+  width: max-content;
+  max-width: 100%;
+  justify-content: flex-start;
+  color: rgba(255, 255, 255, 0.76);
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+body.pl-match-mode-active .team-home .team-match-events .timeline-event {
+  justify-content: flex-end;
+}
+
+body.pl-match-mode-active .team-match-events .timeline-event b {
+  color: #d9b6ed;
+}
+
+body.pl-match-mode-active .matchup,
+body.pl-match-mode-active .match-stage.is-live .matchup {
+  gap: 10px;
+  padding-inline: 8px;
+}
+
+body.pl-match-mode-active .team {
+  gap: 8px;
+}
+
+body.pl-match-mode-active .flag-orb {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+}
+
+body.pl-match-mode-active .score-zone {
+  min-width: 104px;
+}
+
+@media (max-width: 1320px) {
+  body.pl-match-mode-active .team h2.team-name,
+  body.pl-match-mode-active .team h2.team-name.is-long {
+    font-size: 15px;
+  }
+}
+
+body.pl-match-mode-active .flag-orb,
+body.pl-match-mode-active .flag-orb .country-flag,
+body.pl-match-mode-active .flag-orb .pl-club-flag,
+body.pl-match-mode-active .flag-orb img {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.pl-match-mode-active .flag-orb .flag-fallback {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.pl-match-mode-active .round-board {
+  border-radius: 16px;
+}
+
+body.pl-match-mode-active .fixture-grid:not(.bracket-mode) {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+body.pl-match-mode-active .fixture {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: #210c2c;
+}
+
+body.pl-match-mode-active .fixture.selected {
+  border-color: #8f5db3;
+  background: #381d53;
+}
+
+body.pl-match-mode-active .round-link.active,
+body.pl-match-mode-active .primary-button,
+body.pl-match-mode-active .secondary-button:hover {
+  color: #fff;
+  background: #381d53;
+}
+
+body.pl-match-mode-active .pl-engine-table-row.is-selected {
+  color: #fff;
+  background: #381d53;
+  box-shadow: inset 3px 0 #d9b6ed;
+}
+
+@media (max-width: 1180px) {
+  body.pl-match-mode-active .content {
+    grid-template-columns: minmax(190px, 230px) minmax(0, 1fr) minmax(190px, 230px);
+    gap: 16px;
+  }
+
+  body.pl-match-mode-active .fixture-grid:not(.bracket-mode) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 850px) {
+  body.pl-match-mode-active #appShell {
+    grid-template-columns: 1fr;
+  }
+
+  body.pl-match-mode-active .sidebar {
+    display: none !important;
+  }
+
+  body.pl-match-mode-active .content {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "stage"
+      "next"
+      "boot"
+      "board";
+    width: min(100% - 24px, 760px);
+    padding-inline: 0;
+  }
+}
+
+/* Premier League match workspace: inherit the WC placement, then apply PL colour. */
+body.pl-match-mode-active #appShell {
+  display: block !important;
+  min-height: 100vh;
+}
+
+body.pl-match-mode-active .sidebar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex !important;
+  width: 100%;
+  height: 72px;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 clamp(20px, 3vw, 44px);
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #381d53;
+}
+
+body.pl-match-mode-active .topbar {
+  display: none !important;
+}
+
+body.pl-match-mode-active .main {
+  min-width: 0;
+}
+
+body.pl-match-mode-active .content {
+  display: grid !important;
+  grid-template-columns: minmax(210px, 240px) minmax(560px, 860px) minmax(220px, 260px);
+  grid-template-areas:
+    "next stage boot"
+    "board board table";
+  align-items: start;
+  justify-content: center;
+  width: 100%;
+  max-width: 1600px;
+  gap: 22px;
+  margin: 0 auto;
+  padding: 28px 24px 64px;
+}
+
+body.pl-match-mode-active .stage-column {
+  grid-area: stage;
+  min-width: 0;
+}
+
+body.pl-match-mode-active .insight-right,
+body.pl-match-mode-active .insight-right.tactics-hidden {
+  display: grid !important;
+  grid-area: next;
+  align-content: start;
+  gap: 16px;
+  width: auto;
+  margin: 0;
+}
+
+body.pl-match-mode-active .insight-left {
+  display: grid !important;
+  grid-area: boot;
+  align-content: start;
+  gap: 16px;
+}
+
+body.pl-match-mode-active #roundBoard {
+  display: block !important;
+  grid-area: board;
+}
+
+body.pl-match-mode-active #plEngineTablePanel {
+  display: block !important;
+  grid-area: table;
+  align-self: start;
+  width: 100%;
+}
+
+body.pl-match-mode-active .pl-live-back-button {
+  min-height: 40px;
+  margin: 0 0 18px;
+}
+
+body.pl-match-mode-active .stage-topline {
+  justify-content: center;
+  padding: 0 20px 14px;
+}
+
+body.pl-match-mode-active .match-stage {
+  position: relative;
+  min-height: 420px;
+}
+
+body.pl-match-mode-active .match-commentary-view {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  z-index: 4;
+  width: min(680px, calc(100% - 56px));
+  max-width: none;
+  margin: 0;
+  transform: translateX(-50%);
+}
+
+body.pl-match-mode-active .matchup,
+body.pl-match-mode-active .match-stage.is-live .matchup {
+  min-height: 260px;
+  padding: 46px 28px 24px;
+}
+
+body.pl-match-mode-active .score-zone {
+  width: 132px;
+  min-width: 132px;
+}
+
+body.pl-match-mode-active .team h2.team-name,
+body.pl-match-mode-active .team h2.team-name.is-long {
+  line-height: 1.15;
+  word-spacing: 0.08em;
+}
+
+body.pl-match-mode-active .stage-action {
+  padding: 6px 20px 34px;
+}
+
+body.pl-match-mode-active #matchAnalysis {
+  display: block !important;
+  min-height: 118px;
+}
+
+body.pl-match-mode-active .match-stats-empty {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 72px;
+  align-content: center;
+}
+
+body.pl-match-mode-active .match-stats-empty span {
+  grid-column: 1;
+  color: rgba(255, 255, 255, 0.58);
+  line-height: 1.45;
+}
+
+body.pl-match-mode-active .pl-watch-tactics {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: #28002d;
+}
+
+body.pl-match-mode-active .pl-watch-tactics[hidden] {
+  display: none !important;
+}
+
+body.pl-match-mode-active .pl-watch-tactics-copy {
+  display: grid;
+  gap: 5px;
+  min-height: 88px;
+  align-content: center;
+  padding: 16px;
+  text-align: center;
+}
+
+body.pl-match-mode-active .pl-watch-tactics-copy strong {
+  color: #fff;
+  font-size: 12px;
+}
+
+body.pl-match-mode-active .pl-watch-tactics-copy span {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+body.pl-match-mode-active .standard-match-tactics > span {
+  color: #d2afd9;
+}
+
+body.pl-match-mode-active .standard-tactic-buttons {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #180b20;
+}
+
+body.pl-match-mode-active .standard-tactic-buttons button {
+  color: rgba(255, 255, 255, 0.64);
+}
+
+body.pl-match-mode-active .standard-tactic-buttons button.active {
+  color: #fff;
+  background: #381d53;
+  box-shadow: 0 5px 16px rgba(56, 29, 83, 0.34);
+}
+
+body.pl-match-mode-active .live-control {
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.76);
+  background: #381d53;
+}
+
+body.pl-match-mode-active .score-live-controls {
+  margin-top: 8px;
+  transform: translateY(-4px);
+}
+
+/* Keep the completed match score on the same centre line as the live state. */
+body.pl-match-mode-active .match-stage.pl-full-time .score-zone {
+  position: relative;
+  min-height: 210px;
+  gap: 0;
+}
+
+body.pl-match-mode-active .match-stage.pl-full-time .event-live-clock[hidden],
+body.pl-match-mode-active .match-stage.pl-full-time .live-controls[hidden] {
+  display: none !important;
+}
+
+body.pl-match-mode-active .match-stage.pl-full-time .result-note:not([hidden]) {
+  position: absolute;
+  top: calc(50% + 62px);
+  left: 50%;
+  min-height: 20px;
+  color: #d2afd9;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+body.pl-match-mode-active #snapshotButton {
+  border-color: rgba(217, 182, 237, 0.36);
+  color: #fff;
+  background: #381d53;
+  box-shadow: 0 10px 24px rgba(30, 0, 33, 0.34);
+}
+
+body.pl-match-mode-active #snapshotButton:focus-visible {
+  outline: 2px solid #d9b6ed;
+  outline-offset: 3px;
+}
+
+body.pl-match-mode-active .snapshot-modal form {
+  border: 1px solid rgba(217, 182, 237, 0.22);
+  color: #fff;
+  background: #28002d;
+}
+
+body.pl-match-mode-active .snapshot-preview {
+  border-color: rgba(217, 182, 237, 0.22);
+  background: #1e0021;
+  box-shadow: 0 18px 50px rgba(30, 0, 33, 0.44);
+}
+
+body.pl-match-mode-active .snapshot-actions button {
+  border-color: rgba(217, 182, 237, 0.28);
+  color: #fff;
+  background: #381d53;
+}
+
+body.pl-match-mode-active .skip-control {
+  border-color: #7f4da2;
+  color: #fff;
+  background: #60357e;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.pl-match-mode-active .standard-tactic-buttons button:hover:not(:disabled):not(.active) {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  body.pl-match-mode-active .live-control:hover,
+  body.pl-match-mode-active .skip-control:hover,
+  body.pl-match-mode-active #snapshotButton:hover,
+  body.pl-match-mode-active .snapshot-actions button:hover {
+    border-color: #9d6bbb;
+    color: #fff;
+    background: #60357e;
+  }
+
+  body.pl-match-mode-active #roundBoard .team-filter-search:hover,
+  body.pl-match-mode-active #roundBoard .history-round-button:hover,
+  body.pl-match-mode-active #roundBoard #simulateRoundButton:hover,
+  body.pl-match-mode-active #roundBoard .team-filter-chip:hover {
+    border-color: rgba(217, 182, 237, 0.52);
+    color: #fff;
+    background: #4b2863;
+  }
+}
+
+body.pl-match-mode-active #roundBoard .team-filter-search,
+body.pl-match-mode-active #roundBoard .history-round-button,
+body.pl-match-mode-active #roundBoard #simulateRoundButton,
+body.pl-match-mode-active #roundBoard .team-filter-chip {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #fff;
+  background: #381d53;
+  box-shadow: none;
+}
+
+body.pl-match-mode-active #roundBoard .team-filter-search {
+  color: #d9b6ed;
+}
+
+body.pl-match-mode-active #roundBoard .team-filter-search:focus-within {
+  border-color: #9d6bbb;
+  background: #4b2863;
+  box-shadow: 0 0 0 3px rgba(157, 107, 187, 0.14);
+}
+
+body.pl-match-mode-active #roundBoard .team-filter-search input {
+  color: #fff;
+}
+
+body.pl-match-mode-active #roundBoard .team-filter-search input::placeholder {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result-popover {
+  z-index: 120;
+  overflow: hidden;
+  border: 1px solid rgba(217, 182, 237, 0.26);
+  border-radius: 12px;
+  color: #fff;
+  background: #28002d;
+  box-shadow: 0 18px 44px rgba(30, 0, 33, 0.48);
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result {
+  grid-template-columns: 38px minmax(0, 1fr);
+  min-height: 54px;
+  padding: 9px 12px;
+  border-bottom-color: rgba(217, 182, 237, 0.14);
+  color: #fff;
+  background: transparent;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result:last-child {
+  border-bottom: 0;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result > span:first-child,
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result .search-flag,
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result .pl-club-flag {
+  width: 34px;
+  height: 34px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result .pl-club-flag img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result strong {
+  color: #fff;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result small {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result:hover,
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result:focus-visible {
+  color: #fff;
+  background: #381d53;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .search-result-popover .empty-story {
+  color: rgba(255, 255, 255, 0.68);
+  background: #28002d;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .team-filter-check {
+  color: #1e0021;
+  background: #d9b6ed;
+}
+
+body.pl-match-mode-active #roundBoard #teamFilterControl .team-filter-clear {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+body.pl-match-mode-active .golden-boot-panel,
+body.pl-match-mode-active .pl-engine-table-panel {
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+body.pl-match-mode-active .fixture-grid:not(.bracket-mode) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+body.pl-match-mode-active .fixture .fixture-team {
+  grid-template-columns: 36px minmax(0, 1fr) auto 8px;
+  gap: 9px;
+}
+
+body.pl-match-mode-active .fixture .fixture-team .flag,
+body.pl-match-mode-active .fixture .fixture-team .fixture-flag,
+body.pl-match-mode-active .fixture .fixture-team .pl-club-flag {
+  width: 36px;
+  height: 36px;
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.pl-match-mode-active .pl-club-flag {
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.pl-match-mode-active .pl-club-flag:has(> img) > .flag-fallback {
+  display: none !important;
+}
+
+body.pl-match-mode-active .fixture .fixture-team .pl-club-flag img {
+  object-fit: contain;
+}
+
+body.pl-match-mode-active .fixture .fixture-team .name {
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.3;
+  word-spacing: 0.06em;
+}
+
+body.pl-match-mode-active .fixture .fixture-team.winner .name {
+  color: #fff;
+}
+
+/* The Premier League uses the full World Cup matchday squad manager. */
+body.pl-match-mode-active #retroMatchLineupsPanel {
+  --q22-ink: #1e0021;
+  --q22-ink-soft: #18001b;
+  --q22-panel: #28002d;
+  --q22-panel-soft: #1e0021;
+  --q22-wine: #381d53;
+  --q22-wine-bright: #60357e;
+  --q22-line: rgba(217, 182, 237, 0.26);
+  --q22-line-soft: rgba(217, 182, 237, 0.14);
+  --q22-cream: rgba(255, 255, 255, 0.82);
+  --q22-white: #fff;
+  --q22-gold: #d9b6ed;
+  --q22-gold-soft: #e8d2f3;
+  margin-top: 18px;
+  border: 1px solid rgba(217, 182, 237, 0.22);
+  border-radius: 18px;
+  color: #fff;
+  background: #28002d;
+  box-shadow: 0 18px 46px rgba(12, 0, 14, 0.26);
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel summary {
+  padding: 17px 20px;
+  color: #fff;
+  background: #381d53;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel[open] summary {
+  border-bottom-color: rgba(217, 182, 237, 0.2);
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel > .retro-lineups-grid {
+  grid-template-columns: 1fr;
+  align-items: start;
+  padding: 12px;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-lineup-tabs {
+  overflow: hidden;
+  border-color: rgba(217, 182, 237, 0.2);
+  border-radius: 11px;
+  background: #1e0021;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-lineup-tabs button {
+  min-height: 48px;
+  border-right-color: rgba(217, 182, 237, 0.16);
+  color: rgba(255, 255, 255, 0.58);
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-lineup-tabs button.active {
+  color: #fff;
+  background: #381d53;
+  box-shadow: inset 0 -3px #d9b6ed;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-lineup-tab-flag,
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-lineup-tab-flag img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-lineup,
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-live-ratings-side {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(217, 182, 237, 0.18);
+  border-radius: 12px;
+  color: #fff;
+  background: #28002d;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-hint {
+  border-bottom-color: rgba(217, 182, 237, 0.15);
+  color: rgba(255, 255, 255, 0.58);
+  background: rgba(30, 0, 33, 0.72);
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel [data-retro-manager-formation] {
+  min-height: 36px;
+  padding: 0 30px 0 10px;
+  border: 1px solid rgba(217, 182, 237, 0.46);
+  border-radius: 8px;
+  color: #fff;
+  background: #381d53;
+  font: 800 10px "DM Mono", monospace;
+  cursor: pointer;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-pitch {
+  border-color: rgba(255, 255, 255, 0.26);
+  border-radius: 11px;
+  background:
+    linear-gradient(90deg, transparent 49.75%, rgba(255, 255, 255, 0.16) 49.75% 50.25%, transparent 50.25%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.024) 0 12.5%, rgba(0, 0, 0, 0.035) 12.5% 25%),
+    #381d53;
+  box-shadow: inset 0 0 42px rgba(30, 0, 33, 0.42);
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-pitch-player b {
+  border-color: rgba(255, 255, 255, 0.88);
+  color: #fff;
+  background: #60357e;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-pitch-player i {
+  color: #1e0021;
+  background: #e8d2f3;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-section.is-bench {
+  border-left-color: rgba(217, 182, 237, 0.16);
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player {
+  border-color: rgba(217, 182, 237, 0.14);
+  color: rgba(255, 255, 255, 0.84);
+  background: #1e0021;
+}
+
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player.is-selected,
+body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player:hover:not(:disabled) {
+  border-color: #d9b6ed;
+  background: #381d53;
+}
+
+@media (min-width: 1181px) {
+  body.pl-match-mode-active .insight-right,
+  body.pl-match-mode-active .insight-right.tactics-hidden,
+  body.pl-match-mode-active.pl-match-detail-active .insight-right {
+    margin-top: 86px;
+  }
+
+  body.pl-match-mode-active .insight-left {
+    margin-top: 70px;
+  }
+
+  body.pl-match-mode-active .pl-live-back-button {
+    margin-left: -262px;
+  }
+}
+
+@media (max-width: 1180px) {
+  body.pl-match-mode-active .content {
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr) minmax(190px, 220px);
+    gap: 16px;
+    padding-inline: 14px;
+  }
+
+  body.pl-match-mode-active .fixture-grid:not(.bracket-mode) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 851px) and (max-width: 1180px) {
+  body.pl-match-mode-active .insight-right,
+  body.pl-match-mode-active .insight-right.tactics-hidden,
+  body.pl-match-mode-active.pl-match-detail-active .insight-right {
+    margin-top: 86px;
+  }
+
+  body.pl-match-mode-active .insight-left {
+    margin-top: 70px;
+  }
+
+  body.pl-match-mode-active .pl-live-back-button {
+    margin-left: calc(-16px - clamp(180px, 18.65vw, 220px));
+  }
+}
+
+@media (max-width: 850px) {
+  body.pl-match-mode-active .sidebar {
+    position: sticky;
+    display: flex !important;
+    height: 64px;
+    flex-direction: row;
+  }
+
+  body.pl-match-mode-active .content {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "stage"
+      "next"
+      "boot"
+      "board"
+      "table";
+    width: min(100% - 24px, 760px);
+    gap: 16px;
+    padding: 18px 0 52px;
+  }
+
+  body.pl-match-mode-active .insight-right,
+  body.pl-match-mode-active .insight-right.tactics-hidden,
+  body.pl-match-mode-active.pl-match-detail-active .insight-right,
+  body.pl-match-mode-active .insight-left {
+    margin-top: 0;
+  }
+
+  body.pl-match-mode-active .pl-live-back-button {
+    margin-left: 0;
+  }
+
+  body.pl-match-mode-active .match-stage {
+    min-height: 360px;
+  }
+
+  body.pl-match-mode-active .matchup,
+  body.pl-match-mode-active .match-stage.is-live .matchup {
+    min-height: 220px;
+    padding: 34px 12px 20px;
+  }
+
+  body.pl-match-mode-active .score-zone {
+    width: 92px;
+    min-width: 92px;
+  }
+
+  body.pl-match-mode-active .match-stage.pl-full-time .score-zone {
+    min-height: 170px;
+  }
+
+  body.pl-match-mode-active .match-commentary-view {
+    top: 18px;
+    width: calc(100% - 24px);
+  }
+
+  body.pl-match-mode-active .fixture-grid:not(.bracket-mode) {
+    grid-template-columns: 1fr;
+  }
+}

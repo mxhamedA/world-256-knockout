@@ -39,7 +39,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Ró-Ró",
         "displayName": "Ró-Ró",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -68,7 +68,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Abdelkarim Hassan",
         "displayName": "Abdelkarim Hassan",
-        "position": "MF",
+        "position": "LWB",
         "positions": [
           "LWB",
           "CB"
@@ -96,7 +96,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Mohammed Waad",
         "displayName": "Mohammed Waad",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB",
@@ -125,7 +125,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Tarek Salman",
         "displayName": "Tarek Salman",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LWB"
@@ -153,7 +153,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Abdulaziz Hatem",
         "displayName": "Abdulaziz Hatem",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -181,7 +181,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Ahmed Alaaeldin",
         "displayName": "Ahmed Alaaeldin",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW"
@@ -209,7 +209,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Ali Assadalla",
         "displayName": "Ali Assadalla",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -237,7 +237,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Mohammed Muntari",
         "displayName": "Mohammed Muntari",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -264,7 +264,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Hassan Al-Haydos",
         "displayName": "Hassan Al-Haydos",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "CAM",
@@ -293,7 +293,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Akram Afif",
         "displayName": "Akram Afif",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "CF",
@@ -323,7 +323,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Karim Boudiaf",
         "displayName": "Karim Boudiaf",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -351,7 +351,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Musab Kheder",
         "displayName": "Musab Kheder",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "CB"
@@ -379,7 +379,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Homam Ahmed",
         "displayName": "Homam Ahmed",
-        "position": "DF",
+        "position": "LWB",
         "positions": [
           "LWB"
         ],
@@ -406,7 +406,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Bassam Al-Rawi",
         "displayName": "Bassam Al-Rawi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -433,7 +433,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Boualem Khoukhi",
         "displayName": "Boualem Khoukhi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -461,7 +461,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ismaeel Mohammad",
         "displayName": "Ismaeel Mohammad",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "RW"
@@ -489,7 +489,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Khalid Muneer",
         "displayName": "Khalid Muneer",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -518,7 +518,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Almoez Ali",
         "displayName": "Almoez Ali",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -545,7 +545,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Salem Al-Hajri",
         "displayName": "Salem Al-Hajri",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB"
@@ -637,7 +637,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Assim Madibo",
         "displayName": "Assim Madibo",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -665,7 +665,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Naif Al-Hadhrami",
         "displayName": "Naif Al-Hadhrami",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -693,7 +693,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Jassem Gaber",
         "displayName": "Jassem Gaber",
-        "position": "MF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -721,7 +721,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Mostafa Meshaal",
         "displayName": "Mostafa Meshaal",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -816,7 +816,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Félix Torres",
         "displayName": "Félix Torres",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -843,7 +843,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Piero Hincapié",
         "displayName": "Piero Hincapié",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "CB"
@@ -871,7 +871,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Robert Arboleda",
         "displayName": "Robert Arboleda",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -898,7 +898,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "José Cifuentes",
         "displayName": "José Cifuentes",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -926,7 +926,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "William Pacho",
         "displayName": "William Pacho",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -953,7 +953,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Pervis Estupiñán",
         "displayName": "Pervis Estupiñán",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -981,7 +981,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Carlos Gruezo",
         "displayName": "Carlos Gruezo",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -1009,7 +1009,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Ayrton Preciado",
         "displayName": "Ayrton Preciado",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "RM"
@@ -1037,7 +1037,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Romario Ibarra",
         "displayName": "Romario Ibarra",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "ST",
@@ -1066,7 +1066,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Michael Estrada",
         "displayName": "Michael Estrada",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -1125,7 +1125,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Enner Valencia",
         "displayName": "Enner Valencia",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW",
@@ -1154,7 +1154,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Xavier Arreaga",
         "displayName": "Xavier Arreaga",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -1181,7 +1181,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Ángel Mena",
         "displayName": "Ángel Mena",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "RW"
@@ -1209,7 +1209,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Jeremy Sarmiento",
         "displayName": "Jeremy Sarmiento",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -1237,7 +1237,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ángelo Preciado",
         "displayName": "Ángelo Preciado",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -1266,7 +1266,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Diego Palacios",
         "displayName": "Diego Palacios",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -1293,7 +1293,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Gonzalo Plata",
         "displayName": "Gonzalo Plata",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "RW"
@@ -1321,7 +1321,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Sebas Méndez",
         "displayName": "Sebas Méndez",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -1349,7 +1349,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Alan Franco",
         "displayName": "Alan Franco",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "RM"
@@ -1409,7 +1409,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Moisés Caicedo",
         "displayName": "Moisés Caicedo",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -1437,7 +1437,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Djorkaeff Reasco",
         "displayName": "Djorkaeff Reasco",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM"
@@ -1465,7 +1465,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Jackson Porozo",
         "displayName": "Jackson Porozo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -1492,7 +1492,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Kevin Rodríguez",
         "displayName": "Kevin Rodríguez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW"
@@ -1586,7 +1586,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Formose Mendy",
         "displayName": "Formose Mendy",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RWB"
@@ -1614,7 +1614,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Kalidou Koulibaly",
         "displayName": "Kalidou Koulibaly",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -1641,7 +1641,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Pape Abou Cissé",
         "displayName": "Pape Abou Cissé",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -1668,7 +1668,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Idrissa Gueye",
         "displayName": "Idrissa Gueye",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -1696,7 +1696,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Nampalys Mendy",
         "displayName": "Nampalys Mendy",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -1724,7 +1724,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Nicolas Jackson",
         "displayName": "Nicolas Jackson",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM",
@@ -1753,7 +1753,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Cheikhou Kouyaté",
         "displayName": "Cheikhou Kouyaté",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB",
@@ -1782,7 +1782,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Boulaye Dia",
         "displayName": "Boulaye Dia",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW"
@@ -1810,7 +1810,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Moussa N'Diaye",
         "displayName": "Moussa N'Diaye",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "CB",
@@ -1839,7 +1839,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Pathé Ciss",
         "displayName": "Pathé Ciss",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -1867,7 +1867,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Fodé Ballo-Touré",
         "displayName": "Fodé Ballo-Touré",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -1894,7 +1894,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Iliman Ndiaye",
         "displayName": "Iliman Ndiaye",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "ST"
@@ -1922,7 +1922,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Ismail Jakobs",
         "displayName": "Ismail Jakobs",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM"
@@ -1950,7 +1950,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Krépin Diatta",
         "displayName": "Krépin Diatta",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "RW",
@@ -2011,7 +2011,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Pape Matar Sarr",
         "displayName": "Pape Matar Sarr",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -2038,7 +2038,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Ismaïla Sarr",
         "displayName": "Ismaïla Sarr",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "RW"
@@ -2066,7 +2066,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Famara Diédhiou",
         "displayName": "Famara Diédhiou",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -2093,7 +2093,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Bamba Dieng",
         "displayName": "Bamba Dieng",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -2120,7 +2120,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Youssouf Sabaly",
         "displayName": "Youssouf Sabaly",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM"
@@ -2148,7 +2148,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Abdou Diallo",
         "displayName": "Abdou Diallo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -2208,7 +2208,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Moustapha Name",
         "displayName": "Moustapha Name",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -2236,7 +2236,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Mamadou Loum",
         "displayName": "Mamadou Loum",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -2264,7 +2264,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Pape Gueye",
         "displayName": "Pape Gueye",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -2359,7 +2359,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Jurriën Timber",
         "displayName": "Jurriën Timber",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -2387,7 +2387,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Matthijs de Ligt",
         "displayName": "Matthijs de Ligt",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -2414,7 +2414,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Virgil van Dijk",
         "displayName": "Virgil van Dijk",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -2441,7 +2441,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Nathan Aké",
         "displayName": "Nathan Aké",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -2469,7 +2469,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Stefan de Vrij",
         "displayName": "Stefan de Vrij",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -2496,7 +2496,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Steven Bergwijn",
         "displayName": "Steven Bergwijn",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -2525,7 +2525,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Cody Gakpo",
         "displayName": "Cody Gakpo",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "CAM"
@@ -2553,7 +2553,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Luuk de Jong",
         "displayName": "Luuk de Jong",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -2580,7 +2580,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Memphis Depay",
         "displayName": "Memphis Depay",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "LW",
@@ -2609,7 +2609,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Steven Berghuis",
         "displayName": "Steven Berghuis",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RW",
@@ -2638,7 +2638,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Noa Lang",
         "displayName": "Noa Lang",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -2699,7 +2699,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Davy Klaassen",
         "displayName": "Davy Klaassen",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -2727,7 +2727,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Marten de Roon",
         "displayName": "Marten de Roon",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM",
@@ -2756,7 +2756,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Tyrell Malacia",
         "displayName": "Tyrell Malacia",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -2783,7 +2783,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Daley Blind",
         "displayName": "Daley Blind",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "CB",
@@ -2812,7 +2812,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Vincent Janssen",
         "displayName": "Vincent Janssen",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -2839,7 +2839,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Wout Weghorst",
         "displayName": "Wout Weghorst",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -2866,7 +2866,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Teun Koopmeiners",
         "displayName": "Teun Koopmeiners",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -2894,7 +2894,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Frenkie de Jong",
         "displayName": "Frenkie de Jong",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -2921,7 +2921,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Denzel Dumfries",
         "displayName": "Denzel Dumfries",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "RM"
@@ -2981,7 +2981,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Kenneth Taylor",
         "displayName": "Kenneth Taylor",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -3009,7 +3009,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Xavi Simons",
         "displayName": "Xavi Simons",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "ST",
@@ -3038,7 +3038,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Jeremie Frimpong",
         "displayName": "Jeremie Frimpong",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -3134,7 +3134,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Kyle Walker",
         "displayName": "Kyle Walker",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -3161,7 +3161,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Luke Shaw",
         "displayName": "Luke Shaw",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -3188,7 +3188,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Declan Rice",
         "displayName": "Declan Rice",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -3215,7 +3215,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "John Stones",
         "displayName": "John Stones",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -3242,7 +3242,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Harry Maguire",
         "displayName": "Harry Maguire",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -3269,7 +3269,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Jack Grealish",
         "displayName": "Jack Grealish",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "LM"
@@ -3297,7 +3297,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Jordan Henderson",
         "displayName": "Jordan Henderson",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -3325,7 +3325,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Harry Kane",
         "displayName": "Harry Kane",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -3352,7 +3352,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Raheem Sterling",
         "displayName": "Raheem Sterling",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -3381,7 +3381,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Marcus Rashford",
         "displayName": "Marcus Rashford",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -3409,7 +3409,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Kieran Trippier",
         "displayName": "Kieran Trippier",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM"
@@ -3469,7 +3469,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Kalvin Phillips",
         "displayName": "Kalvin Phillips",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -3497,7 +3497,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Eric Dier",
         "displayName": "Eric Dier",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -3524,7 +3524,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Conor Coady",
         "displayName": "Conor Coady",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -3551,7 +3551,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Bukayo Saka",
         "displayName": "Bukayo Saka",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "RW"
@@ -3579,7 +3579,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Trent Alexander-Arnold",
         "displayName": "Trent Alexander-Arnold",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -3606,7 +3606,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Mason Mount",
         "displayName": "Mason Mount",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RW"
@@ -3634,7 +3634,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Phil Foden",
         "displayName": "Phil Foden",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "CF",
@@ -3663,7 +3663,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Ben White",
         "displayName": "Ben White",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -3691,7 +3691,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Jude Bellingham",
         "displayName": "Jude Bellingham",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -3750,7 +3750,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Callum Wilson",
         "displayName": "Callum Wilson",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -3777,7 +3777,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "James Maddison",
         "displayName": "James Maddison",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "CAM"
@@ -3805,7 +3805,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Conor Gallagher",
         "displayName": "Conor Gallagher",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -3899,7 +3899,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Sadegh Moharrami",
         "displayName": "Sadegh Moharrami",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM",
@@ -3928,7 +3928,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Ehsan Hajsafi",
         "displayName": "Ehsan Hajsafi",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM"
@@ -3956,7 +3956,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Shojae Khalilzadeh",
         "displayName": "Shojae Khalilzadeh",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -3984,7 +3984,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Milad Mohammadi",
         "displayName": "Milad Mohammadi",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -4012,7 +4012,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Saeid Ezatolahi",
         "displayName": "Saeid Ezatolahi",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -4040,7 +4040,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Alireza Jahanbakhsh",
         "displayName": "Alireza Jahanbakhsh",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -4068,7 +4068,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Morteza Pouraliganji",
         "displayName": "Morteza Pouraliganji",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -4095,7 +4095,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Mehdi Taremi",
         "displayName": "Mehdi Taremi",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CF"
@@ -4124,7 +4124,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Karim Ansarifard",
         "displayName": "Karim Ansarifard",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -4151,7 +4151,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Vahid Amiri",
         "displayName": "Vahid Amiri",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LB",
@@ -4212,7 +4212,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Hossein Kanaanizadegan",
         "displayName": "Hossein Kanaanizadegan",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -4239,7 +4239,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Saman Ghoddos",
         "displayName": "Saman Ghoddos",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -4268,7 +4268,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Rouzbeh Cheshmi",
         "displayName": "Rouzbeh Cheshmi",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB"
@@ -4296,7 +4296,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Mehdi Torabi",
         "displayName": "Mehdi Torabi",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "CAM",
@@ -4325,7 +4325,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ali Gholizadeh",
         "displayName": "Ali Gholizadeh",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "CAM",
@@ -4354,7 +4354,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Ali Karimi",
         "displayName": "Ali Karimi",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -4382,7 +4382,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Majid Hosseini",
         "displayName": "Majid Hosseini",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -4410,7 +4410,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Sardar Azmoun",
         "displayName": "Sardar Azmoun",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM"
@@ -4438,7 +4438,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Ahmad Nourollahi",
         "displayName": "Ahmad Nourollahi",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -4498,7 +4498,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Ramin Rezaeian",
         "displayName": "Ramin Rezaeian",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -4559,7 +4559,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Abolfazl Jalali",
         "displayName": "Abolfazl Jalali",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -4654,7 +4654,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Sergiño Dest",
         "displayName": "Sergiño Dest",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM",
@@ -4683,7 +4683,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Walker Zimmerman",
         "displayName": "Walker Zimmerman",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -4710,7 +4710,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Tyler Adams",
         "displayName": "Tyler Adams",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM",
@@ -4739,7 +4739,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Antonee Robinson",
         "displayName": "Antonee Robinson",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -4767,7 +4767,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Yunus Musah",
         "displayName": "Yunus Musah",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "CM",
@@ -4796,7 +4796,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Giovanni Reyna",
         "displayName": "Giovanni Reyna",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "CAM",
@@ -4825,7 +4825,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Weston McKennie",
         "displayName": "Weston McKennie",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "LM",
@@ -4854,7 +4854,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Jesús Ferreira",
         "displayName": "Jesús Ferreira",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "CAM",
@@ -4883,7 +4883,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Christian Pulisic",
         "displayName": "Christian Pulisic",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -4912,7 +4912,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Brenden Aaronson",
         "displayName": "Brenden Aaronson",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -4973,7 +4973,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Tim Ream",
         "displayName": "Tim Ream",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5000,7 +5000,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Luca de la Torre",
         "displayName": "Luca de la Torre",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -5029,7 +5029,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Aaron Long",
         "displayName": "Aaron Long",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5056,7 +5056,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Jordan Morris",
         "displayName": "Jordan Morris",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "ST",
@@ -5085,7 +5085,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Cristian Roldan",
         "displayName": "Cristian Roldan",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "CM",
@@ -5114,7 +5114,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Shaq Moore",
         "displayName": "Shaq Moore",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM"
@@ -5142,7 +5142,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Haji Wright",
         "displayName": "Haji Wright",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -5169,7 +5169,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Cameron Carter-Vickers",
         "displayName": "Cameron Carter-Vickers",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5196,7 +5196,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Timothy Weah",
         "displayName": "Timothy Weah",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM",
@@ -5226,7 +5226,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "DeAndre Yedlin",
         "displayName": "DeAndre Yedlin",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -5254,7 +5254,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Kellyn Acosta",
         "displayName": "Kellyn Acosta",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -5282,7 +5282,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Josh Sargent",
         "displayName": "Josh Sargent",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "ST"
@@ -5342,7 +5342,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Joe Scally",
         "displayName": "Joe Scally",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -5437,7 +5437,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Chris Gunter",
         "displayName": "Chris Gunter",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "CB"
@@ -5465,7 +5465,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Neco Williams",
         "displayName": "Neco Williams",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -5494,7 +5494,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Ben Davies",
         "displayName": "Ben Davies",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5521,7 +5521,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Chris Mepham",
         "displayName": "Chris Mepham",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5548,7 +5548,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Joe Rodon",
         "displayName": "Joe Rodon",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5575,7 +5575,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Joe Allen",
         "displayName": "Joe Allen",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -5603,7 +5603,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Harry Wilson",
         "displayName": "Harry Wilson",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "RW",
@@ -5632,7 +5632,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Brennan Johnson",
         "displayName": "Brennan Johnson",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "ST"
@@ -5660,7 +5660,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Aaron Ramsey",
         "displayName": "Aaron Ramsey",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -5688,7 +5688,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Gareth Bale",
         "displayName": "Gareth Bale",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "RM",
@@ -5749,7 +5749,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Kieffer Moore",
         "displayName": "Kieffer Moore",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -5776,7 +5776,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Connor Roberts",
         "displayName": "Connor Roberts",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -5804,7 +5804,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Ethan Ampadu",
         "displayName": "Ethan Ampadu",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM",
@@ -5833,7 +5833,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Joe Morrell",
         "displayName": "Joe Morrell",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -5861,7 +5861,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Tom Lockyer",
         "displayName": "Tom Lockyer",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -5888,7 +5888,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Jonny Williams",
         "displayName": "Jonny Williams",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "CM"
@@ -5916,7 +5916,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Mark Harris",
         "displayName": "Mark Harris",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -5944,7 +5944,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Daniel James",
         "displayName": "Daniel James",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "ST",
@@ -6006,7 +6006,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Sorba Thomas",
         "displayName": "Sorba Thomas",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "LW",
@@ -6035,7 +6035,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Dylan Levitt",
         "displayName": "Dylan Levitt",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -6063,7 +6063,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Ben Cabango",
         "displayName": "Ben Cabango",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -6090,7 +6090,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Rubin Colwill",
         "displayName": "Rubin Colwill",
-        "position": "DF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RW",
@@ -6119,7 +6119,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Matthew Smith",
         "displayName": "Matthew Smith",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -6212,7 +6212,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Juan Foyth",
         "displayName": "Juan Foyth",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB",
@@ -6241,7 +6241,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Nicolás Tagliafico",
         "displayName": "Nicolás Tagliafico",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -6268,7 +6268,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Gonzalo Montiel",
         "displayName": "Gonzalo Montiel",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -6296,7 +6296,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Leandro Paredes",
         "displayName": "Leandro Paredes",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -6324,7 +6324,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Germán Pezzella",
         "displayName": "Germán Pezzella",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -6351,7 +6351,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Rodrigo De Paul",
         "displayName": "Rodrigo De Paul",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "RM"
@@ -6379,7 +6379,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Marcos Acuña",
         "displayName": "Marcos Acuña",
-        "position": "MF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -6406,7 +6406,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Julián Álvarez",
         "displayName": "Julián Álvarez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW",
@@ -6435,7 +6435,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Lionel Messi",
         "displayName": "Lionel Messi",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "CAM"
@@ -6463,7 +6463,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Ángel Di María",
         "displayName": "Ángel Di María",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW"
         ],
@@ -6522,7 +6522,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Cristian Romero",
         "displayName": "Cristian Romero",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -6549,7 +6549,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Exequiel Palacios",
         "displayName": "Exequiel Palacios",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -6578,7 +6578,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Ángel Correa",
         "displayName": "Ángel Correa",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RM",
@@ -6607,7 +6607,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Thiago Almada",
         "displayName": "Thiago Almada",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "LW",
@@ -6636,7 +6636,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Papu Gómez",
         "displayName": "Papu Gómez",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "LW",
@@ -6665,7 +6665,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Guido Rodríguez",
         "displayName": "Guido Rodríguez",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -6692,7 +6692,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Nicolás Otamendi",
         "displayName": "Nicolás Otamendi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -6719,7 +6719,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Alexis Mac Allister",
         "displayName": "Alexis Mac Allister",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -6747,7 +6747,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Paulo Dybala",
         "displayName": "Paulo Dybala",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "CAM"
@@ -6775,7 +6775,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Lautaro Martínez",
         "displayName": "Lautaro Martínez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -6834,7 +6834,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Enzo Fernández",
         "displayName": "Enzo Fernández",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -6862,7 +6862,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Lisandro Martínez",
         "displayName": "Lisandro Martínez",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB",
@@ -6891,7 +6891,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Nahuel Molina",
         "displayName": "Nahuel Molina",
-        "position": "DF",
+        "position": "RM",
         "positions": [
           "RM",
           "RWB",
@@ -6990,7 +6990,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Sultan Al-Ghannam",
         "displayName": "Sultan Al-Ghannam",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -7017,7 +7017,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Abdullah Madu",
         "displayName": "Abdullah Madu",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -7044,7 +7044,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Abdulelah Al-Amri",
         "displayName": "Abdulelah Al-Amri",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -7071,7 +7071,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Ali Al-Bulaihi",
         "displayName": "Ali Al-Bulaihi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -7098,7 +7098,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Mohammed Al-Breik",
         "displayName": "Mohammed Al-Breik",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB",
@@ -7127,7 +7127,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Salman Al-Faraj",
         "displayName": "Salman Al-Faraj",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -7156,7 +7156,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Abdulellah Al-Malki",
         "displayName": "Abdulellah Al-Malki",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -7184,7 +7184,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Firas Al-Buraikan",
         "displayName": "Firas Al-Buraikan",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RM"
@@ -7212,7 +7212,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Salem Al-Dawsari",
         "displayName": "Salem Al-Dawsari",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -7241,7 +7241,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Saleh Al-Shehri",
         "displayName": "Saleh Al-Shehri",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -7268,7 +7268,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Saud Abdulhamid",
         "displayName": "Saud Abdulhamid",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB",
@@ -7297,7 +7297,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Yasser Al-Shahrani",
         "displayName": "Yasser Al-Shahrani",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "RB",
@@ -7326,7 +7326,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Abdullah Otayf",
         "displayName": "Abdullah Otayf",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -7354,7 +7354,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Ali Al-Hassan",
         "displayName": "Ali Al-Hassan",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -7382,7 +7382,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Sami Al-Najei",
         "displayName": "Sami Al-Najei",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RM"
@@ -7410,7 +7410,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Hassan Al-Tambakti",
         "displayName": "Hassan Al-Tambakti",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -7437,7 +7437,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Nawaf Al-Abed",
         "displayName": "Nawaf Al-Abed",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "LW",
@@ -7466,7 +7466,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Hattan Bahebri",
         "displayName": "Hattan Bahebri",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW"
         ],
@@ -7493,7 +7493,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Abdulrahman Al-Aboud",
         "displayName": "Abdulrahman Al-Aboud",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -7585,7 +7585,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Mohamed Kanno",
         "displayName": "Mohamed Kanno",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -7613,7 +7613,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Nasser Al-Dawsari",
         "displayName": "Nasser Al-Dawsari",
-        "position": "MF",
+        "position": "LB",
         "positions": [
           "LB",
           "CM",
@@ -7642,7 +7642,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Haitham Asiri",
         "displayName": "Haitham Asiri",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "ST"
@@ -7670,7 +7670,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Riyadh Sharahili",
         "displayName": "Riyadh Sharahili",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -7765,7 +7765,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Néstor Araujo",
         "displayName": "Néstor Araujo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -7792,7 +7792,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "César Montes",
         "displayName": "César Montes",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -7819,7 +7819,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Edson Álvarez",
         "displayName": "Edson Álvarez",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -7847,7 +7847,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Johan Vásquez",
         "displayName": "Johan Vásquez",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -7875,7 +7875,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Gerardo Arteaga",
         "displayName": "Gerardo Arteaga",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -7902,7 +7902,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Luis Romo",
         "displayName": "Luis Romo",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -7930,7 +7930,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Carlos Rodríguez",
         "displayName": "Carlos Rodríguez",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -7958,7 +7958,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Raúl Jiménez",
         "displayName": "Raúl Jiménez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -7985,7 +7985,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Alexis Vega",
         "displayName": "Alexis Vega",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "ST",
@@ -8014,7 +8014,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Rogelio Funes Mori",
         "displayName": "Rogelio Funes Mori",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -8105,7 +8105,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Érick Gutiérrez",
         "displayName": "Érick Gutiérrez",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -8133,7 +8133,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Héctor Moreno",
         "displayName": "Héctor Moreno",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -8160,7 +8160,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Héctor Herrera",
         "displayName": "Héctor Herrera",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -8187,7 +8187,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Orbelín Pineda",
         "displayName": "Orbelín Pineda",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -8215,7 +8215,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Andrés Guardado",
         "displayName": "Andrés Guardado",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -8242,7 +8242,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Jorge Sánchez",
         "displayName": "Jorge Sánchez",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -8269,7 +8269,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Henry Martín",
         "displayName": "Henry Martín",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -8296,7 +8296,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Uriel Antuna",
         "displayName": "Uriel Antuna",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM",
@@ -8325,7 +8325,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Hirving Lozano",
         "displayName": "Hirving Lozano",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW"
         ],
@@ -8352,7 +8352,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Jesús Gallardo",
         "displayName": "Jesús Gallardo",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM",
@@ -8381,7 +8381,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Luis Chávez",
         "displayName": "Luis Chávez",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -8409,7 +8409,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Roberto Alvarado",
         "displayName": "Roberto Alvarado",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -8437,7 +8437,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Kevin Álvarez",
         "displayName": "Kevin Álvarez",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -8532,7 +8532,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Matty Cash",
         "displayName": "Matty Cash",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -8560,7 +8560,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Artur Jędrzejczyk",
         "displayName": "Artur Jędrzejczyk",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -8588,7 +8588,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Mateusz Wieteska",
         "displayName": "Mateusz Wieteska",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -8615,7 +8615,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Jan Bednarek",
         "displayName": "Jan Bednarek",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -8642,7 +8642,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Krystian Bielik",
         "displayName": "Krystian Bielik",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -8669,7 +8669,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Arkadiusz Milik",
         "displayName": "Arkadiusz Milik",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -8696,7 +8696,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Damian Szymański",
         "displayName": "Damian Szymański",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -8724,7 +8724,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Robert Lewandowski",
         "displayName": "Robert Lewandowski",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -8751,7 +8751,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Grzegorz Krychowiak",
         "displayName": "Grzegorz Krychowiak",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -8779,7 +8779,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Kamil Grosicki",
         "displayName": "Kamil Grosicki",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM"
         ],
@@ -8838,7 +8838,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Jakub Kamiński",
         "displayName": "Jakub Kamiński",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "RW"
@@ -8866,7 +8866,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Jakub Kiwior",
         "displayName": "Jakub Kiwior",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -8894,7 +8894,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Kamil Glik",
         "displayName": "Kamil Glik",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -8921,7 +8921,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Karol Świderski",
         "displayName": "Karol Świderski",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM"
@@ -8949,7 +8949,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Szymon Żurkowski",
         "displayName": "Szymon Żurkowski",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -8976,7 +8976,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Bartosz Bereszyński",
         "displayName": "Bartosz Bereszyński",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -9004,7 +9004,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Sebastian Szymański",
         "displayName": "Sebastian Szymański",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "LW",
@@ -9033,7 +9033,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Piotr Zieliński",
         "displayName": "Piotr Zieliński",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -9061,7 +9061,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Nicola Zalewski",
         "displayName": "Nicola Zalewski",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LW"
@@ -9121,7 +9121,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Krzysztof Piątek",
         "displayName": "Krzysztof Piątek",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -9148,7 +9148,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Przemysław Frankowski",
         "displayName": "Przemysław Frankowski",
-        "position": "MF",
+        "position": "LWB",
         "positions": [
           "LWB",
           "RWB"
@@ -9176,7 +9176,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Robert Gumny",
         "displayName": "Robert Gumny",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB",
@@ -9205,7 +9205,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Michał Skóraś",
         "displayName": "Michał Skóraś",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "RM"
@@ -9300,7 +9300,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Benjamin Pavard",
         "displayName": "Benjamin Pavard",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB"
@@ -9328,7 +9328,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Axel Disasi",
         "displayName": "Axel Disasi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -9355,7 +9355,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Raphaël Varane",
         "displayName": "Raphaël Varane",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -9382,7 +9382,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Jules Koundé",
         "displayName": "Jules Koundé",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -9410,7 +9410,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Matteo Guendouzi",
         "displayName": "Matteo Guendouzi",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -9438,7 +9438,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Antoine Griezmann",
         "displayName": "Antoine Griezmann",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CF",
@@ -9468,7 +9468,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Aurélien Tchouaméni",
         "displayName": "Aurélien Tchouaméni",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -9496,7 +9496,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Olivier Giroud",
         "displayName": "Olivier Giroud",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -9523,7 +9523,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Kylian Mbappé",
         "displayName": "Kylian Mbappé",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -9552,7 +9552,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Ousmane Dembélé",
         "displayName": "Ousmane Dembélé",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "LW"
@@ -9580,7 +9580,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Randal Kolo Muani",
         "displayName": "Randal Kolo Muani",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RM"
@@ -9608,7 +9608,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Youssouf Fofana",
         "displayName": "Youssouf Fofana",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -9636,7 +9636,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Adrien Rabiot",
         "displayName": "Adrien Rabiot",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "LM"
@@ -9664,7 +9664,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Jordan Veretout",
         "displayName": "Jordan Veretout",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -9724,7 +9724,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "William Saliba",
         "displayName": "William Saliba",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -9751,7 +9751,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Dayot Upamecano",
         "displayName": "Dayot Upamecano",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -9778,7 +9778,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Karim Benzema",
         "displayName": "Karim Benzema",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "ST"
@@ -9806,7 +9806,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Kingsley Coman",
         "displayName": "Kingsley Coman",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -9834,7 +9834,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Lucas Hernandez",
         "displayName": "Lucas Hernandez",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -9862,7 +9862,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Théo Hernandez",
         "displayName": "Théo Hernandez",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -9921,7 +9921,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Ibrahima Konaté",
         "displayName": "Ibrahima Konaté",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -9948,7 +9948,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Eduardo Camavinga",
         "displayName": "Eduardo Camavinga",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -9976,7 +9976,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Marcus Thuram",
         "displayName": "Marcus Thuram",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LM"
@@ -10073,7 +10073,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Miloš Degenek",
         "displayName": "Miloš Degenek",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10100,7 +10100,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Nathaniel Atkinson",
         "displayName": "Nathaniel Atkinson",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -10128,7 +10128,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Kye Rowles",
         "displayName": "Kye Rowles",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10155,7 +10155,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Fran Karačić",
         "displayName": "Fran Karačić",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -10182,7 +10182,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Marco Tilio",
         "displayName": "Marco Tilio",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -10211,7 +10211,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Mathew Leckie",
         "displayName": "Mathew Leckie",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -10240,7 +10240,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Bailey Wright",
         "displayName": "Bailey Wright",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10267,7 +10267,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Jamie Maclaren",
         "displayName": "Jamie Maclaren",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -10294,7 +10294,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Ajdin Hrustic",
         "displayName": "Ajdin Hrustic",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "RM",
@@ -10323,7 +10323,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Awer Mabil",
         "displayName": "Awer Mabil",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -10384,7 +10384,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Aaron Mooy",
         "displayName": "Aaron Mooy",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -10412,7 +10412,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Riley McGree",
         "displayName": "Riley McGree",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -10440,7 +10440,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Mitchell Duke",
         "displayName": "Mitchell Duke",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -10467,7 +10467,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Aziz Behich",
         "displayName": "Aziz Behich",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -10494,7 +10494,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Cameron Devlin",
         "displayName": "Cameron Devlin",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -10554,7 +10554,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Harry Souttar",
         "displayName": "Harry Souttar",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10581,7 +10581,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Thomas Deng",
         "displayName": "Thomas Deng",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10608,7 +10608,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Garang Kuol",
         "displayName": "Garang Kuol",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM"
         ],
@@ -10635,7 +10635,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Jackson Irvine",
         "displayName": "Jackson Irvine",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -10662,7 +10662,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Craig Goodwin",
         "displayName": "Craig Goodwin",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -10691,7 +10691,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Joel King",
         "displayName": "Joel King",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -10718,7 +10718,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Jason Cummings",
         "displayName": "Jason Cummings",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -10745,7 +10745,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Keanu Baccus",
         "displayName": "Keanu Baccus",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -10840,7 +10840,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Joachim Andersen",
         "displayName": "Joachim Andersen",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10867,7 +10867,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Victor Nelsson",
         "displayName": "Victor Nelsson",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10894,7 +10894,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Simon Kjær",
         "displayName": "Simon Kjær",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10921,7 +10921,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Joakim Mæhle",
         "displayName": "Joakim Mæhle",
-        "position": "DF",
+        "position": "LM",
         "positions": [
           "LM",
           "RWB",
@@ -10951,7 +10951,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Andreas Christensen",
         "displayName": "Andreas Christensen",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -10978,7 +10978,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Mathias Jensen",
         "displayName": "Mathias Jensen",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -11006,7 +11006,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Thomas Delaney",
         "displayName": "Thomas Delaney",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -11034,7 +11034,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Martin Braithwaite",
         "displayName": "Martin Braithwaite",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LM"
@@ -11062,7 +11062,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Christian Eriksen",
         "displayName": "Christian Eriksen",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -11091,7 +11091,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Andreas Skov Olsen",
         "displayName": "Andreas Skov Olsen",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "CAM",
@@ -11121,7 +11121,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Kasper Dolberg",
         "displayName": "Kasper Dolberg",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -11148,7 +11148,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Rasmus Kristensen",
         "displayName": "Rasmus Kristensen",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -11176,7 +11176,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Mikkel Damsgaard",
         "displayName": "Mikkel Damsgaard",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "LM",
@@ -11205,7 +11205,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Christian Nørgaard",
         "displayName": "Christian Nørgaard",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -11265,7 +11265,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Jens Stryger Larsen",
         "displayName": "Jens Stryger Larsen",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -11293,7 +11293,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Daniel Wass",
         "displayName": "Daniel Wass",
-        "position": "DF",
+        "position": "CM",
         "positions": [
           "CM",
           "RB"
@@ -11321,7 +11321,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Jonas Wind",
         "displayName": "Jonas Wind",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CF"
@@ -11349,7 +11349,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Yussuf Poulsen",
         "displayName": "Yussuf Poulsen",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -11376,7 +11376,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Andreas Cornelius",
         "displayName": "Andreas Cornelius",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -11435,7 +11435,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Pierre-Emile Højbjerg",
         "displayName": "Pierre-Emile Højbjerg",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -11463,7 +11463,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Robert Skov",
         "displayName": "Robert Skov",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "LWB"
@@ -11491,7 +11491,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Jesper Lindstrøm",
         "displayName": "Jesper Lindstrøm",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CF"
@@ -11519,7 +11519,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Alexander Bah",
         "displayName": "Alexander Bah",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM"
@@ -11614,7 +11614,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Bilel Ifa",
         "displayName": "Bilel Ifa",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -11642,7 +11642,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Montassar Talbi",
         "displayName": "Montassar Talbi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -11669,7 +11669,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Yassine Meriah",
         "displayName": "Yassine Meriah",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -11696,7 +11696,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Nader Ghandri",
         "displayName": "Nader Ghandri",
-        "position": "MF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -11724,7 +11724,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Dylan Bronn",
         "displayName": "Dylan Bronn",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -11752,7 +11752,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Youssef Msakni",
         "displayName": "Youssef Msakni",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "SS",
@@ -11781,7 +11781,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Hannibal Mejbri",
         "displayName": "Hannibal Mejbri",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -11809,7 +11809,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Issam Jebali",
         "displayName": "Issam Jebali",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "ST"
@@ -11837,7 +11837,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Wahbi Khazri",
         "displayName": "Wahbi Khazri",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "ST"
@@ -11865,7 +11865,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Taha Yassine Khenissi",
         "displayName": "Taha Yassine Khenissi",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -11892,7 +11892,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Ali Maâloul",
         "displayName": "Ali Maâloul",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB",
@@ -11921,7 +11921,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Ferjani Sassi",
         "displayName": "Ferjani Sassi",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -11950,7 +11950,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Aïssa Laïdouni",
         "displayName": "Aïssa Laïdouni",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -11978,7 +11978,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Mohamed Ali Ben Romdhane",
         "displayName": "Mohamed Ali Ben Romdhane",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -12038,7 +12038,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ellyes Skhiri",
         "displayName": "Ellyes Skhiri",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -12066,7 +12066,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Ghailene Chaalali",
         "displayName": "Ghailene Chaalali",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -12094,7 +12094,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Seifeddine Jaziri",
         "displayName": "Seifeddine Jaziri",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -12121,7 +12121,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Mohamed Dräger",
         "displayName": "Mohamed Dräger",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -12149,7 +12149,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Wajdi Kechrida",
         "displayName": "Wajdi Kechrida",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -12210,7 +12210,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Naïm Sliti",
         "displayName": "Naïm Sliti",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM"
         ],
@@ -12237,7 +12237,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Ali Abdi",
         "displayName": "Ali Abdi",
-        "position": "DF",
+        "position": "LWB",
         "positions": [
           "LWB"
         ],
@@ -12264,7 +12264,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Anis Ben Slimane",
         "displayName": "Anis Ben Slimane",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -12391,7 +12391,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "César Azpilicueta",
         "displayName": "César Azpilicueta",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RWB",
@@ -12420,7 +12420,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Eric García",
         "displayName": "Eric García",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -12447,7 +12447,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Pau Torres",
         "displayName": "Pau Torres",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -12474,7 +12474,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Sergio Busquets",
         "displayName": "Sergio Busquets",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -12501,7 +12501,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Marcos Llorente",
         "displayName": "Marcos Llorente",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "RM",
@@ -12530,7 +12530,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Álvaro Morata",
         "displayName": "Álvaro Morata",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -12557,7 +12557,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Koke",
         "displayName": "Koke",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -12585,7 +12585,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Gavi",
         "displayName": "Gavi",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "LW",
@@ -12614,7 +12614,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Marco Asensio",
         "displayName": "Marco Asensio",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "LW",
@@ -12643,7 +12643,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Ferran Torres",
         "displayName": "Ferran Torres",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "ST",
@@ -12672,7 +12672,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Nico Williams",
         "displayName": "Nico Williams",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -12732,7 +12732,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Alejandro Balde",
         "displayName": "Alejandro Balde",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM",
@@ -12761,7 +12761,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Hugo Guillamón",
         "displayName": "Hugo Guillamón",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB",
@@ -12790,7 +12790,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Rodri",
         "displayName": "Rodri",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB"
@@ -12818,7 +12818,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Yeremy Pino",
         "displayName": "Yeremy Pino",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "ST"
@@ -12846,7 +12846,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Jordi Alba",
         "displayName": "Jordi Alba",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -12873,7 +12873,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Carlos Soler",
         "displayName": "Carlos Soler",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "RM",
@@ -12902,7 +12902,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Dani Carvajal",
         "displayName": "Dani Carvajal",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -12929,7 +12929,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Dani Olmo",
         "displayName": "Dani Olmo",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CF",
@@ -12958,7 +12958,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Pablo Sarabia",
         "displayName": "Pablo Sarabia",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "CAM",
@@ -13019,7 +13019,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Aymeric Laporte",
         "displayName": "Aymeric Laporte",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -13046,7 +13046,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Ansu Fati",
         "displayName": "Ansu Fati",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW"
         ],
@@ -13073,7 +13073,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Pedri",
         "displayName": "Pedri",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -13169,7 +13169,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Daniel Chacón",
         "displayName": "Daniel Chacón",
-        "position": "MF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -13197,7 +13197,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Juan Pablo Vargas",
         "displayName": "Juan Pablo Vargas",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -13224,7 +13224,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Keysher Fuller",
         "displayName": "Keysher Fuller",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -13254,7 +13254,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Celso Borges",
         "displayName": "Celso Borges",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -13282,7 +13282,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Óscar Duarte",
         "displayName": "Óscar Duarte",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -13309,7 +13309,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Anthony Contreras",
         "displayName": "Anthony Contreras",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -13336,7 +13336,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Bryan Oviedo",
         "displayName": "Bryan Oviedo",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -13363,7 +13363,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Jewison Bennette",
         "displayName": "Jewison Bennette",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LW"
@@ -13391,7 +13391,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Bryan Ruiz",
         "displayName": "Bryan Ruiz",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RW",
@@ -13420,7 +13420,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Johan Venegas",
         "displayName": "Johan Venegas",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -13448,7 +13448,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Joel Campbell",
         "displayName": "Joel Campbell",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "CAM",
@@ -13477,7 +13477,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Gerson Torres",
         "displayName": "Gerson Torres",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "LW",
@@ -13506,7 +13506,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Youstin Salas",
         "displayName": "Youstin Salas",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "RB",
@@ -13535,7 +13535,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Francisco Calvo",
         "displayName": "Francisco Calvo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -13562,7 +13562,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Carlos Martínez",
         "displayName": "Carlos Martínez",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -13589,7 +13589,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Yeltsin Tejeda",
         "displayName": "Yeltsin Tejeda",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -13649,7 +13649,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Kendall Waston",
         "displayName": "Kendall Waston",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -13676,7 +13676,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Brandon Aguilera",
         "displayName": "Brandon Aguilera",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -13704,7 +13704,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Douglas López",
         "displayName": "Douglas López",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -13732,7 +13732,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Rónald Matarrita",
         "displayName": "Rónald Matarrita",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM",
@@ -13793,7 +13793,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Roan Wilson",
         "displayName": "Roan Wilson",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -13821,7 +13821,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Anthony Hernández",
         "displayName": "Anthony Hernández",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -13849,7 +13849,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Álvaro Zamora",
         "displayName": "Álvaro Zamora",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -13945,7 +13945,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Antonio Rüdiger",
         "displayName": "Antonio Rüdiger",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -13972,7 +13972,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "David Raum",
         "displayName": "David Raum",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB",
@@ -14001,7 +14001,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Matthias Ginter",
         "displayName": "Matthias Ginter",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -14028,7 +14028,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Thilo Kehrer",
         "displayName": "Thilo Kehrer",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -14056,7 +14056,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Joshua Kimmich",
         "displayName": "Joshua Kimmich",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "RB"
@@ -14084,7 +14084,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Kai Havertz",
         "displayName": "Kai Havertz",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CF",
@@ -14113,7 +14113,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Leon Goretzka",
         "displayName": "Leon Goretzka",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -14141,7 +14141,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Niclas Füllkrug",
         "displayName": "Niclas Füllkrug",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -14168,7 +14168,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Serge Gnabry",
         "displayName": "Serge Gnabry",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM",
@@ -14197,7 +14197,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Mario Götze",
         "displayName": "Mario Götze",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "ST",
@@ -14258,7 +14258,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Thomas Müller",
         "displayName": "Thomas Müller",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CF"
@@ -14286,7 +14286,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Jamal Musiala",
         "displayName": "Jamal Musiala",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "LM",
@@ -14316,7 +14316,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Niklas Süle",
         "displayName": "Niklas Süle",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -14344,7 +14344,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Lukas Klostermann",
         "displayName": "Lukas Klostermann",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -14372,7 +14372,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Julian Brandt",
         "displayName": "Julian Brandt",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RM",
@@ -14401,7 +14401,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Jonas Hofmann",
         "displayName": "Jonas Hofmann",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RM",
@@ -14430,7 +14430,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Leroy Sané",
         "displayName": "Leroy Sané",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -14459,7 +14459,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Christian Günter",
         "displayName": "Christian Günter",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM",
@@ -14488,7 +14488,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "İlkay Gündoğan",
         "displayName": "İlkay Gündoğan",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -14548,7 +14548,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Nico Schlotterbeck",
         "displayName": "Nico Schlotterbeck",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -14575,7 +14575,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Karim Adeyemi",
         "displayName": "Karim Adeyemi",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RM"
@@ -14603,7 +14603,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Armel Bella-Kotchap",
         "displayName": "Armel Bella-Kotchap",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -14630,7 +14630,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Youssoufa Moukoko",
         "displayName": "Youssoufa Moukoko",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -14724,7 +14724,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Miki Yamane",
         "displayName": "Miki Yamane",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -14751,7 +14751,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Shogo Taniguchi",
         "displayName": "Shogo Taniguchi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -14778,7 +14778,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Ko Itakura",
         "displayName": "Ko Itakura",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -14806,7 +14806,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Yuto Nagatomo",
         "displayName": "Yuto Nagatomo",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "RB"
@@ -14834,7 +14834,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Wataru Endo",
         "displayName": "Wataru Endo",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -14862,7 +14862,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Gaku Shibasaki",
         "displayName": "Gaku Shibasaki",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -14890,7 +14890,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Ritsu Dōan",
         "displayName": "Ritsu Dōan",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "CAM"
@@ -14918,7 +14918,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Kaoru Mitoma",
         "displayName": "Kaoru Mitoma",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LW",
@@ -14947,7 +14947,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Takumi Minamino",
         "displayName": "Takumi Minamino",
-        "position": "MF",
+        "position": "CF",
         "positions": [
           "CF",
           "LW",
@@ -14976,7 +14976,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Takefusa Kubo",
         "displayName": "Takefusa Kubo",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "ST",
@@ -15038,7 +15038,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Hidemasa Morita",
         "displayName": "Hidemasa Morita",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -15066,7 +15066,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Junya Ito",
         "displayName": "Junya Ito",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "CF"
@@ -15094,7 +15094,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Daichi Kamada",
         "displayName": "Daichi Kamada",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CF"
@@ -15122,7 +15122,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Takehiro Tomiyasu",
         "displayName": "Takehiro Tomiyasu",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -15149,7 +15149,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ao Tanaka",
         "displayName": "Ao Tanaka",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -15177,7 +15177,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Takuma Asano",
         "displayName": "Takuma Asano",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "CF",
@@ -15206,7 +15206,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Hiroki Sakai",
         "displayName": "Hiroki Sakai",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -15234,7 +15234,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Shuto Machino",
         "displayName": "Shuto Machino",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -15261,7 +15261,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Ayase Ueda",
         "displayName": "Ayase Ueda",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM"
@@ -15289,7 +15289,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Maya Yoshida",
         "displayName": "Maya Yoshida",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -15348,7 +15348,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Yuki Soma",
         "displayName": "Yuki Soma",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "RM"
@@ -15376,7 +15376,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Daizen Maeda",
         "displayName": "Daizen Maeda",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "ST"
@@ -15404,7 +15404,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Hiroki Ito",
         "displayName": "Hiroki Ito",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -15500,7 +15500,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Toby Alderweireld",
         "displayName": "Toby Alderweireld",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -15527,7 +15527,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Arthur Theate",
         "displayName": "Arthur Theate",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -15554,7 +15554,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Wout Faes",
         "displayName": "Wout Faes",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -15581,7 +15581,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Jan Vertonghen",
         "displayName": "Jan Vertonghen",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -15608,7 +15608,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Axel Witsel",
         "displayName": "Axel Witsel",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM",
@@ -15637,7 +15637,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Kevin De Bruyne",
         "displayName": "Kevin De Bruyne",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -15665,7 +15665,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Youri Tielemans",
         "displayName": "Youri Tielemans",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -15693,7 +15693,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Romelu Lukaku",
         "displayName": "Romelu Lukaku",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -15720,7 +15720,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Eden Hazard",
         "displayName": "Eden Hazard",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "SS"
@@ -15748,7 +15748,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Yannick Carrasco",
         "displayName": "Yannick Carrasco",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "LWB"
@@ -15840,7 +15840,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Dries Mertens",
         "displayName": "Dries Mertens",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "ST",
@@ -15869,7 +15869,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Thomas Meunier",
         "displayName": "Thomas Meunier",
-        "position": "MF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM"
@@ -15897,7 +15897,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Thorgan Hazard",
         "displayName": "Thorgan Hazard",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "CF"
@@ -15925,7 +15925,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Leandro Trossard",
         "displayName": "Leandro Trossard",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "CF"
@@ -15953,7 +15953,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Amadou Onana",
         "displayName": "Amadou Onana",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -15981,7 +15981,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Leander Dendoncker",
         "displayName": "Leander Dendoncker",
-        "position": "DF",
+        "position": "CM",
         "positions": [
           "CM",
           "CB"
@@ -16009,7 +16009,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Hans Vanaken",
         "displayName": "Hans Vanaken",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -16037,7 +16037,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Timothy Castagne",
         "displayName": "Timothy Castagne",
-        "position": "MF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB",
@@ -16066,7 +16066,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Charles De Ketelaere",
         "displayName": "Charles De Ketelaere",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -16094,7 +16094,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Michy Batshuayi",
         "displayName": "Michy Batshuayi",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -16121,7 +16121,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Loïs Openda",
         "displayName": "Loïs Openda",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -16148,7 +16148,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Jérémy Doku",
         "displayName": "Jérémy Doku",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -16176,7 +16176,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Zeno Debast",
         "displayName": "Zeno Debast",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -16271,7 +16271,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Alistair Johnston",
         "displayName": "Alistair Johnston",
-        "position": "DF",
+        "position": "RM",
         "positions": [
           "RM",
           "RWB",
@@ -16300,7 +16300,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Sam Adekugbe",
         "displayName": "Sam Adekugbe",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -16327,7 +16327,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Kamal Miller",
         "displayName": "Kamal Miller",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -16355,7 +16355,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Steven Vitória",
         "displayName": "Steven Vitória",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -16382,7 +16382,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Samuel Piette",
         "displayName": "Samuel Piette",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -16410,7 +16410,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Stephen Eustáquio",
         "displayName": "Stephen Eustáquio",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -16438,7 +16438,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Liam Fraser",
         "displayName": "Liam Fraser",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -16465,7 +16465,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Lucas Cavallini",
         "displayName": "Lucas Cavallini",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -16492,7 +16492,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Junior Hoilett",
         "displayName": "Junior Hoilett",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "RWB",
@@ -16522,7 +16522,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Tajon Buchanan",
         "displayName": "Tajon Buchanan",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM",
@@ -16551,7 +16551,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Iké Ugbo",
         "displayName": "Iké Ugbo",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -16578,7 +16578,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Atiba Hutchinson",
         "displayName": "Atiba Hutchinson",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -16606,7 +16606,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Mark-Anthony Kaye",
         "displayName": "Mark-Anthony Kaye",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -16634,7 +16634,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Ismaël Koné",
         "displayName": "Ismaël Koné",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -16693,7 +16693,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Cyle Larin",
         "displayName": "Cyle Larin",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW",
@@ -16754,7 +16754,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Alphonso Davies",
         "displayName": "Alphonso Davies",
-        "position": "FW",
+        "position": "LB",
         "positions": [
           "LB",
           "LM",
@@ -16783,7 +16783,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Jonathan David",
         "displayName": "Jonathan David",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -16810,7 +16810,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Jonathan Osorio",
         "displayName": "Jonathan Osorio",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -16839,7 +16839,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Richie Laryea",
         "displayName": "Richie Laryea",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "RB",
@@ -16869,7 +16869,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Liam Millar",
         "displayName": "Liam Millar",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LW"
@@ -16897,7 +16897,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "David Wotherspoon",
         "displayName": "David Wotherspoon",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "LW"
@@ -16925,7 +16925,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Derek Cornelius",
         "displayName": "Derek Cornelius",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -16953,7 +16953,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Joel Waterman",
         "displayName": "Joel Waterman",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17047,7 +17047,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Achraf Hakimi",
         "displayName": "Achraf Hakimi",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -17075,7 +17075,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Noussair Mazraoui",
         "displayName": "Noussair Mazraoui",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -17103,7 +17103,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Sofyan Amrabat",
         "displayName": "Sofyan Amrabat",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -17131,7 +17131,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Nayef Aguerd",
         "displayName": "Nayef Aguerd",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17158,7 +17158,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Romain Saïss",
         "displayName": "Romain Saïss",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -17186,7 +17186,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Hakim Ziyech",
         "displayName": "Hakim Ziyech",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "CAM"
@@ -17214,7 +17214,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Azzedine Ounahi",
         "displayName": "Azzedine Ounahi",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -17241,7 +17241,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Abderrazak Hamdallah",
         "displayName": "Abderrazak Hamdallah",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -17268,7 +17268,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Anass Zaroury",
         "displayName": "Anass Zaroury",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "RW"
@@ -17296,7 +17296,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Abdelhamid Sabiri",
         "displayName": "Abdelhamid Sabiri",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -17357,7 +17357,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Ilias Chair",
         "displayName": "Ilias Chair",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM"
         ],
@@ -17384,7 +17384,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Zakaria Aboukhlal",
         "displayName": "Zakaria Aboukhlal",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "LW"
@@ -17412,7 +17412,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Selim Amallah",
         "displayName": "Selim Amallah",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -17441,7 +17441,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Abde Ezzalzouli",
         "displayName": "Abde Ezzalzouli",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -17470,7 +17470,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Sofiane Boufal",
         "displayName": "Sofiane Boufal",
-        "position": "MF",
+        "position": "CF",
         "positions": [
           "CF",
           "LM",
@@ -17500,7 +17500,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Jawad El Yamiq",
         "displayName": "Jawad El Yamiq",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17527,7 +17527,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Youssef En-Nesyri",
         "displayName": "Youssef En-Nesyri",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -17554,7 +17554,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Achraf Dari",
         "displayName": "Achraf Dari",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17581,7 +17581,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Walid Cheddira",
         "displayName": "Walid Cheddira",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW",
@@ -17642,7 +17642,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Bilal El Khannous",
         "displayName": "Bilal El Khannous",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -17670,7 +17670,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Badr Benoun",
         "displayName": "Badr Benoun",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17697,7 +17697,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Yahia Attiyat Allah",
         "displayName": "Yahia Attiyat Allah",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -17724,7 +17724,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Yahya Jabrane",
         "displayName": "Yahya Jabrane",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -17819,7 +17819,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Josip Stanišić",
         "displayName": "Josip Stanišić",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB"
@@ -17847,7 +17847,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Borna Barišić",
         "displayName": "Borna Barišić",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -17874,7 +17874,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Ivan Perišić",
         "displayName": "Ivan Perišić",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "LWB",
@@ -17903,7 +17903,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Martin Erlić",
         "displayName": "Martin Erlić",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17930,7 +17930,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Dejan Lovren",
         "displayName": "Dejan Lovren",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -17957,7 +17957,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Lovro Majer",
         "displayName": "Lovro Majer",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -17984,7 +17984,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Mateo Kovačić",
         "displayName": "Mateo Kovačić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -18011,7 +18011,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Andrej Kramarić",
         "displayName": "Andrej Kramarić",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "CAM",
@@ -18041,7 +18041,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Luka Modrić",
         "displayName": "Luka Modrić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -18068,7 +18068,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Marcelo Brozović",
         "displayName": "Marcelo Brozović",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -18128,7 +18128,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Nikola Vlašić",
         "displayName": "Nikola Vlašić",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "CF",
@@ -18158,7 +18158,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Marko Livaja",
         "displayName": "Marko Livaja",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "ST",
@@ -18187,7 +18187,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Mario Pašalić",
         "displayName": "Mario Pašalić",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CF",
@@ -18216,7 +18216,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Bruno Petković",
         "displayName": "Bruno Petković",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM"
@@ -18244,7 +18244,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ante Budimir",
         "displayName": "Ante Budimir",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -18271,7 +18271,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Mislav Oršić",
         "displayName": "Mislav Oršić",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "LM",
@@ -18300,7 +18300,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Borna Sosa",
         "displayName": "Borna Sosa",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM"
@@ -18328,7 +18328,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Joško Gvardiol",
         "displayName": "Joško Gvardiol",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -18356,7 +18356,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Domagoj Vida",
         "displayName": "Domagoj Vida",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -18383,7 +18383,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Josip Juranović",
         "displayName": "Josip Juranović",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "LB"
@@ -18443,7 +18443,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Josip Šutalo",
         "displayName": "Josip Šutalo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -18470,7 +18470,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Luka Sučić",
         "displayName": "Luka Sučić",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -18498,7 +18498,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Kristijan Jakić",
         "displayName": "Kristijan Jakić",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM",
@@ -18596,7 +18596,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Danilo",
         "displayName": "Danilo",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB"
@@ -18624,7 +18624,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Thiago Silva",
         "displayName": "Thiago Silva",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -18651,7 +18651,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Marquinhos",
         "displayName": "Marquinhos",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -18678,7 +18678,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Casemiro",
         "displayName": "Casemiro",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -18705,7 +18705,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Alex Sandro",
         "displayName": "Alex Sandro",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -18732,7 +18732,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Lucas Paquetá",
         "displayName": "Lucas Paquetá",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -18760,7 +18760,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Fred",
         "displayName": "Fred",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -18788,7 +18788,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Richarlison",
         "displayName": "Richarlison",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -18816,7 +18816,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Neymar",
         "displayName": "Neymar",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "CAM"
@@ -18844,7 +18844,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Raphinha",
         "displayName": "Raphinha",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -18904,7 +18904,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Dani Alves",
         "displayName": "Dani Alves",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CM",
@@ -18933,7 +18933,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Éder Militão",
         "displayName": "Éder Militão",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -18960,7 +18960,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Fabinho",
         "displayName": "Fabinho",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB"
@@ -18988,7 +18988,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Alex Telles",
         "displayName": "Alex Telles",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -19015,7 +19015,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Bruno Guimarães",
         "displayName": "Bruno Guimarães",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -19043,7 +19043,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Gabriel Jesus",
         "displayName": "Gabriel Jesus",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW"
@@ -19071,7 +19071,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Antony",
         "displayName": "Antony",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -19099,7 +19099,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Vinícius Júnior",
         "displayName": "Vinícius Júnior",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW"
         ],
@@ -19126,7 +19126,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Rodrygo",
         "displayName": "Rodrygo",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "LW",
@@ -19155,7 +19155,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Éverton Ribeiro",
         "displayName": "Éverton Ribeiro",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RW",
@@ -19216,7 +19216,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Bremer",
         "displayName": "Bremer",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -19243,7 +19243,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Pedro",
         "displayName": "Pedro",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "LM"
@@ -19271,7 +19271,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Gabriel Martinelli",
         "displayName": "Gabriel Martinelli",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM"
         ],
@@ -19367,7 +19367,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Strahinja Pavlović",
         "displayName": "Strahinja Pavlović",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -19394,7 +19394,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Strahinja Eraković",
         "displayName": "Strahinja Eraković",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -19422,7 +19422,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Nikola Milenković",
         "displayName": "Nikola Milenković",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -19449,7 +19449,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Miloš Veljković",
         "displayName": "Miloš Veljković",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -19476,7 +19476,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Nemanja Maksimović",
         "displayName": "Nemanja Maksimović",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -19504,7 +19504,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Nemanja Radonjić",
         "displayName": "Nemanja Radonjić",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "RW",
@@ -19533,7 +19533,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Nemanja Gudelj",
         "displayName": "Nemanja Gudelj",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CB",
@@ -19562,7 +19562,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Aleksandar Mitrović",
         "displayName": "Aleksandar Mitrović",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -19589,7 +19589,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Dušan Tadić",
         "displayName": "Dušan Tadić",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "CF",
@@ -19618,7 +19618,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Luka Jović",
         "displayName": "Luka Jović",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -19677,7 +19677,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Stefan Mitrović",
         "displayName": "Stefan Mitrović",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -19704,7 +19704,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Andrija Živković",
         "displayName": "Andrija Živković",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "LW",
@@ -19733,7 +19733,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Srđan Babić",
         "displayName": "Srđan Babić",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -19760,7 +19760,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Saša Lukić",
         "displayName": "Saša Lukić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -19787,7 +19787,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Filip Kostić",
         "displayName": "Filip Kostić",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LW",
@@ -19816,7 +19816,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Dušan Vlahović",
         "displayName": "Dušan Vlahović",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -19843,7 +19843,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Uroš Račić",
         "displayName": "Uroš Račić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -19871,7 +19871,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Sergej Milinković-Savić",
         "displayName": "Sergej Milinković-Savić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -19899,7 +19899,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Filip Đuričić",
         "displayName": "Filip Đuričić",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "LM"
@@ -19927,7 +19927,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Darko Lazović",
         "displayName": "Darko Lazović",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM"
         ],
@@ -19986,7 +19986,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Ivan Ilić",
         "displayName": "Ivan Ilić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CF"
@@ -20014,7 +20014,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Filip Mladenović",
         "displayName": "Filip Mladenović",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM",
@@ -20043,7 +20043,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Marko Grujić",
         "displayName": "Marko Grujić",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -20138,7 +20138,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Edimilson Fernandes",
         "displayName": "Edimilson Fernandes",
-        "position": "DF",
+        "position": "CM",
         "positions": [
           "CM",
           "RWB",
@@ -20167,7 +20167,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Silvan Widmer",
         "displayName": "Silvan Widmer",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "RB",
@@ -20196,7 +20196,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Nico Elvedi",
         "displayName": "Nico Elvedi",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -20223,7 +20223,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Manuel Akanji",
         "displayName": "Manuel Akanji",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -20250,7 +20250,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Denis Zakaria",
         "displayName": "Denis Zakaria",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -20278,7 +20278,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Breel Embolo",
         "displayName": "Breel Embolo",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -20305,7 +20305,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Remo Freuler",
         "displayName": "Remo Freuler",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -20333,7 +20333,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Haris Seferovic",
         "displayName": "Haris Seferovic",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -20360,7 +20360,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Granit Xhaka",
         "displayName": "Granit Xhaka",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -20388,7 +20388,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Renato Steffen",
         "displayName": "Renato Steffen",
-        "position": "DF",
+        "position": "LM",
         "positions": [
           "LM",
           "RM"
@@ -20448,7 +20448,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Ricardo Rodríguez",
         "displayName": "Ricardo Rodríguez",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LB"
@@ -20476,7 +20476,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Michel Aebischer",
         "displayName": "Michel Aebischer",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -20503,7 +20503,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Djibril Sow",
         "displayName": "Djibril Sow",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM",
@@ -20532,7 +20532,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Christian Fassnacht",
         "displayName": "Christian Fassnacht",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -20560,7 +20560,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Ruben Vargas",
         "displayName": "Ruben Vargas",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM",
@@ -20589,7 +20589,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Eray Cömert",
         "displayName": "Eray Cömert",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -20616,7 +20616,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Noah Okafor",
         "displayName": "Noah Okafor",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "CAM",
@@ -20645,7 +20645,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Fabian Frei",
         "displayName": "Fabian Frei",
-        "position": "MF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -20705,7 +20705,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Fabian Schär",
         "displayName": "Fabian Schär",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -20732,7 +20732,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Xherdan Shaqiri",
         "displayName": "Xherdan Shaqiri",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RM",
@@ -20793,7 +20793,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Fabian Rieder",
         "displayName": "Fabian Rieder",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -20821,7 +20821,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Ardon Jashari",
         "displayName": "Ardon Jashari",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -20916,7 +20916,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Jerome Ngom Mbekeli",
         "displayName": "Jerome Ngom Mbekeli",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB",
@@ -20945,7 +20945,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Nicolas Nkoulou",
         "displayName": "Nicolas Nkoulou",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -20972,7 +20972,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Christopher Wooh",
         "displayName": "Christopher Wooh",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -20999,7 +20999,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Gaël Ondoua",
         "displayName": "Gaël Ondoua",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM"
         ],
@@ -21026,7 +21026,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Moumi Ngamaleu",
         "displayName": "Moumi Ngamaleu",
-        "position": "FW",
+        "position": "LM",
         "positions": [
           "LM",
           "RM"
@@ -21054,7 +21054,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Georges-Kévin Nkoudou",
         "displayName": "Georges-Kévin Nkoudou",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "LM"
@@ -21082,7 +21082,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "André-Frank Zambo Anguissa",
         "displayName": "André-Frank Zambo Anguissa",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -21110,7 +21110,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Jean-Pierre Nsame",
         "displayName": "Jean-Pierre Nsame",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -21137,7 +21137,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Vincent Aboubakar",
         "displayName": "Vincent Aboubakar",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -21164,7 +21164,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Christian Bassogog",
         "displayName": "Christian Bassogog",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RM",
@@ -21193,7 +21193,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 12,
         "name": "Karl Toko Ekambi",
         "displayName": "Karl Toko Ekambi",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "LM"
@@ -21221,7 +21221,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Eric Maxim Choupo-Moting",
         "displayName": "Eric Maxim Choupo-Moting",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LM"
@@ -21249,7 +21249,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Samuel Gouet",
         "displayName": "Samuel Gouet",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -21277,7 +21277,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Pierre Kunde",
         "displayName": "Pierre Kunde",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -21337,7 +21337,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Olivier Mbaizo",
         "displayName": "Olivier Mbaizo",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -21364,7 +21364,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Martin Hongla",
         "displayName": "Martin Hongla",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -21392,7 +21392,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Collins Fai",
         "displayName": "Collins Fai",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -21420,7 +21420,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Bryan Mbeumo",
         "displayName": "Bryan Mbeumo",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "ST"
@@ -21448,7 +21448,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Jean-Charles Castelletto",
         "displayName": "Jean-Charles Castelletto",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -21475,7 +21475,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Olivier Ntcham",
         "displayName": "Olivier Ntcham",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM",
@@ -21536,7 +21536,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Enzo Ebosse",
         "displayName": "Enzo Ebosse",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "LWB"
@@ -21564,7 +21564,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Nouhou Tolo",
         "displayName": "Nouhou Tolo",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "CB"
@@ -21592,7 +21592,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Souaibou Marou",
         "displayName": "Souaibou Marou",
-        "position": "MF",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -21686,7 +21686,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Diogo Dalot",
         "displayName": "Diogo Dalot",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB"
         ],
@@ -21713,7 +21713,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Pepe",
         "displayName": "Pepe",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -21740,7 +21740,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Rúben Dias",
         "displayName": "Rúben Dias",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -21767,7 +21767,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Raphaël Guerreiro",
         "displayName": "Raphaël Guerreiro",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LM"
@@ -21795,7 +21795,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "João Palhinha",
         "displayName": "João Palhinha",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -21823,7 +21823,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Cristiano Ronaldo",
         "displayName": "Cristiano Ronaldo",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -21850,7 +21850,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Bruno Fernandes",
         "displayName": "Bruno Fernandes",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM"
@@ -21878,7 +21878,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "André Silva",
         "displayName": "André Silva",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -21905,7 +21905,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Bernardo Silva",
         "displayName": "Bernardo Silva",
-        "position": "FW",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -21934,7 +21934,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "João Félix",
         "displayName": "João Félix",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "ST",
@@ -21995,7 +21995,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Danilo Pereira",
         "displayName": "Danilo Pereira",
-        "position": "DF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM",
@@ -22024,7 +22024,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "William Carvalho",
         "displayName": "William Carvalho",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -22052,7 +22052,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Rafael Leão",
         "displayName": "Rafael Leão",
-        "position": "FW",
+        "position": "LW",
         "positions": [
           "LW",
           "LM"
@@ -22080,7 +22080,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Vitinha",
         "displayName": "Vitinha",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM"
@@ -22108,7 +22108,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "João Mário",
         "displayName": "João Mário",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "CM"
@@ -22136,7 +22136,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Rúben Neves",
         "displayName": "Rúben Neves",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -22164,7 +22164,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Nuno Mendes",
         "displayName": "Nuno Mendes",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -22192,7 +22192,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "João Cancelo",
         "displayName": "João Cancelo",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "RB"
@@ -22220,7 +22220,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Ricardo Horta",
         "displayName": "Ricardo Horta",
-        "position": "FW",
+        "position": "CF",
         "positions": [
           "CF",
           "ST",
@@ -22281,7 +22281,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Matheus Nunes",
         "displayName": "Matheus Nunes",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -22308,7 +22308,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "António Silva",
         "displayName": "António Silva",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -22335,7 +22335,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Otávio",
         "displayName": "Otávio",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "LM",
@@ -22364,7 +22364,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Gonçalo Ramos",
         "displayName": "Gonçalo Ramos",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -22458,7 +22458,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Tariq Lamptey",
         "displayName": "Tariq Lamptey",
-        "position": "DF",
+        "position": "RWB",
         "positions": [
           "RWB",
           "RB"
@@ -22486,7 +22486,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Denis Odoi",
         "displayName": "Denis Odoi",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CDM",
@@ -22515,7 +22515,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Mohammed Salisu",
         "displayName": "Mohammed Salisu",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -22542,7 +22542,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Thomas Partey",
         "displayName": "Thomas Partey",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -22570,7 +22570,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Elisha Owusu",
         "displayName": "Elisha Owusu",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -22598,7 +22598,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Abdul Fatawu Issahaku",
         "displayName": "Abdul Fatawu Issahaku",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "RW"
@@ -22626,7 +22626,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Daniel-Kofi Kyereh",
         "displayName": "Daniel-Kofi Kyereh",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "ST"
@@ -22654,7 +22654,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Jordan Ayew",
         "displayName": "Jordan Ayew",
-        "position": "FW",
+        "position": "RW",
         "positions": [
           "RW",
           "RM",
@@ -22683,7 +22683,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "André Ayew",
         "displayName": "André Ayew",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW",
@@ -22712,7 +22712,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Osman Bukari",
         "displayName": "Osman Bukari",
-        "position": "MF",
+        "position": "RM",
         "positions": [
           "RM",
           "ST"
@@ -22772,7 +22772,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Daniel Afriyie",
         "displayName": "Daniel Afriyie",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "ST"
@@ -22800,7 +22800,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Gideon Mensah",
         "displayName": "Gideon Mensah",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -22828,7 +22828,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Joseph Aidoo",
         "displayName": "Joseph Aidoo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -22887,7 +22887,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Baba Rahman",
         "displayName": "Baba Rahman",
-        "position": "DF",
+        "position": "LWB",
         "positions": [
           "LWB",
           "LB"
@@ -22915,7 +22915,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Daniel Amartey",
         "displayName": "Daniel Amartey",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -22942,7 +22942,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Iñaki Williams",
         "displayName": "Iñaki Williams",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -22969,7 +22969,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Mohammed Kudus",
         "displayName": "Mohammed Kudus",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -22998,7 +22998,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Salis Abdul Samed",
         "displayName": "Salis Abdul Samed",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -23026,7 +23026,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Kamaldeen Sulemana",
         "displayName": "Kamaldeen Sulemana",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "LM",
@@ -23055,7 +23055,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Alexander Djiku",
         "displayName": "Alexander Djiku",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -23082,7 +23082,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Kamal Sowah",
         "displayName": "Kamal Sowah",
-        "position": "MF",
+        "position": "CF",
         "positions": [
           "CF",
           "CAM",
@@ -23111,7 +23111,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Antoine Semenyo",
         "displayName": "Antoine Semenyo",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "RW",
@@ -23140,7 +23140,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Alidu Seidu",
         "displayName": "Alidu Seidu",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "CB",
@@ -23237,7 +23237,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "José Giménez",
         "displayName": "José Giménez",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -23264,7 +23264,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Diego Godín",
         "displayName": "Diego Godín",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -23291,7 +23291,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Ronald Araújo",
         "displayName": "Ronald Araújo",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB"
@@ -23319,7 +23319,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Matías Vecino",
         "displayName": "Matías Vecino",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -23347,7 +23347,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Rodrigo Bentancur",
         "displayName": "Rodrigo Bentancur",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM"
         ],
@@ -23374,7 +23374,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Nicolás de la Cruz",
         "displayName": "Nicolás de la Cruz",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "LM",
@@ -23403,7 +23403,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Facundo Pellistri",
         "displayName": "Facundo Pellistri",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "RW"
@@ -23431,7 +23431,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Luis Suárez",
         "displayName": "Luis Suárez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -23458,7 +23458,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Giorgian De Arrascaeta",
         "displayName": "Giorgian De Arrascaeta",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "CM",
@@ -23487,7 +23487,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Darwin Núñez",
         "displayName": "Darwin Núñez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -23547,7 +23547,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Guillermo Varela",
         "displayName": "Guillermo Varela",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -23575,7 +23575,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Lucas Torreira",
         "displayName": "Lucas Torreira",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -23603,7 +23603,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Federico Valverde",
         "displayName": "Federico Valverde",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "RW"
@@ -23631,7 +23631,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Mathías Olivera",
         "displayName": "Mathías Olivera",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB",
           "LWB"
@@ -23659,7 +23659,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Matías Viña",
         "displayName": "Matías Viña",
-        "position": "DF",
+        "position": "LWB",
         "positions": [
           "LWB",
           "LM",
@@ -23688,7 +23688,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Maxi Gómez",
         "displayName": "Maxi Gómez",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -23715,7 +23715,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Sebastián Coates",
         "displayName": "Sebastián Coates",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -23742,7 +23742,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Facundo Torres",
         "displayName": "Facundo Torres",
-        "position": "FW",
+        "position": "RM",
         "positions": [
           "RM",
           "LM"
@@ -23770,7 +23770,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 21,
         "name": "Edinson Cavani",
         "displayName": "Edinson Cavani",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST"
         ],
@@ -23797,7 +23797,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Martín Cáceres",
         "displayName": "Martín Cáceres",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "RB",
@@ -23858,7 +23858,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Agustín Canobbio",
         "displayName": "Agustín Canobbio",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -23886,7 +23886,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Manuel Ugarte",
         "displayName": "Manuel Ugarte",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -23914,7 +23914,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "José Luis Rodríguez",
         "displayName": "José Luis Rodríguez",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -24009,7 +24009,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 2,
         "name": "Yoon Jong-gyu",
         "displayName": "Yoon Jong-gyu",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RM"
@@ -24037,7 +24037,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 3,
         "name": "Kim Jin-su",
         "displayName": "Kim Jin-su",
-        "position": "DF",
+        "position": "LB",
         "positions": [
           "LB"
         ],
@@ -24064,7 +24064,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 4,
         "name": "Kim Min-jae",
         "displayName": "Kim Min-jae",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -24091,7 +24091,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 5,
         "name": "Woo-young Jung",
         "displayName": "Woo-young Jung",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -24119,7 +24119,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 6,
         "name": "Hwang In-beom",
         "displayName": "Hwang In-beom",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -24147,7 +24147,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 7,
         "name": "Heung-min Son",
         "displayName": "Heung-min Son",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "LM"
@@ -24175,7 +24175,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 8,
         "name": "Paik Seung-ho",
         "displayName": "Paik Seung-ho",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CDM"
@@ -24203,7 +24203,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 9,
         "name": "Cho Gue-sung",
         "displayName": "Cho Gue-sung",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -24231,7 +24231,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 10,
         "name": "Jae-sung Lee",
         "displayName": "Jae-sung Lee",
-        "position": "MF",
+        "position": "CM",
         "positions": [
           "CM",
           "CAM",
@@ -24260,7 +24260,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 11,
         "name": "Hee-chan Hwang",
         "displayName": "Hee-chan Hwang",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "ST"
@@ -24320,7 +24320,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 13,
         "name": "Son Jun-ho",
         "displayName": "Son Jun-ho",
-        "position": "MF",
+        "position": "CDM",
         "positions": [
           "CDM",
           "CM"
@@ -24348,7 +24348,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 14,
         "name": "Chul Hong",
         "displayName": "Chul Hong",
-        "position": "DF",
+        "position": "LWB",
         "positions": [
           "LWB",
           "LB"
@@ -24376,7 +24376,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 15,
         "name": "Kim Moon-hwan",
         "displayName": "Kim Moon-hwan",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -24404,7 +24404,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 16,
         "name": "Hwang Ui-jo",
         "displayName": "Hwang Ui-jo",
-        "position": "FW",
+        "position": "ST",
         "positions": [
           "ST",
           "LW"
@@ -24432,7 +24432,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 17,
         "name": "Na Sang-ho",
         "displayName": "Na Sang-ho",
-        "position": "MF",
+        "position": "LM",
         "positions": [
           "LM",
           "LW",
@@ -24461,7 +24461,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 18,
         "name": "Lee Kang-in",
         "displayName": "Lee Kang-in",
-        "position": "MF",
+        "position": "CAM",
         "positions": [
           "CAM",
           "ST",
@@ -24490,7 +24490,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 19,
         "name": "Young-gwon Kim",
         "displayName": "Young-gwon Kim",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -24517,7 +24517,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 20,
         "name": "Kwon Kyung-won",
         "displayName": "Kwon Kyung-won",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB"
         ],
@@ -24576,7 +24576,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 22,
         "name": "Kwon Chang-hoon",
         "displayName": "Kwon Chang-hoon",
-        "position": "MF",
+        "position": "RW",
         "positions": [
           "RW",
           "RM"
@@ -24604,7 +24604,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 23,
         "name": "Kim Tae-hwan",
         "displayName": "Kim Tae-hwan",
-        "position": "DF",
+        "position": "RB",
         "positions": [
           "RB",
           "RWB"
@@ -24632,7 +24632,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 24,
         "name": "Cho Yu-min",
         "displayName": "Cho Yu-min",
-        "position": "DF",
+        "position": "CB",
         "positions": [
           "CB",
           "CDM"
@@ -24660,7 +24660,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 25,
         "name": "Jeong Woo-yeong",
         "displayName": "Jeong Woo-yeong",
-        "position": "MF",
+        "position": "CF",
         "positions": [
           "CF",
           "CAM"
@@ -24688,7 +24688,7 @@ const RETRO_2022_SQUADS = Object.freeze({
         "number": 26,
         "name": "Song Min-kyu",
         "displayName": "Song Min-kyu",
-        "position": "MF",
+        "position": "LW",
         "positions": [
           "LW",
           "LM",

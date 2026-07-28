@@ -48,6 +48,10 @@ PLAYER_NAME_OVERRIDES = {
     ("Germany", "thomasmueller"): "Thomas Müller",
 }
 
+PLAYER_OVERALL_OVERRIDES = {
+    ("Brazil", "fred"): 82,
+}
+
 
 def normalize(value):
     decomposed = unicodedata.normalize("NFKD", value or "")
@@ -132,6 +136,7 @@ def player_record(team_name, row, fifa_by_dob):
     }
     player_name_override = PLAYER_NAME_OVERRIDES.get((team_name, normalize(display_name)))
     player_name = player_name_override or display_name.title()
+    overall_override = PLAYER_OVERALL_OVERRIDES.get((team_name, normalize(display_name)))
     return {
         "number": number,
         "name": player_name,
@@ -143,7 +148,7 @@ def player_record(team_name, row, fifa_by_dob):
         "height": integer(row[8]),
         "caps": integer(row[9], 0),
         "internationalGoals": integer(row[10], 0),
-        "overall": integer(fifa_row.get("overall"), 68) if fifa_row else 68,
+        "overall": overall_override if overall_override is not None else integer(fifa_row.get("overall"), 68) if fifa_row else 68,
         "preferredFoot": fifa_row.get("preferred_foot", "Right").lower() if fifa_row else "right",
         "attributes": attributes,
         "_ratingMatch": round(match_score, 3),

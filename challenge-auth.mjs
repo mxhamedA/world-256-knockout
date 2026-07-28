@@ -82,15 +82,94 @@ export async function verifyChallengePassword(password, record) {
 }
 
 export function challengeSessionCookie(token, maxAgeSeconds = 60 * 60 * 24 * 30) {
-  return `palestine_session=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAgeSeconds}`;
+  return `__Host-world256_session=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAgeSeconds}`;
 }
 
 export function clearChallengeSessionCookie() {
-  return "palestine_session=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0";
+  return "__Host-world256_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
+}
+
+export function clearLegacyChallengeSessionCookie() {
+  return "palestine_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
+}
+
+export function clearLegacyPartitionedChallengeSessionCookie() {
+  return "palestine_session=; Path=/; HttpOnly; Secure; SameSite=None; Partitioned; Max-Age=0";
+}
+
+export function challengeSessionCookies(token, maxAgeSeconds = 60 * 60 * 24 * 30) {
+  return [
+    clearLegacyChallengeSessionCookie(),
+    clearLegacyPartitionedChallengeSessionCookie(),
+    challengeSessionCookie(token, maxAgeSeconds),
+  ];
+}
+
+function isLoopbackRequest(request) {
+  try {
+    const hostname = new URL(request.url).hostname.toLowerCase();
+    return hostname === "127.0.0.1" || hostname === "localhost" || hostname === "[::1]";
+  } catch {
+    return false;
+  }
+}
+
+export function localChallengeSessionCookie(token, maxAgeSeconds = 60 * 60 * 24 * 30) {
+  return `world256_local_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAgeSeconds}`;
+}
+
+export function challengeSessionCookiesForRequest(
+  request,
+  token,
+  maxAgeSeconds = 60 * 60 * 24 * 30,
+  allowLocalSession = false,
+) {
+  const cookies = challengeSessionCookies(token, maxAgeSeconds);
+  if (allowLocalSession || isLoopbackRequest(request)) {
+    cookies.push(localChallengeSessionCookie(token, maxAgeSeconds));
+  }
+  return cookies;
+}
+
+export function clearChallengeSessionCookies() {
+  return [
+    clearChallengeSessionCookie(),
+    clearLegacyChallengeSessionCookie(),
+    clearLegacyPartitionedChallengeSessionCookie(),
+  ];
+}
+
+export function clearChallengeSessionCookiesForRequest(request, allowLocalSession = false) {
+  const cookies = clearChallengeSessionCookies();
+  if (allowLocalSession || isLoopbackRequest(request)) cookies.push(localChallengeSessionCookie("", 0));
+  return cookies;
+}
+
+export function challengeSessionTokensFromRequest(request, allowLocalSession = false) {
+  const cookies = (request.headers.get("Cookie") || "")
+    .split(";")
+    .map((part) => part.trim())
+    .map((part) => {
+      const separator = part.indexOf("=");
+      return separator > 0
+        ? { name: part.slice(0, separator), value: part.slice(separator + 1) }
+        : null;
+    })
+    .filter((cookie) => cookie && /^[A-Za-z0-9_-]{43}$/.test(cookie.value));
+  const current = cookies
+    .filter((cookie) => cookie.name === "__Host-world256_session")
+    .map((cookie) => cookie.value);
+  const legacy = cookies
+    .filter((cookie) => cookie.name === "palestine_session")
+    .map((cookie) => cookie.value);
+  const local = allowLocalSession || isLoopbackRequest(request)
+    ? cookies
+      .filter((cookie) => cookie.name === "world256_local_session")
+      .map((cookie) => cookie.value)
+    : [];
+  return [...new Set([...current, ...legacy, ...local])];
 }
 
 export function challengeSessionTokenFromRequest(request) {
-  const cookie = request.headers.get("Cookie") || "";
-  const session = cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith("palestine_session="));
-  return session ? session.slice("palestine_session=".length) : null;
+  return challengeSessionTokensFromRequest(request)[0] || null;
 }

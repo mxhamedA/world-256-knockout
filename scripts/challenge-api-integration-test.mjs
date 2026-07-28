@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-const baseUrl = process.env.CHALLENGE_TEST_URL || "http://127.0.0.1:8793";
+const baseUrl = process.argv[2] || process.env.CHALLENGE_TEST_URL || "http://127.0.0.1:8793";
 const username = `player_${Date.now().toString(36)}`;
 const email = `${username}@example.com`;
 const password = "a-secure-test-password";
@@ -15,8 +15,9 @@ async function request(path = "", { method = "GET", body, session = true } = {})
     },
     body: body ? JSON.stringify(body) : undefined,
   });
-  const setCookie = response.headers.get("set-cookie");
-  if (setCookie) cookie = setCookie.split(";")[0];
+  const activeSessionCookie = response.headers.getSetCookie()
+    .find((value) => /^__Host-world256_session=[A-Za-z0-9_-]{43};/.test(value));
+  if (activeSessionCookie) cookie = activeSessionCookie.split(";")[0];
   return { response, payload: await response.json() };
 }
 
@@ -35,7 +36,7 @@ if (!publicDashboard.payload.auth.googleEnabled) {
 const registered = await request("/register", { method: "POST", body: { email, username, password }, session: false });
 assert.equal(registered.response.status, 201);
 assert.equal(registered.payload.account.username, username);
-assert.match(cookie, /^palestine_session=[A-Za-z0-9_-]{43}$/);
+assert.match(cookie, /^__Host-world256_session=[A-Za-z0-9_-]{43}$/);
 
 const duplicate = await request("/register", { method: "POST", body: { email: `other-${email}`, username, password }, session: false });
 assert.equal(duplicate.response.status, 409);
@@ -178,9 +179,95 @@ assert.equal(qatarCompleted.payload.achievement.id, "retro-2022-world-tour");
 assert.equal(qatarCompleted.payload.achievement.year, 2022);
 assert.equal(qatarCompleted.payload.achievement.total, 32);
 
+const euroSeed = retroSeed + 4;
+const franceEuroStarted = await request("/achievements/retro-2016", {
+  method: "POST",
+  body: { seed: euroSeed, teamName: "France", phase: "start", champion: null },
+});
+assert.equal(franceEuroStarted.response.status, 200);
+assert.equal(franceEuroStarted.payload.unlockedTeam.attempts, 1);
+
+const franceEuroCompleted = await request("/achievements/retro-2016", {
+  method: "POST",
+  body: { seed: euroSeed, teamName: "France", phase: "complete", champion: "France" },
+});
+assert.equal(franceEuroCompleted.response.status, 200);
+assert.equal(franceEuroCompleted.payload.countryUnlocked, true);
+assert.equal(franceEuroCompleted.payload.unlockedTeam.won, true);
+assert.equal(franceEuroCompleted.payload.achievement.id, "retro-2016-european-tour");
+assert.equal(franceEuroCompleted.payload.achievement.title, "UEFA Euro 2016 Tour");
+assert.equal(franceEuroCompleted.payload.achievement.total, 24);
+
+const knockoutSeed = retroSeed + 10;
+const strongTeamMiss = await request("/achievements/knockout-256", {
+  method: "POST",
+  body: {
+    seed: knockoutSeed,
+    teamId: "team-50",
+    bestRoundIndex: 7,
+    championTeamId: "team-1",
+    phase: "complete",
+  },
+});
+assert.equal(strongTeamMiss.response.status, 200);
+assert.equal(strongTeamMiss.payload.unlockedTeam.complete, false);
+assert.equal(strongTeamMiss.payload.unlockedTeam.attempts, 1);
+
+const strongTeamWin = await request("/achievements/knockout-256", {
+  method: "POST",
+  body: {
+    seed: knockoutSeed + 1,
+    teamId: "team-50",
+    bestRoundIndex: 7,
+    championTeamId: "team-50",
+    phase: "complete",
+  },
+});
+assert.equal(strongTeamWin.response.status, 200);
+assert.equal(strongTeamWin.payload.countryUnlocked, true);
+assert.equal(strongTeamWin.payload.unlockedTeam.complete, true);
+assert.equal(strongTeamWin.payload.unlockedTeam.attempts, 2);
+assert.equal(strongTeamWin.payload.unlockedTeam.achievedOnAttempt, 2);
+
+const repeatedStrongTeamWin = await request("/achievements/knockout-256", {
+  method: "POST",
+  body: {
+    seed: knockoutSeed + 1,
+    teamId: "team-50",
+    bestRoundIndex: 7,
+    championTeamId: "team-50",
+    phase: "complete",
+  },
+});
+assert.equal(repeatedStrongTeamWin.response.status, 200);
+assert.equal(repeatedStrongTeamWin.payload.countryUnlocked, false);
+assert.equal(repeatedStrongTeamWin.payload.unlockedTeam.attempts, 2);
+
+const hardTeamProgress = await request("/achievements/knockout-256", {
+  method: "POST",
+  body: {
+    seed: knockoutSeed + 2,
+    teamId: "team-221",
+    bestRoundIndex: 4,
+    championTeamId: null,
+    phase: "progress",
+  },
+});
+assert.equal(hardTeamProgress.response.status, 200);
+assert.equal(hardTeamProgress.payload.countryUnlocked, true);
+assert.equal(hardTeamProgress.payload.unlockedTeam.complete, true);
+assert.equal(hardTeamProgress.payload.unlockedTeam.objectiveLabel, "Reach the Round of 16");
+
+const knockoutProgress = await request("/achievements/knockout-256");
+assert.equal(knockoutProgress.response.status, 200);
+assert.equal(knockoutProgress.payload.achievement.completed, 2);
+assert.equal(knockoutProgress.payload.achievement.total, 256);
+assert.equal(knockoutProgress.payload.achievement.teams.length, 256);
+
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
-assert.equal(achievementBoard.payload.currentUser.achievements, 4);
+assert.equal(achievementBoard.payload.currentUser.achievements, 7);
+assert.equal(achievementBoard.payload.totalAchievements, 408);
 assert.equal(achievementBoard.payload.leaderboard.some((entry) => entry.username === updatedUsername), true);
 
 const tampered = await request("/runs", {

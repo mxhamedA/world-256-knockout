@@ -34,8 +34,10 @@
 			"/retro-14-world-cup",
 			"/retro-18-world-cup",
 			"/retro-22-world-cup",
+			"/retro-euro-2016",
 			"/achievements",
 			"/online-mode",
+			"/pl-simulator",
 			"/palestine-challenge",
 			"/profile",
 			"/*.html"
@@ -58,6 +60,10 @@
 			{
 				"name": "ONLINE_CAPACITY",
 				"class_name": "OnlineCapacityCoordinator"
+			},
+			{
+				"name": "PUBLIC_MATCHMAKER",
+				"class_name": "PublicMatchmaker"
 			}
 		]
 	},
@@ -72,6 +78,12 @@
 			"tag": "online-capacity-v1",
 			"new_sqlite_classes": [
 				"OnlineCapacityCoordinator"
+			]
+		},
+		{
+			"tag": "public-matchmaking-v1",
+			"new_sqlite_classes": [
+				"PublicMatchmaker"
 			]
 		}
 	],

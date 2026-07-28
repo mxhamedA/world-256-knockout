@@ -76,12 +76,16 @@
     profileAchievementTotal: $("#profileAchievementTotal"),
     profileAchievementPoints: $("#profileAchievementPoints"),
     profileAchievementSummary: $("#profileAchievementSummary"),
+    profileTournamentHistory: $("#profileTournamentHistory"),
+    profileTournamentHistoryCount: $("#profileTournamentHistoryCount"),
     profile2010AchievementCount: $("#profile2010AchievementCount"),
     profile2014AchievementCount: $("#profile2014AchievementCount"),
+    profile2016AchievementCount: $("#profile2016AchievementCount"),
     profile2018AchievementCount: $("#profile2018AchievementCount"),
     profile2022AchievementCount: $("#profile2022AchievementCount"),
     profile2010AchievementBar: $("#profile2010AchievementBar"),
     profile2014AchievementBar: $("#profile2014AchievementBar"),
+    profile2016AchievementBar: $("#profile2016AchievementBar"),
     profile2018AchievementBar: $("#profile2018AchievementBar"),
     profile2022AchievementBar: $("#profile2022AchievementBar"),
     profileUnlockedCount: $("#profileUnlockedCount"),
@@ -89,6 +93,9 @@
     achievementCount: $("#retro2014AchievementCount"),
     achievementBar: $("#retro2014AchievementBar"),
     achievementGrid: $("#retro2014AchievementGrid"),
+    achievementsScreen: $("#achievementsScreen"),
+    achievementsModeLabel: $("#achievementsModeLabel"),
+    achievementProgressLabel: $("#achievementProgressLabel"),
     achievementLogin: $("#achievementLoginButton"),
     achievementChallengeTitle: $("#achievementChallengeTitle"),
     achievementModal: $("#achievementUnlockModal"),
@@ -105,6 +112,8 @@
     retroAchievementModalGrid: $("#retro2014ModalAchievementGrid"),
     retroAchievementLogin: $("#retroAchievementLoginButton"),
     retroAchievementModalDescription: $("#retroAchievementModalDescription"),
+    retroAchievementModeLabel: $("#retroAchievementModeLabel"),
+    retroAchievementProgressLabel: $("#retroAchievementProgressLabel"),
     homeAchievementLeaderboard: $("#homeAchievementLeaderboard"),
     homeAchievementOwn: $("#homeAchievementOwn"),
     homeAchievementAction: $("#homeAchievementAction"),
@@ -126,8 +135,10 @@
   let achievementBannerTimer = null;
   let pendingAchievementUnlock = null;
   const trackedRetroRequests = new Map();
+  const trackedKnockoutRequests = new Map();
   let achievementLeaderboardPayload = null;
   let reviewedUsernameAccountId = null;
+  let accountLoadVersion = 0;
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (character) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;",
@@ -136,7 +147,7 @@
   async function challengeApi(path = "", options = {}) {
     const response = await fetch(`/api/challenge${path}`, {
       method: options.method || "GET",
-      credentials: "same-origin",
+      credentials: "include",
       keepalive: options.keepalive === true,
       headers: options.body ? { "Content-Type": "application/json" } : undefined,
       body: options.body ? JSON.stringify(options.body) : undefined,
@@ -149,6 +160,22 @@
       throw error;
     }
     return payload;
+  }
+
+  async function challengeApiForAccount(path, expectedAccount) {
+    let lastError = null;
+    for (const delay of [0, 150, 450]) {
+      if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
+      try {
+        const payload = await challengeApi(path);
+        if (!expectedAccount || payload.account?.id === expectedAccount.id) return payload;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw lastError || new Error(
+      "Your account was created, but sign-in could not finish in this browser. Open www.256teams.com directly, then log in again.",
+    );
   }
 
   function commandId() {
@@ -174,7 +201,7 @@
   function setProfileRoute(active = true, replace = false) {
     if (active && !profileRouteActive()) {
       const currentPath = `${window.location.pathname}${window.location.search}`;
-      profileReturnPath = /^\/retro-(10|14|18|22)-world-cup(?:\?|$)/.test(currentPath) ? currentPath : "/";
+      profileReturnPath = /^\/(?:retro-(?:10|14|18|22)-world-cup|retro-euro-2016)(?:\?|$)/.test(currentPath) ? currentPath : "/";
     }
     const path = active ? "/profile" : profileReturnPath;
     window.history[replace ? "replaceState" : "pushState"]({ appMode: active ? "profile" : "home" }, "", path);
@@ -212,10 +239,13 @@
       elements.retroAccount.setAttribute("aria-label", account ? `Open ${account.username}'s profile` : "Log in");
       elements.retroAccount.title = account ? `Open ${account.username}'s profile` : "Log in";
     }
+    window.dispatchEvent(new CustomEvent("accountstatechange", {
+      detail: { account: account || null },
+    }));
   }
 
   function syncGoogleButton() {
-    const enabled = dashboard?.auth?.googleEnabled === true;
+    const enabled = dashboard?.auth?.googleEnabled !== false;
     elements.googleSignIn.disabled = !enabled;
     elements.googleSignIn.title = enabled ? "Continue with Google" : "Google sign-in needs to be configured";
   }
@@ -403,10 +433,12 @@
     syncGoogleButton();
   }
 
-  async function loadDashboard() {
+  async function loadDashboard(expectedAccount = null) {
     if (!challengeRouteActive()) return;
+    const loadVersion = ++accountLoadVersion;
     try {
-      const payload = await challengeApi();
+      const payload = await challengeApiForAccount("", expectedAccount);
+      if (loadVersion !== accountLoadVersion) return;
       dashboard = payload;
       serverOffset = payload.challenge.serverTime - Date.now();
       renderDashboard();
@@ -416,15 +448,20 @@
       clearInterval(countdownTimer);
       countdownTimer = setInterval(renderCountdown, 1000);
     } catch (error) {
+      if (loadVersion !== accountLoadVersion) return;
       elements.message.textContent = error.message;
       elements.start.disabled = true;
+      if (expectedAccount) throw error;
     }
   }
 
-  async function loadHomeAccount() {
+  async function loadHomeAccount(expectedAccount = null) {
     if (challengeRouteActive() || profileRouteActive()) return;
+    const loadVersion = ++accountLoadVersion;
     try {
-      dashboard = await challengeApi();
+      const payload = await challengeApiForAccount("", expectedAccount);
+      if (loadVersion !== accountLoadVersion) return;
+      dashboard = payload;
       syncMainAccount();
       syncGoogleButton();
       handleAuthReturn();
@@ -432,11 +469,13 @@
       await syncStoredRetroAchievements();
       await loadAchievementLeaderboard();
       if (achievementsRouteActive()) await loadAchievements();
-    } catch {
+    } catch (error) {
+      if (loadVersion !== accountLoadVersion) return;
       syncMainAccount();
       syncGoogleButton();
       await loadAchievementLeaderboard();
       if (achievementsRouteActive()) renderAchievements();
+      if (expectedAccount) throw error;
     }
   }
 
@@ -445,27 +484,102 @@
   }
 
   function teamByName(teamName) {
-    return (typeof TEAMS !== "undefined" ? TEAMS : []).find((team) => team.name === teamName) || null;
+    const historicalAliases = {
+      "Czech Republic": "Czechia",
+      "Turkey": "T\u00fcrkiye",
+    };
+    const sourceName = historicalAliases[teamName] || teamName;
+    const team = (typeof TEAMS !== "undefined" ? TEAMS : []).find((candidate) => candidate.name === sourceName);
+    return team ? { ...team, name: teamName } : null;
+  }
+
+  function achievementEndpoint(key) {
+    return Number(key) === 256 ? "/achievements/knockout-256" : `/achievements/retro-${key}`;
+  }
+
+  function achievementCompetitionLabel(key) {
+    if (Number(key) === 256) return "256 Knockout";
+    if (Number(key) === 2016) return "UEFA Euro 2016";
+    return `${key} World Cup`;
+  }
+
+  function knockoutObjectiveForTeam(team) {
+    if (team?.id === "team-25" || team?.name === "Israel") {
+      return { objectiveLabel: "Lose in the Round of 256", points: 4 };
+    }
+    const rating = Number(team?.simulationRatings?.overall) || 0;
+    if (rating >= 50) {
+      return {
+        objectiveLabel: "Win the tournament",
+        points: rating >= 90 ? 1 : rating >= 80 ? 1 : rating >= 70 ? 2 : rating >= 60 ? 2 : 3,
+      };
+    }
+    if (rating >= 45) return { objectiveLabel: "Reach the final", points: 3 };
+    if (rating >= 40) return { objectiveLabel: "Reach the semi-finals", points: 4 };
+    if (rating >= 35) return { objectiveLabel: "Reach the quarter-finals", points: 4 };
+    return { objectiveLabel: "Reach the Round of 16", points: 5 };
+  }
+
+  function syncAchievementTheme(year = activeAchievementYear) {
+    const theme = String(year);
+    const labels = {
+      256: "256-TEAM KNOCKOUT",
+      2010: "SOUTH AFRICA 2010",
+      2014: "BRAZIL 2014",
+      2016: "UEFA EURO 2016",
+      2018: "RUSSIA 2018",
+      2022: "QATAR 2022",
+    };
+    [elements.achievementsScreen, elements.retroAchievementModal].forEach((element) => {
+      if (element) element.dataset.achievementTheme = theme;
+    });
+    if (elements.achievementsModeLabel) elements.achievementsModeLabel.textContent = labels[year] || labels[2014];
+    if (elements.retroAchievementModeLabel) elements.retroAchievementModeLabel.textContent = labels[year] || labels[2014];
+    const progressLabel = Number(year) === 256 ? "TEAMS COMPLETE" : "COUNTRIES COMPLETE";
+    if (elements.achievementProgressLabel) elements.achievementProgressLabel.textContent = progressLabel;
+    if (elements.retroAchievementProgressLabel) elements.retroAchievementProgressLabel.textContent = progressLabel;
   }
 
   function renderAchievements() {
     if (!elements.achievementGrid) return;
+    syncAchievementTheme();
     const account = dashboard?.account;
     const achievement = achievementPayloads.get(activeAchievementYear)?.achievement;
-    const teams = achievement?.teams || (typeof RETRO_WORLD_CUPS !== "undefined"
-      ? RETRO_WORLD_CUPS[activeAchievementYear].teams.map((team) => ({ teamName: team.name, attempts: 0, won: false, wonOnAttempt: null }))
-      : []);
+    const teams = achievement?.teams || (activeAchievementYear === 256
+      ? (typeof TEAMS !== "undefined" ? TEAMS.map((team) => ({
+          teamId: team.id,
+          teamName: team.name,
+          attempts: 0,
+          complete: false,
+          won: false,
+          ...knockoutObjectiveForTeam(team),
+        })) : [])
+      : (typeof RETRO_WORLD_CUPS !== "undefined"
+        ? RETRO_WORLD_CUPS[activeAchievementYear].teams.map((team) => ({ teamName: team.name, attempts: 0, won: false, wonOnAttempt: null }))
+        : []));
     const completed = Number(achievement?.completed || 0);
-    const total = Number(achievement?.total || 32);
+    const total = Number(achievement?.total || (
+      activeAchievementYear === 256 ? 256
+        : activeAchievementYear === 2016 ? 24
+          : 32
+    ));
     const progressMarkup = teams.map((progress) => {
       const team = teamByName(progress.teamName);
-      const status = progress.won
-        ? `Won in ${progress.wonOnAttempt || progress.attempts} ${Number(progress.wonOnAttempt || progress.attempts) === 1 ? "try" : "tries"}`
+      const complete = progress.complete === true || progress.won === true;
+      const attemptCount = Number(progress.achievedOnAttempt || progress.wonOnAttempt || progress.attempts || 0);
+      const status = complete
+        ? activeAchievementYear === 256
+          ? `${progress.objectiveLabel} · ${attemptCount} ${attemptCount === 1 ? "try" : "tries"}`
+          : `Won in ${attemptCount} ${attemptCount === 1 ? "try" : "tries"}`
         : progress.attempts
-          ? `${progress.attempts} ${progress.attempts === 1 ? "try" : "tries"}`
-          : account ? "Not attempted" : "Log in to track";
+          ? `${progress.objectiveLabel ? `${progress.objectiveLabel} · ` : ""}${progress.attempts} ${progress.attempts === 1 ? "try" : "tries"}`
+          : account
+            ? progress.objectiveLabel || "Not attempted"
+            : progress.objectiveLabel
+              ? `${progress.objectiveLabel} · Log in to track`
+              : "Log in to track";
       return `
-        <article class="achievement-country${progress.won ? " is-complete" : ""}">
+        <article class="achievement-country${complete ? " is-complete" : ""}">
           ${profileFlagMarkup(team, "achievement-country-flag")}
           <span><strong>${escapeHtml(progress.teamName)}</strong><small>${escapeHtml(status)}</small></span>
           ${Number(progress.points) ? `<b>${Number(progress.points)} pts</b>` : ""}
@@ -481,7 +595,11 @@
     if (elements.retroAchievementModalBar) elements.retroAchievementModalBar.style.width = progressWidth;
     if (elements.retroAchievementModalGrid) elements.retroAchievementModalGrid.innerHTML = progressMarkup;
     if (elements.retroAchievementLogin) elements.retroAchievementLogin.hidden = Boolean(account);
-    const challengeCopy = `Win the ${activeAchievementYear} WC with every country`;
+    const challengeCopy = activeAchievementYear === 256
+      ? "Complete the objective for every country in the 256-team knockout"
+      : activeAchievementYear === 2016
+        ? "Win UEFA Euro 2016 with every country"
+        : `Win the ${activeAchievementYear} WC with every country`;
     if (elements.achievementChallengeTitle) elements.achievementChallengeTitle.textContent = challengeCopy;
     if (elements.retroAchievementModalDescription) elements.retroAchievementModalDescription.textContent = challengeCopy;
     document.querySelectorAll("[data-achievement-year]").forEach((button) => {
@@ -491,9 +609,9 @@
 
   async function loadAchievements(year = activeAchievementYear) {
     if (!elements.achievementGrid) return;
-    activeAchievementYear = [2010, 2014, 2018, 2022].includes(Number(year)) ? Number(year) : 2014;
+    activeAchievementYear = [256, 2010, 2014, 2016, 2018, 2022].includes(Number(year)) ? Number(year) : 2014;
     try {
-      achievementPayloads.set(activeAchievementYear, await challengeApi(`/achievements/retro-${activeAchievementYear}`));
+      achievementPayloads.set(activeAchievementYear, await challengeApi(achievementEndpoint(activeAchievementYear)));
     } catch (error) {
       if (error.status === 401) achievementPayloads.delete(activeAchievementYear);
     }
@@ -515,10 +633,21 @@
     const payload = pendingAchievementUnlock;
     const grandUnlock = payload.challengeUnlocked === true;
     const year = Number(payload.achievement?.year) || 2014;
-    elements.achievementModalTitle.textContent = grandUnlock ? `${year} World Cup mastered` : `${payload.unlockedTeam.teamName} complete`;
+    elements.achievementModal.dataset.achievementTheme = String(year);
+    const knockout = year === 256;
+    const euros = year === 2016;
+    elements.achievementModalTitle.textContent = grandUnlock
+      ? knockout ? "256 Knockout mastered" : euros ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
+      : `${payload.unlockedTeam.teamName} complete`;
     elements.achievementModalCopy.textContent = grandUnlock
-      ? `You have won the ${year} World Cup with all 32 countries. ${payload.achievement.completedPoints} points earned in this World Cup.`
-      : `World Cup won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of 32 countries complete.`;
+      ? knockout
+        ? `You have completed all 256 knockout objectives. ${payload.achievement.completedPoints} points earned in this mode.`
+        : euros
+          ? `You have won UEFA Euro 2016 with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
+          : `You have won the ${year} World Cup with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this World Cup.`
+      : knockout
+        ? `${payload.unlockedTeam.objectiveLabel} completed in ${payload.unlockedTeam.achievedOnAttempt} ${payload.unlockedTeam.achievedOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of 256 countries complete.`
+        : `${euros ? "European Championship" : "World Cup"} won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} countries complete.`;
     if (!elements.achievementModal.open) elements.achievementModal.showModal();
   }
 
@@ -527,8 +656,10 @@
     const grandUnlock = payload.challengeUnlocked === true;
     const year = Number(payload.achievement?.year) || 2014;
     pendingAchievementUnlock = payload;
+    elements.achievementBanner.dataset.achievementTheme = String(year);
+    elements.achievementModal.dataset.achievementTheme = String(year);
     elements.achievementBannerTitle.textContent = grandUnlock
-      ? `${year} World Cup mastered`
+      ? year === 256 ? "256 Knockout mastered" : year === 2016 ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete · +${payload.unlockedTeam.points} pts`;
     clearTimeout(achievementBannerTimer);
     elements.achievementBanner.hidden = false;
@@ -549,11 +680,31 @@
     }
   }
 
+  function completedRetroChampion(tournament) {
+    if (tournament?.phase !== "complete") return null;
+    const final = (tournament?.knockoutRounds || [])
+      .flatMap((round) => round?.matches || [])
+      .find((match) => match?.id === "ko-final");
+    const finalWinner = typeof final?.result?.winner === "string"
+      ? final.result.winner.trim()
+      : "";
+    const recordedChampion = typeof tournament.champion === "string"
+      ? tournament.champion.trim()
+      : "";
+    if (
+      !finalWinner
+      || final.result?.revealed === false
+      || recordedChampion !== finalWinner
+    ) return null;
+    return finalWinner;
+  }
+
   async function trackRetroTournament(tournament) {
     const year = Number(tournament?.year);
-    if (![2010, 2014, 2018, 2022].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
-    const phase = tournament.phase === "complete" || tournament.champion ? "complete" : "start";
-    const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}`;
+    if (![2010, 2014, 2016, 2018, 2022].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
+    const champion = completedRetroChampion(tournament);
+    const phase = tournament.phase === "complete" && champion ? "complete" : "start";
+    const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
     if (trackedRetroRequests.has(key)) return trackedRetroRequests.get(key);
     const request = challengeApi(`/achievements/retro-${year}`, {
       method: "POST",
@@ -562,7 +713,7 @@
         seed: Number(tournament.seed),
         teamName: tournament.managedTeam,
         phase,
-        champion: tournament.champion || null,
+        champion,
       },
     }).then((payload) => {
       achievementPayloads.set(year, payload);
@@ -579,10 +730,56 @@
     return request;
   }
 
+  async function trackKnockoutTournament(tournament) {
+    if (
+      !tournament?.teamId
+      || !Number.isInteger(Number(tournament.seed))
+      || !Number.isInteger(Number(tournament.bestRoundIndex))
+    ) return null;
+    const key = [
+      tournament.seed,
+      tournament.teamId,
+      tournament.bestRoundIndex,
+      tournament.championTeamId || "",
+      tournament.phase,
+    ].join(":");
+    if (trackedKnockoutRequests.has(key)) return trackedKnockoutRequests.get(key);
+    const request = challengeApi("/achievements/knockout-256", {
+      method: "POST",
+      keepalive: tournament.phase === "complete",
+      body: {
+        seed: Number(tournament.seed),
+        teamId: tournament.teamId,
+        bestRoundIndex: Number(tournament.bestRoundIndex),
+        championTeamId: tournament.championTeamId || null,
+        phase: tournament.phase,
+      },
+    }).then((payload) => {
+      achievementPayloads.set(256, payload);
+      renderAchievements();
+      showAchievementUnlock(payload);
+      return payload;
+    }).catch((error) => {
+      if (error.status !== 401) console.warn("256 knockout achievement tracking failed", error);
+      trackedKnockoutRequests.delete(key);
+      return null;
+    });
+    trackedKnockoutRequests.set(key, request);
+    return request;
+  }
+
   async function syncStoredRetroAchievements() {
-    if (!dashboard?.account || typeof window.getRetroAchievementTournamentStates !== "function") return;
-    const tournaments = window.getRetroAchievementTournamentStates();
-    await Promise.all(tournaments.map((tournament) => trackRetroTournament(tournament)));
+    if (!dashboard?.account) return;
+    const retroTournaments = typeof window.getRetroAchievementTournamentStates === "function"
+      ? window.getRetroAchievementTournamentStates()
+      : [];
+    const knockoutTournament = typeof window.getKnockout256AchievementTournamentState === "function"
+      ? window.getKnockout256AchievementTournamentState()
+      : null;
+    await Promise.all([
+      ...retroTournaments.map((tournament) => trackRetroTournament(tournament)),
+      knockoutTournament ? trackKnockoutTournament(knockoutTournament) : null,
+    ]);
   }
 
   function profileFlagMarkup(team, className = "profile-country-flag") {
@@ -606,18 +803,18 @@
   }
 
   function renderProfileAchievements() {
-    const years = [2010, 2014, 2018, 2022];
+    const years = [256, 2010, 2014, 2016, 2018, 2022];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
-      total: 32,
+      total: year === 256 ? 256 : year === 2016 ? 24 : 32,
       teams: [],
     });
     const completed = achievements.reduce((sum, achievement) => sum + Number(achievement.completed || 0), 0);
     const total = achievements.reduce((sum, achievement) => sum + Number(achievement.total || 32), 0);
     const points = achievements.reduce((sum, achievement) => sum + Number(achievement.completedPoints || 0), 0);
     const unlocked = achievements.flatMap((achievement) => (achievement.teams || [])
-      .filter((team) => team.won)
+      .filter((team) => team.complete === true || team.won === true)
       .map((team) => ({ ...team, year: Number(achievement.year) })));
 
     elements.profileAchievementCount.textContent = String(completed);
@@ -635,12 +832,14 @@
       const countElement = {
         2010: elements.profile2010AchievementCount,
         2014: elements.profile2014AchievementCount,
+        2016: elements.profile2016AchievementCount,
         2018: elements.profile2018AchievementCount,
         2022: elements.profile2022AchievementCount,
       }[year];
       const barElement = {
         2010: elements.profile2010AchievementBar,
         2014: elements.profile2014AchievementBar,
+        2016: elements.profile2016AchievementBar,
         2018: elements.profile2018AchievementBar,
         2022: elements.profile2022AchievementBar,
       }[year];
@@ -650,22 +849,65 @@
 
     elements.profileUnlockedAchievements.innerHTML = unlocked.length
       ? unlocked.map((achievement) => {
-        const team = teamByName(achievement.teamName);
-        const tries = Number(achievement.wonOnAttempt || achievement.attempts || 1);
+        const team = achievement.teamId ? teamById(achievement.teamId) : teamByName(achievement.teamName);
+        const tries = Number(achievement.achievedOnAttempt || achievement.wonOnAttempt || achievement.attempts || 1);
         const unlockedAt = formatAchievementUnlockTime(achievement.unlockedAt);
+        const achievementCopy = achievement.year === 256
+          ? `256 Knockout - ${achievement.objectiveLabel} in ${tries} ${tries === 1 ? "try" : "tries"}`
+          : `${achievementCompetitionLabel(achievement.year)} - Won in ${tries} ${tries === 1 ? "try" : "tries"}`;
         return `
           <article class="profile-unlocked-achievement">
             ${profileFlagMarkup(team, "profile-unlocked-flag")}
             <span>
               <strong>${escapeHtml(achievement.teamName)}</strong>
-              <small>${achievement.year} World Cup · Won in ${tries} ${tries === 1 ? "try" : "tries"}</small>
+              <small>${escapeHtml(achievementCopy)}</small>
               ${unlockedAt ? `<time datetime="${new Date(Number(achievement.unlockedAt)).toISOString()}">Unlocked ${escapeHtml(unlockedAt)}</time>` : ""}
             </span>
             <b aria-label="${Number(achievement.points || 0)} points">${Number(achievement.points || 0)} pts</b>
           </article>
         `;
       }).join("")
-      : '<p class="profile-empty-state">No World Cup achievements unlocked yet.</p>';
+      : '<p class="profile-empty-state">No achievements unlocked yet.</p>';
+  }
+
+  function renderProfileTournamentHistory() {
+    if (!elements.profileTournamentHistory) return;
+    const records = window.TournamentHistory?.list?.() || [];
+    if (elements.profileTournamentHistoryCount) {
+      elements.profileTournamentHistoryCount.textContent = `${records.length} saved`;
+    }
+    elements.profileTournamentHistory.innerHTML = records.length
+      ? records.map((record) => {
+        const champion = record.teams?.[record.championId];
+        const managedTeam = record.managedTeamId ? record.teams?.[record.managedTeamId] : null;
+        const savedAt = formatAchievementUnlockTime(record.savedAt);
+        const editionMark = record.logo
+          ? `<img src="${escapeHtml(record.logo)}" alt="" loading="lazy" />`
+          : `<b aria-hidden="true">${record.theme === "256" ? "256" : "WC"}</b>`;
+        return `
+          <button
+            class="profile-tournament-history-card"
+            type="button"
+            data-profile-history-id="${escapeHtml(record.id)}"
+            data-history-theme="${escapeHtml(record.theme)}"
+            aria-label="View ${escapeHtml(record.typeLabel)}, won by ${escapeHtml(champion?.name || "the champion")}"
+          >
+            <span class="profile-history-edition">${editionMark}</span>
+            <span class="profile-history-card-copy">
+              <small>${escapeHtml(record.editionLabel)}</small>
+              <strong>${escapeHtml(champion?.name || "Champion")}</strong>
+              <em>${escapeHtml(managedTeam
+                ? `${managedTeam.name} · ${record.managedOutcome}`
+                : record.managedOutcome || "Neutral view")}</em>
+              <time datetime="${new Date(Number(record.savedAt)).toISOString()}">${escapeHtml(savedAt)}</time>
+            </span>
+            <span class="profile-history-champion-flag">
+              ${profileFlagMarkup(champion, "profile-tournament-flag")}
+              <i aria-hidden="true">&rarr;</i>
+            </span>
+          </button>`;
+      }).join("")
+      : '<p class="profile-empty-state">Finish a tournament, then choose Save tournament on the champion screen.</p>';
   }
 
   function renderAchievementLeaderboard() {
@@ -719,6 +961,7 @@
 
   function renderProfile() {
     const account = profilePayload?.account;
+    renderProfileTournamentHistory();
     if (!account) {
       elements.profileCurrentUsername.textContent = "Not logged in";
       elements.profileUsername.value = "";
@@ -745,15 +988,17 @@
     syncMainAccount();
   }
 
-  async function loadProfile() {
+  async function loadProfile(expectedAccount = null) {
+    const loadVersion = ++accountLoadVersion;
     try {
-      profilePayload = await challengeApi("/profile");
+      profilePayload = await challengeApiForAccount("/profile", expectedAccount);
+      if (loadVersion !== accountLoadVersion) return;
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([2010, 2014, 2018, 2022].map(async (year) => {
+        await Promise.all([256, 2010, 2014, 2016, 2018, 2022].map(async (year) => {
           try {
-            achievementPayloads.set(year, await challengeApi(`/achievements/retro-${year}`));
+            achievementPayloads.set(year, await challengeApi(achievementEndpoint(year)));
           } catch {
             achievementPayloads.delete(year);
           }
@@ -763,9 +1008,12 @@
       handleAuthReturn();
       queueGeneratedUsernamePrompt();
     } catch (error) {
+      if (loadVersion !== accountLoadVersion) return;
+      if (expectedAccount) throw error;
       try {
         dashboard = await challengeApi();
       } catch {}
+      if (loadVersion !== accountLoadVersion) return;
       profilePayload = { account: null };
       renderProfile();
       if (error.status !== 401) elements.profileMessage.textContent = error.message;
@@ -799,12 +1047,18 @@
       const body = authMode === "login"
         ? { identifier: elements.username.value, password: elements.password.value }
         : { email: elements.email.value, username: elements.username.value, password: elements.password.value };
-      await challengeApi(`/${authMode}`, { method: "POST", body });
+      const authPayload = await challengeApi(`/${authMode}`, { method: "POST", body });
+      const account = authPayload?.account;
+      if (!account) throw new Error("Your account was saved, but sign-in could not be completed. Please log in again.");
+      accountLoadVersion += 1;
+      dashboard = { ...(dashboard || {}), account };
+      syncMainAccount();
+      if (achievementsRouteActive()) renderAchievements();
+      if (challengeRouteActive()) await loadDashboard(account);
+      else if (profileRouteActive()) await loadProfile(account);
+      else await loadHomeAccount(account);
       authModal.close();
       authForm.reset();
-      if (challengeRouteActive()) await loadDashboard();
-      else if (profileRouteActive()) await loadProfile();
-      else await loadHomeAccount();
     } catch (error) {
       elements.authMessage.textContent = error.message;
     } finally {
@@ -931,6 +1185,9 @@
         dashboard.activeRun = payload.run;
         if (payload.run.status === "completed") {
           lastFinishedRun = payload.run;
+          if (payload.run.tournamentWon) {
+            window.maybeShowPostWinDonation?.(`challenge:${payload.run.id}`);
+          }
           await loadDashboard();
         }
       }
@@ -997,6 +1254,12 @@
     renderProfileAvatar();
     renderProfileCountries();
   });
+  elements.profileTournamentHistory?.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-profile-history-id]");
+    if (!button) return;
+    window.TournamentHistory?.open?.(button.dataset.profileHistoryId, button);
+  });
+  window.addEventListener("tournament-history-changed", renderProfileTournamentHistory);
   authForm.addEventListener("submit", submitAuth);
   elements.authClose.addEventListener("click", () => authModal.close());
   elements.authSwitch.addEventListener("click", () => openAuth(authMode === "login" ? "register" : "login"));
@@ -1013,6 +1276,7 @@
   window.AccountAchievements = {
     load: loadAchievements,
     trackRetroTournament,
+    trackKnockoutTournament,
     openRetroModal: openRetroAchievementsModal,
   };
   syncRoute();

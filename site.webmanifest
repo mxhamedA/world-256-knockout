@@ -1,12 +1,18 @@
 {
-  "name": "256 TEAMS WC",
+  "name": "256 TEAMS SIMULATOR",
   "short_name": "256 TEAMS",
-  "description": "A 256-team football world knockout simulator",
+  "description": "Create, simulate and manage football tournaments with up to 256 teams.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b0f17",
   "theme_color": "#0b0f17",
   "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
     {
       "src": "/assets/256-teams-icon.svg",
       "sizes": "any",

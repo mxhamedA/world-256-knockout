@@ -963,10 +963,9 @@ function deriveTeamSimulationRatings(teamId, name, overall, fifaRank) {
 }
 
 function nationalTeamPlayerPool(name) {
-  return [...new Set([
-    ...(RECENT_NATIONAL_TEAM_PLAYERS[name] || []),
-    ...(REAL_PLAYERS[name] || []),
-  ])].map(repairPlayerText);
+  const recentPlayers = RECENT_NATIONAL_TEAM_PLAYERS[name] || [];
+  const sourcePlayers = recentPlayers.length ? recentPlayers : (REAL_PLAYERS[name] || []);
+  return [...new Set(sourcePlayers)].map(repairPlayerText);
 }
 
 const TEAMS = TEAM_SOURCE.split("\n").map((line, sourceIndex) => {

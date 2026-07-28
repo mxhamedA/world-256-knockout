@@ -1,0 +1,34 @@
+{
+  "id": "pl-26-27",
+  "name": "PL 26/27 Asset Pack",
+  "version": 1,
+  "season": "2026/27",
+  "leagueLogo": "../prem-logo.webp",
+  "source": {
+    "name": "FootyLogos",
+    "url": "https://www.footylogos.com/competition/premier-league",
+    "usage": "Editorial and reference use. Club crests remain trademarks of their respective owners."
+  },
+  "teams": [
+    { "id": "arsenal", "name": "Arsenal", "code": "ARS", "badge": "./badges/arsenal.webp" },
+    { "id": "aston-villa", "name": "Aston Villa", "code": "AVL", "badge": "./badges/aston-villa.webp" },
+    { "id": "bournemouth", "name": "Bournemouth", "code": "BOU", "badge": "./badges/bournemouth.webp" },
+    { "id": "brentford", "name": "Brentford", "code": "BRE", "badge": "./badges/brentford.webp" },
+    { "id": "brighton", "name": "Brighton & Hove Albion", "code": "BHA", "badge": "./badges/brighton.webp" },
+    { "id": "chelsea", "name": "Chelsea", "code": "CHE", "badge": "./badges/chelsea.webp" },
+    { "id": "coventry-city", "name": "Coventry City", "code": "COV", "badge": "./badges/coventry-city.webp", "promoted": true },
+    { "id": "crystal-palace", "name": "Crystal Palace", "code": "CRY", "badge": "./badges/crystal-palace.webp" },
+    { "id": "everton", "name": "Everton", "code": "EVE", "badge": "./badges/everton.webp" },
+    { "id": "fulham", "name": "Fulham", "code": "FUL", "badge": "./badges/fulham.webp" },
+    { "id": "hull-city", "name": "Hull City", "code": "HUL", "badge": "./badges/hull-city.webp", "promoted": true },
+    { "id": "ipswich-town", "name": "Ipswich Town", "code": "IPS", "badge": "./badges/ipswich-town.webp", "promoted": true },
+    { "id": "leeds-united", "name": "Leeds United", "code": "LEE", "badge": "./badges/leeds-united.webp" },
+    { "id": "liverpool", "name": "Liverpool", "code": "LIV", "badge": "./badges/liverpool.webp" },
+    { "id": "manchester-city", "name": "Manchester City", "code": "MCI", "badge": "./badges/manchester-city.webp" },
+    { "id": "manchester-united", "name": "Manchester United", "code": "MUN", "badge": "./badges/manchester-united.webp" },
+    { "id": "newcastle-united", "name": "Newcastle United", "code": "NEW", "badge": "./badges/newcastle-united.webp" },
+    { "id": "nottingham-forest", "name": "Nottingham Forest", "code": "NFO", "badge": "./badges/nottingham-forest.webp" },
+    { "id": "sunderland", "name": "Sunderland", "code": "SUN", "badge": "./badges/sunderland.webp" },
+    { "id": "tottenham-hotspur", "name": "Tottenham Hotspur", "code": "TOT", "badge": "./badges/tottenham-hotspur.webp" }
+  ]
+}

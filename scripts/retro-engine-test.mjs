@@ -146,6 +146,14 @@ Object.entries(squads2022).forEach(([team, squad]) => {
   assert.equal(squad.players.length, team === "Iran" ? 25 : 26, `${team} should preserve its official 2022 squad size`);
   const expectedGoalkeepers = ["Iran", "Switzerland", "Tunisia"].includes(team) ? 4 : 3;
   assert.equal(squad.players.filter((player) => player.position === "GK").length, expectedGoalkeepers, `${team} should preserve its official 2022 goalkeeper count`);
+  assert.ok(
+    squad.players.every((player) => !["DF", "MF", "FW"].includes(player.position)),
+    `${team} should expose detailed WC22 positions instead of broad groups`,
+  );
+  assert.ok(
+    squad.players.every((player) => player.positions.includes(player.position)),
+    `${team} should retain each player's primary role in the suitability list`,
+  );
   assert.equal(squad.startingXI.length, 11, `${team} should have a sourced 2022 opening-match XI`);
   assert.equal(new Set(squad.startingXI).size, 11, `${team} 2022 opening-match XI should not repeat players`);
   assert.ok(squad.formation, `${team} should have a sourced 2022 formation`);
@@ -154,6 +162,20 @@ Object.entries(squads2022).forEach(([team, squad]) => {
   assert.equal(lineup.players.length, 11, `${team} should have a complete 2022 starting XI`);
   assert.equal(new Set(lineup.players.map((player) => player.number)).size, 11, `${team} 2022 starting XI should not repeat players`);
 });
+assert.equal(
+  squads2022.England.players.find((player) => player.name === "Kyle Walker")?.position,
+  "RB",
+  "WC22 full-backs should keep their detailed role",
+);
+assert.equal(
+  squads2022.Brazil.players.find((player) => player.name === "Casemiro")?.position,
+  "CDM",
+  "WC22 holding midfielders should keep their detailed role",
+);
+assert.ok(
+  squads2022.Germany.players.find((player) => player.name === "Joshua Kimmich")?.positions.includes("RB"),
+  "WC22 secondary positions should remain available to the lineup picker",
+);
 
 const tournament = engine.createTournament({ year: 2014, seed: 2014, managedTeam: "Brazil" });
 assert.equal(tournament.groupMatches.length, 48);

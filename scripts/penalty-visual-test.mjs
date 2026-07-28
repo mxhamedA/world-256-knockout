@@ -36,6 +36,28 @@ vm.runInContext(`
   globalThis.resolveKeeper = resolveKeeperPenaltyAttempt;
 `, context);
 
+const skipContext = vm.createContext({});
+vm.runInContext(`
+  let state = {
+    started: true,
+    rounds: [Array.from({ length: 128 }, () => ({}))],
+  };
+  let livePlayback = {
+    phase: "shootout",
+    interactiveShootout: true,
+    ending: false,
+  };
+  ${functionSource("isDefault256KnockoutState")}
+  ${functionSource("canSkipPenaltyShootout")}
+  globalThis.canSkip = () => canSkipPenaltyShootout();
+  globalThis.setCustom = () => { state.customTournament = { active: true }; };
+`, skipContext);
+assert.equal(skipContext.canSkip(), true,
+  "The default 256-team knockout must allow an interactive shootout to be skipped.");
+skipContext.setCustom();
+assert.equal(skipContext.canSkip(), true,
+  "A managed-team shootout must remain skippable in every tournament mode.");
+
 function scene() {
   return {
     dataset: {},
@@ -176,6 +198,26 @@ assert.match(
   functionSource("matchPenaltyAttempt"),
   /random\(\)\s*<\s*conversionChance/,
   "Automatic regulation penalties must use team-based conversion odds.",
+);
+assert.match(
+  functionSource("matchPenaltyAttempt"),
+  /interactivePenaltyDecisions\?\.\[event\.id\]/,
+  "A submitted regulation-penalty decision must be restored after a refresh.",
+);
+assert.match(
+  functionSource("chooseMatchPenaltyTarget"),
+  /saveInteractivePenaltyDecision\(event, attempt\)[\s\S]*saveState\(\);[\s\S]*saveLiveMatchCheckpoint\(\);/,
+  "A regulation-penalty choice and its live checkpoint must be saved before play resumes.",
+);
+assert.match(
+  functionSource("startMatchPenaltyAnimation"),
+  /const decisionLocked = interactive && Boolean\(attempt\.target\);[\s\S]*if \(!awaitingChoice\)/,
+  "A restored regulation penalty must replay its locked result without accepting another choice.",
+);
+assert.match(
+  functionSource("removeSavedPenaltyGoal"),
+  /match\.result\.winnerId = match\.result\.homeGoals === match\.result\.awayGoals[\s\S]*\? null/,
+  "Saving a penalty must immediately clear a stale winner when the corrected score is level.",
 );
 
 console.log("Penalty scoring and animation invariants passed.");

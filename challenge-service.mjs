@@ -9,9 +9,9 @@ import {
   playChallengeRound,
 } from "./challenge-engine.mjs";
 import {
-  challengeSessionCookie,
-  challengeSessionTokenFromRequest,
-  clearChallengeSessionCookie,
+  challengeSessionCookiesForRequest,
+  challengeSessionTokensFromRequest,
+  clearChallengeSessionCookiesForRequest,
   hashChallengePassword,
   hashChallengeSessionToken,
   makeChallengeSessionToken,
@@ -24,6 +24,7 @@ import {
 const SESSION_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
 const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
 const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
+const PL_ASSET_PACK_ID = "pl-26-27";
 const RETRO_2010_TEAMS = Object.freeze([
   "South Africa", "Mexico", "Uruguay", "France",
   "Argentina", "Nigeria", "South Korea", "Greece",
@@ -43,6 +44,14 @@ const RETRO_2014_TEAMS = Object.freeze([
   "Argentina", "Bosnia and Herzegovina", "Iran", "Nigeria",
   "Germany", "Portugal", "Ghana", "USA",
   "Belgium", "Algeria", "Russia", "South Korea",
+]);
+const RETRO_2016_TEAMS = Object.freeze([
+  "France", "Romania", "Albania", "Switzerland",
+  "England", "Russia", "Wales", "Slovakia",
+  "Germany", "Ukraine", "Poland", "Northern Ireland",
+  "Spain", "Czech Republic", "Turkey", "Croatia",
+  "Belgium", "Italy", "Republic of Ireland", "Sweden",
+  "Portugal", "Iceland", "Austria", "Hungary",
 ]);
 const RETRO_2018_TEAMS = Object.freeze([
   "Russia", "Saudi Arabia", "Egypt", "Uruguay",
@@ -77,6 +86,11 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     80, 77, 85, 69, 90, 78, 71, 76,
     92, 84, 78, 77, 84, 74, 79, 72,
   ]),
+  2016: Object.freeze([
+    88, 75, 72, 81, 85, 79, 82, 79,
+    89, 78, 83, 75, 88, 78, 80, 86,
+    87, 86, 77, 80, 87, 78, 81, 77,
+  ]),
   2018: Object.freeze([
     81, 71, 74, 86, 86, 89, 75, 73,
     92, 75, 78, 81, 87, 77, 87, 77,
@@ -90,7 +104,8 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     91, 80, 82, 77, 88, 76, 84, 79,
   ]),
 });
-const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2010, 2014, 2018, 2022]);
+const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2010, 2014, 2016, 2018, 2022]);
+const KNOCKOUT_256_KEY = 256;
 const API_HEADERS = Object.freeze({
   "Cache-Control": "no-store",
   "Content-Type": "application/json; charset=utf-8",
@@ -107,7 +122,11 @@ class ChallengeRequestError extends Error {
 }
 
 function responseJson(value, status = 200, headers = {}) {
-  return new Response(JSON.stringify(value), { status, headers: { ...API_HEADERS, ...headers } });
+  const responseHeaders = new Headers(API_HEADERS);
+  Object.entries(headers).forEach(([name, headerValue]) => {
+    (Array.isArray(headerValue) ? headerValue : [headerValue]).forEach((item) => responseHeaders.append(name, item));
+  });
+  return new Response(JSON.stringify(value), { status, headers: responseHeaders });
 }
 
 function redirectResponse(location, headers = {}) {
@@ -351,7 +370,17 @@ async function completeGoogleLogin(request, env, url) {
     }
     const destination = new URL(stored.return_path, url.origin);
     destination.searchParams.set("auth", "success");
-    return redirectResponse(destination.toString(), { "Set-Cookie": [challengeSessionCookie(session), clearOauthStateCookie()] });
+    return redirectResponse(destination.toString(), {
+      "Set-Cookie": [
+        ...challengeSessionCookiesForRequest(
+          request,
+          session,
+          undefined,
+          env.LOCAL_DEV_AUTH === "true",
+        ),
+        clearOauthStateCookie(),
+      ],
+    });
   } catch (error) {
     const failureCode = error instanceof ChallengeRequestError && error.details?.code
       ? error.details.code
@@ -417,6 +446,7 @@ function publicAccount(account) {
     profileCountryId: country?.id || null,
     profileCountryName: country?.name || null,
     usernameNeedsReview: account.usernameNeedsReview === true,
+    assetPacks: Number(account.pl_26_27_assets_installed) === 1 ? [PL_ASSET_PACK_ID] : [],
   };
 }
 
@@ -436,24 +466,33 @@ async function currentChallenge(db, now = Date.now()) {
   return challenge;
 }
 
-async function authenticatedAccount(request, db, required = true) {
-  const token = challengeSessionTokenFromRequest(request);
-  if (!token) {
+async function authenticatedAccount(request, db, required = true, allowLocalSession = false) {
+  const tokens = challengeSessionTokensFromRequest(request, allowLocalSession);
+  if (!tokens.length) {
     if (required) throw new ChallengeRequestError("Log in to continue.", 401);
     return null;
   }
-  const tokenHash = await hashChallengeSessionToken(token);
-  const account = await db.prepare(`
-    SELECT accounts.id, accounts.username, accounts.email, accounts.profile_country_id, accounts.created_at,
-      (
-        SELECT provider_subject FROM auth_identities
-        WHERE account_id = accounts.id AND provider = 'google'
-        LIMIT 1
-      ) AS google_subject
-    FROM sessions
-    JOIN accounts ON accounts.id = sessions.account_id
-    WHERE sessions.token_hash = ? AND sessions.revoked_at IS NULL AND sessions.expires_at > ?
-  `).bind(tokenHash, Date.now()).first();
+  let account = null;
+  let tokenHash = null;
+  for (const token of tokens) {
+    tokenHash = await hashChallengeSessionToken(token);
+    account = await db.prepare(`
+      SELECT accounts.id, accounts.username, accounts.email, accounts.profile_country_id, accounts.created_at,
+        EXISTS(
+          SELECT 1 FROM account_asset_packs
+          WHERE account_id = accounts.id AND pack_id = '${PL_ASSET_PACK_ID}'
+        ) AS pl_26_27_assets_installed,
+        (
+          SELECT provider_subject FROM auth_identities
+          WHERE account_id = accounts.id AND provider = 'google'
+          LIMIT 1
+        ) AS google_subject
+      FROM sessions
+      JOIN accounts ON accounts.id = sessions.account_id
+      WHERE sessions.token_hash = ? AND sessions.revoked_at IS NULL AND sessions.expires_at > ?
+    `).bind(tokenHash, Date.now()).first();
+    if (account) break;
+  }
   if (!account && required) throw new ChallengeRequestError("Your session has expired. Please log in again.", 401);
   if (!account) return null;
   const usernameNeedsReview = await generatedGoogleUsernameNeedsReview(account);
@@ -519,7 +558,16 @@ async function register(request, env) {
       { code: "session_create_failed", accountCreated: true },
     );
   }
-  return responseJson({ account: { id: accountId, username, profileCountryId: null, profileCountryName: null } }, 201, { "Set-Cookie": challengeSessionCookie(token) });
+  return responseJson({
+    account: { id: accountId, username, profileCountryId: null, profileCountryName: null, assetPacks: [] },
+  }, 201, {
+    "Set-Cookie": challengeSessionCookiesForRequest(
+      request,
+      token,
+      undefined,
+      env.LOCAL_DEV_AUTH === "true",
+    ),
+  });
 }
 
 async function login(request, env) {
@@ -530,9 +578,18 @@ async function login(request, env) {
   if ((!email && !username) || !validChallengePassword(body.password)) {
     throw new ChallengeRequestError("Invalid username/email or password.", 401);
   }
-  const account = email
-    ? await env.CHALLENGE_DB.prepare("SELECT * FROM accounts WHERE email = ? COLLATE NOCASE").bind(email).first()
-    : await env.CHALLENGE_DB.prepare("SELECT * FROM accounts WHERE username = ? COLLATE NOCASE").bind(username).first();
+  const accountLookup = email
+    ? "accounts.email = ? COLLATE NOCASE"
+    : "accounts.username = ? COLLATE NOCASE";
+  const account = await env.CHALLENGE_DB.prepare(`
+    SELECT accounts.*,
+      EXISTS(
+        SELECT 1 FROM account_asset_packs
+        WHERE account_id = accounts.id AND pack_id = '${PL_ASSET_PACK_ID}'
+      ) AS pl_26_27_assets_installed
+    FROM accounts
+    WHERE ${accountLookup}
+  `).bind(email || username).first();
   let passwordMatches = false;
   if (account) passwordMatches = await verifyChallengePassword(body.password, account);
   else await hashChallengePassword(body.password, new Uint8Array(16));
@@ -540,13 +597,22 @@ async function login(request, env) {
     throw new ChallengeRequestError("Invalid username/email or password.", 401);
   }
   const token = await createSession(env.CHALLENGE_DB, account.id, request);
-  return responseJson({ account: publicAccount(account) }, 200, { "Set-Cookie": challengeSessionCookie(token) });
+  return responseJson({ account: publicAccount(account) }, 200, {
+    "Set-Cookie": challengeSessionCookiesForRequest(
+      request,
+      token,
+      undefined,
+      env.LOCAL_DEV_AUTH === "true",
+    ),
+  });
 }
 
 async function logout(request, env) {
-  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false);
+  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false, env.LOCAL_DEV_AUTH === "true");
   if (account) await env.CHALLENGE_DB.prepare("UPDATE sessions SET revoked_at = ? WHERE token_hash = ?").bind(Date.now(), account.tokenHash).run();
-  return responseJson({ ok: true }, 200, { "Set-Cookie": clearChallengeSessionCookie() });
+  return responseJson({ ok: true }, 200, {
+    "Set-Cookie": clearChallengeSessionCookiesForRequest(request, env.LOCAL_DEV_AUTH === "true"),
+  });
 }
 
 async function profile(request, env, account) {
@@ -578,9 +644,39 @@ async function profile(request, env, account) {
     if (String(error).toLowerCase().includes("unique")) throw new ChallengeRequestError("That username is already taken.", 409);
     throw error;
   }
-  const updated = await env.CHALLENGE_DB.prepare("SELECT id, username, profile_country_id, created_at FROM accounts WHERE id = ?")
+  const updated = await env.CHALLENGE_DB.prepare(`
+    SELECT accounts.id, accounts.username, accounts.profile_country_id, accounts.created_at,
+      EXISTS(
+        SELECT 1 FROM account_asset_packs
+        WHERE account_id = accounts.id AND pack_id = '${PL_ASSET_PACK_ID}'
+      ) AS pl_26_27_assets_installed
+    FROM accounts WHERE accounts.id = ?
+  `)
     .bind(account.id).first();
   return responseJson({ account: publicAccount(updated), updatedAt: now });
+}
+
+async function installAssetPack(request, env, account, packId) {
+  if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
+  if (packId !== PL_ASSET_PACK_ID) return responseJson({ error: "Asset pack not found." }, 404);
+  const installedAt = Date.now();
+  await env.CHALLENGE_DB.prepare(`
+    INSERT INTO account_asset_packs (account_id, pack_id, installed_at)
+    VALUES (?, ?, ?)
+    ON CONFLICT(account_id, pack_id) DO NOTHING
+  `).bind(account.id, packId, installedAt).run();
+  const installed = await env.CHALLENGE_DB.prepare(`
+    SELECT installed_at FROM account_asset_packs
+    WHERE account_id = ? AND pack_id = ?
+  `).bind(account.id, packId).first();
+  return responseJson({
+    assetPack: {
+      id: packId,
+      installed: true,
+      installedAt: installed?.installed_at || installedAt,
+    },
+    account: publicAccount({ ...account, pl_26_27_assets_installed: 1 }),
+  });
 }
 
 async function requestAccountDeletion(request, env, account) {
@@ -830,7 +926,7 @@ async function leaderboard(db, challenge, account) {
 async function dashboard(request, env) {
   const now = Date.now();
   const challenge = await currentChallenge(env.CHALLENGE_DB, now);
-  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false);
+  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false, env.LOCAL_DEV_AUTH === "true");
   const board = await leaderboard(env.CHALLENGE_DB, challenge, account);
   let activeRun = null;
   let history = [];
@@ -871,6 +967,15 @@ function retroAchievementConfig(year) {
       title: "Russia 2018 World Tour",
     };
   }
+  if (Number(year) === 2016) {
+    return {
+      year: 2016,
+      table: "retro_2016_attempts",
+      teams: RETRO_2016_TEAMS,
+      id: "retro-2016-european-tour",
+      title: "UEFA Euro 2016 Tour",
+    };
+  }
   if (Number(year) === 2022) {
     return {
       year: 2022,
@@ -903,6 +1008,157 @@ export function retroAchievementPoints(year, teamName) {
   if (rating >= 75) return 6;
   if (rating >= 72) return 8;
   return 10;
+}
+
+export function knockout256AchievementDefinition(teamId) {
+  const team = DRAFT_TEAMS.find((entry) => entry.id === teamId);
+  if (!team) return null;
+  if (team.id === "team-25") {
+    return {
+      teamId,
+      teamName: team.name,
+      objective: "lose-round-256",
+      objectiveLabel: "Lose in the Round of 256",
+      targetRoundIndex: 0,
+      points: 4,
+    };
+  }
+  const rating = Number(team.simulationRatings?.overall) || 0;
+  if (rating >= 50) {
+    return {
+      teamId,
+      teamName: team.name,
+      objective: "champion",
+      objectiveLabel: "Win the tournament",
+      targetRoundIndex: 7,
+      points: rating >= 90 ? 1 : rating >= 80 ? 1 : rating >= 70 ? 2 : rating >= 60 ? 2 : 3,
+    };
+  }
+  if (rating >= 45) {
+    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the final", targetRoundIndex: 7, points: 3 };
+  }
+  if (rating >= 40) {
+    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the semi-finals", targetRoundIndex: 6, points: 4 };
+  }
+  if (rating >= 35) {
+    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the quarter-finals", targetRoundIndex: 5, points: 4 };
+  }
+  return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the Round of 16", targetRoundIndex: 4, points: 5 };
+}
+
+export function knockout256ObjectiveAchieved(definition, {
+  bestRoundIndex,
+  championTeamId = null,
+  phase = "progress",
+} = {}) {
+  if (!definition) return 0;
+  if (definition.objective === "champion") {
+    return Number(
+      phase === "complete"
+      && bestRoundIndex === 7
+      && championTeamId === definition.teamId
+    );
+  }
+  if (definition.objective === "lose-round-256") {
+    return Number(
+      phase === "complete"
+      && bestRoundIndex === 0
+      && championTeamId !== definition.teamId
+    );
+  }
+  return Number(bestRoundIndex >= definition.targetRoundIndex);
+}
+
+async function knockout256AchievementProgress(db, account) {
+  const rows = account ? (await db.prepare(`
+    WITH account_attempts AS (
+      SELECT team_id, champion, achieved, best_round_index, started_at, completed_at
+      FROM knockout_256_attempts
+      WHERE account_id = ?
+    ),
+    first_achievements AS (
+      SELECT team_id,
+        MIN(CASE
+          WHEN team_id = 'team-25'
+            AND best_round_index = 0
+            AND completed_at IS NOT NULL
+            AND champion = 0
+            THEN COALESCE(completed_at, started_at)
+          WHEN team_id <> 'team-25' AND achieved = 1
+            THEN COALESCE(completed_at, started_at)
+        END) AS first_unlock_at,
+        MIN(CASE WHEN champion = 1 THEN COALESCE(completed_at, started_at) END) AS first_champion_at
+      FROM account_attempts
+      GROUP BY team_id
+    )
+    SELECT attempts.team_id,
+      COUNT(*) AS attempts,
+      MAX(attempts.champion) AS champion,
+      MAX(attempts.achieved) AS achieved,
+      MAX(CASE
+        WHEN attempts.team_id = 'team-25'
+          AND attempts.best_round_index = 0
+          AND attempts.completed_at IS NOT NULL
+          AND attempts.champion = 0
+          THEN 1
+        ELSE 0
+      END) AS lost_round_256,
+      MAX(attempts.best_round_index) AS best_round_index,
+      SUM(CASE
+        WHEN first_achievements.first_unlock_at IS NOT NULL
+          AND attempts.started_at <= first_achievements.first_unlock_at THEN 1
+        ELSE 0
+      END) AS achieved_on_attempt,
+      SUM(CASE
+        WHEN first_achievements.first_champion_at IS NOT NULL
+          AND attempts.started_at <= first_achievements.first_champion_at THEN 1
+        ELSE 0
+      END) AS champion_on_attempt,
+      MAX(first_achievements.first_unlock_at) AS unlocked_at,
+      MAX(first_achievements.first_champion_at) AS champion_at
+    FROM account_attempts attempts
+    LEFT JOIN first_achievements ON first_achievements.team_id = attempts.team_id
+    GROUP BY attempts.team_id
+  `).bind(account.id).all()).results : [];
+  const byTeam = new Map(rows.map((row) => [row.team_id, row]));
+  const teams = DRAFT_TEAMS.map((team) => {
+    const definition = knockout256AchievementDefinition(team.id);
+    const row = byTeam.get(team.id);
+    const championObjective = definition.objective === "champion";
+    const loseFirstRoundObjective = definition.objective === "lose-round-256";
+    const complete = championObjective
+      ? Number(row?.champion || 0) === 1
+      : loseFirstRoundObjective
+        ? Number(row?.lost_round_256 || 0) === 1
+        : Number(row?.achieved || 0) === 1;
+    const achievedOnAttempt = Number(
+      championObjective ? row?.champion_on_attempt : row?.achieved_on_attempt,
+    ) || null;
+    const unlockedAt = Number(championObjective ? row?.champion_at : row?.unlocked_at) || null;
+    return {
+      ...definition,
+      attempts: Number(row?.attempts || 0),
+      bestRoundIndex: Number(row?.best_round_index || 0),
+      complete,
+      won: complete,
+      achievedOnAttempt,
+      wonOnAttempt: achievedOnAttempt,
+      unlockedAt,
+    };
+  });
+  const completed = teams.filter((team) => team.complete).length;
+  return {
+    id: "knockout-256-world-tour",
+    title: "256 Knockout World Tour",
+    year: KNOCKOUT_256_KEY,
+    mode: "knockout-256",
+    completed,
+    completedPoints: teams.reduce((sum, team) => sum + (team.complete ? team.points : 0), 0),
+    totalPoints: teams.reduce((sum, team) => sum + team.points, 0),
+    total: teams.length,
+    unlocked: completed === teams.length,
+    teams,
+  };
 }
 
 async function retroAchievementProgress(db, account, year) {
@@ -959,41 +1215,79 @@ async function retroAchievementProgress(db, account, year) {
 }
 
 async function achievementLeaderboard(request, env) {
-  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false);
-  const rows = (await env.CHALLENGE_DB.prepare(`
-    SELECT accounts.id AS account_id, accounts.username, accounts.profile_country_id,
-      wins.year, wins.team_name, wins.unlocked_at
-    FROM accounts
-    LEFT JOIN (
-      SELECT account_id, 2010 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+  const account = await authenticatedAccount(request, env.CHALLENGE_DB, false, env.LOCAL_DEV_AUTH === "true");
+  const [accountRows, retroRows, knockoutRows] = await Promise.all([
+    env.CHALLENGE_DB.prepare(`
+      SELECT id AS account_id, username, profile_country_id
+      FROM accounts
+    `).all(),
+    env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 2010 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2010_attempts WHERE won = 1 GROUP BY account_id, team_name
       UNION ALL
-      SELECT account_id, 2014 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      SELECT account_id, 2014 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2014_attempts WHERE won = 1 GROUP BY account_id, team_name
       UNION ALL
-      SELECT account_id, 2018 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      SELECT account_id, 2016 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2016_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
+      SELECT account_id, 2018 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2018_attempts WHERE won = 1 GROUP BY account_id, team_name
       UNION ALL
-      SELECT account_id, 2022 AS year, team_name, MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      SELECT account_id, 2022 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2022_attempts WHERE won = 1 GROUP BY account_id, team_name
-    ) wins ON wins.account_id = accounts.id
-  `).all()).results;
-  const byAccount = new Map();
-  rows.forEach((row) => {
-    const entry = byAccount.get(row.account_id) || {
+    `).all(),
+    env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 256 AS year, team_id AS team_name, MAX(champion) AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM knockout_256_attempts
+      WHERE (
+        team_id = 'team-25'
+        AND best_round_index = 0
+        AND completed_at IS NOT NULL
+        AND champion = 0
+      ) OR (
+        team_id <> 'team-25'
+        AND achieved = 1
+      )
+      GROUP BY account_id, team_id
+    `).all(),
+  ]);
+  const byAccount = new Map((accountRows.results || []).map((row) => [
+    row.account_id,
+    {
       accountId: row.account_id,
       username: row.username,
       profileCountryId: row.profile_country_id || null,
       points: 0,
       achievements: 0,
       latestUnlock: 0,
-    };
+    },
+  ]));
+  [...(retroRows.results || []), ...(knockoutRows.results || [])].forEach((row) => {
+    const entry = byAccount.get(row.account_id);
+    if (!entry) return;
     if (row.year && row.team_name) {
-      entry.points += retroAchievementPoints(Number(row.year), row.team_name);
+      const knockoutDefinition = Number(row.year) === KNOCKOUT_256_KEY
+        ? knockout256AchievementDefinition(row.team_name)
+        : null;
+      const validUnlock = !knockoutDefinition
+        || knockoutDefinition.objective !== "champion"
+        || Number(row.champion) === 1;
+      if (!validUnlock) {
+        return;
+      }
+      entry.points += Number(row.year) === KNOCKOUT_256_KEY
+        ? knockoutDefinition?.points || 0
+        : retroAchievementPoints(Number(row.year), row.team_name);
       entry.achievements += 1;
       entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
     }
-    byAccount.set(row.account_id, entry);
   });
   const ranked = [...byAccount.values()]
     .sort((left, right) => right.points - left.points
@@ -1019,7 +1313,81 @@ async function achievementLeaderboard(request, env) {
   return responseJson({
     leaderboard: ranked.slice(0, 100),
     currentUser,
-    totalAchievements: RETRO_ACHIEVEMENT_YEARS.length * 32,
+    totalAchievements: RETRO_ACHIEVEMENT_YEARS.reduce(
+      (sum, year) => sum + retroAchievementConfig(year).teams.length,
+      DRAFT_TEAMS.length,
+    ),
+  });
+}
+
+async function knockout256Achievement(request, env, account) {
+  if (request.method === "GET") {
+    return responseJson({ achievement: await knockout256AchievementProgress(env.CHALLENGE_DB, account) });
+  }
+  if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
+
+  const body = await request.json().catch(() => ({}));
+  const definition = knockout256AchievementDefinition(typeof body.teamId === "string" ? body.teamId : "");
+  const seed = Number(body.seed);
+  const bestRoundIndex = Number(body.bestRoundIndex);
+  const phase = body.phase === "complete" ? "complete" : "progress";
+  if (
+    !definition
+    || !Number.isSafeInteger(seed)
+    || seed < 0
+    || !Number.isInteger(bestRoundIndex)
+    || bestRoundIndex < 0
+    || bestRoundIndex > 7
+  ) {
+    throw new ChallengeRequestError("Invalid 256 knockout tournament.", 400);
+  }
+
+  const before = await knockout256AchievementProgress(env.CHALLENGE_DB, account);
+  const previousTeam = before.teams.find((team) => team.teamId === definition.teamId);
+  const now = Date.now();
+  await env.CHALLENGE_DB.prepare(`
+    INSERT OR IGNORE INTO knockout_256_attempts
+      (account_id, tournament_seed, team_id, best_round_index, champion, achieved, started_at)
+    VALUES (?, ?, ?, ?, 0, 0, ?)
+  `).bind(account.id, seed, definition.teamId, bestRoundIndex, now).run();
+
+  const champion = knockout256ObjectiveAchieved(
+    { ...definition, objective: "champion" },
+    { phase, bestRoundIndex, championTeamId: body.championTeamId },
+  );
+  const achieved = knockout256ObjectiveAchieved(
+    definition,
+    { phase, bestRoundIndex, championTeamId: body.championTeamId },
+  );
+  await env.CHALLENGE_DB.prepare(`
+    UPDATE knockout_256_attempts
+    SET best_round_index = MAX(best_round_index, ?),
+      champion = MAX(champion, ?),
+      achieved = MAX(achieved, ?),
+      completed_at = CASE
+        WHEN completed_at IS NULL AND (? = 1 OR ? = 'complete') THEN ?
+        ELSE completed_at
+      END
+    WHERE account_id = ? AND tournament_seed = ? AND team_id = ?
+  `).bind(
+    bestRoundIndex,
+    champion,
+    achieved,
+    achieved,
+    phase,
+    now,
+    account.id,
+    seed,
+    definition.teamId,
+  ).run();
+
+  const achievement = await knockout256AchievementProgress(env.CHALLENGE_DB, account);
+  const currentTeam = achievement.teams.find((team) => team.teamId === definition.teamId);
+  return responseJson({
+    achievement,
+    countryUnlocked: !previousTeam?.complete && currentTeam?.complete === true,
+    challengeUnlocked: !before.unlocked && achievement.unlocked,
+    unlockedTeam: currentTeam,
   });
 }
 
@@ -1078,14 +1446,30 @@ export async function handleChallengeRequest(request, env, url) {
     if (url.pathname === "/api/challenge/achievements/leaderboard" && request.method === "GET") {
       return await achievementLeaderboard(request, env);
     }
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2018|2022)$/);
+    if (url.pathname === "/api/challenge/achievements/knockout-256") {
+      const achievementAccount = await authenticatedAccount(
+        request,
+        env.CHALLENGE_DB,
+        request.method !== "GET",
+        env.LOCAL_DEV_AUTH === "true",
+      );
+      return await knockout256Achievement(request, env, achievementAccount);
+    }
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2016|2018|2022)$/);
     if (retroAchievementMatch) {
-      const achievementAccount = await authenticatedAccount(request, env.CHALLENGE_DB, request.method !== "GET");
+      const achievementAccount = await authenticatedAccount(
+        request,
+        env.CHALLENGE_DB,
+        request.method !== "GET",
+        env.LOCAL_DEV_AUTH === "true",
+      );
       return await retroAchievement(request, env, achievementAccount, Number(retroAchievementMatch[1]));
     }
-    const account = await authenticatedAccount(request, env.CHALLENGE_DB);
+    const account = await authenticatedAccount(request, env.CHALLENGE_DB, true, env.LOCAL_DEV_AUTH === "true");
     if (url.pathname === "/api/challenge/profile") return await profile(request, env, account);
     if (url.pathname === "/api/challenge/profile/deletion-request") return await requestAccountDeletion(request, env, account);
+    const assetPackMatch = url.pathname.match(/^\/api\/challenge\/assets\/([a-z0-9-]+)$/);
+    if (assetPackMatch) return await installAssetPack(request, env, account, assetPackMatch[1]);
     if (url.pathname === "/api/challenge/runs" && request.method === "POST") return await startRun(request, env, account);
     const runMatch = url.pathname.match(/^\/api\/challenge\/runs\/([0-9a-f-]{36})\/play$/i);
     if (runMatch && request.method === "POST") return await playRun(request, env, account, runMatch[1]);

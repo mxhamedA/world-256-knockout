@@ -2,20 +2,59 @@ const STORAGE_KEY = "world-256-tournament-v1";
 const LEGACY_TOURNAMENT_SESSION_KEY = "world-256-legacy-tournament-v1";
 const MATCH_SPEED_STORAGE_KEY = "world-256-match-speed";
 const MATCH_HIGHLIGHT_MODE_STORAGE_KEY = "world-256-highlight-mode";
+const LIVE_MATCH_CHECKPOINT_STORAGE_KEY = "world-256-live-match-checkpoint-v1";
+const REMOVE_INJURIES_STORAGE_KEY = "world-256-remove-injuries";
 const ONLINE_ROOM_SESSION_KEY = "world-256-online-room-v1";
+const ONLINE_MATCHMAKING_SESSION_KEY = "world-256-online-matchmaking-v1";
 const ONLINE_DISPLAY_NAME_KEY = "world-256-online-display-name-v1";
 const RETRO_WORLD_CUP_YEAR_KEY = "world-256-retro-world-cup-year";
 const RETRO_WORLD_CUP_TEAM_KEY_PREFIX = "world-256-retro-world-cup-team";
+const RETRO_COMPETITION_KEY = "world-256-retro-competition";
+const RETRO_EURO_2016_TEAM_KEY = "world-256-retro-euro-2016-team";
 const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
 const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
+const PREMIER_LEAGUE_SETUP_STORAGE_KEY = "world-256-premier-league-2026-27-setup-v1";
 const CUSTOM_TOURNAMENT_SETUP_KEY = "world-256-custom-tournament-setup-v1";
+const TOURNAMENT_HISTORY_STORAGE_KEY = "world-256-tournament-history-v1";
+const EURO_2016_ANNOUNCEMENT_KEY = "world-256-announcement-euro-2016-v1";
+const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
+const POST_WIN_DONATION_CHANCE = 0.25;
+const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
 const CUSTOM_TOURNAMENT_TEAM_COUNTS = Object.freeze([8, 16, 24, 32, 48, 64, 128, 256]);
 const ONLINE_PARTY_MODE_ENABLED = true;
+const LIVE_MATCH_MANAGEMENT_UI_ENABLED = true;
 const STATE_VERSION = 2;
+const TOURNAMENT_HISTORY_VERSION = 1;
+const TOURNAMENT_HISTORY_LIMIT = 12;
+
+const PREMIER_LEAGUE_ASSET_PACK_ID = "pl-26-27";
+const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
+  { id: "arsenal", name: "Arsenal", code: "ARS", badge: "./assets/pl-26-27/badges/arsenal.webp" },
+  { id: "aston-villa", name: "Aston Villa", code: "AVL", badge: "./assets/pl-26-27/badges/aston-villa.webp" },
+  { id: "bournemouth", name: "Bournemouth", code: "BOU", badge: "./assets/pl-26-27/badges/bournemouth.webp" },
+  { id: "brentford", name: "Brentford", code: "BRE", badge: "./assets/pl-26-27/badges/brentford.webp" },
+  { id: "brighton", name: "Brighton & Hove Albion", code: "BHA", badge: "./assets/pl-26-27/badges/brighton.webp" },
+  { id: "chelsea", name: "Chelsea", code: "CHE", badge: "./assets/pl-26-27/badges/chelsea.webp" },
+  { id: "coventry-city", name: "Coventry City", code: "COV", badge: "./assets/pl-26-27/badges/coventry-city.webp", promoted: true },
+  { id: "crystal-palace", name: "Crystal Palace", code: "CRY", badge: "./assets/pl-26-27/badges/crystal-palace.webp" },
+  { id: "everton", name: "Everton", code: "EVE", badge: "./assets/pl-26-27/badges/everton.webp" },
+  { id: "fulham", name: "Fulham", code: "FUL", badge: "./assets/pl-26-27/badges/fulham.webp" },
+  { id: "hull-city", name: "Hull City", code: "HUL", badge: "./assets/pl-26-27/badges/hull-city.webp", promoted: true },
+  { id: "ipswich-town", name: "Ipswich Town", code: "IPS", badge: "./assets/pl-26-27/badges/ipswich-town.webp", promoted: true },
+  { id: "leeds-united", name: "Leeds United", code: "LEE", badge: "./assets/pl-26-27/badges/leeds-united.webp" },
+  { id: "liverpool", name: "Liverpool", code: "LIV", badge: "./assets/pl-26-27/badges/liverpool.webp" },
+  { id: "manchester-city", name: "Manchester City", code: "MCI", badge: "./assets/pl-26-27/badges/manchester-city.webp" },
+  { id: "manchester-united", name: "Manchester United", code: "MUN", badge: "./assets/pl-26-27/badges/manchester-united.webp" },
+  { id: "newcastle-united", name: "Newcastle United", code: "NEW", badge: "./assets/pl-26-27/badges/newcastle-united.webp" },
+  { id: "nottingham-forest", name: "Nottingham Forest", code: "NFO", badge: "./assets/pl-26-27/badges/nottingham-forest.webp" },
+  { id: "sunderland", name: "Sunderland", code: "SUN", badge: "./assets/pl-26-27/badges/sunderland.webp" },
+  { id: "tottenham-hotspur", name: "Tottenham Hotspur", code: "TOT", badge: "./assets/pl-26-27/badges/tottenham-hotspur.webp" },
+]);
 
 const RETRO_WORLD_CUP_PATHS = Object.freeze({
   2010: "/retro-10-world-cup",
   2014: "/retro-14-world-cup",
+  2016: "/retro-euro-2016",
   2018: "/retro-18-world-cup",
   2022: "/retro-22-world-cup",
 });
@@ -42,6 +81,14 @@ const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
     accent: "#fcc40c",
     accentText: "#151006",
   }),
+  2016: Object.freeze({
+    label: "France 2016",
+    host: "France",
+    logo: "./assets/euro-2016-logo.png",
+    accent: "#00a8dc",
+    accentText: "#ffffff",
+    competition: "UEFA Euro",
+  }),
   2018: Object.freeze({
     label: "Russia 2018",
     host: "Russia",
@@ -63,6 +110,40 @@ const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
     accent: "#3463ff",
     accentText: "#ffffff",
   }),
+});
+
+const RETRO_EURO_2016 = Object.freeze({
+  year: "2016",
+  label: "France 2016",
+  logo: "./assets/euro-2016-logo.png",
+  accent: "#0098cd",
+  accentText: "#ffffff",
+  teams: Object.freeze([
+    { name: "France", group: "A" },
+    { name: "Romania", group: "A" },
+    { name: "Albania", group: "A" },
+    { name: "Switzerland", group: "A" },
+    { name: "England", group: "B" },
+    { name: "Russia", group: "B" },
+    { name: "Wales", group: "B" },
+    { name: "Slovakia", group: "B" },
+    { name: "Germany", group: "C" },
+    { name: "Ukraine", group: "C" },
+    { name: "Poland", group: "C" },
+    { name: "Northern Ireland", group: "C" },
+    { name: "Spain", group: "D" },
+    { name: "Czech Republic", group: "D" },
+    { name: "Turkey", group: "D" },
+    { name: "Croatia", group: "D" },
+    { name: "Belgium", group: "E" },
+    { name: "Italy", group: "E" },
+    { name: "Republic of Ireland", group: "E" },
+    { name: "Sweden", group: "E" },
+    { name: "Portugal", group: "F" },
+    { name: "Iceland", group: "F" },
+    { name: "Austria", group: "F" },
+    { name: "Hungary", group: "F" },
+  ]),
 });
 
 const STANDARD_TACTICS = Object.freeze({
@@ -104,6 +185,25 @@ const els = {
   championPodium: $("#championPodium"),
   championExtraAwards: $("#championExtraAwards"),
   championTeamJourney: $("#championTeamJourney"),
+  championSaveTournament: $("#championSaveTournament"),
+  championSaveTournamentLabel: $("#championSaveTournamentLabel"),
+  savedTournamentDeleteButton: $("#savedTournamentDeleteButton"),
+  retroSavedTournamentDeleteButton: $("#retroSavedTournamentDeleteButton"),
+  savedTournamentDeleteModal: $("#savedTournamentDeleteModal"),
+  savedTournamentDeleteCopy: $("#savedTournamentDeleteCopy"),
+  confirmSavedTournamentDeleteButton: $("#confirmSavedTournamentDeleteButton"),
+  tournamentHistoryScreen: $("#tournamentHistoryScreen"),
+  tournamentHistoryClose: $("#tournamentHistoryClose"),
+  tournamentHistoryKicker: $("#tournamentHistoryKicker"),
+  tournamentHistoryTitle: $("#tournamentHistoryTitle"),
+  tournamentHistorySavedAt: $("#tournamentHistorySavedAt"),
+  tournamentHistoryHero: $("#tournamentHistoryHero"),
+  tournamentHistorySummary: $("#tournamentHistorySummary"),
+  tournamentHistoryRounds: $("#tournamentHistoryRounds"),
+  tournamentHistoryRoundTitle: $("#tournamentHistoryRoundTitle"),
+  tournamentHistoryRoundCount: $("#tournamentHistoryRoundCount"),
+  tournamentHistoryMatch: $("#tournamentHistoryMatch"),
+  tournamentHistoryFixtures: $("#tournamentHistoryFixtures"),
   matchNumber: $("#matchNumber"),
   stageRoundLabel: $("#stageRoundLabel"),
   homeSeed: $("#homeSeed"),
@@ -131,7 +231,11 @@ const els = {
   awayEventSide: $("#awayEventSide"),
   eventLiveClock: $("#eventLiveClock"),
   standardMatchTactics: $("#standardMatchTactics"),
+  standardTacticOpponent: $("#standardTacticOpponent"),
+  standardTacticFeedback: $("#standardTacticFeedback"),
   standardTacticButtons: $("#standardTacticButtons"),
+  plWatchTactics: $("#plWatchTactics"),
+  plWatchTacticsCopy: $("#plWatchTacticsCopy"),
   match2dViewer: $("#match2dViewer"),
   matchCommentaryView: $("#matchCommentaryView"),
   matchCommentaryFeed: $("#matchCommentaryFeed"),
@@ -202,7 +306,12 @@ const els = {
   newsButton: $("#newsButton"),
   newsModal: $("#newsModal"),
   newsCloseButton: $("#newsCloseButton"),
+  euro2016AnnouncementModal: $("#euro2016AnnouncementModal"),
+  euro2016AnnouncementClose: $("#euro2016AnnouncementClose"),
+  euro2016AnnouncementAction: $("#euro2016AnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
+  removeInjuriesSetting: $("#removeInjuriesSetting"),
+  removeInjuriesLabel: $("#removeInjuriesLabel"),
   keybindsToggleButton: $("#keybindsToggleButton"),
   keybindsToggleLabel: $("#keybindsToggleLabel"),
   keybindSettingsList: $("#keybindSettingsList"),
@@ -238,15 +347,31 @@ const els = {
   appShell: $("#appShell"),
   startTournamentButton: $("#startTournamentButton"),
   homeRestartButton: $("#homeRestartButton"),
+  defaultModeCard: $("#defaultModeCard"),
   startLegacyDraftButton: $("#startLegacyDraftButton"),
   restartLegacyDraftButton: $("#restartLegacyDraftButton"),
   retroModeCard: $("#retroModeCard"),
   retroWorldCupLogo: $("#retroWorldCupLogo"),
+  retroCompetitionTitle: $("#retroCompetitionTitle"),
+  retroCompetitionSwitch: $("#retroCompetitionSwitch"),
   retroWorldCupYearSwitch: $("#retroWorldCupYearSwitch"),
   retroWorldCupTeamLabel: $("#retroWorldCupTeamLabel"),
   retroWorldCupTeamHint: $("#retroWorldCupTeamHint"),
   retroTeamPickerButton: $("#retroTeamPickerButton"),
   retroTeamPickerMark: $("#retroTeamPickerMark"),
+  premierLeagueTeamPickerButton: $("#premierLeagueTeamPickerButton"),
+  premierLeagueTeamPickerMark: $("#premierLeagueTeamPickerMark"),
+  premierLeagueTeamLabel: $("#premierLeagueTeamLabel"),
+  premierLeagueTeamHint: $("#premierLeagueTeamHint"),
+  premierLeagueLogo: $("#premierLeagueLogo"),
+  premierLeagueLogoPlaceholder: $("#premierLeagueLogoPlaceholder"),
+  premierLeagueInstallButton: $("#premierLeagueInstallButton"),
+  plAssetPackModal: $("#plAssetPackModal"),
+  plAssetPackCloseButton: $("#plAssetPackCloseButton"),
+  plAssetPackCancelButton: $("#plAssetPackCancelButton"),
+  plAssetPackConfirmButton: $("#plAssetPackConfirmButton"),
+  plAssetPackBadgeGrid: $("#plAssetPackBadgeGrid"),
+  plAssetPackStatus: $("#plAssetPackStatus"),
   startRetroWorldCupButton: $("#startRetroWorldCupButton"),
   restartRetroWorldCupButton: $("#restartRetroWorldCupButton"),
   retroWorldCupScreen: $("#retroWorldCupScreen"),
@@ -302,6 +427,13 @@ const els = {
   onlineScreenHeading: $("#onlineScreenHeading"),
   onlineRoomTitle: $("#onlineRoomTitle"),
   onlineRoomEntry: $("#onlineRoomEntry"),
+  onlineEntryOptions: $("#onlineEntryOptions"),
+  onlineMatchmakingCard: $("#onlineMatchmakingCard"),
+  onlineMatchmakingQueue: $("#onlineMatchmakingQueue"),
+  onlineMatchmakingStatus: $("#onlineMatchmakingStatus"),
+  onlineMatchmakingMeta: $("#onlineMatchmakingMeta"),
+  findOnlineMatchButton: $("#findOnlineMatchButton"),
+  cancelOnlineMatchmakingButton: $("#cancelOnlineMatchmakingButton"),
   onlineRoomLobby: $("#onlineRoomLobby"),
   onlineDraft: $("#onlineDraft"),
   onlineMatches: $("#onlineMatches"),
@@ -320,6 +452,7 @@ const els = {
   onlineRoomCodeInput: $("#onlineRoomCodeInput"),
   confirmCreateRoomButton: $("#confirmCreateRoomButton"),
   confirmJoinRoomButton: $("#confirmJoinRoomButton"),
+  onlineRoomCodePanel: $("#onlineRoomCodePanel"),
   onlineRoomCode: $("#onlineRoomCode"),
   copyOnlineRoomCodeButton: $("#copyOnlineRoomCodeButton"),
   onlineRoomInviteLink: $("#onlineRoomInviteLink"),
@@ -424,6 +557,69 @@ if (typeof MutationObserver !== "undefined" && els.onlinePenaltyControl) {
   syncOnlinePenaltyControlSlot();
 }
 
+let postWinDonationTimer = null;
+const postWinDonationEvaluatedThisPage = new Set();
+
+function readPostWinDonationState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(POST_WIN_DONATION_STORAGE_KEY) || "null");
+    return {
+      lastShownAt: Number(saved?.lastShownAt) || 0,
+      evaluated: Array.isArray(saved?.evaluated)
+        ? saved.evaluated.filter((value) => typeof value === "string").slice(-40)
+        : [],
+    };
+  } catch {
+    return { lastShownAt: 0, evaluated: [] };
+  }
+}
+
+function writePostWinDonationState(nextState) {
+  try {
+    localStorage.setItem(POST_WIN_DONATION_STORAGE_KEY, JSON.stringify(nextState));
+  } catch {
+    // The in-page evaluation still prevents duplicate prompts during this visit.
+  }
+}
+
+function maybeShowPostWinDonation(tournamentKey) {
+  const key = typeof tournamentKey === "string" ? tournamentKey.trim() : "";
+  if (!key || !els.donateModal) return false;
+  if (postWinDonationEvaluatedThisPage.has(key)) return false;
+  postWinDonationEvaluatedThisPage.add(key);
+  const promptState = readPostWinDonationState();
+  if (promptState.evaluated.includes(key)) return false;
+  promptState.evaluated = [...promptState.evaluated, key].slice(-40);
+  writePostWinDonationState(promptState);
+  if (Date.now() - promptState.lastShownAt < POST_WIN_DONATION_COOLDOWN_MS) return false;
+  if (Math.random() >= POST_WIN_DONATION_CHANCE) return false;
+
+  clearTimeout(postWinDonationTimer);
+  let remainingChecks = 20;
+  const openWhenReady = () => {
+    const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
+      dialog !== els.donateModal
+    ));
+    if ((anotherDialogIsOpen || document.visibilityState === "hidden") && remainingChecks > 0) {
+      remainingChecks -= 1;
+      postWinDonationTimer = window.setTimeout(openWhenReady, 500);
+      return;
+    }
+    if (anotherDialogIsOpen || document.visibilityState === "hidden" || els.donateModal.open) {
+      postWinDonationTimer = null;
+      return;
+    }
+    promptState.lastShownAt = Date.now();
+    writePostWinDonationState(promptState);
+    postWinDonationTimer = null;
+    els.donateModal.showModal();
+  };
+  postWinDonationTimer = window.setTimeout(openWhenReady, 1800);
+  return true;
+}
+
+window.maybeShowPostWinDonation = maybeShowPostWinDonation;
+
 const defaultKeybinds = Object.freeze({
   enabled: true,
   nextMatch: "Enter",
@@ -447,6 +643,7 @@ const defaultSettings = {
   realNames: true,
   realPlayersOnly: true,
   sound: true,
+  removeInjuries: false,
   keybinds: { ...defaultKeybinds },
 };
 
@@ -476,6 +673,9 @@ function normalizeSettings(settings = {}) {
     ...defaultSettings,
     ...settings,
     realNames: true,
+    removeInjuries: localStorage.getItem(REMOVE_INJURIES_STORAGE_KEY) === null
+      ? settings.removeInjuries === true
+      : localStorage.getItem(REMOVE_INJURIES_STORAGE_KEY) === "true",
     keybinds: normalizeKeybindSettings(settings),
   };
 }
@@ -861,6 +1061,18 @@ function preferredPenaltyFoot(team, player, random) {
 }
 
 function flagMarkup(team, className = "") {
+  if (state?.premierLeagueSeason && team?.badge) {
+    const classes = ["country-flag", "pl-club-flag", className].filter(Boolean).join(" ");
+    const fallback = `<span class="flag-fallback pl-club-code" aria-hidden="true">${escapeHtml(team.code || "PL")}</span>`;
+    if (!premierLeagueAssetsInstalled) {
+      return `<span class="${classes}" role="img" aria-label="${escapeHtml(team.name)} badge">${fallback}</span>`;
+    }
+    return `
+      <span class="${classes}" role="img" aria-label="${escapeHtml(team.name)} badge">
+        <img src="${team.badge}" alt="" loading="lazy" decoding="async" />
+      </span>
+    `;
+  }
   const imageOverride = FLAG_IMAGE_OVERRIDES[team.name];
   const imageClassName = team.name === "Belarus" ? "flag-belarus" : "";
   const classes = ["country-flag", className, imageClassName].filter(Boolean).join(" ");
@@ -961,12 +1173,13 @@ function enforceModeScreenVisibility(mode = currentAppMode()) {
     if (els.retroWorldCupScreen) {
       els.retroWorldCupScreen.hidden = true;
     }
-    document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-2018-active", "retro-2022-active");
+    document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
     return;
   }
 
   document.body.classList.add("retro-mode-active");
   document.body.classList.toggle("retro-2010-active", activeRetroYear === 2010);
+  document.body.classList.toggle("retro-euro-2016-active", activeRetroYear === 2016);
   document.body.classList.toggle("retro-2018-active", activeRetroYear === 2018);
   document.body.classList.toggle("retro-2022-active", activeRetroYear === 2022);
   if (els.appShell) {
@@ -990,7 +1203,7 @@ function forceUnlockStartupState() {
   clearRetroRouteLoadingState();
   if (!isChallengeMode) document.body.classList.remove("challenge-mode-active");
   if (!isProfileMode) document.body.classList.remove("profile-mode-active");
-  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-2018-active", "retro-2022-active");
+  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
 
   if (!isOnlineMode && document.body.classList.contains("online-screen-open")) {
     document.body.classList.remove("online-screen-open");
@@ -1075,7 +1288,7 @@ function recoverFromStartupError(error, context = "startup") {
   stopOnlineLivePresentation();
 
   document.body.classList.remove(
-    "retro-mode-active", "retro-2010-active", "retro-2018-active", "retro-2022-active",
+    "retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active",
     "legacy-mode-active", "achievements-mode-active", "online-screen-open",
     "challenge-mode-active", "profile-mode-active", "mobile-menu-open",
   );
@@ -1131,6 +1344,10 @@ let livePlayback = null;
 let match2dState = null;
 const matchPresentationCache = new Map();
 let spectatePickerMode = "all";
+let premierLeagueMenuSetup = readPremierLeagueMenuSetup();
+let premierLeagueAssetAccount = undefined;
+let premierLeagueAssetsInstalled = false;
+let premierLeagueAssetInstallBusy = false;
 let retroTournament = readRetroTournamentState();
 let retroMenuSettings = readRetroWorldCupSettings();
 let retroTournamentView = "matches";
@@ -1139,9 +1356,13 @@ let retroBottomGroupMatchesVisible = false;
 let retroSelectedMatchId = null;
 let retroSquadTeamName = retroTournament?.managedTeam || "Brazil";
 let onlineRoomSession = readOnlineRoomSession();
+let onlineMatchmakingSession = readOnlineMatchmakingSession();
 let onlineRoomPollTimer = null;
 let onlineRoomRefreshPromise = null;
 let onlineRoomBusy = false;
+let onlineMatchmakingBusy = false;
+let onlineMatchmakingPollTimer = null;
+let onlineMatchmakingRefreshPromise = null;
 let onlineInviteAutoJoinAttempted = false;
 let latestOnlineRoom = null;
 let onlineRoomStateVersion = 0;
@@ -1258,6 +1479,31 @@ function saveOnlineRoomSession(session) {
   syncOnlineRoomCard();
 }
 
+function readOnlineMatchmakingSession() {
+  try {
+    const session = JSON.parse(sessionStorage.getItem(ONLINE_MATCHMAKING_SESSION_KEY) || "null");
+    if (
+      !session
+      || !/^[A-Za-z0-9_-]{16}$/.test(session.ticketId || "")
+      || !/^[A-Za-z0-9_-]{43}$/.test(session.token || "")
+    ) return null;
+    return session;
+  } catch {
+    return null;
+  }
+}
+
+function saveOnlineMatchmakingSession(session) {
+  onlineMatchmakingSession = session;
+  try {
+    if (session) sessionStorage.setItem(ONLINE_MATCHMAKING_SESSION_KEY, JSON.stringify(session));
+    else sessionStorage.removeItem(ONLINE_MATCHMAKING_SESSION_KEY);
+  } catch {
+    // The active search remains usable while this page is open.
+  }
+  renderOnlineMatchmakingState();
+}
+
 function syncOnlineRoomCard() {
   const enabled = onlineModeAvailableLocally();
   els.onlineModeActions.hidden = !enabled;
@@ -1274,7 +1520,7 @@ function configureOnlineModeAvailability() {
     els.onlineModeStatus.textContent = "Online knockout";
     els.onlineModeStatus.classList.add("mode-status-online");
   }
-  els.onlineModeCopy.textContent = "Create or join a private knockout room, draft your countries, and play every match together in real time.";
+  els.onlineModeCopy.textContent = "Match with other players or create a private knockout room, then draft your countries and play every match in real time.";
   syncOnlineRoomCard();
 }
 
@@ -1287,7 +1533,18 @@ const APP_MODE_PATHS = Object.freeze({
   legacy: "/draft-mode",
   retro: "/retro-world-cup",
   online: "/online-mode",
+  premierLeague: "/pl-simulator",
 });
+
+function savedTournamentIdFromPath() {
+  const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+  const match = pathname.match(/^\/saved-tournaments\/([A-Za-z0-9-]+)$/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function savedTournamentPath(recordId) {
+  return `/saved-tournaments/${encodeURIComponent(recordId)}`;
+}
 
 function retroWorldCupYearFromPath() {
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
@@ -1296,6 +1553,7 @@ function retroWorldCupYearFromPath() {
 
 function currentAppMode() {
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (savedTournamentIdFromPath() && activeTournamentHistoryRecord?.mode === "retro") return "retro";
   if (retroWorldCupYearFromPath()) return "retro";
   const pathMode = Object.entries(APP_MODE_PATHS).find(([, path]) => path === pathname)?.[0];
   if (pathMode) return pathMode;
@@ -1327,7 +1585,8 @@ function setOnlineRoomMessage(message = "", error = false) {
 
 function setOnlineRoomBusy(busy) {
   onlineRoomBusy = busy;
-  [els.confirmCreateRoomButton, els.confirmJoinRoomButton, els.closeOnlineRoomButton, els.leaveOnlineRoomButton,
+  [els.confirmCreateRoomButton, els.confirmJoinRoomButton, els.findOnlineMatchButton,
+    els.closeOnlineRoomButton, els.leaveOnlineRoomButton,
     els.closeOnlineDraftRoomButton, els.leaveOnlineDraftRoomButton, els.updateOnlineDisplayNameButton,
     els.onlineReadyButton, els.onlinePauseMatchButton, els.onlineMatchSpeedButton,
     els.closeOnlineMatchRoomButton, els.leaveOnlineMatchRoomButton,
@@ -1340,6 +1599,33 @@ function setOnlineRoomBusy(busy) {
   els.confirmCreateRoomButton.textContent = busy ? "Creating…" : "Create private room";
   els.confirmJoinRoomButton.textContent = busy ? "Joining…" : "Join room";
   els.updateOnlineDisplayNameButton.textContent = busy ? "Saving..." : "Update";
+}
+
+function renderOnlineMatchmakingState(payload = null) {
+  if (!els.onlineMatchmakingCard) return;
+  const searching = Boolean(onlineMatchmakingSession);
+  els.onlineMatchmakingCard.classList.toggle("is-searching", searching);
+  els.onlineMatchmakingQueue.hidden = !searching;
+  els.findOnlineMatchButton.hidden = searching;
+  els.findOnlineMatchButton.disabled = searching || onlineMatchmakingBusy;
+  els.findOnlineMatchButton.innerHTML = onlineMatchmakingBusy
+    ? "Joining queue…"
+    : 'Play now <span aria-hidden="true">&rarr;</span>';
+  els.onlineEntryOptions.hidden = searching;
+  els.onlineDisplayName.disabled = searching || onlineMatchmakingBusy;
+  els.cancelOnlineMatchmakingButton.disabled = onlineMatchmakingBusy;
+  if (!searching) return;
+  const status = payload?.status || "queued";
+  els.onlineMatchmakingStatus.textContent = status === "matching"
+    ? "Opponent found — creating your room"
+    : "Searching for an opponent";
+  if (status === "matching") {
+    els.onlineMatchmakingMeta.textContent = "Your country draft will begin automatically.";
+  } else if (Number.isInteger(payload?.position) && payload.position > 1) {
+    els.onlineMatchmakingMeta.textContent = `Queue position ${payload.position}. Keep this page open.`;
+  } else {
+    els.onlineMatchmakingMeta.textContent = "You’re first in line. Keep this page open.";
+  }
 }
 
 function showOnlineRoomEntry(preferJoin = false) {
@@ -1356,7 +1642,9 @@ function showOnlineRoomEntry(preferJoin = false) {
   els.onlineMatches.hidden = true;
   els.onlineScreenHeading.hidden = false;
   stopOnlineDraftRun();
-  els.onlineRoomTitle.textContent = "Create or join a room";
+  els.onlineRoomTitle.textContent = "Play online";
+  renderOnlineMatchmakingState();
+  if (onlineMatchmakingSession) startOnlineMatchmakingPolling();
   const linkedCode = new URLSearchParams(window.location.search).get("room");
   if (linkedCode) els.onlineRoomCodeInput.value = normalizeOnlineRoomCode(linkedCode);
   requestAnimationFrame(() => (preferJoin && els.onlineRoomCodeInput.value
@@ -1386,7 +1674,9 @@ async function openOnlineRoom(preferJoin = false, { updateUrl = true } = {}) {
 
 function closeOnlineScreen({ updateUrl = true, force = false } = {}) {
   if (onlineRoomBusy && !force) return;
+  if (onlineMatchmakingSession) void cancelOnlineMatchmaking({ quiet: true });
   stopOnlineRoomPolling();
+  stopOnlineMatchmakingPolling();
   stopOnlineDraftRun();
   stopOnlineMatchPlayback();
   stopOnlineLivePresentation();
@@ -1404,13 +1694,14 @@ function closeOnlineScreen({ updateUrl = true, force = false } = {}) {
 }
 
 function showOnlineLobbyShell() {
+  stopOnlineMatchmakingPolling();
   els.onlineRoomEntry.hidden = true;
   els.onlineRoomLobby.hidden = false;
   els.onlineDraft.hidden = true;
   els.onlineMatches.hidden = true;
   els.onlineResults.hidden = true;
   els.onlineScreenHeading.hidden = true;
-  els.onlineRoomTitle.textContent = "Private tournament lobby";
+  els.onlineRoomTitle.textContent = "Online tournament lobby";
   els.onlineRoomCode.textContent = onlineRoomSession?.code || "------";
   startOnlineRoomPolling();
 }
@@ -1434,6 +1725,9 @@ function renderOnlineLobby(room, memberId) {
   els.onlineMatches.hidden = true;
   els.onlineResults.hidden = true;
   els.onlineRoomCode.textContent = room.code;
+  const isPublicRoom = room.visibility === "public";
+  els.onlineRoomTitle.textContent = isPublicRoom ? "Public tournament" : "Private tournament lobby";
+  els.onlineRoomCodePanel.hidden = isPublicRoom;
   const inviteUrl = onlineRoomInviteUrl(room.code);
   els.onlineRoomInviteLink.href = inviteUrl;
   els.onlineRoomInviteLink.textContent = inviteUrl.replace(/^https?:\/\//, "");
@@ -1797,6 +2091,9 @@ function renderOnlineResults(room, memberId) {
   const champion = TEAM_BY_ID.get(tournament.championTeamId);
   const championOwnerId = tournament.teamOwnerById?.[tournament.championTeamId];
   const championOwner = room.members.find((member) => member.id === championOwnerId);
+  maybeShowPostWinDonation(
+    `online:${room.code}:${tournament.completedAt || "complete"}:${tournament.championTeamId || "champion"}`,
+  );
   els.onlineResultsSummary.textContent = tournament.completionReason === "all-players-eliminated"
     ? "Every player-controlled country was eliminated. Here is how the lobby finished."
     : championOwner
@@ -4271,6 +4568,131 @@ async function createOnlineRoom() {
   }
 }
 
+async function startOnlineMatchmaking() {
+  if (onlineMatchmakingBusy || onlineMatchmakingSession || onlineRoomSession) return;
+  const name = readOnlineDisplayName(els.onlineDisplayName);
+  if (!name) return;
+  setOnlineDisplayNames(name);
+  onlineMatchmakingBusy = true;
+  setOnlineRoomMessage();
+  renderOnlineMatchmakingState();
+  try {
+    const accessToken = makeOnlineAccessToken();
+    const payload = await roomApi("/api/matchmaking", {
+      method: "POST",
+      body: { name, accessToken },
+      token: null,
+    });
+    saveOnlineMatchmakingSession({
+      ticketId: payload.ticketId,
+      token: accessToken,
+      name,
+      joinedAt: payload.joinedAt || Date.now(),
+    });
+    renderOnlineMatchmakingState(payload);
+    if (payload.status === "matched") {
+      await enterMatchedOnlineRoom(payload);
+    } else {
+      startOnlineMatchmakingPolling();
+    }
+  } catch (error) {
+    setOnlineRoomMessage(error.message, true);
+  } finally {
+    onlineMatchmakingBusy = false;
+    renderOnlineMatchmakingState();
+  }
+}
+
+async function enterMatchedOnlineRoom(payload) {
+  const session = onlineMatchmakingSession;
+  const assignment = payload?.room;
+  if (!session || !assignment?.code || !assignment?.memberId) return;
+  stopOnlineMatchmakingPolling();
+  saveOnlineRoomSession({
+    code: assignment.code,
+    token: session.token,
+    memberId: assignment.memberId,
+    isHost: Boolean(assignment.isHost),
+    name: session.name,
+    matchmaking: true,
+  });
+  saveOnlineMatchmakingSession(null);
+  showOnlineLobbyShell();
+  await refreshOnlineRoom();
+  showToast("Opponent found. Your country draft is ready.");
+}
+
+async function refreshOnlineMatchmaking({ quiet = false } = {}) {
+  if (!onlineMatchmakingSession) return;
+  if (onlineMatchmakingRefreshPromise) return onlineMatchmakingRefreshPromise;
+  const session = { ...onlineMatchmakingSession };
+  onlineMatchmakingRefreshPromise = (async () => {
+    try {
+      const payload = await roomApi(`/api/matchmaking/${session.ticketId}`, {
+        token: session.token,
+      });
+      if (
+        onlineMatchmakingSession?.ticketId !== session.ticketId
+        || els.onlineRoomScreen.hidden
+      ) return;
+      renderOnlineMatchmakingState(payload);
+      if (payload.status === "matched") await enterMatchedOnlineRoom(payload);
+    } catch (error) {
+      if ([404, 410].includes(error.status) && onlineMatchmakingSession?.ticketId === session.ticketId) {
+        saveOnlineMatchmakingSession(null);
+        setOnlineRoomMessage("That search ended. Start a new search when you’re ready.", true);
+        return;
+      }
+      if (!quiet) setOnlineRoomMessage(error.message, true);
+    }
+  })().finally(() => {
+    onlineMatchmakingRefreshPromise = null;
+  });
+  return onlineMatchmakingRefreshPromise;
+}
+
+function startOnlineMatchmakingPolling() {
+  stopOnlineMatchmakingPolling();
+  const poll = async () => {
+    if (!onlineMatchmakingSession || els.onlineRoomScreen.hidden || document.hidden) return;
+    await refreshOnlineMatchmaking({ quiet: true });
+    if (onlineMatchmakingSession) onlineMatchmakingPollTimer = setTimeout(poll, 1500);
+  };
+  onlineMatchmakingPollTimer = setTimeout(poll, 600);
+}
+
+function stopOnlineMatchmakingPolling() {
+  clearTimeout(onlineMatchmakingPollTimer);
+  onlineMatchmakingPollTimer = null;
+}
+
+async function cancelOnlineMatchmaking({ quiet = false } = {}) {
+  if (!onlineMatchmakingSession || onlineMatchmakingBusy) return;
+  const session = { ...onlineMatchmakingSession };
+  onlineMatchmakingBusy = true;
+  stopOnlineMatchmakingPolling();
+  renderOnlineMatchmakingState();
+  try {
+    await roomApi(`/api/matchmaking/${session.ticketId}/cancel`, {
+      method: "POST",
+      token: session.token,
+    });
+  } catch (error) {
+    if (!quiet && error.status !== 409) setOnlineRoomMessage(error.message, true);
+    if (error.status === 409) {
+      onlineMatchmakingBusy = false;
+      await refreshOnlineMatchmaking();
+      return;
+    }
+  }
+  if (onlineMatchmakingSession?.ticketId === session.ticketId) {
+    saveOnlineMatchmakingSession(null);
+    if (!quiet) setOnlineRoomMessage("Matchmaking cancelled.");
+  }
+  onlineMatchmakingBusy = false;
+  renderOnlineMatchmakingState();
+}
+
 async function joinOnlineRoom() {
   if (onlineRoomBusy) return;
   const name = readOnlineDisplayName(els.onlineDisplayName);
@@ -5058,6 +5480,17 @@ function isValidLegacyTournamentState(candidate) {
   return Boolean(legacyTeamId && teamIds.includes(legacyTeamId));
 }
 
+function isDefaultKnockoutState(candidate) {
+  return Boolean(
+    candidate
+    && !candidate.retroWorldCup
+    && !candidate.customTournament
+    && !candidate.legacyTournament
+    && Array.isArray(candidate.rounds)
+    && candidate.rounds[0]?.length === 128
+  );
+}
+
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -5095,9 +5528,25 @@ if (matchSoundsEnabled === null) {
   localStorage.setItem(MATCH_SOUND_STORAGE_KEY, String(matchSoundsEnabled));
 }
 let standardTournamentState = state;
+let defaultKnockoutState = isDefaultKnockoutState(state) ? state : null;
+let customTournamentState = isValidCustomTournamentState(state) ? state : null;
 let retroSimulatorState = null;
+let activeTournamentHistoryRecord = null;
+let activeTournamentHistoryRound = 0;
+let activeTournamentHistoryMatch = 0;
+let tournamentHistoryReturnState = null;
+let tournamentHistoryReturnFocus = null;
+let tournamentHistoryReturnUrl = null;
+let tournamentHistoryTemporaryTeamIds = [];
 let keybindCaptureAction = null;
 let standardTournamentUiState = null;
+let retroLineupSwapNumber = null;
+let retroLineupPanelView = "managed";
+let retroLineupDragNumber = null;
+let retroLiveSubOutNumber = null;
+let retroLiveSubInNumber = null;
+let retroLivePendingSubstitution = null;
+let retroLiveSubDrag = null;
 let retroTournamentUiState = {
   fixtureLimit: DEFAULT_FIXTURE_LIMIT,
   filterUnresolved: false,
@@ -5140,6 +5589,12 @@ function retroRoundNames() {
 }
 
 function tournamentRoundNames() {
+  if (state?.savedTournamentView && Array.isArray(state.savedTournamentRoundNames)) {
+    return state.savedTournamentRoundNames;
+  }
+  if (state?.premierLeagueSeason) {
+    return Array.from({ length: 38 }, (_, index) => `Matchweek ${index + 1}`);
+  }
   if (isRetroSimulatorState()) return retroRoundNames();
   if (isValidCustomTournamentState(state)) {
     return customRoundNames(state.customTournament.teamCount, state.customTournament.structure);
@@ -5168,6 +5623,8 @@ function tournamentMatchRoundName(match, index = state.activeRound) {
 }
 
 function tournamentFinalRoundIndex() {
+  if (state?.savedTournamentView) return Math.max(0, state.rounds.length - 1);
+  if (state?.premierLeagueSeason) return 37;
   if (isRetroSimulatorState()) return 6;
   if (isValidCustomTournamentState(state)) {
     return customRoundNames(state.customTournament.teamCount, state.customTournament.structure).length - 1;
@@ -5182,6 +5639,7 @@ function tournamentFinalMatch(finalRound = state.rounds[tournamentFinalRoundInde
 
 function retroSquadsForYear(year = retroTournament?.year || Number(readRetroWorldCupYear())) {
   if (Number(year) === 2010) return RETRO_2010_SQUADS;
+  if (Number(year) === 2016) return RETRO_EURO_2016_SQUADS;
   if (Number(year) === 2018) return RETRO_2018_SQUADS;
   if (Number(year) === 2022) return RETRO_2022_SQUADS;
   return RETRO_2014_SQUADS;
@@ -5196,7 +5654,7 @@ function installRetroTeams(year = retroTournament?.year || Number(readRetroWorld
   RETRO_WORLD_CUPS[year].teams.forEach((entry) => {
     const id = retroTeamId(entry.name, year);
     if (TEAM_BY_ID.has(id)) return;
-    const current = TEAMS.find((team) => team.name === entry.name);
+    const current = TEAMS.find((team) => team.name === entry.name) || retroTeamForFlag(entry.name);
     const squad = squads[entry.name];
     const startingNumbers = new Set(
       RETRO_WORLD_CUP_ENGINE.startingXI(year, entry.name).players.map((player) => player.number),
@@ -5214,6 +5672,8 @@ function installRetroTeams(year = retroTournament?.year || Number(readRetroWorld
       }
       return {
         name: player.name,
+        number: player.number,
+        club: player.club,
         position,
         overall: player.overall,
         finishing: player.attributes?.shooting || player.overall,
@@ -5291,6 +5751,15 @@ function repairRetroResultPlayers(match) {
       card.player = replacement(teamName, `${card.side}:red:${card.minute}:${index}`, true);
     }
   });
+  (result.injuries || []).forEach((injury, index) => {
+    const teamName = injury.side === "away" ? match.away : match.home;
+    if (!new Set(rosterFor(teamName)).has(injury.player)) {
+      injury.player = replacement(teamName, `${injury.side}:injury:${injury.minute}:${index}`, true);
+    }
+  });
+  const absences = removeImpossiblePlayerAbsenceEvents(result.redCards || [], result.injuries || []);
+  result.redCards = absences.redCards;
+  result.injuries = absences.injuries;
   (result.shootout || []).forEach((attempt, index) => {
     const teamName = attempt.side === "away" ? match.away : match.home;
     if (!new Set(rosterFor(teamName)).has(attempt.player)) {
@@ -5334,6 +5803,7 @@ function adaptRetroMatch(match) {
     } else if (!Object.hasOwn(match.result, "winner")) {
       match.result.winner = match.result.winnerId ? teamById(match.result.winnerId)?.name || null : null;
     }
+    repairFlatSavedPlayerRatings(match);
     match.result.revealed = match.result.revealed !== false;
   }
   return match;
@@ -5375,15 +5845,24 @@ function activateRetroSimulatorState() {
   }
   const rounds = retroSimulatorRounds();
   const previous = state;
-  const wasRetroWorldCup = Boolean(previous?.retroWorldCup);
+  const wasCurrentRetroTournament = Boolean(
+    previous?.retroWorldCup
+    && Number(previous.retroTournamentYear) === Number(retroTournament.year)
+    && Number(previous.drawSeed) === Number(retroTournament.seed)
+  );
   const previousSpectateTeamId = previous?.spectateTeamId || null;
   const savedNeutralView = retroTournament.neutralView === true;
-  const activeRound = previous?.retroWorldCup
+  const activeRound = wasCurrentRetroTournament
     ? previous.activeRound
     : retroTournamentRoundIndex();
+  if (!wasCurrentRetroTournament) state = {};
   Object.assign(state, {
     version: STATE_VERSION,
     retroWorldCup: true,
+    savedTournamentView: retroTournament.savedTournamentView === true,
+    savedTournamentRecordId: retroTournament.savedTournamentRecordId || null,
+    savedTournamentRoundNames: retroTournament.savedTournamentRoundNames || null,
+    retroTournamentYear: Number(retroTournament.year),
     drawSeed: retroTournament.seed,
     settings: {
       ...normalizeSettings(previous?.settings || standardTournamentState.settings || {}),
@@ -5394,19 +5873,25 @@ function activateRetroSimulatorState() {
     },
     rounds,
     activeRound: Math.min(activeRound ?? 0, Math.max(0, rounds.length - 1)),
-    selectedMatch: previous.selectedMatch ?? 0,
-    championView: previous?.retroWorldCup
+    selectedMatch: wasCurrentRetroTournament ? previous.selectedMatch ?? 0 : 0,
+    championView: wasCurrentRetroTournament
       ? Boolean(previous.championView)
       : retroTournament.phase === "complete",
     started: true,
     predictionTeamId: null,
-    spectateTeamId: wasRetroWorldCup
+    spectateTeamId: wasCurrentRetroTournament
       ? previous.spectateTeamId || null
       : savedNeutralView || !retroTournament.managedTeam
         ? null
         : retroTeamId(retroTournament.managedTeam, retroTournament.year),
-    neutralView: wasRetroWorldCup ? Boolean(previous.neutralView) : savedNeutralView || !retroTournament.managedTeam,
-    standardTactic: previous.standardTactic || "balanced",
+    neutralView: wasCurrentRetroTournament
+      ? Boolean(previous.neutralView)
+      : savedNeutralView || !retroTournament.managedTeam,
+    standardTactic: wasCurrentRetroTournament
+      ? previous.standardTactic || "balanced"
+      : STANDARD_TACTICS[retroTournament.managerTactic]
+        ? retroTournament.managerTactic
+        : "balanced",
   });
   const pendingElimination = retroTournament.pendingEliminationDecision;
   if (
@@ -5429,8 +5914,8 @@ function activateRetroSimulatorState() {
   const managedTeamId = retroTournament.managedTeam
     ? retroTeamId(retroTournament.managedTeam, retroTournament.year)
     : null;
-  const managedTeamChanged = previousSpectateTeamId !== managedTeamId;
-  if (!wasRetroWorldCup || managedTeamChanged) {
+  const managedTeamChanged = !state.neutralView && previousSpectateTeamId !== managedTeamId;
+  if (!wasCurrentRetroTournament || managedTeamChanged) {
     const managedMatchIndex = managedTeamId
       ? round.findIndex((match) => (
           !match.result
@@ -5448,6 +5933,23 @@ function activateRetroSimulatorState() {
         : Math.max(0, nextUnplayedMatchIndex);
   } else if (!round[state.selectedMatch]) {
     state.selectedMatch = Math.max(0, round.findIndex((match) => !match.result?.revealed));
+  }
+  const checkpoint = readStoredLiveMatchCheckpoint();
+  if (checkpoint?.scope === `retro-${retroTournament.year}`) {
+    const checkpointRoundIndex = state.rounds.findIndex((candidateRound) => (
+      candidateRound?.some((match) => (
+        match.id === checkpoint.matchId
+        && !match.result?.revealed
+        && Number(match.result?.engineSeed) === Number(checkpoint.engineSeed)
+      ))
+    ));
+    if (checkpointRoundIndex >= 0) {
+      state.activeRound = checkpointRoundIndex;
+      state.selectedMatch = state.rounds[checkpointRoundIndex]
+        .findIndex((match) => match.id === checkpoint.matchId);
+      state.championView = false;
+      retroSelectedMatchId = checkpoint.matchId;
+    }
   }
 }
 
@@ -5518,21 +6020,194 @@ if (state.legacyTournament && state.spectateTeamId?.startsWith("legacy-")) {
 standardTournamentState = state;
 
 function saveState() {
+  if (state?.savedTournamentView || retroTournament?.savedTournamentView) return;
+  if (state?.premierLeagueSeason) {
+    window.PremierLeagueSeason?.saveEngineState?.(state);
+    return;
+  }
   if (isRetroSimulatorState()) {
     saveRetroTournamentState();
     return;
   }
+  if (isDefaultKnockoutState(state)) defaultKnockoutState = state;
+  if (isValidCustomTournamentState(state)) customTournamentState = state;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   if (isValidLegacyTournamentState(state)) {
     localStorage.setItem(LEGACY_TOURNAMENT_SESSION_KEY, JSON.stringify(state));
+  }
+  const knockoutAchievement = standardKnockoutAchievementState();
+  if (knockoutAchievement) window.AccountAchievements?.trackKnockoutTournament(knockoutAchievement);
+}
+
+function standardKnockoutAchievementState(candidate = state) {
+  if (
+    !candidate?.started
+    || candidate.retroWorldCup
+    || candidate.customTournament
+    || candidate.legacyTournament
+    || candidate.rounds?.[0]?.length !== 128
+  ) return null;
+  const teamId = candidate._activeSpectateId || candidate.spectateTeamId;
+  if (!teamId || !TEAM_BY_ID.has(teamId)) return null;
+  let bestRoundIndex = 0;
+  let eliminated = false;
+  candidate.rounds.forEach((round, roundIndex) => (round || []).forEach((match) => {
+    if (match.homeId !== teamId && match.awayId !== teamId) return;
+    bestRoundIndex = Math.max(bestRoundIndex, roundIndex);
+    if (
+      match.result?.revealed
+      && match.result.winnerId
+      && match.result.winnerId !== teamId
+      && !match.allowDraw
+    ) eliminated = true;
+  }));
+  const finalRound = candidate.rounds[tournamentFinalRoundIndex()] || [];
+  const final = tournamentFinalMatch(finalRound);
+  const championTeamId = (
+    final?.result?.revealed
+    && [final.homeId, final.awayId].includes(final.result.winnerId)
+  ) ? final.result.winnerId : null;
+  return {
+    seed: Number(candidate.drawSeed),
+    teamId,
+    bestRoundIndex,
+    championTeamId,
+    phase: eliminated || championTeamId ? "complete" : "progress",
+  };
+}
+
+window.getKnockout256AchievementTournamentState = () => standardKnockoutAchievementState();
+
+function liveMatchCheckpointScope() {
+  return isRetroSimulatorState()
+    ? `retro-${Number(retroTournament?.year) || Number(readRetroWorldCupYear())}`
+    : "standard";
+}
+
+function readStoredLiveMatchCheckpoint() {
+  try {
+    return JSON.parse(localStorage.getItem(LIVE_MATCH_CHECKPOINT_STORAGE_KEY) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function checkpointUsesCurrentRosters(checkpoint, match) {
+  if (checkpoint?.scope !== "standard" || !match) return true;
+  const rosters = {
+    home: new Set(canonicalCurrentRosterNames(TEAM_BY_ID.get(match.homeId))),
+    away: new Set(canonicalCurrentRosterNames(TEAM_BY_ID.get(match.awayId))),
+  };
+  if (!rosters.home.size || !rosters.away.size) return false;
+  const valid = (side, player) => !player || rosters[side]?.has(repairPlayerText(player));
+  const sideFor = (event, fallback = "home") => (
+    event?.side === "away" || event?.teamId === match.awayId ? "away" : fallback
+  );
+
+  if ((checkpoint.homeReds || []).some((event) => !valid("home", event.player))) return false;
+  if ((checkpoint.awayReds || []).some((event) => !valid("away", event.player))) return false;
+  if ((checkpoint.shootout || []).some((attempt) => !valid(attempt.side === "away" ? "away" : "home", attempt.player))) return false;
+  return !(checkpoint.feed || []).some((event) => {
+    const side = sideFor(event, event?.side === "away" ? "away" : "home");
+    if (event.ownGoal) {
+      const defendingSide = side === "home" ? "away" : "home";
+      return !valid(defendingSide, event.ownGoalBy);
+    }
+    const names = [
+      event.player,
+      event.playerIn,
+      event.playerOut,
+      event.metadata?.scorer,
+    ].filter(Boolean);
+    return names.some((name) => !valid(side, name));
+  });
+}
+
+function readLiveMatchCheckpoint(match) {
+  const checkpoint = readStoredLiveMatchCheckpoint();
+  if (
+    !checkpoint
+    || checkpoint.version !== 1
+    || checkpoint.scope !== liveMatchCheckpointScope()
+    || checkpoint.matchId !== match?.id
+    || Number(checkpoint.engineSeed) !== Number(match?.result?.engineSeed)
+    || match?.result?.revealed
+  ) return null;
+  if (!checkpointUsesCurrentRosters(checkpoint, match)) {
+    clearLiveMatchCheckpoint(match.id);
+    return null;
+  }
+  return checkpoint;
+}
+
+function clearLiveMatchCheckpoint(matchId = null) {
+  const checkpoint = readStoredLiveMatchCheckpoint();
+  if (!matchId || !checkpoint || checkpoint.matchId === matchId) {
+    localStorage.removeItem(LIVE_MATCH_CHECKPOINT_STORAGE_KEY);
+  }
+}
+
+function saveLiveMatchCheckpoint() {
+  if (!livePlayback || livePlayback.ending) return;
+  const match = state.rounds[livePlayback.roundIndex]?.[livePlayback.matchIndex];
+  if (!match?.result || match.result.revealed) return;
+  const displayedMinute = displayedLiveMinute(livePlayback);
+  const activeHighlight = match2dState?.activeHighlight;
+  const checkpoint = {
+    version: 1,
+    scope: liveMatchCheckpointScope(),
+    matchId: match.id,
+    engineSeed: match.result.engineSeed,
+    updatedAt: Date.now(),
+    displayedMinute,
+    minute: Number(livePlayback.minute) || displayedMinute,
+    maxMinute: livePlayback.maxMinute,
+    phase: livePlayback.phase,
+    speed: livePlayback.speed,
+    homeScore: livePlayback.homeScore,
+    awayScore: livePlayback.awayScore,
+    homeReds: livePlayback.homeReds || [],
+    awayReds: livePlayback.awayReds || [],
+    feed: livePlayback.feed || [],
+    commentaryFeed: livePlayback.commentaryFeed || [],
+    playerRatings: livePlayback.playerRatings || null,
+    ratingEventIds: [...(livePlayback.ratingEventIds || [])],
+    ratingActionIds: [...(livePlayback.ratingActionIds || [])],
+    managerSubstitutions: livePlayback.managerSubstitutions || null,
+    oppositionManagement: livePlayback.oppositionManagement || null,
+    penaltyScoreCorrections: livePlayback.penaltyScoreCorrections || { home: 0, away: 0 },
+    cursor: match2dState?.cursor ?? -1,
+    activeHighlightIndex: activeHighlight?.timelineIndex ?? null,
+    actionIndex: match2dState?.actionIndex ?? 0,
+    playedEventKeys: [...(match2dState?.playedEventKeys || [])],
+    shootoutIndex: livePlayback.shootoutIndex || 0,
+    shootoutStep: livePlayback.shootoutStep || "setup",
+    shootout: livePlayback.shootout || [],
+    penaltyHomeScore: livePlayback.penaltyHomeScore || 0,
+    penaltyAwayScore: livePlayback.penaltyAwayScore || 0,
+  };
+  try {
+    localStorage.setItem(LIVE_MATCH_CHECKPOINT_STORAGE_KEY, JSON.stringify(checkpoint));
+  } catch {
+    // A live match remains playable if browser storage is unavailable.
   }
 }
 
 function settleInterruptedLocalMatches() {
   let settled = false;
+  const checkpoint = readStoredLiveMatchCheckpoint();
   state.rounds.forEach((round) => {
     (round || []).forEach((match) => {
       if (match.result?.engineVersion === 2 && !match.result.revealed) {
+        if (
+          checkpoint?.scope === "standard"
+          && checkpoint.matchId === match.id
+          && Number(checkpoint.engineSeed) === Number(match.result.engineSeed)
+        ) {
+          if (checkpointUsesCurrentRosters(checkpoint, match)) return;
+          clearLiveMatchCheckpoint(match.id);
+          return;
+        }
         match.result.revealed = true;
         settled = true;
       }
@@ -5603,9 +6278,13 @@ function teamIsAlive(teamId) {
 }
 
 function tournamentHasThirdPlacePlayoff() {
-  if (isRetroSimulatorState()) return true;
+  if (state?.savedTournamentView) {
+    return (state.rounds.at(-1) || []).some((match) => isThirdPlacePlayoff(match));
+  }
+  if (state?.premierLeagueSeason) return false;
+  if (isRetroSimulatorState()) return Number(retroTournament?.year) !== 2016;
   if (!state.customTournament) return true;
-  return state.customTournament.structure === "knockout" && state.customTournament.thirdPlace === true;
+  return state.customTournament.thirdPlace === true;
 }
 
 function tournamentThirdPlaceMatch(teamId = null) {
@@ -5624,8 +6303,21 @@ function finalBlockedByThirdPlace(match, roundIndex = state.activeRound) {
     || !match
     || isThirdPlacePlayoff(match)
   ) return false;
+  if (managedDefaultFinalSkipsThirdPlace(match, roundIndex)) return false;
   const thirdPlaceMatch = tournamentThirdPlaceMatch();
   return Boolean(thirdPlaceMatch && !thirdPlaceMatch.result?.revealed);
+}
+
+function managedDefaultFinalSkipsThirdPlace(match, roundIndex = state.activeRound) {
+  return Boolean(
+    !isRetroSimulatorState()
+    && !state.customTournament
+    && state.spectateTeamId
+    && !state.neutralView
+    && roundIndex === tournamentFinalRoundIndex()
+    && match
+    && !isThirdPlacePlayoff(match)
+  );
 }
 
 function teamHasPendingThirdPlace(teamId) {
@@ -5685,18 +6377,25 @@ function focusSpectatedTeam(roundIndex = currentTournamentRoundIndex()) {
 function renderSpectatePicker() {
   const savedTeam = spectatedTeam();
   const team = savedTeam?.id?.startsWith("legacy-") ? null : savedTeam;
+  const setupLocked = standardTournamentSetupLocked();
   els.spectatePickerButton.classList.toggle("has-team", Boolean(team));
   if (!team) {
     els.spectatePickerMark.textContent = "◎";
     els.spectatePickerLabel.textContent = "Neutral";
-    els.spectatePickerHint.textContent = "Show every match as normal";
-    els.spectatePickerButton.setAttribute("aria-label", "Choose a team to spectate. Current view: Neutral");
+    els.spectatePickerHint.textContent = setupLocked ? "Locked until restart" : "Show every match as normal";
+    els.spectatePickerButton.setAttribute(
+      "aria-label",
+      setupLocked ? "Managed team locked to Neutral until restart" : "Choose a team to spectate. Current view: Neutral",
+    );
     return;
   }
   els.spectatePickerMark.innerHTML = flagMarkup(team, "spectate-picker-flag");
   els.spectatePickerLabel.textContent = team.name;
-  els.spectatePickerHint.textContent = "Jump to this team every round";
-  els.spectatePickerButton.setAttribute("aria-label", `Choose a team to spectate. Current team: ${team.name}`);
+  els.spectatePickerHint.textContent = setupLocked ? "Locked until restart" : "Jump to this team every round";
+  els.spectatePickerButton.setAttribute(
+    "aria-label",
+    setupLocked ? `Managed team locked to ${team.name} until restart` : `Choose a team to spectate. Current team: ${team.name}`,
+  );
 }
 
 function compareTeamsByOfficialFifaRank(a, b) {
@@ -5708,6 +6407,10 @@ function compareTeamsByOfficialFifaRank(a, b) {
 function renderSpectateList(query = "") {
   if (spectatePickerMode === "retro") {
     renderRetroWorldCupTeamList(query);
+    return;
+  }
+  if (spectatePickerMode === "premier-league") {
+    renderPremierLeagueTeamList(query);
     return;
   }
   const normalized = query.trim().toLowerCase();
@@ -5744,8 +6447,231 @@ function openSpectatePicker(mode = "all") {
   requestAnimationFrame(() => els.spectateSearch.focus());
 }
 
+function readPremierLeagueMenuSetup() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PREMIER_LEAGUE_SETUP_STORAGE_KEY) || "null");
+    return {
+      upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : defaultSettings.upset,
+      goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : defaultSettings.goals,
+      teamId: PREMIER_LEAGUE_2026_27_TEAMS.some((team) => team.id === saved?.teamId) ? saved.teamId : null,
+    };
+  } catch {
+    return { upset: defaultSettings.upset, goals: defaultSettings.goals, teamId: null };
+  }
+}
+
+function savePremierLeagueMenuSetup() {
+  try {
+    localStorage.setItem(PREMIER_LEAGUE_SETUP_STORAGE_KEY, JSON.stringify(premierLeagueMenuSetup));
+  } catch {
+    // The menu setup remains usable for the current page when storage is unavailable.
+  }
+}
+
+function accountHasPremierLeagueAssets(account) {
+  return Array.isArray(account?.assetPacks) && account.assetPacks.includes(PREMIER_LEAGUE_ASSET_PACK_ID);
+}
+
+function premierLeagueBadgeMarkup(team, className = "premier-league-club-badge") {
+  return `<img class="${className}" src="${team.badge}" alt="" loading="lazy" decoding="async" />`;
+}
+
+function renderPremierLeagueAssetPackPreview() {
+  if (!els.plAssetPackBadgeGrid) return;
+  els.plAssetPackBadgeGrid.innerHTML = PREMIER_LEAGUE_2026_27_TEAMS.map((team) => `
+    <span class="pl-asset-pack-badge" title="${escapeHtml(team.name)}">
+      ${premierLeagueBadgeMarkup(team)}
+    </span>
+  `).join("");
+}
+
+function renderPremierLeagueAssetState() {
+  premierLeagueAssetsInstalled = accountHasPremierLeagueAssets(premierLeagueAssetAccount);
+  if (els.premierLeagueLogo) els.premierLeagueLogo.hidden = !premierLeagueAssetsInstalled;
+  if (els.premierLeagueLogoPlaceholder) els.premierLeagueLogoPlaceholder.hidden = premierLeagueAssetsInstalled;
+  if (els.premierLeagueInstallButton) {
+    els.premierLeagueInstallButton.textContent = premierLeagueAssetsInstalled ? "Assets installed" : "Install assets";
+    els.premierLeagueInstallButton.classList.toggle("is-installed", premierLeagueAssetsInstalled);
+    els.premierLeagueInstallButton.setAttribute("aria-pressed", String(premierLeagueAssetsInstalled));
+  }
+  if (els.plAssetPackConfirmButton) {
+    els.plAssetPackConfirmButton.disabled = premierLeagueAssetInstallBusy || premierLeagueAssetsInstalled;
+    els.plAssetPackConfirmButton.textContent = premierLeagueAssetsInstalled
+      ? "Installed"
+      : premierLeagueAssetAccount
+        ? "Install asset pack"
+        : "Log in to install";
+  }
+  renderPremierLeagueTeamPicker();
+  if (spectatePickerMode === "premier-league" && els.spectateModal?.open) {
+    renderPremierLeagueTeamList(els.spectateSearch?.value || "");
+  }
+}
+
+function setPremierLeagueAssetAccount(account) {
+  premierLeagueAssetAccount = account || null;
+  renderPremierLeagueAssetState();
+}
+
+function openPremierLeagueAssetPack() {
+  renderPremierLeagueAssetPackPreview();
+  if (els.plAssetPackStatus) {
+    els.plAssetPackStatus.textContent = premierLeagueAssetsInstalled
+      ? "This asset pack is installed on your account."
+      : premierLeagueAssetAccount
+        ? `Ready to install for ${premierLeagueAssetAccount.username}.`
+        : "Log in to save this asset pack to your account.";
+    els.plAssetPackStatus.classList.toggle("is-success", premierLeagueAssetsInstalled);
+    els.plAssetPackStatus.classList.remove("is-error");
+  }
+  renderPremierLeagueAssetState();
+  if (!els.plAssetPackModal?.open) els.plAssetPackModal?.showModal();
+}
+
+async function installPremierLeagueAssetPack() {
+  if (premierLeagueAssetInstallBusy || premierLeagueAssetsInstalled) return;
+  if (!premierLeagueAssetAccount) {
+    els.plAssetPackModal?.close();
+    document.querySelector("#mainAccountButton")?.click();
+    showToast("Log in, then install the PL 26/27 Asset Pack.");
+    return;
+  }
+  premierLeagueAssetInstallBusy = true;
+  renderPremierLeagueAssetState();
+  if (els.plAssetPackStatus) {
+    els.plAssetPackStatus.textContent = "Installing 20 club badges...";
+    els.plAssetPackStatus.classList.remove("is-error", "is-success");
+  }
+  try {
+    const response = await fetch(`/api/challenge/assets/${PREMIER_LEAGUE_ASSET_PACK_ID}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || "The asset pack could not be installed.");
+      error.status = response.status;
+      throw error;
+    }
+    setPremierLeagueAssetAccount(payload.account || {
+      ...premierLeagueAssetAccount,
+      assetPacks: [PREMIER_LEAGUE_ASSET_PACK_ID],
+    });
+    if (els.plAssetPackStatus) {
+      els.plAssetPackStatus.textContent = "Installed. The Premier League logo and all 20 club badges are now active.";
+      els.plAssetPackStatus.classList.add("is-success");
+    }
+    showToast("PL 26/27 Asset Pack installed.");
+  } catch (error) {
+    if (error.status === 401) premierLeagueAssetAccount = null;
+    if (els.plAssetPackStatus) {
+      els.plAssetPackStatus.textContent = error.status === 401
+        ? "Your session expired. Log in again to install this pack."
+        : error.message;
+      els.plAssetPackStatus.classList.add("is-error");
+    }
+  } finally {
+    premierLeagueAssetInstallBusy = false;
+    renderPremierLeagueAssetState();
+  }
+}
+
+function selectedPremierLeagueTeam() {
+  return PREMIER_LEAGUE_2026_27_TEAMS.find((team) => team.id === premierLeagueMenuSetup.teamId) || null;
+}
+
+function renderPremierLeagueTeamPicker() {
+  const team = selectedPremierLeagueTeam();
+  els.premierLeagueTeamPickerButton?.classList.toggle("has-team", Boolean(team));
+  if (!team) {
+    if (els.premierLeagueTeamPickerMark) els.premierLeagueTeamPickerMark.textContent = "PL";
+    if (els.premierLeagueTeamLabel) els.premierLeagueTeamLabel.textContent = "Neutral";
+    if (els.premierLeagueTeamHint) els.premierLeagueTeamHint.textContent = "Watch the whole title race";
+    els.premierLeagueTeamPickerButton?.setAttribute("aria-label", "Choose a Premier League club. Current view: Neutral");
+    return;
+  }
+  els.premierLeagueTeamPickerMark.innerHTML = premierLeagueAssetsInstalled
+    ? premierLeagueBadgeMarkup(team)
+    : team.code;
+  els.premierLeagueTeamLabel.textContent = team.name;
+  els.premierLeagueTeamHint.textContent = "Manage this club through 38 matches";
+  els.premierLeagueTeamPickerButton.setAttribute("aria-label", `Change ${team.name} as your Premier League club`);
+}
+
+function renderPremierLeagueTeamList(query = "") {
+  const normalized = query.trim().toLowerCase();
+  const teams = PREMIER_LEAGUE_2026_27_TEAMS.filter((team) => team.name.toLowerCase().includes(normalized));
+  const neutralOption = normalized
+    ? ""
+    : `
+      <button class="prediction-option spectate-neutral-option ${premierLeagueMenuSetup.teamId ? "" : "selected"}" type="button" data-prem-team-id="">
+        <span class="spectate-neutral-mark" aria-hidden="true">PL</span>
+        <span><strong>Neutral</strong><small>Watch all 380 matches</small></span>
+        <i aria-hidden="true">${premierLeagueMenuSetup.teamId ? "" : "&#10003;"}</i>
+      </button>
+    `;
+  els.spectateList.innerHTML = neutralOption + teams.map((team) => `
+    <button class="prediction-option ${team.id === premierLeagueMenuSetup.teamId ? "selected" : ""}" type="button" data-prem-team-id="${team.id}">
+      ${premierLeagueAssetsInstalled
+        ? premierLeagueBadgeMarkup(team)
+        : `<span class="premier-league-club-code" aria-hidden="true">${team.code}</span>`}
+      <span><strong>${team.name}</strong><small>${team.promoted ? "Promoted for 2026/27" : "Premier League club"}</small></span>
+      <i aria-hidden="true">${team.id === premierLeagueMenuSetup.teamId ? "&#10003;" : ""}</i>
+    </button>
+  `).join("") || `<div class="overview-empty">No Premier League club matches that search.</div>`;
+}
+
+function openPremierLeagueTeamPicker() {
+  spectatePickerMode = "premier-league";
+  els.spectateModalTitle.textContent = "Choose a Premier League club";
+  els.spectateSearch.placeholder = "Search 20 clubs";
+  els.spectateSearch.value = "";
+  renderPremierLeagueTeamList();
+  els.spectateModal.showModal();
+  requestAnimationFrame(() => els.spectateSearch.focus());
+}
+
 function retroWorldCupTeamStorageKey(year) {
   return `${RETRO_WORLD_CUP_TEAM_KEY_PREFIX}-${year}`;
+}
+
+function readRetroCompetition() {
+  if (Number(retroWorldCupYearFromPath()) === 2016) return "euros";
+  try {
+    return localStorage.getItem(RETRO_COMPETITION_KEY) === "euros" ? "euros" : "wc";
+  } catch {
+    return "wc";
+  }
+}
+
+function selectedRetroTournamentYear() {
+  return readRetroCompetition() === "euros" ? 2016 : Number(readRetroWorldCupYear());
+}
+
+function retroMenuTeamEntries(year = readRetroWorldCupYear()) {
+  return readRetroCompetition() === "euros"
+    ? RETRO_EURO_2016.teams
+    : RETRO_WORLD_CUPS[year]?.teams || [];
+}
+
+function readRetroEuroTeam() {
+  try {
+    const name = localStorage.getItem(RETRO_EURO_2016_TEAM_KEY);
+    return RETRO_EURO_2016.teams.some((team) => team.name === name) ? name : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveRetroEuroTeam(name) {
+  try {
+    if (name) localStorage.setItem(RETRO_EURO_2016_TEAM_KEY, name);
+    else localStorage.removeItem(RETRO_EURO_2016_TEAM_KEY);
+  } catch {
+    // Selection remains usable for the current page when storage is unavailable.
+  }
 }
 
 function readRetroWorldCupTeam(year) {
@@ -5809,34 +6735,55 @@ function lockRetroTournamentSetup(tournament, setup = {}) {
 }
 
 function renderRetroWorldCupTeamPicker(year) {
-  const activeTournament = retroTournamentForYear(year);
-  const selectedName = activeTournament
-    ? retroTournamentLockedSetup(activeTournament)?.managedTeam
-    : readRetroWorldCupTeam(year);
-  const selected = retroWorldCupTeamData(year, selectedName);
+  const isEuros = readRetroCompetition() === "euros";
+  const selectedYear = isEuros ? RETRO_EURO_2016.year : year;
+  const activeTournament = retroTournamentForYear(selectedYear);
+  const selectedName = isEuros
+    ? activeTournament
+      ? retroTournamentLockedSetup(activeTournament)?.managedTeam
+      : readRetroEuroTeam()
+    : activeTournament
+      ? retroTournamentLockedSetup(activeTournament)?.managedTeam
+      : readRetroWorldCupTeam(year);
+  const selected = isEuros
+    ? RETRO_EURO_2016.teams.find((team) => team.name === selectedName)
+    : retroWorldCupTeamData(year, selectedName);
   const team = selected ? retroTeamForFlag(selected.name) : null;
   els.retroTeamPickerButton?.classList.toggle("has-team", Boolean(team));
   if (!team || !selected) {
     if (els.retroTeamPickerMark) els.retroTeamPickerMark.textContent = "◎";
     if (els.retroWorldCupTeamLabel) els.retroWorldCupTeamLabel.textContent = "Neutral";
     if (els.retroWorldCupTeamHint) els.retroWorldCupTeamHint.textContent = "Show every match as normal";
-    els.retroTeamPickerButton?.setAttribute("aria-label", `Choose a team from the ${year} World Cup. Current view: Neutral`);
+    els.retroTeamPickerButton?.setAttribute(
+      "aria-label",
+      isEuros
+        ? "Choose a team from Euro 2016. Current view: Neutral"
+        : `Choose a team from the ${year} World Cup. Current view: Neutral`,
+    );
     return;
   }
   els.retroTeamPickerMark.innerHTML = flagMarkup(team, "spectate-picker-flag");
   els.retroWorldCupTeamLabel.textContent = team.name;
   els.retroWorldCupTeamHint.textContent = `Group ${selected.group}`;
-  els.retroTeamPickerButton.setAttribute("aria-label", `Change ${team.name} as your ${year} World Cup team`);
+  els.retroTeamPickerButton.setAttribute(
+    "aria-label",
+    isEuros ? `Change ${team.name} as your Euro 2016 team` : `Change ${team.name} as your ${year} World Cup team`,
+  );
 }
 
 function renderRetroWorldCupTeamList(query = "") {
-  const year = readRetroWorldCupYear();
+  const year = selectedRetroTournamentYear();
+  const isEuros = readRetroCompetition() === "euros";
   const activeTournament = retroTournamentForYear(year);
-  const selectedName = activeTournament
-    ? retroTournamentLockedSetup(activeTournament)?.managedTeam
-    : readRetroWorldCupTeam(year);
+  const selectedName = isEuros
+    ? activeTournament
+      ? retroTournamentLockedSetup(activeTournament)?.managedTeam
+      : readRetroEuroTeam()
+    : activeTournament
+      ? retroTournamentLockedSetup(activeTournament)?.managedTeam
+      : readRetroWorldCupTeam(year);
   const normalized = query.trim().toLowerCase();
-  const teams = RETRO_WORLD_CUPS[year].teams
+  const teams = retroMenuTeamEntries(year)
     .filter((entry) => entry.name.toLowerCase().includes(normalized))
     .map((entry) => ({
       ...entry,
@@ -5856,18 +6803,19 @@ function renderRetroWorldCupTeamList(query = "") {
       <span><strong>${entry.name}</strong><small>Group ${entry.group}</small></span>
       <i aria-hidden="true">${entry.name === selectedName ? "✓" : ""}</i>
     </button>
-  `).join("") || `<div class="overview-empty">No ${year} team matches that search.</div>`;
+  `).join("") || `<div class="overview-empty">No ${isEuros ? "Euro 2016" : year} team matches that search.</div>`;
 }
 
 function openRetroWorldCupTeamPicker() {
-  const year = readRetroWorldCupYear();
+  const year = selectedRetroTournamentYear();
+  const isEuros = readRetroCompetition() === "euros";
   if (retroTournamentForYear(year)) {
-    showToast("Restart this World Cup before changing your team.");
+    showToast(`Restart this ${isEuros ? "Euro" : "World Cup"} before changing your team.`);
     return;
   }
   spectatePickerMode = "retro";
-  els.spectateModalTitle.textContent = `Choose a ${year} World Cup team`;
-  els.spectateSearch.placeholder = `Search ${year} teams`;
+  els.spectateModalTitle.textContent = isEuros ? "Choose a Euro 2016 team" : `Choose a ${year} World Cup team`;
+  els.spectateSearch.placeholder = isEuros ? "Search Euro 2016 teams" : `Search ${year} teams`;
   els.spectateSearch.value = "";
   renderRetroWorldCupTeamList();
   els.spectateModal.showModal();
@@ -5997,6 +6945,823 @@ function calculateGoalscorerTable(rounds = state.rounds) {
 function calculateTopGoalscorer(rounds = state.rounds) {
   return calculateGoalscorerTable(rounds)[0] || null;
 }
+
+function tournamentHistoryMode(candidate = state) {
+  if (candidate?.retroWorldCup) return "retro";
+  if (candidate?.customTournament) return "custom";
+  if (candidate?.legacyTournament) return "legacy";
+  return "standard";
+}
+
+function tournamentHistoryFinalRoundIndex(candidate = state) {
+  if (candidate?.savedTournamentView) return Math.max(0, candidate.rounds.length - 1);
+  if (candidate?.retroWorldCup) return 6;
+  if (candidate?.customTournament) {
+    return customRoundNames(
+      candidate.customTournament.teamCount,
+      candidate.customTournament.structure,
+    ).length - 1;
+  }
+  return 7;
+}
+
+function tournamentHistoryFinalMatch(candidate = state) {
+  const finalRound = candidate?.rounds?.[tournamentHistoryFinalRoundIndex(candidate)] || [];
+  return finalRound.find((match) => !isThirdPlacePlayoff(match)) || null;
+}
+
+function tournamentHistorySourceKey(candidate = state) {
+  const mode = tournamentHistoryMode(candidate);
+  const year = candidate?.retroWorldCup
+    ? Number(retroTournament?.year || candidate.retroYear || readRetroWorldCupYear())
+    : 0;
+  const seed = Number(candidate?.drawSeed || retroTournament?.seed || 0);
+  const championId = tournamentHistoryFinalMatch(candidate)?.result?.winnerId || "unfinished";
+  return `${mode}:${year}:${seed}:${championId}`;
+}
+
+function tournamentHistoryIsComplete(candidate = state) {
+  const final = tournamentHistoryFinalMatch(candidate);
+  return Boolean(
+    candidate?.started
+    && final?.result?.revealed
+    && final.result.winnerId
+    && [final.homeId, final.awayId].includes(final.result.winnerId),
+  );
+}
+
+function readTournamentHistoryRecords() {
+  try {
+    const payload = JSON.parse(localStorage.getItem(TOURNAMENT_HISTORY_STORAGE_KEY) || "[]");
+    if (!Array.isArray(payload)) return [];
+    return payload
+      .filter((record) => (
+        record?.version === TOURNAMENT_HISTORY_VERSION
+        && typeof record.id === "string"
+        && typeof record.sourceKey === "string"
+        && Array.isArray(record.rounds)
+        && record.rounds.length > 0
+      ))
+      .sort((left, right) => Number(right.savedAt || 0) - Number(left.savedAt || 0))
+      .slice(0, TOURNAMENT_HISTORY_LIMIT);
+  } catch {
+    return [];
+  }
+}
+
+function writeTournamentHistoryRecords(records) {
+  const next = [...records]
+    .sort((left, right) => Number(right.savedAt || 0) - Number(left.savedAt || 0))
+    .slice(0, TOURNAMENT_HISTORY_LIMIT);
+  if (!next.length) {
+    try {
+      localStorage.setItem(TOURNAMENT_HISTORY_STORAGE_KEY, "[]");
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  while (next.length) {
+    try {
+      localStorage.setItem(TOURNAMENT_HISTORY_STORAGE_KEY, JSON.stringify(next));
+      return true;
+    } catch {
+      if (next.length === 1) return false;
+      next.pop();
+    }
+  }
+  return false;
+}
+
+function compactTournamentHistoryEvent(event) {
+  if (!event || typeof event !== "object") return null;
+  return {
+    minute: Number(event.minute) || 0,
+    scorer: event.scorer || null,
+    player: event.player || null,
+    side: event.side || null,
+    type: event.type || null,
+    goalType: event.goalType || null,
+    ownGoal: event.ownGoal === true,
+    scored: event.scored,
+  };
+}
+
+function compactTournamentHistoryResult(result) {
+  if (!result) return null;
+  return {
+    revealed: result.revealed !== false,
+    bye: result.bye === true,
+    homeGoals: Number(result.homeGoals) || 0,
+    awayGoals: Number(result.awayGoals) || 0,
+    regulationHome: Number.isFinite(Number(result.regulationHome)) ? Number(result.regulationHome) : null,
+    regulationAway: Number.isFinite(Number(result.regulationAway)) ? Number(result.regulationAway) : null,
+    extraTime: result.extraTime === true,
+    penalties: result.penalties
+      ? { home: Number(result.penalties.home) || 0, away: Number(result.penalties.away) || 0 }
+      : null,
+    winnerId: result.winnerId || null,
+    homeEvents: (result.homeEvents || []).map(compactTournamentHistoryEvent).filter(Boolean),
+    awayEvents: (result.awayEvents || []).map(compactTournamentHistoryEvent).filter(Boolean),
+    redCards: (result.redCards || []).map(compactTournamentHistoryEvent).filter(Boolean),
+    injuries: (result.injuries || []).map(compactTournamentHistoryEvent).filter(Boolean),
+    shootout: (result.shootout || []).map(compactTournamentHistoryEvent).filter(Boolean),
+  };
+}
+
+function compactTournamentHistoryTeam(team) {
+  if (!team) return null;
+  return {
+    id: team.id,
+    name: team.name,
+    code: team.code || "XX",
+    flag: team.flag || "🏳️",
+    badge: team.badge || null,
+    retroWorldCup: team.retroWorldCup === true,
+    retroYear: team.retroYear || null,
+  };
+}
+
+function tournamentHistoryRoundNames(candidate = state) {
+  if (candidate?.retroWorldCup) return retroRoundNames();
+  if (candidate?.customTournament) {
+    return customRoundNames(
+      candidate.customTournament.teamCount,
+      candidate.customTournament.structure,
+    );
+  }
+  return [...ROUND_NAMES];
+}
+
+function tournamentHistoryManagedOutcome(candidate, managedTeamId, championId, roundNames) {
+  if (!managedTeamId) return "Neutral view";
+  if (managedTeamId === championId) return "Champions";
+  let lastRoundIndex = -1;
+  let eliminated = false;
+  candidate.rounds.forEach((round, roundIndex) => (round || []).forEach((match) => {
+    if (match.homeId !== managedTeamId && match.awayId !== managedTeamId) return;
+    if (!match.result?.revealed) return;
+    lastRoundIndex = Math.max(lastRoundIndex, roundIndex);
+    if (
+      match.result.winnerId
+      && match.result.winnerId !== managedTeamId
+      && !match.allowDraw
+      && !isThirdPlacePlayoff(match)
+    ) eliminated = true;
+  }));
+  if (lastRoundIndex < 0) return "No managed matches";
+  const roundName = roundNames[lastRoundIndex] || `Round ${lastRoundIndex + 1}`;
+  return eliminated ? `Reached ${roundName}` : `Finished ${roundName}`;
+}
+
+function createTournamentHistoryRecord() {
+  if (!tournamentHistoryIsComplete(state)) return null;
+  const mode = tournamentHistoryMode(state);
+  const year = mode === "retro"
+    ? Number(retroTournament?.year || readRetroWorldCupYear())
+    : null;
+  const edition = year ? RETRO_WORLD_CUP_EDITIONS[year] : null;
+  const final = tournamentHistoryFinalMatch(state);
+  const championId = final.result.winnerId;
+  const runnerUpId = championId === final.homeId ? final.awayId : final.homeId;
+  const sourceRoundNames = tournamentHistoryRoundNames(state);
+  const savedRoundIndexes = state.rounds
+    .map((round, roundIndex) => (round?.length ? roundIndex : -1))
+    .filter((roundIndex) => roundIndex >= 0);
+  const roundNames = savedRoundIndexes.map((roundIndex) => sourceRoundNames[roundIndex]);
+  const managedTeamId = state._activeSpectateId
+    || state.spectateTeamId
+    || (mode === "retro" && retroTournament?.managedTeam
+      ? retroTeamId(retroTournament.managedTeam, year)
+      : null);
+  const allTournamentMatches = state.rounds.flatMap((round) => round || []);
+  const teamIds = [...new Set(allTournamentMatches.flatMap((match) => [match.homeId, match.awayId]).filter(Boolean))];
+  const teams = Object.fromEntries(teamIds.map((teamId) => {
+    const compactTeam = compactTournamentHistoryTeam(teamById(teamId));
+    return [teamId, compactTeam || {
+      id: teamId,
+      name: teamId,
+      code: "XX",
+      flag: "🏳️",
+      badge: null,
+    }];
+  }));
+  const topScorer = calculateTopGoalscorer();
+  const sourceKey = tournamentHistorySourceKey(state);
+  const matchCount = allTournamentMatches.filter((match) => match?.result && !match.result.bye).length;
+  const goalCount = allTournamentMatches.reduce((sum, match) => (
+    sum + (match?.result?.bye ? 0 : Number(match?.result?.homeGoals || 0) + Number(match?.result?.awayGoals || 0))
+  ), 0);
+  const typeLabel = mode === "retro"
+    ? year === 2016 ? "UEFA Euro 2016" : `World Cup ${year}`
+    : mode === "custom"
+      ? `${state.customTournament.teamCount}-team custom tournament`
+      : mode === "legacy"
+        ? "Legacy Draft Tournament"
+        : "256 Teams Knockout";
+  const editionLabel = edition?.label || (
+    mode === "custom" ? "Custom Tournament"
+      : mode === "legacy" ? "Legacy Draft"
+        : "256 Teams WC"
+  );
+  const savedAt = Date.now();
+  return {
+    version: TOURNAMENT_HISTORY_VERSION,
+    id: `tournament-${Math.abs(stableHash(sourceKey)).toString(36)}`,
+    sourceKey,
+    savedAt,
+    completedAt: savedAt,
+    mode,
+    theme: year ? String(year) : mode === "standard" ? "256" : mode,
+    year,
+    typeLabel,
+    editionLabel,
+    logo: edition?.logo || null,
+    championId,
+    runnerUpId,
+    managedTeamId,
+    managedOutcome: tournamentHistoryManagedOutcome(state, managedTeamId, championId, sourceRoundNames),
+    matchCount,
+    goalCount,
+    topScorer: topScorer ? {
+      player: topScorer.player,
+      teamId: topScorer.teamId,
+      goals: topScorer.goals,
+    } : null,
+    roundNames,
+    teams,
+    rounds: savedRoundIndexes.map((roundIndex) => (state.rounds[roundIndex] || []).map((match) => ({
+      id: match.id,
+      homeId: match.homeId,
+      awayId: match.awayId,
+      allowDraw: match.allowDraw === true,
+      customGroupLabel: match.customGroupLabel || null,
+      thirdPlacePlayoff: isThirdPlacePlayoff(match),
+      schedule: match.schedule ? {
+        dateLabel: match.schedule.dateLabel || null,
+        timeLabel: match.schedule.timeLabel || null,
+        stadium: match.schedule.stadium || null,
+        city: match.schedule.city || null,
+      } : null,
+      result: compactTournamentHistoryResult(match.result),
+    }))),
+  };
+}
+
+function currentTournamentHistoryRecord() {
+  if (!tournamentHistoryIsComplete(state)) return null;
+  const sourceKey = tournamentHistorySourceKey(state);
+  return readTournamentHistoryRecords().find((record) => record.sourceKey === sourceKey) || null;
+}
+
+function syncChampionTournamentHistoryButton() {
+  if (!els.championSaveTournament || !els.championSaveTournamentLabel) return;
+  els.championSaveTournament.hidden = state?.savedTournamentView === true;
+  if (state?.savedTournamentView) return;
+  const savedRecord = currentTournamentHistoryRecord();
+  els.championSaveTournament.classList.toggle("is-saved", Boolean(savedRecord));
+  els.championSaveTournament.dataset.historyTheme = isRetroSimulatorState()
+    ? String(retroTournament?.year || readRetroWorldCupYear())
+    : isValidCustomTournamentState(state) ? "custom"
+      : state.legacyTournament ? "legacy" : "256";
+  els.championSaveTournamentLabel.textContent = savedRecord
+    ? "View saved tournament"
+    : "Save tournament";
+  els.championSaveTournament.setAttribute(
+    "aria-label",
+    savedRecord ? "View this saved tournament" : "Save this completed tournament to history",
+  );
+}
+
+function saveCurrentTournamentToHistory() {
+  if (!tournamentHistoryIsComplete(state)) {
+    showToast("Finish the tournament before saving it.");
+    return null;
+  }
+  const existing = currentTournamentHistoryRecord();
+  if (existing) return existing;
+  const record = createTournamentHistoryRecord();
+  if (!record) return null;
+  const records = [
+    record,
+    ...readTournamentHistoryRecords().filter((saved) => saved.sourceKey !== record.sourceKey),
+  ];
+  if (!writeTournamentHistoryRecords(records)) {
+    showToast("This browser does not have enough space to save the tournament.");
+    return null;
+  }
+  syncChampionTournamentHistoryButton();
+  window.dispatchEvent(new CustomEvent("tournament-history-changed", { detail: { record } }));
+  showToast("Tournament saved to your history.");
+  return record;
+}
+
+function tournamentHistoryTeam(record, teamId) {
+  return record?.teams?.[teamId] || {
+    id: teamId || "unknown",
+    name: "Unknown team",
+    code: "XX",
+    flag: "🏳️",
+  };
+}
+
+function tournamentHistoryFlag(record, teamId, className = "") {
+  const team = tournamentHistoryTeam(record, teamId);
+  try {
+    return flagMarkup(team, className);
+  } catch {
+    return `<span class="country-flag ${className}" role="img" aria-label="${escapeHtml(team.name)} flag"><span class="flag-fallback" aria-hidden="true">${escapeHtml(team.flag || "🏳️")}</span></span>`;
+  }
+}
+
+function formatTournamentHistoryDate(timestamp, includeTime = false) {
+  const value = Number(timestamp);
+  if (!Number.isFinite(value) || value <= 0) return "";
+  return new Intl.DateTimeFormat(undefined, includeTime
+    ? { dateStyle: "medium", timeStyle: "short" }
+    : { dateStyle: "medium" }).format(new Date(value));
+}
+
+function tournamentHistoryResultNote(result) {
+  if (!result) return "Score unavailable";
+  if (result.penalties) return `Penalties ${result.penalties.home}–${result.penalties.away}`;
+  if (result.extraTime) return "After extra time";
+  return "Full time";
+}
+
+function tournamentHistoryEventMarkup(events, fallback = "No goals") {
+  if (!events?.length) return `<span class="tournament-history-no-events">${fallback}</span>`;
+  return events.map((event) => {
+    const label = event.ownGoal || event.goalType === "ownGoal"
+      ? `${event.scorer || event.player || "Own goal"} (OG)`
+      : event.scorer || event.player || "Goal";
+    return `<span><b>${escapeHtml(label)}</b><i>${Number(event.minute) || 0}'</i></span>`;
+  }).join("");
+}
+
+function renderTournamentHistoryHero() {
+  const record = activeTournamentHistoryRecord;
+  if (!record) return;
+  const champion = tournamentHistoryTeam(record, record.championId);
+  const runnerUp = tournamentHistoryTeam(record, record.runnerUpId);
+  const logoMarkup = record.logo
+    ? `<img class="tournament-history-edition-logo" src="${escapeHtml(record.logo)}" alt="${escapeHtml(record.editionLabel)} logo" />`
+    : `<span class="tournament-history-edition-fallback" aria-hidden="true">${record.theme === "256" ? "256" : "WC"}</span>`;
+  els.tournamentHistoryHero.innerHTML = `
+    <div class="tournament-history-edition">
+      ${logoMarkup}
+      <span><small>${escapeHtml(record.editionLabel)}</small><strong>${escapeHtml(record.typeLabel)}</strong></span>
+    </div>
+    <div class="tournament-history-champion">
+      <span class="tournament-history-crown" aria-hidden="true">&#9733;</span>
+      ${tournamentHistoryFlag(record, record.championId, "tournament-history-champion-flag")}
+      <span>
+        <small>CHAMPIONS</small>
+        <strong>${escapeHtml(champion.name)}</strong>
+        <em>Finalists: ${escapeHtml(champion.name)} &amp; ${escapeHtml(runnerUp.name)}</em>
+      </span>
+    </div>`;
+}
+
+function renderTournamentHistorySummary() {
+  const record = activeTournamentHistoryRecord;
+  if (!record) return;
+  const managedTeam = record.managedTeamId ? tournamentHistoryTeam(record, record.managedTeamId) : null;
+  const topScorer = record.topScorer;
+  const topScorerTeam = topScorer ? tournamentHistoryTeam(record, topScorer.teamId) : null;
+  els.tournamentHistorySummary.innerHTML = `
+    <article>
+      <strong>${record.matchCount.toLocaleString()} matches</strong>
+      <small>Full tournament archive</small>
+    </article>
+    <article>
+      <strong>${record.goalCount.toLocaleString()} goals</strong>
+      <small>Across every saved round</small>
+    </article>
+    <article class="tournament-history-managed">
+      <div>
+        ${managedTeam ? tournamentHistoryFlag(record, managedTeam.id, "tournament-history-summary-flag") : ""}
+        <strong>${escapeHtml(managedTeam?.name || "Neutral simulation")}</strong>
+      </div>
+      <small>${escapeHtml(managedTeam ? record.managedOutcome : "All teams shown")}</small>
+    </article>
+    <article class="tournament-history-top-scorer">
+      <strong>${escapeHtml(topScorer?.player || "No Golden Boot data")}</strong>
+      <small>${topScorer
+        ? `${escapeHtml(topScorerTeam.name)} · ${topScorer.goals} ${topScorer.goals === 1 ? "goal" : "goals"}`
+        : "Goalscorers were not recorded"}</small>
+    </article>`;
+}
+
+function tournamentHistoryMatchLabel(record, match, roundIndex) {
+  if (match?.thirdPlacePlayoff) return "Third-place play-off";
+  return match?.customGroupLabel || record.roundNames[roundIndex] || `Round ${roundIndex + 1}`;
+}
+
+function renderTournamentHistorySelectedMatch() {
+  const record = activeTournamentHistoryRecord;
+  const match = record?.rounds?.[activeTournamentHistoryRound]?.[activeTournamentHistoryMatch];
+  if (!record || !match) {
+    els.tournamentHistoryMatch.innerHTML = '<p class="tournament-history-empty">No saved match in this round.</p>';
+    return;
+  }
+  const home = tournamentHistoryTeam(record, match.homeId);
+  const away = tournamentHistoryTeam(record, match.awayId);
+  const result = match.result;
+  const schedule = match.schedule;
+  const venue = [schedule?.stadium, schedule?.city].filter(Boolean).join(", ");
+  const redCards = result?.redCards || [];
+  const injuries = result?.injuries || [];
+  const incidentMarkup = [
+    ...redCards.map((event) => `${event.player || "Player"} sent off ${Number(event.minute) || 0}'`),
+    ...injuries.map((event) => `${event.player || "Player"} injured ${Number(event.minute) || 0}'`),
+  ];
+  els.tournamentHistoryMatch.innerHTML = `
+    <header>
+      <span>${escapeHtml(tournamentHistoryMatchLabel(record, match, activeTournamentHistoryRound))}</span>
+      <strong>Match ${activeTournamentHistoryMatch + 1} of ${record.rounds[activeTournamentHistoryRound].length}</strong>
+    </header>
+    <div class="tournament-history-scoreboard">
+      <div class="tournament-history-match-team">
+        ${tournamentHistoryFlag(record, home.id, "tournament-history-match-flag")}
+        <strong>${escapeHtml(home.name)}</strong>
+      </div>
+      <div class="tournament-history-score">
+        <span><b>${result ? result.homeGoals : "–"}</b><i>–</i><b>${result ? result.awayGoals : "–"}</b></span>
+        <small>${escapeHtml(tournamentHistoryResultNote(result))}</small>
+      </div>
+      <div class="tournament-history-match-team">
+        ${tournamentHistoryFlag(record, away.id, "tournament-history-match-flag")}
+        <strong>${escapeHtml(away.name)}</strong>
+      </div>
+    </div>
+    <div class="tournament-history-event-grid">
+      <div>${tournamentHistoryEventMarkup(result?.homeEvents)}</div>
+      <span aria-hidden="true"></span>
+      <div>${tournamentHistoryEventMarkup(result?.awayEvents)}</div>
+    </div>
+    ${incidentMarkup.length ? `<div class="tournament-history-incidents">${incidentMarkup.map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>` : ""}
+    ${(schedule?.dateLabel || schedule?.timeLabel || venue) ? `
+      <footer>
+        <span>${escapeHtml([schedule?.dateLabel, schedule?.timeLabel].filter(Boolean).join(" · "))}</span>
+        <span>${escapeHtml(venue)}</span>
+      </footer>` : ""}`;
+}
+
+function renderTournamentHistoryFixtures() {
+  const record = activeTournamentHistoryRecord;
+  const round = record?.rounds?.[activeTournamentHistoryRound] || [];
+  els.tournamentHistoryRoundTitle.textContent = record?.roundNames?.[activeTournamentHistoryRound] || "Saved round";
+  els.tournamentHistoryRoundCount.textContent = `${round.length} ${round.length === 1 ? "match" : "matches"}`;
+  els.tournamentHistoryFixtures.innerHTML = round.map((match, matchIndex) => {
+    const home = tournamentHistoryTeam(record, match.homeId);
+    const away = tournamentHistoryTeam(record, match.awayId);
+    const result = match.result;
+    return `
+      <button
+        class="tournament-history-fixture ${matchIndex === activeTournamentHistoryMatch ? "is-selected" : ""}"
+        type="button"
+        data-history-match="${matchIndex}"
+        aria-pressed="${String(matchIndex === activeTournamentHistoryMatch)}"
+      >
+        <span class="tournament-history-fixture-meta">${escapeHtml(tournamentHistoryMatchLabel(record, match, activeTournamentHistoryRound))}</span>
+        <span class="tournament-history-fixture-team">
+          ${tournamentHistoryFlag(record, home.id, "tournament-history-fixture-flag")}
+          <strong>${escapeHtml(home.name)}</strong>
+          <b>${result ? result.homeGoals : "–"}</b>
+        </span>
+        <span class="tournament-history-fixture-team">
+          ${tournamentHistoryFlag(record, away.id, "tournament-history-fixture-flag")}
+          <strong>${escapeHtml(away.name)}</strong>
+          <b>${result ? result.awayGoals : "–"}</b>
+        </span>
+        <small>${escapeHtml(tournamentHistoryResultNote(result))}</small>
+      </button>`;
+  }).join("");
+}
+
+function renderTournamentHistoryRounds() {
+  const record = activeTournamentHistoryRecord;
+  if (!record) return;
+  els.tournamentHistoryRounds.innerHTML = record.rounds.map((round, roundIndex) => `
+    <button
+      type="button"
+      class="${roundIndex === activeTournamentHistoryRound ? "is-active" : ""}"
+      data-history-round="${roundIndex}"
+      aria-pressed="${String(roundIndex === activeTournamentHistoryRound)}"
+    >
+      <span>${String(roundIndex + 1).padStart(2, "0")}</span>
+      <strong>${escapeHtml(record.roundNames[roundIndex] || `Round ${roundIndex + 1}`)}</strong>
+      <small>${round.length} ${round.length === 1 ? "match" : "matches"}</small>
+    </button>
+  `).join("");
+}
+
+function renderTournamentHistoryRecord() {
+  const record = activeTournamentHistoryRecord;
+  if (!record) return;
+  els.tournamentHistoryScreen.dataset.historyTheme = record.theme;
+  const brandMark = els.tournamentHistoryScreen.querySelector(".tournament-history-brand-mark");
+  if (brandMark) {
+    brandMark.textContent = record.theme === "2016"
+      ? "16"
+      : record.theme === "256"
+        ? "256"
+        : record.theme === "custom"
+          ? "CT"
+          : record.theme === "legacy"
+            ? "LD"
+            : "WC";
+  }
+  els.tournamentHistoryKicker.textContent = record.editionLabel.toUpperCase();
+  els.tournamentHistoryTitle.textContent = record.typeLabel;
+  els.tournamentHistorySavedAt.textContent = `Saved ${formatTournamentHistoryDate(record.savedAt)}`;
+  els.tournamentHistorySavedAt.dateTime = new Date(record.savedAt).toISOString();
+  renderTournamentHistoryHero();
+  renderTournamentHistorySummary();
+  renderTournamentHistoryRounds();
+  renderTournamentHistorySelectedMatch();
+  renderTournamentHistoryFixtures();
+}
+
+function installTournamentHistoryTeams(record) {
+  tournamentHistoryTemporaryTeamIds = [];
+  Object.values(record.teams || {}).forEach((team) => {
+    if (!team?.id || TEAM_BY_ID.has(team.id)) return;
+    const rating = 75;
+    TEAM_BY_ID.set(team.id, {
+      ...team,
+      rating,
+      strength: rating,
+      simulationRatings: deriveTeamSimulationRatings(team.id, team.name, rating, null),
+      playerProfiles: [],
+    });
+    tournamentHistoryTemporaryTeamIds.push(team.id);
+  });
+}
+
+function uninstallTournamentHistoryTeams() {
+  tournamentHistoryTemporaryTeamIds.forEach((teamId) => TEAM_BY_ID.delete(teamId));
+  tournamentHistoryTemporaryTeamIds = [];
+}
+
+function tournamentHistorySimulatorState(record) {
+  const rounds = structuredClone(record.rounds);
+  const roundNames = Array.isArray(record.roundNames)
+    ? record.roundNames
+    : rounds.map((_, index) => `Round ${index + 1}`);
+  const finalRoundIndex = Math.max(0, rounds.length - 1);
+  const finalRound = rounds[finalRoundIndex] || [];
+  const finalMatchIndex = Math.max(0, finalRound.findIndex((match) => !isThirdPlacePlayoff(match)));
+  return {
+    version: STATE_VERSION,
+    savedTournamentView: true,
+    savedTournamentRecordId: record.id,
+    savedTournamentRoundNames: [...roundNames],
+    savedTournamentTheme: record.theme,
+    savedTournamentEditionLabel: record.editionLabel,
+    savedTournamentTypeLabel: record.typeLabel,
+    settings: normalizeSettings({ ...defaultSettings }),
+    rounds,
+    activeRound: finalRoundIndex,
+    selectedMatch: finalMatchIndex,
+    championView: false,
+    started: true,
+    predictionTeamId: null,
+    spectateTeamId: record.managedTeamId || null,
+    _activeSpectateId: record.managedTeamId || null,
+    neutralView: true,
+    standardTactic: "balanced",
+  };
+}
+
+function tournamentHistoryRetroState(record) {
+  const teamName = (teamId) => tournamentHistoryTeam(record, teamId).name;
+  const roundNames = Array.isArray(record.roundNames)
+    ? record.roundNames
+    : record.rounds.map((_, index) => `Round ${index + 1}`);
+  const adaptMatch = (match, roundIndex, matchday = null) => ({
+    ...structuredClone(match),
+    stage: matchday ? "group" : "knockout",
+    roundIndex,
+    matchday,
+    home: teamName(match.homeId),
+    away: teamName(match.awayId),
+    result: match.result ? {
+      ...structuredClone(match.result),
+      winner: match.result.winnerId ? teamName(match.result.winnerId) : null,
+    } : null,
+  });
+  const groupMatches = record.rounds.slice(0, 3).flatMap((round, roundIndex) => (
+    round.map((match) => adaptMatch(match, roundIndex, roundIndex + 1))
+  ));
+  const knockoutRounds = record.rounds.slice(3).map((round, index) => ({
+    name: roundNames[index + 3] || `Round ${index + 4}`,
+    matches: round.map((match) => adaptMatch(match, index, null)),
+  }));
+  const seed = Number.parseInt(String(record.sourceKey || "").match(/:(\d+):/)?.[1] || "", 10)
+    || Math.abs(stableHash(record.id));
+  return {
+    version: RETRO_WORLD_CUP_ENGINE.VERSION || 1,
+    year: Number(record.year),
+    seed: seed >>> 0,
+    managedTeam: record.managedTeamId ? teamName(record.managedTeamId) : null,
+    neutralView: true,
+    phase: "complete",
+    groupMatches,
+    knockoutRounds,
+    champion: teamName(record.championId),
+    createdAt: new Date(record.completedAt || record.savedAt).toISOString(),
+    savedTournamentView: true,
+    savedTournamentRecordId: record.id,
+    savedTournamentRoundNames: [...roundNames],
+  };
+}
+
+function openTournamentHistory(
+  recordId,
+  returnFocus = document.activeElement,
+  { updateUrl = true } = {},
+) {
+  const record = readTournamentHistoryRecords().find((item) => item.id === recordId);
+  if (!record) {
+    showToast("That saved tournament is no longer available.");
+    return false;
+  }
+  stopStandardPlaybackForNavigation();
+  tournamentHistoryReturnState = {
+    state,
+    standardTournamentState,
+    defaultKnockoutState,
+    customTournamentState,
+    retroSimulatorState,
+    retroTournament,
+    standardTournamentUiState,
+    retroTournamentUiState: { ...retroTournamentUiState },
+    retroTournamentView,
+    retroBottomGroupsVisible,
+    retroBottomGroupMatchesVisible,
+    fixtureLimit,
+    filterUnresolved,
+    teamFilterId,
+    teamFilterReturn,
+    appShellHidden: els.appShell.hidden,
+    profileHidden: document.querySelector("#profileScreen")?.hidden ?? true,
+  };
+  tournamentHistoryReturnFocus = returnFocus instanceof HTMLElement ? returnFocus : null;
+  if (updateUrl) {
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    tournamentHistoryReturnUrl = savedTournamentIdFromPath() ? "/" : currentUrl;
+    window.history.pushState(
+      { ...(window.history.state || {}), tournamentHistoryId: record.id },
+      "",
+      savedTournamentPath(record.id),
+    );
+  } else if (!tournamentHistoryReturnUrl) {
+    tournamentHistoryReturnUrl = "/";
+  }
+  activeTournamentHistoryRecord = record;
+  if (record.mode === "retro" && RETRO_WORLD_CUP_EDITIONS[record.year]) {
+    installRetroTeams(record.year);
+  }
+  installTournamentHistoryTeams(record);
+  if (record.mode === "retro" && RETRO_WORLD_CUP_EDITIONS[record.year]) {
+    retroTournament = tournamentHistoryRetroState(record);
+    const simulatorState = tournamentHistorySimulatorState(record);
+    simulatorState.retroWorldCup = true;
+    simulatorState.retroTournamentYear = Number(record.year);
+    simulatorState.drawSeed = retroTournament.seed;
+    retroSimulatorState = simulatorState;
+    state = {};
+    retroTournamentView = "matches";
+    retroBottomGroupsVisible = false;
+    retroBottomGroupMatchesVisible = false;
+  } else {
+    state = tournamentHistorySimulatorState(record);
+    standardTournamentState = state;
+    retroSimulatorState = null;
+  }
+  const profileScreen = document.querySelector("#profileScreen");
+  if (profileScreen) profileScreen.hidden = true;
+  document.body.classList.add("saved-tournament-simulator");
+  document.body.dataset.savedTournamentTheme = record.theme;
+  render();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  requestAnimationFrame(() => {
+    els.legacyDraftBackButton?.focus({ preventScroll: true });
+  });
+  return true;
+}
+
+function closeTournamentHistory({ updateUrl = true } = {}) {
+  if (!activeTournamentHistoryRecord || !tournamentHistoryReturnState) return;
+  stopStandardPlaybackForNavigation();
+  const previous = tournamentHistoryReturnState;
+  uninstallTournamentHistoryTeams();
+  activeTournamentHistoryRecord = null;
+  tournamentHistoryReturnState = null;
+  state = previous.state;
+  standardTournamentState = previous.standardTournamentState;
+  defaultKnockoutState = previous.defaultKnockoutState;
+  customTournamentState = previous.customTournamentState;
+  retroSimulatorState = previous.retroSimulatorState;
+  retroTournament = previous.retroTournament;
+  standardTournamentUiState = previous.standardTournamentUiState;
+  retroTournamentUiState = previous.retroTournamentUiState;
+  retroTournamentView = previous.retroTournamentView;
+  retroBottomGroupsVisible = previous.retroBottomGroupsVisible;
+  retroBottomGroupMatchesVisible = previous.retroBottomGroupMatchesVisible;
+  fixtureLimit = previous.fixtureLimit;
+  filterUnresolved = previous.filterUnresolved;
+  teamFilterId = previous.teamFilterId;
+  teamFilterReturn = previous.teamFilterReturn;
+  document.body.classList.remove("saved-tournament-simulator");
+  delete document.body.dataset.savedTournamentTheme;
+  const returnFocus = tournamentHistoryReturnFocus;
+  tournamentHistoryReturnFocus = null;
+  if (updateUrl) {
+    window.history.pushState(
+      { ...(window.history.state || {}), tournamentHistoryId: null },
+      "",
+      tournamentHistoryReturnUrl || "/",
+    );
+  }
+  tournamentHistoryReturnUrl = null;
+  render();
+  els.appShell.hidden = previous.appShellHidden;
+  const profileScreen = document.querySelector("#profileScreen");
+  if (profileScreen) profileScreen.hidden = previous.profileHidden;
+  requestAnimationFrame(() => returnFocus?.focus?.({ preventScroll: true }));
+}
+
+function syncSavedTournamentDeleteActions() {
+  const visible = Boolean(activeTournamentHistoryRecord);
+  if (els.savedTournamentDeleteButton) els.savedTournamentDeleteButton.hidden = !visible;
+  if (els.retroSavedTournamentDeleteButton) els.retroSavedTournamentDeleteButton.hidden = !visible;
+}
+
+function openSavedTournamentDeleteModal() {
+  if (!activeTournamentHistoryRecord || !els.savedTournamentDeleteModal) return;
+  const edition = activeTournamentHistoryRecord.editionLabel
+    || activeTournamentHistoryRecord.typeLabel
+    || "saved tournament";
+  if (els.savedTournamentDeleteCopy) {
+    els.savedTournamentDeleteCopy.textContent = `${edition} will be permanently removed from this browser.`;
+  }
+  els.savedTournamentDeleteModal.showModal();
+}
+
+function deleteSavedTournament(recordId) {
+  if (!recordId) return false;
+  const records = readTournamentHistoryRecords();
+  const remainingRecords = records.filter((record) => record.id !== recordId);
+  if (remainingRecords.length === records.length) {
+    showToast("That saved tournament is no longer available.");
+    return false;
+  }
+  if (!writeTournamentHistoryRecords(remainingRecords)) {
+    showToast("This browser could not delete the saved tournament.");
+    return false;
+  }
+  window.dispatchEvent(new CustomEvent("tournament-history-changed", {
+    detail: { deletedRecordId: recordId },
+  }));
+  return true;
+}
+
+function confirmSavedTournamentDelete() {
+  const recordId = activeTournamentHistoryRecord?.id;
+  if (!recordId || !deleteSavedTournament(recordId)) return;
+  els.savedTournamentDeleteModal?.close();
+  closeTournamentHistory();
+  showToast("Saved tournament deleted.");
+}
+
+window.TournamentHistory = Object.freeze({
+  list() {
+    return readTournamentHistoryRecords().map((record) => ({
+      id: record.id,
+      savedAt: record.savedAt,
+      completedAt: record.completedAt,
+      mode: record.mode,
+      theme: record.theme,
+      year: record.year,
+      typeLabel: record.typeLabel,
+      editionLabel: record.editionLabel,
+      logo: record.logo,
+      championId: record.championId,
+      managedTeamId: record.managedTeamId,
+      managedOutcome: record.managedOutcome,
+      matchCount: record.matchCount,
+      goalCount: record.goalCount,
+      teams: record.teams,
+    }));
+  },
+  saveCurrent: saveCurrentTournamentToHistory,
+  open: openTournamentHistory,
+  close: closeTournamentHistory,
+  delete: deleteSavedTournament,
+});
 
 function showToast(message, duration = 2600) {
   clearTimeout(toastTimer);
@@ -6148,6 +7913,21 @@ function retroSnapshotPalette(year) {
       footer: "RETRO 10 WORLD CUP",
     };
   }
+  if (Number(year) === 2016) {
+    return {
+      accent: "#ffdc38",
+      backgroundStart: "#020d32",
+      backgroundMiddle: "#0756aa",
+      backgroundEnd: "#079bc9",
+      panel: "rgba(3, 29, 81, 0.94)",
+      award: "rgba(4, 61, 128, 0.96)",
+      flagBacking: "#0756aa",
+      primaryText: "#f8fdff",
+      secondaryText: "#bfeeff",
+      glow: "rgba(28, 199, 238, 0.32)",
+      footer: "UEFA EURO 2016",
+    };
+  }
   if (Number(year) === 2018) {
     return {
       accent: "#e9c477",
@@ -6220,10 +8000,15 @@ function drawSnapshotGoldenBoot(context, scorer, y = 438, retroTheme = null) {
   });
 }
 
-function loadSnapshotFlag(team) {
+function loadSnapshotFlag(team, { premierLeague = false } = {}) {
+  const premierLeagueBadge = premierLeague
+    && premierLeagueAssetsInstalled
+    && team?.badge
+    ? team.badge
+    : null;
   const imageOverride = FLAG_IMAGE_OVERRIDES[team.name];
   const code = FLAG_CODE_OVERRIDES[team.code] || team.code.toLowerCase();
-  if (!imageOverride && code === "xx") return Promise.resolve(null);
+  if (!premierLeagueBadge && !imageOverride && code === "xx") return Promise.resolve(null);
   return new Promise((resolve) => {
     const image = new Image();
     let settled = false;
@@ -6237,11 +8022,40 @@ function loadSnapshotFlag(team) {
     image.crossOrigin = "anonymous";
     image.onload = () => finish(image);
     image.onerror = () => finish(null);
-    image.src = imageOverride || `https://flagcdn.com/w320/${code}.png`;
+    image.src = premierLeagueBadge || imageOverride || `https://flagcdn.com/w320/${code}.png`;
   });
 }
 
-function drawSnapshotFlag(context, image, team, x, y, retroTheme = null) {
+function drawSnapshotFlag(context, image, team, x, y, retroTheme = null, premierLeague = false) {
+  if (premierLeague) {
+    if (image) {
+      const sourceWidth = image.naturalWidth || image.width || 1;
+      const sourceHeight = image.naturalHeight || image.height || 1;
+      const scale = Math.min(150 / sourceWidth, 124 / sourceHeight);
+      const width = Math.max(1, sourceWidth * scale);
+      const height = Math.max(1, sourceHeight * scale);
+      context.save();
+      context.shadowColor = "rgba(0, 0, 0, 0.28)";
+      context.shadowBlur = 18;
+      context.shadowOffsetY = 8;
+      context.drawImage(image, x - width / 2, y - height / 2, width, height);
+      context.restore();
+    } else {
+      snapshotRoundedRect(context, x - 62, y - 54, 124, 108, 18);
+      context.fillStyle = "rgba(96, 53, 126, 0.48)";
+      context.fill();
+      context.strokeStyle = "rgba(217, 182, 237, 0.28)";
+      context.lineWidth = 2;
+      context.stroke();
+      snapshotText(context, team.code || "PL", x, y, 94, 38, {
+        minimumSize: 28,
+        weight: 900,
+        color: "#d9b6ed",
+        family: "Manrope, Arial, sans-serif",
+      });
+    }
+    return;
+  }
   snapshotRoundedRect(context, x - 82, y - 57, 164, 114, 13);
   context.fillStyle = retroTheme?.flagBacking || "#192232";
   context.fill();
@@ -6288,6 +8102,7 @@ async function createMatchSnapshotCanvas() {
     || 2014,
   );
   const retroTheme = retroSnapshot ? retroSnapshotPalette(retroYear) : null;
+  const premierLeagueSnapshot = Boolean(state.premierLeagueSeason);
   const championSnapshot = Boolean(state.championView && revealed);
   const championId = championSnapshot ? result.winnerId : null;
   const goldenBootWinner = championSnapshot ? calculateTopGoalscorer() : null;
@@ -6299,7 +8114,7 @@ async function createMatchSnapshotCanvas() {
   const awayShootout = revealed
     ? (result.shootout || []).filter((attempt) => attempt.side === "away")
     : [];
-  const detailStartY = 365;
+  const detailStartY = premierLeagueSnapshot ? 395 : 365;
   const goalListBottom = (lines) => {
     if (!lines.length) return detailStartY;
     const spacing = lines.length > 6 ? 20 : lines.length > 4 ? 24 : 29;
@@ -6322,8 +8137,8 @@ async function createMatchSnapshotCanvas() {
   const contentBottom = goldenBootY === null ? detailBottom : goldenBootY + 116;
   const canvasHeight = Math.max(675, Math.ceil(contentBottom + 110));
   const [homeFlagImage, awayFlagImage] = await Promise.all([
-    loadSnapshotFlag(home),
-    loadSnapshotFlag(away),
+    loadSnapshotFlag(home, { premierLeague: premierLeagueSnapshot }),
+    loadSnapshotFlag(away, { premierLeague: premierLeagueSnapshot }),
   ]);
   const canvas = document.createElement("canvas");
   canvas.width = 1200;
@@ -6332,23 +8147,31 @@ async function createMatchSnapshotCanvas() {
   if (!context) throw new Error("Image creation is not supported in this browser.");
 
   const background = context.createLinearGradient(0, 0, 1200, canvasHeight);
-  background.addColorStop(0, retroTheme?.backgroundStart || "#0b1018");
-  background.addColorStop(0.55, retroTheme?.backgroundMiddle || "#111925");
-  background.addColorStop(1, retroTheme?.backgroundEnd || "#0b111b");
+  background.addColorStop(0, retroTheme?.backgroundStart || (premierLeagueSnapshot ? "#1e0021" : "#0b1018"));
+  background.addColorStop(0.55, retroTheme?.backgroundMiddle || (premierLeagueSnapshot ? "#381d53" : "#111925"));
+  background.addColorStop(1, retroTheme?.backgroundEnd || (premierLeagueSnapshot ? "#1e0021" : "#0b111b"));
   context.fillStyle = background;
   context.fillRect(0, 0, 1200, canvasHeight);
 
   const glow = context.createRadialGradient(600, 250, 0, 600, 250, 530);
-  glow.addColorStop(0, retroTheme?.glow || "rgba(31, 94, 255, 0.18)");
-  glow.addColorStop(1, retroTheme ? "rgba(0, 0, 0, 0)" : "rgba(31, 94, 255, 0)");
+  glow.addColorStop(
+    0,
+    retroTheme?.glow || (premierLeagueSnapshot ? "rgba(157, 107, 187, 0.34)" : "rgba(31, 94, 255, 0.18)"),
+  );
+  glow.addColorStop(
+    1,
+    retroTheme || premierLeagueSnapshot ? "rgba(0, 0, 0, 0)" : "rgba(31, 94, 255, 0)",
+  );
   context.fillStyle = glow;
   context.fillRect(0, 0, 1200, canvasHeight);
 
   snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, 28);
-  context.fillStyle = retroTheme?.panel || "rgba(17, 24, 36, 0.88)";
+  context.fillStyle = retroTheme?.panel || (premierLeagueSnapshot ? "rgba(40, 0, 45, 0.9)" : "rgba(17, 24, 36, 0.88)");
   context.fill();
   if (!retroSnapshot) {
-    context.strokeStyle = "rgba(118, 145, 196, 0.24)";
+    context.strokeStyle = premierLeagueSnapshot
+      ? "rgba(217, 182, 237, 0.25)"
+      : "rgba(118, 145, 196, 0.24)";
     context.lineWidth = 2;
     context.stroke();
   }
@@ -6357,43 +8180,89 @@ async function createMatchSnapshotCanvas() {
 
   const snapshotHeading = championSnapshot
     ? retroTheme
-      ? `${RETRO_WORLD_CUP_EDITIONS[retroYear].host.toUpperCase()} ${retroYear} WORLD CHAMPIONS`
+      ? Number(retroYear) === 2016
+        ? "FRANCE 2016 EUROPEAN CHAMPIONS"
+        : `${RETRO_WORLD_CUP_EDITIONS[retroYear].host.toUpperCase()} ${retroYear} WORLD CHAMPIONS`
       : "256 TEAMS WC CHAMPIONS"
-    : tournamentMatchRoundName(match, roundIndex).toUpperCase();
+    : premierLeagueSnapshot
+      ? `PL 26/27 · ${tournamentMatchRoundName(match, roundIndex).toUpperCase()}`
+      : tournamentMatchRoundName(match, roundIndex).toUpperCase();
   snapshotText(context, snapshotHeading, 1110, 88, 440, 18, {
     minimumSize: 14,
     weight: 700,
     align: "right",
-    color: retroTheme?.accent || "#779cff",
+    color: retroTheme?.accent || (premierLeagueSnapshot ? "#d9b6ed" : "#779cff"),
     family: "Manrope, Arial, sans-serif",
   });
 
-  drawSnapshotFlag(context, homeFlagImage, home, 270, 205, retroTheme);
-  drawSnapshotFlag(context, awayFlagImage, away, 930, 205, retroTheme);
-  snapshotText(context, home.name, 270, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
-  snapshotText(context, away.name, 930, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
+  const homeSnapshotName = premierLeagueSnapshot && home.name === "Manchester United"
+    ? "Man United"
+    : home.name;
+  const awaySnapshotName = premierLeagueSnapshot && away.name === "Manchester United"
+    ? "Man United"
+    : away.name;
+  if (premierLeagueSnapshot) {
+    drawSnapshotFlag(context, homeFlagImage, home, 405, 250, retroTheme, true);
+    drawSnapshotFlag(context, awayFlagImage, away, 795, 250, retroTheme, true);
+    snapshotText(context, homeSnapshotName, 325, 250, 240, 34, {
+      minimumSize: 22,
+      weight: 800,
+      align: "right",
+      color: "#f5f7fb",
+    });
+    snapshotText(context, awaySnapshotName, 875, 250, 240, 34, {
+      minimumSize: 22,
+      weight: 800,
+      align: "left",
+      color: "#f5f7fb",
+    });
+  } else {
+    drawSnapshotFlag(context, homeFlagImage, home, 270, 205, retroTheme);
+    drawSnapshotFlag(context, awayFlagImage, away, 930, 205, retroTheme);
+    snapshotText(context, homeSnapshotName, 270, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
+    snapshotText(context, awaySnapshotName, 930, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
+  }
 
   if (revealed) {
-    snapshotText(context, String(result.homeGoals), 505, 300, 120, 88, {
+    const scoreY = premierLeagueSnapshot ? 250 : 300;
+    const homeScoreX = premierLeagueSnapshot ? 525 : 505;
+    const awayScoreX = premierLeagueSnapshot ? 675 : 695;
+    snapshotText(context, String(result.homeGoals), homeScoreX, scoreY, 120, 88, {
       weight: 800,
       family: "Manrope, Arial, sans-serif",
     });
-    snapshotText(context, "–", 600, 300, 80, 52, { color: "#65728a", weight: 400 });
-    snapshotText(context, String(result.awayGoals), 695, 300, 120, 88, {
+    snapshotText(context, "–", 600, scoreY, 80, 52, { color: "#65728a", weight: 400 });
+    snapshotText(context, String(result.awayGoals), awayScoreX, scoreY, 120, 88, {
       weight: 800,
       family: "Manrope, Arial, sans-serif",
     });
     const resultLabel = result.penalties
       ? `PENALTIES ${result.penalties.home}–${result.penalties.away}`
       : result.extraTime ? "AFTER EXTRA TIME" : "FULL TIME";
-    snapshotText(context, resultLabel, 600, 370, 380, 24, {
+    snapshotText(context, resultLabel, 600, premierLeagueSnapshot ? 340 : 370, 380, 24, {
       minimumSize: 20,
       weight: 700,
-      color: retroTheme?.accent || "#7e8ca3",
+      color: retroTheme?.accent || (premierLeagueSnapshot ? "#d9b6ed" : "#7e8ca3"),
       family: "Manrope, Arial, sans-serif",
     });
-    drawSnapshotGoalLines(context, homeGoalLines, 188, detailStartY, "left", championSnapshot ? 290 : 420, retroTheme?.secondaryText || "#aab4c4");
-    drawSnapshotGoalLines(context, awayGoalLines, 1012, detailStartY, "right", championSnapshot ? 290 : 420, retroTheme?.secondaryText || "#aab4c4");
+    drawSnapshotGoalLines(
+      context,
+      homeGoalLines,
+      188,
+      detailStartY,
+      "left",
+      championSnapshot ? 290 : 420,
+      retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#aab4c4"),
+    );
+    drawSnapshotGoalLines(
+      context,
+      awayGoalLines,
+      1012,
+      detailStartY,
+      "right",
+      championSnapshot ? 290 : 420,
+      retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#aab4c4"),
+    );
     if (homeShootoutY !== null) {
       drawSnapshotShootout(context, homeShootout, 188, homeShootoutY, "left", championSnapshot ? 290 : 420);
     }
@@ -6402,12 +8271,12 @@ async function createMatchSnapshotCanvas() {
     }
     if (championSnapshot) drawSnapshotGoldenBoot(context, goldenBootWinner, goldenBootY, retroTheme);
   } else {
-    snapshotText(context, "VS", 600, 307, 180, 52, {
+    snapshotText(context, "VS", 600, premierLeagueSnapshot ? 250 : 307, 180, 52, {
       weight: 800,
       color: retroTheme?.accent || "#789cff",
       family: "Manrope, Arial, sans-serif",
     });
-    snapshotText(context, result ? "RESULT HIDDEN" : "UPCOMING FIXTURE", 600, 370, 320, 18, {
+    snapshotText(context, result ? "RESULT HIDDEN" : "UPCOMING FIXTURE", 600, premierLeagueSnapshot ? 340 : 370, 320, 18, {
       weight: 700,
       color: retroTheme?.secondaryText || "#7e8ca3",
       family: "Manrope, Arial, sans-serif",
@@ -6418,10 +8287,17 @@ async function createMatchSnapshotCanvas() {
   snapshotText(context, `${mode} · ${state.settings.goals.toUpperCase()} GOALS`, 84, canvasHeight - 43, 420, 15, {
     weight: 600,
     align: "left",
-    color: retroTheme?.accent || "#69778e",
+    color: retroTheme?.accent || (premierLeagueSnapshot ? "#d2afd9" : "#69778e"),
     family: "Manrope, Arial, sans-serif",
   });
-  if (retroTheme) {
+  if (premierLeagueSnapshot) {
+    snapshotText(context, "PL 26/27 SIMULATION", 600, canvasHeight - 43, 360, 17, {
+      minimumSize: 14,
+      weight: 900,
+      color: "#ffffff",
+      family: "Manrope, Arial, sans-serif",
+    });
+  } else if (retroTheme) {
     snapshotText(context, retroTheme.footer, 600, canvasHeight - 43, 360, 17, {
       minimumSize: 14,
       weight: 800,
@@ -6439,7 +8315,7 @@ async function createMatchSnapshotCanvas() {
   snapshotText(context, "256teams.com", 1116, canvasHeight - 43, 420, 15, {
     weight: 600,
     align: "right",
-    color: retroTheme?.secondaryText || "#69778e",
+    color: retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#69778e"),
     family: "Manrope, Arial, sans-serif",
   });
   return canvas;
@@ -6725,14 +8601,18 @@ async function openSnapshotModal() {
   }
   els.snapshotButton.disabled = true;
   try {
-    els.snapshotModalKicker.textContent = "SHARE THE MOMENT";
-    els.snapshotModalTitle.textContent = "Match snapshot";
+    const premierLeagueSnapshot = Boolean(state.premierLeagueSeason);
+    els.snapshotModalKicker.textContent = premierLeagueSnapshot ? "PL 26/27 SIMULATION" : "SHARE THE MOMENT";
+    els.snapshotModalTitle.textContent = premierLeagueSnapshot ? "Premier League match snapshot" : "Match snapshot";
     snapshotBlob = await canvasPngBlob(await createMatchSnapshotCanvas());
     if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
     snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
     els.snapshotImage.src = snapshotObjectUrl;
+    els.snapshotImage.alt = premierLeagueSnapshot
+      ? "Generated PL 26/27 match snapshot"
+      : "Generated 256 TEAMS WC snapshot";
     const snapshot = snapshotMatchContext();
-    snapshotFilename = `world-256-${snapshot.home.name}-vs-${snapshot.away.name}`
+    snapshotFilename = `${premierLeagueSnapshot ? "pl-26-27" : "world-256"}-${snapshot.home.name}-vs-${snapshot.away.name}`
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "") + ".png";
@@ -6789,9 +8669,10 @@ async function shareSnapshotImage() {
       showToast("File sharing is unavailable here. Use Save image instead.");
       return;
     }
+    const premierLeagueSnapshot = Boolean(state?.premierLeagueSeason);
     await navigator.share({
-      title: "256 TEAMS WC match snapshot",
-      text: "256 TEAMS WC tournament result",
+      title: premierLeagueSnapshot ? "PL 26/27 match snapshot" : "256 TEAMS WC match snapshot",
+      text: premierLeagueSnapshot ? "PL 26/27 simulation result" : "256 TEAMS WC tournament result",
       files: [file],
     });
   } catch (error) {
@@ -6837,19 +8718,26 @@ function clearPlayerProfileCacheForTeam(teamId) {
 }
 
 function playerProfilesForTeam(team) {
-  const officialRetroSquad = Boolean(team.retroWorldCup && team.playerProfiles?.length);
-  const useRealPlayers = Boolean((state.settings.realNames || officialRetroSquad) && team.players);
+  const historicalTournament = isRetroSimulatorState() || state.legacyTournament === true;
+  const officialRetroSquad = Boolean(historicalTournament && team.retroWorldCup && team.playerProfiles?.length);
+  const canonicalCurrentTeam = historicalTournament || state?.premierLeagueSeason
+    ? null
+    : TEAMS.find((candidate) => candidate.name === team.name) || null;
+  const rosterTeam = canonicalCurrentTeam || team;
+  const rosterPlayers = rosterTeam.players || [];
+  const rosterProfiles = rosterTeam.playerProfiles || [];
+  const useRealPlayers = Boolean((state.settings.realNames || officialRetroSquad) && rosterPlayers.length);
   const realPlayersOnly = state.settings.realPlayersOnly !== false;
-  const playerMode = `${useRealPlayers ? "real" : "generated"}:${realPlayersOnly ? "real-only" : "all"}`;
+  const playerMode = `current-roster-3:${useRealPlayers ? "real" : "generated"}:${realPlayersOnly ? "real-only" : "all"}`;
   const cacheKey = `${team.id}:${playerMode}`;
   if (!playerProfileCache.has(cacheKey)) {
     let inputs = useRealPlayers
-      ? team.playerProfiles?.length
+      ? rosterProfiles.length
         ? [
-          ...team.playerProfiles.map((profile) => ({ ...profile })),
-          ...team.players.filter((name) => !team.playerProfiles.some((profile) => profile.name === name)),
+          ...rosterProfiles.map((profile) => ({ ...profile })),
+          ...rosterPlayers.filter((name) => !rosterProfiles.some((profile) => profile.name === name)),
         ]
-        : [...team.players]
+        : [...rosterPlayers]
       : generatedPlayers(team);
     if (realPlayersOnly) inputs = inputs.filter((entry) => !FICTIONAL_PLAYER_NAMES.has(typeof entry === "string" ? entry : entry.name));
     if (team.name === "Moldova" && !inputs.some((entry) => (typeof entry === "string" ? entry : entry.name) === "Amenyah")) {
@@ -6862,6 +8750,18 @@ function playerProfilesForTeam(team) {
       inputs = [{ name: "Wroetoshaw", position: "ST" }, ...inputs];
     }
     let profiles = buildPlayerProfiles(team, inputs, !useRealPlayers);
+    if (state?.premierLeagueSeason) {
+      const shirtNumberByName = new Map(
+        rosterProfiles.map((profile, index) => [
+          profile.name,
+          Number.isInteger(profile.number) ? profile.number : index + 1,
+        ]),
+      );
+      profiles = profiles.map((profile, index) => ({
+        ...profile,
+        number: shirtNumberByName.get(profile.name) || index + 1,
+      }));
+    }
     if (useRealPlayers && !officialRetroSquad) {
       const requiredPositions = ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CAM", "LW", "ST", "RW"];
       const requiredGroups = requiredPositions.reduce((counts, position) => {
@@ -6917,8 +8817,125 @@ function playerProfilesForTeam(team) {
     });
     playerProfileCache.set(cacheKey, profiles);
   }
-  return playerProfileCache.get(cacheKey);
+  const profiles = playerProfileCache.get(cacheKey);
+  const managerLineup = retroManagerLineupForTeam(team);
+  const liveManagement = retroLiveTeamManagement(team.id);
+  if (!managerLineup && !liveManagement) {
+    team.liveMissingSlotIndexes = [];
+    team.liveMissingPlayerNames = [];
+    team.liveOrderedStarterNames = [];
+    return profiles;
+  }
+  const activeStarterNumbers = liveManagement?.activeStarters?.length === 11
+    ? liveManagement.activeStarters
+    : managerLineup?.starters;
+  if (!activeStarterNumbers?.length) return profiles;
+  const missingNumbers = new Set(Object.values(liveManagement?.missingSlots || {}).map((entry) => entry.number));
+  team.liveMissingSlotIndexes = Object.keys(liveManagement?.missingSlots || {}).map(Number);
+  team.liveMissingPlayerNames = Object.values(liveManagement?.missingSlots || {}).map((entry) => entry.name);
+  team.liveOrderedStarterNames = activeStarterNumbers.map((number) => (
+    profiles.find((profile) => profile.number === number)?.name || null
+  ));
+  const starterNumbers = new Set(activeStarterNumbers.filter((number) => !missingNumbers.has(number)));
+  team.selectedFormation = liveManagement?.formation || managerLineup?.formation || team.selectedFormation;
+  return profiles
+    .map((profile) => ({
+      ...profile,
+      startingXI: starterNumbers.has(profile.number),
+      expectedMinutesShare: starterNumbers.has(profile.number) ? 0.98 : 0.08,
+    }))
+    .sort((left, right) => (
+      Number(starterNumbers.has(right.number)) - Number(starterNumbers.has(left.number))
+      || activeStarterNumbers.indexOf(left.number) - activeStarterNumbers.indexOf(right.number)
+    ));
 }
+
+function canonicalCurrentRosterNames(team, outfieldOnly = false) {
+  const rosterTeam = TEAMS.find((candidate) => candidate.name === team?.name) || team;
+  const profiles = Array.isArray(rosterTeam?.playerProfiles) ? rosterTeam.playerProfiles : [];
+  const names = profiles.length
+    ? profiles
+      .filter((profile) => !outfieldOnly || profile.position !== "GK")
+      .map((profile) => profile.name)
+    : (rosterTeam?.players || []);
+  return [...new Set(names.map(repairPlayerText).filter(Boolean))];
+}
+
+function repairDefaultKnockoutRosterResults(candidate = state) {
+  if (
+    !candidate
+    || candidate.retroWorldCup
+    || candidate.legacyTournament
+    || !Array.isArray(candidate.rounds)
+  ) return false;
+
+  let repaired = false;
+  const replaceInvalid = (entry, key, validNames, matchId, field = "player") => {
+    if (!entry || !validNames.length || validNames.includes(repairPlayerText(entry[field]))) return;
+    entry[field] = validNames[stableHash(`${matchId}:${key}`) % validNames.length];
+    repaired = true;
+  };
+
+  candidate.rounds.flat().forEach((match) => {
+    if (!match?.result) return;
+    const teams = {
+      home: TEAM_BY_ID.get(match.homeId),
+      away: TEAM_BY_ID.get(match.awayId),
+    };
+    if (!teams.home || !teams.away || teams.home.retroWorldCup || teams.away.retroWorldCup) return;
+    const rosters = {
+      home: canonicalCurrentRosterNames(teams.home),
+      away: canonicalCurrentRosterNames(teams.away),
+    };
+    const outfield = {
+      home: canonicalCurrentRosterNames(teams.home, true),
+      away: canonicalCurrentRosterNames(teams.away, true),
+    };
+
+    ["home", "away"].forEach((side) => {
+      const defendingSide = side === "home" ? "away" : "home";
+      (match.result[`${side}Events`] || []).forEach((event, index) => {
+        if (event.ownGoal) {
+          replaceInvalid(event, `${side}:own-goal:${index}`, outfield[defendingSide], match.id, "ownGoalBy");
+          const expectedScorer = `${event.ownGoalBy} (OG)`;
+          if (event.scorer !== expectedScorer) {
+            event.scorer = expectedScorer;
+            repaired = true;
+          }
+          return;
+        }
+        replaceInvalid(event, `${side}:goal:${index}`, outfield[side], match.id, "scorer");
+        if (event.assist) replaceInvalid(event, `${side}:assist:${index}`, outfield[side], match.id, "assist");
+      });
+    });
+
+    ["redCards", "injuries"].forEach((collection) => {
+      (match.result[collection] || []).forEach((event, index) => {
+        const side = event.side === "away" || event.teamId === match.awayId ? "away" : "home";
+        replaceInvalid(event, `${collection}:${side}:${index}`, outfield[side], match.id);
+      });
+    });
+    const absences = removeImpossiblePlayerAbsenceEvents(
+      match.result.redCards || [],
+      match.result.injuries || [],
+    );
+    if (
+      absences.redCards.length !== (match.result.redCards || []).length
+      || absences.injuries.length !== (match.result.injuries || []).length
+    ) {
+      match.result.redCards = absences.redCards;
+      match.result.injuries = absences.injuries;
+      repaired = true;
+    }
+    (match.result.shootout || []).forEach((attempt, index) => {
+      const side = attempt.side === "away" ? "away" : "home";
+      replaceInvalid(attempt, `shootout:${side}:${index}`, outfield[side], match.id);
+    });
+  });
+  return repaired;
+}
+
+if (repairDefaultKnockoutRosterResults()) saveState();
 
 function scorerPool(team, excludedPlayers = []) {
   const excluded = new Set(excludedPlayers);
@@ -6942,6 +8959,41 @@ function shootoutPositionPriority(position) {
   return 6;
 }
 
+function retroShootoutActiveNames(team) {
+  if (!team?.retroWorldCup || ![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
+    return null;
+  }
+  const match = selectedMatch();
+  const management = retroLiveTeamManagement(team.id)
+    || match?.result?.retroFinalManagement?.[team.id];
+  const squad = retroManagerSquadForTeam(team);
+  if (management?.activeStarters?.length && squad?.players?.length) {
+    const missingNumbers = new Set(Object.values(management.missingSlots || {}).map((entry) => entry.number));
+    return management.activeStarters
+      .filter((number) => !missingNumbers.has(number))
+      .map((number) => squad.players.find((player) => player.number === number)?.name)
+      .filter(Boolean);
+  }
+  const managedLineup = retroManagerLineupForTeam(team);
+  if (managedLineup?.starters?.length && squad?.players?.length) {
+    return managedLineup.starters
+      .map((number) => squad.players.find((player) => player.number === number)?.name)
+      .filter(Boolean);
+  }
+  return RETRO_WORLD_CUP_ENGINE.startingXI(Number(retroTournament.year), team.name)
+    .players
+    .map((player) => player.name);
+}
+
+function shootoutUnavailablePlayers(result, side) {
+  return [...new Set([
+    ...(result?.suspendedPlayers?.[side] || []),
+    ...(result?.injuries || [])
+      .filter((injury) => injury.side === side)
+      .map((injury) => injury.player),
+  ])];
+}
+
 function shootoutTakerPool(team, unavailablePlayers = [], dismissedPlayers = []) {
   const unavailable = new Set(unavailablePlayers);
   const dismissed = new Set(dismissedPlayers);
@@ -6961,7 +9013,7 @@ function shootoutTakerPool(team, unavailablePlayers = [], dismissedPlayers = [])
         priority: shootoutPositionPriority(entry.slot),
       }))
     : null;
-  const candidates = legacyLineup?.length
+  let candidates = legacyLineup?.length
     ? legacyLineup
     : playerProfilesForTeam(team)
       .filter((profile) => !excluded.has(profile.name))
@@ -6970,16 +9022,12 @@ function shootoutTakerPool(team, unavailablePlayers = [], dismissedPlayers = [])
         index,
         priority: shootoutPositionPriority(shootoutPosition(team, profile)),
       }));
+  const retroActiveNames = new Set(retroShootoutActiveNames(team) || []);
+  if (retroActiveNames.size) {
+    candidates = candidates.filter(({ profile }) => retroActiveNames.has(profile.name));
+  }
   const markedStarters = candidates.filter(({ profile }) => profile.startingXI);
-  const eligiblePlayerCount = Math.max(1, 11 - dismissed.size);
-  const eligible = markedStarters.length
-    ? [
-      ...markedStarters,
-      ...candidates
-        .filter(({ profile }) => !profile.startingXI)
-        .slice(0, Math.max(0, eligiblePlayerCount - markedStarters.length)),
-    ]
-    : candidates;
+  const eligible = markedStarters.length ? markedStarters : candidates;
   const fallback = candidates.length
     ? candidates
     : Array.from({ length: 11 }, (_, index) => ({
@@ -7023,6 +9071,10 @@ function poisson(lambda, random) {
   return count - 1;
 }
 
+function matchGoalRandom(randomSeed, matchId, side, phase = "regulation") {
+  return mulberry32(randomSeed + stableHash(`${matchId}-${side}-${phase}-goals`));
+}
+
 function scoringRunBrake() {
   // Tournament totals are never capped; repeat scoring is controlled per match.
   return 1;
@@ -7040,19 +9092,26 @@ function selectWeightedProfile(profiles, random, weightForProfile) {
   return profiles[profiles.length - 1];
 }
 
+function onPitchPlayerProfiles(team) {
+  const squadProfiles = playerProfilesForTeam(team);
+  const markedStarters = squadProfiles.filter((profile) => profile.startingXI);
+  return markedStarters.length ? markedStarters : squadProfiles;
+}
+
 function eligibleScorerProfiles(team, minute, cards = [], suspendedPlayers = []) {
   const dismissed = new Set(
     cards.filter((card) => card.minute <= minute).map((card) => card.player),
   );
   const unavailable = new Set([...suspendedPlayers, ...dismissed]);
-  const profiles = playerProfilesForTeam(team).filter((profile) => (
+  const activeProfiles = onPitchPlayerProfiles(team);
+  const profiles = activeProfiles.filter((profile) => (
     !unavailable.has(profile.name)
     && profile.position !== "GK"
     && minute <= Math.max(25, profile.expectedMinutesShare * 120)
   ));
   return profiles.length
     ? profiles
-    : playerProfilesForTeam(team).filter((profile) => !unavailable.has(profile.name) && profile.position !== "GK");
+    : activeProfiles.filter((profile) => !unavailable.has(profile.name) && profile.position !== "GK");
 }
 
 function weightedScorer(
@@ -7243,8 +9302,8 @@ function createInteractiveShootoutSequence(match, controlledSide, startRound = 1
     away: (result.redCards || []).filter((card) => card.side === "away").map((card) => card.player),
   };
   const pools = {
-    home: shootoutTakerPool(home, result.suspendedPlayers?.home || [], dismissed.home),
-    away: shootoutTakerPool(away, result.suspendedPlayers?.away || [], dismissed.away),
+    home: shootoutTakerPool(home, shootoutUnavailablePlayers(result, "home"), dismissed.home),
+    away: shootoutTakerPool(away, shootoutUnavailablePlayers(result, "away"), dismissed.away),
   };
   const conversion = {
     home: shootoutConversionChance(home, away, state.settings.upset),
@@ -7465,7 +9524,7 @@ function goalEvents(
 }
 
 function createRedCard(team, side, random, suspendedPlayers = []) {
-  const candidates = playerProfilesForTeam(team).filter((profile) => (
+  const candidates = onPitchPlayerProfiles(team).filter((profile) => (
     !suspendedPlayers.includes(profile.name) && profile.position !== "GK"
   ));
   const player = selectWeightedProfile(candidates, random, (profile) => (
@@ -7477,6 +9536,56 @@ function createRedCard(team, side, random, suspendedPlayers = []) {
     teamId: team.id,
     side,
     type: "red",
+  };
+}
+
+function createInjury(team, side, random, unavailablePlayers = []) {
+  const candidates = onPitchPlayerProfiles(team).filter((profile) => (
+    !unavailablePlayers.includes(profile.name)
+  ));
+  const player = selectWeightedProfile(candidates, random, (profile) => (
+    profile.position === "GK" ? 0.45 : ["ST", "LW", "RW", "CF"].includes(profile.position) ? 1.12 : 1
+  ));
+  if (!player) return null;
+  return {
+    minute: 9 + Math.floor(random() * 76),
+    player: player.name,
+    teamId: team.id,
+    side,
+    type: "injury",
+    matchesOut: random() < 0.72 ? 1 : 2,
+  };
+}
+
+function removeImpossiblePlayerAbsenceEvents(redCards = [], injuries = []) {
+  const seen = new Set();
+  const retainedRedCards = new Set();
+  const retainedInjuries = new Set();
+  [
+    ...redCards.map((event, order) => ({ event, order, kind: "red" })),
+    ...injuries.map((event, order) => ({ event, order, kind: "injury" })),
+  ]
+    .sort((left, right) => (
+      Number(left.event.minute) - Number(right.event.minute)
+      || (left.kind === right.kind ? left.order - right.order : left.kind === "red" ? -1 : 1)
+    ))
+    .forEach(({ event, kind }) => {
+      const player = repairPlayerText(event?.player || event?.scorer || "");
+      const side = event?.side || event?.teamId || "";
+      if (!player) {
+        if (kind === "red") retainedRedCards.add(event);
+        else retainedInjuries.add(event);
+        return;
+      }
+      const key = `${side}:${player.toLocaleLowerCase()}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      if (kind === "red") retainedRedCards.add(event);
+      else retainedInjuries.add(event);
+    });
+  return {
+    redCards: redCards.filter((event) => retainedRedCards.has(event)),
+    injuries: injuries.filter((event) => retainedInjuries.has(event)),
   };
 }
 
@@ -7499,13 +9608,38 @@ function applyScorelineCeiling(home, away, homeGoals, awayGoals) {
 function suspendedPlayersForTeam(teamId, roundIndex) {
   if (roundIndex <= 0) return [];
   const previousMatch = (state.rounds[roundIndex - 1] || []).find((match) => (
-    match?.result?.winnerId === teamId
+    match?.result
     && (match.homeId === teamId || match.awayId === teamId)
   ));
   if (!previousMatch) return [];
   return [...new Set((previousMatch.result.redCards || [])
     .filter((card) => card.teamId === teamId)
     .map((card) => card.player))];
+}
+
+function injuredPlayersForTeam(teamId, roundIndex) {
+  if (state.settings.removeInjuries === true) return [];
+  if (roundIndex <= 0) return [];
+  const injured = [];
+  state.rounds.slice(0, roundIndex).forEach((round, sourceRoundIndex) => {
+    const match = (round || []).find((candidate) => (
+      candidate?.result && (candidate.homeId === teamId || candidate.awayId === teamId)
+    ));
+    (match?.result?.injuries || []).forEach((injury) => {
+      if (
+        injury.teamId === teamId
+        && roundIndex - sourceRoundIndex <= Math.max(1, Number(injury.matchesOut) || 1)
+      ) injured.push(injury.player);
+    });
+  });
+  return [...new Set(injured)];
+}
+
+function unavailablePlayersForTeam(teamId, roundIndex = state.activeRound) {
+  return [...new Set([
+    ...suspendedPlayersForTeam(teamId, roundIndex),
+    ...injuredPlayersForTeam(teamId, roundIndex),
+  ])];
 }
 
 function matchesPlayedForTeam(teamId, beforeRoundIndex) {
@@ -7545,6 +9679,113 @@ function opponentStandardTactic(match, controlledSide) {
   return candidates[stableHash(`${match.id}-opponent-tactic`) % candidates.length];
 }
 
+const RETRO_FORMATION_TACTIC_SYNERGY = Object.freeze({
+  "4-3-3": Object.freeze(["high-press", "tiki-taka", "balanced"]),
+  "4-2-3-1": Object.freeze(["balanced", "counter", "defensive"]),
+  "4-4-2": Object.freeze(["counter", "balanced", "defensive"]),
+  "4-1-2-1-2": Object.freeze(["tiki-taka", "high-press", "balanced"]),
+  "4-3-2-1": Object.freeze(["counter", "tiki-taka", "defensive"]),
+  "4-1-4-1": Object.freeze(["defensive", "tiki-taka", "balanced"]),
+  "3-5-2": Object.freeze(["balanced", "counter", "tiki-taka"]),
+  "3-4-3": Object.freeze(["high-press", "counter", "balanced"]),
+  "5-3-2": Object.freeze(["defensive", "counter", "balanced"]),
+  "5-2-2-1": Object.freeze(["counter", "defensive", "balanced"]),
+  "5-2-3": Object.freeze(["counter", "high-press", "balanced"]),
+});
+
+function standardFormationKey(candidate = state?.standardFormation) {
+  return RETRO_MANAGER_FORMATIONS.includes(candidate) ? candidate : "4-3-3";
+}
+
+function applyPremierLeagueFormationToManagedTeam(match) {
+  if (!state?.premierLeagueSeason || !state.spectateTeamId || !match) return null;
+  if (![match.homeId, match.awayId].includes(state.spectateTeamId)) return null;
+  const managedTeam = teamById(state.spectateTeamId);
+  if (!managedTeam) return null;
+  const savedFormation = state.managerLineups?.[managedTeam.id]?.formation;
+  const formation = standardFormationKey(savedFormation || state.standardFormation);
+  state.standardFormation = formation;
+  managedTeam.selectedFormation = formation;
+  return managedTeam;
+}
+
+function premierLeagueFormationTacticalImpact(tacticKey) {
+  if (!state?.premierLeagueSeason) {
+    return { attack: 1, defence: 1, score: 0, synergy: 0, formation: null };
+  }
+  const formation = standardFormationKey();
+  const preferredTactics = RETRO_FORMATION_TACTIC_SYNERGY[formation] || ["balanced"];
+  const rank = preferredTactics.indexOf(tacticKey);
+  if (rank === 0) return { attack: 1.025, defence: 0.982, score: 1, synergy: 1, formation };
+  if (rank === 1) return { attack: 1.014, defence: 0.99, score: 0.78, synergy: 0.78, formation };
+  if (rank === 2) return { attack: 1.005, defence: 0.996, score: 0.58, synergy: 0.58, formation };
+  return { attack: 0.988, defence: 1.01, score: 0.25, synergy: 0.25, formation };
+}
+
+function retroManagedTeamSheetImpact(team, opponent, tacticKey) {
+  if (
+    !isRetroSimulatorState()
+    || ![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    || team?.name !== retroTournament?.managedTeam
+  ) return { attack: 1, defence: 1, score: 0, fit: 0, selection: 0, synergy: 0 };
+  const squad = retroManagerSquadForTeam(team);
+  const liveManagement = retroLiveTeamManagement(team.id);
+  const lineup = retroManagerLineupForTeam(team);
+  const formation = liveManagement?.formation || lineup?.formation || squad?.formation || "4-3-3";
+  const starterNumbers = liveManagement?.activeStarters || lineup?.starters || [];
+  const missingNumbers = new Set(Object.values(liveManagement?.missingSlots || {}).map((entry) => entry.number));
+  const slots = RETRO_MANAGER_SLOT_POSITIONS[formation] || RETRO_MANAGER_SLOT_POSITIONS["4-3-3"];
+  const starterEntries = starterNumbers
+    .map((number, slotIndex) => ({
+      player: squad?.players.find((candidate) => candidate.number === number),
+      slotIndex,
+    }))
+    .filter(({ player }) => player && !missingNumbers.has(player.number));
+  const starters = starterEntries.map(({ player }) => player);
+  if (!starters.length) return { attack: 1, defence: 1, score: 0, fit: 0, selection: 0, synergy: 0 };
+
+  const fitValues = starterEntries.map(({ player, slotIndex }) => (
+    retroPlayerPositionFit(player, slots[slotIndex] || player.position)
+  ));
+  const averageFit = fitValues.reduce((sum, fit) => sum + fit, 0) / fitValues.length;
+  const fitScore = simulationClamp((averageFit - 72) / 65, 0, 1);
+  const availablePlayers = (squad?.players || []).filter((player) => (
+    !unavailablePlayersForTeam(team.id, state.activeRound).includes(player.name)
+  ));
+  const optimalPlayers = retroOrderPlayersForSlots(availablePlayers, slots)
+    .map((number) => availablePlayers.find((player) => player.number === number))
+    .filter(Boolean);
+  const starterQuality = starters.reduce((sum, player) => sum + player.overall, 0) / starters.length;
+  const optimalQuality = optimalPlayers.reduce((sum, player) => sum + player.overall, 0)
+    / Math.max(1, optimalPlayers.length);
+  const selectionScore = simulationClamp(1 - Math.max(0, optimalQuality - starterQuality) / 9, 0, 1);
+  const preferredTactics = RETRO_FORMATION_TACTIC_SYNERGY[formation] || ["balanced"];
+  const synergyRank = preferredTactics.indexOf(tacticKey);
+  const synergyScore = synergyRank < 0 ? 0.25 : [1, 0.78, 0.58][synergyRank] || 0.5;
+  const managementScore = fitScore * 0.45 + selectionScore * 0.35 + synergyScore * 0.2;
+  const ratingGap = Math.max(0, teamSimulationRatings(opponent).overall - teamSimulationRatings(team).overall);
+  const underdogLeverage = simulationClamp(ratingGap / 18, 0, 1);
+  const attack = simulationClamp(
+    0.91 + managementScore * 0.16 + managementScore * underdogLeverage * 0.1,
+    0.88,
+    1.17,
+  );
+  const defence = simulationClamp(
+    1.09 - managementScore * 0.15 - managementScore * underdogLeverage * 0.09,
+    0.84,
+    1.12,
+  );
+  return {
+    attack,
+    defence,
+    score: managementScore,
+    fit: fitScore,
+    selection: selectionScore,
+    synergy: synergyScore,
+    formation,
+  };
+}
+
 function managedRetroTacticalBoost(ratingGap, edge) {
   if (!isRetroSimulatorState() || !retroTournament?.managedTeam || edge <= 0) {
     return { attack: 1, defence: 1, comebackFloor: null, favouriteCeiling: null };
@@ -7576,10 +9817,12 @@ function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
   const underdogAttackBoost = edge > 0 ? 1 + Math.min(0.38, ratingGap * 0.012) * Math.min(1, edge / 0.2) : 1;
   const underdogDefenceBoost = edge > 0 ? 1 - Math.min(0.28, ratingGap * 0.008) * Math.min(1, edge / 0.2) : 1;
   const managedBoost = managedRetroTacticalBoost(ratingGap, edge);
+  const teamSheetImpact = retroManagedTeamSheetImpact(controlledTeam, opponentTeam, tacticKey);
+  const formationImpact = premierLeagueFormationTacticalImpact(tacticKey);
   const ownMultiplier = tactic.ownXg * opponentTactic.opponentXg * (1 + edge)
-    * underdogAttackBoost * managedBoost.attack;
+    * underdogAttackBoost * managedBoost.attack * teamSheetImpact.attack * formationImpact.attack;
   const opponentMultiplier = tactic.opponentXg * opponentTactic.ownXg * (1 - edge * 0.72)
-    * underdogDefenceBoost * managedBoost.defence;
+    * underdogDefenceBoost * managedBoost.defence * teamSheetImpact.defence * formationImpact.defence;
 
   if (controlledSide === "home") {
     adjustedXG.homeXG *= ownMultiplier;
@@ -7605,7 +9848,25 @@ function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
       adjustedXG.homeXG = Math.min(adjustedXG.homeXG, favouriteCeiling);
     }
   }
-  return { adjustedXG, tacticKey, opponentTacticKey, edge, managedBoost };
+  return {
+    adjustedXG,
+    tacticKey,
+    opponentTacticKey,
+    edge,
+    managedBoost,
+    teamSheetImpact: state.premierLeagueSeason
+      ? { ...teamSheetImpact, ...formationImpact }
+      : teamSheetImpact,
+  };
+}
+
+function standardTacticalFeedback(tacticKey, opponentTacticKey) {
+  const edge = STANDARD_TACTIC_MATCHUPS[tacticKey]?.[opponentTacticKey] || 0;
+  if (edge >= 0.18) return { edge, label: "Strong tactical edge" };
+  if (edge >= 0.06) return { edge, label: "Tactical edge" };
+  if (edge <= -0.18) return { edge, label: "Major tactical risk" };
+  if (edge <= -0.06) return { edge, label: "Tactical risk" };
+  return { edge, label: "Even tactical matchup" };
 }
 
 function customMatchScript(match, roundIndex) {
@@ -7700,17 +9961,62 @@ function simulateCustomMatchOverride(match, roundIndex, home, away) {
   };
 }
 
+function liveSubstitutionExpectedGoalFactors(team) {
+  const management = retroLiveTeamManagement(team?.id);
+  const squad = retroManagerSquadForTeam(team);
+  if (!management?.history?.length || !squad?.players?.length) {
+    return { for: 1, against: 1 };
+  }
+  let forFactor = 1;
+  let againstFactor = 1;
+  const managedExecution = team.name === retroTournament?.managedTeam ? 1.35 : 0.8;
+  management.history.forEach((change) => {
+    const outgoing = squad.players.find((player) => player.number === change.outgoingNumber);
+    const incoming = squad.players.find((player) => player.number === change.incomingNumber);
+    if (!outgoing || !incoming) return;
+    const qualityDifference = simulationClamp(incoming.overall - outgoing.overall, -15, 15);
+    const positionFit = retroPlayerPositionFit(incoming, outgoing.position);
+    const fitExecution = simulationClamp((positionFit - 65) / 75, 0, 1);
+    const freshness = (0.018 + simulationClamp((Number(change.minute) - 45) / 60, 0, 1) * 0.032)
+      * (0.45 + fitExecution * 0.55)
+      * managedExecution;
+    const incomingGroup = retroBroadPosition(incoming.position);
+    if (positionFit < 76) {
+      forFactor -= (0.025 + Math.max(0, -qualityDifference) * 0.003) * managedExecution;
+      againstFactor += (0.02 + Math.max(0, -qualityDifference) * 0.0025) * managedExecution;
+      return;
+    }
+    if (incomingGroup === "FW") {
+      forFactor += qualityDifference * 0.0075 * managedExecution + freshness * 1.15;
+      againstFactor -= freshness * 0.16;
+    } else if (incomingGroup === "MF") {
+      forFactor += qualityDifference * 0.0045 * managedExecution + freshness * 0.72;
+      againstFactor -= qualityDifference * 0.0032 * managedExecution + freshness * 0.58;
+    } else if (incomingGroup === "DF") {
+      forFactor += freshness * 0.18;
+      againstFactor -= qualityDifference * 0.0062 * managedExecution + freshness;
+    } else if (incomingGroup === "GK") {
+      againstFactor -= qualityDifference * 0.0075 * managedExecution + freshness * 0.52;
+    }
+  });
+  return {
+    for: simulationClamp(forFactor, 0.78, 1.25),
+    against: simulationClamp(againstFactor, 0.76, 1.24),
+  };
+}
+
 function simulateMatch(match, roundIndex) {
   const home = teamById(match.homeId);
   const away = teamById(match.awayId);
+  applyPremierLeagueFormationToManagedTeam(match);
   const customRules = customMatchScript(match, roundIndex);
   const customResult = simulateCustomMatchOverride(match, roundIndex, home, away);
   if (customResult) return customResult;
   const randomSeed = state.drawSeed + stableHash(match.id) + roundIndex * 1009;
   const random = mulberry32(randomSeed);
   const suspendedPlayers = {
-    home: suspendedPlayersForTeam(home.id, roundIndex),
-    away: suspendedPlayersForTeam(away.id, roundIndex),
+    home: unavailablePlayersForTeam(home.id, roundIndex),
+    away: unavailablePlayersForTeam(away.id, roundIndex),
   };
   const modeName = state.settings.upset;
   const mode = SIMULATION_CONFIG.modes[modeName] || SIMULATION_CONFIG.modes.balanced;
@@ -7730,7 +10036,7 @@ function simulateMatch(match, roundIndex) {
     momentumForTeam(home.id, away, roundIndex),
     momentumForTeam(away.id, home, roundIndex),
   );
-  const redCards = [];
+  let redCards = [];
   let shock = false;
 
   if (random() < redCardChanceForTeam(home, modeName)) {
@@ -7739,6 +10045,17 @@ function simulateMatch(match, roundIndex) {
   if (random() < redCardChanceForTeam(away, modeName)) {
     redCards.push(createRedCard(away, "away", random, suspendedPlayers.away));
   }
+  const injuryRandom = mulberry32(randomSeed + stableHash(`${match.id}-injuries`));
+  let injuries = [];
+  if (state.settings.removeInjuries !== true && injuryRandom() < 0.075) {
+    const injury = createInjury(home, "home", injuryRandom, suspendedPlayers.home);
+    if (injury) injuries.push(injury);
+  }
+  if (state.settings.removeInjuries !== true && injuryRandom() < 0.075) {
+    const injury = createInjury(away, "away", injuryRandom, suspendedPlayers.away);
+    if (injury) injuries.push(injury);
+  }
+  ({ redCards, injuries } = removeImpossiblePlayerAbsenceEvents(redCards, injuries));
 
   let adjustedXG = { homeXG: expected.homeXG, awayXG: expected.awayXG };
   if (expected.ratingGap >= 18 && random() < mode.shockChance) {
@@ -7755,6 +10072,11 @@ function simulateMatch(match, roundIndex) {
   redCards.forEach((card) => {
     adjustedXG = applyRedCardImpact(adjustedXG.homeXG, adjustedXG.awayXG, card);
   });
+  injuries.forEach((injury) => {
+    const remainingShare = simulationClamp((90 - injury.minute) / 90, 0, 1);
+    if (injury.side === "home") adjustedXG.homeXG *= 1 - remainingShare * 0.045;
+    else adjustedXG.awayXG *= 1 - remainingShare * 0.045;
+  });
   const controlledSide = state.spectateTeamId === match.homeId
     ? "home"
     : state.spectateTeamId === match.awayId ? "away" : null;
@@ -7766,13 +10088,20 @@ function simulateMatch(match, roundIndex) {
       selected: tacticalResult.tacticKey,
       opponent: tacticalResult.opponentTacticKey,
       edge: tacticalResult.edge,
+      management: tacticalResult.teamSheetImpact,
     };
   }
+  const homeSubstitutionImpact = liveSubstitutionExpectedGoalFactors(home);
+  const awaySubstitutionImpact = liveSubstitutionExpectedGoalFactors(away);
+  adjustedXG.homeXG *= homeSubstitutionImpact.for * awaySubstitutionImpact.against;
+  adjustedXG.awayXG *= awaySubstitutionImpact.for * homeSubstitutionImpact.against;
   adjustedXG.homeXG = simulationClamp(adjustedXG.homeXG, mode.minimumXG, goalConfig.maximumXG);
   adjustedXG.awayXG = simulationClamp(adjustedXG.awayXG, mode.minimumXG, goalConfig.maximumXG);
 
-  let homeGoals = poisson(adjustedXG.homeXG, random);
-  let awayGoals = poisson(adjustedXG.awayXG, random);
+  const homeGoalRandom = matchGoalRandom(randomSeed, match.id, "home");
+  const awayGoalRandom = matchGoalRandom(randomSeed, match.id, "away");
+  let homeGoals = poisson(adjustedXG.homeXG, homeGoalRandom);
+  let awayGoals = poisson(adjustedXG.awayXG, awayGoalRandom);
   ({ homeGoals, awayGoals } = applyScorelineCeiling(home, away, homeGoals, awayGoals));
   const minimumGoals = customRules?.mode === "rules"
     ? simulationClamp(Number(customRules.minGoals) || 0, 0, 20)
@@ -7801,17 +10130,33 @@ function simulateMatch(match, roundIndex) {
     const awayDepth = teamSimulationRatings(away).squadDepth;
     const homeExtraTimeFactor = simulationClamp(0.97 - Math.max(0, 76 - homeDepth) * 0.0015, 0.86, 0.98);
     const awayExtraTimeFactor = simulationClamp(0.97 - Math.max(0, 76 - awayDepth) * 0.0015, 0.86, 0.98);
-    homeGoals += poisson(adjustedXG.homeXG * 0.32 * homeExtraTimeFactor, random);
-    awayGoals += poisson(adjustedXG.awayXG * 0.32 * awayExtraTimeFactor, random);
+    homeGoals += poisson(
+      adjustedXG.homeXG * 0.32 * homeExtraTimeFactor,
+      matchGoalRandom(randomSeed, match.id, "home", "extra-time"),
+    );
+    awayGoals += poisson(
+      adjustedXG.awayXG * 0.32 * awayExtraTimeFactor,
+      matchGoalRandom(randomSeed, match.id, "away", "extra-time"),
+    );
   }
 
   if (!match.allowDraw && homeGoals === awayGoals) {
+    const shootoutUnavailable = {
+      home: [...new Set([
+        ...(suspendedPlayers.home || []),
+        ...injuries.filter((injury) => injury.side === "home").map((injury) => injury.player),
+      ])],
+      away: [...new Set([
+        ...(suspendedPlayers.away || []),
+        ...injuries.filter((injury) => injury.side === "away").map((injury) => injury.player),
+      ])],
+    };
     const penaltyResult = simulatePenaltyShootout(
       home,
       away,
       random,
       redCards,
-      suspendedPlayers,
+      shootoutUnavailable,
       modeName,
     );
     penalties = penaltyResult.penalties;
@@ -7823,7 +10168,7 @@ function simulateMatch(match, roundIndex) {
     : homeGoals === awayGoals ? null : homeGoals > awayGoals ? home.id : away.id;
 
   const usedGoalMinutes = new Set();
-  const homeEvents = goalEvents(
+  let homeEvents = goalEvents(
     home,
     away,
     regulationHome,
@@ -7835,7 +10180,7 @@ function simulateMatch(match, roundIndex) {
     suspendedPlayers.away,
     usedGoalMinutes,
   );
-  const awayEvents = goalEvents(
+  let awayEvents = goalEvents(
     away,
     home,
     regulationAway,
@@ -7847,6 +10192,8 @@ function simulateMatch(match, roundIndex) {
     suspendedPlayers.home,
     usedGoalMinutes,
   );
+  homeEvents = removeDismissedPlayersFromFutureGoals(homeEvents, "home", redCards, match, injuries);
+  awayEvents = removeDismissedPlayersFromFutureGoals(awayEvents, "away", redCards, match, injuries);
   return {
     homeGoals,
     awayGoals,
@@ -7859,6 +10206,7 @@ function simulateMatch(match, roundIndex) {
     homeEvents,
     awayEvents,
     redCards: redCards.sort((a, b) => a.minute - b.minute),
+    injuries: injuries.sort((a, b) => a.minute - b.minute),
     suspendedPlayers,
     shock,
     tacticalMatchup,
@@ -7867,6 +10215,10 @@ function simulateMatch(match, roundIndex) {
       away: Number(adjustedXG.awayXG.toFixed(3)),
       homeFatigue: Number(expected.homeFatigue.toFixed(3)),
       awayFatigue: Number(expected.awayFatigue.toFixed(3)),
+    },
+    substitutionImpact: {
+      home: homeSubstitutionImpact,
+      away: awaySubstitutionImpact,
     },
     revealed: false,
   };
@@ -7882,6 +10234,10 @@ function createLiveMatchResult(match, roundIndex) {
 }
 
 function buildNextRound(roundIndex) {
+  if (state?.premierLeagueSeason) {
+    window.PremierLeagueSeason?.syncEngineProgress?.(roundIndex);
+    return;
+  }
   if (isRetroSimulatorState()) {
     const round = state.rounds[roundIndex];
     if (!round?.every((match) => match.result?.revealed)) return;
@@ -7945,7 +10301,17 @@ function buildNextRound(roundIndex) {
 }
 
 function ensureThirdPlacePlayoffForSavedTournament() {
-  if (!state.started || isRetroSimulatorState() || !tournamentHasThirdPlacePlayoff()) return;
+  if (state?.savedTournamentView) return;
+  if (!state.started || isRetroSimulatorState()) return;
+  if (
+    state.customTournament?.structure === "groups"
+    && state.customTournament.thirdPlaceAllFormatsVersion !== 1
+  ) {
+    state.customTournament.thirdPlace = true;
+    state.customTournament.thirdPlaceAllFormatsVersion = 1;
+    saveState();
+  }
+  if (!tournamentHasThirdPlacePlayoff()) return;
   const semiFinalIndex = tournamentFinalRoundIndex() - 1;
   const semiFinals = state.rounds[semiFinalIndex];
   const finalRound = state.rounds[tournamentFinalRoundIndex()];
@@ -8085,6 +10451,25 @@ function advanceSpectatedRun() {
     }
   }
 
+  if (
+    state.activeRound === tournamentFinalRoundIndex()
+    && isThirdPlacePlayoff(match)
+    && match.result?.revealed
+  ) {
+    const finalIndex = selectedRound().findIndex((candidate) => !isThirdPlacePlayoff(candidate));
+    if (finalIndex >= 0) {
+      state.selectedMatch = finalIndex;
+      state.championView = false;
+      fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+      filterUnresolved = false;
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      showToast("The final is ready.");
+      return true;
+    }
+  }
+
   selectedRound().forEach((otherMatch) => {
     if (!otherMatch.result) otherMatch.result = simulateMatch(otherMatch, state.activeRound);
     otherMatch.result.revealed = true;
@@ -8097,9 +10482,16 @@ function advanceSpectatedRun() {
     const pendingThirdPlaceIndex = state.activeRound === tournamentFinalRoundIndex()
       ? selectedRound().findIndex((match) => isThirdPlacePlayoff(match) && !match.result?.revealed)
       : -1;
-    const nextMatchIndex = pendingThirdPlaceIndex >= 0
-      ? pendingThirdPlaceIndex
-      : teamMatchIndex(state.activeRound, team.id);
+    const defaultManagedFinalIndex = (
+      state.activeRound === tournamentFinalRoundIndex()
+      && !state.customTournament
+      && !isRetroSimulatorState()
+    ) ? selectedRound().findIndex((match) => !isThirdPlacePlayoff(match)) : -1;
+    const nextMatchIndex = defaultManagedFinalIndex >= 0
+      ? defaultManagedFinalIndex
+      : pendingThirdPlaceIndex >= 0
+        ? pendingThirdPlaceIndex
+        : teamMatchIndex(state.activeRound, team.id);
     if (isRetroSimulatorState() && completedRound === 2 && nextMatchIndex < 0) {
       const decisionRound = state.rounds[completedRound] || [];
       const decisionMatchIndex = decisionRound.findIndex((item) => item.id === selected?.id);
@@ -8129,7 +10521,12 @@ function advanceSpectatedRun() {
     state.championView = false;
     fixtureLimit = DEFAULT_FIXTURE_LIMIT;
     filterUnresolved = false;
-    showToast(`${team.name}'s ${tournamentRoundName()} match is ready.`);
+    const nextMatch = selectedRound()[state.selectedMatch];
+    showToast(nextMatch && (nextMatch.homeId === team.id || nextMatch.awayId === team.id)
+      ? `${team.name}'s ${tournamentRoundName()} match is ready.`
+      : defaultManagedFinalIndex >= 0
+        ? "The final is ready. The third-place play-off will simulate unless you open it."
+        : `${team.name}'s ${tournamentRoundName()} match is ready.`);
   } else {
     state.championView = true;
   }
@@ -8140,6 +10537,37 @@ function advanceSpectatedRun() {
 }
 
 function goToNextTie() {
+  if (state?.premierLeagueSeason) {
+    const currentRound = selectedRound();
+    const nextMatchIndex = currentRound.findIndex((match) => !match.result?.revealed);
+    if (nextMatchIndex >= 0) {
+      state.selectedMatch = nextMatchIndex;
+      state.championView = false;
+      saveState();
+      render();
+      return;
+    }
+    const nextRoundIndex = state.rounds.findIndex((round, index) => (
+      index > state.activeRound && round.some((match) => !match.result?.revealed)
+    ));
+    if (nextRoundIndex >= 0) {
+      state.activeRound = nextRoundIndex;
+      state.viewRound = nextRoundIndex;
+      state.selectedMatch = Math.max(0, state.rounds[nextRoundIndex].findIndex((match) => !match.result?.revealed));
+      state.championView = false;
+      fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+      filterUnresolved = false;
+      saveState();
+      render();
+      showToast(`${tournamentRoundName()} is ready.`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    saveState();
+    render();
+    showToast("The Premier League season is complete.");
+    return;
+  }
   const currentMatch = selectedMatch();
   const selectedIsSpectatedMatch = state.spectateTeamId
     && currentMatch
@@ -8182,8 +10610,13 @@ function playbackEvents(match) {
     teamId: match.awayId,
     player: event.scorer,
   }));
-  const events = [...homeGoals, ...awayGoals, ...(result.redCards || [])]
-    .sort((a, b) => a.minute - b.minute || (a.type === "red" ? -1 : 1));
+  const events = [
+    ...homeGoals,
+    ...awayGoals,
+    ...(result.redCards || []),
+    ...(result.injuries || []),
+    ...(result.substitutions || []),
+  ].sort((a, b) => a.minute - b.minute || (["red", "injury"].includes(a.type) ? -1 : 1));
 
   return events;
 }
@@ -8209,25 +10642,8 @@ function setMatch2dPosition(element, x, y, duration = 700) {
   element.style.top = `${simulationClamp(y, 5, 95)}%`;
 }
 
-function createMatch2dState(match) {
-  if (!els.match2dPlayers || !els.match2dBall) return null;
-  const home = teamById(match.homeId);
-  const away = teamById(match.awayId);
-  const controlledSide = state.spectateTeamId === match.homeId
-    ? "home"
-    : state.spectateTeamId === match.awayId ? "away" : null;
-  const opponentKey = controlledSide ? opponentStandardTactic(match, controlledSide) : "balanced";
-  const presentation = createMatchHighlightPresentation({
-    seed: match.result.engineSeed || state.drawSeed + stableHash(`${match.id}-highlight-engine`),
-    home,
-    away,
-    homeProfiles: playerProfilesForTeam(home),
-    awayProfiles: playerProfilesForTeam(away),
-    homeTactic: controlledSide === "home" ? state.standardTactic : controlledSide === "away" ? opponentKey : "balanced",
-    awayTactic: controlledSide === "away" ? state.standardTactic : controlledSide === "home" ? opponentKey : "balanced",
-    result: match.result,
-  });
-  match.result.matchStats = presentation.stats;
+function rebuildMatch2dPlayerNodes(presentation) {
+  if (!els.match2dPlayers || !presentation) return [];
   const players = [];
   els.match2dPlayers.replaceChildren();
   [presentation.home, presentation.away].forEach((team) => {
@@ -8251,6 +10667,29 @@ function createMatch2dState(match) {
       });
     });
   });
+  return players;
+}
+
+function createMatch2dState(match) {
+  if (!els.match2dPlayers || !els.match2dBall) return null;
+  const home = teamById(match.homeId);
+  const away = teamById(match.awayId);
+  const controlledSide = state.spectateTeamId === match.homeId
+    ? "home"
+    : state.spectateTeamId === match.awayId ? "away" : null;
+  const opponentKey = controlledSide ? opponentStandardTactic(match, controlledSide) : "balanced";
+  const presentation = createMatchHighlightPresentation({
+    seed: match.result.engineSeed || state.drawSeed + stableHash(`${match.id}-highlight-engine`),
+    home,
+    away,
+    homeProfiles: playerProfilesForTeam(home),
+    awayProfiles: playerProfilesForTeam(away),
+    homeTactic: controlledSide === "home" ? state.standardTactic : controlledSide === "away" ? opponentKey : "balanced",
+    awayTactic: controlledSide === "away" ? state.standardTactic : controlledSide === "home" ? opponentKey : "balanced",
+    result: match.result,
+  });
+  match.result.matchStats = presentation.stats;
+  const players = rebuildMatch2dPlayerNodes(presentation);
   setMatch2dPosition(els.match2dBall, 50, 50, 0);
   return {
     matchId: match.id,
@@ -8282,8 +10721,10 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
   let homeEvents = mergeEvents("homeEvents");
   let awayEvents = mergeEvents("awayEvents");
   let redCards = mergeEvents("redCards");
-  homeEvents = removeDismissedPlayersFromFutureGoals(homeEvents, "home", redCards, match);
-  awayEvents = removeDismissedPlayersFromFutureGoals(awayEvents, "away", redCards, match);
+  let injuries = mergeEvents("injuries");
+  ({ redCards, injuries } = removeImpossiblePlayerAbsenceEvents(redCards, injuries));
+  homeEvents = removeDismissedPlayersFromFutureGoals(homeEvents, "home", redCards, match, injuries);
+  awayEvents = removeDismissedPlayersFromFutureGoals(awayEvents, "away", redCards, match, injuries);
   const regulationHome = homeEvents.filter((event) => event.minute <= 90).length;
   const regulationAway = awayEvents.filter((event) => event.minute <= 90).length;
   const extraTime = !match.allowDraw && regulationHome === regulationAway;
@@ -8292,6 +10733,7 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
     homeEvents = homeEvents.filter((event) => event.minute <= 90);
     awayEvents = awayEvents.filter((event) => event.minute <= 90);
     redCards = redCards.filter((event) => event.minute <= 90);
+    injuries = injuries.filter((event) => event.minute <= 90);
   }
 
   const homeGoals = homeEvents.length;
@@ -8303,12 +10745,23 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
     const shootoutRandom = mulberry32(
       state.drawSeed + stableHash(`${match.id}-${state.standardTactic}-live-tactical-shootout`),
     );
+    const suspendedPlayers = candidate.suspendedPlayers || current.suspendedPlayers || { home: [], away: [] };
+    const shootoutUnavailable = {
+      home: [...new Set([
+        ...(suspendedPlayers.home || []),
+        ...injuries.filter((injury) => injury.side === "home").map((injury) => injury.player),
+      ])],
+      away: [...new Set([
+        ...(suspendedPlayers.away || []),
+        ...injuries.filter((injury) => injury.side === "away").map((injury) => injury.player),
+      ])],
+    };
     const penaltyResult = simulatePenaltyShootout(
       teamById(match.homeId),
       teamById(match.awayId),
       shootoutRandom,
       redCards,
-      candidate.suspendedPlayers || current.suspendedPlayers || { home: [], away: [] },
+      shootoutUnavailable,
       state.settings.upset,
     );
     penalties = penaltyResult.penalties;
@@ -8325,6 +10778,7 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
     homeEvents,
     awayEvents,
     redCards,
+    injuries,
     homeGoals,
     awayGoals,
     regulationHome,
@@ -8341,30 +10795,104 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
       tactic: state.standardTactic,
       opponent: candidate.tacticalMatchup?.opponent || "balanced",
       edge: candidate.tacticalMatchup?.edge || 0,
+      managementScore: candidate.tacticalMatchup?.management?.score || 0,
+      formation: candidate.tacticalMatchup?.management?.formation || null,
     }],
   };
 }
 
-function removeDismissedPlayersFromFutureGoals(events, side, redCards, match) {
+function removeDismissedPlayersFromFutureGoals(events, side, redCards, match, injuries = []) {
   const team = teamById(side === "home" ? match.homeId : match.awayId);
   if (!team) return events;
   return events.map((event, index) => {
-    const dismissed = new Set(redCards
-      .filter((card) => card.side === side && card.minute <= event.minute)
-      .map((card) => card.player));
-    if (!dismissed.has(event.scorer) && !dismissed.has(event.assist)) return event;
-    const eligible = eligibleScorerProfiles(team, event.minute, redCards.filter((card) => card.side === side));
+    const unavailable = new Set([
+      ...redCards
+        .filter((card) => card.side === side && card.minute <= event.minute)
+        .map((card) => card.player),
+      ...injuries
+        .filter((injury) => injury.side === side && injury.minute <= event.minute)
+        .map((injury) => injury.player),
+    ]);
+    if (!unavailable.has(event.scorer) && !unavailable.has(event.assist)) return event;
+    const eligible = eligibleScorerProfiles(team, event.minute, redCards.filter((card) => card.side === side))
+      .filter((profile) => !unavailable.has(profile.name));
     if (!eligible.length) return event;
     const start = stableHash(`${match.id}:${side}:${event.minute}:${index}:dismissal-replacement`) % eligible.length;
     const replacement = eligible[start];
     const assistPool = eligible.filter((profile) => profile.name !== replacement.name);
     return {
       ...event,
-      scorer: dismissed.has(event.scorer) ? replacement.name : event.scorer,
-      assist: dismissed.has(event.assist)
+      scorer: unavailable.has(event.scorer) ? replacement.name : event.scorer,
+      assist: unavailable.has(event.assist)
         ? (assistPool.length ? assistPool[start % assistPool.length].name : null)
         : event.assist,
     };
+  });
+}
+
+function retroPlayersOnPitchAtMinute(match, team, minute, management = null) {
+  const squad = retroManagerSquadForTeam(team);
+  if (!squad?.players?.length) {
+    return playerProfilesForTeam(team).filter((profile) => profile.startingXI);
+  }
+  let activeNumbers = management?.activeStarters?.length
+    ? [...management.activeStarters]
+    : retroManagerLineupForTeam(team)?.starters
+      || RETRO_WORLD_CUP_ENGINE.startingXI(Number(retroTournament?.year), team.name).players.map((player) => player.number);
+  [...(management?.history || [])]
+    .sort((left, right) => right.minute - left.minute)
+    .forEach((change) => {
+      if (Number(change.minute) <= minute) return;
+      const incomingIndex = activeNumbers.indexOf(change.incomingNumber);
+      if (incomingIndex >= 0) activeNumbers.splice(incomingIndex, 1, change.outgoingNumber);
+    });
+  const unavailableNames = new Set([
+    ...(match.result?.redCards || [])
+      .filter((event) => event.teamId === team.id && event.minute <= minute)
+      .map((event) => event.player),
+    ...(match.result?.injuries || [])
+      .filter((event) => event.teamId === team.id && event.minute <= minute)
+      .map((event) => event.player),
+  ]);
+  return activeNumbers
+    .map((number) => squad.players.find((player) => player.number === number))
+    .filter((player) => player && !unavailableNames.has(player.name));
+}
+
+function repairLiveGoalParticipants(match) {
+  if (![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year)) || !match?.result) return;
+  ["home", "away"].forEach((side) => {
+    const team = teamById(side === "home" ? match.homeId : match.awayId);
+    const management = retroLiveTeamManagement(team.id);
+    const events = side === "home" ? match.result.homeEvents : match.result.awayEvents;
+    (events || []).forEach((event, index) => {
+      if (event.ownGoal) {
+        const defendingSide = side === "home" ? "away" : "home";
+        const defendingTeam = teamById(defendingSide === "home" ? match.homeId : match.awayId);
+        const defendingManagement = retroLiveTeamManagement(defendingTeam.id);
+        const defenders = retroPlayersOnPitchAtMinute(match, defendingTeam, event.minute, defendingManagement);
+        const eligibleDefenders = defenders.filter((player) => (
+          ["GK", "CB", "LB", "RB", "LWB", "RWB", "CDM"].includes(player.position)
+        ));
+        const ownGoalPool = eligibleDefenders.length ? eligibleDefenders : defenders;
+        if (ownGoalPool.length && !ownGoalPool.some((player) => player.name === event.ownGoalBy)) {
+          const ownGoalIndex = stableHash(`${match.id}:${side}:${event.minute}:${index}:own-goal`) % ownGoalPool.length;
+          event.ownGoalBy = ownGoalPool[ownGoalIndex].name;
+          event.scorer = `${event.ownGoalBy} (OG)`;
+        }
+        return;
+      }
+      const eligible = retroPlayersOnPitchAtMinute(match, team, event.minute, management)
+        .filter((player) => player.position !== "GK");
+      if (!eligible.length) return;
+      const eligibleNames = new Set(eligible.map((player) => player.name));
+      const replacementIndex = stableHash(`${match.id}:${side}:${event.minute}:${index}:on-pitch`) % eligible.length;
+      if (!eligibleNames.has(event.scorer)) event.scorer = eligible[replacementIndex].name;
+      if (event.assist && (!eligibleNames.has(event.assist) || event.assist === event.scorer)) {
+        const assistPool = eligible.filter((player) => player.name !== event.scorer);
+        event.assist = assistPool.length ? assistPool[replacementIndex % assistPool.length].name : null;
+      }
+    });
   });
 }
 
@@ -8373,20 +10901,426 @@ function displayedLiveMinute(playback = livePlayback) {
   return Number.isFinite(displayed) ? displayed : Number(playback?.minute) || 0;
 }
 
+function retroLiveSubstitutionLimits(match) {
+  const extraTimeActive = Boolean(match?.result?.extraTime && displayedLiveMinute() >= 90);
+  return {
+    substitutions: extraTimeActive ? 7 : 5,
+    stoppages: extraTimeActive ? 4 : 3,
+  };
+}
+
+function retroLiveSubstitutionIsFreeInterval(match) {
+  const minute = displayedLiveMinute();
+  return (
+    (minute >= 44.5 && minute <= 46.5)
+    || Boolean(match?.result?.extraTime && minute >= 89.5 && minute <= 91.5)
+    || Boolean(match?.result?.extraTime && minute >= 104.5 && minute <= 106.5)
+  );
+}
+
+function retroLiveTeamManagement(teamId) {
+  if (!livePlayback || !teamId) return null;
+  return [livePlayback.managerSubstitutions, livePlayback.oppositionManagement]
+    .find((management) => management?.teamId === teamId) || null;
+}
+
+function retroLiveMissingPlayer(management, playerNumber) {
+  if (!management?.missingSlots) return null;
+  const slot = management.activeStarters.indexOf(playerNumber);
+  return slot < 0 ? null : management.missingSlots[slot] || null;
+}
+
+function applyRetroLivePlayerAbsence(match, event) {
+  if (!match || !event || !["red", "injury"].includes(event.type)) return false;
+  if (event.type === "injury" && state.settings.removeInjuries === true) return false;
+  const management = retroLiveTeamManagement(event.teamId);
+  const team = teamById(event.teamId);
+  const squad = retroManagerSquadForTeam(team);
+  const player = squad?.players.find((candidate) => candidate.name === (event.player || event.metadata?.scorer));
+  const slot = player ? management?.activeStarters.indexOf(player.number) : -1;
+  if (!management || !player || slot < 0) return false;
+  management.missingSlots ||= {};
+  management.missingSlots[slot] = {
+    type: event.type,
+    number: player.number,
+    name: player.name,
+    minute: Math.ceil(event.minute),
+  };
+  management.unavailableNumbers ||= [];
+  if (!management.unavailableNumbers.includes(player.number)) management.unavailableNumbers.push(player.number);
+  const eventSide = event.teamId === match.homeId ? "home" : "away";
+  const presentationPlayer = match2dState?.presentation?.[eventSide]?.players
+    ?.find((profile) => profile.name === player.name);
+  const visualPlayer = match2dState?.players?.find((visual) => visual.id === presentationPlayer?.id);
+  if (visualPlayer?.node) {
+    visualPlayer.node.hidden = true;
+    visualPlayer.node.classList.add("is-unavailable");
+  }
+  if (retroLiveSubOutNumber === player.number) {
+    retroLiveSubOutNumber = null;
+    retroLiveSubInNumber = null;
+    retroLivePendingSubstitution = null;
+  }
+  clearPlayerProfileCacheForTeam(team.id);
+  renderRetroMatchLineupsPanel(match);
+  return true;
+}
+
+function retroLiveSubstitutionState(match) {
+  if (
+    !livePlayback
+    || livePlayback.matchId !== match?.id
+    || livePlayback.phase !== "match"
+    || !livePlayback.managerSubstitutions
+  ) return null;
+  return livePlayback.managerSubstitutions;
+}
+
+function retroSubstitutionPositionsCompatible(outgoing, incoming) {
+  if (!outgoing || !incoming) return false;
+  return (outgoing.position === "GK") === (incoming.position === "GK");
+}
+
+function retroPendingSubstitutionChanges() {
+  if (Array.isArray(retroLivePendingSubstitution)) return retroLivePendingSubstitution;
+  return retroLivePendingSubstitution ? [retroLivePendingSubstitution] : [];
+}
+
+function stageRetroLiveSubstitution(match, outgoingNumber, incomingNumber) {
+  const substitutions = retroLiveSubstitutionState(match);
+  const team = spectatedTeam();
+  const squad = retroManagerSquadForTeam(team);
+  const outgoing = squad?.players.find((player) => player.number === outgoingNumber);
+  const incoming = squad?.players.find((player) => player.number === incomingNumber);
+  const pendingChanges = retroPendingSubstitutionChanges();
+  const previewStarters = [...(substitutions?.activeStarters || [])];
+  pendingChanges.forEach((change) => {
+    const slot = previewStarters.indexOf(change.outgoingNumber);
+    if (slot >= 0) previewStarters.splice(slot, 1, change.incomingNumber);
+  });
+  if (
+    !substitutions
+    || !outgoing
+    || !incoming
+    || !previewStarters.includes(outgoingNumber)
+    || previewStarters.includes(incomingNumber)
+    || substitutions.subbedOut.includes(incomingNumber)
+    || pendingChanges.some((change) => (
+      change.outgoingNumber === outgoingNumber
+      || change.incomingNumber === incomingNumber
+      || change.outgoingNumber === incomingNumber
+      || change.incomingNumber === outgoingNumber
+    ))
+  ) return false;
+  const limits = retroLiveSubstitutionLimits(match);
+  if (substitutions.used + pendingChanges.length >= limits.substitutions) {
+    showToast(`Only ${limits.substitutions - substitutions.used} substitutions remain.`);
+    return false;
+  }
+  if (
+    !substitutions.windowOpen
+    && !retroLiveSubstitutionIsFreeInterval(match)
+    && substitutions.stoppages >= limits.stoppages
+  ) {
+    showToast(`All ${limits.stoppages} substitution stoppages have been used.`);
+    return false;
+  }
+  const missing = retroLiveMissingPlayer(substitutions, outgoingNumber);
+  if (missing?.type === "red") {
+    showToast("A player who has been sent off cannot be replaced.");
+    return false;
+  }
+  if (!retroSubstitutionPositionsCompatible(outgoing, incoming)) {
+    showToast(outgoing.position === "GK"
+      ? "A goalkeeper can only be replaced by another goalkeeper."
+      : "An outfield player cannot replace the goalkeeper.");
+    return false;
+  }
+  retroLiveSubOutNumber = outgoingNumber;
+  retroLiveSubInNumber = incomingNumber;
+  retroLivePendingSubstitution = [...pendingChanges, { outgoingNumber, incomingNumber }];
+  retroLiveSubOutNumber = null;
+  retroLiveSubInNumber = null;
+  renderRetroMatchLineupsPanel(match);
+  showToast(`${retroLivePendingSubstitution.length} change${retroLivePendingSubstitution.length === 1 ? "" : "s"} ready.`);
+  return true;
+}
+
+function applyRetroLivePositionSwap(match, firstNumber, secondNumber) {
+  const management = retroLiveSubstitutionState(match);
+  const team = spectatedTeam();
+  const squad = retroManagerSquadForTeam(team);
+  const firstIndex = management?.activeStarters.indexOf(firstNumber) ?? -1;
+  const secondIndex = management?.activeStarters.indexOf(secondNumber) ?? -1;
+  const first = squad?.players.find((player) => player.number === firstNumber);
+  const second = squad?.players.find((player) => player.number === secondNumber);
+  if (
+    !management
+    || !first
+    || !second
+    || firstIndex < 0
+    || secondIndex < 0
+    || firstIndex === secondIndex
+    || management.missingSlots?.[firstIndex]
+    || management.missingSlots?.[secondIndex]
+  ) return false;
+  if (retroPendingSubstitutionChanges().length) {
+    showToast("Confirm or cancel the pending substitutions first.");
+    return false;
+  }
+  [management.activeStarters[firstIndex], management.activeStarters[secondIndex]] = [
+    management.activeStarters[secondIndex],
+    management.activeStarters[firstIndex],
+  ];
+  retroLiveSubOutNumber = null;
+  retroLiveSubInNumber = null;
+  retroLivePendingSubstitution = null;
+  livePlayback.commentaryFeed?.push({
+    minute: Math.max(1, Math.ceil(displayedLiveMinute())),
+    text: `${first.name} and ${second.name} switch positions for ${team.name}.`,
+    type: "tactical-change",
+    emphasis: "normal",
+    eventId: `${match.id}:position-swap:${firstNumber}:${secondNumber}:${Date.now()}`,
+  });
+  renderCommentaryFeed();
+  clearPlayerProfileCacheForTeam(team.id);
+  rebuildLiveMatchAfterTacticChange(match);
+  renderRetroMatchLineupsPanel(match);
+  showToast(`${first.name} and ${second.name} have switched positions.`);
+  return true;
+}
+
+function applyRetroLiveSubstitutionBatch(match, pendingChanges = retroPendingSubstitutionChanges()) {
+  const substitutions = retroLiveSubstitutionState(match);
+  const team = spectatedTeam();
+  const squad = retroManagerSquadForTeam(team);
+  if (!substitutions || !team || substitutions.teamId !== team.id || !squad || !pendingChanges.length) return false;
+  const workingStarters = [...substitutions.activeStarters];
+  const validatedChanges = [];
+  for (const change of pendingChanges) {
+    const outgoingIndex = workingStarters.indexOf(change.outgoingNumber);
+    const incoming = squad.players.find((player) => player.number === change.incomingNumber);
+    const outgoing = squad.players.find((player) => player.number === change.outgoingNumber);
+    if (
+      outgoingIndex < 0
+      || !incoming
+      || !outgoing
+      || !retroSubstitutionPositionsCompatible(outgoing, incoming)
+      || workingStarters.includes(change.incomingNumber)
+      || substitutions.subbedOut.includes(change.incomingNumber)
+      || retroLiveMissingPlayer(substitutions, change.outgoingNumber)?.type === "red"
+    ) return false;
+    workingStarters.splice(outgoingIndex, 1, change.incomingNumber);
+    validatedChanges.push({ ...change, outgoingIndex, outgoing, incoming });
+  }
+  const limits = retroLiveSubstitutionLimits(match);
+  if (substitutions.used + validatedChanges.length > limits.substitutions) {
+    showToast(`Only ${limits.substitutions - substitutions.used} substitutions remain.`);
+    return false;
+  }
+  const freeInterval = retroLiveSubstitutionIsFreeInterval(match);
+  if (!substitutions.windowOpen && !freeInterval && substitutions.stoppages >= limits.stoppages) {
+    showToast(`All ${limits.stoppages} substitution stoppages have been used.`);
+    return false;
+  }
+  if (!livePlayback.paused) toggleLivePause();
+  if (!substitutions.windowOpen) {
+    substitutions.windowOpen = true;
+    if (!freeInterval) substitutions.stoppages += 1;
+  }
+  const substitutionMinute = Math.max(1, Math.ceil(displayedLiveMinute()));
+  const side = team.id === match.homeId ? "home" : "away";
+  livePlayback.playerRatings ||= { home: {}, away: {} };
+  livePlayback.playerRatings[side] ||= {};
+  match.result.substitutions ||= [];
+  validatedChanges.forEach(({ outgoingIndex, outgoing, incoming }) => {
+    substitutions.activeStarters.splice(outgoingIndex, 1, incoming.number);
+    if (substitutions.missingSlots?.[outgoingIndex]) delete substitutions.missingSlots[outgoingIndex];
+    substitutions.used += 1;
+    substitutions.subbedOut.push(outgoing.number);
+    substitutions.history.push({
+      minute: substitutionMinute,
+      outgoingNumber: outgoing.number,
+      outgoingName: outgoing.name,
+      incomingNumber: incoming.number,
+      incomingName: incoming.name,
+    });
+    livePlayback.playerRatings[side][incoming.name] = {
+      rating: 6.5,
+      delta: 0,
+      reason: "Substitute",
+      playerNumber: incoming.number,
+    };
+    const substitutionEvent = {
+      minute: substitutionMinute,
+      player: incoming.name,
+      playerIn: incoming.name,
+      playerOut: outgoing.name,
+      incomingNumber: incoming.number,
+      outgoingNumber: outgoing.number,
+      teamId: team.id,
+      side,
+      type: "substitution",
+    };
+    match.result.substitutions.push(substitutionEvent);
+    livePlayback.feed.unshift(substitutionEvent);
+    appendLiveTimelineEvent(substitutionEvent);
+  });
+  const outgoingNames = validatedChanges.map((change) => change.outgoing.name);
+  const incomingNames = validatedChanges.map((change) => change.incoming.name);
+  livePlayback.commentaryFeed?.push({
+    minute: substitutionMinute,
+    text: `${outgoingNames.join(", ")} ${outgoingNames.length === 1 ? "comes" : "come"} off. ${incomingNames.join(", ")} ${incomingNames.length === 1 ? "is" : "are"} sent on for ${team.name}.`,
+    type: "substitution",
+    emphasis: "normal",
+    eventId: `${match.id}:sub-window:${substitutionMinute}:${substitutions.used}`,
+  });
+  renderCommentaryFeed();
+  retroLiveSubOutNumber = null;
+  retroLiveSubInNumber = null;
+  retroLivePendingSubstitution = null;
+  clearPlayerProfileCacheForTeam(team.id);
+  rebuildLiveMatchAfterTacticChange(match);
+  renderRetroMatchLineupsPanel(match);
+  saveLiveMatchCheckpoint();
+  showToast(`${validatedChanges.length} substitution${validatedChanges.length === 1 ? "" : "s"} confirmed in one stoppage.`);
+  return true;
+}
+
+function applyRetroLiveSubstitution(match, outgoingNumber, incomingNumber) {
+  return applyRetroLiveSubstitutionBatch(match, [{ outgoingNumber, incomingNumber }]);
+}
+
+function updateRetroOppositionManagement(match) {
+  const management = livePlayback?.oppositionManagement;
+  if (!management || livePlayback.phase !== "match") return;
+  const minute = displayedLiveMinute();
+  const schedule = match.result?.extraTime ? [58, 68, 76, 83, 88, 101, 112] : [58, 68, 76, 83, 88];
+  const nextMinute = schedule[management.nextSubIndex];
+  if (!Number.isFinite(nextMinute) || minute < nextMinute) return;
+  management.nextSubIndex += 1;
+  const team = teamById(management.teamId);
+  const squad = retroManagerSquadForTeam(team);
+  if (!team || !squad) return;
+  const side = team.id === match.homeId ? "home" : "away";
+  const ratings = livePlayback.playerRatings?.[side] || {};
+  const activePlayers = management.activeStarters
+    .map((number) => squad.players.find((player) => player.number === number))
+    .filter(Boolean);
+  const unavailable = new Set(management.subbedOut);
+  const bench = retroSortedBenchPlayers(squad, activePlayers)
+    .filter((player) => !unavailable.has(player.number));
+  const rankedOutgoing = activePlayers
+    .filter((player) => (
+      player.position !== "GK"
+      && retroLiveMissingPlayer(management, player.number)?.type !== "red"
+    ))
+    .map((player) => ({
+      player,
+      rating: Number(livePlayerRatingEntry(ratings, player)?.rating) || 6.5,
+    }))
+    .sort((left, right) => left.rating - right.rating || left.player.overall - right.player.overall);
+  const choice = rankedOutgoing
+    .map(({ player }) => ({
+      outgoing: player,
+      incoming: bench
+        .map((candidate) => ({
+          candidate,
+          fit: retroPlayerPositionFit(candidate, player.position),
+        }))
+        .filter(({ fit }) => fit >= 76)
+        .sort((left, right) => right.fit - left.fit || right.candidate.overall - left.candidate.overall)[0]
+        ?.candidate,
+    }))
+    .find(({ incoming }) => incoming);
+  if (!choice) return;
+  const outgoingIndex = management.activeStarters.indexOf(choice.outgoing.number);
+  management.activeStarters.splice(outgoingIndex, 1, choice.incoming.number);
+  if (management.missingSlots?.[outgoingIndex]) delete management.missingSlots[outgoingIndex];
+  management.used += 1;
+  management.subbedOut.push(choice.outgoing.number);
+  management.history.push({
+    minute: Math.ceil(minute),
+    outgoingNumber: choice.outgoing.number,
+    incomingNumber: choice.incoming.number,
+  });
+  livePlayback.playerRatings[side][choice.incoming.name] = {
+    rating: 6.5,
+    delta: 0,
+    reason: "Substitute",
+    playerNumber: choice.incoming.number,
+  };
+  if (management.nextSubIndex === 3) {
+    const opponentScore = side === "home" ? livePlayback.homeScore : livePlayback.awayScore;
+    const managedScore = side === "home" ? livePlayback.awayScore : livePlayback.homeScore;
+    const defenderCount = retroFormationDefenderCount(management.formation);
+    const nextFormation = opponentScore < managedScore
+      ? ({ 3: "3-4-3", 4: "4-3-3", 5: "5-2-3" }[defenderCount] || "4-3-3")
+      : opponentScore > managedScore
+        ? ({ 3: "3-5-2", 4: "4-2-3-1", 5: "5-3-2" }[defenderCount] || "4-2-3-1")
+        : management.formation;
+    if (nextFormation !== management.formation) {
+      const currentFormation = management.formation;
+      const missingEntries = Object.values(management.missingSlots || {});
+      const currentPlayers = management.activeStarters
+        .map((number) => squad.players.find((player) => player.number === number))
+        .filter(Boolean);
+      management.activeStarters = retroOrderStartersForFormationChange(
+        currentPlayers,
+        management.activeStarters,
+        currentFormation,
+        nextFormation,
+      );
+      management.formation = nextFormation;
+      retroRemapMissingSlots(management, missingEntries);
+      team.selectedFormation = nextFormation;
+    }
+  }
+  const substitutionEvent = {
+    minute: Math.ceil(minute),
+    player: choice.incoming.name,
+    playerIn: choice.incoming.name,
+    playerOut: choice.outgoing.name,
+    incomingNumber: choice.incoming.number,
+    outgoingNumber: choice.outgoing.number,
+    teamId: team.id,
+    side,
+    type: "substitution",
+  };
+  match.result.substitutions ||= [];
+  match.result.substitutions.push(substitutionEvent);
+  livePlayback.feed.unshift(substitutionEvent);
+  appendLiveTimelineEvent(substitutionEvent);
+  livePlayback.commentaryFeed?.push({
+    minute: Math.ceil(minute),
+    text: `${choice.outgoing.name} makes way. ${choice.incoming.name} comes on for ${team.name}.`,
+    type: "substitution",
+    emphasis: "normal",
+    eventId: `${match.id}:opponent-sub:${management.used}`,
+  });
+  renderCommentaryFeed();
+  clearPlayerProfileCacheForTeam(team.id);
+  rebuildLiveMatchAfterTacticChange(match);
+  renderRetroMatchLineupsPanel(match);
+  saveLiveMatchCheckpoint();
+}
+
 function rebuildLiveMatchAfterTacticChange(match) {
   if (!livePlayback || !match2dState || livePlayback.matchId !== match.id) return false;
   if (match2dState.activeHighlight) {
-    livePlayback.pendingTacticChange = true;
-    return true;
+    match2dState.activeHighlight = null;
+    match2dState.actionIndex = 0;
+    match2dState.leadInRemaining = 0;
+    els.match2dViewer.hidden = true;
+    els.matchCommentaryView.hidden = false;
   }
   livePlayback.pendingTacticChange = false;
   const displayedCutoff = displayedLiveMinute();
-  const resultCutoff = Math.max(
-    Number(livePlayback.minute) || 0,
-    displayedCutoff,
-  );
+  const resultCutoff = displayedCutoff;
+  livePlayback.minute = displayedCutoff;
   const candidate = createLiveMatchResult(match, livePlayback.roundIndex);
   match.result = mergeLiveTacticalResult(match.result, candidate, resultCutoff, match);
+  repairLiveGoalParticipants(match);
   const controlledSide = state.spectateTeamId === match.homeId ? "home" : "away";
   const opponentKey = match.result.tacticalMatchup?.opponent || opponentStandardTactic(match, controlledSide);
   const presentation = createMatchHighlightPresentation({
@@ -8402,6 +11336,7 @@ function rebuildLiveMatchAfterTacticChange(match) {
   match.result.matchStats = presentation.stats;
   match2dState.presentation = presentation;
   match2dState.engine = presentation;
+  match2dState.players = rebuildMatch2dPlayerNodes(presentation);
   match2dState.cursor = presentation.highlights.findLastIndex((highlight) => highlight.minute <= resultCutoff);
   match2dState.activeHighlight = null;
   match2dState.actionIndex = 0;
@@ -8431,7 +11366,8 @@ function match2dTacticSummary(match) {
   const selected = controlledMatchTactic(match).name;
   const opponentKey = match?.result?.tacticalMatchup?.opponent;
   const opponent = STANDARD_TACTICS[opponentKey]?.name;
-  return opponent ? `${selected} vs ${opponent}` : selected;
+  const formation = state?.premierLeagueSeason ? `${standardFormationKey()} · ` : "";
+  return opponent ? `${formation}${selected} vs ${opponent}` : `${formation}${selected}`;
 }
 
 function syncMatch2dPlayers(duration, shape = null) {
@@ -8539,6 +11475,272 @@ function match2dEventKey(event) {
   return `${event.type}:${event.side}:${event.minute}:${event.player || event.scorer || ""}`;
 }
 
+function initializeLivePlayerRatings(match) {
+  if (!livePlayback || !match2dState?.presentation) return;
+  const createSide = (side) => Object.fromEntries(
+    match2dState.presentation[side].players.map((player) => [
+      player.name,
+      {
+        rating: 6.5,
+        delta: 0,
+        reason: "Kick-off",
+        playerNumber: Number.isFinite(Number(player.number)) ? Number(player.number) : null,
+      },
+    ]),
+  );
+  livePlayback.playerRatings = {
+    home: createSide("home"),
+    away: createSide("away"),
+  };
+  livePlayback.ratingEventIds = new Set();
+  livePlayback.ratingActionIds = new Set();
+}
+
+function liveRatingNameKey(name) {
+  return repairPlayerText(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function livePlayerRatingEntry(ratings, player) {
+  if (!ratings || !player) return null;
+  if (ratings[player.name]) return ratings[player.name];
+  const number = Number(player.number);
+  if (Number.isFinite(number)) {
+    const numberedEntry = Object.values(ratings).find((entry) => Number(entry?.playerNumber) === number);
+    if (numberedEntry) return numberedEntry;
+  }
+  const nameKey = liveRatingNameKey(player.name);
+  if (!nameKey) return null;
+  const nameEntry = Object.entries(ratings)
+    .find(([name]) => liveRatingNameKey(name) === nameKey);
+  return nameEntry?.[1] || null;
+}
+
+function liveRatingSideForPlayer(playerName, preferredSide = null) {
+  const ratings = livePlayback?.playerRatings;
+  if (!ratings || !playerName) return null;
+  if (preferredSide && ratings[preferredSide]?.[playerName]) return preferredSide;
+  if (ratings.home?.[playerName]) return "home";
+  if (ratings.away?.[playerName]) return "away";
+  return null;
+}
+
+function adjustLivePlayerRating(playerName, delta, reason, preferredSide = null) {
+  const side = liveRatingSideForPlayer(playerName, preferredSide);
+  const entry = side ? livePlayback.playerRatings[side][playerName] : null;
+  if (!entry || !Number.isFinite(delta)) return;
+  entry.rating = Number(simulationClamp(entry.rating + delta, 3, 10).toFixed(2));
+  entry.delta = Number(delta.toFixed(2));
+  entry.reason = reason;
+}
+
+function liveRatingActionId(action) {
+  return action?.presentationEvent?.id
+    || action?.event?.id
+    || `${action?.side || ""}:${action?.type || ""}:${action?.actor?.name || ""}:${action?.presentationEvent?.minute ?? action?.event?.minute ?? ""}`;
+}
+
+function updateLiveRatingsForAction(action, shouldRender = true) {
+  if (!livePlayback?.playerRatings || !action || action.event?.type === "goal" || action.outcome === "goal") return;
+  const actionId = liveRatingActionId(action);
+  if (actionId && livePlayback.ratingActionIds?.has(actionId)) return;
+  if (actionId) livePlayback.ratingActionIds?.add(actionId);
+  const actor = action.actor?.name;
+  const side = action.side;
+  if (["interception", "tackle", "clearance"].includes(action.type)) {
+    adjustLivePlayerRating(actor, 0.1, action.type, side);
+  } else if (["progressive-pass", "through-ball", "cross"].includes(action.type)) {
+    adjustLivePlayerRating(actor, 0.03, "Chance created", side);
+  } else if (action.type === "foul") {
+    adjustLivePlayerRating(actor, -0.1, "Foul conceded", side);
+  } else if (action.type === "shot" && ["saved", "wide", "blocked"].includes(action.outcome)) {
+    adjustLivePlayerRating(actor, -0.08, action.outcome === "saved" ? "Shot saved" : "Shot missed", side);
+    if (action.outcome === "saved") {
+      const goalkeeper = match2dState?.presentation?.[side === "home" ? "away" : "home"]?.players
+        .find((player) => player.position === "GK");
+      adjustLivePlayerRating(goalkeeper?.name, 0.15, "Save", side === "home" ? "away" : "home");
+    }
+  }
+  if (shouldRender) renderRetroMatchLineupsPanel(selectedMatch());
+}
+
+function liveRatingEventId(event) {
+  return event?.id || (event ? `rating:${match2dEventKey(event)}` : null);
+}
+
+function updateLiveRatingsForEvent(event, shouldRender = true) {
+  const eventId = liveRatingEventId(event);
+  if (!livePlayback?.playerRatings || !eventId || livePlayback.ratingEventIds.has(eventId)) return;
+  livePlayback.ratingEventIds.add(eventId);
+  const scorer = event.metadata?.scorer || event.player || event.scorer;
+  if (event.type === "goal") {
+    const scoringSide = liveRatingSideForPlayer(scorer, event.side);
+    adjustLivePlayerRating(scorer, 1, "Goal", scoringSide);
+    const assist = event.metadata?.assist || event.assist;
+    adjustLivePlayerRating(assist, 0.45, "Assist", scoringSide);
+    const concedingSide = scoringSide === "home" ? "away" : "home";
+    Object.entries(livePlayback.playerRatings[concedingSide] || {}).forEach(([name]) => {
+      const profile = match2dState?.presentation?.[concedingSide]?.players.find((player) => player.name === name);
+      if (["goalkeeper", "defender"].includes(possessionPositionGroup(profile?.position))) {
+        adjustLivePlayerRating(name, -0.12, "Goal conceded", concedingSide);
+      }
+    });
+  } else if (event.type === "red") {
+    const dismissed = event.metadata?.player || event.metadata?.scorer || event.player;
+    adjustLivePlayerRating(dismissed, -1.5, "Sent off");
+  } else if (event.type === "penalty-miss") {
+    adjustLivePlayerRating(scorer, -0.55, "Penalty missed", event.side);
+  }
+  if (shouldRender) renderRetroMatchLineupsPanel(selectedMatch());
+}
+
+function finalizeLivePlayerRatings(match) {
+  if (!livePlayback?.playerRatings || !match2dState?.presentation || !match?.result) return;
+  const result = match.result;
+  ["home", "away"].forEach((side) => {
+    const teamId = side === "home" ? match.homeId : match.awayId;
+    const goalsAgainst = Number(side === "home" ? result.awayGoals : result.homeGoals) || 0;
+    const won = result.winnerId === teamId;
+    const lost = Boolean(result.winnerId && !won);
+    const outcomeDelta = won ? 0.18 : lost ? -0.12 : 0;
+    const sideRatings = livePlayback.playerRatings[side] || {};
+    const goalEvents = side === "home" ? result.homeEvents || [] : result.awayEvents || [];
+
+    match2dState.presentation[side].players.forEach((player) => {
+      let entry = livePlayerRatingEntry(sideRatings, player);
+      if (!entry) {
+        entry = {
+          rating: 6.5,
+          delta: 0,
+          reason: "Full time",
+          playerNumber: Number.isFinite(Number(player.number)) ? Number(player.number) : null,
+        };
+        sideRatings[player.name] = entry;
+      }
+      const existing = Number(entry.rating);
+      let rating = Number.isFinite(existing) ? existing : 6.5;
+      rating += outcomeDelta;
+
+      const playerKey = liveRatingNameKey(player.name);
+      const scored = goalEvents.filter((event) => liveRatingNameKey(event.scorer) === playerKey).length;
+      const assisted = goalEvents.filter((event) => liveRatingNameKey(event.assist) === playerKey).length;
+      if (scored) rating = Math.max(rating, 6.5 + outcomeDelta + scored * 0.95 + assisted * 0.4);
+      else if (assisted) rating = Math.max(rating, 6.5 + outcomeDelta + assisted * 0.42);
+
+      const positionGroup = possessionPositionGroup(player.position);
+      if (goalsAgainst === 0 && ["goalkeeper", "defender"].includes(positionGroup)) {
+        rating += positionGroup === "goalkeeper" ? 0.42 : 0.3;
+        if (!scored && !assisted) entry.reason = "Clean sheet";
+      } else if (goalsAgainst > 1 && ["goalkeeper", "defender"].includes(positionGroup)) {
+        rating -= Math.min(0.45, (goalsAgainst - 1) * 0.12);
+      }
+
+      const redCard = (result.redCards || []).some((event) => (
+        (event.side === side || event.teamId === teamId)
+        && liveRatingNameKey(event.player || event.scorer) === playerKey
+      ));
+      if (redCard) {
+        rating = Math.min(rating, 5);
+        entry.reason = "Sent off";
+      } else if (scored) {
+        entry.reason = scored > 1 ? `${scored} goals` : "Goal";
+      } else if (assisted) {
+        entry.reason = assisted > 1 ? `${assisted} assists` : "Assist";
+      } else if (won && entry.reason === "Kick-off") {
+        entry.reason = "Winning performance";
+      } else if (lost && entry.reason === "Kick-off") {
+        entry.reason = "Defeat";
+      }
+
+      entry.rating = Number(simulationClamp(rating, 3, 10).toFixed(2));
+      entry.delta = Number((entry.rating - 6.5).toFixed(2));
+      entry.playerNumber = Number.isFinite(Number(player.number)) ? Number(player.number) : entry.playerNumber ?? null;
+    });
+    livePlayback.playerRatings[side] = sideRatings;
+  });
+}
+
+function finalizeAndStoreLivePlayerRatings(match) {
+  if (!livePlayback || livePlayback.ratingsFinalized) return;
+  finalizeLivePlayerRatings(match);
+  if (livePlayback.playerRatings) match.result.playerRatings = livePlayback.playerRatings;
+  livePlayback.ratingsFinalized = true;
+}
+
+function repairFlatSavedPlayerRatings(match) {
+  const result = match?.result;
+  if (!result?.playerRatings) return false;
+  let repaired = false;
+  ["home", "away"].forEach((side) => {
+    const ratings = result.playerRatings[side];
+    const entries = Object.entries(ratings || {});
+    if (
+      entries.length < 2
+      || !entries.every(([, entry]) => Math.abs((Number(entry?.rating) || 6.5) - 6.5) < 0.01)
+    ) return;
+
+    const teamId = side === "home" ? match.homeId : match.awayId;
+    const goalsFor = Number(side === "home" ? result.homeGoals : result.awayGoals) || 0;
+    const goalsAgainst = Number(side === "home" ? result.awayGoals : result.homeGoals) || 0;
+    const goalEvents = side === "home" ? result.homeEvents || [] : result.awayEvents || [];
+    const won = result.winnerId === teamId;
+    const lost = Boolean(result.winnerId && !won);
+    const outcomeDelta = won ? 0.35 : lost ? -0.15 : 0.05;
+    const profiles = playerProfilesForTeam(teamById(teamId));
+
+    entries.forEach(([name, entry]) => {
+      const nameKey = liveRatingNameKey(name);
+      const profile = profiles.find((candidate) => liveRatingNameKey(candidate.name) === nameKey);
+      const scored = goalEvents.filter((event) => liveRatingNameKey(event.scorer) === nameKey).length;
+      const assisted = goalEvents.filter((event) => liveRatingNameKey(event.assist) === nameKey).length;
+      const positionGroup = possessionPositionGroup(profile?.position);
+      const variation = ((stableHash(`${match.id}:${side}:${name}`) % 9) - 4) * 0.04;
+      let rating = 6.25 + outcomeDelta + variation + scored * 0.95 + assisted * 0.42;
+      let reason = won ? "Winning performance" : lost ? "Defeat" : "Full time";
+
+      if (goalsAgainst === 0 && ["goalkeeper", "defender"].includes(positionGroup)) {
+        rating += positionGroup === "goalkeeper" ? 0.42 : 0.3;
+        if (!scored && !assisted) reason = "Clean sheet";
+      } else if (goalsAgainst > 1 && ["goalkeeper", "defender"].includes(positionGroup)) {
+        rating -= Math.min(0.45, (goalsAgainst - 1) * 0.12);
+      }
+      const sentOff = (result.redCards || []).some((card) => (
+        (card.side === side || card.teamId === teamId)
+        && liveRatingNameKey(card.player || card.scorer) === nameKey
+      ));
+      if (sentOff) {
+        rating = Math.min(rating, 5);
+        reason = "Sent off";
+      } else if (scored) {
+        reason = scored > 1 ? `${scored} goals` : "Goal";
+      } else if (assisted) {
+        reason = assisted > 1 ? `${assisted} assists` : "Assist";
+      }
+
+      const finalRating = Number(simulationClamp(rating, 3, 10).toFixed(2));
+      ratings[name] = {
+        ...entry,
+        rating: finalRating,
+        delta: Number((finalRating - 6.5).toFixed(2)),
+        reason,
+        playerNumber: entry?.playerNumber ?? profile?.number ?? null,
+      };
+    });
+    repaired = true;
+  });
+  return repaired;
+}
+
+function fastForwardLivePlayerRatings() {
+  match2dState?.presentation?.highlights?.forEach((highlight) => {
+    highlight.actions?.forEach((action) => updateLiveRatingsForAction(action, false));
+  });
+}
+
 function processPossessionAction(action, timestamp, animate = true) {
   if (!action || !match2dState || !livePlayback) return;
   const match = selectedMatch();
@@ -8580,6 +11782,7 @@ function processPossessionAction(action, timestamp, animate = true) {
   } else {
     receivePresentationAction(action, animate);
   }
+  updateLiveRatingsForAction(action);
   match2dState.nextAction = timestamp + duration + 90 / speed;
   els.match2dTacticLabel.textContent = match2dTacticSummary(match);
 }
@@ -8592,6 +11795,7 @@ function nextMatchHighlight() {
   if (!match2dState) return null;
   return match2dState.presentation.highlights.find((highlight) => (
     highlight.timelineIndex > match2dState.cursor
+    && highlight.minute <= (livePlayback?.maxMinute ?? 120)
   )) || null;
 }
 
@@ -8683,18 +11887,22 @@ function presentationDebug(label, event, reason = "") {
 }
 
 function acceptPresentationEvent(event) {
-  if (!livePlayback || !["goal", "red", "disallowed-goal", "penalty-miss"].includes(event.type)) return;
+  if (!livePlayback || !["goal", "red", "injury", "disallowed-goal", "penalty-miss"].includes(event.type)) return;
   match2dState?.playedEventKeys?.add(event.id);
-  if (["goal", "red"].includes(event.type)) applyLiveEvent(event, Boolean(event.metadata.animate));
+  if (["goal", "red", "injury"].includes(event.type)) applyLiveEvent(event, Boolean(event.metadata.animate));
+  updateLiveRatingsForEvent(event);
   presentationDebug(event.type === "goal" ? "[SCORE_UPDATE]" : "[SIM_EVENT]", event);
 }
 
 function showPresentationEvent(event) {
   if (!livePlayback) return;
   const team = teamById(event.teamId);
+  const injuredPlayer = event.metadata?.scorer || "A player";
   const text = event.importance === "goal"
     ? MatchPresentation.goalCommentary(event, team?.name || "Team")
-    : event.metadata.commentary || event.metadata.heading || event.type;
+    : event.type === "injury"
+      ? `${injuredPlayer} cannot continue and leaves ${team?.name || "his team"} a player short.`
+      : event.metadata.commentary || event.metadata.heading || event.type;
   livePlayback.commentaryFeed = [{
     minute: Math.floor(event.minute),
     text,
@@ -8929,6 +12137,7 @@ function stepMatch2dViewer(timestamp) {
       return;
     } else {
       const importance = receivePresentationAction(action, false);
+      updateLiveRatingsForAction(action);
       if (importance === "goal" || importance === "major") return;
     }
   }
@@ -8990,15 +12199,22 @@ function goalMinuteText(event) {
   return `${event.minute}'${isPenaltyGoalEvent(event) ? " (P)" : ""}`;
 }
 
+function isVisibleMatchFactEvent(event) {
+  return ["goal", "red", "injury"].includes(event?.type);
+}
+
 function timelineEventMarkup(event, away = false, animate = false) {
-  if (!["goal", "red"].includes(event.type)) return "";
+  if (!isVisibleMatchFactEvent(event)) return "";
   const marker = event.type === "red" ? "<i></i>" : "";
   const minute = event.type === "goal" ? goalMinuteText(event) : `${event.minute}'`;
+  const label = event.type === "injury"
+    ? `${event.player || event.metadata?.scorer} injured`
+    : event.player || event.metadata?.scorer;
   return `
-    <div class="event timeline-event ${event.type === "red" ? "red-event" : "goal-event"} ${animate ? "event-enter" : ""}">
+    <div class="event timeline-event ${event.type}-event ${animate ? "event-enter" : ""}">
       ${away
-    ? `<b>${minute}</b><span>${event.player}</span>${marker}`
-    : `${marker}<span>${event.player}</span><b>${minute}</b>`}
+    ? `<b>${minute}</b><span>${escapeHtml(label)}</span>${marker}`
+    : `${marker}<span>${escapeHtml(label)}</span><b>${minute}</b>`}
     </div>
   `;
 }
@@ -9015,7 +12231,7 @@ function disciplineMarkup(cards) {
 function renderLiveTimeline() {
   if (!livePlayback) return;
   const playedEvents = livePlayback.feed
-    .filter((event) => ["goal", "red"].includes(event.type))
+    .filter(isVisibleMatchFactEvent)
     .reverse();
   els.homeEventSide.innerHTML = playedEvents
     .filter((event) => event.side === "home")
@@ -9028,7 +12244,7 @@ function renderLiveTimeline() {
 }
 
 function appendLiveTimelineEvent(event, animate = true) {
-  if (!["goal", "red"].includes(event.type)) return;
+  if (!isVisibleMatchFactEvent(event)) return;
   const target = event.side === "home" ? els.homeEventSide : els.awayEventSide;
   target.insertAdjacentHTML(
     "beforeend",
@@ -9059,12 +12275,22 @@ function applyLiveEvent(event, animate = true) {
   if (event.type === "red") {
     livePlayback[`${event.side}Reds`].push(event);
   }
+  if (["red", "injury"].includes(event.type)) {
+    applyRetroLivePlayerAbsence(selectedMatch(), {
+      ...event,
+      player: event.player || event.metadata?.scorer,
+    });
+  }
   livePlayback.feed.unshift(event);
   els.homeScore.textContent = livePlayback.homeScore;
   els.awayScore.textContent = livePlayback.awayScore;
   els.homeDiscipline.innerHTML = disciplineMarkup(livePlayback.homeReds);
   els.awayDiscipline.innerHTML = disciplineMarkup(livePlayback.awayReds);
   appendLiveTimelineEvent(event, animate);
+  saveLiveMatchCheckpoint();
+  if (state?.premierLeagueSeason && event.type === "goal") {
+    window.PremierLeagueSeason?.renderEngineTable?.();
+  }
   if (isRetroSimulatorState() && retroGroupStageDisplayActive()) {
     renderGoldenBoot();
   }
@@ -9079,7 +12305,10 @@ function ensureShootoutSequence(match) {
     match.result.penalties,
     random,
     match.result.redCards || [],
-    match.result.suspendedPlayers || { home: [], away: [] },
+    {
+      home: shootoutUnavailablePlayers(match.result, "home"),
+      away: shootoutUnavailablePlayers(match.result, "away"),
+    },
   );
 }
 
@@ -9089,7 +12318,10 @@ function repairSavedShootoutSequence(match) {
   const home = teamById(match.homeId);
   const away = teamById(match.awayId);
   const cards = match.result.redCards || [];
-  const suspendedPlayers = match.result.suspendedPlayers || { home: [], away: [] };
+  const suspendedPlayers = {
+    home: shootoutUnavailablePlayers(match.result, "home"),
+    away: shootoutUnavailablePlayers(match.result, "away"),
+  };
   const validTakers = {
     home: new Set(shootoutTakerPool(
       home,
@@ -9390,6 +12622,10 @@ function clearMatchPenaltyAnimation() {
 }
 
 function matchPenaltyAttempt(event, interactionRole = null) {
+  const savedDecision = selectedMatch()?.result?.interactivePenaltyDecisions?.[event.id];
+  if (savedDecision && savedDecision.interactionRole === interactionRole) {
+    return { ...savedDecision };
+  }
   const team = teamById(event.teamId);
   const opponent = teamById(event.side === "home" ? selectedMatch().awayId : selectedMatch().homeId);
   const random = mulberry32(state.drawSeed + stableHash(`${livePlayback.matchId}-${event.side}-${event.minute}-${event.player}-match-penalty`));
@@ -9458,6 +12694,29 @@ function matchPenaltyAttempt(event, interactionRole = null) {
   };
 }
 
+function saveInteractivePenaltyDecision(event, attempt) {
+  const match = selectedMatch();
+  if (!match?.result || !event?.id || !attempt?.interactionRole || !attempt.target) return;
+  match.result.interactivePenaltyDecisions ||= {};
+  match.result.interactivePenaltyDecisions[event.id] = {
+    player: attempt.player,
+    side: attempt.side,
+    scored: attempt.scored,
+    direction: attempt.direction,
+    keeperDive: attempt.keeperDive,
+    goalkeeperTarget: attempt.goalkeeperTarget || null,
+    shotTarget: attempt.shotTarget || null,
+    conversionChance: attempt.conversionChance,
+    outcomeRoll: attempt.outcomeRoll,
+    target: attempt.target,
+    interactive: true,
+    interactionRole: attempt.interactionRole,
+    missType: attempt.missType || null,
+    preserveKeeperDive: Boolean(attempt.preserveKeeperDive),
+    foot: attempt.foot,
+  };
+}
+
 function removeSavedPenaltyGoal(event) {
   const match = selectedMatch();
   if (!match?.result || !["home", "away"].includes(event.side)) return false;
@@ -9476,10 +12735,14 @@ function removeSavedPenaltyGoal(event) {
   if (event.minute <= 90) {
     match.result[regulationKey] = Math.max(0, match.result[regulationKey] - 1);
   }
+  match.result.winnerId = match.result.homeGoals === match.result.awayGoals
+    ? null
+    : match.result.homeGoals > match.result.awayGoals ? match.homeId : match.awayId;
   if (livePlayback) {
     livePlayback.penaltyScoreCorrections ||= { home: 0, away: 0 };
     livePlayback.penaltyScoreCorrections[event.side] += 1;
   }
+  if (event.minute <= 90) reconcileInteractiveMatchBoundary(match, livePlayback);
   return true;
 }
 
@@ -9571,6 +12834,7 @@ function chooseMatchPenaltyTarget(target) {
   if (livePlayback !== playback || !attempt.interactive || attempt.target) return;
   if (attempt.interactionRole === "keeper") resolveKeeperPenaltyAttempt(attempt, target);
   else resolveManualPenaltyAttempt(attempt, target);
+  saveInteractivePenaltyDecision(event, attempt);
   const publishResult = matchPenaltyResultPublisher(playback, event, attempt, action);
   els.matchPenaltyScene.dataset.target = target;
   els.matchPenaltyPlayer.textContent = attempt.interactionRole === "keeper"
@@ -9579,6 +12843,7 @@ function chooseMatchPenaltyTarget(target) {
   els.matchPenaltyOverlay.classList.remove("is-awaiting-choice");
   playback.matchPenaltyContext = null;
   saveState();
+  saveLiveMatchCheckpoint();
   finishMatchPenaltyAnimation(playback, event, attempt, 120, publishResult);
 }
 
@@ -9588,14 +12853,16 @@ function startMatchPenaltyAnimation(event, action) {
   const interactionRole = controlledMatchPenaltyRole(event);
   const interactive = Boolean(interactionRole);
   const attempt = matchPenaltyAttempt(event, interactionRole);
+  const decisionLocked = interactive && Boolean(attempt.target);
+  const awaitingChoice = interactive && !decisionLocked;
   const motionScale = playback.reducedMotion ? 0.15 : 1;
   const delay = (duration) => Math.max(40, duration * motionScale);
   const whistleLeadIn = 1050;
   const setupHold = 1650;
   playback.matchPenaltyActive = true;
   playback.matchPenaltyTimers = [];
-  playback.matchPenaltyContext = interactive ? { playback, event, attempt, action } : null;
-  els.matchPenaltyPlayer.textContent = interactive
+  playback.matchPenaltyContext = awaitingChoice ? { playback, event, attempt, action } : null;
+  els.matchPenaltyPlayer.textContent = awaitingChoice
     ? interactionRole === "keeper"
       ? `${event.player}: choose where to dive`
       : `${event.player}: choose your target`
@@ -9608,16 +12875,16 @@ function startMatchPenaltyAnimation(event, action) {
   playback.matchPenaltyTimers.push(setTimeout(() => {
     if (livePlayback !== playback) return;
     els.matchPenaltyOverlay.hidden = false;
-    els.matchPenaltyOverlay.classList.toggle("is-awaiting-choice", interactive);
+    els.matchPenaltyOverlay.classList.toggle("is-awaiting-choice", awaitingChoice);
     els.matchPenaltyOverlay.classList.toggle("is-keeper-choice", interactionRole === "keeper");
     els.matchPenaltyOverlay.querySelector(".match-penalty-targets")
       ?.setAttribute("aria-label", interactionRole === "keeper" ? "Choose where to dive" : "Choose where to shoot");
     els.matchStage.classList.add("has-match-penalty");
-    els.matchPenaltyScene.dataset.target = matchPenaltySceneTarget(attempt, interactive);
+    els.matchPenaltyScene.dataset.target = matchPenaltySceneTarget(attempt, awaitingChoice);
     setPenaltySceneElement(els.matchPenaltyScene, attempt, "setup");
   }, whistleLeadIn));
 
-  if (!interactive) {
+  if (!awaitingChoice) {
     const publishResult = matchPenaltyResultPublisher(playback, event, attempt, action);
     finishMatchPenaltyAnimation(
       playback,
@@ -9668,12 +12935,14 @@ function renderPenaltyStage() {
     const winner = teamById(match.result.winnerId);
     els.penaltyPlayer.textContent = winner.name;
     els.penaltyOutcome.textContent = "WIN THE SHOOTOUT";
+    saveLiveMatchCheckpoint();
     return;
   }
 
   els.penaltyPlayer.textContent = attempt.player;
   els.penaltyOutcome.textContent = "";
   setPenaltyScene(attempt, step);
+  saveLiveMatchCheckpoint();
 }
 
 function schedulePenaltyStep(duration) {
@@ -9691,23 +12960,52 @@ function finishPenaltyShootout(delay = 1250) {
   livePlayback.finishTimer = setTimeout(finishLivePlayback, penaltyStepDelay(delay));
 }
 
-function canSkipNeutralShootout() {
+function isDefault256KnockoutState(candidate = state) {
+  return Boolean(
+    candidate?.started
+    && !candidate.retroWorldCup
+    && !candidate.customTournament
+    && !candidate.legacyTournament
+    && candidate.rounds?.[0]?.length === 128
+  );
+}
+
+function canSkipPenaltyShootout() {
   return Boolean(
     livePlayback
     && livePlayback.phase === "shootout"
-    && !livePlayback.interactiveShootout
     && !livePlayback.ending,
   );
 }
 
-function skipNeutralShootout() {
-  if (!canSkipNeutralShootout()) return false;
+function skipPenaltyShootout() {
+  if (!canSkipPenaltyShootout()) return false;
   const match = state.rounds[livePlayback.roundIndex]?.[livePlayback.matchIndex];
-  if (!match?.result?.penalties || !livePlayback.shootout.length) return false;
+  if (!match?.result || !livePlayback.shootout.length) return false;
 
   clearTimeout(livePlayback.penaltyTimer);
   clearTimeout(livePlayback.finishTimer);
   livePlayback.presentationScheduler?.clear("skip-shootout");
+  if (livePlayback.interactiveShootout) {
+    const random = mulberry32(state.drawSeed + stableHash(`${match.id}-skipped-shootout`));
+    const automated = simulatePenaltyShootout(
+      teamById(match.homeId),
+      teamById(match.awayId),
+      random,
+      match.result.redCards || [],
+      {
+        home: shootoutUnavailablePlayers(match.result, "home"),
+        away: shootoutUnavailablePlayers(match.result, "away"),
+      },
+      state.settings.upset,
+    );
+    match.result.penalties = automated.penalties;
+    match.result.shootout = automated.sequence;
+    match.result.winnerId = automated.penalties.home > automated.penalties.away ? match.homeId : match.awayId;
+    livePlayback.shootout = automated.sequence;
+    livePlayback.interactiveShootout = false;
+  }
+  if (!match.result.penalties || !livePlayback.shootout.length) return false;
   livePlayback.paused = false;
   livePlayback.shootoutIndex = livePlayback.shootout.length - 1;
   livePlayback.penaltyHomeScore = match.result.penalties.home;
@@ -9808,13 +13106,16 @@ function advancePenaltyShootout() {
   schedulePenaltyStep(650);
 }
 
-function startPenaltyShootout() {
+function startPenaltyShootout(resumeCheckpoint = null) {
   if (!livePlayback) return;
   const match = state.rounds[livePlayback.roundIndex]?.[livePlayback.matchIndex];
+  if (resumeCheckpoint?.shootout?.length) {
+    match.result.shootout = resumeCheckpoint.shootout;
+  }
   ensureShootoutSequence(match);
   repairSavedShootoutSequence(match);
   const controlledSide = controlledStandardShootoutSide(match);
-  if (controlledSide) {
+  if (controlledSide && !resumeCheckpoint) {
     match.result.shootout = createInteractiveShootoutSequence(match, controlledSide);
   }
   livePlayback.phase = "shootout";
@@ -9822,14 +13123,18 @@ function startPenaltyShootout() {
   livePlayback.shootout = match.result.shootout;
   livePlayback.interactiveShootout = Boolean(controlledSide);
   livePlayback.controlledShootoutSide = controlledSide;
-  livePlayback.shootoutIndex = 0;
-  livePlayback.shootoutStep = "setup";
-  livePlayback.penaltyHomeScore = 0;
-  livePlayback.penaltyAwayScore = 0;
+  livePlayback.shootoutIndex = Math.min(
+    Number(resumeCheckpoint?.shootoutIndex) || 0,
+    Math.max(0, livePlayback.shootout.length - 1),
+  );
+  livePlayback.shootoutStep = resumeCheckpoint?.shootoutStep || "setup";
+  livePlayback.penaltyHomeScore = Number(resumeCheckpoint?.penaltyHomeScore) || 0;
+  livePlayback.penaltyAwayScore = Number(resumeCheckpoint?.penaltyAwayScore) || 0;
   livePlayback.shootoutCommentary = null;
   livePlayback.lastTimestamp = 0;
   livePlayback.frame = null;
   render();
+  saveLiveMatchCheckpoint();
   schedulePenaltyStep(800);
 }
 
@@ -9839,6 +13144,7 @@ function finishLivePlayback() {
   const completed = livePlayback;
   const match = state.rounds[completed.roundIndex]?.[completed.matchIndex];
   if (!match?.result) {
+    clearLiveMatchCheckpoint(completed.matchId);
     livePlayback = null;
     return;
   }
@@ -9849,14 +13155,35 @@ function finishLivePlayback() {
   clearTimeout(completed.finishTimer);
   clearTimeout(completed.penaltyTimer);
   if (match2dState?.eventTimer) clearTimeout(match2dState.eventTimer);
+  finalizeAndStoreLivePlayerRatings(match);
+  const finalManagement = [completed.managerSubstitutions, completed.oppositionManagement]
+    .filter(Boolean)
+    .map((management) => [management.teamId, {
+      formation: management.formation,
+      activeStarters: [...management.activeStarters],
+      subbedOut: [...management.subbedOut],
+      unavailableNumbers: [...(management.unavailableNumbers || [])],
+      missingSlots: { ...(management.missingSlots || {}) },
+      used: management.used,
+    }]);
+  if (finalManagement.length) match.result.retroFinalManagement = Object.fromEntries(finalManagement);
   match2dState = null;
   match.result.revealed = true;
+  clearLiveMatchCheckpoint(match.id);
   livePlayback = null;
   buildNextRound(completed.roundIndex);
   saveState();
   render();
 
   const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
+  if (state?.premierLeagueSeason) {
+    if (!winner) {
+      showToast(`${teamById(match.homeId).name} and ${teamById(match.awayId).name} share the points.`);
+    } else {
+      showToast(`${winner.name} take all three points.`);
+    }
+    return;
+  }
   if (!winner) {
     showToast(`${teamById(match.homeId).name} and ${teamById(match.awayId).name} share the points.`);
     return;
@@ -9872,12 +13199,31 @@ function syncPossessionResultStats(result) {
   window.__lastMatchHighlightStats = result.matchStats;
 }
 
+function reconcileInteractiveMatchBoundary(match, playback) {
+  const result = match.result;
+  result.regulationHome = (result.homeEvents || []).filter((event) => event.minute <= 90).length;
+  result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
+  const extraTime = !match.allowDraw && result.regulationHome === result.regulationAway;
+  result.extraTime = extraTime;
+  if (!extraTime) {
+    result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
+    result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
+    result.homeGoals = result.regulationHome;
+    result.awayGoals = result.regulationAway;
+    result.penalties = null;
+    result.shootout = null;
+    result.winnerId = result.homeGoals === result.awayGoals
+      ? null
+      : result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
+  }
+  if (playback) playback.maxMinute = extraTime ? 120 : 90;
+  return extraTime;
+}
+
 function resolveInteractiveRegulation(match, playback) {
   const result = match.result;
   syncPossessionResultStats(result);
-  result.regulationHome = (result.homeEvents || []).filter((event) => event.minute <= 90).length;
-  result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
-  playback.maxMinute = result.extraTime ? 120 : 90;
+  reconcileInteractiveMatchBoundary(match, playback);
 }
 
 function resolveInteractiveExtraTime(match, playback) {
@@ -9925,7 +13271,10 @@ function resolveInteractiveExtraTime(match, playback) {
     teamById(match.awayId),
     random,
     result.redCards || [],
-    result.suspendedPlayers || { home: [], away: [] },
+    {
+      home: shootoutUnavailablePlayers(result, "home"),
+      away: shootoutUnavailablePlayers(result, "away"),
+    },
     state.settings.upset,
   );
   result.penalties = penaltyResult.penalties;
@@ -9975,15 +13324,19 @@ function stepLivePlayback(timestamp) {
       reducedMotion: livePlayback.reducedMotion,
     });
     const displayedMinute = livePlayback.presentationClock.read(timestamp);
+    updateRetroOppositionManagement(selectedMatch());
     const displayedClock = clockText(displayedMinute);
     if (displayedClock !== livePlayback.lastClockText) {
       els.liveClock.textContent = displayedClock;
       els.livePhase.textContent = phaseForMinute(displayedMinute, selectedMatch().result);
       livePlayback.lastClockText = displayedClock;
+      saveLiveMatchCheckpoint();
     }
     if (match2dState?.complete) {
       const match = selectedMatch();
       finalizeHighlightResult(match, livePlayback);
+      finalizeAndStoreLivePlayerRatings(match);
+      renderRetroMatchLineupsPanel(match);
       saveState();
       livePlayback.minute = livePlayback.maxMinute;
       els.liveClock.textContent = clockText(livePlayback.presentationClock.finish(timestamp));
@@ -10011,6 +13364,10 @@ function stepLivePlayback(timestamp) {
 
 function startLivePlayback(match) {
   try {
+  retroLiveSubOutNumber = null;
+  retroLiveSubInNumber = null;
+  retroLivePendingSubstitution = null;
+  retroLiveSubDrag = null;
   if (livePlayback) {
     cancelAnimationFrame(livePlayback.frame);
     clearTimeout(livePlayback.finishTimer);
@@ -10037,35 +13394,41 @@ function startLivePlayback(match) {
     lastError: null,
   };
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let resumeCheckpoint = match.result && !match.result.revealed
+    ? readLiveMatchCheckpoint(match)
+    : null;
   if (!match.result || match.result.engineVersion !== 2 || match.result.revealed) {
+    clearLiveMatchCheckpoint(match.id);
     match.result = createLiveMatchResult(match, state.activeRound);
+    resumeCheckpoint = null;
     saveState();
   }
+  const resumeMinute = simulationClamp(Number(resumeCheckpoint?.displayedMinute) || 0, 0, match.result.extraTime ? 120 : 90);
   livePlayback = {
     matchId: match.id,
     roundIndex: state.activeRound,
     matchIndex: state.selectedMatch,
-    minute: 0,
+    minute: Number(resumeCheckpoint?.minute) || resumeMinute,
     maxMinute: match.result.extraTime ? 120 : 90,
     regulationResolved: false,
-    homeScore: 0,
-    awayScore: 0,
-    homeReds: [],
-    awayReds: [],
+    homeScore: Number(resumeCheckpoint?.homeScore) || 0,
+    awayScore: Number(resumeCheckpoint?.awayScore) || 0,
+    homeReds: resumeCheckpoint?.homeReds || [],
+    awayReds: resumeCheckpoint?.awayReds || [],
     eventIndex: 0,
     events: [],
-    feed: [{ type: "kickoff", minute: 0 }],
-    phase: "match",
+    feed: resumeCheckpoint?.feed || [{ type: "kickoff", minute: 0 }],
+    phase: resumeCheckpoint?.phase || "match",
     shootout: [],
     shootoutIndex: 0,
     shootoutStep: "setup",
     penaltyHomeScore: 0,
     penaltyAwayScore: 0,
-    speed: preferredMatchSpeed ?? (reducedMotion ? 1.5 : 1),
+    speed: Number(resumeCheckpoint?.speed) || preferredMatchSpeed || (reducedMotion ? 1.5 : 1),
     reducedMotion,
     paused: false,
     highlightMode: preferredHighlightMode,
-    commentaryFeed: [{
+    commentaryFeed: resumeCheckpoint?.commentaryFeed || [{
       minute: 0,
       text: `${teamById(match.homeId).name} get the match under way against ${teamById(match.awayId).name}.`,
       type: "kickoff",
@@ -10084,14 +13447,65 @@ function startLivePlayback(match) {
     matchPenaltyActive: false,
     matchPenaltyTimers: [],
     matchPenaltyContext: null,
-    penaltyScoreCorrections: { home: 0, away: 0 },
+    penaltyScoreCorrections: resumeCheckpoint?.penaltyScoreCorrections || { home: 0, away: 0 },
     pendingTacticChange: false,
     presentationClock: null,
     presentationScheduler: null,
     _presentationSequence: 0,
   };
+  if (sharedLineupManagerSupported()) {
+    const managedTeam = [teamById(match.homeId), teamById(match.awayId)]
+      .find((team) => sharedLineupManagedTeamMatches(team));
+    const managerLineup = retroManagerLineupForTeam(managedTeam);
+    if (managedTeam && managerLineup) {
+      livePlayback.managerSubstitutions = {
+        teamId: managedTeam.id,
+        formation: managerLineup.formation,
+        activeStarters: [...managerLineup.starters],
+        used: 0,
+        stoppages: 0,
+        windowOpen: false,
+        subbedOut: [],
+        unavailableNumbers: [],
+        missingSlots: {},
+        history: [],
+      };
+      const opponentTeam = managedTeam.id === match.homeId ? teamById(match.awayId) : teamById(match.homeId);
+      const opponentLineup = sharedLineupDefaultForTeam(opponentTeam);
+      const opponentFormation = RETRO_MANAGER_FORMATIONS.includes(opponentLineup.formation)
+        ? opponentLineup.formation
+        : "4-3-3";
+      const opponentSquad = retroManagerSquadForTeam(opponentTeam);
+      const opponentUnavailable = new Set(unavailablePlayersForTeam(opponentTeam.id, state.activeRound));
+      const opponentAvailablePlayers = (opponentSquad?.players || opponentLineup.players)
+        .filter((player) => !opponentUnavailable.has(player.name));
+      const opponentPreferredNumbers = opponentLineup.players.map((player) => player.number);
+      livePlayback.oppositionManagement = {
+        teamId: opponentTeam.id,
+        formation: opponentFormation,
+        activeStarters: retroSelectAvailableStarterNumbers(
+          opponentAvailablePlayers,
+          opponentPreferredNumbers,
+          opponentFormation,
+        ),
+        used: 0,
+        nextSubIndex: 0,
+        subbedOut: [],
+        unavailableNumbers: [],
+        missingSlots: {},
+        history: [],
+      };
+    }
+  }
+  if (resumeCheckpoint?.managerSubstitutions) {
+    livePlayback.managerSubstitutions = resumeCheckpoint.managerSubstitutions;
+  }
+  if (resumeCheckpoint?.oppositionManagement) {
+    livePlayback.oppositionManagement = resumeCheckpoint.oppositionManagement;
+  }
+  repairLiveGoalParticipants(match);
   livePlayback.presentationClock = MatchPresentation.createClock({
-    initialMinute: 0,
+    initialMinute: resumeMinute,
     maxMinute: livePlayback.maxMinute,
     speed: livePlayback.speed,
     now: performance.now(),
@@ -10109,6 +13523,31 @@ function startLivePlayback(match) {
     return;
   }
   match2dState = createMatch2dState(match);
+  initializeLivePlayerRatings(match);
+  if (resumeCheckpoint && match2dState) {
+    if (resumeCheckpoint.playerRatings) livePlayback.playerRatings = resumeCheckpoint.playerRatings;
+    livePlayback.ratingEventIds = new Set(resumeCheckpoint.ratingEventIds || []);
+    livePlayback.ratingActionIds = new Set(resumeCheckpoint.ratingActionIds || []);
+    livePlayback.visibleStats = matchStatsAtMinute(match2dState.presentation.stats, resumeMinute);
+    match2dState.cursor = Number.isInteger(resumeCheckpoint.cursor)
+      ? resumeCheckpoint.cursor
+      : match2dState.presentation.highlights.findLastIndex((highlight) => highlight.minute < resumeMinute);
+    match2dState.activeHighlight = resumeCheckpoint.activeHighlightIndex === null
+      ? null
+      : match2dState.presentation.highlights.find(
+          (highlight) => highlight.timelineIndex === resumeCheckpoint.activeHighlightIndex,
+        ) || null;
+    match2dState.actionIndex = match2dState.activeHighlight
+      ? Math.min(
+          Number(resumeCheckpoint.actionIndex) || 0,
+          match2dState.activeHighlight.actions.length,
+        )
+      : 0;
+    match2dState.playedEventKeys = new Set(resumeCheckpoint.playedEventKeys || []);
+    match2dState.nextAction = performance.now() + 180;
+    livePlayback.lastClockText = clockText(resumeMinute);
+  }
+  renderRetroMatchLineupsPanel(match);
   window.__playbackDebug._step = "createMatch2dState done";
   window.__playbackDebug._hasMatch2d = !!match2dState;
   window.__playbackDebug._hasPresentation = !!match2dState?.presentation;
@@ -10122,9 +13561,17 @@ function startLivePlayback(match) {
     return;
   }
   window.__playbackDebug._step = "passed highlight check";
+  if (resumeCheckpoint?.phase === "shootout") {
+    startPenaltyShootout(resumeCheckpoint);
+    showToast("Penalty shootout resumed.");
+    return;
+  }
   renderMatchAnalysis(match, true);
+  renderLiveTimeline();
+  renderCommentaryFeed();
   window.__playbackDebug._step = "renderMatchAnalysis done";
   saveState();
+  saveLiveMatchCheckpoint();
   window.__playbackDebug._step = "saveState done";
   livePlayback.frame = requestAnimationFrame(stepLivePlayback);
   window.__playbackDebug._step = "raf scheduled";
@@ -10140,6 +13587,9 @@ function startLivePlayback(match) {
     speed: livePlayback.speed,
     highlightMode: livePlayback.highlightMode,
   });
+  if (resumeCheckpoint && resumeMinute > 0) {
+    showToast(`Match resumed at ${clockText(resumeMinute)}.`);
+  }
   } catch (error) {
     window.__playbackDebug._earlyReturn = "exception";
     window.__playbackDebug._exception = { message: error.message, stack: error.stack };
@@ -10161,7 +13611,7 @@ function skipLivePlayback() {
   }
 
   if (livePlayback.phase === "shootout") {
-    if (skipNeutralShootout()) return;
+    if (skipPenaltyShootout()) return;
     showToast("The shootout must play out kick by kick.");
     return;
   }
@@ -10178,14 +13628,22 @@ function skipLivePlayback() {
     ...(match.result.homeEvents || []).map((event) => ({ ...event, type: "goal", side: "home", player: event.scorer, teamId: match.homeId })),
     ...(match.result.awayEvents || []).map((event) => ({ ...event, type: "goal", side: "away", player: event.scorer, teamId: match.awayId })),
     ...(match.result.redCards || []),
+    ...(match.result.injuries || []),
+    ...(match.result.substitutions || []),
   ].sort((left, right) => left.minute - right.minute);
   livePlayback.homeScore = 0;
   livePlayback.awayScore = 0;
   livePlayback.homeReds = [];
   livePlayback.awayReds = [];
   livePlayback.feed = [{ type: "kickoff", minute: 0 }];
-  events.forEach((event) => applyLiveEvent(event, false));
+  fastForwardLivePlayerRatings();
+  events.forEach((event) => {
+    applyLiveEvent(event, false);
+    updateLiveRatingsForEvent(event, false);
+  });
   finalizeHighlightResult(match, livePlayback);
+  finalizeAndStoreLivePlayerRatings(match);
+  renderRetroMatchLineupsPanel(match);
   fastForwardPossessionEngine(livePlayback.maxMinute);
   if (match2dState) match2dState.complete = true;
   livePlayback.lastTimestamp = 0;
@@ -10246,6 +13704,7 @@ function toggleLivePause() {
     } else {
       schedulePenaltyStep(300);
     }
+    saveLiveMatchCheckpoint();
     return;
   }
 
@@ -10254,19 +13713,38 @@ function toggleLivePause() {
     cancelAnimationFrame(livePlayback.frame);
     livePlayback.frame = null;
     els.pauseLiveButton.textContent = "Resume";
+    saveLiveMatchCheckpoint();
     return;
   }
 
+  if (livePlayback.managerSubstitutions?.windowOpen) {
+    livePlayback.managerSubstitutions.windowOpen = false;
+    retroLiveSubOutNumber = null;
+    retroLiveSubInNumber = null;
+    retroLivePendingSubstitution = null;
+    renderRetroMatchLineupsPanel(selectedMatch());
+  }
   livePlayback.lastTimestamp = 0;
   livePlayback.presentationClock?.resume(performance.now());
   els.pauseLiveButton.textContent = "Pause";
   livePlayback.frame = requestAnimationFrame(stepLivePlayback);
+  saveLiveMatchCheckpoint();
 }
 
 function playSelected() {
   const match = selectedMatch();
   if (!match) return;
   if (livePlayback) return;
+  if (managedDefaultFinalSkipsThirdPlace(match)) {
+    const thirdPlaceMatch = tournamentThirdPlaceMatch();
+    if (thirdPlaceMatch && !thirdPlaceMatch.result?.revealed) {
+      if (!thirdPlaceMatch.result) {
+        thirdPlaceMatch.result = simulateMatch(thirdPlaceMatch, tournamentFinalRoundIndex());
+      }
+      thirdPlaceMatch.result.revealed = true;
+      saveState();
+    }
+  }
   if (finalBlockedByThirdPlace(match)) {
     showToast("Play the third-place play-off before the final.");
     return;
@@ -10293,6 +13771,10 @@ function revealSelected() {
   render();
 
   const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
+  if (state?.premierLeagueSeason) {
+    showToast(winner ? `${winner.name} take all three points.` : "The points are shared.");
+    return;
+  }
   if (!winner) {
     showToast("The points are shared.");
     return;
@@ -10308,6 +13790,36 @@ function simulateCurrentRound() {
     return;
   }
   const round = selectedRound();
+  if (state?.premierLeagueSeason) {
+    const watchedMatchIndex = teamMatchIndex(state.activeRound);
+    const watchedMatchReady = watchedMatchIndex >= 0 && !round[watchedMatchIndex]?.result?.revealed;
+    round.forEach((match, index) => {
+      if (watchedMatchReady && index === watchedMatchIndex) return;
+      if (!match.result) match.result = simulateMatch(match, state.activeRound);
+      match.result.revealed = true;
+    });
+    if (watchedMatchReady) {
+      state.selectedMatch = watchedMatchIndex;
+      state.championView = false;
+      showToast(`Other ${tournamentRoundName()} matches simulated. Your match is ready.`);
+    } else {
+      const nextRoundIndex = state.rounds.findIndex((candidate, index) => (
+        index > state.activeRound && candidate.some((match) => !match.result?.revealed)
+      ));
+      if (nextRoundIndex >= 0) {
+        state.activeRound = nextRoundIndex;
+        state.viewRound = nextRoundIndex;
+        state.selectedMatch = Math.max(0, state.rounds[nextRoundIndex].findIndex((match) => !match.result?.revealed));
+        showToast(`${tournamentRoundName()} is ready.`);
+      } else {
+        showToast("The Premier League season is complete.");
+      }
+    }
+    saveState();
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
   if (isCustomGroupStageRound()) {
     const matchday = pendingCustomGroupMatchday(round);
     if (matchday < 0) return;
@@ -10441,6 +13953,7 @@ function analysisPresentationForMatch(match) {
     (result.homeEvents || []).map((event) => `${event.minute}:${event.scorer}`).join(","),
     (result.awayEvents || []).map((event) => `${event.minute}:${event.scorer}`).join(","),
     (result.redCards || []).map((event) => `${event.minute}:${event.player}`).join(","),
+    (result.injuries || []).map((event) => `${event.minute}:${event.player}`).join(","),
   ].join("|");
   if (matchPresentationCache.has(signature)) return matchPresentationCache.get(signature);
   const home = teamById(match.homeId);
@@ -10472,11 +13985,14 @@ function matchStatValue(value, suffix = "") {
 function renderMatchAnalysis(match, isLive = false) {
   if (!els.matchStatsGrid) return;
   if (!match?.result) {
-    els.matchStatsGrid.innerHTML = '<div class="match-stat-row match-stats-empty"><span>No match selected</span></div>';
+    els.matchStatsGrid.innerHTML = `<div class="match-stat-row match-stats-empty"><span>${state?.premierLeagueSeason ? "Live stats appear at kick-off" : "No match selected"}</span></div>`;
     return;
   }
   const visible = isLive || match.result.revealed;
-  if (!visible) { els.matchStatsGrid.innerHTML = ""; return; }
+  if (!visible) {
+    els.matchStatsGrid.innerHTML = `<div class="match-stat-row match-stats-empty"><span>${state?.premierLeagueSeason ? "Live stats appear when the match resumes" : "Stats hidden until the result is revealed"}</span></div>`;
+    return;
+  }
   const presentation = analysisPresentationForMatch(match);
   if (!presentation) return;
   const stats = isLive && livePlayback?.visibleStats
@@ -10532,16 +14048,18 @@ function renderEvents(match) {
   const sideEvents = (side, goals) => [
     ...(goals || []).map((event) => ({ ...event, type: "goal", player: event.scorer })),
     ...(result.redCards || []).filter((event) => event.side === side),
+    ...(result.injuries || []).filter((event) => event.side === side),
   ].sort((a, b) => a.minute - b.minute);
 
   const homeList = sideEvents("home", result.homeEvents);
   const awayList = sideEvents("away", result.awayEvents);
+  const emptyEventsMarkup = state.premierLeagueSeason ? "" : `<div class="event">No major events</div>`;
   const homeEvents = (homeList.length
     ? homeList.map((event) => timelineEventMarkup(event)).join("")
-    : `<div class="event">No major events</div>`) + shootoutSummaryMarkup(result, "home");
+    : emptyEventsMarkup) + shootoutSummaryMarkup(result, "home");
   const awayEvents = (awayList.length
     ? awayList.map((event) => timelineEventMarkup(event, true)).join("")
-    : `<div class="event">No major events</div>`) + shootoutSummaryMarkup(result, "away");
+    : emptyEventsMarkup) + shootoutSummaryMarkup(result, "away");
   els.homeEventSide.innerHTML = homeEvents;
   els.awayEventSide.innerHTML = awayEvents;
   els.homeEventSide.hidden = false;
@@ -10576,12 +14094,44 @@ function clearChampionConfetti() {
 }
 
 function completedTournamentHonours() {
-  const finalRound = state.rounds[tournamentFinalRoundIndex()] || [];
+  const finalRoundIndex = tournamentFinalRoundIndex();
+  const finalRound = state.rounds[finalRoundIndex] || [];
   const final = tournamentFinalMatch(finalRound);
   const thirdPlacePlayoff = finalRound.find((match) => isThirdPlacePlayoff(match));
-  if (!final?.result?.winnerId || !thirdPlacePlayoff?.result?.winnerId) return null;
+  if (!final?.result?.winnerId) return null;
 
   const loserId = final.result.winnerId === final.homeId ? final.awayId : final.homeId;
+  const podium = [
+    { place: 1, label: "Champions", team: teamById(final.result.winnerId) },
+    { place: 2, label: "Runners-up", team: teamById(loserId) },
+  ];
+  if (thirdPlacePlayoff?.result?.winnerId) {
+    podium.push({
+      place: 3,
+      label: "Third place",
+      team: teamById(thirdPlacePlayoff.result.winnerId),
+    });
+  } else if (isRetroSimulatorState() && Number(retroTournament.year) === 2016) {
+    const semiFinals = state.rounds[finalRoundIndex - 1] || [];
+    const semiFinalists = semiFinals
+      .filter((match) => match?.result?.winnerId)
+      .map((match) => (
+        match.result.winnerId === match.homeId ? match.awayId : match.homeId
+      ))
+      .filter(Boolean);
+    semiFinalists.forEach((teamId) => {
+      podium.push({
+        place: 3,
+        rankLabel: "SF",
+        label: "Semi-finalist",
+        team: teamById(teamId),
+      });
+    });
+  } else {
+    return null;
+  }
+
+  if (podium.some((entry) => !entry.team)) return null;
   const goalkeeperRows = new Map();
   allMatches().filter((match) => match?.result?.revealed && !match.result.bye).forEach((match) => {
     [[match.homeId, match.result.awayGoals], [match.awayId, match.result.homeGoals]].forEach(([teamId, conceded]) => {
@@ -10608,11 +14158,7 @@ function completedTournamentHonours() {
     .sort((left, right) => right.overall - left.overall || left.name.localeCompare(right.name))[0];
 
   return {
-    podium: [
-      { place: 1, label: "Champions", team: teamById(final.result.winnerId) },
-      { place: 2, label: "Runners-up", team: teamById(loserId) },
-      { place: 3, label: "Third place", team: teamById(thirdPlacePlayoff.result.winnerId) },
-    ],
+    podium,
     goldenGlove: {
       player: goalkeeper?.name || `${goalkeeperTeam.name} goalkeeper`,
       team: goalkeeperTeam,
@@ -10633,10 +14179,10 @@ function renderChampionHonours() {
 
   els.championPodium.innerHTML = `
     <span class="champion-section-label">FINAL STANDINGS</span>
-    <div class="champion-podium-grid">
+    <div class="champion-podium-grid${honours.podium.length > 3 ? " has-four-places" : ""}">
       ${honours.podium.map((entry) => `
         <article class="champion-place place-${entry.place}">
-          <b>${entry.place}</b>
+          <b>${entry.rankLabel || entry.place}</b>
           ${flagMarkup(entry.team, "champion-place-flag")}
           <span><strong>${escapeHtml(entry.team.name)}</strong><small>${entry.label}</small></span>
         </article>
@@ -10663,11 +14209,12 @@ function renderStage() {
   els.stageRoundLabel.hidden = Boolean(state.championView);
   els.penaltyStage.hidden = true;
   els.standardMatchTactics.hidden = true;
+  if (els.plWatchTactics) els.plWatchTactics.hidden = true;
   els.standardMatchTactics.closest(".insight-right")?.classList.add("tactics-hidden");
   els.match2dViewer.hidden = true;
   els.matchCommentaryView.hidden = true;
   els.matchPenaltyOverlay.hidden = !livePlayback?.matchPenaltyActive;
-  els.matchStage.classList.remove("is-shootout");
+  els.matchStage.classList.remove("is-shootout", "pl-full-time");
   els.snapshotButton.hidden = true;
   if (els.retroMatchLineupsPanel) els.retroMatchLineupsPanel.hidden = true;
   els.spectateEliminationActions.hidden = true;
@@ -10684,7 +14231,9 @@ function renderStage() {
       const summary = els.championStage.querySelector(".champion-content > p");
       if (trophy) {
         trophy.textContent = isRetroSimulatorState()
-          ? `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
+          ? Number(retroTournament.year) === 2016
+            ? "FRANCE 2016 EUROPEAN CHAMPIONS"
+            : `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
           : isValidCustomTournamentState(state)
             ? `${state.customTournament.teamCount} TEAM CUSTOM TOURNAMENT CHAMPIONS`
           : "256 TEAMS WC CHAMPIONS";
@@ -10697,7 +14246,9 @@ function renderStage() {
           )).length
           : 0;
         summary.textContent = isRetroSimulatorState()
-          ? "Seven matches. One unforgettable World Cup."
+          ? Number(retroTournament.year) === 2016
+            ? "Seven matches. One unforgettable European Championship."
+            : "Seven matches. One unforgettable World Cup."
           : isValidCustomTournamentState(state)
             ? `${customChampionMatches} ${customChampionMatches === 1 ? "match" : "matches"}. A field of ${state.customTournament.teamCount} conquered.`
           : "Eight wins. A field of 256 conquered.";
@@ -10719,6 +14270,18 @@ function renderStage() {
       }
       renderChampionHonours();
       renderChampionPrediction(champion);
+      syncChampionTournamentHistoryButton();
+      if (!state.savedTournamentView) {
+        const mode = isRetroSimulatorState()
+          ? `retro-${retroTournament?.year || "world-cup"}`
+          : isValidCustomTournamentState(state)
+            ? `custom-${state.customTournament.teamCount}`
+            : "knockout-256";
+        maybeShowPostWinDonation(`${mode}:${state.drawSeed || "seed"}:${champion.id}`);
+      }
+      if (isRetroSimulatorState() && !state.savedTournamentView && retroTournament?.managedTeam) {
+        window.AccountAchievements?.trackRetroTournament(retroTournament);
+      }
       return;
     }
   }
@@ -10734,6 +14297,8 @@ function renderStage() {
   const result = match.result;
   const revealed = result?.revealed;
   const isLive = livePlayback?.matchId === match.id;
+  const premierLeagueFullTime = Boolean(state.premierLeagueSeason && revealed && !isLive);
+  const premierLeaguePrematch = Boolean(state.premierLeagueSeason && !result && !isLive);
   const isShootout = isLive && livePlayback.phase === "shootout";
   const pendingReveal = result && !revealed && !isLive;
   const isControlledMatch = Boolean(state.spectateTeamId)
@@ -10742,12 +14307,31 @@ function renderStage() {
   const opponentTacticKey = result?.tacticalMatchup?.opponent
     || (isControlledMatch ? opponentStandardTactic(match, controlledSide) : null);
   const opponentTacticName = STANDARD_TACTICS[opponentTacticKey]?.name;
-  const showStandardTactics = isControlledMatch && !revealed;
+  const tacticalFeedback = opponentTacticKey
+    ? standardTacticalFeedback(state.standardTactic, opponentTacticKey)
+    : null;
+  const showStandardTactics = LIVE_MATCH_MANAGEMENT_UI_ENABLED && isControlledMatch && !revealed;
+  const showPremierLeagueWatchTactics = LIVE_MATCH_MANAGEMENT_UI_ENABLED
+    && Boolean(state.premierLeagueSeason && !isControlledMatch);
   els.standardMatchTactics.hidden = !showStandardTactics;
-  els.standardMatchTactics.closest(".insight-right")?.classList.toggle("tactics-hidden", !showStandardTactics);
-  els.standardMatchTactics.querySelector("span").textContent = opponentTacticName
+  if (state.premierLeagueSeason && isControlledMatch) applyPremierLeagueFormationToManagedTeam(match);
+  if (els.plWatchTactics) {
+    els.plWatchTactics.hidden = !showPremierLeagueWatchTactics;
+    if (showPremierLeagueWatchTactics && els.plWatchTacticsCopy) {
+      const managedClub = teamById(state.spectateTeamId);
+      els.plWatchTacticsCopy.textContent = managedClub
+        ? `Available when ${managedClub.name} play.`
+        : "Choose a club to control tactics in its matches.";
+    }
+  }
+  els.standardMatchTactics.closest(".insight-right")?.classList.toggle(
+    "tactics-hidden",
+    !showStandardTactics && !showPremierLeagueWatchTactics,
+  );
+  els.standardTacticOpponent.textContent = opponentTacticName
     ? `Opponent: ${opponentTacticName}`
     : "";
+  els.standardTacticFeedback.textContent = tacticalFeedback?.label || "";
   els.match2dViewer.hidden = true;
   els.matchCommentaryView.hidden = !isLive || isShootout;
   renderHighlightModeControls();
@@ -10755,21 +14339,33 @@ function renderStage() {
     const active = button.dataset.standardTactic === state.standardTactic;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
-    button.disabled = Boolean(result && !isLive);
+    button.disabled = Boolean(result && !isLive && result.engineVersion === 2);
   });
   els.match2dTacticLabel.textContent = match2dTacticSummary(match);
   els.snapshotButton.hidden = !revealed || Boolean(isLive);
-  if (els.retroMatchLineupsPanel && els.retroMatchLineupsBody && isRetroSimulatorState()) {
+  const showSharedLineupPanel = Boolean(
+    els.retroMatchLineupsPanel
+    && els.retroMatchLineupsBody
+    && (isRetroSimulatorState() || (state.premierLeagueSeason && isControlledMatch))
+    && (LIVE_MATCH_MANAGEMENT_UI_ENABLED || (!isLive && !result))
+  );
+  if (els.retroMatchLineupsPanel) els.retroMatchLineupsPanel.hidden = !showSharedLineupPanel;
+  if (showSharedLineupPanel) {
     const matchChanged = els.retroMatchLineupsPanel.dataset.matchId !== match.id;
+    if (matchChanged) {
+      retroLineupPanelView = "managed";
+      retroLineupSwapNumber = null;
+    }
     els.retroMatchLineupsPanel.hidden = false;
     els.retroMatchLineupsPanel.dataset.matchId = match.id;
-    els.retroMatchLineupsBody.innerHTML = `
-      ${retroLineupSideMarkup(home.name)}
-      ${retroLineupSideMarkup(away.name)}
-    `;
-    if (matchChanged || isLive || result) els.retroMatchLineupsPanel.open = false;
+    renderRetroMatchLineupsPanel(match);
+    if ((isLive || result) && matchChanged) els.retroMatchLineupsPanel.open = false;
   }
   renderMatchAnalysis(match, Boolean(isLive));
+  document.body.classList.toggle("pl-match-detail-active", Boolean(
+    state.premierLeagueSeason && (isLive || revealed || result),
+  ));
+  els.matchStage.classList.toggle("pl-prematch", premierLeaguePrematch);
 
   els.matchNumber.textContent = `${state.selectedMatch + 1}/${selectedRound().length}`;
   els.stageRoundLabel.textContent = tournamentMatchRoundName(match).toUpperCase();
@@ -10779,19 +14375,28 @@ function renderStage() {
   els.awayFlag.innerHTML = flagMarkup(away, "hero-flag");
   setTeamName(els.homeName, home.name);
   setTeamName(els.awayName, away.name);
-  els.homeScore.textContent = isLive ? livePlayback.homeScore : revealed ? result.homeGoals : result ? "–" : "0";
-  els.awayScore.textContent = isLive ? livePlayback.awayScore : revealed ? result.awayGoals : result ? "–" : "0";
+  els.homeScore.textContent = premierLeaguePrematch
+    ? window.PremierLeagueSeason?.kickoffForMatch?.(state.selectedMatch) || "15:00"
+    : isLive ? livePlayback.homeScore : revealed ? result.homeGoals : result ? "–" : "0";
+  els.awayScore.textContent = premierLeaguePrematch
+    ? ""
+    : isLive ? livePlayback.awayScore : revealed ? result.awayGoals : result ? "–" : "0";
   els.resultNote.hidden = isLive || !revealed;
   els.resultNote.textContent = revealed ? resultSuffix(result) : "";
   els.spoilerPanel.hidden = !pendingReveal;
   if (pendingReveal) {
-    els.spoilerTitle.textContent = "Match interrupted";
-    els.spoilerCopy.textContent = "Resume from kick-off without revealing the result.";
+    const checkpoint = readLiveMatchCheckpoint(match);
+    const resumeMinute = Number(checkpoint?.displayedMinute) || 0;
+    els.spoilerTitle.textContent = checkpoint ? "Match paused" : "Match interrupted";
+    els.spoilerCopy.textContent = checkpoint
+      ? `Continue from ${clockText(resumeMinute)} with the score and match state preserved.`
+      : "Resume without revealing the result.";
     els.revealButton.innerHTML = "Resume match <span>&rarr;</span>";
   }
   els.stageAction.hidden = pendingReveal || isLive;
   els.matchStage.classList.toggle("is-live", Boolean(isLive));
   els.matchStage.classList.toggle("is-shootout", Boolean(isShootout));
+  els.matchStage.classList.toggle("pl-full-time", premierLeagueFullTime);
   els.penaltyStage.hidden = !isShootout;
   els.homeDiscipline.innerHTML = disciplineMarkup(
     isLive ? livePlayback.homeReds : revealed ? (result.redCards || []).filter((card) => card.side === "home") : [],
@@ -10806,7 +14411,7 @@ function renderStage() {
     els.eventLiveClock.hidden = isShootout;
     els.eventControls.hidden = false;
     els.skipControl.hidden = isShootout;
-    els.shootoutSkipControl.hidden = !isShootout || !canSkipNeutralShootout();
+    els.shootoutSkipControl.hidden = !isShootout || !canSkipPenaltyShootout();
     els.liveClock.textContent = clockText(displayedMinute);
     els.livePhase.textContent = phaseForMinute(displayedMinute, result);
     els.pauseLiveButton.setAttribute("aria-pressed", String(livePlayback.paused));
@@ -10829,7 +14434,7 @@ function renderStage() {
     && retroTournament.pendingEliminationDecision.teamName === spectatedTeam()?.name
     && retroTournament.pendingEliminationDecision.matchId === match.id,
   );
-  const spectatedLost = retroGroupEliminationPending || (
+  const spectatedLost = !state.premierLeagueSeason && (retroGroupEliminationPending || (
     isSpectatedMatch
     && revealed
     && !thirdPlacePlayoff
@@ -10837,15 +14442,19 @@ function renderStage() {
     && !spectatedHasThirdPlace
     && !match.allowDraw
     && result.winnerId !== state.spectateTeamId
-  );
-  const revealedAction = thirdPlacePlayoff
+  ));
+  const revealedAction = state.premierLeagueSeason
+    ? "Next match"
+    : thirdPlacePlayoff
     ? "Next game"
     : spectatedWon || spectatedHasThirdPlace
     ? state.activeRound === tournamentFinalRoundIndex() ? "Crown champion" : `Next ${spectatedTeam().name} match`
     : state.activeRound === tournamentFinalRoundIndex() ? "Crown champion" : "Next game";
   els.playButton.innerHTML = revealed
     ? `${revealedAction} <span>→</span>`
-    : `<span class="play-icon">▶</span> Play this tie`;
+    : `<span class="play-icon">▶</span> ${state.premierLeagueSeason
+      ? isControlledMatch ? "Play match" : "Watch match"
+      : "Play this tie"}`;
   if (spectatedLost) {
     const team = spectatedTeam();
     els.eliminationTitle.textContent = "ELIMINATED";
@@ -10872,7 +14481,7 @@ function renderRoundNav() {
       >
         <span class="round-index">${complete ? "✓" : String(index + 1).padStart(2, "0")}</span>
         <strong>${name}</strong>
-        <small>${complete ? "Results" : (round ? round.length : 2 ** (tournamentFinalRoundIndex() - index))}</small>
+        <small>${complete ? "Results" : state.premierLeagueSeason ? "10 matches" : (round ? round.length : 2 ** (tournamentFinalRoundIndex() - index))}</small>
       </button>
     `;
   }).join("");
@@ -10955,9 +14564,14 @@ function fixtureScoreMarkup(result, side, revealed) {
   return shootout === undefined ? String(goals) : `${goals}<small>(${shootout})</small>`;
 }
 
-function fixtureStatus(result, revealed, index) {
+function fixtureStatus(match, result, revealed, index) {
   if (result && !revealed) return "READY";
-  if (!revealed) return `MATCH ${String(index + 1).padStart(2, "0")}`;
+  if (!revealed) {
+    const matchNumber = isRetroSimulatorState() && Number.isFinite(Number(match?.schedule?.matchNumber))
+      ? Number(match.schedule.matchNumber)
+      : index + 1;
+    return `MATCH ${String(matchNumber).padStart(2, "0")}`;
+  }
   if (result.bye) return "SEEDED BYE";
   if (result.penalties) return "PENALTIES";
   if (result.extraTime) return "AFTER EXTRA TIME";
@@ -11000,7 +14614,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
       ${options.bracket ? "" : `
         <span class="fixture-card-head">
           <span>${tournamentMatchRoundName(match, roundIndex)}</span>
-          <small>${fixtureStatus(result, revealed, index)}</small>
+          <small>${fixtureStatus(match, result, revealed, index)}</small>
         </span>
       `}
       <span class="fixture-teams">
@@ -11164,7 +14778,7 @@ function renderFixtures() {
   els.fixtureGrid.classList.remove("team-journey-mode");
   const customGroupStage = state.customTournament?.structure === "groups" && state.activeRound === 0;
   const firstKnockoutRound = state.customTournament?.structure === "groups" ? 1 : 0;
-  const bracketMode = !customGroupStage
+  const bracketMode = !state.premierLeagueSeason && !customGroupStage
     && state.activeRound >= Math.max(firstKnockoutRound, tournamentFinalRoundIndex() - 3);
   const historyMode = viewingRoundHistory();
   els.fixtureGrid.classList.toggle("bracket-mode", bracketMode);
@@ -11502,19 +15116,25 @@ function renderProgress() {
   const total = isRetroSimulatorState()
     ? 64
     : state.legacyTournament
-      ? 15
+      ? 16
       : state.customTournament
       ? state.customTournament.structure === "groups"
-        ? (state.customTournament.teamCount / 4) * 6 + customGroupQualifierCount(state.customTournament.teamCount) - 1
+        ? (state.customTournament.teamCount / 4) * 6
+          + customGroupQualifierCount(state.customTournament.teamCount) - 1
+          + Number(state.customTournament.thirdPlace === true)
         : state.customTournament.teamCount - 1 + Number(state.customTournament.thirdPlace === true)
-      : 256;
+      : state.premierLeagueSeason
+        ? 380
+        : 256;
   const percent = Math.round((complete / total) * 100);
   els.progressPercent.textContent = `${percent}%`;
   els.progressBar.style.width = `${percent}%`;
   els.progressCopy.textContent = complete
     ? `${complete} played · ${total - complete} ties remaining`
-    : state.legacyTournament
-      ? "16 teams. 15 ties. One champion."
+    : state.premierLeagueSeason
+      ? "20 clubs. 380 matches. One champion."
+      : state.legacyTournament
+      ? "16 teams. 16 ties including the third-place play-off."
       : state.customTournament
         ? `${state.customTournament.teamCount} teams. ${total} ties. One champion.`
         : "256 teams. 256 ties. One champion.";
@@ -11817,10 +15437,10 @@ function renderLegacyDraftMode() {
 
 function defaultCustomTournamentSetup(teamCount = 32) {
   return {
-    setupVersion: 2,
+    setupVersion: 3,
     teamCount,
     structure: customTournamentRequiresGroups(teamCount) ? "groups" : "knockout",
-    thirdPlace: false,
+    thirdPlace: true,
     format: "full",
     upset: "balanced",
     goals: "normal",
@@ -11838,7 +15458,7 @@ function readCustomTournamentSetup() {
     const teamCount = CUSTOM_TOURNAMENT_TEAM_COUNTS.includes(Number(saved?.teamCount))
       ? Number(saved.teamCount)
       : 32;
-    if (Number(saved?.setupVersion) !== 2) return defaultCustomTournamentSetup(teamCount);
+    if (![2, 3].includes(Number(saved?.setupVersion))) return defaultCustomTournamentSetup(teamCount);
     const seenIds = new Set();
     const selectedIds = Array.from({ length: teamCount }, (_, index) => {
       const teamId = saved?.selectedIds?.[index];
@@ -11847,10 +15467,10 @@ function readCustomTournamentSetup() {
       return teamId;
     });
     return {
-      setupVersion: 2,
+      setupVersion: 3,
       teamCount,
       structure: customTournamentRequiresGroups(teamCount) || saved?.structure === "groups" ? "groups" : "knockout",
-      thirdPlace: saved?.thirdPlace === true,
+      thirdPlace: Number(saved?.setupVersion) === 2 ? true : saved?.thirdPlace !== false,
       format: customTournamentRequiresGroups(teamCount) || saved?.structure === "groups" ? "full" : saved?.format === "penalties" ? "penalties" : "full",
       upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : "balanced",
       goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : "normal",
@@ -11867,7 +15487,7 @@ function readCustomTournamentSetup() {
   }
 }
 
-[2010, 2014, 2018, 2022].forEach((year) => installRetroTeams(year));
+[2010, 2014, 2016, 2018, 2022].forEach((year) => installRetroTeams(year));
 let customTournamentSetup = readCustomTournamentSetup();
 let customTournamentSetupViewOpen = false;
 let customGroupTablesCollapsed = false;
@@ -12007,10 +15627,10 @@ function importCustomTournamentPreset(payload) {
     ? teamLookup.get(`${repairPlayerText(String(managedName)).toLocaleLowerCase()}:${managedYear || "current"}`)?.id || null
     : null;
   customTournamentSetup = {
-    setupVersion: 2,
+    setupVersion: 3,
     teamCount,
     structure: customTournamentRequiresGroups(teamCount) || payload.structure === "groups" ? "groups" : "knockout",
-    thirdPlace: payload.thirdPlace === true,
+    thirdPlace: payload.thirdPlace !== false,
     format: customTournamentRequiresGroups(teamCount) || payload.structure === "groups" ? "full" : payload.format === "penalties" ? "penalties" : "full",
     upset: SIMULATION_CONFIG.modes[payload.upset] ? payload.upset : "balanced",
     goals: SIMULATION_CONFIG.goals[payload.goals] ? payload.goals : "normal",
@@ -12224,6 +15844,19 @@ function customBracketMatchCard(roundIndex, matchIndex, definition = null) {
   `;
 }
 
+function customThirdPlacePreviewMarkup() {
+  if (!customTournamentSetup.thirdPlace) return "";
+  return `
+    <section class="custom-third-place-preview" aria-label="Third-place play-off">
+      <header><strong>Third-place play-off</strong><span>After the semi-finals</span></header>
+      <div>
+        <span>Semi-final loser</span>
+        <span>Semi-final loser</span>
+      </div>
+    </section>
+  `;
+}
+
 function customBracketPanelMarkup() {
   const selected = new Set(customTournamentSetup.selectedIds.filter(Boolean));
   const query = customTournamentUi.search.trim().toLocaleLowerCase();
@@ -12274,6 +15907,7 @@ function customBracketPanelMarkup() {
           </section>`;
         }).join("")}
       </div>
+      ${customThirdPlacePreviewMarkup()}
     </div>
   `;
   const openingMatches = customOpeningMatchDefinitions();
@@ -12288,15 +15922,7 @@ function customBracketPanelMarkup() {
         </section>`;
       }).join("")}
     </div>
-    ${customTournamentSetup.thirdPlace ? `
-      <section class="custom-third-place-preview" aria-label="Third-place play-off">
-        <header><strong>Third-place play-off</strong><span>After the semi-finals</span></header>
-        <div>
-          <span>Semi-final loser</span>
-          <span>Semi-final loser</span>
-        </div>
-      </section>
-    ` : ""}
+    ${customThirdPlacePreviewMarkup()}
   `;
   return `
     <section class="custom-workspace-panel custom-bracket-panel">
@@ -12660,12 +16286,10 @@ function renderCustomTournamentSetup() {
       <div class="custom-config-group custom-format-config">
         <span>Format</span>
         <div class="custom-segmented"><button type="button" data-custom-action="structure" data-structure="knockout" class="${customTournamentSetup.structure === "knockout" ? "active" : ""}" ${customTournamentRequiresGroups(customTournamentSetup.teamCount) ? `disabled title="${customTournamentSetup.teamCount}-team tournaments use a group stage"` : ""}>Knockout</button><button type="button" data-custom-action="structure" data-structure="groups" class="${customTournamentSetup.structure === "groups" ? "active" : ""}">${customTournamentSetup.teamCount === 24 ? "Euros format" : customTournamentSetup.teamCount === 48 ? "World Cup format" : "Groups"}</button></div>
-        ${customTournamentSetup.structure === "knockout" ? `
-          <button class="custom-third-place-toggle ${customTournamentSetup.thirdPlace ? "active" : ""}" type="button" data-custom-action="third-place" aria-pressed="${customTournamentSetup.thirdPlace}">
-            <i aria-hidden="true"></i>
-            <span>Third-place play-off</span>
-          </button>
-        ` : ""}
+        <button class="custom-third-place-toggle ${customTournamentSetup.thirdPlace ? "active" : ""}" type="button" data-custom-action="third-place" aria-pressed="${customTournamentSetup.thirdPlace}">
+          <i aria-hidden="true"></i>
+          <span>Third-place play-off</span>
+        </button>
       </div>
       <details class="custom-setup-more">
         <summary>Role &amp; match settings</summary>
@@ -13361,7 +16985,8 @@ function createCustomTournamentState() {
       active: true,
       teamCount: customTournamentSetup.teamCount,
       structure: customTournamentSetup.structure,
-      thirdPlace: customTournamentSetup.structure === "knockout" && customTournamentSetup.thirdPlace === true,
+      thirdPlace: customTournamentSetup.thirdPlace === true,
+      thirdPlaceAllFormatsVersion: 1,
       format: customTournamentSetup.format,
       upset: customTournamentSetup.upset,
       goals: customTournamentSetup.goals,
@@ -13378,8 +17003,10 @@ function startCustomTournament() {
     return;
   }
   stopStandardPlaybackForNavigation();
+  if (isDefaultKnockoutState(state)) defaultKnockoutState = state;
   customTournamentSetupViewOpen = false;
   state = createCustomTournamentState();
+  customTournamentState = state;
   standardTournamentState = state;
   fixtureLimit = DEFAULT_FIXTURE_LIMIT;
   filterUnresolved = false;
@@ -13405,8 +17032,10 @@ function handleCustomTournamentStartAction() {
 
 function render() {
   forceUnlockStartupState();
-  enforceModeScreenVisibility(currentAppMode());
-  if (currentAppMode() === "retro") {
+  syncSavedTournamentDeleteActions();
+  const premierLeagueMatchActive = state?.premierLeagueSeason === true;
+  enforceModeScreenVisibility(premierLeagueMatchActive ? "standard" : currentAppMode());
+  if (!premierLeagueMatchActive && currentAppMode() === "retro") {
     document.body.classList.remove("legacy-mode-active", "achievements-mode-active");
     els.legacyDraftScreen.hidden = true;
     els.achievementsScreen.hidden = true;
@@ -13428,20 +17057,27 @@ function render() {
   els.fixtureGrid.classList.remove("retro-group-match-history");
   els.teamFilterControl.hidden = false;
   els.unresolvedFilter.hidden = false;
-  document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-2018-active", "retro-2022-active");
+  document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
   els.retroWorldCupScreen.hidden = true;
-  const mode = currentAppMode();
+  const mode = premierLeagueMatchActive ? "standard" : currentAppMode();
   if (mode !== "custom") customTournamentSetupViewOpen = false;
   const customTournamentActive = mode === "custom"
     && isValidCustomTournamentState(state)
     && state.started
     && !customTournamentSetupViewOpen;
   const sharedBackLabel = els.legacyDraftBackButton.querySelector(".legacy-back-label");
-  if (customTournamentActive) {
+  const savedTournamentActive = state?.savedTournamentView === true;
+  if (savedTournamentActive) {
+    els.legacyDraftBackButton.dataset.savedTournament = "true";
+    els.legacyDraftBackButton.setAttribute("aria-label", "Back to saved tournaments");
+    if (sharedBackLabel) sharedBackLabel.textContent = "Back to saved tournaments";
+  } else if (customTournamentActive) {
+    delete els.legacyDraftBackButton.dataset.savedTournament;
     els.legacyDraftBackButton.dataset.customSettings = "true";
     els.legacyDraftBackButton.setAttribute("aria-label", "Back to settings");
     if (sharedBackLabel) sharedBackLabel.textContent = "Back to settings";
   } else {
+    delete els.legacyDraftBackButton.dataset.savedTournament;
     delete els.legacyDraftBackButton.dataset.customSettings;
     els.legacyDraftBackButton.setAttribute("aria-label", "Back to modes");
     if (sharedBackLabel) sharedBackLabel.textContent = "Back to modes";
@@ -13471,7 +17107,7 @@ function render() {
   els.legacyDraftBackButton.hidden = false;
   els.legacyHeaderBackButton.hidden = false;
   const achievementsMode = mode === "achievements";
-  const beforeStart = (mode !== "standard" && !customTournamentActive) || !state.started;
+  const beforeStart = (!savedTournamentActive && mode !== "standard" && !customTournamentActive) || !state.started;
   els.pageHeading.hidden = !beforeStart;
   renderSpectatePicker();
   syncSoundToggle();
@@ -13504,6 +17140,7 @@ function render() {
     els.pageKicker.textContent = "256 TEAMS WC · NEW TOURNAMENT";
     els.pageTitle.textContent = "Choose your mode";
     syncLandingSettings();
+    syncStandardTournamentCardLock();
     renderLegacyLandingSetup();
     renderParticipantOverview(els.overviewSearch.value);
     renderProgress();
@@ -13512,19 +17149,27 @@ function render() {
 
   const roundName = tournamentRoundName();
   const historyMode = viewingRoundHistory();
-  els.pageKicker.textContent = state.legacyTournament
+  els.pageKicker.textContent = savedTournamentActive
+    ? `SAVED TOURNAMENT · ${state.savedTournamentEditionLabel || "TOURNAMENT ARCHIVE"}`
+    : state.premierLeagueSeason
+    ? "PL 26/27 · LEAGUE SEASON"
+    : state.legacyTournament
     ? "LEGACY DRAFT TOURNAMENT"
     : state.championView
     ? "TOURNAMENT COMPLETE"
     : historyMode ? "ROUND ARCHIVE" : state.customTournament
       ? `${state.customTournament.teamCount} TEAM CUSTOM ${state.customTournament.structure === "groups" ? "TOURNAMENT" : "KNOCKOUT"}`
       : "256 TEAMS WC KNOCKOUT";
-  els.pageTitle.textContent = state.legacyTournament
+  els.pageTitle.textContent = state.premierLeagueSeason
+    ? roundName
+    : state.legacyTournament
     ? `${legacyDraft?.nation?.name || "Legacy"} XI`
     : state.championView
     ? "Final"
     : roundName;
-  els.boardTitle.textContent = historyMode
+  els.boardTitle.textContent = state.premierLeagueSeason
+    ? `${roundName} fixtures`
+    : historyMode
     ? roundName
     : state.customTournament?.structure === "groups" && state.activeRound === 0
       ? "Group tables"
@@ -13535,12 +17180,16 @@ function render() {
   const watchedMatchIndex = teamMatchIndex(state.activeRound);
   const finalRoundIncludesThirdPlace = state.activeRound === tournamentFinalRoundIndex()
     && selectedRound().some((match) => isThirdPlacePlayoff(match));
-  els.simulateRoundButton.textContent = watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed
+  els.simulateRoundButton.textContent = state.premierLeagueSeason
+    ? watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed
+      ? "Simulate other matches"
+      : "Simulate matchweek"
+    : watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed
     ? isCustomGroupStageRound() ? "Simulate other matches" : "Simulate other ties"
     : finalRoundIncludesThirdPlace ? "Simulate final round"
       : state.activeRound === tournamentFinalRoundIndex() ? "Simulate final"
         : isCustomGroupStageRound() ? "Simulate matchday" : "Simulate round";
-  els.simulateRoundButton.hidden = historyMode || Boolean(teamFilterId);
+  els.simulateRoundButton.hidden = savedTournamentActive || historyMode || Boolean(teamFilterId);
   renderRoundNav();
   renderRoundHistoryControl();
   renderProgress();
@@ -13551,6 +17200,7 @@ function render() {
   renderQueue();
   renderGoldenBoot();
   renderStorylines();
+  if (state.premierLeagueSeason) window.PremierLeagueSeason?.renderEngineTable?.();
   els.unresolvedFilter.classList.toggle(
     "active",
     state.customTournament?.structure === "groups" && state.activeRound === 0
@@ -13571,14 +17221,44 @@ function syncLandingSettings() {
   document.querySelectorAll(".landing-segmented").forEach((group) => {
     const setting = group.dataset.setting;
     const isRetro = group.dataset.settingsScope === "retro";
-    const activeTournament = isRetro ? retroTournamentForYear(readRetroWorldCupYear()) : null;
+    const isPremierLeague = group.dataset.settingsScope === "premier-league";
+    const activeTournament = isRetro
+      ? retroTournamentForYear(selectedRetroTournamentYear())
+      : null;
     const settings = activeTournament
       ? retroTournamentLockedSetup(activeTournament)
-      : isRetro ? retroMenuSettings : state.settings;
+      : isRetro ? retroMenuSettings
+        : isPremierLeague ? premierLeagueMenuSetup
+          : state.settings;
     group.querySelectorAll("button").forEach((button) => {
       button.classList.toggle("active", button.dataset.value === settings[setting]);
     });
   });
+}
+
+function standardTournamentSetupLocked(candidate = state) {
+  return Boolean(
+    candidate?.started
+    && !candidate.retroWorldCup
+    && !candidate.customTournament
+    && !candidate.legacyTournament
+    && candidate.rounds?.[0]?.length === 128
+  );
+}
+
+function syncStandardTournamentCardLock() {
+  const setupLocked = standardTournamentSetupLocked();
+  els.defaultModeCard?.classList.toggle("is-setup-locked", setupLocked);
+  document.querySelectorAll(".mode-card-default .landing-segmented").forEach((group) => {
+    group.classList.toggle("standard-locked-control", setupLocked);
+    group.querySelectorAll("button").forEach((button) => {
+      button.disabled = setupLocked;
+    });
+  });
+  if (els.spectatePickerButton) {
+    els.spectatePickerButton.disabled = setupLocked;
+    els.spectatePickerButton.title = setupLocked ? "Restart the tournament to change your managed team" : "";
+  }
 }
 
 function readRetroWorldCupSettings() {
@@ -13606,7 +17286,7 @@ function readRetroWorldCupYear() {
   if (pathYear) return pathYear;
   try {
     const year = localStorage.getItem(RETRO_WORLD_CUP_YEAR_KEY);
-    return RETRO_WORLD_CUP_EDITIONS[year] ? year : "2014";
+    return RETRO_WORLD_CUP_EDITIONS[year] && year !== "2016" ? year : "2014";
   } catch {
     return "2014";
   }
@@ -13627,7 +17307,7 @@ function setRetroWorldCupYear(year) {
     button.setAttribute("aria-pressed", String(isActive));
   });
   try {
-    localStorage.setItem(RETRO_WORLD_CUP_YEAR_KEY, selectedYear);
+    if (selectedYear !== "2016") localStorage.setItem(RETRO_WORLD_CUP_YEAR_KEY, selectedYear);
   } catch {
     // The selector still works when storage is unavailable.
   }
@@ -13636,6 +17316,53 @@ function setRetroWorldCupYear(year) {
     retroSquadTeamName = retroTournament?.managedTeam || edition.host;
   }
   syncRetroWorldCupCardAction(selectedYear);
+}
+
+function setRetroCompetition(competition) {
+  const selectedCompetition = competition === "euros" ? "euros" : "wc";
+  const isEuros = selectedCompetition === "euros";
+  try {
+    localStorage.setItem(RETRO_COMPETITION_KEY, selectedCompetition);
+  } catch {
+    // The selector still works when storage is unavailable.
+  }
+  els.retroCompetitionSwitch?.querySelectorAll("[data-retro-competition]").forEach((button) => {
+    const isActive = button.dataset.retroCompetition === selectedCompetition;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  els.retroWorldCupYearSwitch?.querySelectorAll("[data-retro-year]").forEach((button) => {
+    button.hidden = isEuros;
+  });
+  els.retroWorldCupYearSwitch?.querySelectorAll("[data-euro-year]").forEach((button) => {
+    button.hidden = !isEuros;
+    button.classList.toggle("active", isEuros);
+    button.setAttribute("aria-pressed", String(isEuros));
+  });
+  if (els.retroWorldCupYearSwitch) {
+    els.retroWorldCupYearSwitch.dataset.competition = selectedCompetition;
+    els.retroWorldCupYearSwitch.setAttribute("aria-label", isEuros ? "Euros year" : "World Cup year");
+  }
+  if (els.retroModeCard) {
+    els.retroModeCard.dataset.retroCompetition = selectedCompetition;
+  }
+  if (els.retroCompetitionTitle) {
+    els.retroCompetitionTitle.textContent = isEuros ? "Euros Simulator" : "WC Simulator";
+  }
+  if (isEuros) {
+    els.retroModeCard?.style.setProperty("--retro-accent", RETRO_EURO_2016.accent);
+    els.retroModeCard?.style.setProperty("--retro-accent-text", RETRO_EURO_2016.accentText);
+    if (els.retroModeCard) els.retroModeCard.dataset.retroEdition = RETRO_EURO_2016.year;
+    if (els.retroWorldCupLogo) els.retroWorldCupLogo.src = RETRO_EURO_2016.logo;
+    if (els.retroWorldCupScreen?.hidden !== false) {
+      retroTournament = readRetroTournamentState(RETRO_EURO_2016.year);
+      retroSquadTeamName = retroTournament?.managedTeam || RETRO_EURO_2016.teams[0].name;
+    }
+    renderRetroWorldCupTeamPicker(RETRO_EURO_2016.year);
+    syncRetroWorldCupCardAction(RETRO_EURO_2016.year);
+    return;
+  }
+  setRetroWorldCupYear(readRetroWorldCupYear());
 }
 
 function retroTournamentStorageKey(year) {
@@ -13654,6 +17381,7 @@ function readRetroTournamentState(year = readRetroWorldCupYear()) {
 }
 
 function saveRetroTournamentState() {
+  if (retroTournament?.savedTournamentView) return;
   try {
     const year = retroTournament?.year || Number(readRetroWorldCupYear());
     const key = retroTournamentStorageKey(year);
@@ -13670,9 +17398,45 @@ function saveRetroTournamentState() {
   }
 }
 
-window.getRetroAchievementTournamentStates = () => [2010, 2014, 2018, 2022]
-  .map((year) => readRetroTournamentState(year))
-  .filter(Boolean);
+function savedRetroAchievementTournamentStates() {
+  return readTournamentHistoryRecords()
+    .filter((record) => (
+      record?.mode === "retro"
+      && [2010, 2014, 2016, 2018, 2022].includes(Number(record.year))
+      && record.managedTeamId
+      && record.championId
+    ))
+    .map((record) => {
+      const sourceKeyParts = String(record.sourceKey || "").split(":");
+      const seed = Number(sourceKeyParts[2]);
+      const managedTeam = record.teams?.[record.managedTeamId]?.name;
+      const champion = record.teams?.[record.championId]?.name;
+      if (!Number.isInteger(seed) || !managedTeam || !champion) return null;
+      return {
+        year: Number(record.year),
+        seed,
+        managedTeam,
+        phase: "complete",
+        champion,
+      };
+    })
+    .filter(Boolean);
+}
+
+window.getRetroAchievementTournamentStates = () => {
+  const tournaments = [
+    ...[2010, 2014, 2016, 2018, 2022]
+      .map((year) => readRetroTournamentState(year))
+      .filter(Boolean),
+    ...savedRetroAchievementTournamentStates(),
+  ];
+  const unique = new Map();
+  tournaments.forEach((tournament) => {
+    const key = `${tournament.year}:${tournament.seed}:${tournament.managedTeam}:${tournament.champion || ""}`;
+    unique.set(key, tournament);
+  });
+  return [...unique.values()];
+};
 
 function retroTournamentHasProgress() {
   return Boolean(
@@ -13683,9 +17447,13 @@ function retroTournamentHasProgress() {
 
 function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   if (!els.startRetroWorldCupButton) return;
-  const playable = ["2010", "2014", "2018", "2022"].includes(String(year));
-  const hasTeamField = Boolean(RETRO_WORLD_CUPS[year]?.teams?.length);
-  const savedTournament = playable ? retroTournamentForYear(year) : null;
+  const isEuros = readRetroCompetition() === "euros";
+  const selectedYear = isEuros ? RETRO_EURO_2016.year : year;
+  const playable = isEuros || ["2010", "2014", "2018", "2022"].includes(String(selectedYear));
+  const hasTeamField = isEuros
+    ? Boolean(RETRO_EURO_2016.teams.length)
+    : Boolean(RETRO_WORLD_CUPS[year]?.teams?.length);
+  const savedTournament = playable ? retroTournamentForYear(selectedYear) : null;
   const setupLocked = Boolean(savedTournament);
   document.querySelectorAll('[data-settings-scope="retro"]').forEach((group) => {
     group.classList.toggle("retro-locked-control", setupLocked);
@@ -13695,12 +17463,12 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   });
   if (els.retroTeamPickerButton) {
     els.retroTeamPickerButton.disabled = setupLocked || !hasTeamField;
-    els.retroTeamPickerButton.title = setupLocked ? "Restart this World Cup to change team" : "";
+    els.retroTeamPickerButton.title = setupLocked ? `Restart this ${isEuros ? "Euro" : "World Cup"} to change team` : "";
   }
   syncLandingSettings();
   els.startRetroWorldCupButton.disabled = !playable;
   els.startRetroWorldCupButton.innerHTML = playable
-    ? `${savedTournament ? "Resume World Cup" : "Start World Cup"} <span aria-hidden="true">&rarr;</span>`
+    ? `${savedTournament ? "Resume" : "Start"} ${isEuros ? "Euro 2016" : "World Cup"} <span aria-hidden="true">&rarr;</span>`
     : "Coming soon";
   els.restartRetroWorldCupButton.hidden = !playable || !savedTournament;
 }
@@ -13714,6 +17482,7 @@ function retroTeamForFlag(name) {
     "IR Iran": "Iran",
     "Korea Republic": "South Korea",
     "Serbia and Montenegro": "Serbia",
+    "Turkey": "Türkiye",
   };
   const sourceName = aliases[name] || name;
   const team = TEAMS.find((candidate) => candidate.name === sourceName);
@@ -13721,6 +17490,10 @@ function retroTeamForFlag(name) {
 }
 
 function retroFlag(name, className = "") {
+  if (state?.premierLeagueSeason) {
+    const club = sharedLineupTeamByName(name);
+    if (club) return flagMarkup(club, className);
+  }
   return flagMarkup(retroTeamForFlag(name), className);
 }
 
@@ -13804,7 +17577,7 @@ function retroMatchStageMarkup(match) {
     return `
       <section class="retro-champion">
         ${retroFlag(retroTournament.champion, "retro-champion-flag")}
-        <span>WORLD CHAMPIONS</span>
+        <span>${Number(retroTournament.year) === 2016 ? "EUROPEAN CHAMPIONS" : "WORLD CHAMPIONS"}</span>
         <h2>${escapeHtml(retroTournament.champion)}</h2>
       </section>`;
   }
@@ -13886,12 +17659,13 @@ function renderRetroMatchesView() {
 function retroGroupTableMarkup(group) {
   const rows = retroVisibleGroupStandings(group);
   const complete = rows.every((row) => row.played === 3);
+  const bestThirdNames = new Set((retroTournament.bestThirdPlaced || []).map((entry) => entry.team));
   return `
     <section class="retro-group-table">
       <h2>Group ${group}</h2>
       <div class="retro-table-head"><span>Team</span><b>P</b><b>GD</b><b>Pts</b></div>
       ${rows.map((row, index) => `
-        <div class="retro-table-row ${complete && index < 2 ? "qualified" : ""}">
+        <div class="retro-table-row ${complete && (index < 2 || bestThirdNames.has(row.name)) ? "qualified" : ""} ${complete && index === 2 && bestThirdNames.has(row.name) ? "best-third" : ""}">
           <span>${retroFlag(row.name, "retro-table-flag")}<strong>${escapeHtml(row.name)}</strong></span>
           <b>${row.played}</b><b>${row.gd > 0 ? `+${row.gd}` : row.gd}</b><b>${row.points}</b>
         </div>
@@ -13899,19 +17673,39 @@ function retroGroupTableMarkup(group) {
     </section>`;
 }
 
+function retroGroupLetters() {
+  return [...new Set(RETRO_WORLD_CUPS[retroTournament.year].teams.map((team) => team.group))];
+}
+
 function renderRetroGroupsView() {
   restoreSharedMainContent();
   els.retroTournamentBody.innerHTML = `
-    <div class="retro-groups-grid">${[..."ABCDEFGH"].map(retroGroupTableMarkup).join("")}</div>`;
+    <div class="retro-groups-grid">${retroGroupLetters().map(retroGroupTableMarkup).join("")}</div>`;
 }
 
 function renderRetroSquadsView() {
   restoreSharedMainContent();
   const year = retroTournament.year;
+  const isEuro2016 = Number(year) === 2016;
   const available = RETRO_WORLD_CUPS[year].teams;
   const squads = retroSquadsForYear(year);
   if (!squads[retroSquadTeamName]) retroSquadTeamName = retroTournament.managedTeam || available[0].name;
   const squad = squads[retroSquadTeamName];
+  const startingNumbers = new Set(squad.startingXI || []);
+  const startingPlayers = (squad.startingXI || [])
+    .map((number) => squad.players.find((player) => player.number === number))
+    .filter(Boolean);
+  const teamRatingLabels = {
+    overall: "Overall",
+    attack: "Attack",
+    midfield: "Midfield",
+    defence: "Defence",
+    goalkeeper: "Goalkeeper",
+    squadDepth: "Depth",
+    experience: "Experience",
+    penalties: "Penalties",
+    discipline: "Discipline",
+  };
   const positionGroups = [
     ["Goalkeepers", "GK"],
     ["Defenders", "DF"],
@@ -13919,28 +17713,48 @@ function renderRetroSquadsView() {
     ["Attackers", "FW"],
   ];
   els.retroTournamentBody.innerHTML = `
-    <section class="retro-squad-view">
+    <section class="retro-squad-view${isEuro2016 ? " is-compact-squad" : ""}">
       <div class="retro-squad-heading">
-        <div>${retroFlag(retroSquadTeamName, "retro-squad-flag")}<span><small>Coach · ${squad.players.length}-player official squad</small><strong>${escapeHtml(squad.coach)}</strong></span></div>
+        <div>${retroFlag(retroSquadTeamName, "retro-squad-flag")}<span>${isEuro2016
+          ? `<small>UEFA EURO 2016 · Official ${squad.players.length}-player squad</small><strong>${escapeHtml(retroSquadTeamName)}</strong><em>Coach ${escapeHtml(squad.coach)}</em>`
+          : `<small>Coach · ${squad.players.length}-player official squad</small><strong>${escapeHtml(squad.coach)}</strong><em>${escapeHtml(squad.formation)} · Captain ${escapeHtml(squad.captain || "—")}</em>`
+        }</span></div>
         <label>
           <span>Country</span>
           <select id="retroSquadTeamSelect">${available.map((team) => `<option value="${escapeHtml(team.name)}" ${team.name === retroSquadTeamName ? "selected" : ""}>${escapeHtml(team.name)}</option>`).join("")}</select>
         </label>
       </div>
+      ${isEuro2016 ? "" : `<div class="retro-squad-summary">
+        ${squad.teamRatings ? `
+          <section class="retro-team-rating-card">
+            <header><span>Team profile</span><strong>${squad.teamRatings.overall}</strong></header>
+            <div>${Object.entries(squad.teamRatings).map(([key, value]) => `
+              <span><small>${teamRatingLabels[key] || key}</small><b>${value}</b></span>
+            `).join("")}</div>
+          </section>
+        ` : ""}
+        <section class="retro-squad-xi-card">
+          <header><span>Likely starting XI</span><strong>${escapeHtml(squad.formation)}</strong></header>
+          <ol>${startingPlayers.map((player) => `
+            <li><b>${player.number}</b><span>${escapeHtml(player.name)}</span><em>${escapeHtml(player.position)}</em><i>${player.overall}</i></li>
+          `).join("")}</ol>
+        </section>
+      </div>`}
       <div class="retro-squad-groups">
         ${positionGroups.map(([label, position]) => {
-          const players = squad.players.filter((player) => player.position === position);
+          const players = squad.players.filter((player) => retroBroadPosition(player.position) === position);
           return `
             <section class="retro-squad-position-group">
               <h2><span>${label}</span><b>${players.length}</b></h2>
               <div class="retro-squad-list">
                 ${players.map((player) => `
-                  <div class="retro-squad-row">
+                  <div class="retro-squad-row${!isEuro2016 && startingNumbers.has(player.number) ? " is-likely-starter" : ""}"${!isEuro2016 && player.ratingJustification ? ` title="${escapeHtml(player.ratingJustification)}"` : ""}>
                     <b class="retro-squad-number">${player.number}</b>
                     <span>
-                      <strong>${escapeHtml(player.name)}</strong>
-                      <small>${escapeHtml(player.club)}</small>
+                      <strong>${escapeHtml(player.name)}${player.captain ? " (C)" : ""}</strong>
+                      <small>${escapeHtml(player.club)}${!isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>
                     </span>
+                    ${isEuro2016 ? "" : `<em>${escapeHtml(player.position)}</em><i>${player.overall}</i>`}
                   </div>
                 `).join("")}
               </div>
@@ -13950,11 +17764,1071 @@ function renderRetroSquadsView() {
     </section>`;
 }
 
+const RETRO_MANAGER_FORMATIONS = Object.freeze([
+  "4-3-3",
+  "4-2-3-1",
+  "4-4-2",
+  "4-3-1-2",
+  "4-1-2-1-2",
+  "4-3-2-1",
+  "4-1-4-1",
+  "3-5-2",
+  "3-4-1-2",
+  "3-4-2-1",
+  "3-4-3",
+  "3-3-1-3",
+  "5-3-2",
+  "5-4-1",
+  "5-2-2-1",
+  "5-2-3",
+]);
+const RETRO_LINEUP_SLOT_ORDER_VERSION = 4;
+const RETRO_MANAGER_SLOT_POSITIONS = Object.freeze({
+  "4-3-3": Object.freeze(["GK", "LB", "CB", "CB", "RB", "LCM", "CM", "RCM", "LW", "ST", "RW"]),
+  "4-2-3-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "LW", "CAM", "RW", "ST"]),
+  "4-4-2": Object.freeze(["GK", "LB", "CB", "CB", "RB", "LM", "CM", "CM", "RM", "ST", "ST"]),
+  "4-3-1-2": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CM", "CDM", "CM", "CAM", "ST", "ST"]),
+  "4-1-2-1-2": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CM", "CAM", "ST", "ST"]),
+  "4-3-2-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CM", "CDM", "CM", "LW", "RW", "ST"]),
+  "4-1-4-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "LM", "CM", "CM", "RM", "ST"]),
+  "3-5-2": Object.freeze(["GK", "CB", "CB", "CB", "LWB", "CM", "CDM", "CM", "RWB", "ST", "ST"]),
+  "3-4-1-2": Object.freeze(["GK", "CB", "CB", "CB", "LM", "CM", "CM", "RM", "CAM", "ST", "ST"]),
+  "3-4-2-1": Object.freeze(["GK", "CB", "CB", "CB", "LWB", "CM", "CM", "RWB", "CAM", "CAM", "ST"]),
+  "3-4-3": Object.freeze(["GK", "CB", "CB", "CB", "LM", "CM", "CM", "RM", "LW", "ST", "RW"]),
+  "3-3-1-3": Object.freeze(["GK", "CB", "CB", "CB", "LM", "CM", "RM", "CAM", "LW", "ST", "RW"]),
+  "5-3-2": Object.freeze(["GK", "LWB", "CB", "CB", "CB", "RWB", "CM", "CDM", "CM", "ST", "ST"]),
+  "5-4-1": Object.freeze(["GK", "LWB", "CB", "CB", "CB", "RWB", "LM", "CM", "CM", "RM", "ST"]),
+  "5-2-2-1": Object.freeze(["GK", "LWB", "CB", "CB", "CB", "RWB", "CM", "CM", "LM", "RM", "ST"]),
+  "5-2-3": Object.freeze(["GK", "LWB", "CB", "CB", "CB", "RWB", "CM", "CM", "LW", "ST", "RW"]),
+});
+const RETRO_MANAGER_PITCH_POSITIONS = Object.freeze({
+  "4-3-3": Object.freeze([[50, 89], [14, 68], [38, 68], [62, 68], [86, 68], [23, 43], [50, 47], [77, 43], [18, 29], [50, 13], [82, 29]]),
+  "4-2-3-1": Object.freeze([[50, 89], [14, 70], [38, 70], [62, 70], [86, 70], [35, 53], [65, 53], [18, 34], [50, 32], [82, 34], [50, 12]]),
+  "4-4-2": Object.freeze([[50, 89], [14, 70], [38, 70], [62, 70], [86, 70], [14, 44], [38, 47], [62, 47], [86, 44], [37, 17], [63, 17]]),
+  "4-3-1-2": Object.freeze([[50, 89], [14, 70], [38, 70], [62, 70], [86, 70], [26, 47], [50, 52], [74, 47], [50, 31], [37, 14], [63, 14]]),
+  "4-1-2-1-2": Object.freeze([[50, 89], [14, 70], [38, 70], [62, 70], [86, 70], [50, 55], [30, 42], [70, 42], [50, 29], [37, 13], [63, 13]]),
+  "4-3-2-1": Object.freeze([[50, 89], [14, 70], [38, 70], [62, 70], [86, 70], [23, 49], [50, 53], [77, 49], [34, 29], [66, 29], [50, 11]]),
+  "4-1-4-1": Object.freeze([[50, 89], [14, 70], [38, 70], [62, 70], [86, 70], [50, 57], [14, 39], [38, 42], [62, 42], [86, 39], [50, 12]]),
+  "3-5-2": Object.freeze([[50, 89], [25, 70], [50, 72], [75, 70], [10, 47], [33, 46], [50, 51], [67, 46], [90, 47], [37, 17], [63, 17]]),
+  "3-4-1-2": Object.freeze([[50, 89], [25, 70], [50, 72], [75, 70], [12, 46], [38, 49], [62, 49], [88, 46], [50, 30], [37, 14], [63, 14]]),
+  "3-4-2-1": Object.freeze([[50, 89], [25, 70], [50, 72], [75, 70], [10, 47], [38, 49], [62, 49], [90, 47], [35, 27], [65, 27], [50, 10]]),
+  "3-4-3": Object.freeze([[50, 89], [25, 70], [50, 72], [75, 70], [12, 45], [39, 48], [61, 48], [88, 45], [18, 29], [50, 12], [82, 29]]),
+  "3-3-1-3": Object.freeze([[50, 89], [25, 71], [50, 73], [75, 71], [16, 49], [50, 52], [84, 49], [50, 34], [18, 20], [50, 12], [82, 20]]),
+  "5-3-2": Object.freeze([[50, 89], [10, 68], [30, 72], [50, 74], [70, 72], [90, 68], [25, 45], [50, 49], [75, 45], [37, 14], [63, 14]]),
+  "5-4-1": Object.freeze([[50, 89], [10, 69], [30, 73], [50, 75], [70, 73], [90, 69], [14, 43], [39, 47], [61, 47], [86, 43], [50, 12]]),
+  "5-2-2-1": Object.freeze([[50, 89], [10, 69], [30, 73], [50, 75], [70, 73], [90, 69], [35, 48], [65, 48], [25, 28], [75, 28], [50, 10]]),
+  "5-2-3": Object.freeze([[50, 89], [10, 69], [30, 73], [50, 75], [70, 73], [90, 69], [35, 45], [65, 45], [18, 29], [50, 11], [82, 29]]),
+});
+
+function retroBroadPosition(position) {
+  if (position === "GK") return "GK";
+  if (["CB", "LB", "RB", "LWB", "RWB", "SW", "DF"].includes(position)) return "DF";
+  if (["CDM", "DM", "CM", "LCM", "RCM", "CAM", "AM", "LM", "RM", "MF"].includes(position)) return "MF";
+  if (["ST", "CF", "SS", "LW", "RW", "LF", "RF", "FW"].includes(position)) return "FW";
+  return "MF";
+}
+
+function sharedLineupManagerSupported(candidate = state) {
+  if (candidate?.premierLeagueSeason) return Boolean(candidate.spectateTeamId);
+  return Boolean(
+    isRetroSimulatorState(candidate)
+    && [2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    && retroTournament?.managedTeam,
+  );
+}
+
+function sharedLineupManagedTeamMatches(team) {
+  if (!team || !sharedLineupManagerSupported()) return false;
+  if (state?.premierLeagueSeason) return team.id === state.spectateTeamId;
+  return team.name === retroTournament?.managedTeam;
+}
+
+function sharedLineupTeamByName(name) {
+  const currentMatch = selectedMatch();
+  const currentTeams = currentMatch
+    ? [teamById(currentMatch.homeId), teamById(currentMatch.awayId)]
+    : [];
+  return currentTeams.find((team) => team?.name === name)
+    || [...TEAM_BY_ID.values()].find((team) => team?.name === name)
+    || null;
+}
+
+function premierLeagueManagerSquad(team) {
+  if (!state?.premierLeagueSeason || !team) return null;
+  const players = (team.playerProfiles || []).map((profile, index) => ({
+    ...profile,
+    number: Number.isInteger(profile.number) ? profile.number : index + 1,
+    club: team.name,
+    positions: [...new Set([profile.position, ...(profile.positions || [])].filter(Boolean))],
+    overall: Number(profile.overall) || Number(team.rating) || 70,
+  }));
+  if (!players.length) return null;
+  return {
+    team: team.name,
+    formation: sharedLineupManagedTeamMatches(team)
+      ? standardFormationKey(state.standardFormation)
+      : "4-3-3",
+    players,
+  };
+}
+
+function retroManagerSquadForTeam(teamOrName) {
+  if (state?.premierLeagueSeason) {
+    const team = typeof teamOrName === "string"
+      ? sharedLineupTeamByName(teamOrName)
+      : teamOrName;
+    return premierLeagueManagerSquad(team);
+  }
+  const year = Number(retroTournament?.year);
+  const teamName = typeof teamOrName === "string" ? teamOrName : teamOrName?.name;
+  const source = retroSquadsForYear(year)?.[teamName];
+  if (!source?.players?.length) return source;
+  const team = typeof teamOrName === "string"
+    ? teamById(retroTeamId(teamName, year))
+    : teamOrName;
+  const profiles = team?.playerProfiles || [];
+  return {
+    ...source,
+    players: source.players.map((player) => {
+      const profile = profiles.find((candidate) => (
+        candidate.number === player.number || candidate.name === player.name
+      ));
+      const sourcePositions = [player.position, ...(player.positions || [])].filter(Boolean);
+      const detailedPositions = sourcePositions.filter((position) => !["DF", "MF", "FW"].includes(position));
+      const sourceGroup = retroBroadPosition(player.position);
+      const sameGroupPosition = detailedPositions.find((position) => retroBroadPosition(position) === sourceGroup);
+      const position = ["DF", "MF", "FW"].includes(player.position)
+        ? sameGroupPosition || profile?.position || detailedPositions[0] || player.position
+        : player.position;
+      const positions = [...new Set([position, ...detailedPositions, ...sourcePositions])];
+      return { ...player, position, positions, squadGroup: sourceGroup };
+    }),
+  };
+}
+
+const RETRO_POSITION_FIT = Object.freeze({
+  GK: Object.freeze({ GK: 140 }),
+  LB: Object.freeze({ LB: 140, LWB: 124, CB: 66, RB: 34, LM: 28 }),
+  RB: Object.freeze({ RB: 140, RWB: 124, CB: 66, LB: 34, RM: 28 }),
+  CB: Object.freeze({ CB: 140, LB: 72, RB: 72, CDM: 68, LWB: 48, RWB: 48 }),
+  LWB: Object.freeze({ LWB: 140, LB: 132, LM: 106, LW: 78, CB: 50 }),
+  RWB: Object.freeze({ RWB: 140, RB: 132, RM: 106, RW: 78, CB: 50 }),
+  CDM: Object.freeze({ CDM: 140, DM: 140, CM: 112, CB: 92, CAM: 42 }),
+  CM: Object.freeze({ CM: 140, CDM: 120, DM: 120, CAM: 112, LM: 92, RM: 92 }),
+  LCM: Object.freeze({ CAM: 140, AM: 140, CM: 132, LM: 118, CDM: 92, DM: 92, RM: 72 }),
+  RCM: Object.freeze({ CAM: 140, AM: 140, CM: 132, RM: 118, CDM: 92, DM: 92, LM: 72 }),
+  CAM: Object.freeze({ CAM: 140, AM: 140, CM: 112, CF: 108, LW: 82, RW: 82, ST: 64 }),
+  LM: Object.freeze({ LM: 140, LW: 126, LWB: 108, CM: 96, CAM: 86 }),
+  RM: Object.freeze({ RM: 140, RW: 126, RWB: 108, CM: 96, CAM: 86 }),
+  LW: Object.freeze({ LW: 140, LM: 124, RM: 110, CAM: 102, CF: 94, ST: 76, FW: 76, LWB: 58 }),
+  RW: Object.freeze({ RW: 140, RM: 124, LM: 110, CAM: 102, CF: 94, ST: 76, FW: 76, RWB: 58 }),
+  ST: Object.freeze({ ST: 140, CF: 128, SS: 120, LW: 78, RW: 78, CAM: 68 }),
+  CF: Object.freeze({ CF: 140, ST: 126, SS: 124, CAM: 114, LW: 98, RW: 98 }),
+  SS: Object.freeze({ SS: 140, CF: 132, ST: 118, CAM: 116, LW: 92, RW: 92 }),
+});
+
+function retroPlayerPositionFit(player, slotPosition) {
+  const positions = [...new Set([player.position, ...(player.positions || [])].filter(Boolean))];
+  const fitTable = RETRO_POSITION_FIT[slotPosition] || {};
+  const detailedFit = positions.reduce((best, position, index) => (
+    Math.max(best, (fitTable[position] || 0) - index * 3)
+  ), 0);
+  if (detailedFit) return detailedFit;
+  const playerGroup = retroBroadPosition(player.position);
+  const slotGroup = retroBroadPosition(slotPosition);
+  if (playerGroup === slotGroup) return 46;
+  if (playerGroup === "GK" || slotGroup === "GK") return -100;
+  if (playerGroup === "MF") return 24;
+  if (playerGroup === "FW" && slotGroup === "MF") return 14;
+  return 0;
+}
+
+function retroPlayerSlotAssignmentScore(player, slot) {
+  const fit = retroPlayerPositionFit(player, slot);
+  const slotGroup = retroBroadPosition(slot);
+  const primaryGroup = player.squadGroup || retroBroadPosition(player.position);
+  const positions = [player.position, ...(player.positions || [])].filter(Boolean);
+  const listedGroups = new Set(
+    positions.map(retroBroadPosition),
+  );
+  const naturalWideEquivalent = (
+    (slot === "LW" && positions.includes("LM"))
+    || (slot === "RW" && positions.includes("RM"))
+    || (slot === "LM" && positions.includes("LW"))
+    || (slot === "RM" && positions.includes("RW"))
+  );
+  const crossedWideEquivalent = (
+    (slot === "LW" && positions.includes("RM"))
+    || (slot === "RW" && positions.includes("LM"))
+  );
+  const exactWideRole = ["LW", "RW", "LM", "RM"].includes(slot) && positions.includes(slot);
+  const centralAttackerInWideSlot = ["LW", "RW"].includes(slot)
+    && !exactWideRole
+    && !naturalWideEquivalent
+    && !crossedWideEquivalent;
+  const primaryPosition = positions[0];
+  let groupFit;
+  if (slot === "CM") {
+    groupFit = ["CM", "CDM", "DM"].includes(primaryPosition)
+      ? 230
+      : ["CAM", "AM"].includes(primaryPosition) ? 40 : 120;
+  } else if (["LCM", "RCM"].includes(slot)) {
+    groupFit = ["CAM", "AM"].includes(primaryPosition)
+      ? 220
+      : primaryPosition === "CM" ? 170
+        : ["CDM", "DM"].includes(primaryPosition) ? 70 : 120;
+  } else {
+    groupFit = exactWideRole || naturalWideEquivalent
+      ? 190
+      : crossedWideEquivalent
+        ? 150
+      : centralAttackerInWideSlot
+        ? 30
+      : primaryGroup === slotGroup
+        ? 180
+        : listedGroups.has(slotGroup) ? 70 : 0;
+  }
+  return fit + groupFit;
+}
+
+function retroOrderPlayersForSlots(players, slots) {
+  if (players.length !== slots.length || players.length > 20) {
+    const remaining = [...players];
+    return slots.map((slot) => {
+      const best = remaining
+        .map((player, index) => ({ player, index, fit: retroPlayerPositionFit(player, slot) }))
+        .sort((left, right) => right.fit - left.fit || right.player.overall - left.player.overall)[0];
+      if (!best) return null;
+      remaining.splice(best.index, 1);
+      return best.player.number;
+    }).filter((number) => number !== null);
+  }
+
+  const memo = new Map();
+  const solve = (slotIndex, usedMask) => {
+    if (slotIndex === slots.length) return { score: 0, numbers: [] };
+    const key = `${slotIndex}:${usedMask}`;
+    if (memo.has(key)) return memo.get(key);
+    let best = null;
+    players.forEach((player, playerIndex) => {
+      const playerBit = 1 << playerIndex;
+      if (usedMask & playerBit) return;
+      const remainder = solve(slotIndex + 1, usedMask | playerBit);
+      const slot = slots[slotIndex];
+      const score = retroPlayerSlotAssignmentScore(player, slot) * 1000
+        + (Number(player.overall) || 0)
+        + remainder.score;
+      if (!best || score > best.score) {
+        best = { score, numbers: [player.number, ...remainder.numbers] };
+      }
+    });
+    memo.set(key, best);
+    return best;
+  };
+  return solve(0, 0)?.numbers || [];
+}
+
+function retroOrderStarterNumbers(players, formation) {
+  const slots = RETRO_MANAGER_SLOT_POSITIONS[formation] || RETRO_MANAGER_SLOT_POSITIONS["4-3-3"];
+  return retroOrderPlayersForSlots(players, slots);
+}
+
+function retroNormalizeStarterSlotOrder(players, starterNumbers, formation) {
+  const byNumber = new Map(players.map((player) => [player.number, player]));
+  const selectedPlayers = starterNumbers
+    .map((number) => byNumber.get(number))
+    .filter(Boolean);
+  return selectedPlayers.length === starterNumbers.length
+    ? retroOrderStarterNumbers(selectedPlayers, formation)
+    : starterNumbers;
+}
+
+function retroSelectBestStarterNumbers(players, preferredNumbers, formation) {
+  const slots = RETRO_MANAGER_SLOT_POSITIONS[formation] || RETRO_MANAGER_SLOT_POSITIONS["4-3-3"];
+  if (players.length < slots.length) return [];
+  const preferred = new Set(preferredNumbers || []);
+  const eligibleForSlot = (player, slot) => {
+    const slotGroup = retroBroadPosition(slot);
+    const primaryGroup = player.squadGroup || retroBroadPosition(player.position);
+    const positions = [player.position, ...(player.positions || [])].filter(Boolean);
+    const listedGroups = new Set(positions.map(retroBroadPosition));
+    if (slotGroup === "GK") return primaryGroup === "GK";
+    if (primaryGroup === "GK") return false;
+    if (slotGroup === "DF") return primaryGroup === "DF" || listedGroups.has("DF");
+    if (slotGroup === "MF") {
+      return primaryGroup === "MF"
+        || listedGroups.has("MF")
+        || (["LM", "RM"].includes(slot) && listedGroups.has("FW"));
+    }
+    return primaryGroup === "FW"
+      || listedGroups.has("FW")
+      || (slot === "LW" && positions.some((position) => ["LM", "RM"].includes(position)))
+      || (slot === "RW" && positions.some((position) => ["RM", "LM"].includes(position)));
+  };
+  const scores = slots.map((slot) => players.map((player) => {
+    if (!eligibleForSlot(player, slot)) return -1_000_000_000;
+    return retroPlayerSlotAssignmentScore(player, slot) * 1000
+      + (preferred.has(player.number) ? 26000 : 0)
+      + (Number(player.startingXILikelihood) || 0) * 5000
+      + (Number(player.overall) || 0) * 10;
+  }));
+
+  // Rectangular Hungarian assignment: every pitch slot gets one unique player.
+  const slotCount = slots.length;
+  const playerCount = players.length;
+  const rowPotential = Array(slotCount + 1).fill(0);
+  const columnPotential = Array(playerCount + 1).fill(0);
+  const matchedRow = Array(playerCount + 1).fill(0);
+  const previousColumn = Array(playerCount + 1).fill(0);
+  for (let row = 1; row <= slotCount; row += 1) {
+    matchedRow[0] = row;
+    let column = 0;
+    const minimum = Array(playerCount + 1).fill(Number.POSITIVE_INFINITY);
+    const used = Array(playerCount + 1).fill(false);
+    do {
+      used[column] = true;
+      const activeRow = matchedRow[column];
+      let delta = Number.POSITIVE_INFINITY;
+      let nextColumn = 0;
+      for (let candidate = 1; candidate <= playerCount; candidate += 1) {
+        if (used[candidate]) continue;
+        const cost = -scores[activeRow - 1][candidate - 1]
+          - rowPotential[activeRow]
+          - columnPotential[candidate];
+        if (cost < minimum[candidate]) {
+          minimum[candidate] = cost;
+          previousColumn[candidate] = column;
+        }
+        if (minimum[candidate] < delta) {
+          delta = minimum[candidate];
+          nextColumn = candidate;
+        }
+      }
+      for (let candidate = 0; candidate <= playerCount; candidate += 1) {
+        if (used[candidate]) {
+          rowPotential[matchedRow[candidate]] += delta;
+          columnPotential[candidate] -= delta;
+        } else {
+          minimum[candidate] -= delta;
+        }
+      }
+      column = nextColumn;
+    } while (matchedRow[column] !== 0);
+    do {
+      const prior = previousColumn[column];
+      matchedRow[column] = matchedRow[prior];
+      column = prior;
+    } while (column !== 0);
+  }
+  const playerIndexBySlot = Array(slotCount).fill(-1);
+  for (let column = 1; column <= playerCount; column += 1) {
+    if (matchedRow[column]) playerIndexBySlot[matchedRow[column] - 1] = column - 1;
+  }
+  if (playerIndexBySlot.some((playerIndex, slotIndex) => (
+    playerIndex < 0 || scores[slotIndex][playerIndex] <= -1_000_000_000
+  ))) return [];
+  return playerIndexBySlot.map((playerIndex) => players[playerIndex].number);
+}
+
+function retroSelectAvailableStarterNumbers(availablePlayers, preferredNumbers, formation) {
+  const slots = RETRO_MANAGER_SLOT_POSITIONS[formation] || RETRO_MANAGER_SLOT_POSITIONS["4-3-3"];
+  const byNumber = new Map(availablePlayers.map((player) => [player.number, player]));
+  const used = new Set();
+  return slots.map((slot, index) => {
+    const preferred = byNumber.get(preferredNumbers[index]);
+    if (preferred && !used.has(preferred.number)) {
+      used.add(preferred.number);
+      return preferred.number;
+    }
+    const replacement = availablePlayers
+      .filter((player) => !used.has(player.number))
+      .map((player) => ({ player, fit: retroPlayerPositionFit(player, slot) }))
+      .sort((left, right) => right.fit - left.fit || right.player.overall - left.player.overall)[0]
+      ?.player;
+    if (!replacement) return null;
+    used.add(replacement.number);
+    return replacement.number;
+  }).filter((number) => number !== null);
+}
+
+function sharedLineupDefaultForTeam(team) {
+  if (!team) return null;
+  if (state?.premierLeagueSeason) {
+    const squad = retroManagerSquadForTeam(team);
+    if (!squad?.players?.length) return null;
+    const requestedFormation = sharedLineupManagedTeamMatches(team)
+      ? state.managerLineups?.[team.id]?.formation || state.standardFormation
+      : team.selectedFormation;
+    const formation = standardFormationKey(requestedFormation || squad.formation || "4-3-3");
+    const unavailable = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
+    const availablePlayers = squad.players.filter((player) => !unavailable.has(player.name));
+    const preferredPlayers = squad.players.slice(0, 11);
+    const preferredNumbers = retroOrderStarterNumbers(preferredPlayers, formation);
+    const starterNumbers = retroSelectAvailableStarterNumbers(
+      availablePlayers,
+      preferredNumbers,
+      formation,
+    );
+    return {
+      formation,
+      players: starterNumbers
+        .map((number) => availablePlayers.find((player) => player.number === number))
+        .filter(Boolean),
+    };
+  }
+  const year = Number(retroTournament?.year);
+  const lineup = RETRO_WORLD_CUP_ENGINE.startingXI(year, team.name);
+  const squad = retroManagerSquadForTeam(team);
+  const formation = RETRO_MANAGER_FORMATIONS.includes(lineup?.formation) ? lineup.formation : "4-3-3";
+  const preferredNumbers = lineup.players.map((player) => player.number);
+  const orderedNumbers = retroSelectBestStarterNumbers(squad?.players || lineup.players, preferredNumbers, formation);
+  return {
+    ...lineup,
+    formation,
+    players: orderedNumbers
+      .map((number) => squad?.players.find((player) => player.number === number))
+      .filter(Boolean),
+  };
+}
+
+function retroFormationDefenderCount(formation) {
+  const slots = RETRO_MANAGER_SLOT_POSITIONS[formation] || [];
+  return slots.filter((slot) => possessionPositionGroup(slot) === "defender").length;
+}
+
+function retroRemapMissingSlots(management, missingEntries = Object.values(management?.missingSlots || {})) {
+  if (!management) return;
+  management.missingSlots = Object.fromEntries(
+    missingEntries
+      .map((missing) => [management.activeStarters.indexOf(missing.number), missing])
+      .filter(([index]) => index >= 0),
+  );
+}
+
+function retroOrderStartersForFormationChange(players, currentNumbers, currentFormation, nextFormation) {
+  const nextSlots = RETRO_MANAGER_SLOT_POSITIONS[nextFormation] || RETRO_MANAGER_SLOT_POSITIONS["4-3-3"];
+  if (retroFormationDefenderCount(currentFormation) !== 4 || retroFormationDefenderCount(nextFormation) !== 4) {
+    return retroOrderPlayersForSlots(players, nextSlots);
+  }
+  const playersByNumber = new Map(players.map((player) => [player.number, player]));
+  const unchangedBackFive = currentNumbers.slice(0, 5).filter((number) => playersByNumber.has(number));
+  if (unchangedBackFive.length !== 5) return retroOrderPlayersForSlots(players, nextSlots);
+  const unchangedNumbers = new Set(unchangedBackFive);
+  const remainingPlayers = players.filter((player) => !unchangedNumbers.has(player.number));
+  return [
+    ...unchangedBackFive,
+    ...retroOrderPlayersForSlots(remainingPlayers, nextSlots.slice(5)),
+  ];
+}
+
+function retroManagerLineupForTeam(team) {
+  if (state?.premierLeagueSeason) {
+    if (!team || !sharedLineupManagedTeamMatches(team)) return null;
+    const squad = retroManagerSquadForTeam(team);
+    if (!squad?.players?.length) return null;
+    state.managerLineups ||= {};
+    const saved = state.managerLineups[team.id] || {};
+    const formation = RETRO_MANAGER_FORMATIONS.includes(saved.formation)
+      ? saved.formation
+      : standardFormationKey(state.standardFormation || squad.formation);
+    const unavailableNames = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
+    const availablePlayers = squad.players.filter((player) => !unavailableNames.has(player.name));
+    const validNumbers = new Set(availablePlayers.map((player) => player.number));
+    const savedStarters = Array.isArray(saved.starters) ? saved.starters : [];
+    const defaultLineup = sharedLineupDefaultForTeam(team);
+    const defaultStarters = defaultLineup?.players.map((player) => player.number) || [];
+    let preferredStarters = savedStarters.length === 11 && new Set(savedStarters).size === 11
+      ? savedStarters
+      : defaultStarters;
+    if (saved.slotOrderVersion !== RETRO_LINEUP_SLOT_ORDER_VERSION) {
+      preferredStarters = retroSelectBestStarterNumbers(
+        squad.players,
+        preferredStarters,
+        formation,
+      );
+    }
+    const starters = preferredStarters.length === 11
+      && preferredStarters.every((number) => validNumbers.has(number))
+      ? preferredStarters
+      : retroSelectAvailableStarterNumbers(availablePlayers, preferredStarters, formation);
+    const lineup = { formation, starters, slotOrderVersion: RETRO_LINEUP_SLOT_ORDER_VERSION };
+    state.managerLineups[team.id] = lineup;
+    state.standardFormation = formation;
+    team.selectedFormation = formation;
+    return lineup;
+  }
+  if (
+    !team
+    || ![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    || team.name !== retroTournament?.managedTeam
+  ) return null;
+  const squad = retroManagerSquadForTeam(team);
+  if (!squad?.players?.length) return null;
+  retroTournament.managerLineups ||= {};
+  const saved = retroTournament.managerLineups[team.name] || {};
+  const unavailableNames = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
+  const availablePlayers = squad.players.filter((player) => !unavailableNames.has(player.name));
+  const validNumbers = new Set(availablePlayers.map((player) => player.number));
+  const savedStarters = Array.isArray(saved.starters) ? saved.starters : [];
+  const defaultStarters = RETRO_WORLD_CUP_ENGINE.startingXI(Number(retroTournament.year), team.name).players
+    .map((player) => player.number);
+  const formation = RETRO_MANAGER_FORMATIONS.includes(saved.formation)
+    ? saved.formation
+    : RETRO_MANAGER_FORMATIONS.includes(squad.formation) ? squad.formation : "4-3-3";
+  let preferredStarters = savedStarters.length === 11 && new Set(savedStarters).size === 11
+    ? savedStarters
+    : defaultStarters;
+  if (saved.slotOrderVersion !== RETRO_LINEUP_SLOT_ORDER_VERSION) {
+    preferredStarters = retroSelectBestStarterNumbers(
+      squad.players,
+      preferredStarters,
+      formation,
+    );
+  }
+  const starters = preferredStarters.every((number) => validNumbers.has(number))
+    ? preferredStarters
+    : retroSelectAvailableStarterNumbers(availablePlayers, preferredStarters, formation);
+  const lineup = { formation, starters, slotOrderVersion: RETRO_LINEUP_SLOT_ORDER_VERSION };
+  retroTournament.managerLineups[team.name] = lineup;
+  return lineup;
+}
+
+function retroManagerCanEditMatch(match) {
+  if (state?.premierLeagueSeason) {
+    return Boolean(
+      state.spectateTeamId
+      && !match?.result?.revealed
+      && [match?.homeId, match?.awayId].includes(state.spectateTeamId),
+    );
+  }
+  return Boolean(
+    isRetroSimulatorState()
+    && [2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    && retroTournament?.managedTeam
+    && !match?.result?.revealed
+    && [match?.home, match?.away, teamById(match?.homeId)?.name, teamById(match?.awayId)?.name]
+      .includes(retroTournament.managedTeam),
+  );
+}
+
+function retroManagerPlayerMarkup(
+  player,
+  starting,
+  selected,
+  disabled,
+  { substitution = false, previewOutgoing = false } = {},
+) {
+  const interactionAttribute = previewOutgoing
+    ? `data-retro-sub-undo-out="${player.number}"`
+    : substitution
+    ? `data-retro-sub-player="${player.number}" data-retro-sub-role="in"`
+    : `data-retro-lineup-player="${player.number}"`;
+  return `
+    <button
+      class="retro-manager-player ${starting ? "is-starter" : "is-bench"} ${selected ? "is-selected" : ""} ${previewOutgoing ? "is-preview-out" : ""}"
+      type="button"
+      ${interactionAttribute}
+      aria-pressed="${selected}"
+      draggable="${!disabled && !previewOutgoing}"
+      ${disabled ? "disabled" : ""}
+      ${previewOutgoing ? `aria-label="Undo substitution for ${escapeHtml(player.name)}"` : ""}
+    >
+      <b>${player.number}</b>
+      <span><strong>${escapeHtml(player.name)}</strong><small>${previewOutgoing ? "Tap to undo change" : escapeHtml(player.club || player.position)}</small></span>
+      <em>${previewOutgoing ? "UNDO" : player.position}</em>
+      <i>${player.overall}</i>
+    </button>`;
+}
+
+function retroPitchPlayerMarkup(
+  player,
+  index,
+  formation,
+  { managed = false, disabled = false, ratingEntry = null, substitution = false, previewIncoming = false } = {},
+) {
+  const positions = RETRO_MANAGER_PITCH_POSITIONS[formation] || RETRO_MANAGER_PITCH_POSITIONS["4-3-3"];
+  const [x, y] = positions[index] || [50, 50];
+  const selected = Number(substitution ? retroLiveSubOutNumber : retroLineupSwapNumber) === player.number;
+  const interactionAttributes = substitution
+    ? `data-retro-sub-player="${player.number}" data-retro-sub-role="out" aria-pressed="${selected}" draggable="${!disabled}"`
+    : managed
+      ? `data-retro-lineup-player="${player.number}" data-retro-lineup-slot="${index}" aria-pressed="${selected}" draggable="${!disabled}"`
+      : "disabled";
+  const shirtNumber = player.number ?? "—";
+  const rating = Number(ratingEntry?.rating);
+  const metric = Number.isFinite(rating) ? rating.toFixed(1) : player.overall;
+  const metricClass = Number.isFinite(rating) ? retroRatingTone(rating) : "";
+  return `
+    <button
+      class="retro-pitch-player ${selected ? "is-selected" : ""} ${previewIncoming ? "is-preview-in" : ""} ${Number.isFinite(rating) ? "has-rating" : ""}"
+      type="button"
+      style="--pitch-x:${x}%;--pitch-y:${y}%"
+      ${interactionAttributes}
+      ${disabled && (managed || substitution) ? "disabled" : ""}
+      title="${escapeHtml(player.name)} · ${player.position} · ${player.overall}"
+    >
+      <b>${shirtNumber}</b>
+      <span>${escapeHtml(player.name.split(" ").at(-1))}</span>
+      <i class="${metricClass}">${metric}</i>
+    </button>`;
+}
+
+function retroPitchMissingPlayerMarkup(missing, index, formation, canReplace = false) {
+  const positions = RETRO_MANAGER_PITCH_POSITIONS[formation] || RETRO_MANAGER_PITCH_POSITIONS["4-3-3"];
+  const [x, y] = positions[index] || [50, 50];
+  const injuryCanBeReplaced = canReplace && missing.type === "injury";
+  return `
+    <button
+      class="retro-pitch-player is-missing ${missing.type === "red" ? "is-dismissed" : "is-injured"}"
+      type="button"
+      style="--pitch-x:${x}%;--pitch-y:${y}%"
+      ${injuryCanBeReplaced
+        ? `data-retro-sub-player="${missing.number}" data-retro-sub-role="out" draggable="true"`
+        : "disabled"}
+      title="${escapeHtml(missing.name)} · ${missing.type === "red" ? "Sent off" : "Injured"}"
+    >
+      <b>${missing.type === "red" ? "RC" : "+"}</b>
+      <span>${escapeHtml(missing.name.split(" ").at(-1))}</span>
+      <i>${missing.type === "red" ? "Sent off" : "Injured"}</i>
+    </button>`;
+}
+
+function retroSortedBenchPlayers(squad, starters) {
+  const starterNumbers = new Set(starters.map((player) => player.number));
+  const starterNames = new Set(starters.map((player) => player.name));
+  const positionOrder = { GK: 0, DF: 1, MF: 2, FW: 3 };
+  return (squad?.players || [])
+    .filter((player) => !starterNumbers.has(player.number) && !starterNames.has(player.name))
+    .sort((left, right) => (
+      (positionOrder[retroBroadPosition(left.position)] ?? 4) - (positionOrder[retroBroadPosition(right.position)] ?? 4)
+      || right.overall - left.overall
+      || left.number - right.number
+    ));
+}
+
+function retroOpponentPitchMarkup(teamName) {
+  const team = state?.premierLeagueSeason
+    ? sharedLineupTeamByName(teamName)
+    : teamById(retroTeamId(teamName, Number(retroTournament?.year)));
+  const squad = retroManagerSquadForTeam(team);
+  const lineup = sharedLineupDefaultForTeam(team);
+  if (!team || !squad || !lineup) return "";
+  const supportedFormation = RETRO_MANAGER_FORMATIONS.includes(lineup.formation) ? lineup.formation : "4-3-3";
+  const unavailable = new Set(unavailablePlayersForTeam(team?.id, state.activeRound));
+  const available = (squad?.players || lineup.players).filter((player) => !unavailable.has(player.name));
+  const orderedNumbers = retroSelectAvailableStarterNumbers(
+    available,
+    lineup.players.map((player) => player.number),
+    supportedFormation,
+  );
+  const players = orderedNumbers
+    .map((number) => available.find((player) => player.number === number))
+    .filter(Boolean);
+  const bench = retroSortedBenchPlayers(squad, players)
+    .filter((player) => !unavailable.has(player.name));
+  return `
+    <section class="retro-manager-lineup is-opponent">
+      <div class="retro-manager-layout">
+        <div class="retro-manager-pitch-box">
+          <div class="retro-pitch-corner-control">
+            <b class="retro-formation-badge">${escapeHtml(lineup.formation)}</b>
+          </div>
+          <div class="retro-manager-pitch" aria-label="${escapeHtml(teamName)} starting formation">
+            <span class="retro-pitch-halfway" aria-hidden="true"></span>
+            <span class="retro-pitch-circle" aria-hidden="true"></span>
+            ${players.map((player, index) => retroPitchPlayerMarkup(player, index, supportedFormation)).join("")}
+          </div>
+        </div>
+        <div class="retro-manager-section is-bench">
+          <div class="retro-manager-section-title">
+            <strong>Bench</strong>
+            <span>${bench.length} players</span>
+          </div>
+          <div class="retro-manager-player-list is-bench-list">
+            ${bench.map((player) => retroManagerPlayerMarkup(
+              player,
+              false,
+              false,
+              true,
+            )).join("")}
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+function retroManagerLineupMarkup(teamName, match) {
+  const team = state?.premierLeagueSeason
+    ? sharedLineupTeamByName(teamName)
+    : teamById(retroTeamId(teamName, Number(retroTournament?.year)));
+  const lineup = retroManagerLineupForTeam(team);
+  const squad = retroManagerSquadForTeam(team);
+  if (!lineup || !squad) return retroLineupSideMarkup(teamName);
+  const starters = lineup.starters
+    .map((number) => squad.players.find((player) => player.number === number))
+    .filter(Boolean);
+  const unavailableNames = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
+  const bench = retroSortedBenchPlayers(squad, starters)
+    .filter((player) => !unavailableNames.has(player.name));
+  const live = Boolean(livePlayback?.matchId === match.id);
+  return `
+    <section class="retro-manager-lineup" data-team-name="${escapeHtml(teamName)}">
+      <p class="retro-manager-hint">${live
+        ? "Formation changes apply from the next passage of play."
+        : retroLineupSwapNumber
+          ? "Drop or choose the player to swap with."
+          : "Drag players between the pitch and bench, or choose two players to swap."}</p>
+      <div class="retro-manager-layout">
+        <div class="retro-manager-pitch-box">
+          <div class="retro-pitch-corner-control">
+            <label>
+              <select data-retro-manager-formation aria-label="${escapeHtml(teamName)} formation">
+                ${RETRO_MANAGER_FORMATIONS.map((formation) => (
+                  `<option value="${formation}" ${formation === lineup.formation ? "selected" : ""}>${formation}</option>`
+                )).join("")}
+              </select>
+            </label>
+          </div>
+          <div class="retro-manager-pitch" aria-label="${escapeHtml(teamName)} starting formation">
+            <span class="retro-pitch-halfway" aria-hidden="true"></span>
+            <span class="retro-pitch-circle" aria-hidden="true"></span>
+            ${starters.map((player, index) => retroPitchPlayerMarkup(
+              player,
+              index,
+              lineup.formation,
+              { managed: true, disabled: live },
+            )).join("")}
+          </div>
+        </div>
+        <div class="retro-manager-section is-bench">
+          <div class="retro-manager-section-title"><strong>Bench</strong><span>${bench.length} players</span></div>
+          <div class="retro-manager-player-list is-bench-list">
+            ${bench.map((player) => retroManagerPlayerMarkup(
+              player,
+              false,
+              Number(retroLineupSwapNumber) === player.number,
+              live,
+            )).join("")}
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+function retroRatingTone(rating) {
+  if (rating >= 8) return "is-excellent";
+  if (rating >= 7) return "is-good";
+  if (rating >= 6) return "is-average";
+  if (rating < 6) return "is-poor";
+  return "is-average";
+}
+
+function retroDisplayedRatingEntry(match, side, ratings, player) {
+  const matched = livePlayerRatingEntry(ratings, player);
+  const matchedRating = Number(matched?.rating);
+  if (
+    livePlayback
+    || !match?.result?.revealed
+    || (Number.isFinite(matchedRating) && Math.abs(matchedRating - 6.5) >= 0.01)
+  ) return matched || { rating: 6.5, delta: 0, reason: "" };
+
+  const result = match.result;
+  const teamId = side === "home" ? match.homeId : match.awayId;
+  const goalsAgainst = Number(side === "home" ? result.awayGoals : result.homeGoals) || 0;
+  const goalEvents = side === "home" ? result.homeEvents || [] : result.awayEvents || [];
+  const playerKey = liveRatingNameKey(player.name);
+  const scored = goalEvents.filter((event) => liveRatingNameKey(event.scorer) === playerKey).length;
+  const assisted = goalEvents.filter((event) => liveRatingNameKey(event.assist) === playerKey).length;
+  const won = result.winnerId === teamId;
+  const lost = Boolean(result.winnerId && !won);
+  const positionGroup = possessionPositionGroup(player.position);
+  const variation = ((stableHash(`${match.id}:${side}:${player.name}`) % 9) - 4) * 0.04;
+  let rating = 6.25 + (won ? 0.35 : lost ? -0.15 : 0.05) + variation + scored * 0.95 + assisted * 0.42;
+  let reason = won ? "Winning performance" : lost ? "Defeat" : "Full time";
+  if (goalsAgainst === 0 && ["goalkeeper", "defender"].includes(positionGroup)) {
+    rating += positionGroup === "goalkeeper" ? 0.42 : 0.3;
+    if (!scored && !assisted) reason = "Clean sheet";
+  } else if (goalsAgainst > 1 && ["goalkeeper", "defender"].includes(positionGroup)) {
+    rating -= Math.min(0.45, (goalsAgainst - 1) * 0.12);
+  }
+  if (scored) reason = scored > 1 ? `${scored} goals` : "Goal";
+  else if (assisted) reason = assisted > 1 ? `${assisted} assists` : "Assist";
+  const finalRating = Number(simulationClamp(rating, 3, 10).toFixed(2));
+  return {
+    ...(matched || {}),
+    rating: finalRating,
+    delta: Number((finalRating - 6.5).toFixed(2)),
+    reason,
+    playerNumber: matched?.playerNumber ?? player.number ?? null,
+  };
+}
+
+function retroLiveRatingsSideMarkup(teamName, side, ratings, match) {
+  const team = teamById(side === "home" ? match.homeId : match.awayId);
+  const orderedProfiles = match2dState?.presentation?.[side]?.players
+    || playerProfilesForTeam(team).filter((profile) => livePlayerRatingEntry(ratings, profile));
+  const managed = sharedLineupManagedTeamMatches(team);
+  const lineup = managed ? retroManagerLineupForTeam(team) : null;
+  return `
+    <section class="retro-live-ratings-side">
+      <header>
+        ${retroFlag(teamName, "retro-lineup-flag")}
+        <span><small>${livePlayback ? "LIVE RATINGS" : "MATCH RATINGS"}</small><strong>${escapeHtml(teamName)}</strong></span>
+        ${managed && lineup ? `
+          <label>
+            <span>Formation</span>
+            <select data-retro-manager-formation aria-label="${escapeHtml(teamName)} formation">
+              ${RETRO_MANAGER_FORMATIONS.map((formation) => (
+                `<option value="${formation}" ${formation === lineup.formation ? "selected" : ""}>${formation}</option>`
+              )).join("")}
+            </select>
+          </label>` : ""}
+      </header>
+      <div class="retro-live-rating-list">
+        ${orderedProfiles.map((profile) => {
+          const entry = retroDisplayedRatingEntry(match, side, ratings, profile);
+          return `
+            <div class="retro-live-rating-row">
+              <span><strong>${escapeHtml(profile.name)}</strong><small>${escapeHtml(entry.reason || profile.position)}</small></span>
+              <b class="${retroRatingTone(entry.rating)}">${Number(entry.rating).toFixed(1)}</b>
+            </div>`;
+        }).join("")}
+      </div>
+    </section>`;
+}
+
+function retroLivePitchRatingsSideMarkup(teamName, side, ratings, match) {
+  const team = teamById(side === "home" ? match.homeId : match.awayId);
+  const squad = retroManagerSquadForTeam(team);
+  const presentationSide = match2dState?.presentation?.[side];
+  const managed = sharedLineupManagedTeamMatches(team);
+  const lineup = managed ? retroManagerLineupForTeam(team) : null;
+  const teamManagement = retroLiveTeamManagement(team.id) || match.result?.retroFinalManagement?.[team.id];
+  const substitutions = managed ? retroLiveSubstitutionState(match) : null;
+  const fallback = sharedLineupDefaultForTeam(team);
+  if (!fallback) return "";
+  const requestedFormation = teamManagement?.formation || lineup?.formation || presentationSide?.formation || fallback.formation;
+  const formation = RETRO_MANAGER_FORMATIONS.includes(requestedFormation) ? requestedFormation : "4-3-3";
+  let starterSlots = teamManagement?.activeStarters?.length === 11 && squad
+    ? teamManagement.activeStarters
+      .map((number) => squad.players.find((player) => player.number === number) || null)
+    : presentationSide?.players?.length === 11 ? [...presentationSide.players] : [];
+  if (starterSlots.length !== 11 && lineup && squad) {
+    starterSlots = lineup.starters
+      .map((number) => squad.players.find((player) => player.number === number) || null);
+  }
+  if (starterSlots.length !== 11) {
+    const orderedNumbers = retroOrderStarterNumbers(fallback.players, formation);
+    starterSlots = orderedNumbers
+      .map((number) => fallback.players.find((player) => player.number === number) || null);
+  }
+  starterSlots = starterSlots.map((player) => {
+    if (!player) return null;
+    const squadPlayer = squad?.players?.find((candidate) => (
+      candidate.number === player.number || candidate.name === player.name
+    ));
+    return {
+      ...squadPlayer,
+      ...player,
+      number: player.number ?? squadPlayer?.number ?? "—",
+    };
+  });
+  const pendingChanges = managed ? retroPendingSubstitutionChanges() : [];
+  const pendingOutgoingNumbers = new Set(pendingChanges.map((change) => change.outgoingNumber));
+  const pendingIncomingNumbers = new Set(pendingChanges.map((change) => change.incomingNumber));
+  const previewSlots = [...starterSlots];
+  const pendingSlots = new Map();
+  pendingChanges.forEach((change) => {
+    const slot = teamManagement?.activeStarters.indexOf(change.outgoingNumber) ?? -1;
+    const incoming = squad?.players.find((player) => player.number === change.incomingNumber);
+    if (slot >= 0 && incoming) {
+      previewSlots[slot] = incoming;
+      pendingSlots.set(slot, change);
+    }
+  });
+  const unavailableNumbers = new Set([
+    ...(teamManagement?.subbedOut || []),
+    ...((teamManagement?.unavailableNumbers || []).filter((number) => (
+      !pendingOutgoingNumbers.has(number)
+      || teamManagement?.missingSlots?.[teamManagement.activeStarters.indexOf(number)]?.type === "red"
+    ))),
+  ]);
+  const unavailableNames = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
+  const bench = retroSortedBenchPlayers(squad, previewSlots.filter(Boolean))
+    .filter((player) => !unavailableNumbers.has(player.number) && !unavailableNames.has(player.name));
+  const limits = substitutions ? retroLiveSubstitutionLimits(match) : null;
+  const canSubstitute = Boolean(managed && substitutions && livePlayback?.phase === "match");
+  const selectedOutgoing = retroLiveSubOutNumber === null
+    ? null
+    : squad?.players.find((player) => player.number === retroLiveSubOutNumber);
+  return `
+    <section class="retro-manager-lineup is-live-ratings">
+      <div class="retro-manager-layout is-live">
+        <div class="retro-manager-pitch-box">
+          <div class="retro-pitch-corner-control">
+            ${managed && livePlayback ? `
+              <label>
+                <select data-retro-manager-formation aria-label="${escapeHtml(teamName)} formation">
+                  ${RETRO_MANAGER_FORMATIONS.map((option) => (
+                    `<option value="${option}" ${option === formation ? "selected" : ""}>${option}</option>`
+                  )).join("")}
+                </select>
+              </label>` : `<b class="retro-formation-badge">${escapeHtml(formation)}</b>`}
+          </div>
+          ${substitutions ? pendingChanges.length ? `
+            <div class="retro-pitch-sub-counter is-pending" aria-label="Confirm substitution batch">
+              <span>${pendingChanges.length} change${pendingChanges.length === 1 ? "" : "s"}</span>
+              <button type="button" data-retro-sub-action="cancel">Cancel</button>
+              <button type="button" data-retro-sub-action="confirm">Confirm all</button>
+            </div>` : `
+            <div class="retro-pitch-sub-counter" aria-label="Substitution allowances">
+              <span>${substitutions.used}/${limits.substitutions} subs</span>
+              <span>${substitutions.stoppages}/${limits.stoppages} stoppages</span>
+            </div>` : ""}
+          <div class="retro-manager-pitch" aria-label="${escapeHtml(teamName)} match ratings formation">
+            <span class="retro-pitch-halfway" aria-hidden="true"></span>
+            <span class="retro-pitch-circle" aria-hidden="true"></span>
+            ${previewSlots.map((player, index) => {
+              const missing = teamManagement?.missingSlots?.[index];
+              if (missing && !pendingSlots.has(index)) {
+                return retroPitchMissingPlayerMarkup(missing, index, formation, canSubstitute);
+              }
+              if (!player) return "";
+              return retroPitchPlayerMarkup(
+                player,
+                index,
+                formation,
+                {
+                  disabled: !canSubstitute || pendingIncomingNumbers.has(player.number),
+                  substitution: canSubstitute,
+                  previewIncoming: pendingSlots.has(index),
+                  ratingEntry: retroDisplayedRatingEntry(match, side, ratings, player),
+                },
+              );
+            }).join("")}
+          </div>
+        </div>
+        <div class="retro-manager-section is-bench">
+          <div class="retro-manager-section-title">
+            <strong>Bench</strong>
+            <span>${bench.length} players</span>
+          </div>
+          <div class="retro-manager-player-list is-bench-list">
+            ${bench.map((player) => retroManagerPlayerMarkup(
+              player,
+              false,
+              player.number === retroLiveSubInNumber,
+              !canSubstitute
+                || (
+                  !pendingOutgoingNumbers.has(player.number)
+                  && Boolean(selectedOutgoing && !retroSubstitutionPositionsCompatible(selectedOutgoing, player))
+                ),
+              {
+                substitution: canSubstitute,
+                previewOutgoing: pendingOutgoingNumbers.has(player.number),
+              },
+            )).join("")}
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+function retroLineupTabsMarkup(managedTeam, opponentTeam) {
+  return `
+    <div class="retro-lineup-tabs" role="tablist" aria-label="Team sheet">
+      <button type="button" role="tab" data-retro-lineup-tab="managed" aria-selected="${retroLineupPanelView === "managed"}" class="${retroLineupPanelView === "managed" ? "active" : ""}">
+        ${retroFlag(managedTeam.name, "retro-lineup-tab-flag")}<span>Your XI</span>
+      </button>
+      <button type="button" role="tab" data-retro-lineup-tab="opponent" aria-selected="${retroLineupPanelView === "opponent"}" class="${retroLineupPanelView === "opponent" ? "active" : ""}">
+        ${retroFlag(opponentTeam.name, "retro-lineup-tab-flag")}<span>Opposition</span>
+      </button>
+    </div>`;
+}
+
+function renderRetroMatchLineupsPanel(match) {
+  const premierLeagueManagerMatch = Boolean(
+    state?.premierLeagueSeason
+    && state.spectateTeamId
+    && [match?.homeId, match?.awayId].includes(state.spectateTeamId),
+  );
+  if (
+    !els.retroMatchLineupsPanel
+    || !els.retroMatchLineupsBody
+    || (!isRetroSimulatorState() && !premierLeagueManagerMatch)
+    || !match
+  ) return;
+  repairFlatSavedPlayerRatings(match);
+  const previousBenchScroll = els.retroMatchLineupsBody
+    .querySelector(".retro-manager-section.is-bench .retro-manager-player-list")
+    ?.scrollTop || 0;
+  const home = teamById(match.homeId);
+  const away = teamById(match.awayId);
+  const ratings = livePlayback?.matchId === match.id
+    ? livePlayback.playerRatings
+    : match.result?.playerRatings;
+  const wasOpen = els.retroMatchLineupsPanel.open;
+  const managedTeam = [home, away].find((team) => sharedLineupManagedTeamMatches(team));
+  const opponentTeam = managedTeam ? (managedTeam.id === home.id ? away : home) : null;
+  const managedSide = managedTeam?.id === home.id ? "home" : "away";
+  const opponentSide = managedSide === "home" ? "away" : "home";
+  const useTabbedManager = Boolean(managedTeam && opponentTeam && retroManagerLineupForTeam(managedTeam));
+  if (ratings && useTabbedManager) {
+    els.retroMatchLineupsPanel.querySelector("summary").textContent = livePlayback ? "Live matchday squad" : "Match ratings";
+    els.retroMatchLineupsBody.innerHTML = `
+      <section class="retro-lineup-workspace">
+        ${retroLineupTabsMarkup(managedTeam, opponentTeam)}
+        ${retroLineupPanelView === "managed"
+          ? retroLivePitchRatingsSideMarkup(managedTeam.name, managedSide, ratings[managedSide] || {}, match)
+          : retroLivePitchRatingsSideMarkup(opponentTeam.name, opponentSide, ratings[opponentSide] || {}, match)}
+      </section>
+    `;
+  } else if (useTabbedManager) {
+    const editable = retroManagerCanEditMatch(match);
+    els.retroMatchLineupsPanel.querySelector("summary").textContent = editable ? "Manage starting XI" : "Starting XI";
+    els.retroMatchLineupsBody.innerHTML = `
+      <section class="retro-lineup-workspace">
+        ${retroLineupTabsMarkup(managedTeam, opponentTeam)}
+        ${retroLineupPanelView === "managed"
+          ? retroManagerLineupMarkup(managedTeam.name, match)
+          : retroOpponentPitchMarkup(opponentTeam.name)}
+      </section>
+    `;
+  } else if (ratings) {
+    els.retroMatchLineupsPanel.querySelector("summary").textContent = livePlayback ? "Live matchday squad" : "Match ratings";
+    els.retroMatchLineupsBody.innerHTML = `
+      ${retroLiveRatingsSideMarkup(home.name, "home", ratings.home || {}, match)}
+      ${retroLiveRatingsSideMarkup(away.name, "away", ratings.away || {}, match)}
+    `;
+  } else {
+    const editable = retroManagerCanEditMatch(match);
+    els.retroMatchLineupsPanel.querySelector("summary").textContent = editable ? "Manage starting XI" : "Starting XI";
+    els.retroMatchLineupsBody.innerHTML = state?.premierLeagueSeason
+      ? `<section class="retro-lineup-workspace">
+          ${retroLineupTabsMarkup(managedTeam, opponentTeam)}
+          ${retroLineupPanelView === "managed"
+            ? retroManagerLineupMarkup(managedTeam.name, match)
+            : retroOpponentPitchMarkup(opponentTeam.name)}
+        </section>`
+      : `
+        ${editable && sharedLineupManagedTeamMatches(home) ? retroManagerLineupMarkup(home.name, match) : retroLineupSideMarkup(home.name)}
+        ${editable && sharedLineupManagedTeamMatches(away) ? retroManagerLineupMarkup(away.name, match) : retroLineupSideMarkup(away.name)}
+      `;
+  }
+  els.retroMatchLineupsPanel.open = wasOpen || (
+    retroManagerCanEditMatch(match)
+    && !match.result
+  );
+  const nextBench = els.retroMatchLineupsBody
+    .querySelector(".retro-manager-section.is-bench .retro-manager-player-list");
+  if (nextBench && previousBenchScroll > 0) nextBench.scrollTop = previousBenchScroll;
+}
+
 function retroLineupSideMarkup(teamName) {
   const lineup = RETRO_WORLD_CUP_ENGINE.startingXI(retroTournament.year, teamName);
   const positionOrder = { GK: 0, DF: 1, MF: 2, FW: 3 };
   const players = [...lineup.players].sort((left, right) =>
-    (positionOrder[left.position] ?? 4) - (positionOrder[right.position] ?? 4)
+    (positionOrder[retroBroadPosition(left.position)] ?? 4) - (positionOrder[retroBroadPosition(right.position)] ?? 4)
     || left.number - right.number
   );
   return `
@@ -13985,7 +18859,7 @@ function retroFormationSideMarkup(teamName) {
   };
   const used = { GK: 0, DF: 0, MF: 0, FW: 0 };
   const players = lineup.players.map((player) => {
-    const group = rows[player.position] ? player.position : "MF";
+    const group = retroBroadPosition(player.position);
     const slots = rows[group];
     const slot = slots[Math.min(used[group], slots.length - 1)];
     used[group] += 1;
@@ -14038,7 +18912,7 @@ function renderRetroTournamentProgress() {
   }
   if (retroTournament.phase === "group") {
     const next = retroTournament.groupMatches.find((match) => !match.result);
-    els.retroTournamentProgress.innerHTML = `<span>Group stage</span><strong>Matchday ${next?.matchday || 3} · ${played}/48 played</strong>`;
+    els.retroTournamentProgress.innerHTML = `<span>Group stage</span><strong>Matchday ${next?.matchday || 3} · ${played}/${retroTournament.groupMatches.length} played</strong>`;
     return;
   }
   const round = retroTournament.knockoutRounds.at(-1);
@@ -14064,7 +18938,7 @@ function renderRetroSharedMatchesView() {
   if (retroBottomGroupsVisible) {
     els.boardTitle.textContent = "Group tables";
     els.fixtureGrid.innerHTML = `
-      <div class="retro-groups-grid">${[..."ABCDEFGH"].map(retroGroupTableMarkup).join("")}</div>
+      <div class="retro-groups-grid">${retroGroupLetters().map(retroGroupTableMarkup).join("")}</div>
     `;
     els.loadMoreButton.hidden = true;
     els.simulateRoundButton.hidden = true;
@@ -14094,14 +18968,22 @@ function renderRetroWorldCupMode() {
     return;
   }
   activateRetroSimulatorState();
+  const isEuros = Number(retroTournament.year) === 2016;
   document.body.classList.add("retro-mode-active");
   document.body.classList.toggle("retro-2010-active", Number(retroTournament.year) === 2010);
+  document.body.classList.toggle("retro-euro-2016-active", Number(retroTournament.year) === 2016);
   document.body.classList.toggle("retro-2018-active", Number(retroTournament.year) === 2018);
   document.body.classList.toggle("retro-2022-active", Number(retroTournament.year) === 2022);
   els.retroWorldCupScreen.hidden = false;
   els.retroTournamentKicker.textContent = RETRO_WORLD_CUP_EDITIONS[retroTournament.year].label.toUpperCase();
-  els.retroTournamentTitle.textContent = `World Cup ${retroTournament.year}`;
+  els.retroTournamentTitle.textContent = isEuros ? "UEFA Euro 2016" : `World Cup ${retroTournament.year}`;
+  if (els.retroAchievementsButton) els.retroAchievementsButton.hidden = false;
   els.retroWorldCupRestartButton.hidden = !retroTournamentHasProgress();
+  if (retroTournament.phase === "complete" && !retroTournament.savedTournamentView) {
+    maybeShowPostWinDonation(
+      `retro-${retroTournament.year}:${retroTournament.seed || "seed"}:${retroTournament.champion || "champion"}`,
+    );
+  }
   document.querySelectorAll("[data-retro-view]").forEach((button) => {
     button.classList.toggle("active", button.dataset.retroView === retroTournamentView);
   });
@@ -14113,12 +18995,13 @@ function renderRetroWorldCupMode() {
 }
 
 function startRetroWorldCup() {
-  const year = Number(readRetroWorldCupYear());
-  if (![2010, 2014, 2018, 2022].includes(year)) {
-    showToast(`World Cup ${year} is coming soon.`);
+  const year = selectedRetroTournamentYear();
+  const isEuros = year === 2016;
+  if (![2010, 2014, 2016, 2018, 2022].includes(year)) {
+    showToast(`The ${year} tournament is coming soon.`);
     return;
   }
-  const managedTeam = readRetroWorldCupTeam(String(year));
+  const managedTeam = isEuros ? readRetroEuroTeam() : readRetroWorldCupTeam(String(year));
   retroTournament = readRetroTournamentState(year);
   if (!retroTournament) {
     retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
@@ -14146,14 +19029,18 @@ function startRetroWorldCup() {
 }
 
 function restartRetroWorldCup() {
+  const requestedYear = Number(els.retroRestartModal.dataset.restartYear)
+    || Number(retroTournament?.year)
+    || selectedRetroTournamentYear();
   stopStandardPlaybackForNavigation();
   const returnHome = els.retroRestartModal.dataset.returnHome === "true";
   delete els.retroRestartModal.dataset.returnHome;
+  delete els.retroRestartModal.dataset.restartYear;
   els.retroRestartModal.close();
   if (isRetroSimulatorState()) restoreStandardTournamentState();
 
   if (returnHome) {
-    const resetYear = retroTournament?.year || Number(readRetroWorldCupYear());
+    const resetYear = requestedYear;
     restoreSharedMainContent();
     retroTournament = null;
     retroSimulatorState = null;
@@ -14161,12 +19048,16 @@ function restartRetroWorldCup() {
     retroBottomGroupsVisible = false;
     retroBottomGroupMatchesVisible = false;
     retroSelectedMatchId = null;
-    saveRetroTournamentState();
+    try {
+      localStorage.removeItem(retroTournamentStorageKey(resetYear));
+    } catch {
+      // The in-memory reset still succeeds when storage is unavailable.
+    }
     syncRetroWorldCupCardAction(String(resetYear));
     setAppModeUrl("home", { replace: true });
     render();
     window.scrollTo({ top: 0, behavior: "auto" });
-    showToast(`World Cup ${resetYear} reset.`);
+    showToast(`${Number(resetYear) === 2016 ? "Euro 2016" : `World Cup ${resetYear}`} reset.`);
     return;
   }
 
@@ -14195,7 +19086,7 @@ function restartRetroWorldCup() {
   syncRetroWorldCupCardAction(String(year));
   render();
   window.scrollTo({ top: 0, behavior: "auto" });
-  showToast(`World Cup ${year} restarted.`);
+  showToast(`${Number(year) === 2016 ? "Euro 2016" : `World Cup ${year}`} restarted.`);
 }
 
 function syncSettingsDialog() {
@@ -14203,6 +19094,12 @@ function syncSettingsDialog() {
   els.realPlayersOnlySetting.setAttribute("aria-pressed", String(enabled));
   els.realPlayersOnlySetting.classList.toggle("is-enabled", enabled);
   state.settings = normalizeSettings(state.settings);
+  const injuriesRemoved = state.settings.removeInjuries === true;
+  els.removeInjuriesSetting?.setAttribute("aria-pressed", String(injuriesRemoved));
+  els.removeInjuriesSetting?.classList.toggle("is-enabled", injuriesRemoved);
+  if (els.removeInjuriesLabel) {
+    els.removeInjuriesLabel.textContent = injuriesRemoved ? "Injuries off" : "Injuries on";
+  }
   const keybindsEnabled = state.settings.keybinds.enabled !== false;
   els.keybindsToggleButton?.setAttribute("aria-pressed", String(keybindsEnabled));
   els.keybindsToggleButton?.classList.toggle("is-enabled", keybindsEnabled);
@@ -14269,11 +19166,17 @@ function captureKeybindShortcut(event) {
 function openRestartConfirmation() {
   if (isRetroSimulatorState()) {
     const title = els.retroRestartModal.querySelector("h2");
-    if (title) title.textContent = `Restart World Cup ${retroTournament?.year || 2014}?`;
+    const year = Number(retroTournament?.year || 2014);
+    if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
     els.retroRestartModal.dataset.returnHome = "false";
     els.retroRestartModal.showModal();
     return;
   }
+  openDefaultResetModal(false);
+}
+
+function openDefaultResetModal(returnToSetup = false) {
+  els.resetModal.dataset.returnToSetup = String(returnToSetup);
   els.resetModal.showModal();
 }
 
@@ -14299,9 +19202,9 @@ function runKeybindShortcut(event) {
     || !els.onlineRoomScreen.hidden
   ) return false;
   const key = normalizedKeybindKey(event.key);
-  if (key === "Enter" && canSkipNeutralShootout()) {
+  if (key === "Enter" && canSkipPenaltyShootout()) {
     event.preventDefault();
-    skipNeutralShootout();
+    skipPenaltyShootout();
     return true;
   }
   if (keybinds.enabled === false) return false;
@@ -14337,7 +19240,36 @@ function teamJourneyMatches(teamId) {
     .filter(({ match }) => match.homeId === teamId || match.awayId === teamId));
 }
 
+function activeTournamentTeamIds() {
+  return new Set(
+    (state?.rounds || []).flatMap((round) => (round || [])
+      .flatMap((match) => [match?.homeId, match?.awayId])
+      .filter(Boolean)),
+  );
+}
+
+function searchableTeamsForCurrentMode() {
+  if (state?.premierLeagueSeason) {
+    const activeIds = activeTournamentTeamIds();
+    return [...activeIds]
+      .map((teamId) => teamById(teamId))
+      .filter(Boolean)
+      .sort((left, right) => left.name.localeCompare(right.name));
+  }
+  if (isRetroSimulatorState()) {
+    return RETRO_WORLD_CUPS[retroTournament.year].teams
+      .map((entry) => teamById(retroTeamId(entry.name, retroTournament.year)))
+      .filter(Boolean);
+  }
+  return TEAMS;
+}
+
 function renderTeamFilter() {
+  if (teamFilterId && !activeTournamentTeamIds().has(teamFilterId)) {
+    teamFilterId = null;
+    teamFilterReturn = null;
+  }
+  els.teamSearch.placeholder = state?.premierLeagueSeason ? "Filter by club" : "Filter by team";
   const team = teamFilterId ? teamById(teamFilterId) : null;
   els.teamFilterControl.classList.toggle("active", Boolean(team));
   els.teamFilterChip.hidden = !team;
@@ -14393,11 +19325,7 @@ function closeSearch() {
 function renderSearchResults(query) {
   closeSearch();
   if (!query.trim()) return;
-  const searchableTeams = isRetroSimulatorState()
-    ? RETRO_WORLD_CUPS[retroTournament.year].teams
-      .map((entry) => teamById(retroTeamId(entry.name, retroTournament.year)))
-      .filter(Boolean)
-    : TEAMS;
+  const searchableTeams = searchableTeamsForCurrentMode();
   const results = searchableTeams
     .filter((team) => team.name.toLowerCase().includes(query.toLowerCase()))
     .slice(0, 8);
@@ -14413,7 +19341,7 @@ function renderSearchResults(query) {
         </button>
       `;
     }).join("")
-    : `<div class="empty-story"><p>No team found.</p></div>`;
+    : `<div class="empty-story"><p>${state?.premierLeagueSeason ? "No club found." : "No team found."}</p></div>`;
   els.teamFilterControl.appendChild(searchPopover);
   searchPopover.querySelectorAll(".search-result").forEach((button) => {
     button.addEventListener("click", () => {
@@ -14443,7 +19371,19 @@ els.standardTacticButtons.addEventListener("click", (event) => {
   }
   if (button.dataset.standardTactic === state.standardTactic) return;
   state.standardTactic = button.dataset.standardTactic;
+  if (isRetroSimulatorState() && retroTournament) {
+    retroTournament.managerTactic = state.standardTactic;
+  }
   const liveMatch = selectedMatch();
+  if (
+    !livePlayback
+    && liveMatch?.result
+    && !liveMatch.result.revealed
+    && liveMatch.result.engineVersion !== 2
+  ) {
+    liveMatch.result = null;
+    clearLiveMatchCheckpoint(liveMatch.id);
+  }
   if (livePlayback && match2dState?.engine && liveMatch) {
     rebuildLiveMatchAfterTacticChange(liveMatch);
   } else if (match2dState?.engine && liveMatch) {
@@ -14452,7 +19392,10 @@ els.standardTacticButtons.addEventListener("click", (event) => {
   }
   saveState();
   render();
-  showToast(`${STANDARD_TACTICS[state.standardTactic].name} selected.`);
+  const controlledSide = liveMatch && state.spectateTeamId === liveMatch.homeId ? "home" : "away";
+  const opponentKey = liveMatch ? opponentStandardTactic(liveMatch, controlledSide) : "balanced";
+  const feedback = standardTacticalFeedback(state.standardTactic, opponentKey);
+  showToast(`${STANDARD_TACTICS[state.standardTactic].name} selected · ${feedback.label}.`);
 });
 els.revealButton.addEventListener("click", () => {
   const match = selectedMatch();
@@ -14470,7 +19413,7 @@ els.matchHighlightMode?.addEventListener("click", (event) => {
 els.pauseLiveButton.addEventListener("click", toggleLivePause);
 els.speedButton.addEventListener("click", cycleLiveSpeed);
 els.skipLiveButton.addEventListener("click", skipLivePlayback);
-els.skipShootoutButton.addEventListener("click", skipNeutralShootout);
+els.skipShootoutButton.addEventListener("click", skipPenaltyShootout);
 els.simulateRoundButton.addEventListener("click", requestRoundSimulation);
 $("#confirmSimulateRoundButton").addEventListener("click", simulateCurrentRound);
 els.roundNav.addEventListener("click", (event) => {
@@ -14566,6 +19509,66 @@ els.settingsButton.addEventListener("click", () => {
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.click());
 els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
+
+let featureAnnouncementRetryTimer = null;
+let euro2016AnnouncementShownThisPage = false;
+
+function announcementWasSeen(storageKey) {
+  try {
+    return localStorage.getItem(storageKey) === "seen";
+  } catch {
+    return false;
+  }
+}
+
+function rememberAnnouncement(storageKey) {
+  try {
+    localStorage.setItem(storageKey, "seen");
+  } catch {
+    // The in-page flags still prevent a repeated popup during this visit.
+  }
+}
+
+function openNextFeatureAnnouncement() {
+  clearTimeout(featureAnnouncementRetryTimer);
+  featureAnnouncementRetryTimer = null;
+  const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
+    dialog !== els.euro2016AnnouncementModal
+  ));
+  if (anotherDialogIsOpen) {
+    featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
+    return;
+  }
+  if (
+    els.euro2016AnnouncementModal
+    && !euro2016AnnouncementShownThisPage
+    && !announcementWasSeen(EURO_2016_ANNOUNCEMENT_KEY)
+  ) {
+    euro2016AnnouncementShownThisPage = true;
+    els.euro2016AnnouncementModal.showModal();
+  }
+}
+
+function closeEuro2016Announcement() {
+  rememberAnnouncement(EURO_2016_ANNOUNCEMENT_KEY);
+  if (els.euro2016AnnouncementModal?.open) els.euro2016AnnouncementModal.close();
+}
+
+els.euro2016AnnouncementClose?.addEventListener("click", closeEuro2016Announcement);
+els.euro2016AnnouncementModal?.addEventListener("cancel", () => {
+  rememberAnnouncement(EURO_2016_ANNOUNCEMENT_KEY);
+});
+els.euro2016AnnouncementModal?.addEventListener("close", () => {
+  rememberAnnouncement(EURO_2016_ANNOUNCEMENT_KEY);
+});
+els.euro2016AnnouncementAction?.addEventListener("click", () => {
+  closeEuro2016Announcement();
+  setRetroCompetition("euros");
+  window.setTimeout(() => {
+    els.retroModeCard?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 120);
+});
+
 function openCustomTournamentSettings() {
   stopStandardPlaybackForNavigation();
   customTournamentSetupViewOpen = true;
@@ -14581,7 +19584,7 @@ els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.cli
 $("#profileFeedbackButton")?.addEventListener("click", () => els.bugReportButton.click());
 $("#profileAchievementsButton")?.addEventListener("click", () => els.openAchievementsButton.click());
 els.retroAchievementsButton?.addEventListener("click", () => {
-  if ([2010, 2014, 2018, 2022].includes(Number(retroTournament?.year))) {
+  if ([2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;
   }
@@ -14593,6 +19596,32 @@ els.realPlayersOnlySetting.addEventListener("click", () => {
   state.settings.realPlayersOnly = state.settings.realPlayersOnly === false;
   saveState();
   syncSettingsDialog();
+});
+els.removeInjuriesSetting?.addEventListener("click", () => {
+  state.settings = normalizeSettings(state.settings);
+  const injuriesRemoved = state.settings.removeInjuries !== true;
+  state.settings.removeInjuries = injuriesRemoved;
+  if (standardTournamentState?.settings) {
+    standardTournamentState.settings.removeInjuries = injuriesRemoved;
+  }
+  if (retroSimulatorState?.settings) {
+    retroSimulatorState.settings.removeInjuries = injuriesRemoved;
+  }
+  localStorage.setItem(REMOVE_INJURIES_STORAGE_KEY, String(injuriesRemoved));
+  const match = selectedMatch();
+  if (injuriesRemoved && match?.result && !match.result.revealed) {
+    const cutoff = livePlayback?.matchId === match.id
+      ? displayedLiveMinute()
+      : Number(readLiveMatchCheckpoint(match)?.displayedMinute) || 0;
+    match.result.injuries = (match.result.injuries || [])
+      .filter((injury) => injury.minute <= cutoff);
+    if (livePlayback?.matchId === match.id) rebuildLiveMatchAfterTacticChange(match);
+  }
+  saveState();
+  saveLiveMatchCheckpoint();
+  syncSettingsDialog();
+  if (match) renderMatchAnalysis(match, Boolean(livePlayback?.matchId === match.id));
+  showToast(injuriesRemoved ? "Injuries removed." : "Injuries enabled.");
 });
 els.keybindsToggleButton?.addEventListener("click", () => {
   state.settings = normalizeSettings(state.settings);
@@ -14617,6 +19646,13 @@ els.keybindSettingsList?.addEventListener("click", (event) => {
 
 els.joinOnlineRoomButton.addEventListener("click", () => openOnlineRoom(true));
 els.openAchievementsButton?.addEventListener("click", () => {
+  if (
+    els.retroWorldCupScreen?.hidden === false
+    && [2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+  ) {
+    window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
+    return;
+  }
   stopStandardPlaybackForNavigation();
   setAppModeUrl("achievements");
   render();
@@ -14625,6 +19661,8 @@ els.openAchievementsButton?.addEventListener("click", () => {
 });
 els.confirmCreateRoomButton.addEventListener("click", createOnlineRoom);
 els.confirmJoinRoomButton.addEventListener("click", joinOnlineRoom);
+els.findOnlineMatchButton?.addEventListener("click", startOnlineMatchmaking);
+els.cancelOnlineMatchmakingButton?.addEventListener("click", () => cancelOnlineMatchmaking());
 els.updateOnlineDisplayNameButton.addEventListener("click", updateOnlineDisplayName);
 els.leaveOnlineRoomButton.addEventListener("click", leaveOnlineRoom);
 els.closeOnlineRoomButton.addEventListener("click", closeOnlineRoom);
@@ -14817,6 +19855,9 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden && onlineRoomSession && !els.onlineRoomScreen.hidden) {
     refreshOnlineRoom({ quiet: true });
     startOnlineRoomPolling();
+  } else if (!document.hidden && onlineMatchmakingSession && !els.onlineRoomScreen.hidden) {
+    refreshOnlineMatchmaking({ quiet: true });
+    startOnlineMatchmakingPolling();
   }
 });
 
@@ -14836,25 +19877,63 @@ els.clearPredictionButton.addEventListener("click", () => {
   showToast("Champion prediction cleared.");
 });
 
-els.spectatePickerButton.addEventListener("click", () => openSpectatePicker("all"));
+els.spectatePickerButton.addEventListener("click", () => {
+  if (standardTournamentSetupLocked()) {
+    showToast("Restart the tournament before changing your managed team.");
+    return;
+  }
+  openSpectatePicker("all");
+});
 els.retroTeamPickerButton?.addEventListener("click", openRetroWorldCupTeamPicker);
+els.premierLeagueTeamPickerButton?.addEventListener("click", openPremierLeagueTeamPicker);
+els.premierLeagueInstallButton?.addEventListener("click", openPremierLeagueAssetPack);
+els.plAssetPackCloseButton?.addEventListener("click", () => els.plAssetPackModal?.close());
+els.plAssetPackCancelButton?.addEventListener("click", () => els.plAssetPackModal?.close());
+els.plAssetPackConfirmButton?.addEventListener("click", installPremierLeagueAssetPack);
+window.addEventListener("accountstatechange", (event) => {
+  setPremierLeagueAssetAccount(event.detail?.account || null);
+});
 els.spectateSearch.addEventListener("input", (event) => renderSpectateList(event.target.value));
 els.spectateList.addEventListener("click", (event) => {
   const option = event.target.closest(".prediction-option");
   if (!option) return;
+  if (spectatePickerMode === "premier-league") {
+    const teamId = option.dataset.premTeamId || null;
+    const team = PREMIER_LEAGUE_2026_27_TEAMS.find((candidate) => candidate.id === teamId) || null;
+    premierLeagueMenuSetup.teamId = team?.id || null;
+    savePremierLeagueMenuSetup();
+    renderPremierLeagueTeamPicker();
+    els.spectateModal.close();
+    showToast(team ? `${team.name} selected for the Premier League simulator.` : "Neutral Premier League view selected.");
+    return;
+  }
   if (spectatePickerMode === "retro") {
-    const year = readRetroWorldCupYear();
+    const year = selectedRetroTournamentYear();
+    const isEuros = readRetroCompetition() === "euros";
     if (retroTournamentForYear(year)) {
       els.spectateModal.close();
-      showToast("Restart this World Cup before changing your team.");
+      showToast(`Restart this ${isEuros ? "Euro" : "World Cup"} before changing your team.`);
       return;
     }
     const name = option.dataset.retroTeamName;
-    if (name && !retroWorldCupTeamData(year, name)) return;
-    saveRetroWorldCupTeam(year, name);
+    const selectedData = isEuros
+      ? RETRO_EURO_2016.teams.find((team) => team.name === name)
+      : retroWorldCupTeamData(year, name);
+    if (name && !selectedData) return;
+    if (isEuros) saveRetroEuroTeam(name);
+    else saveRetroWorldCupTeam(year, name);
     renderRetroWorldCupTeamPicker(year);
     els.spectateModal.close();
-    showToast(name ? `${name} selected for the ${year} World Cup.` : "Neutral view selected.");
+    showToast(
+      name
+        ? `${name} selected for ${isEuros ? "Euro 2016" : `the ${year} World Cup`}.`
+        : "Neutral view selected.",
+    );
+    return;
+  }
+  if (standardTournamentSetupLocked()) {
+    els.spectateModal.close();
+    showToast("Restart the tournament before changing your managed team.");
     return;
   }
   const teamId = option.dataset.teamId || null;
@@ -14867,6 +19946,261 @@ els.spectateList.addEventListener("click", (event) => {
   const team = spectatedTeam();
   showToast(team ? `Now following ${team.name}.` : "Neutral view selected.");
   if (state.started) window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+function applyRetroLineupSwap(lineup, firstNumber, secondNumber) {
+  const firstIndex = lineup.starters.indexOf(Number(firstNumber));
+  const secondIndex = lineup.starters.indexOf(Number(secondNumber));
+  if (firstIndex < 0 && secondIndex < 0) return false;
+  if (firstIndex >= 0 && secondIndex >= 0) {
+    [lineup.starters[firstIndex], lineup.starters[secondIndex]] = [
+      lineup.starters[secondIndex],
+      lineup.starters[firstIndex],
+    ];
+  } else if (firstIndex >= 0) {
+    lineup.starters.splice(firstIndex, 1, Number(secondNumber));
+  } else {
+    lineup.starters.splice(secondIndex, 1, Number(firstNumber));
+  }
+  return true;
+}
+
+function commitRetroLineupChange(team, match, message = "Starting XI updated.") {
+  retroLineupSwapNumber = null;
+  clearPlayerProfileCacheForTeam(team.id);
+  saveState();
+  renderRetroMatchLineupsPanel(match);
+  showToast(message);
+}
+
+els.retroMatchLineupsBody?.addEventListener("click", (event) => {
+  const tab = event.target.closest("[data-retro-lineup-tab]");
+  if (tab) {
+    retroLineupPanelView = tab.dataset.retroLineupTab === "opponent" ? "opponent" : "managed";
+    retroLineupSwapNumber = null;
+    retroLiveSubOutNumber = null;
+    retroLiveSubInNumber = null;
+    retroLivePendingSubstitution = null;
+    renderRetroMatchLineupsPanel(selectedMatch());
+    return;
+  }
+  const substitutionAction = event.target.closest("[data-retro-sub-action]");
+  const actionMatch = selectedMatch();
+  if (substitutionAction && actionMatch) {
+    if (substitutionAction.dataset.retroSubAction === "confirm" && retroPendingSubstitutionChanges().length) {
+      applyRetroLiveSubstitutionBatch(actionMatch);
+    } else {
+      retroLiveSubOutNumber = null;
+      retroLiveSubInNumber = null;
+      retroLivePendingSubstitution = null;
+      renderRetroMatchLineupsPanel(actionMatch);
+    }
+    return;
+  }
+  const undoPendingSubstitution = event.target.closest("[data-retro-sub-undo-out]");
+  const undoMatch = selectedMatch();
+  if (undoPendingSubstitution && undoMatch) {
+    const outgoingNumber = Number(undoPendingSubstitution.dataset.retroSubUndoOut);
+    const remainingChanges = retroPendingSubstitutionChanges()
+      .filter((change) => change.outgoingNumber !== outgoingNumber);
+    retroLivePendingSubstitution = remainingChanges.length ? remainingChanges : null;
+    retroLiveSubOutNumber = null;
+    retroLiveSubInNumber = null;
+    renderRetroMatchLineupsPanel(undoMatch);
+    showToast("Pending substitution removed.");
+    return;
+  }
+  const substitutionButton = event.target.closest("[data-retro-sub-player]");
+  const liveMatch = selectedMatch();
+  if (substitutionButton && liveMatch && livePlayback?.matchId === liveMatch.id) {
+    const number = Number(substitutionButton.dataset.retroSubPlayer);
+    const role = substitutionButton.dataset.retroSubRole;
+    if (!Number.isInteger(number)) return;
+    if (role === "out") {
+      if (retroLiveSubOutNumber === number) {
+        retroLiveSubOutNumber = null;
+        retroLiveSubInNumber = null;
+        renderRetroMatchLineupsPanel(liveMatch);
+        return;
+      }
+      if (retroLiveSubInNumber !== null) {
+        stageRetroLiveSubstitution(liveMatch, number, retroLiveSubInNumber);
+        return;
+      }
+      if (retroLiveSubOutNumber !== null) {
+        applyRetroLivePositionSwap(liveMatch, retroLiveSubOutNumber, number);
+        return;
+      }
+      retroLiveSubOutNumber = number;
+      renderRetroMatchLineupsPanel(liveMatch);
+      return;
+    }
+    if (role === "in" && retroLiveSubOutNumber === null) {
+      retroLiveSubInNumber = retroLiveSubInNumber === number ? null : number;
+      renderRetroMatchLineupsPanel(liveMatch);
+      return;
+    }
+    if (role === "in") stageRetroLiveSubstitution(liveMatch, retroLiveSubOutNumber, number);
+    return;
+  }
+  const button = event.target.closest("[data-retro-lineup-player]");
+  const match = selectedMatch();
+  if (!button || !match || livePlayback || !retroManagerCanEditMatch(match)) return;
+  const team = spectatedTeam();
+  const lineup = retroManagerLineupForTeam(team);
+  const number = Number(button.dataset.retroLineupPlayer);
+  if (!lineup || !Number.isInteger(number)) return;
+  if (retroLineupSwapNumber === null) {
+    retroLineupSwapNumber = number;
+    renderRetroMatchLineupsPanel(match);
+    return;
+  }
+  if (retroLineupSwapNumber === number) {
+    retroLineupSwapNumber = null;
+    renderRetroMatchLineupsPanel(match);
+    return;
+  }
+  if (!applyRetroLineupSwap(lineup, retroLineupSwapNumber, number)) {
+    retroLineupSwapNumber = number;
+    renderRetroMatchLineupsPanel(match);
+    return;
+  }
+  commitRetroLineupChange(team, match);
+});
+
+els.retroMatchLineupsBody?.addEventListener("dragstart", (event) => {
+  const substitutionPlayer = event.target.closest("[data-retro-sub-player]");
+  if (substitutionPlayer && livePlayback && retroLineupPanelView === "managed") {
+    retroLiveSubDrag = {
+      number: Number(substitutionPlayer.dataset.retroSubPlayer),
+      role: substitutionPlayer.dataset.retroSubRole,
+    };
+    substitutionPlayer.classList.add("is-dragging");
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", String(retroLiveSubDrag.number));
+    return;
+  }
+  const player = event.target.closest("[data-retro-lineup-player]");
+  if (!player || livePlayback || retroLineupPanelView !== "managed") return;
+  retroLineupDragNumber = Number(player.dataset.retroLineupPlayer);
+  player.classList.add("is-dragging");
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/plain", String(retroLineupDragNumber));
+});
+
+els.retroMatchLineupsBody?.addEventListener("dragover", (event) => {
+  const substitutionTarget = event.target.closest("[data-retro-sub-player]");
+  if (
+    substitutionTarget
+    && retroLiveSubDrag
+    && (
+      substitutionTarget.dataset.retroSubRole !== retroLiveSubDrag.role
+      || substitutionTarget.dataset.retroSubRole === "out"
+    )
+  ) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+    substitutionTarget.classList.add("is-drop-target");
+    return;
+  }
+  const target = event.target.closest("[data-retro-lineup-player]");
+  if (!target || retroLineupDragNumber === null) return;
+  event.preventDefault();
+  event.dataTransfer.dropEffect = "move";
+  target.classList.add("is-drop-target");
+});
+
+els.retroMatchLineupsBody?.addEventListener("dragleave", (event) => {
+  event.target.closest("[data-retro-sub-player]")?.classList.remove("is-drop-target");
+  event.target.closest("[data-retro-lineup-player]")?.classList.remove("is-drop-target");
+});
+
+els.retroMatchLineupsBody?.addEventListener("drop", (event) => {
+  const substitutionTarget = event.target.closest("[data-retro-sub-player]");
+  const liveMatch = selectedMatch();
+  if (
+    substitutionTarget
+    && liveMatch
+    && retroLiveSubDrag
+    && (
+      substitutionTarget.dataset.retroSubRole !== retroLiveSubDrag.role
+      || substitutionTarget.dataset.retroSubRole === "out"
+    )
+  ) {
+    event.preventDefault();
+    const targetNumber = Number(substitutionTarget.dataset.retroSubPlayer);
+    substitutionTarget.classList.remove("is-drop-target");
+    if (retroLiveSubDrag.role === "out" && substitutionTarget.dataset.retroSubRole === "out") {
+      applyRetroLivePositionSwap(liveMatch, retroLiveSubDrag.number, targetNumber);
+    } else {
+      const outgoingNumber = retroLiveSubDrag.role === "out" ? retroLiveSubDrag.number : targetNumber;
+      const incomingNumber = retroLiveSubDrag.role === "in" ? retroLiveSubDrag.number : targetNumber;
+      stageRetroLiveSubstitution(liveMatch, outgoingNumber, incomingNumber);
+    }
+    retroLiveSubDrag = null;
+    return;
+  }
+  const target = event.target.closest("[data-retro-lineup-player]");
+  const match = selectedMatch();
+  const team = spectatedTeam();
+  const lineup = retroManagerLineupForTeam(team);
+  if (!target || !match || !lineup || retroLineupDragNumber === null) return;
+  event.preventDefault();
+  const targetNumber = Number(target.dataset.retroLineupPlayer);
+  target.classList.remove("is-drop-target");
+  if (targetNumber !== retroLineupDragNumber && applyRetroLineupSwap(lineup, retroLineupDragNumber, targetNumber)) {
+    commitRetroLineupChange(team, match, "Lineup position updated.");
+  }
+  retroLineupDragNumber = null;
+});
+
+els.retroMatchLineupsBody?.addEventListener("dragend", (event) => {
+  retroLiveSubDrag = null;
+  retroLineupDragNumber = null;
+  event.target.closest("[data-retro-sub-player]")?.classList.remove("is-dragging");
+  event.target.closest("[data-retro-lineup-player]")?.classList.remove("is-dragging");
+  els.retroMatchLineupsBody.querySelectorAll(".is-drop-target").forEach((node) => node.classList.remove("is-drop-target"));
+});
+
+els.retroMatchLineupsBody?.addEventListener("change", (event) => {
+  const select = event.target.closest("[data-retro-manager-formation]");
+  const match = selectedMatch();
+  const team = spectatedTeam();
+  const lineup = retroManagerLineupForTeam(team);
+  if (!select || !match || !lineup || !RETRO_MANAGER_FORMATIONS.includes(select.value)) return;
+  const squad = retroManagerSquadForTeam(team);
+  if (!squad) return;
+  const currentFormation = lineup.formation;
+  const nextFormation = select.value;
+  lineup.starters = retroOrderStartersForFormationChange(
+    lineup.starters.map((number) => squad.players.find((player) => player.number === number)).filter(Boolean),
+    lineup.starters,
+    currentFormation,
+    nextFormation,
+  );
+  const substitutions = retroLiveSubstitutionState(match);
+  if (substitutions?.activeStarters?.length === 11) {
+    const missingEntries = Object.values(substitutions.missingSlots || {});
+    substitutions.activeStarters = retroOrderStartersForFormationChange(
+      substitutions.activeStarters
+        .map((number) => squad.players.find((player) => player.number === number))
+        .filter(Boolean),
+      substitutions.activeStarters,
+      currentFormation,
+      nextFormation,
+    );
+    substitutions.formation = nextFormation;
+    retroRemapMissingSlots(substitutions, missingEntries);
+  }
+  lineup.formation = nextFormation;
+  if (state?.premierLeagueSeason) state.standardFormation = nextFormation;
+  team.selectedFormation = nextFormation;
+  clearPlayerProfileCacheForTeam(team.id);
+  saveState();
+  if (livePlayback?.matchId === match.id) rebuildLiveMatchAfterTacticChange(match);
+  renderRetroMatchLineupsPanel(match);
+  saveLiveMatchCheckpoint();
+  showToast(`${nextFormation} formation selected.`);
 });
 
 els.continueNeutralButton.addEventListener("click", () => {
@@ -14973,40 +20307,106 @@ els.replaySpectatedButton.addEventListener("click", () => {
   showToast(`Fresh draw. ${team.name}'s opening match is ready.`);
 });
 
-$("#newTournamentButton").addEventListener("click", () => els.resetModal.showModal());
+$("#newTournamentButton").addEventListener("click", () => openDefaultResetModal(false));
+els.championSaveTournament?.addEventListener("click", () => {
+  const savedRecord = currentTournamentHistoryRecord();
+  if (savedRecord) {
+    openTournamentHistory(savedRecord.id, els.championSaveTournament);
+    return;
+  }
+  saveCurrentTournamentToHistory();
+});
+els.tournamentHistoryClose?.addEventListener("click", closeTournamentHistory);
+els.savedTournamentDeleteButton?.addEventListener("click", openSavedTournamentDeleteModal);
+els.retroSavedTournamentDeleteButton?.addEventListener("click", openSavedTournamentDeleteModal);
+els.confirmSavedTournamentDeleteButton?.addEventListener("click", confirmSavedTournamentDelete);
+els.tournamentHistoryRounds?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-history-round]");
+  if (!button || !activeTournamentHistoryRecord) return;
+  const roundIndex = Number(button.dataset.historyRound);
+  if (!Number.isInteger(roundIndex) || !activeTournamentHistoryRecord.rounds[roundIndex]) return;
+  activeTournamentHistoryRound = roundIndex;
+  const round = activeTournamentHistoryRecord.rounds[roundIndex];
+  activeTournamentHistoryMatch = Math.max(0, round.findIndex((match) => !match.thirdPlacePlayoff));
+  renderTournamentHistoryRounds();
+  renderTournamentHistorySelectedMatch();
+  renderTournamentHistoryFixtures();
+  els.tournamentHistoryRoundTitle.scrollIntoView({ behavior: "auto", block: "nearest" });
+});
+els.tournamentHistoryFixtures?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-history-match]");
+  if (!button || !activeTournamentHistoryRecord) return;
+  const matchIndex = Number(button.dataset.historyMatch);
+  if (!Number.isInteger(matchIndex)
+    || !activeTournamentHistoryRecord.rounds[activeTournamentHistoryRound]?.[matchIndex]) return;
+  activeTournamentHistoryMatch = matchIndex;
+  renderTournamentHistorySelectedMatch();
+  renderTournamentHistoryFixtures();
+  els.tournamentHistoryMatch.scrollIntoView({
+    behavior: event.detail === 0 || window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "center",
+  });
+});
 $("#championReset").addEventListener("click", () => {
   if (isRetroSimulatorState()) {
     const year = retroTournament?.year || Number(readRetroWorldCupYear());
     const title = els.retroRestartModal.querySelector("h2");
-    if (title) title.textContent = `Restart World Cup ${year}?`;
+    if (title) title.textContent = `Restart ${Number(year) === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
     els.retroRestartModal.dataset.returnHome = "false";
     els.retroRestartModal.showModal();
     return;
   }
-  els.resetModal.showModal();
+  openDefaultResetModal(false);
 });
 els.championTeamJourney?.addEventListener("click", () => {
   els.roundBoard.scrollIntoView({ behavior: "smooth", block: "start" });
   requestAnimationFrame(() => els.teamSearch.focus({ preventScroll: true }));
 });
-els.homeRestartButton?.addEventListener("click", () => els.resetModal.showModal());
+els.homeRestartButton?.addEventListener("click", () => openDefaultResetModal(true));
 $("#confirmResetButton").addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
+  const returnToSetup = els.resetModal.dataset.returnToSetup === "true";
+  delete els.resetModal.dataset.returnToSetup;
   const wasCustomTournament = isValidCustomTournamentState(state);
+  const wasDefaultKnockout = Boolean(
+    state.started
+    && !state.retroWorldCup
+    && !state.customTournament
+    && !state.legacyTournament
+    && state.rounds?.[0]?.length === 128
+  );
+  const restartDefaultInPlace = wasDefaultKnockout && !returnToSetup;
   const previousSettings = { ...state.settings };
-  const previousSpectateTeamId = state.spectateTeamId;
+  const previousSpectateTeamId = state._activeSpectateId || state.spectateTeamId;
+  if (wasCustomTournament) customTournamentState = null;
   state = createInitialState();
   state.settings = previousSettings;
   state.spectateTeamId = previousSpectateTeamId;
+  state.neutralView = !previousSpectateTeamId;
   fixtureLimit = DEFAULT_FIXTURE_LIMIT;
   filterUnresolved = false;
   teamFilterId = null;
   teamFilterReturn = null;
   closeSearch();
+  if (restartDefaultInPlace) {
+    state.started = true;
+    state._activeSpectateId = previousSpectateTeamId;
+    if (previousSpectateTeamId) focusSpectatedTeam(0);
+  }
   saveState();
-  setAppModeUrl(wasCustomTournament ? "custom" : "home", { replace: true });
+  setAppModeUrl(wasCustomTournament ? "custom" : restartDefaultInPlace ? "standard" : "home", { replace: true });
   render();
-  showToast(wasCustomTournament ? "Custom tournament returned to the builder." : "Fresh draw created. All 256 teams are back.");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  if (wasCustomTournament) {
+    showToast("Custom tournament returned to the builder.");
+  } else if (returnToSetup && wasDefaultKnockout) {
+    showToast("Tournament reset. Change your team or settings when you're ready.");
+  } else if (restartDefaultInPlace && previousSpectateTeamId) {
+    const managedTeam = teamById(previousSpectateTeamId);
+    showToast(`Fresh draw. ${managedTeam?.name || "Your team's"} opening match is ready.`);
+  } else {
+    showToast("Fresh draw created. All 256 teams are back.");
+  }
 });
 
 document.querySelectorAll(".segmented").forEach((group) => {
@@ -15023,10 +20423,10 @@ document.querySelectorAll(".landing-segmented").forEach((group) => {
     const button = event.target.closest("button");
     if (!button) return;
     if (group.dataset.settingsScope === "retro") {
-      const year = readRetroWorldCupYear();
+      const year = selectedRetroTournamentYear();
       if (retroTournamentForYear(year)) {
         syncLandingSettings();
-        showToast("Restart this World Cup before changing its simulation settings.");
+        showToast(`Restart this ${year === 2016 ? "Euro" : "World Cup"} before changing its simulation settings.`);
         return;
       }
       retroMenuSettings[group.dataset.setting] = button.dataset.value;
@@ -15034,7 +20434,15 @@ document.querySelectorAll(".landing-segmented").forEach((group) => {
         retroSimulatorState.settings[group.dataset.setting] = button.dataset.value;
       }
       saveRetroWorldCupSettings();
+    } else if (group.dataset.settingsScope === "premier-league") {
+      premierLeagueMenuSetup[group.dataset.setting] = button.dataset.value;
+      savePremierLeagueMenuSetup();
     } else {
+      if (standardTournamentSetupLocked()) {
+        syncLandingSettings();
+        showToast("Restart the tournament before changing its simulation settings.");
+        return;
+      }
       state.settings[group.dataset.setting] = button.dataset.value;
       saveState();
     }
@@ -15062,18 +20470,24 @@ els.retroWorldCupYearSwitch?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-retro-year]");
   if (button) setRetroWorldCupYear(button.dataset.retroYear);
 });
+els.retroCompetitionSwitch?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-retro-competition]");
+  if (button) setRetroCompetition(button.dataset.retroCompetition);
+});
 
 els.startRetroWorldCupButton?.addEventListener("click", startRetroWorldCup);
 els.restartRetroWorldCupButton?.addEventListener("click", () => {
-  const year = Number(readRetroWorldCupYear());
+  const year = selectedRetroTournamentYear();
   const title = els.retroRestartModal.querySelector("h2");
-  if (title) title.textContent = `Restart World Cup ${year}?`;
+  if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
   els.retroRestartModal.dataset.returnHome = "true";
+  els.retroRestartModal.dataset.restartYear = String(year);
   els.retroRestartModal.showModal();
 });
 els.retroWorldCupRestartButton?.addEventListener("click", () => {
   const title = els.retroRestartModal.querySelector("h2");
-  if (title) title.textContent = `Restart World Cup ${retroTournament?.year || 2014}?`;
+  const year = Number(retroTournament?.year || 2014);
+  if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
   els.retroRestartModal.dataset.returnHome = "false";
   els.retroRestartModal.showModal();
 });
@@ -15159,11 +20573,16 @@ $("#goToTopButton").addEventListener("click", () => {
 
 els.openCustomTournamentButton?.addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
+  if (isValidCustomTournamentState(customTournamentState)) {
+    state = customTournamentState;
+    standardTournamentState = state;
+    customTournamentSetupViewOpen = false;
+  }
   setAppModeUrl("custom");
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
-els.restartCustomTournamentButton?.addEventListener("click", () => els.resetModal.showModal());
+els.restartCustomTournamentButton?.addEventListener("click", () => openDefaultResetModal(false));
 
 els.customTournamentBackButton?.addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
@@ -15178,6 +20597,17 @@ els.customHeaderStartButton?.addEventListener("click", handleCustomTournamentSta
 els.customPresetFile?.addEventListener("change", (event) => readCustomTournamentPresetFile(event.target.files?.[0]));
 
 els.startTournamentButton.addEventListener("click", () => {
+  if (isValidCustomTournamentState(state)) {
+    customTournamentState = state;
+    state = isDefaultKnockoutState(defaultKnockoutState)
+      ? defaultKnockoutState
+      : createInitialState();
+    standardTournamentState = state;
+    fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+    filterUnresolved = false;
+    teamFilterId = null;
+    teamFilterReturn = null;
+  }
   if (state.legacyTournament) {
     const previousSettings = { ...state.settings };
     const standardSpectateTeamId = state.spectateTeamId?.startsWith("legacy-") ? null : state.spectateTeamId;
@@ -15192,7 +20622,7 @@ els.startTournamentButton.addEventListener("click", () => {
   }
   // If resuming but the spectate team changed, force a fresh start
   if (state.started && state._activeSpectateId && state.spectateTeamId !== state._activeSpectateId) {
-    els.resetModal.showModal();
+    openDefaultResetModal(false);
     return;
   }
   if (!state.started) state._activeSpectateId = state.spectateTeamId;
@@ -15275,6 +20705,10 @@ els.restartLegacyDraftButton?.addEventListener("click", () => {
 });
 
 els.legacyDraftBackButton.addEventListener("click", () => {
+  if (els.legacyDraftBackButton.dataset.savedTournament === "true") {
+    closeTournamentHistory();
+    return;
+  }
   if (els.legacyDraftBackButton.dataset.customSettings === "true") {
     openCustomTournamentSettings();
     return;
@@ -15289,6 +20723,10 @@ els.legacyHeaderBackButton.addEventListener("click", () => {
 });
 
 els.retroWorldCupBackButton?.addEventListener("click", () => {
+  if (activeTournamentHistoryRecord) {
+    closeTournamentHistory();
+    return;
+  }
   stopStandardPlaybackForNavigation();
   setAppModeUrl("home");
   render();
@@ -15297,6 +20735,10 @@ els.retroWorldCupBackButton?.addEventListener("click", () => {
 
 document.querySelector(".brand").addEventListener("click", (event) => {
   event.preventDefault();
+  if (activeTournamentHistoryRecord) {
+    closeTournamentHistory();
+    return;
+  }
   setMobileMenu(false);
   stopStandardPlaybackForNavigation();
   setAppModeUrl("home", { replace: true });
@@ -15351,13 +20793,29 @@ $("#fullscreenButton").addEventListener("click", async () => {
 });
 
 window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && activeTournamentHistoryRecord) {
+    event.preventDefault();
+    closeTournamentHistory();
+    return;
+  }
   if (captureKeybindShortcut(event)) return;
   if (confirmOpenDialogShortcut(event)) return;
   if (event.key === "Escape") setMobileMenu(false);
   runKeybindShortcut(event);
 });
 
+window.addEventListener("pagehide", saveLiveMatchCheckpoint);
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") saveLiveMatchCheckpoint();
+});
+
 window.addEventListener("popstate", () => {
+  const routedTournamentHistoryId = savedTournamentIdFromPath();
+  if (routedTournamentHistoryId) {
+    openTournamentHistory(routedTournamentHistoryId, null, { updateUrl: false });
+    return;
+  }
+  if (activeTournamentHistoryRecord) closeTournamentHistory({ updateUrl: false });
   const mode = currentAppMode();
   const routedRetroYear = retroWorldCupYearFromPath();
   if (mode === "retro" && routedRetroYear) {
@@ -15377,6 +20835,15 @@ window.addEventListener("popstate", () => {
     }
     return;
   }
+  if (mode === "premierLeague") {
+    stopStandardPlaybackForNavigation();
+    if (!els.onlineRoomScreen.hidden) closeOnlineScreen({ updateUrl: false, force: true });
+    window.PremierLeagueSeason?.openSeason?.({ updateUrl: false });
+    return;
+  }
+  if (window.PremierLeagueSeason?.isOpen?.()) {
+    window.PremierLeagueSeason.closeSeason({ updateUrl: false });
+  }
   if (mode !== "standard") stopStandardPlaybackForNavigation();
   if (!els.onlineRoomScreen.hidden) closeOnlineScreen({ updateUrl: false, force: true });
   render();
@@ -15385,6 +20852,7 @@ window.addEventListener("popstate", () => {
 
 setOnlineDisplayNames(onlineRoomSession?.name || readSavedOnlineDisplayName());
 const initialUrlParams = new URLSearchParams(window.location.search);
+const initialSavedTournamentId = savedTournamentIdFromPath();
 const linkedOnlineRoomCode = initialUrlParams.get("room");
 if (linkedOnlineRoomCode) els.onlineRoomCodeInput.value = normalizeOnlineRoomCode(linkedOnlineRoomCode);
 let initialAppMode = currentAppMode();
@@ -15406,7 +20874,27 @@ if (initialAppMode === "standard" && !state.started) {
 }
 configureOnlineModeAvailability();
 syncOnlineRoomCard();
+renderPremierLeagueTeamPicker();
+renderPremierLeagueAssetState();
 setRetroWorldCupYear(initialRetroYear || readRetroWorldCupYear());
+setRetroCompetition(Number(initialRetroYear) === 2016 ? "euros" : initialRetroYear ? "wc" : readRetroCompetition());
+if (initialAppMode === "retro" && Number(initialRetroYear) === 2016 && !retroTournament) {
+  const managedTeam = readRetroEuroTeam() || "France";
+  saveRetroEuroTeam(managedTeam);
+  retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
+    year: 2016,
+    seed: Date.now(),
+    managedTeam,
+  });
+  lockRetroTournamentSetup(retroTournament, {
+    managedTeam,
+    upset: retroMenuSettings.upset,
+    goals: retroMenuSettings.goals,
+  });
+  saveRetroTournamentState();
+  retroSquadTeamName = managedTeam;
+  retroSelectedMatchId = RETRO_WORLD_CUP_ENGINE.nextUnplayedMatch(retroTournament)?.id || null;
+}
 if (initialAppMode === "retro" && !initialRetroYear) {
   setAppModeUrl("retro", { replace: true });
 }
@@ -15414,6 +20902,9 @@ try {
   render();
 } catch (error) {
   recoverFromStartupError(error, "initial-render");
+}
+if (initialSavedTournamentId && !openTournamentHistory(initialSavedTournamentId, null, { updateUrl: false })) {
+  window.history.replaceState({ ...(window.history.state || {}), tournamentHistoryId: null }, "", "/");
 }
 clearRetroRouteLoadingState();
 if (interruptedLocalMatchSettled && initialAppMode === "standard") {
@@ -15437,3 +20928,4 @@ if (!window.__retroWorldCupStartupUnfreezeBound) {
     }
   }, 250);
 }
+featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 900);

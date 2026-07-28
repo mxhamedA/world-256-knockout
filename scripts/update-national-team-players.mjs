@@ -62,6 +62,25 @@ const manualSources = {
   Philippines: "Philippines June 2026 senior squad",
 };
 
+// Current-squad pages can lag behind retirement announcements, especially
+// immediately after a major tournament. Keep this small, sourced and explicit
+// instead of guessing that every older active player has retired.
+const retiredInternationalPlayers = new Set([
+  "Manuel Neuer",
+  "Patrik Schick",
+  "Guillermo Ochoa",
+  "Riyad Mahrez",
+  "Enner Valencia",
+  "NicolÃ¡s Otamendi",
+  "Marko ArnautoviÄ‡",
+  "Sadio ManÃ©",
+  "Craig Gordon",
+  "Jean MichaÃ«l Seri",
+  "Neymar",
+  "Wataru Endo",
+  "Kyle Walker",
+]);
+
 function pageTitle(teamName) {
   return pageOverrides[teamName] || `${teamName} national football team`;
 }
@@ -97,6 +116,10 @@ function parseRosterSection(roster) {
   const players = [];
   for (const line of roster.split("\n")) {
     if (!/nat fs.*player/i.test(line)) continue;
+    // Wikipedia keeps retired internationals in some recent-call-up tables and
+    // marks them RET. They are useful historical context, but not current squad
+    // candidates for the default simulator.
+    if (/(?:^|[\s|=])RET(?:[\s|}]|$)/i.test(line)) continue;
     const nameMatch = /\|\s*name\s*=\s*(.*?)(?=\s*\|\s*(?:caps|goals|club|clubnum|pos|age|number|num|nat|notes?)\s*=|\s*}}\s*$)/i.exec(line);
     if (!nameMatch) continue;
     const pos = sourcePositionGroup(/\|\s*pos\s*=\s*([A-Z]+)/i.exec(line)?.[1] || "");
@@ -211,13 +234,15 @@ const sources = {};
 for (const [name, wikipediaPlayers, resolvedPage] of fetched) {
   const preferred = manualOverrides[name]
     || (name === "Chile" ? chileOfficialMarch2026 : []);
+  const fallbackPlayers = wikipediaPlayers.length < 11 ? (existing[name] || []) : [];
   const roster = [
     ...preferred,
     ...wikipediaPlayers,
-    ...(existing[name] || []),
+    ...fallbackPlayers,
   ].filter((player, index, entries) => {
     const playerName = typeof player === "string" ? player : player.name;
-    return entries.findIndex((candidate) => (typeof candidate === "string" ? candidate : candidate.name) === playerName) === index;
+    return !retiredInternationalPlayers.has(playerName)
+      && entries.findIndex((candidate) => (typeof candidate === "string" ? candidate : candidate.name) === playerName) === index;
   });
   const selected = selectSquad(roster, 26);
   if (selected.length >= 4) pools[name] = selected.map((player) => player.name);

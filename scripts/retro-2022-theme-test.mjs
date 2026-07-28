@@ -12,8 +12,9 @@ const worker = fs.readFileSync(path.join(root, "worker.mjs"), "utf8");
 const build = fs.readFileSync(path.join(root, "scripts", "build-cloudflare.mjs"), "utf8");
 const marker = "/* Qatar 2022 Retro edition: original burgundy architectural treatment. */";
 const markerIndex = css.indexOf(marker);
+const russiaMarkerIndex = css.indexOf("/* Russia 2018 Retro edition: original folk-pattern treatment over the shared simulator. */");
 
-assert.ok(markerIndex >= css.length * 0.9, "The Qatar theme must follow legacy rules so they cannot override it.");
+assert.ok(markerIndex > russiaMarkerIndex, "The Qatar theme must follow the legacy retro themes so they cannot override it.");
 assert.equal(css.indexOf(marker, markerIndex + marker.length), -1, "The Qatar theme marker should occur once.");
 const theme = css.slice(markerIndex);
 
@@ -58,6 +59,7 @@ assert.doesNotMatch(
 );
 assert.match(app, /if \(Number\(year\) === 2022\) return RETRO_2022_SQUADS;/);
 assert.match(app, /classList\.toggle\("retro-2022-active", Number\(retroTournament\.year\) === 2022\)/);
+assert.match(css, /Qatar 2022 manager: editable team sheet and live performance ratings/);
 assert.match(html, /<script src="\.\/retro-2022-squads\.js/);
 assert.match(html, /<script src="\.\/retro-2022-schedule\.js/);
 assert.match(worker, /"\/retro-22-world-cup"/);

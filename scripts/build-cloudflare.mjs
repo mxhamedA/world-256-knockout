@@ -10,12 +10,15 @@ const staticFiles = [
   "_headers",
   "ads.txt",
   "analytics.js",
+  "favicon.png",
   "app.js",
   "retro-data.js",
   "retro-2010-squads.js",
   "retro-2010-schedule.js",
   "retro-2014-squads.js",
   "retro-2014-schedule.js",
+  "retro-euro-2016-squads.js",
+  "retro-euro-2016-schedule.js",
   "retro-2018-squads.js",
   "retro-2018-schedule.js",
   "retro-2022-squads.js",
@@ -29,6 +32,9 @@ const staticFiles = [
   "player-pools.generated.js",
   "privacy.html",
   "presentation-engine.js",
+  "premier-league.css",
+  "premier-league-data.js",
+  "premier-league.js",
   "redirect.js",
   "simulation-engine.js",
   "styles.css",
@@ -41,6 +47,8 @@ const staticFiles = [
     "assets/retro-world-cup-2014.png",
     "assets/retro-world-cup-2018.png",
     "assets/retro-world-cup-2022.png",
+    "assets/euro-2016-logo.png",
+    "assets/prem-logo.webp",
     "assets/world-cup-2026-logo.png",
     "assets/retro-2010/south-africa-sunburst-desktop.webp",
     "assets/retro-2010/south-africa-sunburst-portrait.webp",
@@ -72,6 +80,11 @@ if (existsSync(legacyDataRoot)) {
 const flagAssetsRoot = join(projectRoot, "assets", "flags");
 if (existsSync(flagAssetsRoot)) {
   cpSync(flagAssetsRoot, join(outputRoot, "assets", "flags"), { recursive: true });
+}
+
+const premierLeagueAssetPackRoot = join(projectRoot, "assets", "pl-26-27");
+if (existsSync(premierLeagueAssetPackRoot)) {
+  cpSync(premierLeagueAssetPackRoot, join(outputRoot, "assets", "pl-26-27"), { recursive: true });
 }
 
 const sourceHtml = readFileSync(join(projectRoot, "index.html"), "utf8");

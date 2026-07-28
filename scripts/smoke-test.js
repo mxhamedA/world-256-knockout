@@ -349,8 +349,8 @@ assert.match(
 );
 assert.match(
   appSource,
-  /function resolveInteractiveRegulation[\s\S]*result\.regulationHome[\s\S]*playback\.maxMinute = result\.extraTime \? 120 : 90/,
-  "A watched match must preserve the authoritative regulation and extra-time boundary.",
+  /function reconcileInteractiveMatchBoundary[\s\S]*result\.regulationHome[\s\S]*playback\.maxMinute = extraTime \? 120 : 90[\s\S]*function resolveInteractiveRegulation[\s\S]*reconcileInteractiveMatchBoundary\(match, playback\)/,
+  "A watched match must recalculate the authoritative regulation and extra-time boundary after an interactive penalty.",
 );
 assert.doesNotMatch(appSource, /function appendInteractiveExtraTime/,
   "Extra-time goals must remain part of the deterministic match timeline.");
@@ -555,9 +555,25 @@ assert.doesNotMatch(
 assert.match(appSource, /Resume tournament/);
 assert.match(
   appSource,
-  /function settleInterruptedLocalMatches\(\)[\s\S]*match\.result\?\.engineVersion === 2 && !match\.result\.revealed[\s\S]*match\.result\.revealed = true[\s\S]*buildNextRound\(roundIndex\)[\s\S]*saveState\(\)/,
-  "Reloading must finalize an already-started local match instead of allowing it to be replayed.",
+  /function settleInterruptedLocalMatches\(\)[\s\S]*checkpoint\.matchId === match\.id[\s\S]*Number\(checkpoint\.engineSeed\) === Number\(match\.result\.engineSeed\)[\s\S]*return;[\s\S]*match\.result\.revealed = true/,
+  "A valid live checkpoint must prevent an interrupted local match from being auto-finalized.",
 );
+assert.match(
+  appSource,
+  /function saveLiveMatchCheckpoint\(\)[\s\S]*displayedMinute[\s\S]*homeScore[\s\S]*playerRatings[\s\S]*managerSubstitutions[\s\S]*activeHighlightIndex[\s\S]*actionIndex/,
+  "Live checkpoints must preserve the exact clock and gameplay state.",
+);
+assert.match(
+  appSource,
+  /function startLivePlayback\(match\)[\s\S]*readLiveMatchCheckpoint\(match\)[\s\S]*initialMinute: resumeMinute[\s\S]*activeHighlightIndex[\s\S]*Match resumed at/,
+  "Interrupted matches must restore their saved minute and highlight cursor.",
+);
+assert.match(
+  appSource,
+  /checkpoint\?\.scope === `retro-\$\{retroTournament\.year\}`[\s\S]*state\.activeRound = checkpointRoundIndex[\s\S]*retroSelectedMatchId = checkpoint\.matchId/,
+  "A resumed retro tournament must reopen the interrupted fixture instead of selecting the next match.",
+);
+assert.match(appSource, /window\.addEventListener\("pagehide", saveLiveMatchCheckpoint\)/);
 assert.match(htmlSource, /<a class="brand" href="\/"/);
 assert.match(htmlSource, /<a class="online-screen-brand"[^>]*href="\/"/);
 assert.doesNotMatch(workerSource, /members: \[member, cpuMember\]/);
@@ -1288,14 +1304,14 @@ assert.match(appSource, /function startLivePlayback\(match\)[\s\S]*presentationS
   "Starting a new regular match must clear stale shootout commentary and playback timers.");
 assert.match(htmlSource, /id="shootoutSkipControl" hidden[\s\S]*id="skipShootoutButton"[^>]*>Skip shootout<\/button>/,
   "Neutral shootouts need a dedicated skip control.");
-assert.match(appSource, /function canSkipNeutralShootout\(\)[\s\S]*phase === "shootout"[\s\S]*!livePlayback\.interactiveShootout/,
-  "Shootout skipping must be restricted to non-interactive neutral matches.");
-assert.match(appSource, /function skipNeutralShootout\(\)[\s\S]*penaltyHomeScore = match\.result\.penalties\.home[\s\S]*penaltyAwayScore = match\.result\.penalties\.away[\s\S]*finishPenaltyShootout\(220\)/,
-  "Skipping a neutral shootout must reveal its authoritative result without resimulation.");
-assert.match(appSource, /if \(livePlayback\.phase === "shootout"\) \{[\s\S]*if \(skipNeutralShootout\(\)\) return;/,
-  "The skip-to-full-time keyboard action must route neutral shootouts through the shootout skipper.");
-assert.match(appSource, /if \(key === "Enter" && canSkipNeutralShootout\(\)\)[\s\S]*skipNeutralShootout\(\)[\s\S]*if \(keybinds\.enabled === false\)/,
-  "Enter must skip a neutral shootout even when configurable shortcuts are disabled or remapped.");
+assert.match(appSource, /function canSkipPenaltyShootout\(\)[\s\S]*phase === "shootout"[\s\S]*!livePlayback\.ending/,
+  "Shootout skipping must remain available in neutral and managed-team matches.");
+assert.match(appSource, /function skipPenaltyShootout\(\)[\s\S]*if \(livePlayback\.interactiveShootout\)[\s\S]*simulatePenaltyShootout\([\s\S]*penaltyHomeScore = match\.result\.penalties\.home[\s\S]*penaltyAwayScore = match\.result\.penalties\.away[\s\S]*finishPenaltyShootout\(220\)/,
+  "Skipping a managed-team shootout must settle it and reveal its final score.");
+assert.match(appSource, /if \(livePlayback\.phase === "shootout"\) \{[\s\S]*if \(skipPenaltyShootout\(\)\) return;/,
+  "The skip-to-full-time keyboard action must route shootouts through the shootout skipper.");
+assert.match(appSource, /if \(key === "Enter" && canSkipPenaltyShootout\(\)\)[\s\S]*skipPenaltyShootout\(\)[\s\S]*if \(keybinds\.enabled === false\)/,
+  "Enter must skip a shootout even when configurable shortcuts are disabled or remapped.");
 const legacyPenaltyOrder = context.__shootoutTakerPool({
   id: "legacy-penalty-order-proof",
   name: "Spain Legacy XI",

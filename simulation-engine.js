@@ -43,7 +43,7 @@ const SIMULATION_CONFIG = Object.freeze({
   goals: {
     tight: { baseXG: 0.92, minimumXG: 0.08, maximumXG: 2.9 },
     normal: { baseXG: 1.02, minimumXG: 0.10, maximumXG: 3.2 },
-    wild: { baseXG: 1.55, minimumXG: 0.16, maximumXG: 4.8 },
+    wild: { baseXG: 1.55, minimumXG: 0.16, maximumXG: 6.4 },
   },
   goalTypes: {
     openPlay: 0.80,
@@ -322,7 +322,7 @@ function buildPlayerProfiles(team, names, generated = false) {
     const overallBase = generated ? teamOverall : team.rating;
     const overall = simulationClamp(
       profileOverride.overall
-        ?? (sourceProfile.retroWorldCup ? sourceProfile.overall : null)
+        ?? (sourceProfile.retroWorldCup || sourceProfile.simulatorRating ? sourceProfile.overall : null)
         ?? overallBase + baseOffset + stableOverallVariation,
       20,
       overallMaximum,
@@ -491,13 +491,61 @@ const POSSESSION_FORMATIONS = Object.freeze({
     [6, 50], [22, 14], [22, 38], [22, 62], [22, 86],
     [44, 14], [41, 38], [41, 62], [44, 86], [69, 38], [69, 62],
   ]),
+  "4-3-1-2": Object.freeze([
+    [6, 50], [22, 14], [22, 38], [22, 62], [22, 86],
+    [43, 26], [40, 50], [43, 74], [58, 50], [72, 38], [72, 62],
+  ]),
   "4-2-3-1": Object.freeze([
     [6, 50], [22, 14], [22, 38], [22, 62], [22, 86],
     [38, 36], [38, 64], [56, 18], [54, 50], [56, 82], [70, 50],
   ]),
+  "4-1-2-1-2": Object.freeze([
+    [6, 50], [22, 14], [22, 38], [22, 62], [22, 86],
+    [38, 50], [49, 30], [49, 70], [59, 50], [72, 38], [72, 62],
+  ]),
+  "4-3-2-1": Object.freeze([
+    [6, 50], [22, 14], [22, 38], [22, 62], [22, 86],
+    [43, 24], [40, 50], [43, 76], [58, 34], [58, 66], [72, 50],
+  ]),
+  "4-1-4-1": Object.freeze([
+    [6, 50], [22, 14], [22, 38], [22, 62], [22, 86],
+    [37, 50], [51, 14], [48, 38], [48, 62], [51, 86], [72, 50],
+  ]),
   "3-5-2": Object.freeze([
     [6, 50], [23, 25], [21, 50], [23, 75], [43, 10],
     [40, 33], [38, 50], [40, 67], [43, 90], [69, 38], [69, 62],
+  ]),
+  "3-4-1-2": Object.freeze([
+    [6, 50], [23, 25], [21, 50], [23, 75],
+    [45, 12], [42, 38], [42, 62], [45, 88], [58, 50], [72, 38], [72, 62],
+  ]),
+  "3-4-2-1": Object.freeze([
+    [6, 50], [23, 25], [21, 50], [23, 75],
+    [45, 10], [42, 38], [42, 62], [45, 90], [59, 35], [59, 65], [73, 50],
+  ]),
+  "3-4-3": Object.freeze([
+    [6, 50], [23, 25], [21, 50], [23, 75],
+    [45, 12], [42, 39], [42, 61], [45, 88], [69, 18], [72, 50], [69, 82],
+  ]),
+  "3-3-1-3": Object.freeze([
+    [6, 50], [23, 25], [21, 50], [23, 75],
+    [43, 16], [40, 50], [43, 84], [57, 50], [69, 18], [72, 50], [69, 82],
+  ]),
+  "5-3-2": Object.freeze([
+    [6, 50], [27, 10], [22, 30], [20, 50], [22, 70], [27, 90],
+    [44, 25], [41, 50], [44, 75], [70, 38], [70, 62],
+  ]),
+  "5-4-1": Object.freeze([
+    [6, 50], [27, 10], [22, 30], [20, 50], [22, 70], [27, 90],
+    [46, 14], [43, 39], [43, 61], [46, 86], [72, 50],
+  ]),
+  "5-2-2-1": Object.freeze([
+    [6, 50], [27, 10], [22, 30], [20, 50], [22, 70], [27, 90],
+    [43, 35], [43, 65], [59, 25], [59, 75], [72, 50],
+  ]),
+  "5-2-3": Object.freeze([
+    [6, 50], [27, 10], [22, 30], [20, 50], [22, 70], [27, 90],
+    [44, 35], [44, 65], [68, 18], [72, 50], [68, 82],
   ]),
 });
 
@@ -509,8 +557,20 @@ const POSSESSION_ACTION_TYPES = Object.freeze([
 const POSSESSION_SLOT_POSITIONS = Object.freeze({
   "4-3-3": ["GK", "LB", "CB", "CB", "RB", "CM", "CM", "CM", "LW", "ST", "RW"],
   "4-4-2": ["GK", "LB", "CB", "CB", "RB", "LM", "CM", "CM", "RM", "ST", "ST"],
+  "4-3-1-2": ["GK", "LB", "CB", "CB", "RB", "CM", "CDM", "CM", "CAM", "ST", "ST"],
   "4-2-3-1": ["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "LW", "CAM", "RW", "ST"],
+  "4-1-2-1-2": ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CM", "CAM", "ST", "ST"],
+  "4-3-2-1": ["GK", "LB", "CB", "CB", "RB", "CM", "CDM", "CM", "LW", "RW", "ST"],
+  "4-1-4-1": ["GK", "LB", "CB", "CB", "RB", "CDM", "LM", "CM", "CM", "RM", "ST"],
   "3-5-2": ["GK", "CB", "CB", "CB", "LWB", "CM", "CDM", "CM", "RWB", "ST", "ST"],
+  "3-4-1-2": ["GK", "CB", "CB", "CB", "LM", "CM", "CM", "RM", "CAM", "ST", "ST"],
+  "3-4-2-1": ["GK", "CB", "CB", "CB", "LWB", "CM", "CM", "RWB", "CAM", "CAM", "ST"],
+  "3-4-3": ["GK", "CB", "CB", "CB", "LM", "CM", "CM", "RM", "LW", "ST", "RW"],
+  "3-3-1-3": ["GK", "CB", "CB", "CB", "LM", "CM", "RM", "CAM", "LW", "ST", "RW"],
+  "5-3-2": ["GK", "LWB", "CB", "CB", "CB", "RWB", "CM", "CDM", "CM", "ST", "ST"],
+  "5-4-1": ["GK", "LWB", "CB", "CB", "CB", "RWB", "LM", "CM", "CM", "RM", "ST"],
+  "5-2-2-1": ["GK", "LWB", "CB", "CB", "CB", "RWB", "CM", "CM", "LW", "RW", "ST"],
+  "5-2-3": ["GK", "LWB", "CB", "CB", "CB", "RWB", "CM", "CM", "LW", "ST", "RW"],
 });
 
 function possessionHash(value) {
@@ -597,7 +657,9 @@ function possessionPositionFit(profile, slotPosition) {
 
 function buildPossessionLineup(team, profiles, formationName) {
   const slots = POSSESSION_SLOT_POSITIONS[formationName] || POSSESSION_SLOT_POSITIONS["4-3-3"];
-  const pool = profiles.slice(0, 18).map((profile, index) => ({ profile, index }));
+  const markedStarters = profiles.filter((profile) => profile.startingXI);
+  const lineupPool = markedStarters.length === 11 ? markedStarters : profiles.slice(0, 18);
+  const pool = lineupPool.map((profile, index) => ({ profile, index }));
   while (pool.length < 11) {
     const index = pool.length;
     pool.push({
@@ -640,6 +702,7 @@ function buildPossessionLineup(team, profiles, formationName) {
 }
 
 function possessionFormationForTeam(team, profiles) {
+  if (POSSESSION_FORMATIONS[team.selectedFormation]) return team.selectedFormation;
   if (team.positionSuitability?.length) {
     const positions = team.positionSuitability.map((entry) => entry.slot);
     const defenders = positions.filter((position) => ["CB", "LB", "RB", "LWB", "RWB"].includes(position)).length;
@@ -658,7 +721,19 @@ function possessionPoint(side, point) {
 
 function createPossessionSide(team, profiles, side, tacticKey) {
   const formation = possessionFormationForTeam(team, profiles);
-  const lineup = buildPossessionLineup(team, profiles, formation);
+  const missingPlayerNames = new Set(team.liveMissingPlayerNames || []);
+  const missingSlotIndexes = new Set(team.liveMissingSlotIndexes || []);
+  const availableProfiles = profiles.filter((profile) => !missingPlayerNames.has(profile.name));
+  const orderedStarterNames = team.liveOrderedStarterNames || [];
+  const formationSlots = POSSESSION_SLOT_POSITIONS[formation] || POSSESSION_SLOT_POSITIONS["4-3-3"];
+  const lineup = orderedStarterNames.length === 11
+    ? orderedStarterNames.map((name, slotIndex) => {
+        const profile = availableProfiles.find((candidate) => candidate.name === name);
+        return profile
+          ? normalisePossessionProfile(profile, slotIndex, team, formationSlots[slotIndex])
+          : null;
+      })
+    : buildPossessionLineup(team, availableProfiles, formation);
   return {
     id: team.id,
     side,
@@ -666,12 +741,13 @@ function createPossessionSide(team, profiles, side, tacticKey) {
     tacticKey,
     formation,
     rating: teamSimulationRatings(team),
-    players: lineup.map((profile, index) => {
-      const point = possessionPoint(side, POSSESSION_FORMATIONS[formation][index]);
+    players: lineup.flatMap((profile, slotIndex) => {
+      if (!profile || missingSlotIndexes.has(slotIndex)) return [];
+      const point = possessionPoint(side, POSSESSION_FORMATIONS[formation][slotIndex]);
       return {
         ...profile,
         side,
-        index,
+        index: slotIndex,
         baseX: point[0],
         baseY: point[1],
         x: point[0],
@@ -1676,6 +1752,15 @@ function createMatchHighlightPresentation(options) {
     });
   });
   (result.redCards || []).forEach((event) => addDescriptor({
+    minute: event.minute,
+    side: event.side === "home" ? "away" : "home",
+    sequenceType: "defensive-interception",
+    outcome: "foul",
+    importance: "key",
+    event: { ...event, authoritative: true },
+    xg: 0,
+  }));
+  (result.injuries || []).forEach((event) => addDescriptor({
     minute: event.minute,
     side: event.side === "home" ? "away" : "home",
     sequenceType: "defensive-interception",

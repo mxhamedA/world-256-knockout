@@ -26,6 +26,7 @@ import {
   ROOM_CODE_PATTERN,
   ROOM_LIFETIME_MS,
   hashAccessToken,
+  makeRoomCode,
   makeMemberId,
   normalizeDisplayName,
   normalizeRoomCode,
@@ -53,6 +54,9 @@ const ONLINE_CAPACITY_SHARDS = 8;
 const ONLINE_MAX_RESERVED_MATCHES_PER_ROOM = 16;
 const ONLINE_SHORT_ALARM_CONTINUATION_MS = 50;
 const ONLINE_CONTROLLED_MATCH_CATCHUP_MINUTES = 3;
+const MATCHMAKING_QUEUE_TTL_MS = 5 * 60 * 1000;
+const MATCHMAKING_ASSIGNMENT_TTL_MS = 10 * 60 * 1000;
+const MATCHMAKING_TICKET_PATTERN = /^[A-Za-z0-9_-]{16}$/;
 const DRAFT_ELIGIBLE_TEAMS = DRAFT_TEAMS;
 const FIFA_RANKED_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS
   .filter((team) => Number.isInteger(team.officialFifaRank))
@@ -60,7 +64,8 @@ const FIFA_RANKED_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS
 const GREAT_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank <= 20);
 const MID_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank >= 40 && team.officialFifaRank <= 90);
 const LOWER_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS.filter((team) => !team.officialFifaRank || team.officialFifaRank >= 120);
-const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/draft-mode", "/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/achievements", "/online-mode", "/palestine-challenge", "/profile"]);
+const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/draft-mode", "/retro-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/retro-euro-2016", "/achievements", "/online-mode", "/pl-simulator", "/palestine-challenge", "/profile"]);
+const SAVED_TOURNAMENT_PATH = /^\/saved-tournaments\/[A-Za-z0-9-]+$/;
 
 export default {
   async fetch(request, env) {
@@ -112,6 +117,31 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
           return json({ error: "Too many rooms created. Try again in a minute." }, 429);
         }
         return createRoom(request, env);
+      }
+
+      if (url.pathname === "/api/matchmaking" && request.method === "POST") {
+        if (!(await allowRequest(env.ROOM_JOIN_LIMITER, rateKey(request, "matchmaking-join")))) {
+          return json({ error: "Too many matchmaking attempts. Try again in a minute." }, 429);
+        }
+        return forwardToMatchmaker(env, request, "join");
+      }
+
+      const matchmakingMatch = url.pathname.match(/^\/api\/matchmaking\/([A-Za-z0-9_-]{16})(?:\/(cancel))?$/);
+      if (matchmakingMatch) {
+        const ticketId = matchmakingMatch[1];
+        const action = matchmakingMatch[2] || "status";
+        const limiter = request.method === "GET" ? env.ROOM_STATUS_LIMITER : env.ROOM_API_LIMITER;
+        const limiterAction = request.method === "GET" ? "matchmaking-status" : "matchmaking-command";
+        if (!(await allowRequest(limiter, roomActorRateKey(request, limiterAction)))) {
+          return json({ error: "Matchmaking updates are arriving too quickly. Try again in a moment." }, 429);
+        }
+        if (action === "status" && request.method === "GET") {
+          return forwardToMatchmaker(env, request, "status", ticketId);
+        }
+        if (action === "cancel" && request.method === "POST") {
+          return forwardToMatchmaker(env, request, "cancel", ticketId);
+        }
+        return json({ error: "Method not allowed." }, 405);
       }
 
       const match = url.pathname.match(/^\/api\/rooms\/([^/]+)(?:\/(join|leave|rename|rematch|draft-start|draft-draw|match-ready|match-tactic|match-playback|match-view|penalty-kick|team-select))?$/);
@@ -170,7 +200,8 @@ async function serveHtmlAsset(request, env) {
   if (normalizedPath === "/palestine-challenge" && env.PALESTINE_CHALLENGE_ENABLED !== "true") {
     return Response.redirect(new URL("/", request.url), 302);
   }
-  const assetRequest = APP_SHELL_PATHS.has(normalizedPath) && normalizedPath !== "/"
+  const appShellPath = APP_SHELL_PATHS.has(normalizedPath) || SAVED_TOURNAMENT_PATH.test(normalizedPath);
+  const assetRequest = appShellPath && normalizedPath !== "/"
     ? new Request(new URL(`/${assetUrl.search}`, assetUrl), request)
     : request;
   const response = await env.ASSETS.fetch(assetRequest);
@@ -305,6 +336,7 @@ export class TournamentRoom extends DurableObject {
     const room = {
       code,
       status: "lobby",
+      visibility: body.visibility === "public" ? "public" : "private",
       createdAt: now,
       expiresAt: now + ROOM_LIFETIME_MS,
       hostMemberId: member.id,
@@ -1017,6 +1049,333 @@ export class TournamentRoom extends DurableObject {
   }
 }
 
+export class PublicMatchmaker extends DurableObject {
+  async fetch(request) {
+    const startedAt = performance.now();
+    const action = new URL(request.url).pathname.slice(1);
+    let status = 500;
+    try {
+      structuredLog("matchmaking-request", { action, method: request.method });
+      let response;
+      if (action === "join" && request.method === "POST") response = await this.join(request);
+      else if (action === "status" && request.method === "GET") response = await this.status(request);
+      else if (action === "cancel" && request.method === "POST") response = await this.cancel(request);
+      else response = json({ error: "Not found." }, 404);
+      status = response.status;
+      return response;
+    } catch (error) {
+      if (error instanceof RoomRequestError || Number.isInteger(error?.status)) {
+        status = error.status;
+        return json({ error: error.message }, status);
+      }
+      throw error;
+    } finally {
+      structuredLog("matchmaking-request-complete", {
+        action,
+        status,
+        durationMs: Number((performance.now() - startedAt).toFixed(2)),
+      });
+    }
+  }
+
+  async alarm() {
+    await this.cleanupExpiredTickets();
+  }
+
+  async join(request) {
+    const body = await readJson(request);
+    requireClientCommandId(body);
+    const accessToken = validateClientAccessToken(body.accessToken);
+    const name = normalizeDisplayName(body.name);
+    if (!name) return invalidNameResponse();
+    const tokenHash = await hashAccessToken(accessToken);
+    const now = Date.now();
+    let ticket = await this.ticketForTokenHash(tokenHash);
+    if (!ticket || ticket.expiresAt <= now || ticket.status === "cancelled") {
+      const ticketId = makeMemberId();
+      ticket = {
+        id: ticketId,
+        name,
+        tokenHash,
+        accessToken,
+        status: "queued",
+        joinedAt: now,
+        expiresAt: now + MATCHMAKING_QUEUE_TTL_MS,
+      };
+      await this.ctx.storage.transaction(async (transaction) => {
+        const queue = await transaction.get("queue") || [];
+        queue.push(ticketId);
+        await transaction.put(`ticket:${ticketId}`, ticket);
+        await transaction.put(`token:${tokenHash}`, ticketId);
+        await transaction.put("queue", queue);
+      });
+      await this.scheduleCleanup(ticket.expiresAt);
+      writeOnlineAnalytics(this.env, "matchmaking-queued", 1, 0, 0);
+    }
+    await this.attemptMatch();
+    ticket = await this.ctx.storage.get(`ticket:${ticket.id}`) || ticket;
+    return json(await this.publicTicket(ticket), ticket.status === "matched" ? 200 : 201);
+  }
+
+  async status(request) {
+    const ticket = await this.authenticatedTicket(request);
+    if (ticket.status === "cancelled") return json({ error: "Matchmaking was cancelled." }, 410);
+    if (ticket.expiresAt <= Date.now()) {
+      await this.expireTicket(ticket);
+      return json({ error: "Matchmaking expired. Start a new search." }, 410);
+    }
+    if (ticket.status === "queued") await this.attemptMatch();
+    const current = await this.ctx.storage.get(`ticket:${ticket.id}`) || ticket;
+    return json(await this.publicTicket(current));
+  }
+
+  async cancel(request) {
+    const body = await readJson(request);
+    requireClientCommandId(body);
+    const ticket = await this.authenticatedTicket(request);
+    if (ticket.status === "matched" || ticket.status === "matching") {
+      return json({ error: "Your match has already been found." }, 409);
+    }
+    if (ticket.status === "cancelled") return json({ status: "cancelled", ticketId: ticket.id });
+    ticket.status = "cancelled";
+    ticket.accessToken = undefined;
+    ticket.expiresAt = Date.now() + 60_000;
+    await this.ctx.storage.transaction(async (transaction) => {
+      const queue = await transaction.get("queue") || [];
+      await transaction.put("queue", queue.filter((ticketId) => ticketId !== ticket.id));
+      await transaction.put(`ticket:${ticket.id}`, ticket);
+      await transaction.delete(`token:${ticket.tokenHash}`);
+    });
+    return json({ status: "cancelled", ticketId: ticket.id });
+  }
+
+  async authenticatedTicket(request) {
+    const ticketId = request.headers.get("X-Matchmaking-Ticket");
+    if (!MATCHMAKING_TICKET_PATTERN.test(ticketId || "")) {
+      throw new RoomRequestError("A valid matchmaking ticket is required.", 400);
+    }
+    const token = bearerToken(request);
+    if (!token) throw new RoomRequestError("Matchmaking authorization is required.", 401);
+    const ticket = await this.ctx.storage.get(`ticket:${ticketId}`);
+    if (!ticket) throw new RoomRequestError("Matchmaking ticket not found.", 404);
+    const tokenHash = await hashAccessToken(token);
+    if (!safeEqual(ticket.tokenHash, tokenHash)) {
+      throw new RoomRequestError("Matchmaking authorization failed.", 401);
+    }
+    return ticket;
+  }
+
+  async ticketForTokenHash(tokenHash) {
+    const ticketId = await this.ctx.storage.get(`token:${tokenHash}`);
+    return ticketId ? this.ctx.storage.get(`ticket:${ticketId}`) : null;
+  }
+
+  async publicTicket(ticket) {
+    const response = {
+      status: ticket.status,
+      ticketId: ticket.id,
+      joinedAt: ticket.joinedAt,
+      expiresAt: ticket.expiresAt,
+    };
+    if (ticket.status === "queued") {
+      const queue = await this.ctx.storage.get("queue") || [];
+      const position = queue.indexOf(ticket.id);
+      response.position = position >= 0 ? position + 1 : null;
+      response.queuedPlayers = queue.length;
+      response.waitedMs = Math.max(0, Date.now() - ticket.joinedAt);
+    } else if (ticket.status === "matching") {
+      response.waitedMs = Math.max(0, Date.now() - ticket.joinedAt);
+    } else if (ticket.status === "matched") {
+      response.room = {
+        code: ticket.roomCode,
+        memberId: ticket.memberId,
+        isHost: ticket.isHost,
+        matchedAt: ticket.matchedAt,
+      };
+    }
+    return response;
+  }
+
+  async attemptMatch() {
+    const pair = await this.ctx.storage.transaction(async (transaction) => {
+      const queue = await transaction.get("queue") || [];
+      const available = [];
+      const now = Date.now();
+      for (const ticketId of queue) {
+        const ticket = await transaction.get(`ticket:${ticketId}`);
+        if (!ticket || ticket.status !== "queued" || ticket.expiresAt <= now) continue;
+        available.push(ticket);
+      }
+      const secondIndex = available.findIndex((ticket, index) => (
+        index > 0 && ticket.name.toLocaleLowerCase() !== available[0]?.name.toLocaleLowerCase()
+      ));
+      if (secondIndex < 1) {
+        await transaction.put("queue", available.map((ticket) => ticket.id));
+        return null;
+      }
+      const selected = [available[0], available[secondIndex]];
+      const selectedIds = new Set(selected.map((ticket) => ticket.id));
+      for (const ticket of selected) {
+        ticket.status = "matching";
+        await transaction.put(`ticket:${ticket.id}`, ticket);
+      }
+      await transaction.put("queue", available
+        .filter((ticket) => !selectedIds.has(ticket.id))
+        .map((ticket) => ticket.id));
+      return selected;
+    });
+    if (!pair) return;
+
+    try {
+      const assignment = await this.createMatchedRoom(pair);
+      const matchedAt = Date.now();
+      await this.ctx.storage.transaction(async (transaction) => {
+        for (const ticket of pair) {
+          const current = await transaction.get(`ticket:${ticket.id}`);
+          if (!current || current.status !== "matching") continue;
+          const member = assignment.members.find((entry) => entry.ticketId === ticket.id);
+          await transaction.put(`ticket:${ticket.id}`, {
+            id: ticket.id,
+            name: ticket.name,
+            tokenHash: ticket.tokenHash,
+            status: "matched",
+            joinedAt: ticket.joinedAt,
+            matchedAt,
+            expiresAt: matchedAt + MATCHMAKING_ASSIGNMENT_TTL_MS,
+            roomCode: assignment.roomCode,
+            memberId: member.memberId,
+            isHost: member.isHost,
+          });
+        }
+      });
+      await this.scheduleCleanup(matchedAt + MATCHMAKING_ASSIGNMENT_TTL_MS);
+      writeOnlineAnalytics(this.env, "matchmaking-matched", 2, 1, 0);
+    } catch (error) {
+      const now = Date.now();
+      await this.ctx.storage.transaction(async (transaction) => {
+        const queue = await transaction.get("queue") || [];
+        for (const ticket of pair) {
+          const current = await transaction.get(`ticket:${ticket.id}`);
+          if (!current || current.status !== "matching" || current.expiresAt <= now) continue;
+          current.status = "queued";
+          await transaction.put(`ticket:${ticket.id}`, current);
+          if (!queue.includes(ticket.id)) queue.push(ticket.id);
+        }
+        await transaction.put("queue", queue);
+      });
+      structuredLog("matchmaking-room-failure", {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  async createMatchedRoom(pair) {
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      const roomCode = makeRoomCode();
+      const stub = this.env.TOURNAMENT_ROOMS.get(this.env.TOURNAMENT_ROOMS.idFromName(roomCode));
+      const host = pair[0];
+      const guest = pair[1];
+      const created = await this.roomCommand(stub, roomCode, "create", "POST", {
+        name: host.name,
+        accessToken: host.accessToken,
+        visibility: "public",
+      });
+      if (created.response.status === 409) continue;
+      if (!created.response.ok) throw new Error(created.payload.error || "Could not create a matched room.");
+      const joined = await this.roomCommand(stub, roomCode, "join", "POST", {
+        name: guest.name,
+        accessToken: guest.accessToken,
+      });
+      if (!joined.response.ok) {
+        await this.closeMatchedRoom(stub, roomCode, host.accessToken);
+        throw new Error(joined.payload.error || "Could not join the matched room.");
+      }
+      const drafted = await this.roomCommand(stub, roomCode, "draft-start", "POST", {}, host.accessToken);
+      if (!drafted.response.ok) {
+        await this.closeMatchedRoom(stub, roomCode, host.accessToken);
+        throw new Error(drafted.payload.error || "Could not start the matched room.");
+      }
+      return {
+        roomCode,
+        members: [
+          { ticketId: host.id, memberId: created.payload.memberId, isHost: true },
+          { ticketId: guest.id, memberId: joined.payload.memberId, isHost: false },
+        ],
+      };
+    }
+    throw new Error("Could not reserve a public room code.");
+  }
+
+  async roomCommand(stub, roomCode, action, method, body = {}, token = null) {
+    const headers = new Headers({
+      "Content-Type": "application/json",
+      "X-Room-Code": roomCode,
+    });
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    const response = await stub.fetch(new Request(`https://room.internal/${action}`, {
+      method,
+      headers,
+      body: method === "GET" ? undefined : JSON.stringify({
+        ...body,
+        clientCommandId: crypto.randomUUID(),
+      }),
+    }));
+    const payload = await response.json().catch(() => ({}));
+    return { response, payload };
+  }
+
+  async closeMatchedRoom(stub, roomCode, token) {
+    try {
+      await stub.fetch(new Request("https://room.internal/close", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Room-Code": roomCode,
+        },
+      }));
+    } catch {
+      // The normal room expiry remains a safe fallback if cleanup cannot complete.
+    }
+  }
+
+  async expireTicket(ticket) {
+    await this.ctx.storage.transaction(async (transaction) => {
+      const queue = await transaction.get("queue") || [];
+      await transaction.put("queue", queue.filter((ticketId) => ticketId !== ticket.id));
+      await transaction.delete(`ticket:${ticket.id}`);
+      await transaction.delete(`token:${ticket.tokenHash}`);
+    });
+  }
+
+  async cleanupExpiredTickets() {
+    const now = Date.now();
+    const tickets = await this.ctx.storage.list({ prefix: "ticket:" });
+    const expired = [...tickets.values()].filter((ticket) => ticket.expiresAt <= now);
+    if (expired.length) {
+      await this.ctx.storage.transaction(async (transaction) => {
+        const queue = await transaction.get("queue") || [];
+        const expiredIds = new Set(expired.map((ticket) => ticket.id));
+        await transaction.put("queue", queue.filter((ticketId) => !expiredIds.has(ticketId)));
+        for (const ticket of expired) {
+          await transaction.delete(`ticket:${ticket.id}`);
+          await transaction.delete(`token:${ticket.tokenHash}`);
+        }
+      });
+    }
+    const remaining = [...(await this.ctx.storage.list({ prefix: "ticket:" })).values()];
+    if (remaining.length) {
+      await this.ctx.storage.setAlarm(Math.min(...remaining.map((ticket) => ticket.expiresAt)));
+    } else {
+      await this.ctx.storage.deleteAlarm();
+    }
+  }
+
+  async scheduleCleanup(expiresAt) {
+    const currentAlarm = await this.ctx.storage.getAlarm();
+    if (!currentAlarm || expiresAt < currentAlarm) await this.ctx.storage.setAlarm(expiresAt);
+  }
+}
+
 export class OnlineCapacityCoordinator extends DurableObject {
   async fetch(request) {
     const startedAt = performance.now();
@@ -1206,6 +1565,23 @@ async function forwardToRoom(env, code, request, action) {
   const body = hasBody ? await request.arrayBuffer() : undefined;
   const sourceUrl = new URL(request.url);
   return stub.fetch(new Request(`https://room.internal/${action}${sourceUrl.search}`, {
+    method: request.method,
+    headers,
+    body,
+  }));
+}
+
+async function forwardToMatchmaker(env, request, action, ticketId = null) {
+  const stub = env.PUBLIC_MATCHMAKER.get(env.PUBLIC_MATCHMAKER.idFromName("public-v1"));
+  const headers = new Headers();
+  const authorization = request.headers.get("Authorization");
+  if (authorization) headers.set("Authorization", authorization);
+  const contentType = request.headers.get("Content-Type");
+  if (contentType) headers.set("Content-Type", contentType);
+  if (ticketId) headers.set("X-Matchmaking-Ticket", ticketId);
+  const hasBody = !["GET", "HEAD"].includes(request.method);
+  const body = hasBody ? await request.arrayBuffer() : undefined;
+  return stub.fetch(new Request(`https://matchmaker.internal/${action}`, {
     method: request.method,
     headers,
     body,
@@ -2076,6 +2452,7 @@ function publicRoom(room) {
   return {
     code: room.code,
     status: room.status,
+    visibility: room.visibility || "private",
     createdAt: room.createdAt,
     expiresAt: room.expiresAt,
     memberCount: room.members.filter((member) => !member.leftAt).length,

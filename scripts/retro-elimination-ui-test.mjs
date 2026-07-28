@@ -19,8 +19,13 @@ assert.doesNotMatch(
 );
 assert.match(
   appSource,
-  /const retroGroupEliminationPending = Boolean\([\s\S]*pendingEliminationDecision\.matchId === match\.id[\s\S]*\);[\s\S]*const spectatedLost = retroGroupEliminationPending \|\|/,
+  /const retroGroupEliminationPending = Boolean\([\s\S]*pendingEliminationDecision\.matchId === match\.id[\s\S]*\);[\s\S]*const spectatedLost = !state\.premierLeagueSeason && \(retroGroupEliminationPending \|\|/,
   "The standard elimination choice panel must also render for a retro group-stage exit.",
+);
+assert.match(
+  appSource,
+  /function tournamentHasThirdPlacePlayoff\(\) \{[\s\S]*if \(isRetroSimulatorState\(\)\) return Number\(retroTournament\?\.year\) !== 2016;/,
+  "Euro 2016 must not hide elimination choices behind a nonexistent third-place playoff.",
 );
 assert.match(
   appSource,
@@ -29,8 +34,13 @@ assert.match(
 );
 assert.match(
   appSource,
-  /savedNeutralView = retroTournament\.neutralView === true[\s\S]*neutralView: wasRetroWorldCup \? Boolean\(previous\.neutralView\) : savedNeutralView \|\| !retroTournament\.managedTeam/,
+  /savedNeutralView = retroTournament\.neutralView === true[\s\S]*neutralView: wasCurrentRetroTournament[\s\S]*Boolean\(previous\.neutralView\)[\s\S]*savedNeutralView \|\| !retroTournament\.managedTeam/,
   "Neutral continuation must survive World Cup renders and reloads.",
+);
+assert.match(
+  appSource,
+  /const managedTeamChanged = !state\.neutralView && previousSpectateTeamId !== managedTeamId;/,
+  "Neutral World Cup renders must not repeatedly refocus the eliminated managed team.",
 );
 assert.match(
   appSource,
