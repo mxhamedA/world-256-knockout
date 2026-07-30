@@ -8,18 +8,24 @@ import { DRAFT_TEAMS } from "../draft-team-catalog.generated.mjs";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const generated = fs.readFileSync(path.join(root, "player-pools.generated.js"), "utf8");
 const data = fs.readFileSync(path.join(root, "data.js"), "utf8");
+const simulationEngine = fs.readFileSync(path.join(root, "simulation-engine.js"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const context = {};
 vm.createContext(context);
-vm.runInContext(`${generated}\n${data}\nglobalThis.__rosterQa = {
+vm.runInContext(`${generated}\n${data}\n${simulationEngine}\nglobalThis.__rosterQa = {
   teams: TEAMS,
   pools: RECENT_NATIONAL_TEAM_PLAYERS,
   profiles: RECENT_NATIONAL_TEAM_PLAYER_PROFILES,
   sources: NATIONAL_TEAM_PLAYER_SOURCES,
+  bulgariaProfiles: buildPlayerProfiles(
+    TEAMS.find((team) => team.name === "Bulgaria"),
+    TEAMS.find((team) => team.name === "Bulgaria").players,
+    false,
+  ),
 };`, context);
 
-const { teams, pools, profiles, sources } = context.__rosterQa;
+const { teams, pools, profiles, sources, bulgariaProfiles } = context.__rosterQa;
 const recognised = teams.filter((team) => team.confed !== "INVITED");
 const completePositions = ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CAM", "LW", "ST", "RW"];
 
@@ -49,6 +55,11 @@ teams.forEach((team) => {
 const germany = teams.find((team) => team.name === "Germany");
 assert.ok(germany?.players?.length >= 26, "Germany needs a full 26-player recent squad.");
 assert.ok(!germany.players.some((name) => /^Germany Player \d+$/i.test(name)), "Germany must not contain numbered placeholders.");
+
+const danielNaumov = bulgariaProfiles.find((profile) => profile.name === "Daniel Naumov");
+assert.equal(danielNaumov?.position, "GK", "Bulgaria goalkeeper Daniel Naumov must not be assigned as a striker.");
+assert.equal(danielNaumov?.finishing, 5, "Daniel Naumov must retain goalkeeper-level finishing.");
+assert.equal(danielNaumov?.penaltyTaker, false, "Daniel Naumov must not become Bulgaria's default penalty taker.");
 
 const brazil = teams.find((team) => team.name === "Brazil");
 const retiredBrazilPlayers = new Set(["Kaká", "Kaka", "Robinho", "Cafu", "Roberto Carlos", "Rivaldo", "Ronaldinho"]);
@@ -137,6 +148,18 @@ assert.match(
   /current-roster-3:/,
   "The player-profile cache must be separated from older roster revisions.",
 );
+const eligibleScorerSource = functionSource("eligibleScorerProfiles");
+assert.match(
+  eligibleScorerSource,
+  /profile\.position !== "GK"/,
+  "Goalkeepers must be excluded from normal goal-scorer selection.",
+);
+const canonicalRosterSource = functionSource("canonicalCurrentRosterNames");
+assert.match(
+  canonicalRosterSource,
+  /buildPlayerProfiles\(rosterTeam,\s*rosterTeam\?\.players \|\| \[\],\s*false\)/,
+  "Saved current tournaments must infer positions before repairing invalid scorers.",
+);
 const customSourcePoolSource = functionSource("customTeamSourcePool");
 assert.match(
   customSourcePoolSource,
@@ -172,6 +195,7 @@ const opponentProfiles = Array.from(
 );
 rosterRepairContext.setTeams([
   { id: "brazil", playerProfiles: currentBrazilProfiles },
+  { id: "bulgaria", playerProfiles: Array.from(bulgariaProfiles, (profile) => ({ ...profile })) },
   { id: "portugal", playerProfiles: currentPortugalProfiles },
   { id: "spain", playerProfiles: currentSpainProfiles },
   { id: "opponent", playerProfiles: opponentProfiles },
@@ -208,6 +232,20 @@ const savedMatches = Array.from({ length: 128 }, (_, index) => {
       },
     };
   }
+  if (index === 2) {
+    return {
+      id: "r0-m2",
+      homeId: "bulgaria",
+      awayId: "opponent",
+      result: {
+        homeGoals: 1,
+        awayGoals: 0,
+        winnerId: "bulgaria",
+        homeEvents: [{ minute: 54, scorer: "Daniel Naumov" }],
+        awayEvents: [],
+      },
+    };
+  }
   return { id: `r0-m${index}`, homeId: "brazil", awayId: "opponent", result: null };
 });
 const savedTournament = { started: true, rounds: [savedMatches] };
@@ -230,6 +268,18 @@ assert.ok(
 );
 assert.equal(repairedPortugalResult.awayGoals, 1, "Portugal roster repair must preserve the score.");
 assert.equal(repairedPortugalResult.winnerId, "portugal", "Portugal roster repair must preserve the winner.");
+assert.notEqual(
+  savedTournament.rounds[0][2].result.homeEvents[0].scorer,
+  "Daniel Naumov",
+  "A saved Daniel Naumov goal must be reassigned to a Bulgarian outfield player.",
+);
+assert.ok(
+  bulgariaProfiles.some((profile) => (
+    profile.position !== "GK"
+    && profile.name === savedTournament.rounds[0][2].result.homeEvents[0].scorer
+  )),
+  "The replacement Bulgaria scorer must be a real outfield player.",
+);
 
 const savedGroupTournament = {
   started: true,

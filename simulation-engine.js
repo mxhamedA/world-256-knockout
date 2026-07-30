@@ -142,7 +142,10 @@ const PENALTY_TAKER_OVERRIDES = new Map([
 ]);
 
 const GENERATED_POSITION_SEQUENCE = ["ST", "LW", "RW", "CAM", "CM", "CM", "CDM", "CB", "LB", "RB", "GK"];
-const REAL_POSITION_SEQUENCE = ["ST", "LW", "RW", "CF", "CAM", "SS", "AM", "CM", "CDM", "CB", "CB"];
+// Sourced current-squad pools are ordered as a conventional XI by the roster
+// generator. Preserve that order when a source has names but no structured
+// position metadata, otherwise the first-listed goalkeeper becomes a striker.
+const REAL_POSITION_SEQUENCE = ["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CAM", "LW", "ST", "RW"];
 
 function simulationClamp(value, minimum, maximum) {
   return Math.max(minimum, Math.min(maximum, value));
@@ -316,6 +319,9 @@ function buildPlayerProfiles(team, names, generated = false) {
   const teamOverall = teamSimulationRatings(team).overall;
   const generatedMaximum = maximumGeneratedPlayerOverall(teamOverall);
   const penaltyOverride = PENALTY_TAKER_OVERRIDES.get(team.name);
+  const defaultPenaltyTakerIndex = generated
+    ? 0
+    : positions.findIndex((position) => ["ST", "CF"].includes(position));
 
   return names.map((entry, index) => {
     const sourceProfile = typeof entry === "string" ? { name: entry } : entry;
@@ -359,7 +365,7 @@ function buildPlayerProfiles(team, names, generated = false) {
     );
     const penaltyTaker = profileOverride.penaltyTaker
       ?? (sourceProfile.retroWorldCup && sourceProfile.penaltyTaker !== undefined ? sourceProfile.penaltyTaker : null)
-      ?? (penaltyOverride ? name === penaltyOverride : index === 0);
+      ?? (position === "GK" ? false : penaltyOverride ? name === penaltyOverride : index === defaultPenaltyTakerIndex);
     const expectedMinutesShare = profileOverride.expectedMinutesShare
       ?? (sourceProfile.retroWorldCup ? sourceProfile.expectedMinutesShare : null)
       ?? expectedMinutesForProfile(attackingRole, position, index);

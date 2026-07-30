@@ -26,6 +26,7 @@ const staticFiles = [
   "retro-2018-schedule.js",
   "retro-2022-squads.js",
   "retro-2022-schedule.js",
+  "retro-2026-squads.js",
   "retro-engine.js",
   "challenge.js",
   "clean.css",

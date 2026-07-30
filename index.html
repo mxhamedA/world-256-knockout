@@ -19,7 +19,7 @@
       if (initialPath === "/pl-simulator") {
         document.documentElement.classList.add("route-pl-loading");
       }
-      if (["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup"].includes(initialPath)) {
+      if (["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(initialPath)) {
         document.documentElement.classList.add("route-retro-loading");
         if (initialPath === "/retro-06-world-cup") document.documentElement.classList.add("route-retro-2006-loading");
         if (initialPath === "/retro-22-world-cup") document.documentElement.classList.add("route-retro-2022-loading");
@@ -29,7 +29,7 @@
       (function () {
         const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
         if (pathname === "/palestine-challenge" || pathname === "/profile") return;
-        const isRetroRoute = ["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup"].includes(pathname);
+        const isRetroRoute = ["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(pathname);
         const clearRetroLoading = () => {
           document.documentElement.classList.remove("route-retro-loading", "route-retro-2006-loading", "route-retro-2022-loading");
           const appShell = document.getElementById("appShell");
@@ -1094,7 +1094,9 @@
           <div class="retro-tournament-progress" id="retroTournamentProgress"></div>
         </section>
         <nav class="retro-view-tabs" aria-label="Retro World Cup views">
-          <button class="active" type="button" data-retro-view="matches">Matches</button>
+          <button class="active" type="button" data-retro-view="matches">Match centre</button>
+          <button type="button" data-retro-view="groups">Standings</button>
+          <button type="button" data-retro-view="lineups">Lineups</button>
           <button type="button" data-retro-view="squads">Squads</button>
         </nav>
         <div class="retro-tournament-body" id="retroTournamentBody"></div>
@@ -2046,6 +2048,7 @@
     <script src="./retro-2018-schedule.js?v=retro-schedule-2018-1"></script>
     <script src="./retro-2022-squads.js?v=retro-squads-2022-1"></script>
     <script src="./retro-2022-schedule.js?v=retro-schedule-2022-1"></script>
+    <script src="./retro-2026-squads.js?v=world-cup-2026-official-1"></script>
     <script src="./retro-engine.js?v=penalties-ratings-reds-1"></script>
     <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
     <script src="./simulation-engine.js?v=penalties-ratings-reds-1"></script>

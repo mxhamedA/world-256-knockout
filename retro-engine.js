@@ -203,6 +203,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2016) return typeof RETRO_EURO_2016_SQUADS !== "undefined" ? RETRO_EURO_2016_SQUADS : {};
     if (Number(year) === 2018) return typeof RETRO_2018_SQUADS !== "undefined" ? RETRO_2018_SQUADS : {};
     if (Number(year) === 2022) return typeof RETRO_2022_SQUADS !== "undefined" ? RETRO_2022_SQUADS : {};
+    if (Number(year) === 2026) return typeof RETRO_2026_SQUADS !== "undefined" ? RETRO_2026_SQUADS : {};
     return {};
   }
 
@@ -229,7 +230,10 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   function teamEntry(year, name) {
     const entry = RETRO_WORLD_CUPS[year]?.teams.find((candidate) => candidate.name === name);
     const squad = squadsForYear(year)[name] || null;
-    return entry ? { ...entry, squad } : null;
+    const rating = Number(year) === 2026 && Number.isFinite(Number(squad?.teamRatings?.overall))
+      ? Number(squad.teamRatings.overall)
+      : entry?.rating;
+    return entry ? { ...entry, rating, squad } : null;
   }
 
   function startingXI(yearOrTeamName, maybeTeamName) {
@@ -289,6 +293,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (year === 2016 && Number.isFinite(Number(player?.euroGoals))) {
       return Number(player.euroGoals);
     }
+    if (year === 2026) return 0;
     const goals = year === 2006 ? WORLD_CUP_2006_GOALS
       : year === 2010 ? WORLD_CUP_2010_GOALS
       : year === 2018 ? WORLD_CUP_2018_GOALS : WORLD_CUP_2014_GOALS;
@@ -721,7 +726,77 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     tournament.phase = "knockout";
   }
 
+  function buildWorldCup2026RoundOf32(tournament) {
+    const compareQualifier = (left, right) => (
+      right.points - left.points
+      || right.gd - left.gd
+      || right.gf - left.gf
+      || teamEntry(tournament.year, right.name).rating - teamEntry(tournament.year, left.name).rating
+      || left.group.localeCompare(right.group)
+    );
+    const tables = Object.fromEntries(groupLetters(tournament.year).map((group) => [
+      group,
+      groupStandings(tournament, group),
+    ]));
+    const winners = Object.entries(tables)
+      .map(([group, table]) => ({ group, ...table[0] }))
+      .sort(compareQualifier);
+    const runnersUp = Object.entries(tables)
+      .map(([group, table]) => ({ group, ...table[1] }))
+      .sort(compareQualifier);
+    const bestThirds = Object.entries(tables)
+      .map(([group, table]) => ({ group, ...table[2] }))
+      .sort(compareQualifier)
+      .slice(0, 8);
+    const takeDifferentGroup = (pool, group) => {
+      const candidateIndex = pool.findIndex((candidate) => candidate.group !== group);
+      return pool.splice(candidateIndex >= 0 ? candidateIndex : 0, 1)[0];
+    };
+    const pairings = [];
+    const thirdPool = [...bestThirds].reverse();
+    winners.slice(0, 8).forEach((winner) => {
+      pairings.push([winner, takeDifferentGroup(thirdPool, winner.group)]);
+    });
+    const runnerPool = [...runnersUp].reverse();
+    winners.slice(8).forEach((winner) => {
+      pairings.push([winner, takeDifferentGroup(runnerPool, winner.group)]);
+    });
+    const remainingRunners = runnerPool.sort(compareQualifier);
+    while (remainingRunners.length) {
+      const home = remainingRunners.shift();
+      pairings.push([home, takeDifferentGroup(remainingRunners, home.group)]);
+    }
+
+    tournament.bestThirdPlaced = bestThirds.map((entry) => ({
+      group: entry.group,
+      team: entry.name,
+      points: entry.points,
+      goalDifference: entry.gd,
+      goalsFor: entry.gf,
+    }));
+    tournament.knockoutRounds = [{
+      name: "Round of 32",
+      matches: pairings.map(([home, away], index) => {
+        const id = `ko-r32-m${index + 1}`;
+        return {
+          id,
+          stage: "knockout",
+          roundIndex: 0,
+          home: home.name,
+          away: away.name,
+          schedule: knockoutScheduleForYear(tournament.year)[id],
+          result: null,
+        };
+      }),
+    }];
+    tournament.phase = "knockout";
+  }
+
   function buildRoundOf16(tournament) {
+    if (Number(tournament.year) === 2026) {
+      buildWorldCup2026RoundOf32(tournament);
+      return;
+    }
     if (Number(tournament.year) === 2016) {
       buildEuro2016RoundOf16(tournament);
       return;
@@ -732,6 +807,10 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   function buildNextKnockoutRound(tournament) {
     const current = tournament.knockoutRounds.at(-1);
     if (!current?.matches.every((match) => match.result)) return;
+    const roundNames = Number(tournament.year) === 2026
+      ? ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Finals"]
+      : ROUND_NAMES;
+    const finalRoundIndex = roundNames.length - 1;
     if (current.name === "Finals") {
       tournament.phase = "complete";
       tournament.champion = current.matches.find((match) => match.id === "ko-final").result.winner;
@@ -741,12 +820,12 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       const winners = current.matches.map((match) => match.result.winner);
       if (Number(tournament.year) === 2016) {
         tournament.knockoutRounds.push({
-          name: ROUND_NAMES[3],
+          name: roundNames[finalRoundIndex],
           matches: [{
             id: "ko-final",
             label: "Final",
             stage: "knockout",
-            roundIndex: 3,
+            roundIndex: finalRoundIndex,
             home: winners[0],
             away: winners[1],
             schedule: knockoutScheduleForYear(tournament.year)["ko-final"],
@@ -759,13 +838,13 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
         match.result.winner === match.home ? match.away : match.home
       ));
       tournament.knockoutRounds.push({
-        name: ROUND_NAMES[3],
+        name: roundNames[finalRoundIndex],
         matches: [
           {
             id: "ko-third-place",
             label: "Third-place play-off",
             stage: "knockout",
-            roundIndex: 3,
+            roundIndex: finalRoundIndex,
             home: losers[0],
             away: losers[1],
             schedule: knockoutScheduleForYear(tournament.year)["ko-third-place"],
@@ -775,7 +854,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
             id: "ko-final",
             label: "Final",
             stage: "knockout",
-            roundIndex: 3,
+            roundIndex: finalRoundIndex,
             home: winners[0],
             away: winners[1],
             schedule: knockoutScheduleForYear(tournament.year)["ko-final"],
@@ -787,10 +866,13 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     }
     const nextIndex = tournament.knockoutRounds.length;
     const winners = current.matches.map((match) => match.result.winner);
+    const roundId = Number(tournament.year) === 2026
+      ? ["r32", "r16", "qf", "sf", "final"][nextIndex] || `r${nextIndex + 1}`
+      : `r${nextIndex + 1}`;
     tournament.knockoutRounds.push({
-      name: ROUND_NAMES[nextIndex],
+      name: roundNames[nextIndex],
       matches: Array.from({ length: winners.length / 2 }, (_, index) => {
-        const id = `ko-r${nextIndex + 1}-m${index + 1}`;
+        const id = `ko-${roundId}-m${index + 1}`;
         return {
           id,
           stage: "knockout",
@@ -813,7 +895,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function createTournament({ year = 2014, seed = Date.now(), managedTeam = null } = {}) {
-    if (![2006, 2010, 2014, 2016, 2018, 2022].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
+    if (![2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
       throw new Error("That retro tournament is not playable yet.");
     }
     return {
@@ -874,12 +956,12 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
 
   function validate(tournament) {
     const year = Number(tournament?.year);
-    const expectedTeams = year === 2016 ? 24 : 32;
-    const expectedGroupMatches = year === 2016 ? 36 : 48;
+    const expectedTeams = year === 2026 ? 48 : year === 2016 ? 24 : 32;
+    const expectedGroupMatches = year === 2026 ? 72 : year === 2016 ? 36 : 48;
     return Boolean(
       tournament
       && tournament.version === VERSION
-      && [2006, 2010, 2014, 2016, 2018, 2022].includes(year)
+      && [2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)
       && Array.isArray(tournament.groupMatches)
       && tournament.groupMatches.length === expectedGroupMatches
       && RETRO_WORLD_CUPS[tournament.year]?.teams.length === expectedTeams

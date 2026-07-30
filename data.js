@@ -705,6 +705,7 @@ const FIFA_MIN_POINTS = 721.2;
 // them feel pre-selected to win a tournament taking place four years later.
 const TEAM_STRENGTH_ADJUSTMENTS = new Map([
   ["Argentina", -10],
+  ["France", -5],
   ["Germany", 1.7],
   ["Mexico", -3.76],
   ["Norway", 4.6],
@@ -925,7 +926,7 @@ function clampSimulationRating(value, minimum = 5, maximum = 99) {
 }
 
 const TEAM_SIMULATION_RATING_OVERRIDES = new Map([
-  ["France", { attack: 96, midfield: 94, defence: 94, goalkeeper: 93, squadDepth: 97, experience: 95, penalties: 92 }],
+  ["France", { overall: 94, attack: 93, midfield: 91, defence: 90, goalkeeper: 88, squadDepth: 93, experience: 92, penalties: 89 }],
   ["Spain", { attack: 95, midfield: 96, defence: 92, goalkeeper: 90, squadDepth: 94, experience: 92, penalties: 90 }],
   ["Argentina", { attack: 93, midfield: 93, defence: 90, goalkeeper: 91, squadDepth: 91, experience: 97, penalties: 95 }],
   ["Brazil", { attack: 94, midfield: 91, defence: 89, goalkeeper: 92, squadDepth: 94, experience: 93, penalties: 91 }],

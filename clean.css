@@ -33464,3 +33464,533 @@ body.retro-mode-active.retro-2006-active #mainContent .standard-match-tactics .s
     background: #0d6483 !important;
   }
 }
+
+/* FIFA World Cup 2026 mode */
+body.retro-mode-active.retro-2026-active {
+  --wc26-blue: #0a45ff;
+  --wc26-blue-light: #3768ff;
+  --wc26-navy: #06164f;
+  --wc26-navy-soft: #10286f;
+  --wc26-white: #ffffff;
+  --wc26-ink: #07143d;
+  --wc26-muted: #c9d7ff;
+  --wc26-orange: #ff9e2f;
+  --wc26-green: #15933b;
+  --wc26-red: #f0442f;
+  --wc26-line: rgba(255, 255, 255, 0.28);
+  color: var(--wc26-white);
+  background:
+    radial-gradient(circle at 82% 12%, rgba(73, 116, 255, 0.95) 0 18%, transparent 18.2%),
+    linear-gradient(132deg, var(--wc26-blue-light) 0 31%, var(--wc26-blue) 31% 100%);
+}
+
+body.retro-mode-active.retro-2026-active,
+body.retro-mode-active.retro-2026-active button,
+body.retro-mode-active.retro-2026-active select,
+body.retro-mode-active.retro-2026-active input {
+  font-family: Manrope, Arial, sans-serif;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-screen {
+  min-height: 100vh;
+  color: var(--wc26-white);
+  background:
+    linear-gradient(116deg, rgba(54, 103, 255, 0.96) 0 28%, transparent 28.1%),
+    radial-gradient(circle at 87% 46%, rgba(5, 42, 206, 0.9) 0 30%, transparent 30.2%),
+    var(--wc26-blue);
+}
+
+body.retro-mode-active.retro-2026-active .retro-screen-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+  color: var(--wc26-white);
+  background: #030b28;
+  box-shadow: 0 10px 30px rgba(0, 10, 45, 0.22);
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-screen-brand,
+  .retro-screen-action,
+  .retro-back-to-modes,
+  .retro-screen-restart
+) {
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--wc26-white);
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2026-active #retroDonateButton,
+body.retro-mode-active.retro-2026-active :is(.primary-button, .simulate-button, .retro-start-button) {
+  border-color: var(--wc26-orange) !important;
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-orange) !important;
+  box-shadow: 0 8px 20px rgba(88, 43, 0, 0.2) !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-main {
+  width: min(1500px, calc(100% - 40px));
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading {
+  position: relative;
+  align-items: end;
+  margin-top: 22px;
+  padding: 28px 30px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px 14px 0 0;
+  color: var(--wc26-white);
+  background: linear-gradient(112deg, rgba(6, 22, 79, 0.98), rgba(10, 69, 255, 0.74));
+  box-shadow: 0 18px 40px rgba(0, 15, 72, 0.24);
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading::after {
+  content: "26";
+  position: absolute;
+  right: 24px;
+  bottom: -34px;
+  color: rgba(255, 255, 255, 0.13);
+  font: 900 clamp(7rem, 14vw, 14rem)/1 Impact, "Arial Narrow", sans-serif;
+  letter-spacing: -0.07em;
+  pointer-events: none;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading > div,
+body.retro-mode-active.retro-2026-active .retro-tournament-progress {
+  position: relative;
+  z-index: 1;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading > div:first-child > span {
+  color: var(--wc26-muted);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading h1,
+body.retro-mode-active.retro-2026-active :is(
+  .retro-section-heading h2,
+  .retro-lineups-heading h2,
+  .retro-squad-heading strong,
+  .panel-title,
+  .board-title
+) {
+  color: var(--wc26-white);
+  font-family: Impact, "Arial Narrow", Manrope, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-progress span {
+  border-color: rgba(255, 255, 255, 0.24);
+  color: var(--wc26-white);
+  background: rgba(5, 18, 65, 0.76);
+}
+
+body.retro-mode-active.retro-2026-active .retro-view-tabs {
+  gap: 0;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 0 0 12px 12px;
+  background: var(--wc26-white);
+  box-shadow: 0 16px 34px rgba(0, 16, 74, 0.2);
+}
+
+body.retro-mode-active.retro-2026-active .retro-view-tabs button {
+  min-height: 58px;
+  padding: 0 22px;
+  border: 0;
+  border-bottom: 4px solid transparent;
+  border-radius: 0;
+  color: #26365f;
+  background: transparent;
+  font-weight: 850;
+}
+
+body.retro-mode-active.retro-2026-active .retro-view-tabs button.active {
+  border-bottom-color: var(--wc26-navy);
+  color: var(--wc26-navy);
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body {
+  margin-top: 24px;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent {
+  color: var(--wc26-white);
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .topbar,
+  .round-nav,
+  .bracket-heads
+) {
+  border: 0;
+  color: var(--wc26-white);
+  background: var(--wc26-navy);
+  box-shadow: 0 12px 28px rgba(0, 12, 60, 0.18);
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .round-nav {
+  padding: 8px;
+  border-radius: 12px;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .round-nav button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--wc26-muted);
+  background: transparent;
+  font-weight: 800;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .round-nav button.active {
+  color: var(--wc26-navy);
+  background: var(--wc26-white);
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-group-table,
+  .retro-match-layout,
+  .retro-lineup-side,
+  .retro-squad-position-group,
+  .retro-manager-lineup,
+  .retro-manager-pitch-box,
+  .retro-golden-boot,
+  .retro-fixture,
+  .panel,
+  .fixture-panel,
+  .match-panel
+) {
+  border: 0 !important;
+  border-radius: 14px !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 0 14px 30px rgba(0, 13, 66, 0.22) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .fixture {
+  border-radius: 12px !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-section-heading,
+  .retro-lineups-heading,
+  .retro-squad-heading,
+  .retro-manager-lineup > header,
+  .retro-group-table > header
+) {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-groups-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-table-head,
+  .retro-live-table-head,
+  .retro-squad-position-group > h2,
+  .retro-manager-section-title
+) {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-muted) !important;
+  background: #0c2468 !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-table-row,
+  .retro-live-table-row,
+  .retro-squad-row,
+  .retro-manager-player,
+  .retro-fixture-details,
+  .retro-lineup-player,
+  .fixture
+) {
+  border-color: rgba(255, 255, 255, 0.13) !important;
+  color: var(--wc26-white) !important;
+  background: #122a70 !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-table-row:nth-child(even),
+  .retro-squad-row:nth-child(even),
+  .fixture:nth-child(even)
+) {
+  background: #0d2365 !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-table-row small,
+  .retro-squad-row small,
+  .retro-manager-player small,
+  .retro-fixture-details small,
+  .retro-lineups-heading p,
+  .retro-squad-heading small,
+  .muted
+) {
+  color: var(--wc26-muted) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-squad-heading select,
+  .retro-lineup-tabs button,
+  .retro-formation-badge,
+  .retro-match-stage,
+  .retro-match-schedule,
+  .retro-manager-formation select,
+  .team-filter-control input,
+  .search input
+) {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-rating-method {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(110px, 1fr));
+  gap: 1px;
+  margin: 14px 0 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  color: var(--wc26-white);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 28px rgba(0, 12, 60, 0.18);
+}
+
+body.retro-mode-active.retro-2026-active .retro-rating-method > div {
+  display: grid;
+  gap: 4px;
+  min-height: 82px;
+  padding: 15px 18px;
+  background: var(--wc26-navy);
+}
+
+body.retro-mode-active.retro-2026-active .retro-rating-method span {
+  color: var(--wc26-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+body.retro-mode-active.retro-2026-active .retro-rating-method strong {
+  color: var(--wc26-white);
+  font: 800 1.45rem/1 Manrope, sans-serif;
+}
+
+body.retro-mode-active.retro-2026-active .retro-rating-method p {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 11px 18px;
+  color: var(--wc26-ink);
+  background: var(--wc26-orange);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+body.retro-mode-active.retro-2026-active .retro-lineup-tabs button.active {
+  border-color: var(--wc26-white) !important;
+  color: var(--wc26-navy) !important;
+  background: var(--wc26-white) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-match-primary,
+  .match-detail,
+  .fixture.is-selected,
+  .fixture.active
+) {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-white) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-match-primary *,
+  .match-detail h2,
+  .match-detail h3
+) {
+  color: var(--wc26-ink);
+}
+
+body.retro-mode-active.retro-2026-active .retro-match-score {
+  color: var(--wc26-white);
+  background: var(--wc26-navy-soft);
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-manager-pitch,
+  .retro-formation-pitch,
+  .match-2d-pitch
+) {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.24) 2px, transparent 2px) 0 50% / 100% 50%,
+    linear-gradient(90deg, rgba(255, 255, 255, 0.11) 50%, transparent 50%) 0 0 / 22% 100%,
+    #1769d8 !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-pitch-player {
+  border-color: var(--wc26-white) !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 0 5px 12px rgba(0, 8, 42, 0.3) !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-pitch-player i {
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .retro-stage-actions button,
+  .retro-sub-action,
+  .secondary-button,
+  .ghost-button
+) {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .status-won,
+  .winner,
+  .is-winner,
+  .penalty-mark.goal
+) {
+  color: #eaffef !important;
+  background: var(--wc26-green) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .status-lost,
+  .is-loser,
+  .penalty-mark.miss
+) {
+  color: #fff !important;
+  background: var(--wc26-red) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  dialog form,
+  .settings-modal form,
+  .snapshot-modal form,
+  .elimination-confirmation-card,
+  .champion-stage
+) {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+}
+
+body.retro-mode-active.retro-2026-active .toast {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--wc26-white);
+  background: var(--wc26-navy);
+}
+
+body.retro-mode-active.retro-2026-active :is(button, select, input):focus-visible {
+  outline: 3px solid var(--wc26-orange) !important;
+  outline-offset: 3px;
+}
+
+body.retro-mode-active.retro-2026-active :is(button, .fixture, .retro-manager-player) {
+  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease, color 140ms ease;
+}
+
+body.retro-mode-active.retro-2026-active button:active {
+  transform: scale(0.97);
+}
+
+body.retro-mode-active.retro-2026-active ::selection {
+  color: var(--wc26-navy);
+  background: var(--wc26-orange);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.retro-mode-active.retro-2026-active :is(
+    .retro-screen-action,
+    .retro-back-to-modes,
+    .retro-screen-restart,
+    .retro-stage-actions button,
+    .secondary-button
+  ):hover {
+    border-color: var(--wc26-white) !important;
+    background: #183783 !important;
+  }
+
+  body.retro-mode-active.retro-2026-active :is(.fixture, .retro-manager-player):hover {
+    border-color: rgba(255, 255, 255, 0.52) !important;
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 900px) {
+  body.retro-mode-active.retro-2026-active .retro-tournament-main {
+    width: min(100% - 24px, 1500px);
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-view-tabs {
+    padding: 0 8px;
+    overflow-x: auto;
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-view-tabs button {
+    flex: 0 0 auto;
+    min-height: 52px;
+    padding-inline: 16px;
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-tournament-heading {
+    align-items: start;
+    padding: 22px;
+  }
+}
+
+@media (max-width: 600px) {
+  body.retro-mode-active.retro-2026-active .retro-tournament-main {
+    width: min(100% - 16px, 1500px);
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-tournament-heading {
+    margin-top: 12px;
+    padding: 18px;
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-tournament-heading::after {
+    right: 12px;
+    font-size: 7rem;
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-view-tabs {
+    justify-content: start;
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-groups-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.retro-mode-active.retro-2026-active #mainContent .fixture-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.retro-mode-active.retro-2026-active .retro-rating-method {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.retro-mode-active.retro-2026-active :is(button, .fixture, .retro-manager-player) {
+    transition: none !important;
+  }
+}

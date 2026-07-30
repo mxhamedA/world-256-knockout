@@ -9,9 +9,14 @@ const printFullReport = process.argv.includes("--json");
 const profilesOnly = process.argv.includes("--profiles-only");
 const targetedMatchArgument = process.argv.find((argument) => /^--targeted-matches=\d+$/.test(argument));
 const targetedMatchCount = targetedMatchArgument ? Number(targetedMatchArgument.split("=")[1]) : 0;
+const managedTeamArgument = process.argv.find((argument) => argument.startsWith("--managed-team="));
+const managedTeamName = managedTeamArgument ? managedTeamArgument.slice("--managed-team=".length) : null;
+const managedCountArgument = process.argv.find((argument) => /^--managed-count=\d+$/.test(argument));
+const managedTournamentCount = managedCountArgument ? Number(managedCountArgument.split("=")[1]) : 0;
 
 if (tournamentCount > 50) throw new Error("Validation is capped at 50 complete tournaments.");
 if (targetedMatchCount > 20) throw new Error("Targeted validation is capped at 20 single matches.");
+if (managedTournamentCount > 200) throw new Error("Managed validation is capped at 200 complete tournaments.");
 
 function mockElement() {
   return {
@@ -87,8 +92,19 @@ context.document = {
   activeElement: { tagName: "BODY" },
   fullscreenElement: null,
 };
-context.window = { addEventListener() {}, scrollTo() {}, matchMedia() { return { matches: false }; }, location: { pathname: "/", search: "", hash: "" }, history: { replaceState() {}, pushState() {} } };
+context.window = {
+  addEventListener() {},
+  scrollTo() {},
+  matchMedia() { return { matches: false }; },
+  location: { href: "http://localhost/", origin: "http://localhost", pathname: "/", search: "", hash: "" },
+  history: { replaceState() {}, pushState() {} },
+  setTimeout() { return 1; },
+  clearTimeout() {},
+  setInterval() { return 1; },
+  clearInterval() {},
+};
 context.localStorage = { getItem() { return null; }, setItem() {} };
+context.sessionStorage = context.localStorage;
 context.requestAnimationFrame = () => 1;
 context.cancelAnimationFrame = () => {};
 context.setTimeout = () => 1;
@@ -98,7 +114,13 @@ const sources = [
   "player-pools.generated.js",
   "data.js",
   "retro-data.js",
+  "retro-2006-squads.js",
+  "retro-2010-squads.js",
   "retro-2014-squads.js",
+  "retro-euro-2016-squads.js",
+  "retro-2018-squads.js",
+  "retro-2022-squads.js",
+  "retro-2026-squads.js",
   "retro-2014-schedule.js",
   "retro-engine.js",
   "presentation-engine.js",
@@ -110,6 +132,7 @@ vm.runInContext(`${sources}
 globalThis.__runBalanceReport = function runBalanceReport(tournamentCount) {
   const report = {
     tournamentCount,
+    championTeams: {},
     championRankDistribution: {},
     championRatingDistribution: {},
     finalistRanks: [],
@@ -196,8 +219,10 @@ globalThis.__runBalanceReport = function runBalanceReport(tournamentCount) {
 
     const quarterFinalists = state.rounds[5].flatMap((match) => [teamById(match.homeId), teamById(match.awayId)]);
     const semiFinalists = state.rounds[6].flatMap((match) => [teamById(match.homeId), teamById(match.awayId)]);
-    const finalists = state.rounds[7].flatMap((match) => [teamById(match.homeId), teamById(match.awayId)]);
-    const champion = teamById(state.rounds[7][0].result.winnerId);
+    const finalMatch = state.rounds[7].find((match) => !isThirdPlacePlayoff(match));
+    const finalists = [teamById(finalMatch.homeId), teamById(finalMatch.awayId)];
+    const champion = teamById(finalMatch.result.winnerId);
+    report.championTeams[champion.name] = (report.championTeams[champion.name] || 0) + 1;
     report.quarterFinalistRanks.push(...quarterFinalists.map((team) => team.fifaRank || 999));
     report.semiFinalistRanks.push(...semiFinalists.map((team) => team.fifaRank || 999));
     report.finalistRanks.push(...finalists.map((team) => team.fifaRank || 999));
@@ -337,6 +362,51 @@ globalThis.__runBalanceReport = function runBalanceReport(tournamentCount) {
   return report;
 };`, context);
 
+if (managedTeamName && managedTournamentCount) {
+  const managedReport = vm.runInContext(`((teamName, runCount) => {
+    const managedTeam = TEAMS.find((team) => team.name === teamName);
+    if (!managedTeam) throw new Error(\`Unknown managed team: \${teamName}\`);
+    const reached = Array(8).fill(0);
+    let champions = 0;
+    for (let tournamentIndex = 0; tournamentIndex < runCount; tournamentIndex += 1) {
+      state.drawSeed = 910_000 + tournamentIndex * 7_919;
+      state.settings = { ...defaultSettings, upset: "balanced", goals: "normal", spoiler: false, realNames: true };
+      state.spectateTeamId = managedTeam.id;
+      state.neutralView = false;
+      state.standardTactic = "balanced";
+      state.customTournament = null;
+      state.premierLeagueSeason = null;
+      state.rounds = [createFirstRound(state.drawSeed)];
+      for (let roundIndex = 0; roundIndex < 8; roundIndex += 1) {
+        state.activeRound = roundIndex;
+        const round = state.rounds[roundIndex] || [];
+        if (round.some((match) => (
+          !isThirdPlacePlayoff(match)
+          && (match.homeId === managedTeam.id || match.awayId === managedTeam.id)
+        ))) {
+          reached[roundIndex] += 1;
+        }
+        round.forEach((match) => {
+          match.result = simulateMatch(match, roundIndex);
+          match.result.revealed = true;
+        });
+        if (roundIndex < 7) buildNextRound(roundIndex);
+      }
+      const finalMatch = state.rounds[7]?.find((match) => !isThirdPlacePlayoff(match));
+      champions += Number(finalMatch?.result?.winnerId === managedTeam.id);
+    }
+    return {
+      team: managedTeam.name,
+      rating: managedTeam.rating,
+      runs: runCount,
+      championRate: champions / runCount,
+      reachRateByRound: reached.map((count) => count / runCount),
+    };
+  })(${JSON.stringify(managedTeamName)}, ${managedTournamentCount})`, context);
+  console.log(JSON.stringify(managedReport, null, 2));
+  process.exit(0);
+}
+
 if (profilesOnly) {
   const profiles = vm.runInContext(`(() => {
     state.settings = { ...defaultSettings, realNames: true };
@@ -435,6 +505,7 @@ if (printFullReport) {
     tournamentCount: report.tournamentCount,
     elapsedSeconds,
     championRankDistribution: report.championRankDistribution,
+    championTeams: report.championTeams,
     championRatingDistribution: report.championRatingDistribution,
     averageGoalsPerMatch: report.averageGoalsPerMatch,
     averageRedCardsPerMatch: report.averageRedCardsPerMatch,
