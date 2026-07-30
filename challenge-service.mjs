@@ -25,6 +25,16 @@ const SESSION_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
 const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
 const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
 const PL_ASSET_PACK_ID = "pl-26-27";
+const RETRO_2006_TEAMS = Object.freeze([
+  "Germany", "Costa Rica", "Poland", "Ecuador",
+  "England", "Paraguay", "Trinidad and Tobago", "Sweden",
+  "Argentina", "Ivory Coast", "Serbia and Montenegro", "Netherlands",
+  "Mexico", "Iran", "Angola", "Portugal",
+  "Italy", "Ghana", "USA", "Czech Republic",
+  "Brazil", "Croatia", "Australia", "Japan",
+  "France", "Switzerland", "South Korea", "Togo",
+  "Spain", "Ukraine", "Tunisia", "Saudi Arabia",
+]);
 const RETRO_2010_TEAMS = Object.freeze([
   "South Africa", "Mexico", "Uruguay", "France",
   "Argentina", "Nigeria", "South Korea", "Greece",
@@ -74,6 +84,12 @@ const RETRO_2022_TEAMS = Object.freeze([
   "Portugal", "Ghana", "Uruguay", "South Korea",
 ]);
 const RETRO_TEAM_RATINGS = Object.freeze({
+  2006: Object.freeze([
+    89, 73, 77, 79, 87, 79, 68, 82,
+    89, 80, 76, 86, 82, 73, 70, 88,
+    91, 79, 76, 84, 89, 81, 78, 76,
+    90, 81, 77, 69, 86, 81, 73, 70,
+  ]),
   2010: Object.freeze([
     71, 78, 83, 82, 87, 76, 75, 77,
     83, 77, 72, 73, 87, 74, 78, 80,
@@ -104,8 +120,31 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     91, 80, 82, 77, 88, 76, 84, 79,
   ]),
 });
-const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2010, 2014, 2016, 2018, 2022]);
+const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2006, 2010, 2014, 2016, 2018, 2022]);
 const KNOCKOUT_256_KEY = 256;
+const PREMIER_LEAGUE_KEY = 2026;
+const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
+  ["arsenal", "Arsenal", 1, 2],
+  ["aston-villa", "Aston Villa", 4, 4],
+  ["bournemouth", "Bournemouth", 8, 5],
+  ["brentford", "Brentford", 8, 5],
+  ["brighton", "Brighton & Hove Albion", 6, 5],
+  ["chelsea", "Chelsea", 1, 3],
+  ["coventry-city", "Coventry City", 17, 8],
+  ["crystal-palace", "Crystal Palace", 6, 5],
+  ["everton", "Everton", 8, 5],
+  ["fulham", "Fulham", 8, 5],
+  ["hull-city", "Hull City", 10, 8],
+  ["ipswich-town", "Ipswich Town", 10, 8],
+  ["leeds-united", "Leeds United", 10, 7],
+  ["liverpool", "Liverpool", 1, 2],
+  ["manchester-city", "Manchester City", 1, 2],
+  ["manchester-united", "Manchester United", 1, 3],
+  ["newcastle-united", "Newcastle United", 4, 3],
+  ["nottingham-forest", "Nottingham Forest", 8, 5],
+  ["sunderland", "Sunderland", 10, 8],
+  ["tottenham-hotspur", "Tottenham Hotspur", 1, 4],
+]);
 const API_HEADERS = Object.freeze({
   "Cache-Control": "no-store",
   "Content-Type": "application/json; charset=utf-8",
@@ -949,6 +988,15 @@ async function dashboard(request, env) {
 }
 
 function retroAchievementConfig(year) {
+  if (Number(year) === 2006) {
+    return {
+      year: 2006,
+      table: "retro_2006_attempts",
+      teams: RETRO_2006_TEAMS,
+      id: "retro-2006-world-tour",
+      title: "Germany 2006 World Tour",
+    };
+  }
   if (Number(year) === 2010) {
     return {
       year: 2010,
@@ -1214,14 +1262,91 @@ async function retroAchievementProgress(db, account, year) {
   };
 }
 
+export function premierLeagueAchievementDefinition(clubId) {
+  const entry = PREMIER_LEAGUE_ACHIEVEMENTS.find(([id]) => id === clubId);
+  if (!entry) return null;
+  const [id, clubName, targetPosition, points] = entry;
+  const objectiveLabel = targetPosition === 1
+    ? "Win the Premier League"
+    : targetPosition === 10
+      ? "Finish in the top half"
+      : targetPosition === 17
+        ? "Avoid relegation"
+      : `Finish in the top ${targetPosition}`;
+  return { clubId: id, teamName: clubName, objectiveLabel, targetPosition, points };
+}
+
+async function premierLeagueAchievementProgress(db, account) {
+  const rows = account ? (await db.prepare(`
+    WITH account_attempts AS (
+      SELECT club_id, achieved, final_position, started_at, completed_at
+      FROM premier_league_attempts
+      WHERE account_id = ?
+    ),
+    first_achievements AS (
+      SELECT club_id, MIN(COALESCE(completed_at, started_at)) AS first_unlock_at
+      FROM account_attempts
+      WHERE achieved = 1
+      GROUP BY club_id
+    )
+    SELECT attempts.club_id,
+      COUNT(*) AS attempts,
+      MAX(attempts.achieved) AS achieved,
+      MIN(attempts.final_position) AS best_position,
+      SUM(CASE
+        WHEN first_achievements.first_unlock_at IS NOT NULL
+          AND attempts.started_at <= first_achievements.first_unlock_at THEN 1
+        ELSE 0
+      END) AS achieved_on_attempt,
+      MAX(first_achievements.first_unlock_at) AS unlocked_at
+    FROM account_attempts attempts
+    LEFT JOIN first_achievements ON first_achievements.club_id = attempts.club_id
+    GROUP BY attempts.club_id
+  `).bind(account.id).all()).results : [];
+  const byClub = new Map(rows.map((row) => [row.club_id, row]));
+  const teams = PREMIER_LEAGUE_ACHIEVEMENTS.map(([clubId]) => {
+    const definition = premierLeagueAchievementDefinition(clubId);
+    const row = byClub.get(clubId);
+    const complete = Number(row?.achieved || 0) === 1;
+    const achievedOnAttempt = Number(row?.achieved_on_attempt || 0) || null;
+    return {
+      ...definition,
+      attempts: Number(row?.attempts || 0),
+      bestPosition: Number(row?.best_position || 0) || null,
+      complete,
+      won: complete,
+      achievedOnAttempt,
+      wonOnAttempt: achievedOnAttempt,
+      unlockedAt: Number(row?.unlocked_at || 0) || null,
+    };
+  });
+  const completed = teams.filter((team) => team.complete).length;
+  return {
+    id: "premier-league-2026-27-club-objectives",
+    title: "Premier League 2026/27 Club Objectives",
+    year: PREMIER_LEAGUE_KEY,
+    mode: "premier-league",
+    completed,
+    completedPoints: teams.reduce((sum, team) => sum + (team.complete ? team.points : 0), 0),
+    totalPoints: teams.reduce((sum, team) => sum + team.points, 0),
+    total: teams.length,
+    unlocked: completed === teams.length,
+    teams,
+  };
+}
+
 async function achievementLeaderboard(request, env) {
   const account = await authenticatedAccount(request, env.CHALLENGE_DB, false, env.LOCAL_DEV_AUTH === "true");
-  const [accountRows, retroRows, knockoutRows] = await Promise.all([
+  const [accountRows, earlyRetroRows, recentRetroRows, knockoutRows, premierLeagueRows] = await Promise.all([
     env.CHALLENGE_DB.prepare(`
       SELECT id AS account_id, username, profile_country_id
       FROM accounts
     `).all(),
     env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 2006 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2006_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
       SELECT account_id, 2010 AS year, team_name, 1 AS champion,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2010_attempts WHERE won = 1 GROUP BY account_id, team_name
@@ -1229,7 +1354,8 @@ async function achievementLeaderboard(request, env) {
       SELECT account_id, 2014 AS year, team_name, 1 AS champion,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2014_attempts WHERE won = 1 GROUP BY account_id, team_name
-      UNION ALL
+    `).all(),
+    env.CHALLENGE_DB.prepare(`
       SELECT account_id, 2016 AS year, team_name, 1 AS champion,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2016_attempts WHERE won = 1 GROUP BY account_id, team_name
@@ -1257,6 +1383,13 @@ async function achievementLeaderboard(request, env) {
       )
       GROUP BY account_id, team_id
     `).all(),
+    env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 2026 AS year, club_id AS team_name, 0 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM premier_league_attempts
+      WHERE achieved = 1
+      GROUP BY account_id, club_id
+    `).all(),
   ]);
   const byAccount = new Map((accountRows.results || []).map((row) => [
     row.account_id,
@@ -1269,12 +1402,20 @@ async function achievementLeaderboard(request, env) {
       latestUnlock: 0,
     },
   ]));
-  [...(retroRows.results || []), ...(knockoutRows.results || [])].forEach((row) => {
+  [
+    ...(earlyRetroRows.results || []),
+    ...(recentRetroRows.results || []),
+    ...(knockoutRows.results || []),
+    ...(premierLeagueRows.results || []),
+  ].forEach((row) => {
     const entry = byAccount.get(row.account_id);
     if (!entry) return;
     if (row.year && row.team_name) {
       const knockoutDefinition = Number(row.year) === KNOCKOUT_256_KEY
         ? knockout256AchievementDefinition(row.team_name)
+        : null;
+      const premierLeagueDefinition = Number(row.year) === PREMIER_LEAGUE_KEY
+        ? premierLeagueAchievementDefinition(row.team_name)
         : null;
       const validUnlock = !knockoutDefinition
         || knockoutDefinition.objective !== "champion"
@@ -1284,7 +1425,9 @@ async function achievementLeaderboard(request, env) {
       }
       entry.points += Number(row.year) === KNOCKOUT_256_KEY
         ? knockoutDefinition?.points || 0
-        : retroAchievementPoints(Number(row.year), row.team_name);
+        : Number(row.year) === PREMIER_LEAGUE_KEY
+          ? premierLeagueDefinition?.points || 0
+          : retroAchievementPoints(Number(row.year), row.team_name);
       entry.achievements += 1;
       entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
     }
@@ -1315,7 +1458,7 @@ async function achievementLeaderboard(request, env) {
     currentUser,
     totalAchievements: RETRO_ACHIEVEMENT_YEARS.reduce(
       (sum, year) => sum + retroAchievementConfig(year).teams.length,
-      DRAFT_TEAMS.length,
+      DRAFT_TEAMS.length + PREMIER_LEAGUE_ACHIEVEMENTS.length,
     ),
   });
 }
@@ -1391,6 +1534,58 @@ async function knockout256Achievement(request, env, account) {
   });
 }
 
+async function premierLeagueAchievement(request, env, account) {
+  if (request.method === "GET") {
+    return responseJson({ achievement: await premierLeagueAchievementProgress(env.CHALLENGE_DB, account) });
+  }
+  if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
+
+  const body = await request.json().catch(() => ({}));
+  const definition = premierLeagueAchievementDefinition(
+    typeof body.clubId === "string" ? body.clubId.trim() : "",
+  );
+  const seed = Number(body.seed);
+  const phase = body.phase === "complete" ? "complete" : "start";
+  const finalPosition = phase === "complete" ? Number(body.finalPosition) : null;
+  if (
+    !definition
+    || !Number.isSafeInteger(seed)
+    || seed < 0
+    || (phase === "complete" && (!Number.isInteger(finalPosition) || finalPosition < 1 || finalPosition > 20))
+  ) {
+    throw new ChallengeRequestError("Invalid Premier League season.", 400);
+  }
+
+  const before = await premierLeagueAchievementProgress(env.CHALLENGE_DB, account);
+  const previousClub = before.teams.find((team) => team.clubId === definition.clubId);
+  const now = Date.now();
+  await env.CHALLENGE_DB.prepare(`
+    INSERT OR IGNORE INTO premier_league_attempts
+      (account_id, season_seed, club_id, achieved, started_at)
+    VALUES (?, ?, ?, 0, ?)
+  `).bind(account.id, seed, definition.clubId, now).run();
+
+  if (phase === "complete") {
+    const achieved = finalPosition <= definition.targetPosition ? 1 : 0;
+    await env.CHALLENGE_DB.prepare(`
+      UPDATE premier_league_attempts
+      SET final_position = ?,
+        achieved = MAX(achieved, ?),
+        completed_at = COALESCE(completed_at, ?)
+      WHERE account_id = ? AND season_seed = ? AND club_id = ?
+    `).bind(finalPosition, achieved, now, account.id, seed, definition.clubId).run();
+  }
+
+  const achievement = await premierLeagueAchievementProgress(env.CHALLENGE_DB, account);
+  const currentClub = achievement.teams.find((team) => team.clubId === definition.clubId);
+  return responseJson({
+    achievement,
+    countryUnlocked: !previousClub?.complete && currentClub?.complete === true,
+    challengeUnlocked: !before.unlocked && achievement.unlocked,
+    unlockedTeam: currentClub,
+  });
+}
+
 async function retroAchievement(request, env, account, year) {
   const config = retroAchievementConfig(year);
   if (request.method === "GET") {
@@ -1455,7 +1650,16 @@ export async function handleChallengeRequest(request, env, url) {
       );
       return await knockout256Achievement(request, env, achievementAccount);
     }
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2010|2014|2016|2018|2022)$/);
+    if (url.pathname === "/api/challenge/achievements/premier-league") {
+      const achievementAccount = await authenticatedAccount(
+        request,
+        env.CHALLENGE_DB,
+        request.method !== "GET",
+        env.LOCAL_DEV_AUTH === "true",
+      );
+      return await premierLeagueAchievement(request, env, achievementAccount);
+    }
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2006|2010|2014|2016|2018|2022)$/);
     if (retroAchievementMatch) {
       const achievementAccount = await authenticatedAccount(
         request,

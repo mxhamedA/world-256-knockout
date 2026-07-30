@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /profile
+Disallow: /saved-tournament/
+
+Sitemap: https://www.256teams.com/sitemap.xml

@@ -2,7 +2,9 @@
   "scripts": {
     "build": "node scripts/build-cloudflare.mjs",
     "generate:legacy-data": "node scripts/generate-legacy-catalog.mjs",
+    "generate:pl-squads": "node scripts/generate-pl-squads.mjs",
     "generate:retro-schedule": "node scripts/generate-retro-2014-schedule.mjs",
+    "generate:retro-2006": "node scripts/generate-retro-2006-data.mjs",
     "generate:retro-2018": "python scripts/generate-retro-2018-squads.py && node scripts/generate-retro-2018-schedule.mjs",
     "generate:retro-2022": "node scripts/generate-retro-2022-squads.mjs && node scripts/generate-retro-2022-schedule.mjs",
     "predev": "node scripts/generate-legacy-catalog.mjs",
@@ -17,7 +19,9 @@
     "test:possession": "node scripts/possession-engine-test.mjs",
     "test:presentation": "node scripts/presentation-engine-test.mjs",
     "test:penalties": "node scripts/penalty-visual-test.mjs && node scripts/interactive-penalty-boundary-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/room-security-test.mjs",
+    "test:penalty-skip": "node scripts/penalty-skip-continuation-test.mjs",
     "test:retro": "node scripts/retro-engine-test.mjs",
+    "test:retro-2006": "node scripts/retro-2006-mode-test.mjs",
     "test:retro-elimination": "node scripts/retro-elimination-ui-test.mjs",
     "test:custom-third-place": "node scripts/custom-third-place-test.mjs",
     "test:setup-lock": "node scripts/default-setup-lock-test.mjs",
@@ -49,5 +53,8 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.115.0"
   }
 }

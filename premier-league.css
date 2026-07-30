@@ -12,6 +12,308 @@
     var(--pl-bg);
 }
 
+/* Paint the PL shell immediately on direct-route refreshes. */
+html.route-pl-loading,
+html.route-pl-loading body {
+  min-height: 100%;
+  background: #1e0021;
+}
+
+html.route-pl-loading #appShell {
+  display: none !important;
+}
+
+html.route-pl-loading #premierLeagueSeasonScreen {
+  display: block !important;
+}
+
+/* Match the established World Cup header structure. */
+.pl-season-header {
+  grid-template-columns: 1fr auto 1fr;
+  min-height: 72px;
+  padding: 0 28px;
+  background: #381d53;
+}
+
+.pl-season-header-left,
+.pl-season-utility-actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+}
+
+.pl-season-header-left {
+  grid-column: 1;
+  justify-self: start;
+}
+
+.pl-season-site-brand {
+  grid-column: 2;
+  justify-self: center;
+}
+
+.pl-season-utility-actions {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.pl-season-restart-button,
+.pl-season-header :is(.utility-button) {
+  display: inline-flex;
+  min-width: 38px;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #d9b6ed;
+  background: transparent;
+  font: 800 11px "Manrope", system-ui, sans-serif;
+  cursor: pointer;
+}
+
+.pl-season-restart-button {
+  padding: 0;
+  font-size: 20px;
+}
+
+.pl-season-header :is(.pl-season-restart-button, .utility-button):hover {
+  color: #fff;
+  background: rgba(117, 65, 143, 0.48);
+}
+
+/* Keep navigation plain and remove the managed-fixture banner treatment. */
+.pl-season-action-row .pl-back-button,
+.pl-season-action-row .pl-back-button:hover {
+  padding: 0;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.pl-fixture-row.is-managed-match {
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pl-season-finale {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid rgba(217, 182, 237, 0.2);
+  border-radius: 18px;
+  background: #28002d;
+  box-shadow: 0 22px 60px rgba(20, 0, 24, 0.32);
+}
+
+.pl-finale-hero {
+  display: grid;
+  justify-items: center;
+  padding: 26px 24px 22px;
+  border-bottom: 1px solid rgba(217, 182, 237, 0.16);
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(157, 107, 187, 0.34), transparent 48%),
+    #381d53;
+}
+
+.pl-finale-hero > span,
+.pl-finale-section-title {
+  color: #d9b6ed;
+  font: 800 10px "DM Mono", monospace;
+  letter-spacing: 1.4px;
+}
+
+.pl-finale-hero img {
+  width: 72px;
+  height: 72px;
+  margin: 12px 0 8px;
+  object-fit: contain;
+}
+
+.pl-finale-hero h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(32px, 4.5vw, 48px);
+  letter-spacing: -1.8px;
+}
+
+.pl-finale-hero p {
+  margin: 6px 0 0;
+  color: #d9b6ed;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pl-finale-body {
+  padding: 20px;
+}
+
+.pl-finale-podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 9px;
+}
+
+.pl-finale-place,
+.pl-finale-award {
+  border: 1px solid rgba(217, 182, 237, 0.16);
+  border-radius: 12px;
+  background: #32123d;
+}
+
+.pl-finale-place {
+  display: grid;
+  grid-template-columns: 28px 34px minmax(0, 1fr);
+  min-height: 60px;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+}
+
+.pl-finale-place > b {
+  color: #d9b6ed;
+  font-size: 20px;
+}
+
+.pl-finale-place img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.pl-finale-place span {
+  display: grid;
+  gap: 2px;
+}
+
+.pl-finale-place strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-finale-place small {
+  color: #b896c4;
+  font: 700 9px "DM Mono", monospace;
+}
+
+.pl-finale-awards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.pl-finale-award {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  min-height: 78px;
+  align-items: center;
+  gap: 11px;
+  padding: 12px 14px;
+}
+
+.pl-finale-award-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #60357e;
+  font-size: 17px;
+}
+
+.pl-finale-award-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.pl-finale-award-copy > span {
+  color: #d9b6ed;
+  font: 800 9px "DM Mono", monospace;
+  letter-spacing: 1px;
+}
+
+.pl-finale-award-copy strong {
+  overflow: hidden;
+  color: #fff;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-finale-award-copy small {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #b896c4;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pl-finale-award-copy img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+}
+
+.pl-finale-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.pl-finale-actions button {
+  min-height: 38px;
+  padding: 0 15px;
+  border: 1px solid rgba(217, 182, 237, 0.24);
+  border-radius: 9px;
+  color: #fff;
+  background: #381d53;
+  font: 800 11px "Manrope", sans-serif;
+  cursor: pointer;
+}
+
+.pl-finale-actions .is-primary {
+  color: #1e0021;
+  background: #fff;
+}
+
+@media (max-width: 760px) {
+  .pl-season-header {
+    padding-inline: 14px;
+  }
+
+  .pl-season-header :is(.utility-button) > span:last-child {
+    display: none;
+  }
+
+  .pl-finale-podium,
+  .pl-finale-awards {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-finale-body {
+    padding: 18px;
+  }
+
+  .pl-finale-actions {
+    flex-wrap: wrap;
+  }
+}
+
 .pl-season-open #appShell {
   display: none !important;
 }
@@ -270,6 +572,186 @@
   cursor: pointer;
 }
 
+.pl-panel-heading a {
+  padding: 8px 0;
+  color: #d6b8df;
+  font: 800 11px "Manrope", sans-serif;
+  text-decoration: none;
+}
+
+.pl-panel-footer {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 8px 24px;
+  border-top: 1px solid var(--pl-line);
+}
+
+.pl-panel-footer button {
+  padding: 8px 0;
+  border: 0;
+  color: #d6b8df;
+  background: transparent;
+  font: 800 11px "Manrope", sans-serif;
+  cursor: pointer;
+}
+
+.pl-latest-transfers-panel {
+  margin-top: 20px;
+}
+
+.pl-transfer-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pl-transfer-row {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  min-width: 0;
+  min-height: 86px;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 22px;
+  border-bottom: 1px solid var(--pl-line);
+  color: #fff;
+  background: transparent;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.pl-transfer-row:nth-child(odd) {
+  border-right: 1px solid var(--pl-line);
+}
+
+.pl-transfer-row:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.pl-transfer-row:active {
+  transform: scale(0.985);
+}
+
+.pl-transfer-row time {
+  display: grid;
+  width: 42px;
+  height: 50px;
+  align-content: center;
+  justify-items: center;
+  border-right: 1px solid rgba(217, 182, 237, 0.2);
+  color: #fff;
+  font-family: "DM Mono", monospace;
+  text-transform: uppercase;
+}
+
+.pl-transfer-row time b {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.pl-transfer-row time span {
+  margin-top: 4px;
+  color: #ba8bcf;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.pl-transfer-copy {
+  display: grid;
+  overflow: hidden;
+  min-width: 0;
+  gap: 8px;
+}
+
+.pl-transfer-copy > strong {
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-transfer-route {
+  display: flex;
+  overflow: hidden;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.pl-transfer-route > b {
+  flex: 0 0 auto;
+  color: #ba8bcf;
+  font-size: 12px;
+}
+
+.pl-transfer-club {
+  display: flex;
+  overflow: hidden;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+  color: var(--pl-muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pl-transfer-club.is-destination {
+  color: #fff;
+}
+
+.pl-transfer-club .pl-club-flag,
+.pl-transfer-monogram {
+  display: block;
+  min-width: 20px;
+  max-width: 20px;
+  width: 20px;
+  min-height: 20px;
+  max-height: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  object-fit: contain;
+}
+
+.pl-transfer-monogram {
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  color: #ba8bcf;
+  background: rgba(96, 53, 126, 0.5);
+  font: 800 7px "DM Mono", monospace;
+}
+
+.pl-transfer-club > span:last-child {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pl-transfer-open {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  transition: color 160ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pl-transfer-row:hover {
+    background: rgba(96, 53, 126, 0.24);
+  }
+
+  .pl-transfer-row:hover .pl-transfer-open {
+    color: #fff;
+    transform: translate(2px, -2px);
+  }
+}
+
 .pl-fixture-list {
   display: grid;
   padding: 0 24px;
@@ -285,8 +767,9 @@
 }
 
 .pl-fixture-play {
-  min-width: 88px;
+  width: 96px;
   height: 36px;
+  box-sizing: border-box;
   padding: 0 13px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 9px;
@@ -491,8 +974,8 @@ body.pl-match-mode-active .pl-club-flag img {
 .pl-fixture-score small {
   margin-top: 3px;
   color: var(--pl-muted);
-  font: 700 8px "DM Mono", monospace;
-  letter-spacing: 0.7px;
+  font: 700 9px "Manrope", system-ui, sans-serif;
+  letter-spacing: 0.2px;
 }
 
 .pl-table {
@@ -604,8 +1087,9 @@ body.pl-match-mode-active .pl-club-flag img {
   font-size: 26px;
 }
 
-.pl-matchweek-nav {
+.pl-matchweek-toolbar > .pl-matchweek-nav {
   display: flex;
+  grid-auto-flow: column;
   gap: 8px;
 }
 
@@ -629,6 +1113,7 @@ body.pl-match-mode-active .pl-club-flag img {
 .pl-squad-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   gap: 16px;
 }
 
@@ -726,6 +1211,14 @@ body.pl-match-mode-active .pl-club-flag img {
   color: #fff;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.pl-player-list i em {
+  margin-left: 5px;
+  color: #d9b6ed;
+  font: 800 8px "DM Mono", monospace;
+  font-style: normal;
+  letter-spacing: 0.4px;
 }
 
 .pl-season-champion {
@@ -840,6 +1333,26 @@ body.pl-match-mode-active .pl-club-flag img {
 }
 
 @media (max-width: 640px) {
+  .pl-season-action-row {
+    gap: 8px;
+  }
+
+  .pl-season-date strong {
+    font-size: 13px;
+  }
+
+  .pl-transfer-list {
+    grid-template-columns: 1fr;
+  }
+
+  .pl-transfer-row:nth-child(odd) {
+    border-right: 0;
+  }
+
+  .pl-transfer-row:nth-last-child(2) {
+    border-bottom: 1px solid var(--pl-line);
+  }
+
   .pl-season-header {
     min-height: auto;
     align-items: center;
@@ -1259,11 +1772,35 @@ body.pl-match-mode-active .standard-match-tactics {
 }
 
 .pl-season-action-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   min-height: 48px;
   align-items: center;
-  justify-content: space-between;
   gap: 18px;
+}
+
+.pl-season-date {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  line-height: 1;
+  text-align: center;
+}
+
+.pl-season-date span {
+  color: #d9b6ed;
+  font: 800 10px "DM Mono", monospace;
+  letter-spacing: 1.2px;
+}
+
+.pl-season-date strong {
+  color: #fff;
+  font-size: 16px;
+  letter-spacing: -0.35px;
+}
+
+.pl-season-action-row .pl-season-header-actions {
+  justify-self: end;
 }
 
 .pl-season-action-row .pl-back-button,
@@ -1286,30 +1823,22 @@ body.pl-match-mode-active .standard-match-tactics {
 }
 
 .pl-fixture-row.is-managed-match {
-  margin-inline: -1px;
-  padding-inline: 13px;
-  border: 1px solid rgba(165, 111, 207, 0.48);
+  border: 0;
   border-radius: 12px;
   background: linear-gradient(90deg, rgba(91, 48, 126, 0.38), rgba(56, 29, 83, 0.08));
-}
-
-.pl-your-match-label {
-  position: absolute;
-  top: 6px;
-  left: 13px;
-  color: #d9b6ed;
-  font: 800 8px "DM Mono", monospace;
-  letter-spacing: 1px;
-}
-
-.pl-fixture-row.is-managed-match .pl-fixture-team,
-.pl-fixture-row.is-managed-match .pl-fixture-score {
-  padding-top: 9px;
+  box-shadow: inset 0 0 0 1px rgba(165, 111, 207, 0.48);
 }
 
 .pl-fixture-row.is-managed-match .pl-fixture-play {
   color: #1e0021;
   background: #fff;
+}
+
+.pl-fixture-play:disabled {
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.04);
+  opacity: 1;
 }
 
 .pl-fixture-team img,
@@ -1505,6 +2034,10 @@ body.pl-match-mode-active .team-away .team-match-events {
   text-align: left;
 }
 
+body.pl-match-mode-active .team-away .team-match-events .timeline-event {
+  justify-self: start;
+}
+
 body.pl-match-mode-active .team-match-events .timeline-event {
   width: max-content;
   max-width: 100%;
@@ -1514,6 +2047,108 @@ body.pl-match-mode-active .team-match-events .timeline-event {
   font-size: clamp(10px, 1vw, 13px);
   font-weight: 800;
   line-height: 1.3;
+}
+
+/* Keep both Premier League headers on the same purple utility palette. */
+body.pl-match-mode-active .brand-mark,
+.pl-season-site-brand .brand-mark {
+  color: #ffffff;
+  background: #75418f;
+  box-shadow: 0 8px 22px rgba(30, 0, 33, 0.32);
+}
+
+body.pl-match-mode-active .top-actions .utility-button {
+  color: #d9b6ed;
+}
+
+body.pl-match-mode-active .top-actions .utility-button:hover {
+  color: #ffffff;
+  background: rgba(117, 65, 143, 0.48);
+}
+
+body.pl-match-mode-active .top-actions .header-donate-link {
+  border-color: rgba(217, 182, 237, 0.32);
+  color: #ffffff;
+  background: #75418f;
+}
+
+body.pl-match-mode-active .top-actions .account-avatar-icon svg {
+  stroke: #c899df;
+}
+
+.pl-season-header {
+  grid-template-columns: 1fr auto 1fr;
+  min-height: 76px;
+  padding: 10px 28px;
+  background: #381d53;
+}
+
+.pl-season-site-brand {
+  grid-column: 2;
+  justify-self: center;
+}
+
+.pl-season-utility-actions {
+  display: flex;
+  grid-column: 3;
+  align-items: center;
+  justify-self: end;
+  gap: 4px;
+}
+
+.pl-season-utility-actions .utility-button {
+  min-height: 38px;
+  padding: 0 10px;
+  color: #d9b6ed;
+}
+
+.pl-season-utility-actions .utility-button:hover {
+  color: #ffffff;
+  background: rgba(117, 65, 143, 0.48);
+}
+
+.pl-season-utility-actions .header-donate-link {
+  border-color: rgba(217, 182, 237, 0.32);
+  color: #ffffff;
+  background: #75418f;
+}
+
+.pl-season-utility-actions .account-avatar-icon svg {
+  stroke: #c899df;
+}
+
+@media (max-width: 1000px) {
+  .pl-season-header {
+    grid-template-columns: auto 1fr;
+  }
+
+  .pl-season-site-brand {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .pl-season-utility-actions {
+    grid-column: 2;
+  }
+
+  .pl-season-utility-actions .utility-button > span:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .pl-season-header {
+    padding-inline: 14px;
+  }
+
+  .pl-season-utility-actions {
+    gap: 0;
+  }
+
+  .pl-season-utility-actions .utility-button {
+    min-width: 34px;
+    padding-inline: 7px;
+  }
 }
 
 body.pl-match-mode-active .team-home .team-match-events .timeline-event {
@@ -1663,8 +2298,8 @@ body.pl-match-mode-active .content {
   display: grid !important;
   grid-template-columns: minmax(210px, 240px) minmax(560px, 860px) minmax(220px, 260px);
   grid-template-areas:
-    "next stage boot"
-    "board board table";
+    "next stage table"
+    "board board boot";
   align-items: start;
   justify-content: center;
   width: 100%;
@@ -2206,7 +2841,7 @@ body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player:hover:no
     margin-top: 86px;
   }
 
-  body.pl-match-mode-active .insight-left {
+  body.pl-match-mode-active #plEngineTablePanel {
     margin-top: 70px;
   }
 
@@ -2234,7 +2869,7 @@ body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player:hover:no
     margin-top: 86px;
   }
 
-  body.pl-match-mode-active .insight-left {
+  body.pl-match-mode-active #plEngineTablePanel {
     margin-top: 70px;
   }
 
@@ -2256,9 +2891,9 @@ body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player:hover:no
     grid-template-areas:
       "stage"
       "next"
-      "boot"
+      "table"
       "board"
-      "table";
+      "boot";
     width: min(100% - 24px, 760px);
     gap: 16px;
     padding: 18px 0 52px;
@@ -2301,5 +2936,133 @@ body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player:hover:no
 
   body.pl-match-mode-active .fixture-grid:not(.bracket-mode) {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Final PL season-shell overrides. Keep these after legacy compatibility rules. */
+.pl-season-header {
+  grid-template-columns: 1fr auto 1fr;
+  min-height: 72px;
+  padding: 0 28px;
+  background: #381d53;
+}
+
+.pl-season-header-left {
+  display: flex;
+  grid-column: 1;
+  min-width: 0;
+  align-items: center;
+  justify-self: start;
+  gap: 7px;
+}
+
+.pl-season-site-brand {
+  grid-column: 2;
+  justify-self: center;
+}
+
+.pl-season-utility-actions {
+  display: flex;
+  grid-column: 3;
+  min-width: 0;
+  align-items: center;
+  justify-self: end;
+  gap: 7px;
+}
+
+.pl-season-action-row .pl-back-button,
+.pl-season-action-row .pl-back-button:hover {
+  padding: 0;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.pl-fixture-row.is-managed-match {
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (max-width: 760px) {
+  .pl-season-header {
+    grid-template-columns: 1fr auto 1fr;
+    padding-inline: 14px;
+  }
+
+  .pl-season-header-left {
+    grid-column: 1;
+  }
+
+  .pl-season-site-brand {
+    display: inline-flex;
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .pl-season-utility-actions {
+    grid-column: 3;
+  }
+}
+
+/* Preserve the desktop-style row on mobile without letting either team overflow. */
+@media (max-width: 850px) {
+  body.pl-match-mode-active .matchup,
+  body.pl-match-mode-active .match-stage.is-live .matchup {
+    grid-template-columns: minmax(0, 1fr) 80px minmax(0, 1fr);
+    gap: 4px;
+    padding-inline: 10px;
+  }
+
+  body.pl-match-mode-active .score-zone {
+    width: 80px;
+    min-width: 80px;
+  }
+
+  body.pl-match-mode-active .team {
+    width: 100%;
+    min-width: 0;
+    gap: 6px;
+  }
+
+  body.pl-match-mode-active .team-home {
+    justify-content: flex-start;
+  }
+
+  body.pl-match-mode-active .flag-orb {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    transform: none;
+  }
+
+  body.pl-match-mode-active .team-home .flag-orb {
+    transform: translateX(8px);
+  }
+
+  body.pl-match-mode-active .team-away .flag-orb {
+    transform: translateX(-8px);
+  }
+
+  body.pl-match-mode-active .team h2.team-name,
+  body.pl-match-mode-active .team h2.team-name.is-long {
+    width: auto;
+    min-width: 0;
+    max-width: calc(100% - 48px);
+    overflow: hidden;
+    font-size: clamp(11px, 3vw, 14px);
+    letter-spacing: -0.35px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.pl-match-mode-active .team h2.team-name > span,
+  body.pl-match-mode-active .team h2.team-name.is-overflowing > span {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

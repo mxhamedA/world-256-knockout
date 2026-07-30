@@ -1,4 +1,75 @@
-const PREMIER_LEAGUE_2026_27_DATA_UPDATED = "27 July 2026";
+const PREMIER_LEAGUE_2026_27_DATA_UPDATED = window.PREMIER_LEAGUE_2026_27_SQUADS_UPDATED || "29 July 2026";
+
+const PREMIER_LEAGUE_2026_27_LATEST_TRANSFERS = Object.freeze([
+  Object.freeze({
+    player: "Morgan Rogers",
+    fromId: "aston-villa",
+    fromName: "Aston Villa",
+    toId: "chelsea",
+    toName: "Chelsea",
+    date: "21 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4680249/why-have-chelsea-signed-rogers-and-what-does-he-bring",
+  }),
+  Object.freeze({
+    player: "João Gomes",
+    fromName: "Wolves",
+    toId: "aston-villa",
+    toName: "Aston Villa",
+    date: "20 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4680265/gomes-becomes-a-villan",
+  }),
+  Object.freeze({
+    player: "Johan Manzambi",
+    fromName: "Freiburg",
+    toId: "aston-villa",
+    toName: "Aston Villa",
+    date: "18 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4680006/manzambi-checks-in-at-bodymoor-heath",
+  }),
+  Object.freeze({
+    player: "Youri Tielemans",
+    fromId: "aston-villa",
+    fromName: "Aston Villa",
+    toId: "manchester-united",
+    toName: "Manchester United",
+    date: "14 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4679511/man-utd-sign-youri-tielemans-from-aston-villa",
+  }),
+  Object.freeze({
+    player: "Sandro Tonali",
+    fromId: "newcastle-united",
+    fromName: "Newcastle United",
+    toId: "tottenham-hotspur",
+    toName: "Tottenham Hotspur",
+    date: "6 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4678206/the-briefing-haalands-world-cup-heroics-spurs-welcome-special-tonali-and-more",
+  }),
+  Object.freeze({
+    player: "Hayden Hackney",
+    fromName: "Middlesbrough",
+    toId: "everton",
+    toName: "Everton",
+    date: "3 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4677798/the-premier-leagues-best-signings-from-the-efl",
+  }),
+  Object.freeze({
+    player: "Mateus Fernandes",
+    fromName: "West Ham United",
+    toId: "tottenham-hotspur",
+    toName: "Tottenham Hotspur",
+    date: "2 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4677623/the-briefing-big-day-of-transfers-premier-league-stars-reach-100-world-cup-goals-and-more",
+  }),
+  Object.freeze({
+    player: "Elliot Anderson",
+    fromId: "nottingham-forest",
+    fromName: "Nottingham Forest",
+    toId: "manchester-city",
+    toName: "Manchester City",
+    date: "2 Jul 2026",
+    sourceUrl: "https://www.premierleague.com/en/news/4677648/man-city-reach-agreement-to-sign-anderson-from-nottingham-forest",
+  }),
+]);
 
 const plPlayer = (name, position, overall, extra = {}) => Object.freeze({
   name,
@@ -6,6 +77,323 @@ const plPlayer = (name, position, overall, extra = {}) => Object.freeze({
   overall,
   simulatorRating: true,
   ...extra,
+});
+
+const plDepth = (entries) => Object.freeze(
+  entries.map(([name, position, overall]) => plPlayer(name, position, overall)),
+);
+
+const normalizePremierLeaguePlayerRating = (value) => Math.max(
+  67,
+  Math.min(91, Math.round(67 + (Number(value || 64) - 64) * 0.8)),
+);
+
+const PREMIER_LEAGUE_2026_27_PLAYER_RATING_OVERRIDES = Object.freeze({
+  "Gianluigi Donnarumma": 89,
+  "James Trafford": 80,
+  "Nico O'Reilly": 84,
+  "Phil Foden": 85,
+  "Elliot Anderson": 85,
+});
+
+const normalizePremierLeaguePlayerName = (value) => String(value || "")
+  .normalize("NFKD")
+  .replace(/\p{Diacritic}/gu, "")
+  .replace(/[^a-z0-9]+/gi, " ")
+  .trim()
+  .toLowerCase();
+
+const PREMIER_LEAGUE_PLAYER_DISPLAY_NAMES = Object.freeze({
+  "ruben dos santos gato alves dias": "Rúben Dias",
+  "bruno guimaraes rodriguez moura": "Bruno Guimarães",
+  "andrey nascimento dos santos": "Andrey Santos",
+  "estevao almeida de oliveira goncalves": "Estêvão",
+});
+
+const premierLeaguePlayerDisplayName = (value) => (
+  PREMIER_LEAGUE_PLAYER_DISPLAY_NAMES[normalizePremierLeaguePlayerName(value)] || value
+);
+
+const PREMIER_LEAGUE_FC26_RATING_ENTRIES = Object.entries(window.PREMIER_LEAGUE_FC26_RATINGS || {})
+  .map(([name, overall]) => [normalizePremierLeaguePlayerName(name), Number(overall)]);
+
+function officialFc26RatingForPlayer(playerName) {
+  const key = normalizePremierLeaguePlayerName(playerName);
+  const exact = PREMIER_LEAGUE_FC26_RATING_ENTRIES.find(([candidate]) => candidate === key);
+  if (exact) return exact[1];
+  const tokens = key.split(/\s+/);
+  const lastName = tokens.at(-1);
+  if (!lastName || lastName.length < 4) return null;
+  const candidates = PREMIER_LEAGUE_FC26_RATING_ENTRIES.filter(([candidate]) => {
+    const candidateTokens = candidate.split(/\s+/);
+    return candidateTokens.at(-1) === lastName
+      || (candidate.length >= 5 && (candidate.includes(key) || key.includes(candidate)));
+  });
+  return candidates.length === 1 ? candidates[0][1] : null;
+}
+
+const PREMIER_LEAGUE_2026_27_PREFERRED_FORMATIONS = Object.freeze({
+  arsenal: "4-3-3",
+  "aston-villa": "4-2-3-1",
+  bournemouth: "4-1-4-1",
+  brentford: "4-2-3-1",
+  brighton: "4-2-3-1",
+  chelsea: "4-2-3-1",
+  "coventry-city": "4-2-3-1",
+  "crystal-palace": "3-4-2-1",
+  everton: "4-2-3-1",
+  fulham: "4-2-3-1",
+  "hull-city": "4-2-3-1",
+  "ipswich-town": "4-2-3-1",
+  "leeds-united": "4-3-3",
+  liverpool: "4-2-3-1",
+  "manchester-city": "4-3-3",
+  "manchester-united": "3-4-3",
+  "newcastle-united": "4-3-3",
+  "nottingham-forest": "4-2-3-1",
+  sunderland: "4-3-3",
+  "tottenham-hotspur": "4-3-3",
+});
+
+const PREMIER_LEAGUE_MOBILE_CLUB_NAMES = Object.freeze({
+  "manchester-city": "Man City",
+  "manchester-united": "Man Utd",
+  "nottingham-forest": "Nott. Forest",
+  "tottenham-hotspur": "Spurs",
+});
+
+const PREMIER_LEAGUE_2026_27_SQUAD_DEPTH = Object.freeze({
+  arsenal: plDepth([
+    ["Kepa Arrizabalaga", "GK", 82],
+    ["Ben White", "RB", 84],
+    ["Cristhian Mosquera", "CB", 82],
+    ["Piero Hincapié", "CB", 83],
+    ["Myles Lewis-Skelly", "LB", 82],
+    ["Mikel Merino", "CM", 84],
+    ["Gabriel Martinelli", "LW", 84],
+    ["Leandro Trossard", "LW", 82],
+  ]),
+  "aston-villa": plDepth([
+    ["Marco Bizot", "GK", 78],
+    ["Lucas Digne", "LB", 80],
+    ["Tyrone Mings", "CB", 80],
+    ["Victor Lindelöf", "CB", 79],
+    ["Andrés García", "RB", 77],
+    ["Ross Barkley", "CM", 77],
+    ["Emiliano Buendía", "CAM", 79],
+    ["Evann Guessand", "RW", 80],
+    ["Lamare Bogarde", "CDM", 75],
+  ]),
+  bournemouth: plDepth([
+    ["Will Dennis", "GK", 72],
+    ["Marcos Senesi", "CB", 81],
+    ["Veljko Milosavljević", "CB", 75],
+    ["Adam Smith", "RB", 75],
+    ["Julio Soler", "LB", 75],
+    ["Lewis Cook", "CM", 79],
+    ["Ryan Christie", "CM", 78],
+    ["Álex Jiménez", "RB", 77],
+    ["Enes Ünal", "ST", 78],
+    ["Junior Kroupi", "ST", 78],
+  ]),
+  brentford: plDepth([
+    ["Hákon Valdimarsson", "GK", 76],
+    ["Ellery Balcombe", "GK", 72],
+    ["Kristoffer Ajer", "CB", 79],
+    ["Ethan Pinnock", "CB", 79],
+    ["Rico Henry", "LB", 77],
+    ["Vitaly Janelt", "CDM", 78],
+    ["Mathias Jensen", "CM", 78],
+    ["Fábio Carvalho", "CAM", 78],
+    ["Keane Lewis-Potter", "LW", 78],
+    ["Frank Onyeka", "CM", 77],
+  ]),
+  brighton: plDepth([
+    ["Jason Steele", "GK", 75],
+    ["Carl Rushworth", "GK", 75],
+    ["Joel Veltman", "RB", 78],
+    ["Olivier Boscagli", "CB", 80],
+    ["Yasin Ayari", "CM", 78],
+    ["James Milner", "CM", 74],
+    ["Solly March", "RW", 76],
+    ["Brajan Gruda", "RW", 78],
+    ["Stefanos Tzimas", "ST", 77],
+  ]),
+  chelsea: plDepth([
+    ["Filip Jørgensen", "GK", 78],
+    ["Tosin Adarabioyo", "CB", 79],
+    ["Wesley Fofana", "CB", 81],
+    ["Malo Gusto", "RB", 81],
+    ["Romeo Lavia", "CDM", 82],
+    ["Alejandro Garnacho", "LW", 82],
+    ["Facundo Buonanotte", "CAM", 79],
+    ["Tyrique George", "LW", 76],
+    ["Josh Acheampong", "CB", 76],
+  ]),
+  "coventry-city": plDepth([
+    ["Ben Wilson", "GK", 68],
+    ["Jay Dasilva", "LB", 69],
+    ["Joel Latibeaudiere", "CB", 70],
+    ["Luis Binks", "CB", 68],
+    ["Jamie Allen", "CM", 68],
+    ["Brandon Thomas-Asante", "ST", 70],
+    ["Fábio Tavares", "ST", 66],
+    ["Raphael Borges Rodrigues", "LW", 68],
+    ["Norman Bassette", "ST", 68],
+    ["Kai Andrews", "CM", 66],
+  ]),
+  "crystal-palace": plDepth([
+    ["Walter Benítez", "GK", 80],
+    ["Remi Matthews", "GK", 70],
+    ["Nathaniel Clyne", "RB", 75],
+    ["Chadi Riad", "CB", 77],
+    ["Borna Sosa", "LB", 78],
+    ["Cheick Doucouré", "CDM", 81],
+    ["Justin Devenny", "CM", 73],
+    ["Eddie Nketiah", "ST", 79],
+    ["Christantus Uche", "CAM", 79],
+    ["Jesurun Rak-Sakyi", "RW", 75],
+  ]),
+  everton: plDepth([
+    ["Mark Travers", "GK", 77],
+    ["Séamus Coleman", "RB", 75],
+    ["Nathan Patterson", "RB", 75],
+    ["Michael Keane", "CB", 76],
+    ["Vitaliy Mykolenko", "LB", 79],
+    ["Tim Iroegbunam", "CM", 75],
+    ["Merlin Röhl", "CM", 78],
+    ["Jack Grealish", "LW", 82],
+    ["Tyler Dibling", "RW", 78],
+    ["Harrison Armstrong", "CM", 70],
+  ]),
+  fulham: plDepth([
+    ["Benjamin Lecomte", "GK", 77],
+    ["Timothy Castagne", "RB", 79],
+    ["Issa Diop", "CB", 78],
+    ["Jorge Cuenca", "CB", 77],
+    ["Ryan Sessegnon", "LB", 78],
+    ["Tom Cairney", "CM", 75],
+    ["Harrison Reed", "CDM", 76],
+    ["Samuel Chukwueze", "RW", 81],
+    ["Adama Traoré", "RW", 79],
+    ["Joshua King", "CAM", 75],
+  ]),
+  "hull-city": plDepth([
+    ["Dillon Phillips", "GK", 70],
+    ["Cody Drameh", "RB", 69],
+    ["Sean McLoughlin", "CB", 68],
+    ["John Egan", "CB", 70],
+    ["Finley Burns", "CB", 66],
+    ["Gustavo Puerta", "CM", 70],
+    ["Kasey Palmer", "CAM", 71],
+    ["Liam Millar", "LW", 70],
+    ["Mason Burstow", "ST", 69],
+    ["João Pedro", "ST", 72],
+  ]),
+  "ipswich-town": plDepth([
+    ["Christian Walton", "GK", 73],
+    ["Cieran Slicker", "GK", 67],
+    ["Ben Johnson", "RB", 75],
+    ["Luke Woolfenden", "CB", 73],
+    ["Cameron Burgess", "CB", 73],
+    ["Harry Clarke", "RB", 72],
+    ["Conor Townsend", "LB", 71],
+    ["Massimo Luongo", "CM", 72],
+    ["Nathan Broadhead", "LW", 74],
+    ["Ali Al-Hamadi", "ST", 71],
+  ]),
+  "leeds-united": plDepth([
+    ["James Trafford", "GK", 80],
+    ["Illan Meslier", "GK", 78],
+    ["Karl Darlow", "GK", 75],
+    ["Jaka Bijol", "CB", 80],
+    ["Sebastiaan Bornauw", "CB", 78],
+    ["James Justin", "RB", 79],
+    ["Ilia Gruev", "CDM", 77],
+    ["Sean Longstaff", "CM", 78],
+    ["Jack Harrison", "LW", 78],
+    ["Lukas Nmecha", "ST", 78],
+    ["Sam Byram", "LB", 75],
+  ]),
+  liverpool: plDepth([
+    ["Giorgi Mamardashvili", "GK", 84],
+    ["Conor Bradley", "RB", 80],
+    ["Ibrahima Konaté", "CB", 86],
+    ["Joe Gomez", "CB", 80],
+    ["Wataru Endo", "CDM", 78],
+    ["Curtis Jones", "CM", 82],
+    ["Dominik Szoboszlai", "CAM", 87],
+    ["Mohamed Salah", "RW", 90],
+    ["Trey Nyoni", "CM", 74],
+  ]),
+  "manchester-city": plDepth([
+    ["John Stones", "CB", 83],
+    ["Abdukodir Khusanov", "CB", 80],
+    ["Nathan Aké", "CB", 82],
+    ["Rico Lewis", "RB", 80],
+    ["Nico González", "CDM", 81],
+    ["Mateo Kovačić", "CM", 82],
+    ["Oscar Bobb", "RW", 79],
+    ["Omar Marmoush", "ST", 84],
+  ]),
+  "manchester-united": plDepth([
+    ["Altay Bayındır", "GK", 76],
+    ["Noussair Mazraoui", "RB", 81],
+    ["Harry Maguire", "CB", 80],
+    ["Luke Shaw", "LB", 80],
+    ["Lisandro Martínez", "CB", 83],
+    ["Casemiro", "CDM", 81],
+    ["Mason Mount", "CAM", 80],
+    ["Joshua Zirkzee", "CF", 80],
+    ["Chido Obi", "ST", 74],
+  ]),
+  "newcastle-united": plDepth([
+    ["Nick Pope", "GK", 82],
+    ["Kieran Trippier", "RB", 80],
+    ["Dan Burn", "CB", 79],
+    ["Jamaal Lascelles", "CB", 75],
+    ["Emil Krafth", "RB", 75],
+    ["Joe Willock", "CM", 78],
+    ["Lewis Miley", "CM", 78],
+    ["William Osula", "ST", 76],
+    ["Jacob Murphy", "RW", 78],
+    ["Alex Murphy", "CB", 72],
+  ]),
+  "nottingham-forest": plDepth([
+    ["Angus Gunn", "GK", 76],
+    ["Carlos Miguel", "GK", 76],
+    ["Morato", "CB", 79],
+    ["Willy Boly", "CB", 77],
+    ["Oleksandr Zinchenko", "LB", 80],
+    ["Ibrahim Sangaré", "CDM", 79],
+    ["Omari Hutchinson", "RW", 79],
+    ["Dilane Bakwa", "RW", 78],
+    ["Taiwo Awoniyi", "ST", 78],
+    ["Arnaud Kalimuendo", "ST", 80],
+  ]),
+  sunderland: plDepth([
+    ["Anthony Patterson", "GK", 75],
+    ["Robin Roefs", "GK", 77],
+    ["Nordi Mukiele", "RB", 80],
+    ["Jenson Seelt", "CB", 72],
+    ["Luke O'Nien", "CB", 74],
+    ["Dennis Cirkin", "LB", 75],
+    ["Chris Rigg", "CM", 76],
+    ["Romaine Mundle", "LW", 74],
+    ["Eliezer Mayenda", "ST", 75],
+    ["Arthur Masuaku", "LB", 75],
+  ]),
+  "tottenham-hotspur": plDepth([
+    ["Antonín Kinský", "GK", 78],
+    ["Destiny Udogie", "LB", 82],
+    ["Kevin Danso", "CB", 81],
+    ["Archie Gray", "CM", 79],
+    ["Lucas Bergvall", "CM", 80],
+    ["Brennan Johnson", "RW", 82],
+    ["Dejan Kulusevski", "RW", 84],
+    ["Richarlison", "ST", 80],
+    ["Pape Matar Sarr", "CM", 81],
+  ]),
 });
 
 const plClub = ({
@@ -21,30 +409,122 @@ const plClub = ({
   experience,
   arrivals = [],
   roster,
-}) => Object.freeze({
-  id,
-  name,
-  code,
-  badge: `./assets/pl-26-27/badges/${id}.webp`,
-  rating,
-  strength: rating,
-  nameCulture: "british",
-  fifaRank: 30,
-  simulationRatings: Object.freeze({
-    overall: rating,
-    attack,
-    midfield,
-    defence,
-    goalkeeper,
-    squadDepth: depth,
-    experience,
-    penalties: Math.round((attack + goalkeeper + experience) / 3),
-    discipline: 68,
-  }),
-  arrivals: Object.freeze(arrivals),
-  players: Object.freeze(roster.map((player) => player.name)),
-  playerProfiles: Object.freeze(roster),
-});
+}) => {
+  const normalizePlayerName = (value) => value
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+  const roleOverrideEntries = [...roster, ...(PREMIER_LEAGUE_2026_27_SQUAD_DEPTH[id] || [])]
+    .map((player) => [normalizePlayerName(player.name), player]);
+  const roleOverrides = new Map(roleOverrideEntries);
+  const likelyStarterNames = new Set(roster.slice(0, 11).map((player) => normalizePlayerName(player.name)));
+  const roleOverrideForPlayer = (player) => {
+    const key = normalizePlayerName(player.name);
+    const exact = roleOverrides.get(key);
+    if (exact) return { key, override: exact };
+    const keyTokens = key.split(/\s+/);
+    const candidates = roleOverrideEntries.filter(([overrideKey]) => {
+      if (overrideKey.length >= 5 && (key.includes(overrideKey) || overrideKey.includes(key))) return true;
+      const overrideTokens = overrideKey.split(/\s+/);
+      const lastToken = overrideTokens.at(-1);
+      return lastToken.length >= 4 && keyTokens.includes(lastToken);
+    });
+    return candidates.length === 1
+      ? { key: candidates[0][0], override: candidates[0][1] }
+      : { key, override: null };
+  };
+  const baseCurrentSquad = window.PREMIER_LEAGUE_2026_27_CURRENT_SQUADS?.[id];
+  const trafford = window.PREMIER_LEAGUE_2026_27_CURRENT_SQUADS?.["manchester-city"]
+    ?.find((player) => normalizePlayerName(player.name) === "james trafford");
+  const currentSquad = id === "manchester-city"
+    ? baseCurrentSquad?.filter((player) => normalizePlayerName(player.name) !== "james trafford")
+    : id === "leeds-united" && trafford
+      ? [...(baseCurrentSquad || []), trafford]
+      : baseCurrentSquad;
+  if (!Array.isArray(currentSquad) || currentSquad.length < 20) {
+    throw new Error(`Missing current 2026/27 Premier League squad for ${name}`);
+  }
+  const completeRoster = Object.freeze(currentSquad.map((player) => {
+    const { key, override } = roleOverrideForPlayer(player);
+    const explicitRating = PREMIER_LEAGUE_2026_27_PLAYER_RATING_OVERRIDES[player.name];
+    const officialRating = officialFc26RatingForPlayer(player.name);
+    const fplFallback = normalizePremierLeaguePlayerRating(player.overall);
+    const calibratedFallback = override?.overall
+      ? Math.round(fplFallback * 0.35 + Number(override.overall) * 0.65)
+      : fplFallback;
+    const registeredNameOverride = premierLeaguePlayerDisplayName(player.name);
+    const displayName = registeredNameOverride !== player.name
+      ? registeredNameOverride
+      : player.displayName?.trim().includes(" ")
+        ? player.displayName
+        : player.name;
+    return plPlayer(
+      displayName,
+      override?.position || player.position,
+      explicitRating ?? officialRating ?? Math.max(64, Math.min(90, calibratedFallback)),
+      {
+      fplId: player.fplId,
+      positions: Object.freeze([
+        ...new Set([override?.position, ...(override?.positions || []), player.position].filter(Boolean)),
+      ]),
+      startingXILikelihood: likelyStarterNames.has(key) ? 1 : 0,
+      startingXI: likelyStarterNames.has(key),
+      ...(override?.captain ? { captain: true } : {}),
+      ...(override?.penaltyTaker ? { penaltyTaker: true } : {}),
+      },
+    );
+  }));
+  const averageTop = (players, count, fallback) => {
+    const ratings = players
+      .map((player) => Number(player.overall) || 0)
+      .sort((left, right) => right - left)
+      .slice(0, count);
+    return ratings.length
+      ? ratings.reduce((total, value) => total + value, 0) / ratings.length
+      : fallback;
+  };
+  const attackingPlayers = completeRoster.filter((player) => ["ST", "CF", "SS", "LW", "RW", "CAM", "AM"].includes(player.position));
+  const midfieldPlayers = completeRoster.filter((player) => ["CDM", "CM", "CAM", "AM", "LM", "RM"].includes(player.position));
+  const defensivePlayers = completeRoster.filter((player) => ["CB", "LB", "RB", "LWB", "RWB"].includes(player.position));
+  const goalkeepers = completeRoster.filter((player) => player.position === "GK");
+  const startingQuality = averageTop(completeRoster, 11, rating);
+  const depthQuality = averageTop(completeRoster, 18, startingQuality);
+  const derivedOverall = Math.round(startingQuality * 0.72 + depthQuality * 0.28);
+  const derivedAttack = Math.round(averageTop(attackingPlayers, 5, derivedOverall));
+  const derivedMidfield = Math.round(averageTop(midfieldPlayers, 5, derivedOverall));
+  const derivedDefence = Math.round(averageTop(defensivePlayers, 5, derivedOverall));
+  const derivedGoalkeeper = Math.round(averageTop(goalkeepers, 1, derivedOverall));
+  const derivedDepth = Math.round(depthQuality);
+  const leagueStrengthAdjustment = id === "nottingham-forest" ? -1 : 0;
+  const adjustedRating = (value) => Math.max(60, Math.min(91, value + leagueStrengthAdjustment));
+  return Object.freeze({
+    id,
+    name,
+    mobileName: PREMIER_LEAGUE_MOBILE_CLUB_NAMES[id] || name,
+    code,
+    badge: `./assets/pl-26-27/badges/${id}.webp`,
+    rating: adjustedRating(derivedOverall),
+    strength: adjustedRating(derivedOverall),
+    premierLeague: true,
+    preferredFormation: PREMIER_LEAGUE_2026_27_PREFERRED_FORMATIONS[id] || "4-3-3",
+    nameCulture: "british",
+    fifaRank: 30,
+    simulationRatings: Object.freeze({
+      overall: adjustedRating(derivedOverall),
+      attack: adjustedRating(derivedAttack),
+      midfield: adjustedRating(derivedMidfield),
+      defence: adjustedRating(derivedDefence),
+      goalkeeper: adjustedRating(derivedGoalkeeper),
+      squadDepth: adjustedRating(derivedDepth),
+      experience,
+      penalties: Math.round((attack + goalkeeper + experience) / 3),
+      discipline: 68,
+    }),
+    arrivals: Object.freeze(arrivals),
+    players: Object.freeze(completeRoster.map((player) => player.name)),
+    playerProfiles: completeRoster,
+  });
+};
 
 const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
   plClub({
@@ -283,6 +763,7 @@ const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
   plClub({
     id: "leeds-united", name: "Leeds United", code: "LEE", rating: 73,
     attack: 74, midfield: 75, defence: 73, goalkeeper: 74, depth: 72, experience: 74,
+    arrivals: ["James Trafford"],
     roster: [
       plPlayer("Dominic Calvert-Lewin", "ST", 77, { penaltyTaker: true }),
       plPlayer("Wilfried Gnonto", "LW", 77),
@@ -329,7 +810,7 @@ const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
       plPlayer("Antoine Semenyo", "LW", 88),
       plPlayer("Jérémy Doku", "RW", 85),
       plPlayer("Rayan Cherki", "CAM", 87),
-      plPlayer("Elliot Anderson", "CM", 86),
+      plPlayer("Elliot Anderson", "CM", 85),
       plPlayer("Rodri", "CDM", 91, { captain: true }),
       plPlayer("Matheus Nunes", "RB", 82),
       plPlayer("Rúben Dias", "CB", 89),
@@ -337,7 +818,7 @@ const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
       plPlayer("Rayan Aït-Nouri", "LB", 84),
       plPlayer("Gianluigi Donnarumma", "GK", 91),
       plPlayer("Tijjani Reijnders", "CM", 86),
-      plPlayer("Phil Foden", "RW", 89),
+      plPlayer("Phil Foden", "RW", 85),
       plPlayer("Savinho", "RW", 82),
     ],
   }),
@@ -489,5 +970,6 @@ function createPremierLeagueSchedule() {
 }
 
 window.PREMIER_LEAGUE_2026_27_DATA_UPDATED = PREMIER_LEAGUE_2026_27_DATA_UPDATED;
+window.PREMIER_LEAGUE_2026_27_LATEST_TRANSFERS = PREMIER_LEAGUE_2026_27_LATEST_TRANSFERS;
 window.PREMIER_LEAGUE_2026_27_CLUBS = PREMIER_LEAGUE_2026_27_CLUBS;
 window.createPremierLeagueSchedule = createPremierLeagueSchedule;

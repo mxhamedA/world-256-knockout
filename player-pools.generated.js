@@ -517,7 +517,6 @@ const RECENT_NATIONAL_TEAM_PLAYERS = {
     "Lamine Camara",
     "Assane Diao",
     "Bamba Dieng",
-    "Sadio Mané",
     "Édouard Mendy",
     "Mory Diaw",
     "Krépin Diatta",
@@ -627,7 +626,6 @@ const RECENT_NATIONAL_TEAM_PLAYERS = {
     "Xaver Schlager",
     "Nicolas Seiwald",
     "Marcel Sabitzer",
-    "Marko Arnautović",
     "Michael Gregoritsch",
     "Saša Kalajdžić",
     "Florian Wiegele",
@@ -845,7 +843,6 @@ const RECENT_NATIONAL_TEAM_PLAYERS = {
     "Ghislain Konan",
     "Wilfried Singo",
     "Odilon Kossounou",
-    "Jean Michaël Seri",
     "Seko Fofana",
     "Franck Kessié",
     "Ange-Yoan Bonny",
@@ -8280,7 +8277,7 @@ const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = {
       "sourcePosition": "FW"
     },
     {
-      "name": "Sadio Mané",
+      "name": "Iliman Ndiaye",
       "position": "RW",
       "sourcePosition": "FW"
     },
@@ -8342,11 +8339,6 @@ const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = {
     {
       "name": "Cherif Ndiaye",
       "position": "LW",
-      "sourcePosition": "FW"
-    },
-    {
-      "name": "Iliman Ndiaye",
-      "position": "RW",
       "sourcePosition": "FW"
     },
     {
@@ -8798,9 +8790,9 @@ const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = {
       "sourcePosition": "MF"
     },
     {
-      "name": "Marko Arnautović",
+      "name": "Patrick Wimmer",
       "position": "LW",
-      "sourcePosition": "FW"
+      "sourcePosition": "MF"
     },
     {
       "name": "Michael Gregoritsch",
@@ -8870,11 +8862,6 @@ const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = {
     {
       "name": "Konrad Laimer",
       "position": "RM",
-      "sourcePosition": "MF"
-    },
-    {
-      "name": "Patrick Wimmer",
-      "position": "CDM",
       "sourcePosition": "MF"
     },
     {
@@ -9824,7 +9811,7 @@ const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = {
       "sourcePosition": "DF"
     },
     {
-      "name": "Jean Michaël Seri",
+      "name": "Ibrahim Sangaré",
       "position": "CDM",
       "sourcePosition": "MF"
     },
@@ -9882,11 +9869,6 @@ const RECENT_NATIONAL_TEAM_PLAYER_PROFILES = {
       "name": "Evan Ndicka",
       "position": "RB",
       "sourcePosition": "DF"
-    },
-    {
-      "name": "Ibrahim Sangaré",
-      "position": "CDM",
-      "sourcePosition": "MF"
     },
     {
       "name": "Parfait Guiagon",

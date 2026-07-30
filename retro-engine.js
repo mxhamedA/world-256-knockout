@@ -58,6 +58,21 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     "samueletoo": 2,
     "robinho": 2,
   });
+  const WORLD_CUP_2006_GOALS = Object.freeze({
+    "miroslavklose": 5,
+    "hernancrespo": 3,
+    "ronaldo": 3,
+    "thierryhenry": 3,
+    "zinedinezidane": 3,
+    "davidvilla": 3,
+    "fernandotorres": 3,
+    "lukaspodolski": 3,
+    "maxirodriguez": 3,
+    "andriyshevchenko": 2,
+    "lucatoni": 2,
+    "tomasrosicky": 2,
+    "timcahill": 2,
+  });
   const WORLD_CUP_2018_GOALS = Object.freeze({
     "harrykane": 6,
     "antoinegriezmann": 4,
@@ -83,6 +98,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     "takashiinui": 2,
   });
   const PENALTY_TAKERS_BY_YEAR = Object.freeze({
+    2006: Object.fromEntries(Object.entries(typeof RETRO_2006_SQUADS !== "undefined" ? RETRO_2006_SQUADS : {})
+      .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2010: Object.fromEntries(Object.entries(typeof RETRO_2010_SQUADS !== "undefined" ? RETRO_2010_SQUADS : {})
       .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2014: {
@@ -180,6 +197,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function squadsForYear(year) {
+    if (Number(year) === 2006) return typeof RETRO_2006_SQUADS !== "undefined" ? RETRO_2006_SQUADS : {};
     if (Number(year) === 2010) return typeof RETRO_2010_SQUADS !== "undefined" ? RETRO_2010_SQUADS : {};
     if (Number(year) === 2014) return typeof RETRO_2014_SQUADS !== "undefined" ? RETRO_2014_SQUADS : {};
     if (Number(year) === 2016) return typeof RETRO_EURO_2016_SQUADS !== "undefined" ? RETRO_EURO_2016_SQUADS : {};
@@ -189,6 +207,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function groupScheduleForYear(year) {
+    if (Number(year) === 2006) return RETRO_2006_GROUP_SCHEDULE;
     if (Number(year) === 2010) return RETRO_2010_GROUP_SCHEDULE;
     if (Number(year) === 2014) return RETRO_2014_GROUP_SCHEDULE;
     if (Number(year) === 2016) return RETRO_EURO_2016_GROUP_SCHEDULE;
@@ -198,6 +217,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function knockoutScheduleForYear(year) {
+    if (Number(year) === 2006) return RETRO_2006_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2010) return RETRO_2010_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2014) return RETRO_2014_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2016) return RETRO_EURO_2016_KNOCKOUT_SCHEDULE;
@@ -269,7 +289,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (year === 2016 && Number.isFinite(Number(player?.euroGoals))) {
       return Number(player.euroGoals);
     }
-    const goals = year === 2010 ? WORLD_CUP_2010_GOALS
+    const goals = year === 2006 ? WORLD_CUP_2006_GOALS
+      : year === 2010 ? WORLD_CUP_2010_GOALS
       : year === 2018 ? WORLD_CUP_2018_GOALS : WORLD_CUP_2014_GOALS;
     return goals[normalizedPlayerName(player)] || 0;
   }
@@ -535,6 +556,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
         ],
       },
       totalExpectedGoals: Number(totalXg.toFixed(2)),
+      revealed: true,
     };
     advanceTournament(tournament);
     return match.result;
@@ -781,7 +803,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function createTournament({ year = 2014, seed = Date.now(), managedTeam = null } = {}) {
-    if (![2010, 2014, 2016, 2018, 2022].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
+    if (![2006, 2010, 2014, 2016, 2018, 2022].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
       throw new Error("That retro tournament is not playable yet.");
     }
     return {
@@ -847,7 +869,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     return Boolean(
       tournament
       && tournament.version === VERSION
-      && [2010, 2014, 2016, 2018, 2022].includes(year)
+      && [2006, 2010, 2014, 2016, 2018, 2022].includes(year)
       && Array.isArray(tournament.groupMatches)
       && tournament.groupMatches.length === expectedGroupMatches
       && RETRO_WORLD_CUPS[tournament.year]?.teams.length === expectedTeams

@@ -11,12 +11,18 @@ const RETRO_WORLD_CUP_YEAR_KEY = "world-256-retro-world-cup-year";
 const RETRO_WORLD_CUP_TEAM_KEY_PREFIX = "world-256-retro-world-cup-team";
 const RETRO_COMPETITION_KEY = "world-256-retro-competition";
 const RETRO_EURO_2016_TEAM_KEY = "world-256-retro-euro-2016-team";
+const RETRO_COPA_2024_TEAM_KEY = "world-256-retro-copa-2024-team";
 const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
 const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
 const PREMIER_LEAGUE_SETUP_STORAGE_KEY = "world-256-premier-league-2026-27-setup-v1";
 const CUSTOM_TOURNAMENT_SETUP_KEY = "world-256-custom-tournament-setup-v1";
 const TOURNAMENT_HISTORY_STORAGE_KEY = "world-256-tournament-history-v1";
-const EURO_2016_ANNOUNCEMENT_KEY = "world-256-announcement-euro-2016-v1";
+const TOURNAMENT_HISTORY_MIGRATION_KEY = "world-256-tournament-history-indexeddb-v1";
+const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
+const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
+const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
+const PREMIER_LEAGUE_ANNOUNCEMENT_KEY = "world-256-announcement-premier-league-beta-v1";
+const RETRO_2006_ANNOUNCEMENT_KEY = "world-256-announcement-retro-2006-v1";
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -25,7 +31,7 @@ const ONLINE_PARTY_MODE_ENABLED = true;
 const LIVE_MATCH_MANAGEMENT_UI_ENABLED = true;
 const STATE_VERSION = 2;
 const TOURNAMENT_HISTORY_VERSION = 1;
-const TOURNAMENT_HISTORY_LIMIT = 12;
+const TOURNAMENT_HISTORY_LIMIT = 50;
 
 const PREMIER_LEAGUE_ASSET_PACK_ID = "pl-26-27";
 const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
@@ -52,6 +58,7 @@ const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
 ]);
 
 const RETRO_WORLD_CUP_PATHS = Object.freeze({
+  2006: "/retro-06-world-cup",
   2010: "/retro-10-world-cup",
   2014: "/retro-14-world-cup",
   2016: "/retro-euro-2016",
@@ -64,8 +71,8 @@ const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
     label: "Germany 2006",
     host: "Germany",
     logo: "./assets/retro-world-cup-2006.png",
-    accent: "#55bb68",
-    accentText: "#07150b",
+    accent: "#d6aa21",
+    accentText: "#071b2a",
   }),
   2010: Object.freeze({
     label: "South Africa 2010",
@@ -143,6 +150,32 @@ const RETRO_EURO_2016 = Object.freeze({
     { name: "Iceland", group: "F" },
     { name: "Austria", group: "F" },
     { name: "Hungary", group: "F" },
+  ]),
+});
+
+const RETRO_COPA_2024 = Object.freeze({
+  year: "2024",
+  label: "USA 2024",
+  logo: "./assets/copa-america-2024-logo.png",
+  accent: "#ff2835",
+  accentText: "#ffffff",
+  teams: Object.freeze([
+    { name: "Argentina", group: "A" },
+    { name: "Peru", group: "A" },
+    { name: "Chile", group: "A" },
+    { name: "Canada", group: "A" },
+    { name: "Mexico", group: "B" },
+    { name: "Ecuador", group: "B" },
+    { name: "Venezuela", group: "B" },
+    { name: "Jamaica", group: "B" },
+    { name: "United States", group: "C" },
+    { name: "Uruguay", group: "C" },
+    { name: "Panama", group: "C" },
+    { name: "Bolivia", group: "C" },
+    { name: "Brazil", group: "D" },
+    { name: "Colombia", group: "D" },
+    { name: "Paraguay", group: "D" },
+    { name: "Costa Rica", group: "D" },
   ]),
 });
 
@@ -306,9 +339,12 @@ const els = {
   newsButton: $("#newsButton"),
   newsModal: $("#newsModal"),
   newsCloseButton: $("#newsCloseButton"),
-  euro2016AnnouncementModal: $("#euro2016AnnouncementModal"),
-  euro2016AnnouncementClose: $("#euro2016AnnouncementClose"),
-  euro2016AnnouncementAction: $("#euro2016AnnouncementAction"),
+  premierLeagueAnnouncementModal: $("#premierLeagueAnnouncementModal"),
+  premierLeagueAnnouncementClose: $("#premierLeagueAnnouncementClose"),
+  premierLeagueAnnouncementAction: $("#premierLeagueAnnouncementAction"),
+  retro2006AnnouncementModal: $("#retro2006AnnouncementModal"),
+  retro2006AnnouncementClose: $("#retro2006AnnouncementClose"),
+  retro2006AnnouncementAction: $("#retro2006AnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   removeInjuriesSetting: $("#removeInjuriesSetting"),
   removeInjuriesLabel: $("#removeInjuriesLabel"),
@@ -355,6 +391,7 @@ const els = {
   retroCompetitionTitle: $("#retroCompetitionTitle"),
   retroCompetitionSwitch: $("#retroCompetitionSwitch"),
   retroWorldCupYearSwitch: $("#retroWorldCupYearSwitch"),
+  retroCopaComingSoon: $("#retroCopaComingSoon"),
   retroWorldCupTeamLabel: $("#retroWorldCupTeamLabel"),
   retroWorldCupTeamHint: $("#retroWorldCupTeamHint"),
   retroTeamPickerButton: $("#retroTeamPickerButton"),
@@ -1102,6 +1139,12 @@ function flagMarkup(team, className = "") {
   `;
 }
 
+function premierLeagueResponsiveTeamName(team) {
+  if (!state?.premierLeagueSeason || !team) return team?.name || "";
+  const mobile = window.matchMedia?.("(max-width: 850px)")?.matches === true;
+  return mobile ? team.mobileName || team.name : team.name;
+}
+
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (character) => ({
     "&": "&amp;",
@@ -1148,7 +1191,7 @@ document.addEventListener("error", (event) => {
 }, true);
 
 function clearRetroRouteLoadingState() {
-  document.documentElement.classList.remove("route-retro-loading", "route-retro-2022-loading");
+  document.documentElement.classList.remove("route-retro-loading", "route-retro-2006-loading", "route-retro-2022-loading");
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
   if (pathname === "/palestine-challenge" || pathname === "/profile") return;
 
@@ -1173,11 +1216,12 @@ function enforceModeScreenVisibility(mode = currentAppMode()) {
     if (els.retroWorldCupScreen) {
       els.retroWorldCupScreen.hidden = true;
     }
-    document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
+    document.body.classList.remove("retro-mode-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
     return;
   }
 
   document.body.classList.add("retro-mode-active");
+  document.body.classList.toggle("retro-2006-active", activeRetroYear === 2006);
   document.body.classList.toggle("retro-2010-active", activeRetroYear === 2010);
   document.body.classList.toggle("retro-euro-2016-active", activeRetroYear === 2016);
   document.body.classList.toggle("retro-2018-active", activeRetroYear === 2018);
@@ -1203,7 +1247,7 @@ function forceUnlockStartupState() {
   clearRetroRouteLoadingState();
   if (!isChallengeMode) document.body.classList.remove("challenge-mode-active");
   if (!isProfileMode) document.body.classList.remove("profile-mode-active");
-  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
+  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
 
   if (!isOnlineMode && document.body.classList.contains("online-screen-open")) {
     document.body.classList.remove("online-screen-open");
@@ -1253,6 +1297,7 @@ function startStartupUnfreezeWatchdog() {
 
 function startupRecoveryNeeded() {
   if (document.documentElement.classList.contains("route-retro-loading")
+    || document.documentElement.classList.contains("route-retro-2006-loading")
     || document.documentElement.classList.contains("route-retro-2022-loading")) {
     return true;
   }
@@ -1288,7 +1333,7 @@ function recoverFromStartupError(error, context = "startup") {
   stopOnlineLivePresentation();
 
   document.body.classList.remove(
-    "retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active",
+    "retro-mode-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active",
     "legacy-mode-active", "achievements-mode-active", "online-screen-open",
     "challenge-mode-active", "profile-mode-active", "mobile-menu-open",
   );
@@ -5638,6 +5683,7 @@ function tournamentFinalMatch(finalRound = state.rounds[tournamentFinalRoundInde
 }
 
 function retroSquadsForYear(year = retroTournament?.year || Number(readRetroWorldCupYear())) {
+  if (Number(year) === 2006) return RETRO_2006_SQUADS;
   if (Number(year) === 2010) return RETRO_2010_SQUADS;
   if (Number(year) === 2016) return RETRO_EURO_2016_SQUADS;
   if (Number(year) === 2018) return RETRO_2018_SQUADS;
@@ -5706,15 +5752,27 @@ function installRetroTeams(year = retroTournament?.year || Number(readRetroWorld
       };
     });
     const rating = entry.rating;
+    const derivedSimulationRatings = deriveTeamSimulationRatings(
+      id,
+      entry.name,
+      rating,
+      current?.fifaRank || null,
+    );
     TEAM_BY_ID.set(id, {
       ...(current || {}),
       id,
       name: entry.name,
       strength: rating,
       rating,
-      simulationRatings: squad?.teamRatings
-        ? { ...squad.teamRatings }
-        : deriveTeamSimulationRatings(id, entry.name, rating, current?.fifaRank || null),
+      simulationRatings: Number(year) === 2006
+        ? {
+          ...derivedSimulationRatings,
+          ...(squad?.teamRatings || {}),
+          overall: rating,
+        }
+        : squad?.teamRatings
+          ? { ...squad.teamRatings }
+          : derivedSimulationRatings,
       players: playerProfiles.map((player) => player.name),
       playerProfiles,
       retroWorldCup: true,
@@ -6107,6 +6165,20 @@ function checkpointUsesCurrentRosters(checkpoint, match) {
   if ((checkpoint.homeReds || []).some((event) => !valid("home", event.player))) return false;
   if ((checkpoint.awayReds || []).some((event) => !valid("away", event.player))) return false;
   if ((checkpoint.shootout || []).some((attempt) => !valid(attempt.side === "away" ? "away" : "home", attempt.player))) return false;
+  if (["home", "away"].some((side) => (
+    Object.keys(checkpoint.playerRatings?.[side] || {}).some((player) => !valid(side, player))
+  ))) return false;
+  const invalidManagementHistory = (management) => {
+    if (!management?.teamId) return false;
+    const side = management.teamId === match.awayId ? "away" : "home";
+    return (management.history || []).some((change) => (
+      !valid(side, change.outgoingName) || !valid(side, change.incomingName)
+    ));
+  };
+  if (
+    invalidManagementHistory(checkpoint.managerSubstitutions)
+    || invalidManagementHistory(checkpoint.oppositionManagement)
+  ) return false;
   return !(checkpoint.feed || []).some((event) => {
     const side = sideFor(event, event?.side === "away" ? "away" : "home");
     if (event.ownGoal) {
@@ -6486,6 +6558,7 @@ function renderPremierLeagueAssetPackPreview() {
 }
 
 function renderPremierLeagueAssetState() {
+  const assetsWereInstalled = premierLeagueAssetsInstalled;
   premierLeagueAssetsInstalled = accountHasPremierLeagueAssets(premierLeagueAssetAccount);
   if (els.premierLeagueLogo) els.premierLeagueLogo.hidden = !premierLeagueAssetsInstalled;
   if (els.premierLeagueLogoPlaceholder) els.premierLeagueLogoPlaceholder.hidden = premierLeagueAssetsInstalled;
@@ -6505,6 +6578,17 @@ function renderPremierLeagueAssetState() {
   renderPremierLeagueTeamPicker();
   if (spectatePickerMode === "premier-league" && els.spectateModal?.open) {
     renderPremierLeagueTeamList(els.spectateSearch?.value || "");
+  }
+  if (
+    assetsWereInstalled !== premierLeagueAssetsInstalled
+    && state?.premierLeagueSeason
+    && document.body.classList.contains("pl-match-mode-active")
+  ) {
+    requestAnimationFrame(() => {
+      if (!state?.premierLeagueSeason || !document.body.classList.contains("pl-match-mode-active")) return;
+      render();
+      window.PremierLeagueSeason?.renderEngineTable?.();
+    });
   }
 }
 
@@ -6584,11 +6668,20 @@ function selectedPremierLeagueTeam() {
 
 function renderPremierLeagueTeamPicker() {
   const team = selectedPremierLeagueTeam();
+  const seasonStarted = window.PremierLeagueSeason?.hasStarted?.() === true;
+  if (els.premierLeagueTeamPickerButton) {
+    els.premierLeagueTeamPickerButton.disabled = seasonStarted;
+    els.premierLeagueTeamPickerButton.title = seasonStarted
+      ? "Restart the season before changing clubs."
+      : "";
+  }
   els.premierLeagueTeamPickerButton?.classList.toggle("has-team", Boolean(team));
   if (!team) {
     if (els.premierLeagueTeamPickerMark) els.premierLeagueTeamPickerMark.textContent = "PL";
     if (els.premierLeagueTeamLabel) els.premierLeagueTeamLabel.textContent = "Neutral";
-    if (els.premierLeagueTeamHint) els.premierLeagueTeamHint.textContent = "Watch the whole title race";
+    if (els.premierLeagueTeamHint) {
+      els.premierLeagueTeamHint.textContent = seasonStarted ? "Club choice locked for this season" : "Watch the whole title race";
+    }
     els.premierLeagueTeamPickerButton?.setAttribute("aria-label", "Choose a Premier League club. Current view: Neutral");
     return;
   }
@@ -6596,8 +6689,13 @@ function renderPremierLeagueTeamPicker() {
     ? premierLeagueBadgeMarkup(team)
     : team.code;
   els.premierLeagueTeamLabel.textContent = team.name;
-  els.premierLeagueTeamHint.textContent = "Manage this club through 38 matches";
-  els.premierLeagueTeamPickerButton.setAttribute("aria-label", `Change ${team.name} as your Premier League club`);
+  els.premierLeagueTeamHint.textContent = seasonStarted
+    ? "Club choice locked for this season"
+    : "Manage this club through 38 matches";
+  els.premierLeagueTeamPickerButton.setAttribute(
+    "aria-label",
+    seasonStarted ? `${team.name} is locked for this season` : `Change ${team.name} as your Premier League club`,
+  );
 }
 
 function renderPremierLeagueTeamList(query = "") {
@@ -6640,20 +6738,25 @@ function retroWorldCupTeamStorageKey(year) {
 function readRetroCompetition() {
   if (Number(retroWorldCupYearFromPath()) === 2016) return "euros";
   try {
-    return localStorage.getItem(RETRO_COMPETITION_KEY) === "euros" ? "euros" : "wc";
+    const savedCompetition = localStorage.getItem(RETRO_COMPETITION_KEY);
+    return ["wc", "euros", "copa"].includes(savedCompetition) ? savedCompetition : "wc";
   } catch {
     return "wc";
   }
 }
 
 function selectedRetroTournamentYear() {
-  return readRetroCompetition() === "euros" ? 2016 : Number(readRetroWorldCupYear());
+  const competition = readRetroCompetition();
+  if (competition === "euros") return 2016;
+  if (competition === "copa") return 2024;
+  return Number(readRetroWorldCupYear());
 }
 
 function retroMenuTeamEntries(year = readRetroWorldCupYear()) {
-  return readRetroCompetition() === "euros"
-    ? RETRO_EURO_2016.teams
-    : RETRO_WORLD_CUPS[year]?.teams || [];
+  const competition = readRetroCompetition();
+  if (competition === "euros") return RETRO_EURO_2016.teams;
+  if (competition === "copa") return RETRO_COPA_2024.teams;
+  return RETRO_WORLD_CUPS[year]?.teams || [];
 }
 
 function readRetroEuroTeam() {
@@ -6669,6 +6772,24 @@ function saveRetroEuroTeam(name) {
   try {
     if (name) localStorage.setItem(RETRO_EURO_2016_TEAM_KEY, name);
     else localStorage.removeItem(RETRO_EURO_2016_TEAM_KEY);
+  } catch {
+    // Selection remains usable for the current page when storage is unavailable.
+  }
+}
+
+function readRetroCopaTeam() {
+  try {
+    const name = localStorage.getItem(RETRO_COPA_2024_TEAM_KEY);
+    return RETRO_COPA_2024.teams.some((team) => team.name === name) ? name : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveRetroCopaTeam(name) {
+  try {
+    if (name) localStorage.setItem(RETRO_COPA_2024_TEAM_KEY, name);
+    else localStorage.removeItem(RETRO_COPA_2024_TEAM_KEY);
   } catch {
     // Selection remains usable for the current page when storage is unavailable.
   }
@@ -6735,17 +6856,23 @@ function lockRetroTournamentSetup(tournament, setup = {}) {
 }
 
 function renderRetroWorldCupTeamPicker(year) {
-  const isEuros = readRetroCompetition() === "euros";
-  const selectedYear = isEuros ? RETRO_EURO_2016.year : year;
+  const competition = readRetroCompetition();
+  const isEuros = competition === "euros";
+  const isCopa = competition === "copa";
+  const selectedYear = isCopa ? RETRO_COPA_2024.year : isEuros ? RETRO_EURO_2016.year : year;
   const activeTournament = retroTournamentForYear(selectedYear);
-  const selectedName = isEuros
+  const selectedName = isCopa
+    ? readRetroCopaTeam()
+    : isEuros
     ? activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
       : readRetroEuroTeam()
     : activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
       : readRetroWorldCupTeam(year);
-  const selected = isEuros
+  const selected = isCopa
+    ? RETRO_COPA_2024.teams.find((team) => team.name === selectedName)
+    : isEuros
     ? RETRO_EURO_2016.teams.find((team) => team.name === selectedName)
     : retroWorldCupTeamData(year, selectedName);
   const team = selected ? retroTeamForFlag(selected.name) : null;
@@ -6756,7 +6883,9 @@ function renderRetroWorldCupTeamPicker(year) {
     if (els.retroWorldCupTeamHint) els.retroWorldCupTeamHint.textContent = "Show every match as normal";
     els.retroTeamPickerButton?.setAttribute(
       "aria-label",
-      isEuros
+      isCopa
+        ? "Choose a team from Copa América 2024. Current view: Neutral"
+        : isEuros
         ? "Choose a team from Euro 2016. Current view: Neutral"
         : `Choose a team from the ${year} World Cup. Current view: Neutral`,
     );
@@ -6767,15 +6896,23 @@ function renderRetroWorldCupTeamPicker(year) {
   els.retroWorldCupTeamHint.textContent = `Group ${selected.group}`;
   els.retroTeamPickerButton.setAttribute(
     "aria-label",
-    isEuros ? `Change ${team.name} as your Euro 2016 team` : `Change ${team.name} as your ${year} World Cup team`,
+    isCopa
+      ? `Change ${team.name} as your Copa América 2024 team`
+      : isEuros
+        ? `Change ${team.name} as your Euro 2016 team`
+        : `Change ${team.name} as your ${year} World Cup team`,
   );
 }
 
 function renderRetroWorldCupTeamList(query = "") {
   const year = selectedRetroTournamentYear();
-  const isEuros = readRetroCompetition() === "euros";
+  const competition = readRetroCompetition();
+  const isEuros = competition === "euros";
+  const isCopa = competition === "copa";
   const activeTournament = retroTournamentForYear(year);
-  const selectedName = isEuros
+  const selectedName = isCopa
+    ? readRetroCopaTeam()
+    : isEuros
     ? activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
       : readRetroEuroTeam()
@@ -6803,19 +6940,29 @@ function renderRetroWorldCupTeamList(query = "") {
       <span><strong>${entry.name}</strong><small>Group ${entry.group}</small></span>
       <i aria-hidden="true">${entry.name === selectedName ? "✓" : ""}</i>
     </button>
-  `).join("") || `<div class="overview-empty">No ${isEuros ? "Euro 2016" : year} team matches that search.</div>`;
+  `).join("") || `<div class="overview-empty">No ${isCopa ? "Copa América 2024" : isEuros ? "Euro 2016" : year} team matches that search.</div>`;
 }
 
 function openRetroWorldCupTeamPicker() {
   const year = selectedRetroTournamentYear();
-  const isEuros = readRetroCompetition() === "euros";
+  const competition = readRetroCompetition();
+  const isEuros = competition === "euros";
+  const isCopa = competition === "copa";
   if (retroTournamentForYear(year)) {
     showToast(`Restart this ${isEuros ? "Euro" : "World Cup"} before changing your team.`);
     return;
   }
   spectatePickerMode = "retro";
-  els.spectateModalTitle.textContent = isEuros ? "Choose a Euro 2016 team" : `Choose a ${year} World Cup team`;
-  els.spectateSearch.placeholder = isEuros ? "Search Euro 2016 teams" : `Search ${year} teams`;
+  els.spectateModalTitle.textContent = isCopa
+    ? "Choose a Copa América 2024 team"
+    : isEuros
+      ? "Choose a Euro 2016 team"
+      : `Choose a ${year} World Cup team`;
+  els.spectateSearch.placeholder = isCopa
+    ? "Search Copa América 2024 teams"
+    : isEuros
+      ? "Search Euro 2016 teams"
+      : `Search ${year} teams`;
   els.spectateSearch.value = "";
   renderRetroWorldCupTeamList();
   els.spectateModal.showModal();
@@ -6890,14 +7037,88 @@ function completedCount() {
   return allMatches().filter((match) => match?.result && !match.result.bye).length;
 }
 
+function calculateRetroGoalscorerTable() {
+  if (!retroTournament) return [];
+  const year = Number(retroTournament.year);
+  const appearances = new Map();
+  const scorers = new Map();
+  const matchRows = [
+    ...(retroTournament.groupMatches || []).map((match) => ({
+      match,
+      roundIndex: Math.max(0, Number(match.matchday || 1) - 1),
+    })),
+    ...(retroTournament.knockoutRounds || []).flatMap((round, knockoutIndex) => (
+      (round.matches || []).map((match) => ({ match, roundIndex: 3 + knockoutIndex }))
+    )),
+  ];
+
+  matchRows.forEach(({ match, roundIndex }) => {
+    if (!match?.result?.revealed || match.result.bye) return;
+    [[match.home, "home"], [match.away, "away"]].forEach(([teamName, side]) => {
+      if (!teamName) return;
+      appearances.set(teamName, (appearances.get(teamName) || 0) + 1);
+      (match.result[`${side}Events`] || []).forEach((event) => {
+        if (!event?.scorer || event.goalType === "ownGoal" || event.ownGoal) return;
+        const key = `${teamName}\u0000${event.scorer}`;
+        const current = scorers.get(key) || {
+          player: event.scorer,
+          teamId: retroTeamId(teamName, year),
+          teamName,
+          goals: 0,
+          penalties: 0,
+          latestRound: roundIndex,
+        };
+        current.goals += 1;
+        if (event.goalType === "penalty" || event.penalty === true) current.penalties += 1;
+        current.latestRound = Math.max(current.latestRound, roundIndex);
+        scorers.set(key, current);
+      });
+    });
+  });
+
+  return [...scorers.values()].map((entry) => {
+    const team = teamById(entry.teamId);
+    const squadProfiles = playerProfilesForTeam(team);
+    const profile = squadProfiles.find((player) => player.name === entry.player);
+    const matches = appearances.get(entry.teamName) || 0;
+    return {
+      ...entry,
+      matches,
+      minutes: profile ? Math.round(matches * 90 * profile.expectedMinutesShare) : matches * 90,
+      position: profile?.position || "—",
+      playerOverall: profile?.overall || team?.rating || 0,
+      finishing: profile?.finishing || 0,
+      attackingRole: profile?.attackingRole || "support",
+      scorerWeight: profile ? calculateScorerWeight(profile, team, squadProfiles) : 0,
+    };
+  }).sort((left, right) => (
+    right.goals - left.goals
+    || right.latestRound - left.latestRound
+    || left.player.localeCompare(right.player)
+  ));
+}
+
 function calculateGoalscorerTable(rounds = state.rounds) {
+  if (isRetroSimulatorState() && retroTournament && rounds === state.rounds) {
+    return calculateRetroGoalscorerTable();
+  }
   const scorers = new Map();
   const teamAppearances = new Map();
+  const playerAppearances = new Map();
   rounds.forEach((round, roundIndex) => {
     (round || []).forEach((match) => {
       if (!match?.result?.revealed || match.result.bye) return;
       teamAppearances.set(match.homeId, (teamAppearances.get(match.homeId) || 0) + 1);
       teamAppearances.set(match.awayId, (teamAppearances.get(match.awayId) || 0) + 1);
+      const appearances = ensurePremierLeaguePlayerAppearances(match, roundIndex);
+      if (appearances) {
+        [["home", match.homeId], ["away", match.awayId]].forEach(([side, teamId]) => {
+          (appearances[side] || []).forEach((player) => {
+            const key = `${teamId}\u0000${player}`;
+            playerAppearances.set(key, (playerAppearances.get(key) || 0) + 1);
+          });
+        });
+      }
       const addGoals = (events, teamId) => {
         (events || []).forEach((event) => {
           if (event.goalType === "ownGoal" || event.ownGoal) return;
@@ -6924,7 +7145,9 @@ function calculateGoalscorerTable(rounds = state.rounds) {
     const team = teamById(entry.teamId);
     const squadProfiles = playerProfilesForTeam(team);
     const profile = squadProfiles.find((player) => player.name === entry.player);
-    const matches = teamAppearances.get(entry.teamId) || 0;
+    const matches = playerAppearances.get(`${entry.teamId}\u0000${entry.player}`)
+      ?? teamAppearances.get(entry.teamId)
+      ?? 0;
     return {
       ...entry,
       matches,
@@ -6990,47 +7213,239 @@ function tournamentHistoryIsComplete(candidate = state) {
   );
 }
 
-function readTournamentHistoryRecords() {
+function upgradeTournamentHistoryRecord(record) {
+  const premierLeagueRecord = record?.mode === "premier-league"
+    || record?.theme === "premier-league"
+    || String(record?.sourceKey || "").startsWith("premier-league:2026-27:");
+  if (!premierLeagueRecord) return record;
+
+  const currentClubs = new Map(
+    (window.PREMIER_LEAGUE_2026_27_CLUBS || []).map((club) => [club.id, club]),
+  );
+  const referencedTeamIds = new Set([
+    ...Object.keys(record.teams || {}),
+    ...(record.rounds || []).flatMap((round) => (
+      (round || []).flatMap((match) => [match?.homeId, match?.awayId])
+    )),
+  ].filter(Boolean));
+  const teams = Object.fromEntries([...referencedTeamIds].map((teamId) => {
+    const savedTeam = record.teams?.[teamId] || {};
+    const currentClub = currentClubs.get(teamId);
+    return [teamId, {
+      ...savedTeam,
+      id: teamId,
+      name: savedTeam.name || currentClub?.name || teamId,
+      mobileName: savedTeam.mobileName || currentClub?.mobileName || savedTeam.name || currentClub?.name || teamId,
+      code: savedTeam.code || currentClub?.code || "PL",
+      badge: savedTeam.badge || currentClub?.badge || null,
+    }];
+  }));
+  const rounds = Array.isArray(record.rounds) ? record.rounds : [];
+  return {
+    ...record,
+    mode: "premier-league",
+    theme: "premier-league",
+    year: 2026,
+    typeLabel: "Premier League 2026/27",
+    editionLabel: "PL 26/27",
+    teams,
+    roundNames: rounds.length === 38
+      ? rounds.map((_, index) => `Matchweek ${index + 1}`)
+      : record.roundNames,
+  };
+}
+
+function normalizeTournamentHistoryRecords(records) {
+  const recordsById = new Map();
+  (Array.isArray(records) ? records : []).map(upgradeTournamentHistoryRecord).forEach((record) => {
+    if (
+      record?.version !== TOURNAMENT_HISTORY_VERSION
+      || typeof record.id !== "string"
+      || typeof record.sourceKey !== "string"
+      || !Array.isArray(record.rounds)
+      || !record.rounds.length
+    ) return;
+    const existing = recordsById.get(record.id);
+    if (!existing || Number(record.savedAt || 0) >= Number(existing.savedAt || 0)) {
+      recordsById.set(record.id, record);
+    }
+  });
+  return [...recordsById.values()]
+    .sort((left, right) => Number(right.savedAt || 0) - Number(left.savedAt || 0))
+    .slice(0, TOURNAMENT_HISTORY_LIMIT);
+}
+
+function readLegacyTournamentHistoryRecords() {
   try {
     const payload = JSON.parse(localStorage.getItem(TOURNAMENT_HISTORY_STORAGE_KEY) || "[]");
-    if (!Array.isArray(payload)) return [];
-    return payload
-      .filter((record) => (
-        record?.version === TOURNAMENT_HISTORY_VERSION
-        && typeof record.id === "string"
-        && typeof record.sourceKey === "string"
-        && Array.isArray(record.rounds)
-        && record.rounds.length > 0
-      ))
-      .sort((left, right) => Number(right.savedAt || 0) - Number(left.savedAt || 0))
-      .slice(0, TOURNAMENT_HISTORY_LIMIT);
+    return normalizeTournamentHistoryRecords(payload);
   } catch {
     return [];
   }
 }
 
+let tournamentHistoryRecordsCache = readLegacyTournamentHistoryRecords();
+let tournamentHistoryDatabasePromise = null;
+let tournamentHistoryInitializationPromise = null;
+let tournamentHistoryWriteQueue = Promise.resolve();
+let tournamentHistoryCacheRevision = 0;
+const tournamentHistoryDeletedIds = new Set();
+
+function readTournamentHistoryRecords() {
+  return [...tournamentHistoryRecordsCache];
+}
+
+function writeLegacyTournamentHistoryRecords(records) {
+  try {
+    localStorage.setItem(
+      TOURNAMENT_HISTORY_STORAGE_KEY,
+      JSON.stringify(normalizeTournamentHistoryRecords(records)),
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function openTournamentHistoryDatabase() {
+  if (tournamentHistoryDatabasePromise) return tournamentHistoryDatabasePromise;
+  tournamentHistoryDatabasePromise = new Promise((resolve, reject) => {
+    if (!("indexedDB" in window)) {
+      reject(new Error("IndexedDB is unavailable."));
+      return;
+    }
+    const request = window.indexedDB.open(
+      TOURNAMENT_HISTORY_DATABASE_NAME,
+      TOURNAMENT_HISTORY_DATABASE_VERSION,
+    );
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(TOURNAMENT_HISTORY_OBJECT_STORE)) {
+        request.result.createObjectStore(TOURNAMENT_HISTORY_OBJECT_STORE, { keyPath: "id" });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("Could not open tournament history."));
+    request.onblocked = () => reject(new Error("Tournament history migration was blocked."));
+  });
+  return tournamentHistoryDatabasePromise;
+}
+
+function readIndexedTournamentHistoryRecords(database) {
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(TOURNAMENT_HISTORY_OBJECT_STORE, "readonly");
+    const request = transaction.objectStore(TOURNAMENT_HISTORY_OBJECT_STORE).getAll();
+    request.onsuccess = () => resolve(normalizeTournamentHistoryRecords(request.result));
+    request.onerror = () => reject(request.error || new Error("Could not read tournament history."));
+    transaction.onabort = () => reject(transaction.error || new Error("Tournament history read was aborted."));
+  });
+}
+
+function replaceIndexedTournamentHistoryRecords(database, records) {
+  const next = normalizeTournamentHistoryRecords(records);
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(TOURNAMENT_HISTORY_OBJECT_STORE, "readwrite");
+    const store = transaction.objectStore(TOURNAMENT_HISTORY_OBJECT_STORE);
+    store.clear();
+    next.forEach((record) => store.put(record));
+    transaction.oncomplete = () => resolve(next);
+    transaction.onerror = () => reject(transaction.error || new Error("Could not save tournament history."));
+    transaction.onabort = () => reject(transaction.error || new Error("Tournament history save was aborted."));
+  });
+}
+
+function mergeTournamentHistoryRecords(indexedRecords, currentRecords) {
+  return normalizeTournamentHistoryRecords([
+    ...indexedRecords.filter((record) => !tournamentHistoryDeletedIds.has(record.id)),
+    ...currentRecords,
+  ]);
+}
+
+function dispatchTournamentHistoryStorageError() {
+  window.dispatchEvent(new CustomEvent("tournament-history-storage-error"));
+}
+
+function initializeTournamentHistoryStorage() {
+  if (tournamentHistoryInitializationPromise) return tournamentHistoryInitializationPromise;
+  tournamentHistoryInitializationPromise = (async () => {
+    const database = await openTournamentHistoryDatabase();
+    let indexedRecords = await readIndexedTournamentHistoryRecords(database);
+    while (true) {
+      const revision = tournamentHistoryCacheRevision;
+      const mergedRecords = mergeTournamentHistoryRecords(
+        indexedRecords,
+        tournamentHistoryRecordsCache,
+      );
+      await replaceIndexedTournamentHistoryRecords(database, mergedRecords);
+
+      const verifiedRecords = await readIndexedTournamentHistoryRecords(database);
+      const verifiedIds = new Set(verifiedRecords.map((record) => record.id));
+      if (
+        verifiedRecords.length !== mergedRecords.length
+        || mergedRecords.some((record) => !verifiedIds.has(record.id))
+      ) {
+        throw new Error("Tournament history migration could not be verified.");
+      }
+      if (revision === tournamentHistoryCacheRevision) {
+        tournamentHistoryRecordsCache = verifiedRecords;
+        break;
+      }
+      indexedRecords = verifiedRecords;
+    }
+
+    try {
+      localStorage.setItem(TOURNAMENT_HISTORY_MIGRATION_KEY, "complete");
+      localStorage.removeItem(TOURNAMENT_HISTORY_STORAGE_KEY);
+    } catch {
+      // IndexedDB is verified; retaining an extra legacy copy is harmless.
+    }
+    window.dispatchEvent(new CustomEvent("tournament-history-changed", {
+      detail: { migrated: true },
+    }));
+    return database;
+  })().catch((error) => {
+    console.warn("Tournament history is using legacy browser storage.", error);
+    if (!writeLegacyTournamentHistoryRecords(tournamentHistoryRecordsCache)) {
+      dispatchTournamentHistoryStorageError();
+    }
+    return null;
+  });
+  return tournamentHistoryInitializationPromise;
+}
+
+function queueTournamentHistoryWrite() {
+  tournamentHistoryWriteQueue = tournamentHistoryWriteQueue
+    .catch(() => undefined)
+    .then(async () => {
+      const database = await initializeTournamentHistoryStorage();
+      if (!database) {
+        if (!writeLegacyTournamentHistoryRecords(tournamentHistoryRecordsCache)) {
+          throw new Error("Tournament history could not be stored.");
+        }
+        return;
+      }
+      await replaceIndexedTournamentHistoryRecords(database, tournamentHistoryRecordsCache);
+    })
+    .catch((error) => {
+      console.warn("Could not persist tournament history.", error);
+      dispatchTournamentHistoryStorageError();
+    });
+}
+
 function writeTournamentHistoryRecords(records) {
-  const next = [...records]
-    .sort((left, right) => Number(right.savedAt || 0) - Number(left.savedAt || 0))
-    .slice(0, TOURNAMENT_HISTORY_LIMIT);
-  if (!next.length) {
-    try {
-      localStorage.setItem(TOURNAMENT_HISTORY_STORAGE_KEY, "[]");
-      return true;
-    } catch {
-      return false;
-    }
+  const next = normalizeTournamentHistoryRecords(records);
+  const nextIds = new Set(next.map((record) => record.id));
+  tournamentHistoryRecordsCache.forEach((record) => {
+    if (!nextIds.has(record.id)) tournamentHistoryDeletedIds.add(record.id);
+  });
+  next.forEach((record) => tournamentHistoryDeletedIds.delete(record.id));
+  tournamentHistoryRecordsCache = next;
+  tournamentHistoryCacheRevision += 1;
+
+  if (!("indexedDB" in window)) {
+    return writeLegacyTournamentHistoryRecords(next);
   }
-  while (next.length) {
-    try {
-      localStorage.setItem(TOURNAMENT_HISTORY_STORAGE_KEY, JSON.stringify(next));
-      return true;
-    } catch {
-      if (next.length === 1) return false;
-      next.pop();
-    }
-  }
-  return false;
+  queueTournamentHistoryWrite();
+  return true;
 }
 
 function compactTournamentHistoryEvent(event) {
@@ -7038,6 +7453,7 @@ function compactTournamentHistoryEvent(event) {
   return {
     minute: Number(event.minute) || 0,
     scorer: event.scorer || null,
+    assist: event.assist || event.metadata?.assist || null,
     player: event.player || null,
     side: event.side || null,
     type: event.type || null,
@@ -7061,6 +7477,10 @@ function compactTournamentHistoryResult(result) {
       ? { home: Number(result.penalties.home) || 0, away: Number(result.penalties.away) || 0 }
       : null,
     winnerId: result.winnerId || null,
+    playerAppearances: result.playerAppearances ? {
+      home: [...(result.playerAppearances.home || [])],
+      away: [...(result.playerAppearances.away || [])],
+    } : null,
     homeEvents: (result.homeEvents || []).map(compactTournamentHistoryEvent).filter(Boolean),
     awayEvents: (result.awayEvents || []).map(compactTournamentHistoryEvent).filter(Boolean),
     redCards: (result.redCards || []).map(compactTournamentHistoryEvent).filter(Boolean),
@@ -7253,6 +7673,108 @@ function saveCurrentTournamentToHistory() {
   syncChampionTournamentHistoryButton();
   window.dispatchEvent(new CustomEvent("tournament-history-changed", { detail: { record } }));
   showToast("Tournament saved to your history.");
+  return record;
+}
+
+function savePremierLeagueToHistory(payload) {
+  const rounds = Array.isArray(payload?.rounds) ? payload.rounds : [];
+  const table = Array.isArray(payload?.table) ? payload.table : [];
+  const teamsList = Array.isArray(payload?.teams) ? payload.teams : [];
+  const complete = rounds.length === 38
+    && rounds.every((round) => (
+      Array.isArray(round)
+      && round.length === 10
+      && round.every((match) => match?.result?.revealed)
+    ));
+  if (!complete || !table[0]?.club?.id) {
+    showToast("Finish the Premier League season before saving it.");
+    return null;
+  }
+
+  const championId = table[0].club.id;
+  const runnerUpId = table[1]?.club?.id || null;
+  const sourceKey = String(
+    payload.sourceKey
+    || `premier-league:2026-27:${Number(payload.drawSeed) || 0}:${championId}`,
+  );
+  const existing = readTournamentHistoryRecords().find((record) => record.sourceKey === sourceKey);
+  if (existing) {
+    showToast("This league season is already saved.");
+    return existing;
+  }
+
+  const teams = Object.fromEntries(teamsList.map((team) => {
+    const compactTeam = compactTournamentHistoryTeam(team);
+    return [team.id, compactTeam];
+  }).filter(([, team]) => Boolean(team)));
+  const allMatches = rounds.flat();
+  const managedTeamId = payload.managedTeamId || null;
+  const managedPosition = managedTeamId
+    ? table.findIndex((row) => row.club?.id === managedTeamId) + 1
+    : 0;
+  const managedPositionSuffix = managedPosition % 100 >= 11 && managedPosition % 100 <= 13
+    ? "th"
+    : managedPosition % 10 === 1 ? "st"
+      : managedPosition % 10 === 2 ? "nd"
+        : managedPosition % 10 === 3 ? "rd" : "th";
+  const topScorer = payload.topScorer;
+  const savedAt = Date.now();
+  const record = {
+    version: TOURNAMENT_HISTORY_VERSION,
+    id: `tournament-${Math.abs(stableHash(sourceKey)).toString(36)}`,
+    sourceKey,
+    savedAt,
+    completedAt: savedAt,
+    mode: "premier-league",
+    theme: "premier-league",
+    year: 2026,
+    typeLabel: "Premier League 2026/27",
+    editionLabel: "PL 26/27",
+    logo: null,
+    championId,
+    runnerUpId,
+    managedTeamId,
+    managedOutcome: managedPosition === 1
+      ? "Champions"
+      : managedPosition > 0 ? `${managedPosition}${managedPositionSuffix} place`
+        : "Neutral view",
+    matchCount: allMatches.length,
+    goalCount: allMatches.reduce((sum, match) => (
+      sum + Number(match.result?.homeGoals || 0) + Number(match.result?.awayGoals || 0)
+    ), 0),
+    topScorer: topScorer ? {
+      player: topScorer.player,
+      teamId: topScorer.teamId,
+      goals: Number(topScorer.goals) || 0,
+    } : null,
+    roundNames: rounds.map((_, index) => `Matchweek ${index + 1}`),
+    teams,
+    rounds: rounds.map((round) => round.map((match) => ({
+      id: match.id,
+      homeId: match.homeId,
+      awayId: match.awayId,
+      allowDraw: true,
+      customGroupLabel: null,
+      thirdPlacePlayoff: false,
+      schedule: match.schedule ? {
+        dateLabel: match.schedule.dateLabel || null,
+        timeLabel: match.schedule.timeLabel || null,
+        stadium: match.schedule.stadium || null,
+        city: match.schedule.city || null,
+      } : null,
+      result: compactTournamentHistoryResult(match.result),
+    }))),
+  };
+  const records = [
+    record,
+    ...readTournamentHistoryRecords().filter((saved) => saved.sourceKey !== sourceKey),
+  ];
+  if (!writeTournamentHistoryRecords(records)) {
+    showToast("This browser does not have enough space to save the league.");
+    return null;
+  }
+  window.dispatchEvent(new CustomEvent("tournament-history-changed", { detail: { record } }));
+  showToast("League saved to your tournament history.");
   return record;
 }
 
@@ -7621,6 +8143,14 @@ function openTournamentHistory(
     tournamentHistoryReturnUrl = "/";
   }
   activeTournamentHistoryRecord = record;
+  if (record.mode === "premier-league" && window.PremierLeagueSeason?.openSavedHistory?.(record)) {
+    const profileScreen = document.querySelector("#profileScreen");
+    if (profileScreen) profileScreen.hidden = true;
+    document.body.classList.add("saved-tournament-simulator");
+    document.body.dataset.savedTournamentTheme = record.theme;
+    window.scrollTo({ top: 0, behavior: "auto" });
+    return true;
+  }
   if (record.mode === "retro" && RETRO_WORLD_CUP_EDITIONS[record.year]) {
     installRetroTeams(record.year);
   }
@@ -7657,6 +8187,9 @@ function closeTournamentHistory({ updateUrl = true } = {}) {
   if (!activeTournamentHistoryRecord || !tournamentHistoryReturnState) return;
   stopStandardPlaybackForNavigation();
   const previous = tournamentHistoryReturnState;
+  if (activeTournamentHistoryRecord.mode === "premier-league") {
+    window.PremierLeagueSeason?.closeSavedHistory?.();
+  }
   uninstallTournamentHistoryTeams();
   activeTournamentHistoryRecord = null;
   tournamentHistoryReturnState = null;
@@ -7741,6 +8274,7 @@ window.TournamentHistory = Object.freeze({
   list() {
     return readTournamentHistoryRecords().map((record) => ({
       id: record.id,
+      sourceKey: record.sourceKey,
       savedAt: record.savedAt,
       completedAt: record.completedAt,
       mode: record.mode,
@@ -7758,6 +8292,10 @@ window.TournamentHistory = Object.freeze({
     }));
   },
   saveCurrent: saveCurrentTournamentToHistory,
+  savePremierLeague: savePremierLeagueToHistory,
+  has(sourceKey) {
+    return readTournamentHistoryRecords().some((record) => record.sourceKey === sourceKey);
+  },
   open: openTournamentHistory,
   close: closeTournamentHistory,
   delete: deleteSavedTournament,
@@ -7769,6 +8307,16 @@ function showToast(message, duration = 2600) {
   els.toast.classList.add("show");
   toastTimer = setTimeout(() => els.toast.classList.remove("show"), duration);
 }
+
+window.addEventListener("tournament-history-storage-error", () => {
+  showToast("Tournament history could not be updated. Your existing saves were kept.", 5200);
+});
+
+window.addEventListener("achievement-tracking-error", (event) => {
+  const year = Number(event.detail?.year);
+  const modeLabel = Number.isInteger(year) ? `${year} achievement` : "Achievement";
+  showToast(`${modeLabel} could not be saved. It will retry automatically.`, 4200);
+});
 
 let snapshotBlob = null;
 let snapshotObjectUrl = null;
@@ -7898,6 +8446,21 @@ function drawSnapshotConfetti(context, championId) {
 }
 
 function retroSnapshotPalette(year) {
+  if (Number(year) === 2006) {
+    return {
+      accent: "#f3d566",
+      backgroundStart: "#d8eff7",
+      backgroundMiddle: "#0b5274",
+      backgroundEnd: "#031b2b",
+      panel: "rgba(3, 37, 57, 0.94)",
+      award: "rgba(7, 53, 80, 0.96)",
+      flagBacking: "#0b5274",
+      primaryText: "#f4fbff",
+      secondaryText: "#b9d4df",
+      glow: "rgba(243, 213, 102, 0.24)",
+      footer: "GERMANY 2006 WORLD CUP",
+    };
+  }
   if (Number(year) === 2010) {
     return {
       accent: "#ffd34f",
@@ -8691,6 +9254,196 @@ function saveSnapshotImage() {
   showToast("Snapshot saved as a PNG.");
 }
 
+async function createPremierLeagueSeasonSnapshotCanvas(summary) {
+  const championRow = summary?.champion;
+  const champion = championRow?.club;
+  if (!champion) throw new Error("The Premier League season is not complete.");
+  const podium = summary.podium || [];
+  const simulationStyleLabel = {
+    realistic: "REALISTIC",
+    balanced: "STANDARD",
+    chaos: "PURE CHAOS",
+  }[summary?.settings?.upset] || "STANDARD";
+  const goalLevelLabel = {
+    tight: "TIGHT",
+    normal: "NORMAL",
+    wild: "GOAL FEST",
+  }[summary?.settings?.goals] || "NORMAL";
+  const awardRows = [
+    ["GOLDEN BOOT", summary.goldenBoot, (award) => `${award.goals} goals`, "⚽"],
+    ["GOLDEN GLOVE", summary.goldenGlove, (award) => `${award.cleanSheets} clean sheets`, "🧤"],
+    ["PLAYER OF THE SEASON", summary.playerOfTheYear, (award) => `${award.goals} goals · ${award.assists} assists`, "🏆"],
+    ["YOUNG PLAYER OF THE SEASON", summary.youngPlayerOfTheYear, (award) => `${award.goals} goals · ${award.assists} assists`, "🌟"],
+  ];
+  const loadedBadges = await Promise.all([
+    loadSnapshotFlag(champion, { premierLeague: true }),
+    ...podium.map((row) => loadSnapshotFlag(row.club, { premierLeague: true })),
+    ...awardRows.map(([, award]) => (
+      award?.team ? loadSnapshotFlag(award.team, { premierLeague: true }) : Promise.resolve(null)
+    )),
+  ]);
+  const championBadge = loadedBadges[0];
+  const podiumBadges = loadedBadges.slice(1, 1 + podium.length);
+  const awardBadges = loadedBadges.slice(1 + podium.length);
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = 900;
+  const context = canvas.getContext("2d");
+  const background = context.createLinearGradient(0, 0, 1200, 900);
+  background.addColorStop(0, "#381d53");
+  background.addColorStop(0.5, "#28002d");
+  background.addColorStop(1, "#1e0021");
+  context.fillStyle = background;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  snapshotText(context, "2026/27 PREMIER LEAGUE CHAMPIONS", 600, 62, 760, 19, {
+    weight: 800,
+    color: "#d9b6ed",
+    family: "DM Mono, monospace",
+  });
+  drawSnapshotFlag(context, championBadge, champion, 600, 160, null, true);
+  snapshotText(context, champion.name, 600, 260, 820, 58, {
+    minimumSize: 36,
+    weight: 900,
+    color: "#ffffff",
+  });
+  snapshotText(context, `${championRow.points} POINTS · ${championRow.won} WINS · ${championRow.gf} GOALS`, 600, 306, 720, 16, {
+    weight: 800,
+    color: "#d9b6ed",
+  });
+
+  podium.forEach((row, index) => {
+    const x = 178 + index * 422;
+    snapshotRoundedRect(context, x - 168, 350, 336, 72, 12);
+    context.fillStyle = "rgba(96, 53, 126, 0.44)";
+    context.fill();
+    snapshotText(context, String(index + 1), x - 138, 386, 34, 25, {
+      weight: 900,
+      color: "#d9b6ed",
+    });
+    const podiumBadge = podiumBadges[index];
+    if (podiumBadge) {
+      const sourceWidth = podiumBadge.naturalWidth || podiumBadge.width || 1;
+      const sourceHeight = podiumBadge.naturalHeight || podiumBadge.height || 1;
+      const ratio = Math.min(34 / sourceWidth, 34 / sourceHeight);
+      const badgeWidth = sourceWidth * ratio;
+      const badgeHeight = sourceHeight * ratio;
+      context.drawImage(
+        podiumBadge,
+        x - 100 - badgeWidth / 2,
+        386 - badgeHeight / 2,
+        badgeWidth,
+        badgeHeight,
+      );
+    } else {
+      snapshotRoundedRect(context, x - 116, 370, 32, 32, 7);
+      context.fillStyle = "rgba(96, 53, 126, 0.72)";
+      context.fill();
+      snapshotText(context, row.club.code || "PL", x - 100, 387, 26, 9, {
+        minimumSize: 7,
+        weight: 900,
+        color: "#d9b6ed",
+      });
+    }
+    snapshotText(context, row.club.name, x - 72, 378, 185, 17, {
+      minimumSize: 12,
+      weight: 800,
+      align: "left",
+      color: "#fff",
+    });
+    snapshotText(context, `${row.points} PTS`, x - 72, 402, 185, 12, {
+      weight: 800,
+      align: "left",
+      color: "#b896c4",
+    });
+  });
+
+  awardRows.forEach(([label, award, detail, mark], index) => {
+    if (!award) return;
+    const column = index % 2;
+    const row = Math.floor(index / 2);
+    const x = 52 + column * 574;
+    const y = 466 + row * 142;
+    snapshotRoundedRect(context, x, y, 522, 116, 14);
+    context.fillStyle = "rgba(50, 18, 61, 0.94)";
+    context.fill();
+    context.strokeStyle = "rgba(217, 182, 237, 0.18)";
+    context.lineWidth = 1.5;
+    context.stroke();
+    context.fillStyle = "rgba(96, 53, 126, 0.72)";
+    context.beginPath();
+    context.arc(x + 28, y + 58, 22, 0, Math.PI * 2);
+    context.fill();
+    snapshotText(context, mark, x + 28, y + 60, 32, 18, {
+      minimumSize: 14,
+      weight: 800,
+      color: "#ffffff",
+    });
+    const badge = awardBadges[index];
+    if (badge) {
+      const ratio = Math.min(28 / (badge.naturalWidth || badge.width || 1), 28 / (badge.naturalHeight || badge.height || 1));
+      const width = (badge.naturalWidth || badge.width || 1) * ratio;
+      const height = (badge.naturalHeight || badge.height || 1) * ratio;
+      context.drawImage(badge, x + 72 - width / 2, y + 58 - height / 2, width, height);
+    }
+    snapshotText(context, label, x + 98, y + 27, 390, 12, {
+      weight: 900,
+      align: "left",
+      color: "#d9b6ed",
+      family: "DM Mono, monospace",
+    });
+    snapshotText(context, award.player, x + 98, y + 58, 390, 23, {
+      minimumSize: 16,
+      weight: 900,
+      align: "left",
+      color: "#fff",
+    });
+    snapshotText(context, `${award.team.name} · ${detail(award)}`, x + 98, y + 87, 390, 13, {
+      minimumSize: 10,
+      weight: 700,
+      align: "left",
+      color: "#b896c4",
+    });
+  });
+
+  snapshotText(context, `PL 26/27 SIMULATION · ${simulationStyleLabel} · ${goalLevelLabel}`, 84, 850, 760, 14, {
+    weight: 800,
+    align: "left",
+    color: "#b896c4",
+  });
+  snapshotText(context, "256teams.com", 1116, 850, 380, 14, {
+    weight: 800,
+    align: "right",
+    color: "#b896c4",
+  });
+  return canvas;
+}
+
+async function openPremierLeagueSeasonSnapshotModal(summary, button = null) {
+  if (button) button.disabled = true;
+  try {
+    els.snapshotModalKicker.textContent = "PL 26/27 SEASON COMPLETE";
+    els.snapshotModalTitle.textContent = "Premier League winners snapshot";
+    snapshotBlob = await canvasPngBlob(await createPremierLeagueSeasonSnapshotCanvas(summary));
+    if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
+    snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
+    els.snapshotImage.src = snapshotObjectUrl;
+    els.snapshotImage.alt = "Generated Premier League season winners snapshot";
+    snapshotFilename = `pl-26-27-${summary.champion.club.name}-champions`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") + ".png";
+    els.shareSnapshotButton.hidden = typeof navigator.share !== "function";
+    els.snapshotModal.showModal();
+  } catch (error) {
+    showToast(error.message || "The season snapshot could not be created.");
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+window.openPremierLeagueSeasonSnapshotModal = openPremierLeagueSeasonSnapshotModal;
+
 function generatedPlayers(team) {
   const seed = stableHash(team.name);
   const culture = CULTURAL_NAME_POOLS[team.nameCulture] || CULTURAL_NAME_POOLS.british;
@@ -8905,7 +9658,16 @@ function repairDefaultKnockoutRosterResults(candidate = state) {
           return;
         }
         replaceInvalid(event, `${side}:goal:${index}`, outfield[side], match.id, "scorer");
-        if (event.assist) replaceInvalid(event, `${side}:assist:${index}`, outfield[side], match.id, "assist");
+        if (event.assist) {
+          replaceInvalid(event, `${side}:assist:${index}`, outfield[side], match.id, "assist");
+          if (event.assist === event.scorer) {
+            const eligibleAssisters = outfield[side].filter((name) => name !== event.scorer);
+            event.assist = eligibleAssisters.length
+              ? eligibleAssisters[stableHash(`${match.id}:${side}:assist-alternative:${index}`) % eligibleAssisters.length]
+              : null;
+            repaired = true;
+          }
+        }
       });
     });
 
@@ -8930,6 +9692,27 @@ function repairDefaultKnockoutRosterResults(candidate = state) {
     (match.result.shootout || []).forEach((attempt, index) => {
       const side = attempt.side === "away" ? "away" : "home";
       replaceInvalid(attempt, `shootout:${side}:${index}`, outfield[side], match.id);
+    });
+    (match.result.substitutions || []).forEach((substitution, index) => {
+      const side = substitution.side === "away" || substitution.teamId === match.awayId
+        ? "away"
+        : "home";
+      replaceInvalid(substitution, `substitution:${side}:${index}:in`, rosters[side], match.id, "playerIn");
+      replaceInvalid(substitution, `substitution:${side}:${index}:out`, rosters[side], match.id, "playerOut");
+      if (substitution.player) {
+        replaceInvalid(substitution, `substitution:${side}:${index}:player`, rosters[side], match.id);
+      }
+    });
+    ["home", "away"].forEach((side) => {
+      const ratings = match.result.playerRatings?.[side];
+      if (!ratings || typeof ratings !== "object") return;
+      Object.entries(ratings).forEach(([player, rating]) => {
+        if (rosters[side].includes(repairPlayerText(player))) return;
+        const replacement = rosters[side][stableHash(`${match.id}:rating:${side}:${player}`) % rosters[side].length];
+        if (replacement && !ratings[replacement]) ratings[replacement] = rating;
+        delete ratings[player];
+        repaired = true;
+      });
     });
   });
   return repaired;
@@ -8960,7 +9743,7 @@ function shootoutPositionPriority(position) {
 }
 
 function retroShootoutActiveNames(team) {
-  if (!team?.retroWorldCup || ![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
+  if (!team?.retroWorldCup || ![2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
     return null;
   }
   const match = selectedMatch();
@@ -9440,8 +10223,29 @@ function chooseAssist(team, scorer, minute, cards, random, suspendedPlayers, goa
   const candidates = eligibleScorerProfiles(team, minute, cards, suspendedPlayers)
     .filter((profile) => profile.name !== scorer && profile.position !== "GK");
   if (!candidates.length) return null;
+  const positionWeight = {
+    CAM: 1.7,
+    AM: 1.7,
+    LW: 1.45,
+    RW: 1.45,
+    LM: 1.35,
+    RM: 1.35,
+    CM: 1.2,
+    ST: 0.82,
+    CF: 0.9,
+    SS: 1,
+    CDM: 0.68,
+    DM: 0.68,
+    LB: 0.62,
+    RB: 0.62,
+    LWB: 0.78,
+    RWB: 0.78,
+    CB: 0.08,
+  };
   return selectWeightedProfile(candidates, random, (profile) => (
-    profile.overall * profile.expectedMinutesShare * (["CAM", "AM", "CM", "LW", "RW"].includes(profile.position) ? 1.35 : 1)
+    (Number(profile.passing) || profile.overall)
+    * profile.expectedMinutesShare
+    * (positionWeight[profile.position] || 0.72)
   )).name;
 }
 
@@ -9508,7 +10312,8 @@ function goalEvents(
       },
     );
     inMatchGoals.set(scorer, (inMatchGoals.get(scorer) || 0) + 1);
-    const assist = chooseAssist(team, scorer, minute, cards, random, suspendedPlayers, goalType);
+    const chosenAssist = chooseAssist(team, scorer, minute, cards, random, suspendedPlayers, goalType);
+    const assist = chosenAssist && chosenAssist !== scorer ? chosenAssist : null;
     events.push({ minute, scorer, assist, goalType, type: "goal" });
     currentTeamGoals += 1;
   };
@@ -9725,7 +10530,7 @@ function premierLeagueFormationTacticalImpact(tacticKey) {
 function retroManagedTeamSheetImpact(team, opponent, tacticKey) {
   if (
     !isRetroSimulatorState()
-    || ![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    || ![2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
     || team?.name !== retroTournament?.managedTeam
   ) return { attack: 1, defence: 1, score: 0, fit: 0, selection: 0, synergy: 0 };
   const squad = retroManagerSquadForTeam(team);
@@ -10005,6 +10810,93 @@ function liveSubstitutionExpectedGoalFactors(team) {
   };
 }
 
+function premierLeagueAppearanceRoster(team, side, match, roundIndex, result) {
+  const profiles = playerProfilesForTeam(team);
+  const unavailable = new Set(result.suspendedPlayers?.[side] || []);
+  const ownEvents = result[`${side}Events`] || [];
+  const opponentEvents = result[side === "home" ? "awayEvents" : "homeEvents"] || [];
+  const forcedNames = new Set();
+  ownEvents.forEach((event) => {
+    if (!event.ownGoal && event.scorer) forcedNames.add(event.scorer);
+    const assist = event.assist || event.metadata?.assist;
+    if (assist) forcedNames.add(assist);
+  });
+  opponentEvents.forEach((event) => {
+    if (event.ownGoalBy) forcedNames.add(event.ownGoalBy);
+  });
+  (result.redCards || []).forEach((event) => {
+    if (event.side === side || event.teamId === team.id) forcedNames.add(event.player);
+  });
+  (result.injuries || []).forEach((event) => {
+    if (event.side === side || event.teamId === team.id) forcedNames.add(event.player);
+  });
+
+  const available = profiles.filter((profile) => (
+    !unavailable.has(profile.name) || forcedNames.has(profile.name)
+  ));
+  const targetCount = Math.min(
+    available.length,
+    14 + (stableHash(`${match.id}:${side}:appearance-count`) % 3),
+  );
+  const random = mulberry32(
+    state.drawSeed
+    + stableHash(`${match.id}:${side}:appearances`)
+    + roundIndex * 1543,
+  );
+  const selected = new Set(
+    [...forcedNames].filter((name) => available.some((profile) => profile.name === name)),
+  );
+
+  const goalkeepers = available.filter((profile) => profile.position === "GK");
+  if (goalkeepers.length && !goalkeepers.some((profile) => selected.has(profile.name))) {
+    const goalkeeper = goalkeepers
+      .map((profile) => ({
+        profile,
+        score: (profile.startingXI ? 6 : 1)
+          + profile.overall / 18
+          + random() * 2.2,
+      }))
+      .sort((left, right) => right.score - left.score)[0]?.profile;
+    if (goalkeeper) selected.add(goalkeeper.name);
+  }
+
+  const candidates = available
+    .filter((profile) => !selected.has(profile.name))
+    .map((profile) => {
+      const restChance = profile.position === "GK"
+        ? 0.025
+        : profile.startingXI ? Math.max(0.055, 0.105 - (profile.overall - 70) * 0.002) : 0;
+      const rested = restChance > 0 && random() < restChance;
+      const weight = (
+        (profile.startingXI ? 5.3 : 0.9)
+        + simulationClamp(profile.expectedMinutesShare, 0.02, 1) * 1.8
+        + simulationClamp((profile.overall - 62) / 24, 0.1, 1.25)
+      ) * (rested ? 0.16 : 1);
+      return {
+        profile,
+        lottery: -Math.log(Math.max(0.000001, random())) / Math.max(0.05, weight),
+      };
+    })
+    .sort((left, right) => left.lottery - right.lottery);
+  candidates.slice(0, Math.max(0, targetCount - selected.size)).forEach(({ profile }) => {
+    selected.add(profile.name);
+  });
+  return [...selected];
+}
+
+function ensurePremierLeaguePlayerAppearances(match, roundIndex, result = match?.result) {
+  if (!state?.premierLeagueSeason || !match || !result) return null;
+  if (
+    Array.isArray(result.playerAppearances?.home)
+    && Array.isArray(result.playerAppearances?.away)
+  ) return result.playerAppearances;
+  result.playerAppearances = {
+    home: premierLeagueAppearanceRoster(teamById(match.homeId), "home", match, roundIndex, result),
+    away: premierLeagueAppearanceRoster(teamById(match.awayId), "away", match, roundIndex, result),
+  };
+  return result.playerAppearances;
+}
+
 function simulateMatch(match, roundIndex) {
   const home = teamById(match.homeId);
   const away = teamById(match.awayId);
@@ -10194,7 +11086,7 @@ function simulateMatch(match, roundIndex) {
   );
   homeEvents = removeDismissedPlayersFromFutureGoals(homeEvents, "home", redCards, match, injuries);
   awayEvents = removeDismissedPlayersFromFutureGoals(awayEvents, "away", redCards, match, injuries);
-  return {
+  const result = {
     homeGoals,
     awayGoals,
     regulationHome,
@@ -10222,6 +11114,8 @@ function simulateMatch(match, roundIndex) {
     },
     revealed: false,
   };
+  ensurePremierLeaguePlayerAppearances(match, roundIndex, result);
+  return result;
 }
 
 function createLiveMatchResult(match, roundIndex) {
@@ -10538,6 +11432,22 @@ function advanceSpectatedRun() {
 
 function goToNextTie() {
   if (state?.premierLeagueSeason) {
+    const completedMatch = selectedMatch();
+    const completedManagedMatch = Boolean(
+      completedMatch?.result?.revealed
+      && state.spectateTeamId
+      && (
+        completedMatch.homeId === state.spectateTeamId
+        || completedMatch.awayId === state.spectateTeamId
+      )
+    );
+    if (
+      completedManagedMatch
+      && window.PremierLeagueSeason?.finishManagedMatchweek?.(
+        state.activeRound,
+        state.selectedMatch,
+      )
+    ) return;
     const currentRound = selectedRound();
     const nextMatchIndex = currentRound.findIndex((match) => !match.result?.revealed);
     if (nextMatchIndex >= 0) {
@@ -10819,13 +11729,15 @@ function removeDismissedPlayersFromFutureGoals(events, side, redCards, match, in
     if (!eligible.length) return event;
     const start = stableHash(`${match.id}:${side}:${event.minute}:${index}:dismissal-replacement`) % eligible.length;
     const replacement = eligible[start];
-    const assistPool = eligible.filter((profile) => profile.name !== replacement.name);
+    const scorer = unavailable.has(event.scorer) ? replacement.name : event.scorer;
+    const assistPool = eligible.filter((profile) => profile.name !== scorer);
+    const replacedAssist = unavailable.has(event.assist)
+      ? (assistPool.length ? assistPool[start % assistPool.length].name : null)
+      : event.assist;
     return {
       ...event,
-      scorer: unavailable.has(event.scorer) ? replacement.name : event.scorer,
-      assist: unavailable.has(event.assist)
-        ? (assistPool.length ? assistPool[start % assistPool.length].name : null)
-        : event.assist,
+      scorer,
+      assist: replacedAssist === scorer ? null : replacedAssist,
     };
   });
 }
@@ -10860,7 +11772,7 @@ function retroPlayersOnPitchAtMinute(match, team, minute, management = null) {
 }
 
 function repairLiveGoalParticipants(match) {
-  if (![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year)) || !match?.result) return;
+  if (![2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year)) || !match?.result) return;
   ["home", "away"].forEach((side) => {
     const team = teamById(side === "home" ? match.homeId : match.awayId);
     const management = retroLiveTeamManagement(team.id);
@@ -11366,8 +12278,7 @@ function match2dTacticSummary(match) {
   const selected = controlledMatchTactic(match).name;
   const opponentKey = match?.result?.tacticalMatchup?.opponent;
   const opponent = STANDARD_TACTICS[opponentKey]?.name;
-  const formation = state?.premierLeagueSeason ? `${standardFormationKey()} · ` : "";
-  return opponent ? `${formation}${selected} vs ${opponent}` : `${formation}${selected}`;
+  return opponent ? `${selected} vs ${opponent}` : selected;
 }
 
 function syncMatch2dPlayers(duration, shape = null) {
@@ -12978,6 +13889,97 @@ function canSkipPenaltyShootout() {
   );
 }
 
+function completedShootoutPrefix(playback) {
+  if (!playback?.shootout?.length) return [];
+  const currentAttempt = playback.shootout[playback.shootoutIndex];
+  const includeCurrent = ["result", "complete"].includes(playback.shootoutStep)
+    || (
+      playback.shootoutStep === "flight"
+      && typeof currentAttempt?.scored === "boolean"
+    );
+  const completedCount = Math.min(
+    playback.shootout.length,
+    Math.max(0, playback.shootoutIndex + Number(includeCurrent)),
+  );
+  return playback.shootout
+    .slice(0, completedCount)
+    .filter((attempt) => typeof attempt?.scored === "boolean")
+    .map((attempt) => ({ ...attempt, interactive: false }));
+}
+
+function simulatePenaltyShootoutContinuation(
+  home,
+  away,
+  random,
+  completedAttempts,
+  cards = [],
+  suspendedPlayers = { home: [], away: [] },
+  modeName = "balanced",
+) {
+  const dismissed = {
+    home: cards.filter((card) => card.side === "home").map((card) => card.player),
+    away: cards.filter((card) => card.side === "away").map((card) => card.player),
+  };
+  const pools = {
+    home: shootoutTakerPool(home, suspendedPlayers.home || [], dismissed.home),
+    away: shootoutTakerPool(away, suspendedPlayers.away || [], dismissed.away),
+  };
+  const conversion = {
+    home: shootoutConversionChance(home, away, modeName),
+    away: shootoutConversionChance(away, home, modeName),
+  };
+  const sequence = completedAttempts.map((attempt) => ({ ...attempt, interactive: false }));
+  const penalties = {
+    home: sequence.filter((attempt) => attempt.side === "home" && attempt.scored).length,
+    away: sequence.filter((attempt) => attempt.side === "away" && attempt.scored).length,
+  };
+  const kicks = {
+    home: sequence.filter((attempt) => attempt.side === "home").length,
+    away: sequence.filter((attempt) => attempt.side === "away").length,
+  };
+
+  const shootoutState = () => ({
+    homeScore: penalties.home,
+    awayScore: penalties.away,
+    homeKicks: kicks.home,
+    awayKicks: kicks.away,
+  });
+  const takeKick = (side, forcedOutcome = null) => {
+    const team = side === "home" ? home : away;
+    const pool = pools[side];
+    const round = kicks[side] + 1;
+    const player = pool[(round - 1) % pool.length];
+    const scored = typeof forcedOutcome === "boolean"
+      ? forcedOutcome
+      : random() < shootoutRoundConversionChance(conversion[side], round);
+    if (scored) penalties[side] += 1;
+    kicks[side] += 1;
+    sequence.push(createShootoutAttempt(side, team, player, scored, round, random));
+  };
+
+  let winnerSide = standardShootoutWinner(shootoutState());
+  while (!winnerSide && sequence.length < 120) {
+    takeKick(kicks.home <= kicks.away ? "home" : "away");
+    winnerSide = standardShootoutWinner(shootoutState());
+  }
+
+  if (!winnerSide) {
+    while (kicks.home !== kicks.away) {
+      takeKick(kicks.home < kicks.away ? "home" : "away");
+    }
+    const homeFavoured = random() < simulationClamp(
+      0.5 + (calculateShootoutRating(home) - calculateShootoutRating(away)) * 0.005,
+      0.38,
+      0.62,
+    );
+    takeKick("home", homeFavoured);
+    takeKick("away", !homeFavoured);
+    winnerSide = homeFavoured ? "home" : "away";
+  }
+
+  return { penalties, sequence, winnerSide };
+}
+
 function skipPenaltyShootout() {
   if (!canSkipPenaltyShootout()) return false;
   const match = state.rounds[livePlayback.roundIndex]?.[livePlayback.matchIndex];
@@ -12987,11 +13989,13 @@ function skipPenaltyShootout() {
   clearTimeout(livePlayback.finishTimer);
   livePlayback.presentationScheduler?.clear("skip-shootout");
   if (livePlayback.interactiveShootout) {
+    const completedAttempts = completedShootoutPrefix(livePlayback);
     const random = mulberry32(state.drawSeed + stableHash(`${match.id}-skipped-shootout`));
-    const automated = simulatePenaltyShootout(
+    const automated = simulatePenaltyShootoutContinuation(
       teamById(match.homeId),
       teamById(match.awayId),
       random,
+      completedAttempts,
       match.result.redCards || [],
       {
         home: shootoutUnavailablePlayers(match.result, "home"),
@@ -13001,7 +14005,7 @@ function skipPenaltyShootout() {
     );
     match.result.penalties = automated.penalties;
     match.result.shootout = automated.sequence;
-    match.result.winnerId = automated.penalties.home > automated.penalties.away ? match.homeId : match.awayId;
+    match.result.winnerId = automated.winnerSide === "home" ? match.homeId : match.awayId;
     livePlayback.shootout = automated.sequence;
     livePlayback.interactiveShootout = false;
   }
@@ -13979,7 +14983,40 @@ function analysisPresentationForMatch(match) {
 }
 
 function matchStatValue(value, suffix = "") {
-  return `${value}${suffix}`;
+  const numeric = Number(value);
+  return `${Number.isFinite(numeric) ? numeric : 0}${suffix}`;
+}
+
+function normalizedMatchStats(stats = {}, fallback = {}) {
+  const finite = (value) => value === null || value === undefined || value === ""
+    ? null
+    : Number.isFinite(Number(value)) ? Number(value) : null;
+  const pair = (key, defaultHome = 0, defaultAway = 0) => {
+    const home = finite(stats?.[key]?.home);
+    const away = finite(stats?.[key]?.away);
+    const fallbackHome = finite(fallback?.[key]?.home);
+    const fallbackAway = finite(fallback?.[key]?.away);
+    return {
+      home: home ?? fallbackHome ?? defaultHome,
+      away: away ?? fallbackAway ?? defaultAway,
+    };
+  };
+  let possession = pair("possession", 50, 50);
+  const possessionTotal = possession.home + possession.away;
+  if (possessionTotal <= 0) {
+    possession = { home: 50, away: 50 };
+  } else if (Math.abs(possessionTotal - 100) > 0.01) {
+    const home = Math.round((possession.home / possessionTotal) * 100);
+    possession = { home, away: 100 - home };
+  }
+  return {
+    possession,
+    xg: pair("xg"),
+    shots: pair("shots"),
+    shotsOnTarget: pair("shotsOnTarget"),
+    yellowCards: pair("yellowCards"),
+    redCards: pair("redCards"),
+  };
 }
 
 function renderMatchAnalysis(match, isLive = false) {
@@ -13995,9 +15032,10 @@ function renderMatchAnalysis(match, isLive = false) {
   }
   const presentation = analysisPresentationForMatch(match);
   if (!presentation) return;
-  const stats = isLive && livePlayback?.visibleStats
+  const rawStats = isLive && livePlayback?.visibleStats
     ? livePlayback.visibleStats
     : match.result.matchStats || presentation.stats;
+  const stats = normalizedMatchStats(rawStats, presentation.stats);
   const rows = [
     ["Possession", matchStatValue(stats.possession.home, "%"), matchStatValue(stats.possession.away, "%")],
     ["xG", Number(stats.xg.home).toFixed(2), Number(stats.xg.away).toFixed(2)],
@@ -14072,7 +15110,9 @@ let confettiChampionId = null;
 function renderChampionConfetti(championId) {
   if (confettiChampionId === championId || !els.championConfetti) return;
   confettiChampionId = championId;
-  const colours = ["#f2c45f", "#5f8cff", "#f4f7fb", "#34c77b", "#ef5b5b"];
+  const colours = isRetroSimulatorState() && Number(retroTournament?.year) === 2006
+    ? ["#f3d566", "#d8eff7", "#78b0c7", "#f4fbff", "#0b5274"]
+    : ["#f2c45f", "#5f8cff", "#f4f7fb", "#34c77b", "#ef5b5b"];
   els.championConfetti.innerHTML = Array.from({ length: 120 }, (_, index) => {
     const random = mulberry32(stableHash(`${championId}-confetti-${index}`));
     const x = Math.round(random() * 100);
@@ -14310,7 +15350,9 @@ function renderStage() {
   const tacticalFeedback = opponentTacticKey
     ? standardTacticalFeedback(state.standardTactic, opponentTacticKey)
     : null;
-  const showStandardTactics = LIVE_MATCH_MANAGEMENT_UI_ENABLED && isControlledMatch && !revealed;
+  const showStandardTactics = LIVE_MATCH_MANAGEMENT_UI_ENABLED
+    && isControlledMatch
+    && !revealed;
   const showPremierLeagueWatchTactics = LIVE_MATCH_MANAGEMENT_UI_ENABLED
     && Boolean(state.premierLeagueSeason && !isControlledMatch);
   els.standardMatchTactics.hidden = !showStandardTactics;
@@ -14328,9 +15370,9 @@ function renderStage() {
     "tactics-hidden",
     !showStandardTactics && !showPremierLeagueWatchTactics,
   );
-  els.standardTacticOpponent.textContent = opponentTacticName
-    ? `Opponent: ${opponentTacticName}`
-    : "";
+  els.standardTacticOpponent.textContent = state.premierLeagueSeason
+    ? opponentTacticName ? `Tactics · Opponent: ${opponentTacticName}` : "Tactics"
+    : opponentTacticName ? `Opponent: ${opponentTacticName}` : "";
   els.standardTacticFeedback.textContent = tacticalFeedback?.label || "";
   els.match2dViewer.hidden = true;
   els.matchCommentaryView.hidden = !isLive || isShootout;
@@ -14346,7 +15388,7 @@ function renderStage() {
   const showSharedLineupPanel = Boolean(
     els.retroMatchLineupsPanel
     && els.retroMatchLineupsBody
-    && (isRetroSimulatorState() || (state.premierLeagueSeason && isControlledMatch))
+    && isRetroSimulatorState()
     && (LIVE_MATCH_MANAGEMENT_UI_ENABLED || (!isLive && !result))
   );
   if (els.retroMatchLineupsPanel) els.retroMatchLineupsPanel.hidden = !showSharedLineupPanel;
@@ -14373,8 +15415,8 @@ function renderStage() {
   els.awaySeed.textContent = "";
   els.homeFlag.innerHTML = flagMarkup(home, "hero-flag");
   els.awayFlag.innerHTML = flagMarkup(away, "hero-flag");
-  setTeamName(els.homeName, home.name);
-  setTeamName(els.awayName, away.name);
+  setTeamName(els.homeName, premierLeagueResponsiveTeamName(home));
+  setTeamName(els.awayName, premierLeagueResponsiveTeamName(away));
   els.homeScore.textContent = premierLeaguePrematch
     ? window.PremierLeagueSeason?.kickoffForMatch?.(state.selectedMatch) || "15:00"
     : isLive ? livePlayback.homeScore : revealed ? result.homeGoals : result ? "–" : "0";
@@ -14595,8 +15637,10 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
     ? `style="grid-column:${options.column};grid-row:${options.row}"`
     : "";
   const connection = options.connects ? "data-connects=\"true\"" : "";
-  const homeName = home?.name || "To be confirmed";
-  const awayName = result?.bye ? "Seeded bye" : away?.name || "To be confirmed";
+  const homeName = home ? premierLeagueResponsiveTeamName(home) : "To be confirmed";
+  const awayName = result?.bye
+    ? "Seeded bye"
+    : away ? premierLeagueResponsiveTeamName(away) : "To be confirmed";
   const homeFlag = home ? flagMarkup(home, "fixture-flag") : `<span class="fixture-tbc-flag">?</span>`;
   const awayFlag = away
     ? flagMarkup(away, "fixture-flag")
@@ -15487,7 +16531,7 @@ function readCustomTournamentSetup() {
   }
 }
 
-[2010, 2014, 2016, 2018, 2022].forEach((year) => installRetroTeams(year));
+[2006, 2010, 2014, 2016, 2018, 2022].forEach((year) => installRetroTeams(year));
 let customTournamentSetup = readCustomTournamentSetup();
 let customTournamentSetupViewOpen = false;
 let customGroupTablesCollapsed = false;
@@ -15720,6 +16764,7 @@ function customFirstEmptyIndex() {
 
 function customPresetPool(preset) {
   if (preset === "europe") return TEAMS.filter((team) => team.confed === "UEFA");
+  if (preset === "asia") return TEAMS.filter((team) => team.confed === "AFC");
   if (preset === "africa") return TEAMS.filter((team) => team.confed === "CAF");
   if (preset === "guests") return TEAMS.filter((team) => team.confed === "INVITED");
   if (preset === "underdogs") return TEAMS.filter((team) => (
@@ -15934,6 +16979,7 @@ function customBracketPanelMarkup() {
               <option value="top" ${customTournamentUi.quickFillPreset === "top" ? "selected" : ""}>Top ranked</option>
               <option value="random" ${customTournamentUi.quickFillPreset === "random" ? "selected" : ""}>Random</option>
               <option value="europe" ${customTournamentUi.quickFillPreset === "europe" ? "selected" : ""}>Only Europe</option>
+              <option value="asia" ${customTournamentUi.quickFillPreset === "asia" ? "selected" : ""}>Only Asia</option>
               <option value="africa" ${customTournamentUi.quickFillPreset === "africa" ? "selected" : ""}>Only Africa</option>
               <option value="underdogs" ${customTournamentUi.quickFillPreset === "underdogs" ? "selected" : ""}>Only underdogs</option>
               <option value="guests" ${customTournamentUi.quickFillPreset === "guests" ? "selected" : ""}>Only guest nations</option>
@@ -17034,6 +18080,10 @@ function render() {
   forceUnlockStartupState();
   syncSavedTournamentDeleteActions();
   const premierLeagueMatchActive = state?.premierLeagueSeason === true;
+  if (premierLeagueMatchActive) {
+    document.body.classList.add("pl-match-mode-active");
+    document.body.classList.remove("pl-season-open");
+  }
   enforceModeScreenVisibility(premierLeagueMatchActive ? "standard" : currentAppMode());
   if (!premierLeagueMatchActive && currentAppMode() === "retro") {
     document.body.classList.remove("legacy-mode-active", "achievements-mode-active");
@@ -17050,6 +18100,7 @@ function render() {
   if (isRetroSimulatorState() && livePlayback) stopStandardPlaybackForNavigation();
   restoreSharedMainContent();
   restoreStandardTournamentState();
+  if (repairDefaultKnockoutRosterResults(state)) saveState();
   ensureThirdPlacePlayoffForSavedTournament();
   retroBottomGroupsVisible = false;
   retroBottomGroupMatchesVisible = false;
@@ -17057,7 +18108,7 @@ function render() {
   els.fixtureGrid.classList.remove("retro-group-match-history");
   els.teamFilterControl.hidden = false;
   els.unresolvedFilter.hidden = false;
-  document.body.classList.remove("retro-mode-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
+  document.body.classList.remove("retro-mode-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active");
   els.retroWorldCupScreen.hidden = true;
   const mode = premierLeagueMatchActive ? "standard" : currentAppMode();
   if (mode !== "custom") customTournamentSetupViewOpen = false;
@@ -17293,11 +18344,12 @@ function readRetroWorldCupYear() {
 }
 
 function setRetroWorldCupYear(year) {
-  const selectedYear = RETRO_WORLD_CUP_EDITIONS[year] ? year : "2014";
+  const selectedYear = RETRO_WORLD_CUP_EDITIONS[year] ? String(year) : "2014";
   const edition = RETRO_WORLD_CUP_EDITIONS[selectedYear];
   els.retroModeCard?.style.setProperty("--retro-accent", edition.accent);
   els.retroModeCard?.style.setProperty("--retro-accent-text", edition.accentText);
   if (els.retroModeCard) els.retroModeCard.dataset.retroEdition = selectedYear;
+  document.body.classList.toggle("retro-2006-menu-theme", selectedYear === "2006" && readRetroCompetition() === "wc");
   if (els.retroWorldCupLogo) els.retroWorldCupLogo.src = edition.logo;
   if (els.retroTeamPickerButton) els.retroTeamPickerButton.disabled = !RETRO_WORLD_CUPS[selectedYear];
   renderRetroWorldCupTeamPicker(selectedYear);
@@ -17319,8 +18371,9 @@ function setRetroWorldCupYear(year) {
 }
 
 function setRetroCompetition(competition) {
-  const selectedCompetition = competition === "euros" ? "euros" : "wc";
+  const selectedCompetition = ["euros", "copa"].includes(competition) ? competition : "wc";
   const isEuros = selectedCompetition === "euros";
+  const isCopa = selectedCompetition === "copa";
   try {
     localStorage.setItem(RETRO_COMPETITION_KEY, selectedCompetition);
   } catch {
@@ -17332,22 +18385,48 @@ function setRetroCompetition(competition) {
     button.setAttribute("aria-pressed", String(isActive));
   });
   els.retroWorldCupYearSwitch?.querySelectorAll("[data-retro-year]").forEach((button) => {
-    button.hidden = isEuros;
+    button.hidden = isEuros || isCopa;
   });
   els.retroWorldCupYearSwitch?.querySelectorAll("[data-euro-year]").forEach((button) => {
     button.hidden = !isEuros;
     button.classList.toggle("active", isEuros);
     button.setAttribute("aria-pressed", String(isEuros));
   });
+  els.retroWorldCupYearSwitch?.querySelectorAll("[data-copa-year]").forEach((button) => {
+    button.hidden = !isCopa;
+    button.classList.toggle("active", isCopa);
+    button.setAttribute("aria-pressed", String(isCopa));
+  });
   if (els.retroWorldCupYearSwitch) {
     els.retroWorldCupYearSwitch.dataset.competition = selectedCompetition;
-    els.retroWorldCupYearSwitch.setAttribute("aria-label", isEuros ? "Euros year" : "World Cup year");
+    els.retroWorldCupYearSwitch.setAttribute(
+      "aria-label",
+      isCopa ? "Copa América year" : isEuros ? "Euros year" : "World Cup year",
+    );
   }
   if (els.retroModeCard) {
     els.retroModeCard.dataset.retroCompetition = selectedCompetition;
   }
+  document.body.classList.toggle(
+    "retro-2006-menu-theme",
+    selectedCompetition === "wc" && readRetroWorldCupYear() === "2006",
+  );
   if (els.retroCompetitionTitle) {
-    els.retroCompetitionTitle.textContent = isEuros ? "Euros Simulator" : "WC Simulator";
+    els.retroCompetitionTitle.textContent = isCopa
+      ? "Copa Simulator"
+      : isEuros
+        ? "Euros Simulator"
+        : "WC Simulator";
+  }
+  els.retroCopaComingSoon?.setAttribute("aria-hidden", String(!isCopa));
+  if (isCopa) {
+    els.retroModeCard?.style.setProperty("--retro-accent", RETRO_COPA_2024.accent);
+    els.retroModeCard?.style.setProperty("--retro-accent-text", RETRO_COPA_2024.accentText);
+    if (els.retroModeCard) els.retroModeCard.dataset.retroEdition = RETRO_COPA_2024.year;
+    if (els.retroWorldCupLogo) els.retroWorldCupLogo.src = RETRO_COPA_2024.logo;
+    renderRetroWorldCupTeamPicker(RETRO_COPA_2024.year);
+    syncRetroWorldCupCardAction(RETRO_COPA_2024.year);
+    return;
   }
   if (isEuros) {
     els.retroModeCard?.style.setProperty("--retro-accent", RETRO_EURO_2016.accent);
@@ -17402,7 +18481,7 @@ function savedRetroAchievementTournamentStates() {
   return readTournamentHistoryRecords()
     .filter((record) => (
       record?.mode === "retro"
-      && [2010, 2014, 2016, 2018, 2022].includes(Number(record.year))
+      && [2006, 2010, 2014, 2016, 2018, 2022].includes(Number(record.year))
       && record.managedTeamId
       && record.championId
     ))
@@ -17425,7 +18504,7 @@ function savedRetroAchievementTournamentStates() {
 
 window.getRetroAchievementTournamentStates = () => {
   const tournaments = [
-    ...[2010, 2014, 2016, 2018, 2022]
+    ...[2006, 2010, 2014, 2016, 2018, 2022]
       .map((year) => readRetroTournamentState(year))
       .filter(Boolean),
     ...savedRetroAchievementTournamentStates(),
@@ -17447,10 +18526,14 @@ function retroTournamentHasProgress() {
 
 function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   if (!els.startRetroWorldCupButton) return;
-  const isEuros = readRetroCompetition() === "euros";
-  const selectedYear = isEuros ? RETRO_EURO_2016.year : year;
-  const playable = isEuros || ["2010", "2014", "2018", "2022"].includes(String(selectedYear));
-  const hasTeamField = isEuros
+  const selectedCompetition = readRetroCompetition();
+  const isEuros = selectedCompetition === "euros";
+  const isCopa = selectedCompetition === "copa";
+  const selectedYear = isCopa ? 2024 : isEuros ? RETRO_EURO_2016.year : year;
+  const playable = isEuros || (!isCopa && ["2006", "2010", "2014", "2018", "2022"].includes(String(selectedYear)));
+  const hasTeamField = isCopa
+    ? Boolean(RETRO_COPA_2024.teams.length)
+    : isEuros
     ? Boolean(RETRO_EURO_2016.teams.length)
     : Boolean(RETRO_WORLD_CUPS[year]?.teams?.length);
   const savedTournament = playable ? retroTournamentForYear(selectedYear) : null;
@@ -17467,7 +18550,9 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   }
   syncLandingSettings();
   els.startRetroWorldCupButton.disabled = !playable;
-  els.startRetroWorldCupButton.innerHTML = playable
+  els.startRetroWorldCupButton.innerHTML = isCopa
+    ? "Coming soon"
+    : playable
     ? `${savedTournament ? "Resume" : "Start"} ${isEuros ? "Euro 2016" : "World Cup"} <span aria-hidden="true">&rarr;</span>`
     : "Coming soon";
   els.restartRetroWorldCupButton.hidden = !playable || !savedTournament;
@@ -17483,6 +18568,7 @@ function retroTeamForFlag(name) {
     "Korea Republic": "South Korea",
     "Serbia and Montenegro": "Serbia",
     "Turkey": "Türkiye",
+    "United States": "USA",
   };
   const sourceName = aliases[name] || name;
   const team = TEAMS.find((candidate) => candidate.name === sourceName);
@@ -17692,20 +18778,6 @@ function renderRetroSquadsView() {
   if (!squads[retroSquadTeamName]) retroSquadTeamName = retroTournament.managedTeam || available[0].name;
   const squad = squads[retroSquadTeamName];
   const startingNumbers = new Set(squad.startingXI || []);
-  const startingPlayers = (squad.startingXI || [])
-    .map((number) => squad.players.find((player) => player.number === number))
-    .filter(Boolean);
-  const teamRatingLabels = {
-    overall: "Overall",
-    attack: "Attack",
-    midfield: "Midfield",
-    defence: "Defence",
-    goalkeeper: "Goalkeeper",
-    squadDepth: "Depth",
-    experience: "Experience",
-    penalties: "Penalties",
-    discipline: "Discipline",
-  };
   const positionGroups = [
     ["Goalkeepers", "GK"],
     ["Defenders", "DF"],
@@ -17724,22 +18796,6 @@ function renderRetroSquadsView() {
           <select id="retroSquadTeamSelect">${available.map((team) => `<option value="${escapeHtml(team.name)}" ${team.name === retroSquadTeamName ? "selected" : ""}>${escapeHtml(team.name)}</option>`).join("")}</select>
         </label>
       </div>
-      ${isEuro2016 ? "" : `<div class="retro-squad-summary">
-        ${squad.teamRatings ? `
-          <section class="retro-team-rating-card">
-            <header><span>Team profile</span><strong>${squad.teamRatings.overall}</strong></header>
-            <div>${Object.entries(squad.teamRatings).map(([key, value]) => `
-              <span><small>${teamRatingLabels[key] || key}</small><b>${value}</b></span>
-            `).join("")}</div>
-          </section>
-        ` : ""}
-        <section class="retro-squad-xi-card">
-          <header><span>Likely starting XI</span><strong>${escapeHtml(squad.formation)}</strong></header>
-          <ol>${startingPlayers.map((player) => `
-            <li><b>${player.number}</b><span>${escapeHtml(player.name)}</span><em>${escapeHtml(player.position)}</em><i>${player.overall}</i></li>
-          `).join("")}</ol>
-        </section>
-      </div>`}
       <div class="retro-squad-groups">
         ${positionGroups.map(([label, position]) => {
           const players = squad.players.filter((player) => retroBroadPosition(player.position) === position);
@@ -17752,7 +18808,7 @@ function renderRetroSquadsView() {
                     <b class="retro-squad-number">${player.number}</b>
                     <span>
                       <strong>${escapeHtml(player.name)}${player.captain ? " (C)" : ""}</strong>
-                      <small>${escapeHtml(player.club)}${!isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>
+                      <small>${escapeHtml(player.club || player.position)}${!isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>
                     </span>
                     ${isEuro2016 ? "" : `<em>${escapeHtml(player.position)}</em><i>${player.overall}</i>`}
                   </div>
@@ -17782,7 +18838,7 @@ const RETRO_MANAGER_FORMATIONS = Object.freeze([
   "5-2-2-1",
   "5-2-3",
 ]);
-const RETRO_LINEUP_SLOT_ORDER_VERSION = 4;
+const RETRO_LINEUP_SLOT_ORDER_VERSION = 5;
 const RETRO_MANAGER_SLOT_POSITIONS = Object.freeze({
   "4-3-3": Object.freeze(["GK", "LB", "CB", "CB", "RB", "LCM", "CM", "RCM", "LW", "ST", "RW"]),
   "4-2-3-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "LW", "CAM", "RW", "ST"]),
@@ -17832,7 +18888,7 @@ function sharedLineupManagerSupported(candidate = state) {
   if (candidate?.premierLeagueSeason) return Boolean(candidate.spectateTeamId);
   return Boolean(
     isRetroSimulatorState(candidate)
-    && [2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    && [2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
     && retroTournament?.managedTeam,
   );
 }
@@ -17867,7 +18923,7 @@ function premierLeagueManagerSquad(team) {
     team: team.name,
     formation: sharedLineupManagedTeamMatches(team)
       ? standardFormationKey(state.standardFormation)
-      : "4-3-3",
+      : standardFormationKey(team.preferredFormation),
     players,
   };
 }
@@ -17879,6 +18935,7 @@ function retroManagerSquadForTeam(teamOrName) {
       : teamOrName;
     return premierLeagueManagerSquad(team);
   }
+  if (!isRetroSimulatorState()) return null;
   const year = Number(retroTournament?.year);
   const teamName = typeof teamOrName === "string" ? teamOrName : teamOrName?.name;
   const source = retroSquadsForYear(year)?.[teamName];
@@ -18158,13 +19215,14 @@ function sharedLineupDefaultForTeam(team) {
     if (!squad?.players?.length) return null;
     const requestedFormation = sharedLineupManagedTeamMatches(team)
       ? state.managerLineups?.[team.id]?.formation || state.standardFormation
-      : team.selectedFormation;
+      : team.selectedFormation || team.preferredFormation;
     const formation = standardFormationKey(requestedFormation || squad.formation || "4-3-3");
     const unavailable = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
     const availablePlayers = squad.players.filter((player) => !unavailable.has(player.name));
-    const preferredPlayers = squad.players.slice(0, 11);
-    const preferredNumbers = retroOrderStarterNumbers(preferredPlayers, formation);
-    const starterNumbers = retroSelectAvailableStarterNumbers(
+    const preferredNumbers = squad.players
+      .filter((player) => Number(player.startingXILikelihood) > 0)
+      .map((player) => player.number);
+    const starterNumbers = retroSelectBestStarterNumbers(
       availablePlayers,
       preferredNumbers,
       formation,
@@ -18259,7 +19317,8 @@ function retroManagerLineupForTeam(team) {
   }
   if (
     !team
-    || ![2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    || !isRetroSimulatorState()
+    || ![2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
     || team.name !== retroTournament?.managedTeam
   ) return null;
   const squad = retroManagerSquadForTeam(team);
@@ -18303,7 +19362,7 @@ function retroManagerCanEditMatch(match) {
   }
   return Boolean(
     isRetroSimulatorState()
-    && [2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    && [2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
     && retroTournament?.managedTeam
     && !match?.result?.revealed
     && [match?.home, match?.away, teamById(match?.homeId)?.name, teamById(match?.awayId)?.name]
@@ -18318,6 +19377,7 @@ function retroManagerPlayerMarkup(
   disabled,
   { substitution = false, previewOutgoing = false } = {},
 ) {
+  const playerContext = player.club || player.position;
   const interactionAttribute = previewOutgoing
     ? `data-retro-sub-undo-out="${player.number}"`
     : substitution
@@ -18334,7 +19394,7 @@ function retroManagerPlayerMarkup(
       ${previewOutgoing ? `aria-label="Undo substitution for ${escapeHtml(player.name)}"` : ""}
     >
       <b>${player.number}</b>
-      <span><strong>${escapeHtml(player.name)}</strong><small>${previewOutgoing ? "Tap to undo change" : escapeHtml(player.club || player.position)}</small></span>
+      <span><strong>${escapeHtml(player.name)}</strong><small>${previewOutgoing ? "Tap to undo change" : escapeHtml(playerContext)}</small></span>
       <em>${previewOutgoing ? "UNDO" : player.position}</em>
       <i>${player.overall}</i>
     </button>`;
@@ -18970,6 +20030,7 @@ function renderRetroWorldCupMode() {
   activateRetroSimulatorState();
   const isEuros = Number(retroTournament.year) === 2016;
   document.body.classList.add("retro-mode-active");
+  document.body.classList.toggle("retro-2006-active", Number(retroTournament.year) === 2006);
   document.body.classList.toggle("retro-2010-active", Number(retroTournament.year) === 2010);
   document.body.classList.toggle("retro-euro-2016-active", Number(retroTournament.year) === 2016);
   document.body.classList.toggle("retro-2018-active", Number(retroTournament.year) === 2018);
@@ -18997,7 +20058,7 @@ function renderRetroWorldCupMode() {
 function startRetroWorldCup() {
   const year = selectedRetroTournamentYear();
   const isEuros = year === 2016;
-  if (![2010, 2014, 2016, 2018, 2022].includes(year)) {
+  if (![2006, 2010, 2014, 2016, 2018, 2022].includes(year)) {
     showToast(`The ${year} tournament is coming soon.`);
     return;
   }
@@ -19511,7 +20572,8 @@ $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.
 els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
 
 let featureAnnouncementRetryTimer = null;
-let euro2016AnnouncementShownThisPage = false;
+let premierLeagueAnnouncementShownThisPage = false;
+let retro2006AnnouncementShownThisPage = false;
 
 function announcementWasSeen(storageKey) {
   try {
@@ -19533,37 +20595,66 @@ function openNextFeatureAnnouncement() {
   clearTimeout(featureAnnouncementRetryTimer);
   featureAnnouncementRetryTimer = null;
   const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
-    dialog !== els.euro2016AnnouncementModal
+    dialog !== els.premierLeagueAnnouncementModal
+    &&
+    dialog !== els.retro2006AnnouncementModal
   ));
   if (anotherDialogIsOpen) {
     featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
     return;
   }
   if (
-    els.euro2016AnnouncementModal
-    && !euro2016AnnouncementShownThisPage
-    && !announcementWasSeen(EURO_2016_ANNOUNCEMENT_KEY)
+    els.premierLeagueAnnouncementModal
+    && !premierLeagueAnnouncementShownThisPage
+    && !announcementWasSeen(PREMIER_LEAGUE_ANNOUNCEMENT_KEY)
   ) {
-    euro2016AnnouncementShownThisPage = true;
-    els.euro2016AnnouncementModal.showModal();
+    premierLeagueAnnouncementShownThisPage = true;
+    els.premierLeagueAnnouncementModal.showModal();
+    return;
+  }
+  if (
+    els.retro2006AnnouncementModal
+    && !retro2006AnnouncementShownThisPage
+    && !announcementWasSeen(RETRO_2006_ANNOUNCEMENT_KEY)
+  ) {
+    retro2006AnnouncementShownThisPage = true;
+    els.retro2006AnnouncementModal.showModal();
   }
 }
 
-function closeEuro2016Announcement() {
-  rememberAnnouncement(EURO_2016_ANNOUNCEMENT_KEY);
-  if (els.euro2016AnnouncementModal?.open) els.euro2016AnnouncementModal.close();
+function closePremierLeagueAnnouncement() {
+  rememberAnnouncement(PREMIER_LEAGUE_ANNOUNCEMENT_KEY);
+  if (els.premierLeagueAnnouncementModal?.open) els.premierLeagueAnnouncementModal.close();
 }
 
-els.euro2016AnnouncementClose?.addEventListener("click", closeEuro2016Announcement);
-els.euro2016AnnouncementModal?.addEventListener("cancel", () => {
-  rememberAnnouncement(EURO_2016_ANNOUNCEMENT_KEY);
+els.premierLeagueAnnouncementClose?.addEventListener("click", closePremierLeagueAnnouncement);
+els.premierLeagueAnnouncementModal?.addEventListener("cancel", () => {
+  rememberAnnouncement(PREMIER_LEAGUE_ANNOUNCEMENT_KEY);
 });
-els.euro2016AnnouncementModal?.addEventListener("close", () => {
-  rememberAnnouncement(EURO_2016_ANNOUNCEMENT_KEY);
+els.premierLeagueAnnouncementModal?.addEventListener("close", () => {
+  rememberAnnouncement(PREMIER_LEAGUE_ANNOUNCEMENT_KEY);
 });
-els.euro2016AnnouncementAction?.addEventListener("click", () => {
-  closeEuro2016Announcement();
-  setRetroCompetition("euros");
+els.premierLeagueAnnouncementAction?.addEventListener("click", () => {
+  closePremierLeagueAnnouncement();
+  document.querySelector("#premierLeagueModeCard")?.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+function closeRetro2006Announcement() {
+  rememberAnnouncement(RETRO_2006_ANNOUNCEMENT_KEY);
+  if (els.retro2006AnnouncementModal?.open) els.retro2006AnnouncementModal.close();
+}
+
+els.retro2006AnnouncementClose?.addEventListener("click", closeRetro2006Announcement);
+els.retro2006AnnouncementModal?.addEventListener("cancel", () => {
+  rememberAnnouncement(RETRO_2006_ANNOUNCEMENT_KEY);
+});
+els.retro2006AnnouncementModal?.addEventListener("close", () => {
+  rememberAnnouncement(RETRO_2006_ANNOUNCEMENT_KEY);
+});
+els.retro2006AnnouncementAction?.addEventListener("click", () => {
+  closeRetro2006Announcement();
+  setRetroCompetition("wc");
+  setRetroWorldCupYear("2006");
   window.setTimeout(() => {
     els.retroModeCard?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 120);
@@ -19584,7 +20675,7 @@ els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.cli
 $("#profileFeedbackButton")?.addEventListener("click", () => els.bugReportButton.click());
 $("#profileAchievementsButton")?.addEventListener("click", () => els.openAchievementsButton.click());
 els.retroAchievementsButton?.addEventListener("click", () => {
-  if ([2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
+  if ([2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;
   }
@@ -19647,8 +20738,16 @@ els.keybindSettingsList?.addEventListener("click", (event) => {
 els.joinOnlineRoomButton.addEventListener("click", () => openOnlineRoom(true));
 els.openAchievementsButton?.addEventListener("click", () => {
   if (
+    state?.premierLeagueSeason
+    || document.body.classList.contains("pl-season-open")
+    || document.body.classList.contains("pl-match-mode-active")
+  ) {
+    window.AccountAchievements?.openRetroModal(2026);
+    return;
+  }
+  if (
     els.retroWorldCupScreen?.hidden === false
-    && [2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    && [2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
   ) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;
@@ -19886,6 +20985,7 @@ els.spectatePickerButton.addEventListener("click", () => {
 });
 els.retroTeamPickerButton?.addEventListener("click", openRetroWorldCupTeamPicker);
 els.premierLeagueTeamPickerButton?.addEventListener("click", openPremierLeagueTeamPicker);
+window.addEventListener("premier-league-season-state", renderPremierLeagueTeamPicker);
 els.premierLeagueInstallButton?.addEventListener("click", openPremierLeagueAssetPack);
 els.plAssetPackCloseButton?.addEventListener("click", () => els.plAssetPackModal?.close());
 els.plAssetPackCancelButton?.addEventListener("click", () => els.plAssetPackModal?.close());
@@ -19898,6 +20998,11 @@ els.spectateList.addEventListener("click", (event) => {
   const option = event.target.closest(".prediction-option");
   if (!option) return;
   if (spectatePickerMode === "premier-league") {
+    if (window.PremierLeagueSeason?.hasStarted?.()) {
+      els.spectateModal.close();
+      showToast("Restart the season before changing clubs.");
+      return;
+    }
     const teamId = option.dataset.premTeamId || null;
     const team = PREMIER_LEAGUE_2026_27_TEAMS.find((candidate) => candidate.id === teamId) || null;
     premierLeagueMenuSetup.teamId = team?.id || null;
@@ -19909,24 +21014,29 @@ els.spectateList.addEventListener("click", (event) => {
   }
   if (spectatePickerMode === "retro") {
     const year = selectedRetroTournamentYear();
-    const isEuros = readRetroCompetition() === "euros";
+    const competition = readRetroCompetition();
+    const isEuros = competition === "euros";
+    const isCopa = competition === "copa";
     if (retroTournamentForYear(year)) {
       els.spectateModal.close();
       showToast(`Restart this ${isEuros ? "Euro" : "World Cup"} before changing your team.`);
       return;
     }
     const name = option.dataset.retroTeamName;
-    const selectedData = isEuros
+    const selectedData = isCopa
+      ? RETRO_COPA_2024.teams.find((team) => team.name === name)
+      : isEuros
       ? RETRO_EURO_2016.teams.find((team) => team.name === name)
       : retroWorldCupTeamData(year, name);
     if (name && !selectedData) return;
-    if (isEuros) saveRetroEuroTeam(name);
+    if (isCopa) saveRetroCopaTeam(name);
+    else if (isEuros) saveRetroEuroTeam(name);
     else saveRetroWorldCupTeam(year, name);
     renderRetroWorldCupTeamPicker(year);
     els.spectateModal.close();
     showToast(
       name
-        ? `${name} selected for ${isEuros ? "Euro 2016" : `the ${year} World Cup`}.`
+        ? `${name} selected for ${isCopa ? "Copa América 2024" : isEuros ? "Euro 2016" : `the ${year} World Cup`}.`
         : "Neutral view selected.",
     );
     return;
@@ -20705,6 +21815,10 @@ els.restartLegacyDraftButton?.addEventListener("click", () => {
 });
 
 els.legacyDraftBackButton.addEventListener("click", () => {
+  if (state?.premierLeagueSeason || document.body.classList.contains("pl-match-mode-active")) {
+    window.PremierLeagueSeason?.returnToSeason?.();
+    return;
+  }
   if (els.legacyDraftBackButton.dataset.savedTournament === "true") {
     closeTournamentHistory();
     return;
@@ -20718,6 +21832,10 @@ els.legacyDraftBackButton.addEventListener("click", () => {
 });
 
 els.legacyHeaderBackButton.addEventListener("click", () => {
+  if (state?.premierLeagueSeason || document.body.classList.contains("pl-match-mode-active")) {
+    window.PremierLeagueSeason?.returnToSeason?.();
+    return;
+  }
   setAppModeUrl("home");
   render();
 });
@@ -20812,7 +21930,10 @@ document.addEventListener("visibilitychange", () => {
 window.addEventListener("popstate", () => {
   const routedTournamentHistoryId = savedTournamentIdFromPath();
   if (routedTournamentHistoryId) {
-    openTournamentHistory(routedTournamentHistoryId, null, { updateUrl: false });
+    void initializeTournamentHistoryStorage().then(() => {
+      if (savedTournamentIdFromPath() !== routedTournamentHistoryId) return;
+      openTournamentHistory(routedTournamentHistoryId, null, { updateUrl: false });
+    });
     return;
   }
   if (activeTournamentHistoryRecord) closeTournamentHistory({ updateUrl: false });
@@ -20903,9 +22024,12 @@ try {
 } catch (error) {
   recoverFromStartupError(error, "initial-render");
 }
-if (initialSavedTournamentId && !openTournamentHistory(initialSavedTournamentId, null, { updateUrl: false })) {
-  window.history.replaceState({ ...(window.history.state || {}), tournamentHistoryId: null }, "", "/");
-}
+void initializeTournamentHistoryStorage().then(() => {
+  if (!initialSavedTournamentId) return;
+  if (!openTournamentHistory(initialSavedTournamentId, null, { updateUrl: false })) {
+    window.history.replaceState({ ...(window.history.state || {}), tournamentHistoryId: null }, "", "/");
+  }
+});
 clearRetroRouteLoadingState();
 if (interruptedLocalMatchSettled && initialAppMode === "standard") {
   showToast("Interrupted match finalized from its saved result.");

@@ -818,7 +818,6 @@ export const DRAFT_TEAMS = [
       "Lamine Camara",
       "Assane Diao",
       "Bamba Dieng",
-      "Sadio Mané",
       "Édouard Mendy",
       "Mory Diaw",
       "Krépin Diatta",
@@ -833,7 +832,8 @@ export const DRAFT_TEAMS = [
       "Cherif Ndiaye",
       "Iliman Ndiaye",
       "Ismaïla Sarr",
-      "Ibrahim Mbaye"
+      "Ibrahim Mbaye",
+      "Omar Ahmed"
     ]
   },
   {
@@ -992,7 +992,6 @@ export const DRAFT_TEAMS = [
       "Xaver Schlager",
       "Nicolas Seiwald",
       "Marcel Sabitzer",
-      "Marko Arnautović",
       "Michael Gregoritsch",
       "Saša Kalajdžić",
       "Florian Wiegele",
@@ -1009,7 +1008,8 @@ export const DRAFT_TEAMS = [
       "Konrad Laimer",
       "Patrick Wimmer",
       "Paul Wanner",
-      "Alessandro Schöpf"
+      "Alessandro Schöpf",
+      "Andrei Ceban"
     ]
   },
   {
@@ -1341,7 +1341,6 @@ export const DRAFT_TEAMS = [
       "Ghislain Konan",
       "Wilfried Singo",
       "Odilon Kossounou",
-      "Jean Michaël Seri",
       "Seko Fofana",
       "Franck Kessié",
       "Ange-Yoan Bonny",
@@ -1361,7 +1360,8 @@ export const DRAFT_TEAMS = [
       "Amad Diallo",
       "Nicolas Pépé",
       "Evann Guessand",
-      "Bazoumana Touré"
+      "Bazoumana Touré",
+      "Ali Abdallah"
     ]
   },
   {

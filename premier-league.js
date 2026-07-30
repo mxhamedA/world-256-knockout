@@ -2,26 +2,50 @@
   const STORAGE_KEY = "world-256-pl-26-27-season-v1";
   const MATCH_VIEW_STORAGE_KEY = "world-256-pl-26-27-active-match-v1";
   const clubs = window.PREMIER_LEAGUE_2026_27_CLUBS || [];
+  const latestTransfers = window.PREMIER_LEAGUE_2026_27_LATEST_TRANSFERS || [];
   if (clubs.length !== 20) return;
 
   const screen = document.querySelector("#premierLeagueSeasonScreen");
   const appShell = document.querySelector("#appShell");
   const content = document.querySelector("#plSeasonContent");
   const startButton = document.querySelector("#startPremierLeagueSeasonButton");
+  const menuRestartButton = document.querySelector("#restartPremierLeagueSeasonButton");
+  const menuCard = document.querySelector("#premierLeagueModeCard");
   const backButton = document.querySelector("#plSeasonBackButton");
   const restartButton = document.querySelector("#plRestartSeasonButton");
+  const restartModal = document.querySelector("#plRestartModal");
+  const confirmRestartButton = document.querySelector("#confirmPlRestartButton");
   const simulateButton = document.querySelector("#plSimulateMatchweekButton");
   const progressLabel = document.querySelector("#plSeasonProgressLabel");
   const progressBar = document.querySelector("#plSeasonProgressBar");
   const seasonTitle = document.querySelector("#plSeasonTitle");
   const seasonSummary = document.querySelector("#plSeasonSummary");
   const seasonKicker = document.querySelector("#plSeasonKicker");
+  const seasonDate = document.querySelector("#plSeasonDate");
+  const seasonMatchweek = document.querySelector("#plSeasonMatchweek");
   const liveBackButton = document.querySelector("#plLiveBackButton");
   const engineTablePanel = document.querySelector("#plEngineTablePanel");
   const engineTable = document.querySelector("#plEngineTable");
   const engineFullTableButton = document.querySelector("#plEngineFullTableButton");
+  const seasonSettingsButton = document.querySelector("#plSeasonSettingsButton");
+  const seasonFeedbackButton = document.querySelector("#plSeasonFeedbackButton");
+  const seasonAchievementsButton = document.querySelector("#plSeasonAchievementsButton");
+  const seasonDonateButton = document.querySelector("#plSeasonDonateButton");
+  const seasonAccountButton = document.querySelector("#plSeasonAccountButton");
+  const seasonAccountLabel = document.querySelector("#plSeasonAccountLabel");
   const tabs = [...document.querySelectorAll("[data-pl-view]")];
   const clubById = new Map(clubs.map((club) => [club.id, club]));
+  const youngPlayerNames = new Set([
+    "Max Dowman", "Ethan Nwaneri", "Myles Lewis-Skelly", "Josh Acheampong",
+    "Tyrique George", "Romeo Lavia", "Estevao", "Estevão", "Kendry Paez",
+    "Kendry Páez", "Nico O'Reilly", "Rico Lewis", "Abdukodir Khusanov",
+    "Claudio Echeverri", "Savinho", "Leny Yoro", "Kobbie Mainoo", "Chido Obi",
+    "Patrick Dorgu", "Harry Amass", "Ayden Heaven", "Rio Ngumoha", "Trey Nyoni",
+    "Lewis Miley", "Archie Gray", "Lucas Bergvall", "Mikey Moore", "Wilson Odobert",
+    "Chris Rigg", "Jobe Bellingham", "Eli Junior Kroupi", "Junior Kroupi",
+    "Stefanos Tzimas", "Brajan Gruda", "Yasin Ayari", "Carlos Baleba",
+    "Jaka Bijol", "Ao Tanaka", "Wilfried Gnonto",
+  ]);
 
   clubs.forEach((club) => {
     TEAM_BY_ID.set(club.id, club);
@@ -32,6 +56,119 @@
   let expandedSquadId = null;
   let season = readSeason();
   let standardStateBeforeMatch = null;
+  let dynamicMatchClubIds = [];
+  let restartFromMenu = false;
+  let savedHistorySession = null;
+
+  function ratingHash(seed, value) {
+    let hash = (Number(seed) || 1) ^ 0x9e3779b9;
+    for (const character of String(value)) {
+      hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
+      hash ^= hash >>> 13;
+    }
+    return (hash >>> 0) / 4294967295;
+  }
+
+  function playerRatingKey(player) {
+    return String(player.fplId || player.name);
+  }
+
+  function createRatingModel(seed) {
+    const players = {};
+    const clubPaths = {};
+    clubs.forEach((club) => {
+      clubPaths[club.id] = {
+        start: 0,
+        target: 0,
+      };
+      players[club.id] = Object.fromEntries(club.playerProfiles.map((player) => {
+        const key = playerRatingKey(player);
+        const startDelta = 0;
+        const potentialDelta = Math.round(ratingHash(seed, `${club.id}:${key}:potential`) * 3);
+        return [key, {
+          startDelta,
+          potential: Math.max(player.overall, Math.min(92, player.overall + potentialDelta)),
+          curve: 1,
+        }];
+      }));
+    });
+    return { version: 2, players, clubPaths };
+  }
+
+  function ensureRatingModel(candidate) {
+    if (
+      candidate.ratingModel?.version !== 2
+      || !candidate.ratingModel?.players
+      || !candidate.ratingModel?.clubPaths
+    ) {
+      candidate.ratingModel = createRatingModel(candidate.drawSeed);
+    }
+  }
+
+  function playerRatingAtRound(club, player, roundIndex) {
+    const model = season?.ratingModel?.players?.[club.id]?.[playerRatingKey(player)];
+    if (!model) return { overall: player.overall, potential: player.overall };
+    const progress = Math.max(0, Math.min(1, Number(roundIndex) / 37));
+    const start = player.overall + model.startDelta;
+    const developed = start + (model.potential - start) * (progress ** model.curve);
+    return {
+      overall: Math.max(67, Math.min(92, Math.round(developed))),
+      potential: model.potential,
+    };
+  }
+
+  function dynamicClubForRound(club, roundIndex) {
+    const profiles = club.playerProfiles.map((player) => ({
+      ...player,
+      ...playerRatingAtRound(club, player, roundIndex),
+    }));
+    const progress = Math.max(0, Math.min(1, Number(roundIndex) / 37));
+    const path = season?.ratingModel?.clubPaths?.[club.id] || { start: 0, target: 0 };
+    const clubDelta = path.start + (path.target - path.start) * progress;
+    const baseOverallByPlayer = new Map(club.playerProfiles.map((player) => [playerRatingKey(player), player.overall]));
+    const playerDelta = profiles
+      .slice()
+      .sort((left, right) => right.overall - left.overall)
+      .slice(0, 16)
+      .reduce((total, player) => (
+        total + player.overall - (baseOverallByPlayer.get(playerRatingKey(player)) || player.overall)
+      ), 0) / 16;
+    const shift = Math.round(clubDelta + playerDelta * 0.55);
+    const adjust = (value) => Math.max(55, Math.min(96, Number(value) + shift));
+    return {
+      ...club,
+      rating: adjust(club.rating),
+      strength: adjust(club.strength),
+      playerProfiles: profiles,
+      simulationRatings: {
+        ...club.simulationRatings,
+        overall: adjust(club.simulationRatings.overall),
+        attack: adjust(club.simulationRatings.attack),
+        midfield: adjust(club.simulationRatings.midfield),
+        defence: adjust(club.simulationRatings.defence),
+        goalkeeper: adjust(club.simulationRatings.goalkeeper),
+        squadDepth: adjust(club.simulationRatings.squadDepth),
+      },
+    };
+  }
+
+  function installDynamicClubs(roundIndex, clubIds) {
+    clubIds.forEach((clubId) => {
+      const baseClub = clubById.get(clubId);
+      if (!baseClub) return;
+      TEAM_BY_ID.set(clubId, dynamicClubForRound(baseClub, roundIndex));
+      clearPlayerProfileCacheForTeam(clubId);
+    });
+  }
+
+  function restoreBaseClubs(clubIds) {
+    clubIds.forEach((clubId) => {
+      const baseClub = clubById.get(clubId);
+      if (!baseClub) return;
+      TEAM_BY_ID.set(clubId, baseClub);
+      clearPlayerProfileCacheForTeam(clubId);
+    });
+  }
 
   function readActiveMatchView() {
     try {
@@ -63,9 +200,10 @@
   }
 
   function newSeason() {
-    return {
+    const drawSeed = Math.floor(Math.random() * 2_000_000_000);
+    const freshSeason = {
       version: 1,
-      drawSeed: Math.floor(Math.random() * 2_000_000_000),
+      drawSeed,
       settings: {
         ...normalizeSettings(),
         upset: premierLeagueMenuSetup.upset || "balanced",
@@ -84,10 +222,12 @@
       spectateTeamId: premierLeagueMenuSetup.teamId || null,
       neutralView: !premierLeagueMenuSetup.teamId,
       standardTactic: "balanced",
-      standardFormation: "4-3-3",
+      standardFormation: clubById.get(premierLeagueMenuSetup.teamId)?.preferredFormation || "4-3-3",
       managerLineups: {},
       premierLeagueSeason: true,
     };
+    freshSeason.ratingModel = createRatingModel(drawSeed);
+    return freshSeason;
   }
 
   function validSeason(candidate) {
@@ -106,22 +246,35 @@
           realPlayersOnly: true,
         };
         saved.premierLeagueSeason = true;
+        saved.standardTactic = typeof STANDARD_TACTICS !== "undefined" && STANDARD_TACTICS[saved.standardTactic]
+          ? saved.standardTactic
+          : "balanced";
+        ensureRatingModel(saved);
         saved.standardFormation = [
           "4-3-3",
           "4-2-3-1",
           "4-4-2",
+          "4-3-1-2",
           "4-1-2-1-2",
           "4-3-2-1",
           "4-1-4-1",
           "3-5-2",
+          "3-4-1-2",
+          "3-4-2-1",
           "3-4-3",
+          "3-3-1-3",
           "5-3-2",
+          "5-4-1",
           "5-2-2-1",
           "5-2-3",
         ].includes(saved.standardFormation) ? saved.standardFormation : "4-3-3";
         saved.managerLineups = saved.managerLineups && typeof saved.managerLineups === "object"
           ? saved.managerLineups
           : {};
+        if (!saved.managerLineups?.[saved.spectateTeamId]?.formation) {
+          saved.standardFormation = clubById.get(saved.spectateTeamId)?.preferredFormation
+            || saved.standardFormation;
+        }
         saved.matchViewActive = saved.matchViewActive === true;
         saved.selectedMatch = Math.max(0, Math.min(
           9,
@@ -131,7 +284,6 @@
         saved.viewRound = Math.max(0, Math.min(37, Number(saved.viewRound) || saved.activeRound || 0));
         const activeMatchView = readActiveMatchView();
         if (activeMatchView && saved.rounds[activeMatchView.roundIndex]?.[activeMatchView.matchIndex]) {
-          saved.activeRound = activeMatchView.roundIndex;
           saved.viewRound = activeMatchView.roundIndex;
           saved.selectedMatch = activeMatchView.matchIndex;
           saved.matchViewActive = true;
@@ -146,6 +298,56 @@
 
   function saveSeason() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(season));
+    syncMenuState();
+  }
+
+  function achievementState() {
+    if (!season?.spectateTeamId || !Number.isSafeInteger(Number(season.drawSeed))) return null;
+    const finished = completedMatchweeks() === 38;
+    const finalPosition = finished
+      ? leagueTable().findIndex((row) => row.club.id === season.spectateTeamId) + 1
+      : null;
+    return {
+      seed: Number(season.drawSeed),
+      clubId: season.spectateTeamId,
+      phase: finished && finalPosition > 0 ? "complete" : "start",
+      finalPosition: finished && finalPosition > 0 ? finalPosition : null,
+    };
+  }
+
+  function syncAchievementState() {
+    const detail = achievementState();
+    if (!detail) return;
+    window.AccountAchievements?.trackPremierLeagueSeason?.(detail);
+    if (typeof window.CustomEvent === "function") {
+      window.dispatchEvent(new window.CustomEvent("premier-league-achievement-state", { detail }));
+    }
+  }
+
+  function syncMenuState() {
+    const hasSeason = validSeason(season);
+    if (startButton) {
+      startButton.innerHTML = `
+        <span class="premier-league-launch-beta">BETA</span>
+        ${hasSeason ? "Resume season" : "Start season"}
+        <span class="premier-league-launch-arrow" aria-hidden="true">&rarr;</span>
+      `;
+    }
+    if (menuRestartButton) menuRestartButton.hidden = !hasSeason;
+    if (menuCard) menuCard.classList.toggle("is-season-started", hasSeason);
+    const picker = document.querySelector("#premierLeagueTeamPickerButton");
+    if (picker) {
+      picker.disabled = hasSeason;
+      picker.title = hasSeason ? "Restart the season before changing clubs." : "";
+    }
+    document.querySelectorAll('[data-settings-scope="premier-league"] button').forEach((button) => {
+      button.disabled = hasSeason;
+    });
+    if (typeof window.CustomEvent === "function") {
+      window.dispatchEvent(new window.CustomEvent("premier-league-season-state", {
+        detail: { started: hasSeason, clubId: season?.spectateTeamId || null },
+      }));
+    }
   }
 
   function completedMatchweeks() {
@@ -159,6 +361,8 @@
 
   function simulateLeagueMatch(match, roundIndex) {
     const previousState = state;
+    const matchClubIds = [match.homeId, match.awayId];
+    installDynamicClubs(roundIndex, matchClubIds);
     state = season;
     try {
       const result = simulateMatch(match, roundIndex);
@@ -166,6 +370,7 @@
       return result;
     } finally {
       state = previousState;
+      restoreBaseClubs(matchClubIds);
     }
   }
 
@@ -179,18 +384,8 @@
     const next = firstIncompleteMatchweek();
     season.activeRound = next < 0 ? 38 : next;
     season.viewRound = roundIndex;
+    if (next < 0) activeView = "overview";
     if (persist) saveSeason();
-  }
-
-  function simulateRemainingSeason() {
-    for (let roundIndex = 0; roundIndex < season.rounds.length; roundIndex += 1) {
-      if (season.rounds[roundIndex].some((match) => !match.result?.revealed)) {
-        simulateMatchweek(roundIndex, { persist: false });
-      }
-    }
-    season.activeRound = 38;
-    season.viewRound = 37;
-    saveSeason();
   }
 
   function badgeMarkup(club, className = "") {
@@ -198,6 +393,11 @@
       return `<img class="${className}" src="${club.badge}" alt="" loading="lazy" decoding="async" />`;
     }
     return `<span class="pl-club-code ${className}" aria-hidden="true">${club.code}</span>`;
+  }
+
+  function clubDisplayName(club) {
+    const mobile = window.matchMedia?.("(max-width: 850px)")?.matches === true;
+    return mobile ? club.mobileName || club.name : club.name;
   }
 
   function matchDate(roundIndex) {
@@ -221,12 +421,12 @@
     const managed = Boolean(season.spectateTeamId)
       && (match.homeId === season.spectateTeamId || match.awayId === season.spectateTeamId);
     const score = played ? `${match.result.homeGoals}–${match.result.awayGoals}` : matchKickoff(matchIndex);
-    const actionLabel = played ? "View match" : managed ? "Play match" : "Watch match";
+    const locked = !played && season.viewRound !== season.activeRound;
+    const actionLabel = played ? "View match" : locked ? "Locked" : managed ? "Play match" : "Watch match";
     return `
       <article class="pl-fixture-row ${managed ? "is-managed-match" : ""}">
-        ${managed ? '<span class="pl-your-match-label">YOUR MATCH</span>' : ""}
         <div class="pl-fixture-team home">
-          <span>${escapeHtml(home.name)}</span>
+          <span>${escapeHtml(clubDisplayName(home))}</span>
           ${badgeMarkup(home)}
         </div>
         <div class="pl-fixture-score">
@@ -235,13 +435,24 @@
         </div>
         <div class="pl-fixture-team away">
           ${badgeMarkup(away)}
-          <span>${escapeHtml(away.name)}</span>
+          <span>${escapeHtml(clubDisplayName(away))}</span>
         </div>
-        <button class="pl-fixture-play" type="button" data-pl-play-match="${matchIndex}">
+        <button class="pl-fixture-play" type="button" data-pl-play-match="${matchIndex}" ${locked ? 'disabled title="Reach this matchweek before opening the fixture."' : ""}>
           ${actionLabel}
         </button>
       </article>
     `;
+  }
+
+  function orderedRoundFixtures(round) {
+    return round
+      .map((match, matchIndex) => ({
+        match,
+        matchIndex,
+        managed: Boolean(season.spectateTeamId)
+          && (match.homeId === season.spectateTeamId || match.awayId === season.spectateTeamId),
+      }))
+      .sort((left, right) => Number(right.managed) - Number(left.managed));
   }
 
   function leagueTable({ includeLive = false } = {}) {
@@ -297,17 +508,27 @@
       ));
   }
 
-  function tableMarkup({ limit = 20 } = {}) {
+  function ordinalPosition(position) {
+    const value = Number(position);
+    const teen = value % 100;
+    if (teen >= 11 && teen <= 13) return `${value}th`;
+    if (value % 10 === 1) return `${value}st`;
+    if (value % 10 === 2) return `${value}nd`;
+    if (value % 10 === 3) return `${value}rd`;
+    return `${value}th`;
+  }
+
+  function tableMarkup({ limit = 20, showHeader = true, ordinalPositions = false } = {}) {
     const rows = leagueTable().slice(0, limit);
     return `
       <div class="pl-table" role="table" aria-label="Premier League table">
-        <div class="pl-table-head" role="row">
+        ${showHeader ? `<div class="pl-table-head" role="row">
           <span>Pos</span><span>Team</span><span>Pl</span><span>W</span><span>D</span><span>L</span><span>GF</span><span>GA</span><span>GD</span><span>Pts</span>
-        </div>
+        </div>` : ""}
         ${rows.map((row, index) => `
           <div class="pl-table-row ${index < 4 ? "is-champions-league" : ""} ${index >= 17 ? "is-relegation" : ""} ${row.club.id === season.spectateTeamId ? "is-selected" : ""}" role="row">
-            <span>${String(index + 1).padStart(2, "0")}</span>
-            <span class="pl-table-team">${badgeMarkup(row.club)}<b>${escapeHtml(row.club.name)}</b></span>
+            <span>${ordinalPositions ? ordinalPosition(index + 1) : String(index + 1).padStart(2, "0")}</span>
+            <span class="pl-table-team">${badgeMarkup(row.club)}<b>${escapeHtml(clubDisplayName(row.club))}</b></span>
             <span>${row.played}</span>
             <span>${row.won}</span>
             <span>${row.drawn}</span>
@@ -322,53 +543,255 @@
     `;
   }
 
-  function championMarkup() {
-    if (completedMatchweeks() !== 38) return "";
-    const champion = leagueTable()[0]?.club;
-    if (!champion) return "";
+  function seasonPlayerAwards() {
+    const playerRows = new Map();
+    const goalkeeperRows = new Map();
+    const table = leagueTable();
+    const tableByClub = new Map(table.map((row) => [row.club.id, row]));
+    const addPlayerEvent = (teamId, event) => {
+      if (!event || event.goalType === "ownGoal" || event.ownGoal) return;
+      const scorerKey = `${teamId}:${event.scorer}`;
+      const scorer = playerRows.get(scorerKey) || {
+        player: event.scorer,
+        teamId,
+        goals: 0,
+        assists: 0,
+      };
+      scorer.goals += 1;
+      playerRows.set(scorerKey, scorer);
+      const assistName = event.assist || event.metadata?.assist || null;
+      if (assistName && assistName !== event.scorer) {
+        const assistKey = `${teamId}:${assistName}`;
+        const assister = playerRows.get(assistKey) || {
+          player: assistName,
+          teamId,
+          goals: 0,
+          assists: 0,
+        };
+        assister.assists += 1;
+        playerRows.set(assistKey, assister);
+      }
+    };
+
+    season.rounds.forEach((round) => round.forEach((match) => {
+      if (!match.result?.revealed) return;
+      (match.result.homeEvents || []).forEach((event) => addPlayerEvent(match.homeId, event));
+      (match.result.awayEvents || []).forEach((event) => addPlayerEvent(match.awayId, event));
+      [
+        [match.homeId, Number(match.result.awayGoals) || 0],
+        [match.awayId, Number(match.result.homeGoals) || 0],
+      ].forEach(([teamId, conceded]) => {
+        const row = goalkeeperRows.get(teamId) || {
+          teamId,
+          cleanSheets: 0,
+          conceded: 0,
+          appearances: 0,
+        };
+        row.appearances += 1;
+        row.conceded += conceded;
+        if (conceded === 0) row.cleanSheets += 1;
+        goalkeeperRows.set(teamId, row);
+      });
+    }));
+
+    const enrichedPlayers = [...playerRows.values()].map((row) => {
+      const team = clubById.get(row.teamId);
+      const profile = team?.playerProfiles.find((player) => player.name === row.player);
+      const clubPoints = tableByClub.get(row.teamId)?.points || 0;
+      return {
+        ...row,
+        team,
+        profile,
+        overall: Number(profile?.overall) || Number(team?.rating) || 0,
+        awardScore: row.goals * 4 + row.assists * 2.2 + clubPoints * 0.08 + (Number(profile?.overall) || 0) * 0.06,
+      };
+    });
+    const byGoals = (left, right) => (
+      right.goals - left.goals
+      || right.assists - left.assists
+      || right.overall - left.overall
+      || left.player.localeCompare(right.player)
+    );
+    const goldenBoot = enrichedPlayers.slice().sort(byGoals)[0] || null;
+    const playerOfTheYear = enrichedPlayers
+      .slice()
+      .sort((left, right) => right.awardScore - left.awardScore || byGoals(left, right))[0]
+      || goldenBoot;
+    const youngPlayerOfTheYear = enrichedPlayers
+      .filter((row) => youngPlayerNames.has(row.player))
+      .sort((left, right) => right.awardScore - left.awardScore || byGoals(left, right))[0]
+      || enrichedPlayers.filter((row) => row.overall <= 82).sort((left, right) => right.awardScore - left.awardScore)[0]
+      || goldenBoot;
+    const gloveRow = [...goalkeeperRows.values()].sort((left, right) => (
+      right.cleanSheets - left.cleanSheets
+      || left.conceded - right.conceded
+      || (clubById.get(right.teamId)?.simulationRatings.goalkeeper || 0)
+        - (clubById.get(left.teamId)?.simulationRatings.goalkeeper || 0)
+    ))[0];
+    const gloveTeam = clubById.get(gloveRow?.teamId);
+    const goalkeeper = gloveTeam?.playerProfiles
+      .filter((player) => player.position === "GK")
+      .sort((left, right) => right.overall - left.overall || left.name.localeCompare(right.name))[0];
+    const goldenGlove = gloveRow && gloveTeam ? {
+      ...gloveRow,
+      player: goalkeeper?.name || `${gloveTeam.name} goalkeeper`,
+      team: gloveTeam,
+    } : null;
+
+    return {
+      table,
+      goldenBoot,
+      goldenGlove,
+      playerOfTheYear,
+      youngPlayerOfTheYear,
+    };
+  }
+
+  function finaleAwardMarkup(label, award, mark, detail) {
+    if (!award) return "";
     return `
-      <section class="pl-season-champion">
-        <span>2026/27 CHAMPIONS</span>
-        <div>${badgeMarkup(champion)}<strong>${escapeHtml(champion.name)}</strong></div>
+      <article class="pl-finale-award">
+        <div class="pl-finale-award-mark" aria-hidden="true">${mark}</div>
+        <div class="pl-finale-award-copy">
+          <span>${label}</span>
+          <strong>${escapeHtml(award.player)}</strong>
+          <small>${badgeMarkup(award.team)} ${escapeHtml(clubDisplayName(award.team))} · ${escapeHtml(detail(award))}</small>
+        </div>
+      </article>
+    `;
+  }
+
+  function premierLeagueHistorySourceKey() {
+    const championId = leagueTable()[0]?.club?.id || "unfinished";
+    return `premier-league:2026-27:${Number(season?.drawSeed) || 0}:${championId}`;
+  }
+
+  function seasonFinaleMarkup() {
+    const awards = seasonPlayerAwards();
+    const champion = awards.table[0]?.club;
+    if (!champion) return "";
+    const podium = awards.table.slice(0, 3);
+    const saved = window.TournamentHistory?.has?.(premierLeagueHistorySourceKey()) === true;
+    return `
+      <section class="pl-season-finale">
+        <header class="pl-finale-hero">
+          <span>2026/27 PREMIER LEAGUE CHAMPIONS</span>
+          ${badgeMarkup(champion)}
+          <h1>${escapeHtml(clubDisplayName(champion))}</h1>
+          <p>${awards.table[0].points} points · ${awards.table[0].won} wins · ${awards.table[0].gf} goals</p>
+        </header>
+        <div class="pl-finale-body">
+          <span class="pl-finale-section-title">FINAL STANDINGS</span>
+          <div class="pl-finale-podium">
+            ${podium.map((row, index) => `
+              <article class="pl-finale-place">
+                <b>${index + 1}</b>
+                ${badgeMarkup(row.club)}
+                <span><strong>${escapeHtml(clubDisplayName(row.club))}</strong><small>${row.points} PTS</small></span>
+              </article>
+            `).join("")}
+          </div>
+          <div class="pl-finale-awards">
+            ${finaleAwardMarkup("GOLDEN BOOT", awards.goldenBoot, "⚽", (award) => `${award.goals} goals`)}
+            ${finaleAwardMarkup("GOLDEN GLOVE", awards.goldenGlove, "🧤", (award) => `${award.cleanSheets} clean sheets`)}
+            ${finaleAwardMarkup("PLAYER OF THE SEASON", awards.playerOfTheYear, "🏆", (award) => `${award.goals} goals · ${award.assists} assists`)}
+            ${finaleAwardMarkup("YOUNG PLAYER OF THE SEASON", awards.youngPlayerOfTheYear, "🌟", (award) => `${award.goals} goals · ${award.assists} assists`)}
+          </div>
+          <div class="pl-finale-actions">
+            <button class="is-primary" type="button" data-pl-finale-action="snapshot">Create snapshot</button>
+            ${season.savedTournamentView ? "" : `<button type="button" data-pl-finale-action="save" ${saved ? "disabled" : ""}>${saved ? "League saved" : "Save league"}</button>`}
+            <button type="button" data-pl-finale-action="table">View final table</button>
+            ${season.savedTournamentView ? "" : '<button type="button" data-pl-finale-action="restart">Run it back</button>'}
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function renderSeasonFinale() {
+    content.innerHTML = seasonFinaleMarkup();
+  }
+
+  function transferClubMarkup(clubId, clubName) {
+    const club = clubById.get(clubId);
+    if (club) {
+      return `${badgeMarkup(club, "pl-club-flag")}<span>${escapeHtml(clubDisplayName(club))}</span>`;
+    }
+    const initials = String(clubName || "?")
+      .split(/\s+/)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 3)
+      .toUpperCase();
+    return `<span class="pl-transfer-monogram" aria-hidden="true">${escapeHtml(initials)}</span><span>${escapeHtml(clubName)}</span>`;
+  }
+
+  function latestTransfersMarkup() {
+    if (!latestTransfers.length) return "";
+    return `
+      <section class="pl-panel pl-latest-transfers-panel">
+        <header class="pl-panel-heading">
+          <div>
+            <span>SUMMER 2026 · UPDATED ${escapeHtml(window.PREMIER_LEAGUE_2026_27_DATA_UPDATED.toUpperCase())}</span>
+            <h2>Latest transfers</h2>
+          </div>
+          <a href="https://www.premierleague.com/en/transfers/2026-27/summer" target="_blank" rel="noreferrer">All transfers &rarr;</a>
+        </header>
+        <div class="pl-transfer-list">
+          ${latestTransfers.map((transfer) => {
+            const [day, month] = transfer.date.split(" ");
+            return `
+            <a class="pl-transfer-row" href="${escapeHtml(transfer.sourceUrl)}" target="_blank" rel="noreferrer">
+              <time datetime="${escapeHtml(transfer.date)}">
+                <b>${escapeHtml(day)}</b>
+                <span>${escapeHtml(month)}</span>
+              </time>
+              <span class="pl-transfer-copy">
+                <strong>${escapeHtml(transfer.player)}</strong>
+                <span class="pl-transfer-route">
+                  <span class="pl-transfer-club">${transferClubMarkup(transfer.fromId, transfer.fromName)}</span>
+                  <b aria-label="transferred to">&rarr;</b>
+                  <span class="pl-transfer-club is-destination">${transferClubMarkup(transfer.toId, transfer.toName)}</span>
+                </span>
+              </span>
+              <span class="pl-transfer-open" aria-hidden="true">&nearr;</span>
+            </a>
+          `;
+          }).join("")}
+        </div>
       </section>
     `;
   }
 
   function renderOverview() {
+    if (completedMatchweeks() === 38) {
+      renderSeasonFinale();
+      return;
+    }
     const roundIndex = Math.min(37, season.viewRound);
     const round = season.rounds[roundIndex];
+    const orderedFixtures = orderedRoundFixtures(round);
     content.innerHTML = `
-      ${championMarkup()}
       <div class="pl-overview-grid">
         <section class="pl-panel">
-          <header class="pl-panel-heading">
-            <div>
-              <span>${escapeHtml(matchDate(roundIndex).toUpperCase())}</span>
-              <h2>Matchweek ${roundIndex + 1}</h2>
-            </div>
-            <button type="button" data-pl-open-view="matches">View all matches &rarr;</button>
-          </header>
           <div class="pl-fixture-list">
-            ${round.slice(0, 5).map(fixtureMarkup).join("")}
+            ${orderedFixtures.slice(0, 5).map(({ match, matchIndex }) => fixtureMarkup(match, matchIndex)).join("")}
           </div>
+          <footer class="pl-panel-footer"><button type="button" data-pl-open-view="matches">View all matches &rarr;</button></footer>
         </section>
         <section class="pl-panel">
-          <header class="pl-panel-heading">
-            <div>
-              <span>LIVE STANDINGS</span>
-              <h2>Premier League table</h2>
-            </div>
-            <button type="button" data-pl-open-view="table">Full table &rarr;</button>
-          </header>
           ${tableMarkup({ limit: 10 })}
+          <footer class="pl-panel-footer"><button type="button" data-pl-open-view="table">Full table &rarr;</button></footer>
         </section>
       </div>
+      ${latestTransfersMarkup()}
     `;
   }
 
   function renderMatches() {
     const roundIndex = Math.min(37, season.viewRound);
     const round = season.rounds[roundIndex];
+    const orderedFixtures = orderedRoundFixtures(round);
     content.innerHTML = `
       <div class="pl-matchweek-toolbar">
         <div>
@@ -381,46 +804,33 @@
         </div>
       </div>
       <section class="pl-panel pl-matches-panel">
-        <div class="pl-fixture-list">${round.map(fixtureMarkup).join("")}</div>
+        <div class="pl-fixture-list">${orderedFixtures.map(({ match, matchIndex }) => fixtureMarkup(match, matchIndex)).join("")}</div>
       </section>
     `;
   }
 
   function renderTable() {
     content.innerHTML = `
-      ${championMarkup()}
       <section class="pl-panel pl-full-table-panel">
-        <header class="pl-panel-heading">
-          <div>
-            <span>AFTER ${completedMatchweeks()} MATCHWEEKS</span>
-            <h2>Premier League table</h2>
-          </div>
-          ${completedMatchweeks() < 38 ? '<button type="button" data-pl-action="simulate-season">Simulate full season &rarr;</button>' : ""}
-        </header>
-        ${tableMarkup()}
+        ${tableMarkup({ showHeader: false, ordinalPositions: true })}
       </section>
     `;
   }
 
   function renderSquads() {
     content.innerHTML = `
-      <div class="pl-matchweek-toolbar">
-        <div>
-          <span>PROVISIONAL DATA · UPDATED ${escapeHtml(window.PREMIER_LEAGUE_2026_27_DATA_UPDATED.toUpperCase())}</span>
-          <h2>Squads and ratings</h2>
-        </div>
-      </div>
       <section class="pl-squad-grid">
         ${clubs.map((club) => {
           const open = club.id === expandedSquadId;
+          const dynamicClub = dynamicClubForRound(club, Math.min(37, season.activeRound));
           return `
             <article class="pl-squad-card" data-pl-squad="${club.id}">
               ${badgeMarkup(club)}
               <div class="pl-squad-card-copy">
-                <strong>${escapeHtml(club.name)}</strong>
-                <small>${club.playerProfiles.length} players · provisional 2026/27 squad</small>
+                <strong>${escapeHtml(clubDisplayName(club))}</strong>
+                <small>${club.playerProfiles.length} players · current 2026/27 squad</small>
               </div>
-              <div class="pl-squad-rating"><span>RATING</span><strong>${club.rating}</strong></div>
+              <div class="pl-squad-rating"><span>RATING</span><strong>${dynamicClub.rating}</strong></div>
               <div class="pl-squad-detail" ${open ? "" : "hidden"}>
                 ${club.arrivals.length ? `
                   <div class="pl-squad-arrivals">
@@ -428,7 +838,7 @@
                   </div>
                 ` : ""}
                 <div class="pl-player-list">
-                  ${club.playerProfiles.map((player) => `
+                  ${dynamicClub.playerProfiles.map((player) => `
                     <span><b>${escapeHtml(player.name)}</b><i>${escapeHtml(player.position)} · ${player.overall}</i></span>
                   `).join("")}
                 </div>
@@ -454,8 +864,12 @@
         ? `${leader?.name || "The champions"} finish top after 380 matches.`
         : "Fixtures, live matches and the latest league table.";
     }
-    if (finished && leader) {
+    const headerRound = Math.min(37, season.viewRound);
+    if (seasonDate) seasonDate.textContent = matchDate(headerRound).toUpperCase();
+    if (seasonMatchweek) seasonMatchweek.textContent = `Matchweek ${headerRound + 1}`;
+    if (finished && leader && !season.savedTournamentView) {
       window.maybeShowPostWinDonation?.(`premier-league:${season.drawSeed}:${leader.id}`);
+      syncAchievementState();
     }
 
     if (finished) {
@@ -472,6 +886,10 @@
 
   function renderSeason() {
     if (!season) season = newSeason();
+    screen.classList.toggle("is-saved-history", season.savedTournamentView === true);
+    restartButton.hidden = season.savedTournamentView === true;
+    syncSeasonUtilityHeader();
+    screen.classList.remove("is-complete");
     tabs.forEach((tab) => {
       const selected = tab.dataset.plView === activeView;
       tab.classList.toggle("active", selected);
@@ -484,17 +902,107 @@
     else renderOverview();
   }
 
+  function syncSeasonUtilityHeader() {
+    const sourceButton = document.querySelector("#mainAccountButton");
+    const sourceLabel = document.querySelector("#mainAccountLabel");
+    if (seasonAccountLabel) seasonAccountLabel.textContent = sourceLabel?.textContent || "Log in";
+    if (seasonAccountButton && sourceButton) {
+      const label = sourceButton.getAttribute("aria-label") || sourceLabel?.textContent || "Log in";
+      seasonAccountButton.setAttribute("aria-label", label);
+      seasonAccountButton.title = sourceButton.title || label;
+    }
+  }
+
+  function savedHistorySeed(record) {
+    const sourceSeed = Number.parseInt(
+      String(record?.sourceKey || "").match(/^premier-league:2026-27:(\d+):/)?.[1] || "",
+      10,
+    );
+    return Number.isSafeInteger(sourceSeed) ? sourceSeed : Math.abs(stableHash(record?.id || "saved-league"));
+  }
+
+  function openSavedHistory(record) {
+    if (
+      record?.mode !== "premier-league"
+      || !Array.isArray(record.rounds)
+      || record.rounds.length !== 38
+    ) return false;
+    if (savedHistorySession) closeSavedHistory();
+    savedHistorySession = {
+      season,
+      activeView,
+      expandedSquadId,
+    };
+    const savedSeason = {
+      version: 1,
+      drawSeed: savedHistorySeed(record),
+      settings: {
+        ...normalizeSettings(),
+        realNames: true,
+        realPlayersOnly: true,
+      },
+      rounds: structuredClone(record.rounds),
+      activeRound: 38,
+      viewRound: 37,
+      selectedMatch: 0,
+      matchViewActive: false,
+      championView: true,
+      started: true,
+      predictionTeamId: null,
+      spectateTeamId: record.managedTeamId || null,
+      neutralView: !record.managedTeamId,
+      standardTactic: "balanced",
+      standardFormation: clubById.get(record.managedTeamId)?.preferredFormation || "4-3-3",
+      managerLineups: {},
+      premierLeagueSeason: true,
+      savedTournamentView: true,
+      savedTournamentRecordId: record.id,
+    };
+    savedSeason.ratingModel = createRatingModel(savedSeason.drawSeed);
+    season = savedSeason;
+    activeView = "overview";
+    expandedSquadId = null;
+    stopStandardPlaybackForNavigation();
+    closeOpenDialogsAndMenus();
+    appShell.hidden = true;
+    screen.hidden = false;
+    document.body.classList.add("pl-season-open");
+    document.body.classList.remove("pl-match-mode-active", "pl-match-detail-active");
+    const backLabel = backButton?.querySelector("span:last-child");
+    if (backLabel) backLabel.textContent = "Back to saved leagues";
+    renderSeason();
+    document.documentElement.classList.remove("route-pl-loading");
+    window.scrollTo({ top: 0, behavior: "auto" });
+    return true;
+  }
+
+  function closeSavedHistory() {
+    if (!savedHistorySession) return false;
+    stopStandardPlaybackForNavigation();
+    restoreBaseClubs(dynamicMatchClubIds);
+    dynamicMatchClubIds = [];
+    standardStateBeforeMatch = null;
+    screen.hidden = true;
+    document.body.classList.remove("pl-season-open", "pl-match-mode-active", "pl-match-detail-active");
+    screen.classList.remove("is-saved-history");
+    const previous = savedHistorySession;
+    savedHistorySession = null;
+    season = previous.season;
+    activeView = previous.activeView;
+    expandedSquadId = previous.expandedSquadId;
+    const backLabel = backButton?.querySelector("span:last-child");
+    if (backLabel) backLabel.textContent = "Back to modes";
+    restartButton.hidden = false;
+    return true;
+  }
+
   function openSeason({ updateUrl = true, restoreMatch = true } = {}) {
     if (!season) {
       clearActiveMatchView();
       season = newSeason();
       saveSeason();
+      syncAchievementState();
     }
-    season.spectateTeamId = premierLeagueMenuSetup.teamId || season.spectateTeamId || null;
-    season.neutralView = !season.spectateTeamId;
-    season.settings.upset = premierLeagueMenuSetup.upset || season.settings.upset;
-    season.settings.goals = premierLeagueMenuSetup.goals || season.settings.goals;
-    saveSeason();
     if (
       restoreMatch
       && season.matchViewActive
@@ -522,20 +1030,31 @@
     ) {
       setAppModeUrl("premierLeague");
     }
-    activeView = "matches";
+    activeView = completedMatchweeks() === 38 ? "overview" : "matches";
     renderSeason();
+    document.documentElement.classList.remove("route-pl-loading");
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function closeSeason({ updateUrl = true } = {}) {
-    if (state?.premierLeagueSeason || document.body.classList.contains("pl-match-mode-active")) {
-      returnToSeason({ view: "matches" });
+    stopStandardPlaybackForNavigation();
+    restoreBaseClubs(dynamicMatchClubIds);
+    dynamicMatchClubIds = [];
+    if (state?.premierLeagueSeason) {
+      season = state;
+      season.matchViewActive = false;
+      clearActiveMatchView();
+      saveSeason();
+      state = standardStateBeforeMatch || standardTournamentState;
     }
+    standardStateBeforeMatch = null;
     screen.hidden = true;
     appShell.hidden = false;
     document.body.classList.remove("pl-season-open");
     document.body.classList.remove("pl-match-detail-active");
     document.body.classList.remove("pl-match-mode-active");
+    liveBackButton.hidden = true;
+    engineTablePanel.hidden = true;
     if (
       updateUrl
       && typeof currentAppMode === "function"
@@ -544,6 +1063,7 @@
     ) {
       setAppModeUrl("home");
     }
+    if (typeof render === "function") render();
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
@@ -584,7 +1104,7 @@
       ${rows.map((row, index) => `
         <div class="pl-engine-table-row ${row.club.id === season.spectateTeamId ? "is-selected" : ""}">
           <b>${startIndex + index + 1}</b>
-          <span>${badgeMarkup(row.club)}<strong>${escapeHtml(row.club.shortName || row.club.name)}</strong></span>
+          <span>${badgeMarkup(row.club)}<strong>${escapeHtml(clubDisplayName(row.club))}</strong></span>
           <i>${row.gd > 0 ? "+" : ""}${row.gd}</i>
           <strong>${row.points}</strong>
         </div>
@@ -598,7 +1118,14 @@
     const selectedMatchIndex = Math.max(0, Math.min(9, Number(matchIndex) || 0));
     const match = season.rounds[selectedRoundIndex]?.[selectedMatchIndex];
     if (!match) return;
+    if (!match.result?.revealed && selectedRoundIndex !== season.activeRound) {
+      showToast(`Matchweek ${selectedRoundIndex + 1} is locked. Play matchweek ${season.activeRound + 1} first.`);
+      return;
+    }
     stopStandardPlaybackForNavigation();
+    restoreBaseClubs(dynamicMatchClubIds);
+    dynamicMatchClubIds = [match.homeId, match.awayId];
+    installDynamicClubs(selectedRoundIndex, dynamicMatchClubIds);
     standardStateBeforeMatch = state;
     season.premierLeagueSeason = true;
     season.activeRound = selectedRoundIndex;
@@ -606,14 +1133,17 @@
     season.selectedMatch = selectedMatchIndex;
     season.matchViewActive = true;
     season.championView = false;
-    saveActiveMatchView(selectedRoundIndex, selectedMatchIndex);
-    saveSeason();
+    if (!season.savedTournamentView) {
+      saveActiveMatchView(selectedRoundIndex, selectedMatchIndex);
+      saveSeason();
+    }
     state = season;
     screen.hidden = true;
     appShell.hidden = false;
     document.body.classList.remove("pl-season-open");
     document.body.classList.add("pl-match-mode-active");
     render();
+    document.documentElement.classList.remove("route-pl-loading");
     liveBackButton.hidden = false;
     window.scrollTo({ top: 0, behavior: "auto" });
   }
@@ -621,7 +1151,24 @@
   function returnToSeason({ view = "matches" } = {}) {
     if (!state?.premierLeagueSeason && !document.body.classList.contains("pl-match-mode-active")) return;
     stopStandardPlaybackForNavigation();
+    restoreBaseClubs(dynamicMatchClubIds);
+    dynamicMatchClubIds = [];
     if (state?.premierLeagueSeason) season = state;
+    if (season?.savedTournamentView) {
+      season.matchViewActive = false;
+      state = standardStateBeforeMatch || standardTournamentState;
+      standardStateBeforeMatch = null;
+      document.body.classList.remove("pl-match-mode-active", "pl-match-detail-active");
+      document.body.classList.add("pl-season-open");
+      liveBackButton.hidden = true;
+      engineTablePanel.hidden = true;
+      appShell.hidden = true;
+      screen.hidden = false;
+      activeView = view;
+      renderSeason();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
     if (season) {
       season.matchViewActive = false;
       clearActiveMatchView();
@@ -639,7 +1186,49 @@
     screen.hidden = false;
     activeView = view;
     renderSeason();
+    if (document.activeElement && !screen.contains(document.activeElement)) {
+      document.activeElement.blur?.();
+    }
     window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  function finishManagedMatchweek(roundIndex, matchIndex) {
+    if (!state?.premierLeagueSeason || !season) return false;
+    const completedRoundIndex = Math.max(0, Math.min(37, Number(roundIndex) || 0));
+    const round = season.rounds[completedRoundIndex];
+    const managedMatch = round?.[Number(matchIndex)];
+    if (
+      !managedMatch?.result?.revealed
+      || !season.spectateTeamId
+      || (managedMatch.homeId !== season.spectateTeamId && managedMatch.awayId !== season.spectateTeamId)
+    ) return false;
+
+    round.forEach((match, index) => {
+      if (index === Number(matchIndex)) return;
+      if (!match.result) match.result = simulateMatch(match, completedRoundIndex);
+      match.result.revealed = true;
+    });
+
+    const nextRoundIndex = completedRoundIndex + 1;
+    if (nextRoundIndex < 38) {
+      season.activeRound = nextRoundIndex;
+      season.viewRound = nextRoundIndex;
+      season.selectedMatch = Math.max(
+        0,
+        season.rounds[nextRoundIndex].findIndex((match) => (
+          match.homeId === season.spectateTeamId || match.awayId === season.spectateTeamId
+        )),
+      );
+    } else {
+      season.activeRound = 38;
+      season.viewRound = 37;
+    }
+    saveSeason();
+    returnToSeason({ view: "overview" });
+    showToast(nextRoundIndex < 38
+      ? `Matchweek ${completedRoundIndex + 1} complete. Matchweek ${nextRoundIndex + 1} is ready.`
+      : "The Premier League season is complete.");
+    return true;
   }
 
   window.PremierLeagueSeason = {
@@ -651,13 +1240,23 @@
         || document.body.classList.contains("pl-match-mode-active");
     },
     saveEngineState(candidate) {
-      const activeMatchView = readActiveMatchView();
+      if (candidate?.savedTournamentView) return;
       season = candidate;
-      if (activeMatchView && season?.rounds?.[activeMatchView.roundIndex]?.[activeMatchView.matchIndex]) {
-        season.activeRound = activeMatchView.roundIndex;
-        season.viewRound = activeMatchView.roundIndex;
-        season.selectedMatch = activeMatchView.matchIndex;
-        season.matchViewActive = true;
+      if (
+        season?.matchViewActive
+        && season.rounds?.[season.activeRound]?.[season.selectedMatch]
+      ) {
+        season.viewRound = season.activeRound;
+        const selected = season.rounds[season.activeRound][season.selectedMatch];
+        const selectedClubIds = [selected.homeId, selected.awayId];
+        if (selectedClubIds.some((clubId) => !dynamicMatchClubIds.includes(clubId))) {
+          restoreBaseClubs(dynamicMatchClubIds);
+          dynamicMatchClubIds = selectedClubIds;
+          installDynamicClubs(season.activeRound, dynamicMatchClubIds);
+        }
+        saveActiveMatchView(season.activeRound, season.selectedMatch);
+      } else if (!season?.matchViewActive) {
+        clearActiveMatchView();
       }
       saveSeason();
       renderEngineTable();
@@ -665,13 +1264,64 @@
     syncEngineProgress,
     renderEngineTable,
     returnToSeason,
+    finishManagedMatchweek,
     kickoffForMatch: matchKickoff,
+    achievementState,
+    hasStarted() {
+      return validSeason(season);
+    },
+    openSavedHistory,
+    closeSavedHistory,
   };
 
   startButton?.addEventListener("click", () => openSeason());
-  backButton?.addEventListener("click", () => closeSeason());
+  backButton?.addEventListener("click", () => {
+    if (savedHistorySession) {
+      window.TournamentHistory?.close?.();
+      return;
+    }
+    closeSeason();
+  });
+  seasonSettingsButton?.addEventListener("click", () => document.querySelector("#settingsButton")?.click());
+  seasonFeedbackButton?.addEventListener("click", () => document.querySelector("#bugReportButton")?.click());
+  seasonAchievementsButton?.addEventListener("click", () => {
+    window.AccountAchievements?.openRetroModal(2026);
+  });
+  seasonDonateButton?.addEventListener("click", () => document.querySelector("#donateButton")?.click());
+  seasonAccountButton?.addEventListener("click", () => document.querySelector("#mainAccountButton")?.click());
   liveBackButton?.addEventListener("click", () => returnToSeason());
   engineFullTableButton?.addEventListener("click", () => returnToSeason({ view: "table" }));
+  window.addEventListener("tournament-history-changed", () => {
+    if (!screen.hidden && completedMatchweeks() === 38) renderSeason();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key !== "Enter"
+      || event.repeat
+      || event.isComposing
+      || event.altKey
+      || event.ctrlKey
+      || event.metaKey
+      || event.shiftKey
+      || screen.hidden
+      || !["overview", "matches"].includes(activeView)
+      || !season?.spectateTeamId
+      || season.viewRound !== season.activeRound
+      || document.querySelector("dialog[open]")
+      || (
+        screen.contains(event.target)
+        && event.target?.closest?.("button, a, input, select, textarea, [contenteditable='true']")
+      )
+    ) return;
+    const managedMatchIndex = season.rounds[season.viewRound]?.findIndex((match) => (
+      (match.homeId === season.spectateTeamId || match.awayId === season.spectateTeamId)
+      && !match.result?.revealed
+    ));
+    if (managedMatchIndex < 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    openMatch(managedMatchIndex, { roundIndex: season.viewRound });
+  });
   tabs.forEach((tab) => tab.addEventListener("click", () => {
     activeView = tab.dataset.plView;
     renderSeason();
@@ -690,18 +1340,81 @@
     showToast(`Matchweek ${season.viewRound + 1} complete.`);
   });
 
-  restartButton?.addEventListener("click", () => {
-    if (!window.confirm("Restart the PL 26/27 season and clear every result?")) return;
+  function restartSeason() {
     clearActiveMatchView();
     season = newSeason();
     activeView = "overview";
     expandedSquadId = null;
     saveSeason();
+    syncAchievementState();
     renderSeason();
     showToast("A fresh PL 26/27 season is ready.");
+  }
+
+  restartButton?.addEventListener("click", () => {
+    restartFromMenu = false;
+    restartModal?.showModal();
+  });
+  menuRestartButton?.addEventListener("click", () => {
+    restartFromMenu = true;
+    restartModal?.showModal();
+  });
+  confirmRestartButton?.addEventListener("click", () => {
+    if (!restartFromMenu) {
+      restartSeason();
+      return;
+    }
+    restartFromMenu = false;
+    clearActiveMatchView();
+    localStorage.removeItem(STORAGE_KEY);
+    season = null;
+    activeView = "overview";
+    expandedSquadId = null;
+    syncMenuState();
+    showToast("Season cleared. Choose a club and start again.");
   });
 
   content?.addEventListener("click", (event) => {
+    const finaleAction = event.target.closest("[data-pl-finale-action]")?.dataset.plFinaleAction;
+    if (finaleAction === "snapshot") {
+      const awards = seasonPlayerAwards();
+      window.openPremierLeagueSeasonSnapshotModal?.({
+        champion: awards.table[0],
+        podium: awards.table.slice(0, 3),
+        goldenBoot: awards.goldenBoot,
+        goldenGlove: awards.goldenGlove,
+        playerOfTheYear: awards.playerOfTheYear,
+        youngPlayerOfTheYear: awards.youngPlayerOfTheYear,
+        settings: {
+          upset: season.settings?.upset || "balanced",
+          goals: season.settings?.goals || "normal",
+        },
+      }, event.target.closest("button"));
+      return;
+    }
+    if (finaleAction === "save") {
+      const awards = seasonPlayerAwards();
+      const record = window.TournamentHistory?.savePremierLeague?.({
+        sourceKey: premierLeagueHistorySourceKey(),
+        drawSeed: season.drawSeed,
+        rounds: season.rounds,
+        teams: clubs,
+        table: awards.table,
+        managedTeamId: season.spectateTeamId || null,
+        topScorer: awards.goldenBoot,
+      });
+      if (record) renderSeason();
+      return;
+    }
+    if (finaleAction === "table") {
+      activeView = "table";
+      renderSeason();
+      return;
+    }
+    if (finaleAction === "restart") {
+      restartModal?.showModal();
+      return;
+    }
     const openView = event.target.closest("[data-pl-open-view]")?.dataset.plOpenView;
     if (openView) {
       activeView = openView;
@@ -720,13 +1433,6 @@
       renderSeason();
       return;
     }
-    if (event.target.closest('[data-pl-action="simulate-season"]')) {
-      if (!window.confirm("Simulate every remaining Premier League match?")) return;
-      simulateRemainingSeason();
-      renderSeason();
-      showToast("The PL 26/27 season is complete.");
-      return;
-    }
     const squadCard = event.target.closest("[data-pl-squad]");
     if (squadCard) {
       expandedSquadId = expandedSquadId === squadCard.dataset.plSquad ? null : squadCard.dataset.plSquad;
@@ -735,10 +1441,12 @@
   });
 
   window.addEventListener("accountstatechange", () => {
+    syncSeasonUtilityHeader();
     if (!screen?.hidden) renderSeason();
   });
 
   if (typeof currentAppMode === "function" && currentAppMode() === "premierLeague") {
     openSeason({ updateUrl: false });
   }
+  syncMenuState();
 })();

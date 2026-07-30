@@ -27,7 +27,16 @@ const accountClient = fs.readFileSync(path.join(root, "challenge.js"), "utf8");
 const accountService = fs.readFileSync(path.join(root, "challenge-service.mjs"), "utf8");
 
 assert.match(html, /<h3>PL 26\/27 Simulator<\/h3>/);
-assert.match(html, /id="premierLeagueInstallButton"/);
+assert.match(
+  html,
+  /id="premierLeagueInstallButton"[^>]*aria-haspopup="dialog"[^>]*>/,
+  "The Premier League asset-pack button must remain visible on the mode card.",
+);
+assert.doesNotMatch(
+  html,
+  /id="premierLeagueInstallButton"[^>]*\shidden(?:\s|>)/,
+  "The Premier League asset-pack button must not be hard-hidden.",
+);
 assert.match(html, /id="plAssetPackModal"/);
 assert.match(app, /PREMIER_LEAGUE_ASSET_PACK_ID = "pl-26-27"/);
 assert.match(app, /\/api\/challenge\/assets\/\$\{PREMIER_LEAGUE_ASSET_PACK_ID\}/);

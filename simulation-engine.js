@@ -200,7 +200,11 @@ function calculateExpectedGoals(
   const rawDifference = calculateMatchupPower(home, away) - calculateMatchupPower(away, home);
   const baseRoundMultiplier = SIMULATION_CONFIG.roundStrengthMultipliers[roundIndex] || 1;
   const roundMultiplier = 1 + (baseRoundMultiplier - 1) * mode.roundStrengthMultiplierScale;
-  const adjustedDifference = rawDifference * roundMultiplier;
+  // A 38-match league table needs team quality to compound more clearly than a
+  // knockout tie. Keep cups untouched, but give the Premier League ratings
+  // enough separation for elite squads to pull away over a full season.
+  const leagueQualitySeparation = home?.premierLeague && away?.premierLeague ? 1.35 : 1;
+  const adjustedDifference = rawDifference * roundMultiplier * leagueQualitySeparation;
   const minimumXG = Math.max(mode.minimumXG, goalConfig.minimumXG);
 
   let homeXG = goalConfig.baseXG * Math.exp(adjustedDifference / mode.ratingScale);
@@ -223,6 +227,12 @@ function calculateExpectedGoals(
   awayXG *= (1 - awayFatigue) * (1 + homeFatigue * 0.25);
   homeXG *= homeMomentumMultiplier;
   awayXG *= awayMomentumMultiplier;
+  if (home?.premierLeague && away?.premierLeague) {
+    // League fixtures should not be neutral-site matches. This produces a
+    // restrained, realistic venue edge while preserving the existing ratings.
+    homeXG *= 1.38 * 1.1;
+    awayXG *= 1.38 * 0.94;
+  }
 
   return {
     homeXG: simulationClamp(homeXG, minimumXG, goalConfig.maximumXG),
@@ -310,7 +320,13 @@ function buildPlayerProfiles(team, names, generated = false) {
   return names.map((entry, index) => {
     const sourceProfile = typeof entry === "string" ? { name: entry } : entry;
     const name = sourceProfile.name;
-    const profileOverride = PLAYER_PROFILE_OVERRIDES.get(name) || {};
+    // League simulator profiles already carry the official/calibrated player
+    // data for this competition. Historic global overrides are intended for
+    // the cup modes and must not silently turn (for example) 88-rated Saka
+    // into a 93-rated player inside the Premier League.
+    const profileOverride = sourceProfile.simulatorRating
+      ? {}
+      : PLAYER_PROFILE_OVERRIDES.get(name) || {};
     const position = profileOverride.position || sourceProfile.position || positions[index % positions.length];
     const baseOffset = generated
       ? index === 0 ? 5 : index <= 2 ? 3 : index <= 5 ? 0 : index <= 9 ? -3 : -6
@@ -444,6 +460,21 @@ function teamGoalShareMultiplier(profile, playerGoals, teamGoals) {
   return 1;
 }
 
+function premierLeagueSeasonScorerMultiplier(playerGoals, teamGoals) {
+  if (teamGoals < 8) return 1;
+  const share = playerGoals / Math.max(1, teamGoals);
+  let multiplier = 1;
+  if (share >= 0.45) multiplier *= 0.55;
+  else if (share >= 0.38) multiplier *= 0.72;
+  else if (share >= 0.32) multiplier *= 0.88;
+  if (playerGoals >= 40) multiplier *= 0.00001;
+  else if (playerGoals >= 35) multiplier *= 0.0005;
+  else if (playerGoals >= 30) multiplier *= 0.005;
+  else if (playerGoals >= 25) multiplier *= 0.06;
+  else if (playerGoals >= 20) multiplier *= 0.35;
+  return multiplier;
+}
+
 function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = {}) {
   const squad = context.squadProfiles || null;
   let weight = calculateScorerWeight(profile, context.team, squad);
@@ -460,6 +491,12 @@ function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = 
     context.tournamentPlayerGoals || 0,
     context.tournamentTeamGoals || 0,
   );
+  if (context.team?.premierLeague) {
+    weight *= premierLeagueSeasonScorerMultiplier(
+      context.tournamentPlayerGoals || 0,
+      context.tournamentTeamGoals || 0,
+    );
+  }
   if (goalType === "penalty") weight *= profile.penaltyTaker ? 8 : 0.70;
   if (goalType === "setPiece") {
     if (profile.position === "CB") weight *= 5.5;

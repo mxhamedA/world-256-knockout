@@ -267,7 +267,7 @@ assert.equal(knockoutProgress.payload.achievement.teams.length, 256);
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
 assert.equal(achievementBoard.payload.currentUser.achievements, 7);
-assert.equal(achievementBoard.payload.totalAchievements, 408);
+assert.equal(achievementBoard.payload.totalAchievements, 460);
 assert.equal(achievementBoard.payload.leaderboard.some((entry) => entry.username === updatedUsername), true);
 
 const tampered = await request("/runs", {

@@ -61,27 +61,33 @@ assert.ok(
   brazil.playerProfiles.every((profile) => brazil.players.includes(profile.name)),
   "Brazil's structured squad must only use its current player pool.",
 );
+const rosterNameKey = (value) => value
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]/gi, "")
+  .toLocaleLowerCase();
 const retiredInternationalLeakChecks = new Map([
-  ["Serbia", ["DuÅ¡an TadiÄ‡"]],
+  ["Serbia", ["Dusan Tadic"]],
   ["Cameroon", ["Karl Toko Ekambi"]],
   ["Germany", ["Manuel Neuer"]],
   ["Czechia", ["Patrik Schick"]],
   ["Mexico", ["Guillermo Ochoa"]],
   ["Algeria", ["Riyad Mahrez"]],
   ["Ecuador", ["Enner Valencia"]],
-  ["Argentina", ["NicolÃ¡s Otamendi"]],
-  ["Austria", ["Marko ArnautoviÄ‡"]],
-  ["Senegal", ["Sadio ManÃ©"]],
+  ["Argentina", ["Nicolas Otamendi"]],
+  ["Austria", ["Marko Arnautovic"]],
+  ["Senegal", ["Sadio Mane"]],
   ["Scotland", ["Craig Gordon"]],
-  ["Ivory Coast", ["Jean MichaÃ«l Seri"]],
+  ["Ivory Coast", ["Jean Michael Seri"]],
   ["Brazil", ["Neymar"]],
   ["Japan", ["Wataru Endo"]],
   ["England", ["Kyle Walker"]],
 ]);
 retiredInternationalLeakChecks.forEach((retiredPlayers, teamName) => {
   const team = teams.find((candidate) => candidate.name === teamName);
+  const currentPlayerKeys = new Set((team?.players || []).map(rosterNameKey));
   assert.ok(
-    retiredPlayers.every((player) => !team?.players?.includes(player)),
+    retiredPlayers.every((player) => !currentPlayerKeys.has(rosterNameKey(player))),
     `${teamName}'s current squad must not inherit retired players from the legacy fallback.`,
   );
 });
@@ -97,14 +103,14 @@ assert.match(
   "The roster updater must discard recent-call-up rows marked as retired.",
 );
 assert.match(
-  html,
-  /player-pools\.generated\.js\?v=current-rosters-/,
-  "Current squad data needs a cache-busting asset version.",
+  updater,
+  /retiredInternationalPlayerKeys\.has\(playerKey\)/,
+  "The roster updater must compare excluded players through encoding-safe lookup keys.",
 );
 assert.match(
   html,
-  /app\.js\?v=current-roster-(?:repair|audit)-/,
-  "Saved-match roster repair needs a cache-busting asset version.",
+  /player-pools\.generated\.js\?v=current-rosters-/,
+  "Current squad data needs a cache-busting asset version.",
 );
 
 function functionSource(name) {
@@ -131,6 +137,12 @@ assert.match(
   /current-roster-3:/,
   "The player-profile cache must be separated from older roster revisions.",
 );
+const customSourcePoolSource = functionSource("customTeamSourcePool");
+assert.match(
+  customSourcePoolSource,
+  /if \(source === "current"\) return \[\.\.\.TEAMS\]/,
+  "Current custom-tournament countries must come from the canonical current-team collection.",
+);
 
 const rosterRepairContext = vm.createContext({});
 vm.runInContext(`
@@ -151,6 +163,9 @@ const portugal = teams.find((team) => team.name === "Portugal");
 assert.ok(portugal?.players?.length >= 20, "Portugal needs a complete recent squad.");
 assert.ok(!portugal.players.includes("Deco"), "Portugal's current squad must not contain Deco.");
 const currentPortugalProfiles = Array.from(portugal.playerProfiles, (profile) => ({ ...profile }));
+const spain = teams.find((team) => team.name === "Spain");
+const currentSpainProfiles = Array.from(spain.playerProfiles, (profile) => ({ ...profile }));
+assert.ok(currentSpainProfiles.length >= 20, "Spain needs a complete current squad.");
 const opponentProfiles = Array.from(
   teams.find((team) => !["Brazil", "Portugal"].includes(team.name) && team.playerProfiles?.length)?.playerProfiles || [],
   (profile) => ({ ...profile }),
@@ -158,6 +173,7 @@ const opponentProfiles = Array.from(
 rosterRepairContext.setTeams([
   { id: "brazil", playerProfiles: currentBrazilProfiles },
   { id: "portugal", playerProfiles: currentPortugalProfiles },
+  { id: "spain", playerProfiles: currentSpainProfiles },
   { id: "opponent", playerProfiles: opponentProfiles },
 ]);
 const savedMatches = Array.from({ length: 128 }, (_, index) => {
@@ -232,6 +248,28 @@ const savedGroupTournament = {
       ],
       awayEvents: [],
     },
+  }, {
+    id: "group-a-match-2",
+    homeId: "spain",
+    awayId: "opponent",
+    result: {
+      homeGoals: 1,
+      awayGoals: 0,
+      winnerId: "spain",
+      homeEvents: [{ minute: 67, scorer: "David Villa", assist: "Xavi" }],
+      awayEvents: [],
+      substitutions: [{
+        side: "home",
+        teamId: "spain",
+        player: "Andres Iniesta",
+        playerIn: "Andres Iniesta",
+        playerOut: "Xabi Alonso",
+      }],
+      playerRatings: {
+        home: { "Iker Casillas": { rating: 8.1 } },
+        away: {},
+      },
+    },
   }]],
 };
 assert.equal(
@@ -244,6 +282,25 @@ assert.ok(
     currentBrazilProfiles.some((profile) => profile.name === event.scorer)
   )),
   "Every repaired group-stage scorer must belong to Brazil's current squad.",
+);
+const repairedSpainResult = savedGroupTournament.rounds[0][1].result;
+assert.ok(
+  [repairedSpainResult.homeEvents[0].scorer, repairedSpainResult.homeEvents[0].assist]
+    .every((name) => currentSpainProfiles.some((profile) => profile.name === name)),
+  "A normal custom Spain match must replace 2010-era scorers and assists.",
+);
+assert.ok(
+  [
+    repairedSpainResult.substitutions[0].player,
+    repairedSpainResult.substitutions[0].playerIn,
+    repairedSpainResult.substitutions[0].playerOut,
+  ].every((name) => currentSpainProfiles.some((profile) => profile.name === name)),
+  "A normal custom Spain match must replace 2010-era substitution names.",
+);
+assert.ok(
+  Object.keys(repairedSpainResult.playerRatings.home)
+    .every((name) => currentSpainProfiles.some((profile) => profile.name === name)),
+  "A normal custom Spain match must replace 2010-era player-rating keys.",
 );
 
 assert.equal(rosterRepairContext.checkpointIsCurrent({
@@ -258,6 +315,29 @@ assert.equal(rosterRepairContext.checkpointIsCurrent({
   scope: "standard",
   shootout: [{ side: "away", player: currentPortugalProfiles[0].name }],
 }, savedMatches[1]), true, "A checkpoint using Portugal's current squad must remain resumable.");
+assert.equal(rosterRepairContext.checkpointIsCurrent({
+  scope: "standard",
+  playerRatings: { home: { Xavi: { rating: 8.5 } }, away: {} },
+}, savedGroupTournament.rounds[0][1]), false, "A checkpoint containing a 2010 Spain rating must be discarded.");
+
+const retroSquadResolverSource = functionSource("retroManagerSquadForTeam");
+assert.match(
+  retroSquadResolverSource,
+  /if \(!isRetroSimulatorState\(\)\) return null;/,
+  "Historical squad resolution must be disabled outside an active retro tournament.",
+);
+const retroLineupResolverSource = functionSource("retroManagerLineupForTeam");
+assert.match(
+  retroLineupResolverSource,
+  /\|\| !isRetroSimulatorState\(\)/,
+  "Historical lineup resolution must be disabled outside an active retro tournament.",
+);
+const renderSource = functionSource("render");
+assert.match(
+  renderSource,
+  /restoreStandardTournamentState\(\);[\s\S]*repairDefaultKnockoutRosterResults\(state\)/,
+  "Normal and custom tournament results must be repaired whenever their state becomes active.",
+);
 
 DRAFT_TEAMS.forEach((team) => {
   assert.equal(team.players.length, 26, `${team.name} needs a complete 26-player online squad.`);

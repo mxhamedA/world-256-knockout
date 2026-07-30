@@ -36,6 +36,15 @@ const final = (winner, revealed = true) => [{
     result: { winner, revealed },
   }],
 }];
+const finalWithoutReveal = (winner) => [{
+  name: "Finals",
+  matches: [{
+    id: "ko-final",
+    home: "Belgium",
+    away: "Italy",
+    result: { winner },
+  }],
+}];
 
 assert.equal(
   completedRetroChampion({
@@ -46,6 +55,17 @@ assert.equal(
   }),
   null,
   "A hidden precomputed final winner must not unlock an achievement before the tournament is complete.",
+);
+
+assert.equal(
+  completedRetroChampion({
+    phase: "complete",
+    managedTeam: "Belgium",
+    champion: "Belgium",
+    knockoutRounds: finalWithoutReveal("Belgium"),
+  }),
+  null,
+  "A final result without an explicit full-time reveal must not unlock an achievement.",
 );
 
 assert.equal(
@@ -85,6 +105,13 @@ assert.match(
   challengeSource,
   /const phase = tournament\.phase === "complete" && champion \? "complete" : "start";/,
   "Achievement tracking must only submit a completed run with a validated champion.",
+);
+
+const retroEngineSource = readFileSync(join(root, "retro-engine.js"), "utf8");
+assert.match(
+  retroEngineSource,
+  /totalExpectedGoals:[\s\S]*?revealed: true,[\s\S]*?advanceTournament\(tournament\);/,
+  "Instant simulations must explicitly reveal their result before tournament completion can unlock an achievement.",
 );
 
 console.log("Retro achievement finalist-loss regression checks passed.");

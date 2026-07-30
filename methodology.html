@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6724809725459853" crossorigin="anonymous"></script>
+    <meta name="description" content="How 256 TEAMS WC models team strength, match chances, goalscorers, upsets, extra time and penalty shootouts." />
+    <title>Simulation Methodology | 256 TEAMS WC</title>
+    <link rel="canonical" href="https://www.256teams.com/methodology" />
+    <meta property="og:title" content="256 TEAMS WC Simulation Methodology" />
+    <meta property="og:description" content="A transparent explanation of the ratings, randomness and limitations behind the simulator." />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="https://www.256teams.com/methodology" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./content.css?v=content-1" />
+  </head>
+  <body>
+    <header class="content-nav">
+      <a class="content-brand" href="/">256 TEAMS WC</a>
+      <nav class="content-nav-links" aria-label="Information"><a href="./guides.html">Guides</a><a href="./how-it-works.html">How it works</a><a href="./faq.html">FAQ</a><a href="./about.html">About</a><a class="content-play-link" href="/">Play simulator</a></nav>
+    </header>
+    <main class="content-shell">
+      <article>
+        <header class="content-hero">
+          <p class="content-kicker">Behind the simulator</p>
+          <h1>Simulation methodology</h1>
+          <p class="content-deck">The model is designed to tell believable football stories, not to claim certainty. Here is what influences a match, where randomness enters and what the results should—and should not—be used for.</p>
+          <p class="content-meta">Written and maintained by Mohamed A. · Updated 29 July 2026</p>
+        </header>
+
+        <section class="content-section">
+          <h2>The design goal</h2>
+          <p>256 TEAMS WC aims for a balance between team quality and tournament unpredictability. Strong teams should usually look stronger across many simulations, but a single knockout match must still allow a disciplined underdog, an early red card or a penalty shootout to change the outcome.</p>
+          <p>The simulator therefore does not select a winner first and decorate it with a score. It builds a match from team profiles, chance creation and event probabilities, then resolves extra time or penalties only when necessary. The visible commentary and statistics are tied to that simulated match state.</p>
+        </section>
+
+        <section class="content-section">
+          <h2>Team profiles</h2>
+          <p>Default national-team profiles consider several football dimensions rather than one public ranking number. These include attacking threat, midfield control, defensive quality, goalkeeping, squad depth, experience and discipline. The values are curated for the game and can be adjusted as the project develops.</p>
+          <p>Those dimensions influence the types and quality of opportunities a side is likely to create or concede. They are comparative game inputs, not official FIFA ratings, live betting models or claims about a country’s permanent football strength.</p>
+          <h3>Historical competitions</h3>
+          <p>Retro modes use competition-specific squads and structures. They are built to evoke the selected tournament and give recognised players appropriate roles, but they remain simulations. A historical squad can take a path that never happened in the real competition.</p>
+        </section>
+
+        <section class="content-section">
+          <h2>From chances to a scoreline</h2>
+          <p>The engine uses the two team profiles, the selected simulation style and the chosen goal level to shape a match. Stronger attacking and midfield profiles generally create more pressure; defending and goalkeeping help resist it. Random variation is applied within that structure so repeated fixtures are not identical.</p>
+          <ul>
+            <li><strong>Realistic:</strong> gives team-quality differences more consistency and reduces the frequency of major shocks.</li>
+            <li><strong>Standard:</strong> keeps ratings meaningful while leaving visible room for plausible upsets.</li>
+            <li><strong>Pure chaos:</strong> compresses the practical advantage of stronger teams and increases volatility.</li>
+            <li><strong>Tight, Normal and Goal fest:</strong> alter the overall chance and scoring environment without changing the tournament rules.</li>
+          </ul>
+          <p>No setting guarantees a favourite’s victory or a specific number of goals. They move probabilities rather than scripting results.</p>
+        </section>
+
+        <section class="content-section">
+          <h2>Match events and players</h2>
+          <p>Goals, cards and other key moments are placed within the match timeline so the live clock, score and commentary remain coherent. Goalscorer selection considers the available player pool and football role: forwards and strong finishers are normally more likely to score than defenders, while playing time and penalty responsibilities can also matter.</p>
+          <p>Prominent teams and historical modes use curated player information where available. Other parts of the field may use deterministic generated player names so every match can still produce readable events. Generated names are fictional and are not presented as real squad information.</p>
+        </section>
+
+        <section class="content-section">
+          <h2>Extra time, penalties and upsets</h2>
+          <p>If regulation ends level in a knockout tie, the engine continues into extra time. If the match is still tied, a shootout resolves it. Shootouts use a separate sequence of kicks and are intentionally high-variance; even a strong favourite can be eliminated.</p>
+          <p>Upsets are a feature, but the model tries to keep them in context. A narrow rating gap should produce a genuinely competitive match. A very large gap still favours the stronger side, although a rare shock remains possible because real knockout football is not deterministic.</p>
+        </section>
+
+        <section class="content-section">
+          <h2>Limitations and responsible use</h2>
+          <p>The simulator does not ingest live injuries, tactical news, travel conditions, betting markets or official ranking feeds for every match. Curated ratings and squads can become outdated. The model also simplifies football into a manageable set of factors and cannot reproduce every managerial decision or player interaction.</p>
+          <p>Results are for entertainment, discussion and creative tournament play. They are not factual predictions, scouting analysis, betting advice or an official assessment by FIFA, UEFA, a league, club or association. If you spot a data problem, use the site’s Feedback control or contact <a href="mailto:mohamed@256teams.com">mohamed@256teams.com</a>.</p>
+        </section>
+      </article>
+    </main>
+    <footer class="content-footer"><div class="content-footer-main"><span>&copy; 2026 Mohamed A. All rights reserved.</span><nav aria-label="Footer"><a href="./guides.html">Guides</a><a href="./how-it-works.html">How it works</a><a href="./about.html">About</a><a href="./privacy.html">Privacy</a><a href="./disclaimer.html">Disclaimer</a></nav></div></footer>
+  </body>
+</html>

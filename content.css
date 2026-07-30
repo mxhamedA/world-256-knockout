@@ -1,0 +1,328 @@
+:root {
+  --bg: #0b0f17;
+  --panel: #111722;
+  --panel-soft: #151d2a;
+  --line: #252e3b;
+  --text: #f2f5f9;
+  --muted: #9aa5b7;
+  --soft: #cbd3df;
+  --blue: #6f98ff;
+  --green: #79ddb7;
+  color-scheme: dark;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% -10%, rgba(95, 140, 255, 0.13), transparent 34rem),
+    radial-gradient(circle at 90% 30%, rgba(121, 221, 183, 0.06), transparent 28rem),
+    var(--bg);
+}
+
+a {
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.content-nav {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  min-height: 72px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 clamp(20px, 4vw, 48px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(11, 15, 23, 0.9);
+  backdrop-filter: blur(18px);
+}
+
+.content-brand {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.content-nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.6vw, 26px);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.content-nav-links a {
+  text-decoration: none;
+}
+
+.content-nav-links .content-play-link {
+  padding: 9px 13px;
+  border: 1px solid rgba(111, 152, 255, 0.45);
+  border-radius: 9px;
+  color: var(--text);
+  background: rgba(95, 140, 255, 0.1);
+}
+
+.content-shell {
+  width: min(900px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: clamp(60px, 9vw, 104px) 0 88px;
+}
+
+.content-hero {
+  max-width: 790px;
+  margin-bottom: 56px;
+}
+
+.content-kicker {
+  margin: 0 0 14px;
+  color: var(--blue);
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.content-hero h1 {
+  max-width: 820px;
+  margin: 0;
+  font-size: clamp(38px, 7vw, 68px);
+  letter-spacing: clamp(-3.1px, -0.25vw, -1.8px);
+  line-height: 1;
+}
+
+.content-deck {
+  max-width: 720px;
+  margin: 24px 0 0;
+  color: var(--soft);
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.7;
+}
+
+.content-meta {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.content-section {
+  padding: 34px 0;
+  border-top: 1px solid var(--line);
+}
+
+.content-section h2 {
+  margin: 0 0 16px;
+  font-size: clamp(23px, 3.4vw, 32px);
+  letter-spacing: -1px;
+}
+
+.content-section h3 {
+  margin: 28px 0 10px;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+
+.content-section p,
+.content-section li {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.content-section p {
+  margin: 0 0 16px;
+}
+
+.content-section p:last-child {
+  margin-bottom: 0;
+}
+
+.content-section ul,
+.content-section ol {
+  margin: 12px 0 0;
+  padding-left: 24px;
+}
+
+.content-section li + li {
+  margin-top: 8px;
+}
+
+.content-section strong {
+  color: var(--soft);
+}
+
+.content-section a,
+.content-card a {
+  color: var(--soft);
+  text-decoration-color: rgba(203, 211, 223, 0.35);
+  text-underline-offset: 4px;
+}
+
+.content-note {
+  margin: 24px 0 0;
+  padding: 20px 22px;
+  border: 1px solid rgba(111, 152, 255, 0.28);
+  border-radius: 14px;
+  color: var(--soft);
+  background: rgba(95, 140, 255, 0.07);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.content-card {
+  display: block;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(17, 23, 34, 0.75);
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.content-card small {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--blue);
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.content-card strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 17px;
+}
+
+.content-card span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.content-faq details {
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+}
+
+.content-faq details:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.content-faq summary {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.content-faq details p {
+  margin: 13px 0 0;
+}
+
+.content-footer {
+  width: min(900px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 28px 0 38px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.content-footer-main,
+.content-footer nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.content-footer-main {
+  justify-content: space-between;
+}
+
+.content-footer nav {
+  flex-wrap: wrap;
+}
+
+.content-footer a {
+  text-decoration: none;
+}
+
+.content-nav a:focus-visible,
+.content-footer a:focus-visible,
+.content-card:focus-visible,
+.content-section a:focus-visible {
+  border-radius: 5px;
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .content-nav-links a:hover,
+  .content-footer a:hover {
+    color: var(--text);
+  }
+
+  .content-card:hover {
+    border-color: rgba(111, 152, 255, 0.5);
+    background: var(--panel-soft);
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 680px) {
+  .content-nav {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .content-nav-links {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-shell,
+  .content-footer {
+    width: min(100% - 32px, 900px);
+  }
+
+  .content-footer-main {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

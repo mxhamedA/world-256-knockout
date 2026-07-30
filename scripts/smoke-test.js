@@ -42,6 +42,20 @@ assert.match(
 );
 assert.match(
   appSource,
+  /if \(preset === "asia"\) return TEAMS\.filter\(\(team\) => team\.confed === "AFC"\);/,
+  "The custom tournament Asia preset must include only current AFC teams.",
+);
+assert.match(
+  appSource,
+  /<option value="asia"[^>]*>Only Asia<\/option>/,
+  "The custom tournament quick-fill menu must expose the Asia filter.",
+);
+assert.ok(
+  teams.filter((team) => team.confed === "AFC").length >= 32,
+  "The Asia filter must have enough current AFC teams for a 32-team custom tournament.",
+);
+assert.match(
+  appSource,
   /function customWorldCup48KnockoutPairings\([\s\S]*?winnerThirdPairings[\s\S]*?remainingWinnerPairings[\s\S]*?runnerPairings/,
   "The 48-team group format must generate a complete 32-team knockout field.",
 );
@@ -1306,8 +1320,8 @@ assert.match(htmlSource, /id="shootoutSkipControl" hidden[\s\S]*id="skipShootout
   "Neutral shootouts need a dedicated skip control.");
 assert.match(appSource, /function canSkipPenaltyShootout\(\)[\s\S]*phase === "shootout"[\s\S]*!livePlayback\.ending/,
   "Shootout skipping must remain available in neutral and managed-team matches.");
-assert.match(appSource, /function skipPenaltyShootout\(\)[\s\S]*if \(livePlayback\.interactiveShootout\)[\s\S]*simulatePenaltyShootout\([\s\S]*penaltyHomeScore = match\.result\.penalties\.home[\s\S]*penaltyAwayScore = match\.result\.penalties\.away[\s\S]*finishPenaltyShootout\(220\)/,
-  "Skipping a managed-team shootout must settle it and reveal its final score.");
+assert.match(appSource, /function skipPenaltyShootout\(\)[\s\S]*if \(livePlayback\.interactiveShootout\)[\s\S]*completedShootoutPrefix\(livePlayback\)[\s\S]*simulatePenaltyShootoutContinuation\([\s\S]*penaltyHomeScore = match\.result\.penalties\.home[\s\S]*penaltyAwayScore = match\.result\.penalties\.away[\s\S]*finishPenaltyShootout\(220\)/,
+  "Skipping a managed-team shootout must preserve completed kicks, settle the remainder, and reveal its final score.");
 assert.match(appSource, /if \(livePlayback\.phase === "shootout"\) \{[\s\S]*if \(skipPenaltyShootout\(\)\) return;/,
   "The skip-to-full-time keyboard action must route shootouts through the shootout skipper.");
 assert.match(appSource, /if \(key === "Enter" && canSkipPenaltyShootout\(\)\)[\s\S]*skipPenaltyShootout\(\)[\s\S]*if \(keybinds\.enabled === false\)/,

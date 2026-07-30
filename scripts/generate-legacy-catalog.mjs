@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -25,6 +25,7 @@ const source = `window.LEGACY_HISTORIC_DATABASE = ${JSON.stringify(database)};\n
 writeFileSync(outputPath, source, "utf8");
 const distPath = join(projectRoot, "dist", "legacy-data", "catalog.generated.js");
 if (existsSync(join(projectRoot, "dist"))) {
+  mkdirSync(dirname(distPath), { recursive: true });
   writeFileSync(distPath, source, "utf8");
 }
 console.log(`Generated Legacy Draft catalog: ${Object.keys(database).length} nations, ${Object.values(database).reduce((sum, nation) => sum + nation.squads.length, 0)} XIs.`);

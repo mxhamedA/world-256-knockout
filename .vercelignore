@@ -1,0 +1,9 @@
+tmp/
+.git/
+node_modules/
+dist/
+.wrangler/
+.data/
+.dotnet-home/
+.nuget-packages/
+*.zip

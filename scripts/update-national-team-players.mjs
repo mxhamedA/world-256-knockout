@@ -65,20 +65,31 @@ const manualSources = {
 // Current-squad pages can lag behind retirement announcements, especially
 // immediately after a major tournament. Keep this small, sourced and explicit
 // instead of guessing that every older active player has retired.
-const retiredInternationalPlayers = new Set([
-  "Manuel Neuer",
-  "Patrik Schick",
-  "Guillermo Ochoa",
-  "Riyad Mahrez",
-  "Enner Valencia",
-  "NicolÃ¡s Otamendi",
-  "Marko ArnautoviÄ‡",
-  "Sadio ManÃ©",
-  "Craig Gordon",
-  "Jean MichaÃ«l Seri",
-  "Neymar",
-  "Wataru Endo",
-  "Kyle Walker",
+function playerLookupKey(value = "") {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]/gi, "")
+    .toLocaleLowerCase();
+}
+
+// Store these as ASCII lookup keys. This avoids a bad source-file encoding
+// turning an accented name into a different string that silently bypasses the
+// current-roster filter.
+const retiredInternationalPlayerKeys = new Set([
+  "manuelneuer",
+  "patrikschick",
+  "guillermoochoa",
+  "riyadmahrez",
+  "ennervalencia",
+  "nicolasotamendi",
+  "markoarnautovic",
+  "sadiomane",
+  "craiggordon",
+  "jeanmichaelseri",
+  "neymar",
+  "wataruendo",
+  "kylewalker",
 ]);
 
 function pageTitle(teamName) {
@@ -241,8 +252,11 @@ for (const [name, wikipediaPlayers, resolvedPage] of fetched) {
     ...fallbackPlayers,
   ].filter((player, index, entries) => {
     const playerName = typeof player === "string" ? player : player.name;
-    return !retiredInternationalPlayers.has(playerName)
-      && entries.findIndex((candidate) => (typeof candidate === "string" ? candidate : candidate.name) === playerName) === index;
+    const playerKey = playerLookupKey(playerName);
+    return !retiredInternationalPlayerKeys.has(playerKey)
+      && entries.findIndex((candidate) => (
+        playerLookupKey(typeof candidate === "string" ? candidate : candidate.name) === playerKey
+      )) === index;
   });
   const selected = selectSquad(roster, 26);
   if (selected.length >= 4) pools[name] = selected.map((player) => player.name);
