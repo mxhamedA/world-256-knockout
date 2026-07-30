@@ -1093,6 +1093,10 @@ body.pl-match-mode-active .pl-club-flag img {
   gap: 8px;
 }
 
+.pl-matchweek-toolbar-nav-only {
+  justify-content: flex-end;
+}
+
 .pl-matchweek-nav button {
   min-width: 42px;
   min-height: 42px;
@@ -3064,5 +3068,138 @@ body.pl-match-mode-active #retroMatchLineupsPanel .retro-manager-player:hover:no
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+}
+
+/* Mobile PL result cards grow with their event list, and the header keeps one clear left action. */
+#plSeasonSettingsButton {
+  border-color: rgba(217, 182, 237, 0.34);
+  color: #fff;
+  background: #75418f;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #plSeasonSettingsButton:hover {
+    color: #fff;
+    background: #8f55ae;
+  }
+}
+
+#plSeasonSettingsButton:active {
+  transform: scale(0.97);
+}
+
+@media (max-width: 850px) {
+  .pl-season-header {
+    display: flex;
+    min-height: 64px;
+    padding: 0 12px;
+  }
+
+  .pl-season-header-left {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    gap: 4px;
+    transform: translateY(-50%);
+  }
+
+  .pl-season-site-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .pl-season-utility-actions {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    gap: 4px;
+    transform: translateY(-50%);
+  }
+
+  .pl-season-utility-actions .utility-button {
+    position: relative;
+    width: 34px;
+    min-width: 34px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 9px;
+  }
+
+  .pl-season-header-left #plSeasonSettingsButton,
+  .pl-season-header-left #plRestartSeasonButton {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 9px;
+  }
+
+  .pl-season-header-left #plSeasonSettingsButton {
+    order: 1;
+  }
+
+  .pl-season-header-left #plRestartSeasonButton {
+    order: 2;
+  }
+
+  body.pl-match-mode-active .sidebar #menuButton {
+    display: none !important;
+  }
+
+  body.pl-match-mode-active .sidebar .header-actions #settingsButton {
+    top: 14px;
+    left: 12px;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    border-color: rgba(217, 182, 237, 0.34);
+    color: #fff;
+    background: #75418f;
+  }
+
+  body.pl-match-mode-active .sidebar .header-actions #settingsButton:active {
+    transform: scale(0.97);
+  }
+
+  body.pl-match-mode-active .match-stage.pl-full-time .stage-action {
+    margin-top: var(--pl-result-event-clearance, 0px);
+  }
+
+  body.pl-match-mode-active .match-stage.pl-full-time .matchup {
+    overflow: visible;
+  }
+
+  body.pl-match-mode-active .match-stage.pl-full-time .result-note:not([hidden]) {
+    position: static;
+    top: auto;
+    left: auto;
+    margin-top: 7px;
+    transform: none;
+  }
+}
+
+@media (max-width: 430px) {
+  .pl-season-header {
+    padding-inline: 9px;
+  }
+
+  .pl-season-header-left {
+    left: 9px;
+  }
+
+  .pl-season-utility-actions {
+    right: 9px;
+    gap: 2px;
+  }
+}
+
+@media (max-width: 850px) and (hover: hover) and (pointer: fine) {
+  body.pl-match-mode-active .sidebar .header-actions #settingsButton:hover {
+    color: #fff;
+    background: #8f55ae;
   }
 }

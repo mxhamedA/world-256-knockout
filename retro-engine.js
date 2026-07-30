@@ -351,6 +351,15 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       * (0.45 + shooting / 180 + penaltyAbility / 180);
   }
 
+  function primaryPenaltyScorer(year, team, candidates) {
+    const orderedTakers = PENALTY_TAKERS_BY_YEAR[year]?.[team.name] || [];
+    for (const taker of orderedTakers) {
+      const player = candidates.find((candidate) => normalizedPlayerName(candidate) === taker);
+      if (player) return player;
+    }
+    return null;
+  }
+
   function goalEvents(year, team, count, random, usedMinutes, penaltyMinutes, scorerTotals = new Map()) {
     const players = team.squad?.players || [];
     const candidates = players.filter((player) => player.position !== "GK");
@@ -363,22 +372,23 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       const penalty = random() < 0.065
         && penaltyMinutes.every((otherMinute) => Math.abs(otherMinute - minute) >= 12);
       if (penalty) penaltyMinutes.push(minute);
-      const scorer = weightedPick(
-        candidates,
-        random,
-        (player) => {
-          const baseWeight = penalty
-          ? penaltyScoringWeight(year, team, player, starters.has(player.number))
-          : scoringWeight(year, player, starters.has(player.number));
-          const existingGoals = scorerTotals.get(player.name) || 0;
-          const diversityWeight = Number(year) === 2022
-            ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.18)
-            : Number(year) === 2016
-              ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.25)
-              : 1;
-          return baseWeight * diversityWeight;
-        },
-      );
+      const scorer = (penalty ? primaryPenaltyScorer(year, team, candidates) : null)
+        || weightedPick(
+          candidates,
+          random,
+          (player) => {
+            const baseWeight = penalty
+              ? penaltyScoringWeight(year, team, player, starters.has(player.number))
+              : scoringWeight(year, player, starters.has(player.number));
+            const existingGoals = scorerTotals.get(player.name) || 0;
+            const diversityWeight = Number(year) === 2022
+              ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.18)
+              : Number(year) === 2016
+                ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.25)
+                : 1;
+            return baseWeight * diversityWeight;
+          },
+        );
       if (scorer) scorerTotals.set(scorer.name, (scorerTotals.get(scorer.name) || 0) + 1);
       events.push({
         minute,

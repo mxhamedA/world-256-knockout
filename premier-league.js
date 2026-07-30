@@ -518,6 +518,78 @@
     return `${value}th`;
   }
 
+  function resultCommentary(match, roundIndex = season?.activeRound || 0) {
+    if (!match?.result) return "The result is in.";
+    const home = clubById.get(match.homeId);
+    const away = clubById.get(match.awayId);
+    if (!home || !away) return "The result is in.";
+
+    const table = leagueTable();
+    const homePosition = table.findIndex((row) => row.club.id === home.id) + 1;
+    const awayPosition = table.findIndex((row) => row.club.id === away.id) + 1;
+    const matchweek = Math.max(1, Math.min(38, Number(roundIndex) + 1));
+    const lateSeason = matchweek >= 28;
+    const homeGoals = Number(match.result.homeGoals) || 0;
+    const awayGoals = Number(match.result.awayGoals) || 0;
+
+    if (homeGoals === awayGoals) {
+      const bestPosition = Math.min(homePosition, awayPosition);
+      const worstPosition = Math.max(homePosition, awayPosition);
+      if (lateSeason && bestPosition <= 4 && worstPosition >= 17) {
+        const contender = homePosition < awayPosition ? home : away;
+        const survivor = contender.id === home.id ? away : home;
+        return `${survivor.name} frustrate ${contender.name} in a result that matters at both ends of the table.`;
+      }
+      if (lateSeason && homePosition <= 6 && awayPosition <= 6) {
+        return `${home.name} and ${away.name} give up no ground in a tight race for Europe.`;
+      }
+      if (lateSeason && homePosition >= 16 && awayPosition >= 16) {
+        return `A tense point apiece for ${home.name} and ${away.name} in the survival fight.`;
+      }
+      if (matchweek <= 5) {
+        return `${home.name} and ${away.name} share the points as the early table takes shape.`;
+      }
+      return `${home.name} and ${away.name} share the points.`;
+    }
+
+    const winner = homeGoals > awayGoals ? home : away;
+    const loser = winner.id === home.id ? away : home;
+    const winnerPosition = winner.id === home.id ? homePosition : awayPosition;
+    const loserPosition = loser.id === home.id ? homePosition : awayPosition;
+    const winnerRating = Number(winner.simulationRatings?.overall) || Number(winner.rating) || 0;
+    const loserRating = Number(loser.simulationRatings?.overall) || Number(loser.rating) || 0;
+    const upset = loserRating - winnerRating >= 7;
+
+    if (matchweek === 38 && winnerPosition === 1) {
+      return `${winner.name} finish the season as Premier League champions!`;
+    }
+    if (lateSeason && winnerPosition === 1) {
+      return `${winner.name} keep control of the title race with a vital win.`;
+    }
+    if (lateSeason && winnerPosition >= 16) {
+      return `A huge survival win for ${winner.name} against ${loser.name}.`;
+    }
+    if (lateSeason && loserPosition >= 18) {
+      return `${winner.name} pile more relegation pressure on ${loser.name}.`;
+    }
+    if (upset && winnerPosition <= 10) {
+      return `Big result! ${winner.name} stun ${loser.name} and strengthen their top-half push.`;
+    }
+    if (upset) {
+      return `Premier League upset! ${winner.name} stun ${loser.name}.`;
+    }
+    if (winnerPosition <= 4 && matchweek >= 8) {
+      return `${winner.name} strengthen their place in the top four.`;
+    }
+    if (winnerPosition <= 7 && matchweek >= 12) {
+      return `${winner.name} boost their push for European football.`;
+    }
+    if (matchweek <= 5) {
+      return `${winner.name} collect three early-season points against ${loser.name}.`;
+    }
+    return `${winner.name} take all three points and sit ${ordinalPosition(winnerPosition)}.`;
+  }
+
   function tableMarkup({ limit = 20, showHeader = true, ordinalPositions = false } = {}) {
     const rows = leagueTable().slice(0, limit);
     return `
@@ -793,11 +865,7 @@
     const round = season.rounds[roundIndex];
     const orderedFixtures = orderedRoundFixtures(round);
     content.innerHTML = `
-      <div class="pl-matchweek-toolbar">
-        <div>
-          <span>${escapeHtml(matchDate(roundIndex).toUpperCase())}</span>
-          <h2>Matchweek ${roundIndex + 1}</h2>
-        </div>
+      <div class="pl-matchweek-toolbar pl-matchweek-toolbar-nav-only">
         <div class="pl-matchweek-nav">
           <button type="button" data-pl-round="-1" ${roundIndex === 0 ? "disabled" : ""} aria-label="Previous matchweek">&larr;</button>
           <button type="button" data-pl-round="1" ${roundIndex === 37 ? "disabled" : ""} aria-label="Next matchweek">&rarr;</button>
@@ -1266,6 +1334,7 @@
     returnToSeason,
     finishManagedMatchweek,
     kickoffForMatch: matchKickoff,
+    resultCommentary,
     achievementState,
     hasStarted() {
       return validSeason(season);

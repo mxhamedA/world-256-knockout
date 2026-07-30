@@ -287,6 +287,22 @@ assert.match(css, /\.pl-fixture-play\s*\{[\s\S]*?width:\s*96px/,
   "Play, watch, and view buttons must share one fixed alignment width.");
 assert.match(css, /\.pl-matchweek-toolbar > \.pl-matchweek-nav\s*\{[\s\S]*?display:\s*flex/,
   "Matchweek arrow buttons must sit alongside each other.");
+assert.match(
+  seasonSource,
+  /function renderMatches\(\)[\s\S]*?pl-matchweek-toolbar pl-matchweek-toolbar-nav-only[\s\S]*?pl-matchweek-nav/,
+  "The Matches view must keep only the matchweek arrows below the tabs.",
+);
+const renderMatchesSource = seasonSource.slice(
+  seasonSource.indexOf("function renderMatches()"),
+  seasonSource.indexOf("function renderTable()"),
+);
+assert.doesNotMatch(
+  renderMatchesSource,
+  /matchDate\(roundIndex\)|<h2>Matchweek/,
+  "The Matches view must not duplicate the date and matchweek already shown at the top.",
+);
+assert.match(css, /\.pl-matchweek-toolbar-nav-only\s*\{[\s\S]*?justify-content:\s*flex-end/,
+  "The remaining matchweek arrows must stay right-aligned.");
 assert.match(seasonSource, /const locked = !played && season\.viewRound !== season\.activeRound/,
   "Unplayed fixtures outside the current matchweek must be locked.");
 assert.match(seasonSource, /selectedRoundIndex !== season\.activeRound/,
@@ -302,8 +318,8 @@ assert.ok(schedule.flat().every((match) => match.allowDraw === true), "League ma
 assert.match(html, /id="premierLeagueSeasonScreen"/, "PL screen is missing");
 assert.match(html, /initialPath === "\/pl-simulator"[\s\S]*?route-pl-loading/,
   "Direct PL refreshes must suppress the home shell before first paint.");
-assert.match(html, /class="pl-season-header-left"[\s\S]*?id="plRestartSeasonButton"[\s\S]*?id="plSeasonSettingsButton"/,
-  "Restart and Settings must sit together on the left side of the PL header.");
+assert.match(html, /class="pl-season-header-left"[\s\S]*?id="plSeasonSettingsButton"[\s\S]*?id="plRestartSeasonButton"/,
+  "Settings must sit at the far left with Restart immediately to its right.");
 assert.match(html, /id="plRestartModal"[\s\S]*?id="confirmPlRestartButton"/,
   "PL restart must use a functional confirmation dialog.");
 assert.match(html, /id="startPremierLeagueSeasonButton"/, "PL start action is missing");
@@ -311,7 +327,7 @@ assert.match(html, /id="plSeasonDate"[\s\S]*?id="plSeasonMatchweek"/,
   "The current fixture date and matchweek must sit in the centre action bar.");
 assert.match(html, /class="pl-season-header-left"[\s\S]*?id="plSeasonSettingsButton"[\s\S]*?class="pl-season-site-brand"[\s\S]*?id="plSeasonFeedbackButton"[\s\S]*?id="plSeasonAchievementsButton"[\s\S]*?id="plSeasonDonateButton"[\s\S]*?id="plSeasonAccountButton"/,
   "The PL season header must mirror the World Cup utility header.");
-assert.match(html, /premier-league-squads\.generated\.js\?v=pl-live-squads-2[\s\S]*?premier-league-fc26-ratings\.js\?v=fc26-official-1[\s\S]*?premier-league-data\.js\?v=pl-mobile-club-names-1/,
+assert.match(html, /premier-league-squads\.generated\.js\?v=pl-live-squads-2[\s\S]*?premier-league-fc26-ratings\.js\?v=fc26-official-1[\s\S]*?premier-league-data\.js\?v=pl-mobile-result-layout-2/,
   "Official FC 26 ratings must load between the current squads and PL data assembly.");
 assert.doesNotMatch(html, /20 clubs &middot; 380 matches/, "The PL menu card should not repeat the season totals");
 assert.doesNotMatch(html, />38 matchweeks</, "The PL menu start button should stay compact");
@@ -392,8 +408,48 @@ assert.match(
 );
 assert.match(
   dataSource,
-  /"manchester-city":\s*"Man City"[\s\S]*"manchester-united":\s*"Man Utd"[\s\S]*"nottingham-forest":\s*"Nott\. Forest"[\s\S]*"tottenham-hotspur":\s*"Spurs"/,
-  "The four long Premier League club names must have mobile aliases.",
+  /brighton:\s*"Brighton"[\s\S]*"coventry-city":\s*"Coventry"[\s\S]*"hull-city":\s*"Hull"[\s\S]*"leeds-united":\s*"Leeds"[\s\S]*"manchester-city":\s*"Man City"[\s\S]*"manchester-united":\s*"Man Utd"[\s\S]*"newcastle-united":\s*"Newcastle"[\s\S]*"nottingham-forest":\s*"Nott\. Forest"[\s\S]*"tottenham-hotspur":\s*"Spurs"/,
+  "Long Premier League club names must have their requested mobile aliases.",
+);
+assert.match(
+  appSource,
+  /--pl-result-event-clearance[\s\S]*premierLeagueResultEventRows - 2\) \* 24/,
+  "Completed mobile PL matches must reserve space for every scorer and major event.",
+);
+assert.match(
+  css,
+  /body\.pl-match-mode-active \.match-stage\.pl-full-time \.stage-action\s*\{[\s\S]*?margin-top:\s*var\(--pl-result-event-clearance/,
+  "The mobile Next match action must move below long scorer lists.",
+);
+assert.match(
+  css,
+  /body\.pl-match-mode-active \.match-stage\.pl-full-time \.matchup\s*\{[\s\S]*?overflow:\s*visible/,
+  "The mobile matchup must not clip scorer lines before the reserved button clearance.",
+);
+assert.match(
+  css,
+  /body\.pl-match-mode-active \.match-stage\.pl-full-time \.result-note:not\(\[hidden\]\)\s*\{[\s\S]*?position:\s*static[\s\S]*?margin-top:\s*7px[\s\S]*?transform:\s*none/,
+  "The mobile FULL TIME label must sit directly below the score in normal flow.",
+);
+assert.match(
+  css,
+  /body\.pl-match-mode-active \.sidebar #menuButton\s*\{[\s\S]*?display:\s*none !important[\s\S]*?#settingsButton[\s\S]*?left:\s*12px[\s\S]*?background:\s*#75418f/,
+  "The PL mobile match header must replace the menu icon with a purple Settings button.",
+);
+assert.match(
+  css,
+  /\.pl-season-header-left #plSeasonSettingsButton[\s\S]*?order:\s*1[\s\S]*?\.pl-season-header-left #plRestartSeasonButton[\s\S]*?order:\s*2/,
+  "The mobile PL season header must keep Settings before Restart.",
+);
+assert.match(
+  css,
+  /\.pl-season-utility-actions\s*\{[\s\S]*?position:\s*absolute[\s\S]*?right:\s*12px[\s\S]*?transform:\s*translateY\(-50%\)/,
+  "The mobile PL season utilities must use the same right-edge anchoring as the match header.",
+);
+assert.match(
+  css,
+  /\.pl-season-utility-actions \.utility-button\s*\{[\s\S]*?width:\s*34px[\s\S]*?height:\s*36px[\s\S]*?border-radius:\s*9px/,
+  "The mobile PL season utility icons must match the match-header control sizing.",
 );
 assert.match(
   seasonSource,
@@ -402,7 +458,7 @@ assert.match(
 );
 assert.match(
   appSource,
-  /function premierLeagueResponsiveTeamName\(team\)[\s\S]*state\?\.premierLeagueSeason[\s\S]*matchMedia\?\.\("\(max-width: 850px\)"\)[\s\S]*team\.mobileName \|\| team\.name/,
+  /function premierLeagueResponsiveTeamName\(team\)[\s\S]*state\?\.premierLeagueSeason[\s\S]*matchMedia\?\.\("\(max-width: 850px\)"\)[\s\S]*currentClub\?\.mobileName \|\| team\.mobileName \|\| team\.name/,
   "The shared PL match screen must use the same mobile club aliases.",
 );
 assert.match(
@@ -585,7 +641,11 @@ vm.runInContext(seasonSource, uiContext);
 listeners.get("start:click")();
 assert.equal(elements.screen.hidden, false, "Starting the season should open the PL screen");
 assert.equal(elements.appShell.hidden, true, "Starting the season should hide the mode menu");
-assert.match(elements.content.innerHTML, /Matchweek 1/, "The opening matchweek should render");
+assert.match(
+  elements.content.innerHTML,
+  /pl-matchweek-toolbar-nav-only[\s\S]*?pl-fixture-list/,
+  "The opening matchweek fixtures should render without a duplicated heading.",
+);
 listeners.get("simulate:click")();
 const storedSeason = JSON.parse(savedValues.get("world-256-pl-26-27-season-v1"));
 assert.equal(storedSeason.standardFormation, "4-3-3", "A new PL season should start in a 4-3-3");

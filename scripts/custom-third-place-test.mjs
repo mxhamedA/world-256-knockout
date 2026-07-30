@@ -38,5 +38,30 @@ assert.match(
   /customGroupQualifierCount\(state\.customTournament\.teamCount\) - 1[\s\S]*Number\(state\.customTournament\.thirdPlace === true\)/,
   "Group-format progress totals must include the third-place fixture.",
 );
+assert.match(
+  appSource,
+  /const CUSTOM_TEAM_SOURCE_OPTIONS[\s\S]*\["2006", "World Cup 2006"\][\s\S]*\["2016", "UEFA Euro 2016"\]/,
+  "The custom team library must expose the 2006 World Cup and Euro 2016 squads.",
+);
+assert.match(
+  appSource,
+  /if \(preset === "south-america"\) return TEAMS\.filter\(\(team\) => team\.confed === "CONMEBOL"\);/,
+  "Custom tournament quick fill must support South American teams.",
+);
+assert.match(
+  appSource,
+  /if \(preset === "north-america"\) return TEAMS\.filter\(\(team\) => team\.confed === "CONCACAF"\);/,
+  "Custom tournament quick fill must support North American teams.",
+);
+assert.match(
+  appSource,
+  /\[2006, 2010, 2014, 2016, 2018, 2022\]\.forEach\(\(year\) => installRetroTeams\(year\)\)/,
+  "The 2006 and Euro 2016 historical datasets must be installed in the shared team pool.",
+);
+assert.match(
+  appSource,
+  /function customTeamCompetitionLabel[\s\S]*Number\(team\.retroYear\) === 2016 \? "UEFA Euro 2016"/,
+  "Euro 2016 teams must be labelled as a European Championship rather than a World Cup.",
+);
 
 console.log("Custom third-place play-off checks passed.");

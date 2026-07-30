@@ -156,8 +156,13 @@ const PREMIER_LEAGUE_2026_27_PREFERRED_FORMATIONS = Object.freeze({
 });
 
 const PREMIER_LEAGUE_MOBILE_CLUB_NAMES = Object.freeze({
+  brighton: "Brighton",
+  "coventry-city": "Coventry",
+  "hull-city": "Hull",
+  "leeds-united": "Leeds",
   "manchester-city": "Man City",
   "manchester-united": "Man Utd",
+  "newcastle-united": "Newcastle",
   "nottingham-forest": "Nott. Forest",
   "tottenham-hotspur": "Spurs",
 });

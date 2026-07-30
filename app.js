@@ -1142,7 +1142,9 @@ function flagMarkup(team, className = "") {
 function premierLeagueResponsiveTeamName(team) {
   if (!state?.premierLeagueSeason || !team) return team?.name || "";
   const mobile = window.matchMedia?.("(max-width: 850px)")?.matches === true;
-  return mobile ? team.mobileName || team.name : team.name;
+  const currentClub = window.PREMIER_LEAGUE_2026_27_CLUBS
+    ?.find((club) => club.id === team.id);
+  return mobile ? currentClub?.mobileName || team.mobileName || team.name : team.name;
 }
 
 function escapeHtml(value) {
@@ -7235,7 +7237,7 @@ function upgradeTournamentHistoryRecord(record) {
       ...savedTeam,
       id: teamId,
       name: savedTeam.name || currentClub?.name || teamId,
-      mobileName: savedTeam.mobileName || currentClub?.mobileName || savedTeam.name || currentClub?.name || teamId,
+      mobileName: currentClub?.mobileName || savedTeam.mobileName || savedTeam.name || currentClub?.name || teamId,
       code: savedTeam.code || currentClub?.code || "PL",
       badge: savedTeam.badge || currentClub?.badge || null,
     }];
@@ -9908,7 +9910,11 @@ function weightedScorer(
   tournamentScoring = { teamGoals: 0, playerGoals: new Map() },
 ) {
   const squadProfiles = playerProfilesForTeam(team);
-  const profiles = eligibleScorerProfiles(team, minute, [], excludedPlayers);
+  const profiles = preferredPenaltyScorerProfiles(
+    team,
+    eligibleScorerProfiles(team, minute, [], excludedPlayers),
+    goalType,
+  );
   return selectWeightedProfile(profiles, random, (profile) => scorerWeightForGoalType(
     profile,
     goalType,
@@ -9936,7 +9942,11 @@ function availableScorer(
   tournamentScoring = { teamGoals: 0, playerGoals: new Map() },
 ) {
   const squadProfiles = playerProfilesForTeam(team);
-  const profiles = eligibleScorerProfiles(team, minute, cards, suspendedPlayers);
+  const profiles = preferredPenaltyScorerProfiles(
+    team,
+    eligibleScorerProfiles(team, minute, cards, suspendedPlayers),
+    goalType,
+  );
   return selectWeightedProfile(profiles, random, (profile) => scorerWeightForGoalType(
     profile,
     goalType,
@@ -12431,18 +12441,27 @@ function livePlayerRatingEntry(ratings, player) {
   return nameEntry?.[1] || null;
 }
 
+function livePlayerRatingKey(ratings, playerName) {
+  if (!ratings || !playerName) return null;
+  if (Object.hasOwn(ratings, playerName)) return playerName;
+  const nameKey = liveRatingNameKey(playerName);
+  if (!nameKey) return null;
+  return Object.keys(ratings).find((name) => liveRatingNameKey(name) === nameKey) || null;
+}
+
 function liveRatingSideForPlayer(playerName, preferredSide = null) {
   const ratings = livePlayback?.playerRatings;
   if (!ratings || !playerName) return null;
-  if (preferredSide && ratings[preferredSide]?.[playerName]) return preferredSide;
-  if (ratings.home?.[playerName]) return "home";
-  if (ratings.away?.[playerName]) return "away";
+  if (preferredSide && livePlayerRatingKey(ratings[preferredSide], playerName)) return preferredSide;
+  if (livePlayerRatingKey(ratings.home, playerName)) return "home";
+  if (livePlayerRatingKey(ratings.away, playerName)) return "away";
   return null;
 }
 
 function adjustLivePlayerRating(playerName, delta, reason, preferredSide = null) {
   const side = liveRatingSideForPlayer(playerName, preferredSide);
-  const entry = side ? livePlayback.playerRatings[side][playerName] : null;
+  const ratingKey = side ? livePlayerRatingKey(livePlayback.playerRatings[side], playerName) : null;
+  const entry = ratingKey ? livePlayback.playerRatings[side][ratingKey] : null;
   if (!entry || !Number.isFinite(delta)) return;
   entry.rating = Number(simulationClamp(entry.rating + delta, 3, 10).toFixed(2));
   entry.delta = Number(delta.toFixed(2));
@@ -14142,6 +14161,155 @@ function startPenaltyShootout(resumeCheckpoint = null) {
   schedulePenaltyStep(800);
 }
 
+function commentaryTeamRating(team) {
+  if (!team) return 0;
+  return Number(teamSimulationRatings(team)?.overall)
+    || Number(team.strength)
+    || Number(team.rating)
+    || 0;
+}
+
+function groupCommentaryContext(match, roundIndex) {
+  const isCustomGroup = Number.isInteger(match?.customGroupIndex);
+  const isNamedGroup = match?.stage === "group" || Boolean(match?.group);
+  if (!isCustomGroup && !isNamedGroup) return null;
+
+  const groupMatches = state.rounds.flat().filter((candidate) => {
+    if (isCustomGroup) return candidate.customGroupIndex === match.customGroupIndex;
+    return (candidate.stage === "group" || candidate.allowDraw) && candidate.group === match.group;
+  });
+  const teamIds = [...new Set(groupMatches.flatMap((candidate) => [candidate.homeId, candidate.awayId]))];
+  const rows = new Map(teamIds.map((teamId) => [teamId, {
+    teamId,
+    played: 0,
+    gf: 0,
+    ga: 0,
+    points: 0,
+  }]));
+  groupMatches.forEach((candidate) => {
+    if (!candidate.result?.revealed) return;
+    const home = rows.get(candidate.homeId);
+    const away = rows.get(candidate.awayId);
+    if (!home || !away) return;
+    const homeGoals = Number(candidate.result.homeGoals) || 0;
+    const awayGoals = Number(candidate.result.awayGoals) || 0;
+    home.played += 1;
+    away.played += 1;
+    home.gf += homeGoals;
+    home.ga += awayGoals;
+    away.gf += awayGoals;
+    away.ga += homeGoals;
+    if (homeGoals > awayGoals) home.points += 3;
+    else if (awayGoals > homeGoals) away.points += 3;
+    else {
+      home.points += 1;
+      away.points += 1;
+    }
+  });
+  const table = [...rows.values()]
+    .map((row) => ({ ...row, gd: row.gf - row.ga }))
+    .sort((left, right) => (
+      right.points - left.points
+      || right.gd - left.gd
+      || right.gf - left.gf
+      || commentaryTeamRating(teamById(right.teamId)) - commentaryTeamRating(teamById(left.teamId))
+    ));
+  const rawLabel = isCustomGroup ? match.customGroupLabel : match.group;
+  const groupLabel = String(rawLabel || "").toLowerCase().startsWith("group")
+    ? String(rawLabel)
+    : `Group ${rawLabel || ""}`.trim();
+  return {
+    groupLabel,
+    matchday: Number(match.matchday) || (isCustomGroup ? customGroupMatchday(match) + 1 : Number(roundIndex) + 1),
+    table,
+    complete: groupMatches.length > 0 && groupMatches.every((candidate) => candidate.result?.revealed),
+  };
+}
+
+function groupResultCommentary(match, winner, loser, roundIndex) {
+  const home = teamById(match.homeId);
+  const away = teamById(match.awayId);
+  const context = groupCommentaryContext(match, roundIndex);
+  if (!context) return null;
+
+  const homePosition = context.table.findIndex((row) => row.teamId === match.homeId) + 1;
+  const awayPosition = context.table.findIndex((row) => row.teamId === match.awayId) + 1;
+  const upset = winner && loser
+    ? commentaryTeamRating(loser) - commentaryTeamRating(winner) >= 7
+    : false;
+
+  if (!winner) {
+    if (context.matchday <= 1) {
+      return `${home.name} and ${away.name} share the points; ${context.groupLabel} starts wide open.`;
+    }
+    if (context.matchday >= 3 && context.complete) {
+      if (homePosition <= 2 && awayPosition <= 2) {
+        return `${home.name} and ${away.name} both book their places in the knockouts.`;
+      }
+      if (homePosition <= 2 || awayPosition <= 2) {
+        const qualifier = homePosition <= 2 ? home : away;
+        return `The points are shared, and ${qualifier.name} secure a knockout place.`;
+      }
+      return `${home.name} and ${away.name} share the points as ${context.groupLabel} is decided.`;
+    }
+    if (context.matchday >= 3) {
+      return `${home.name} and ${away.name} share the points, leaving qualification in the balance.`;
+    }
+    return `${home.name} and ${away.name} share the points; everything remains to play for in ${context.groupLabel}.`;
+  }
+
+  const winnerPosition = context.table.findIndex((row) => row.teamId === winner.id) + 1;
+  if (context.matchday <= 1) {
+    return upset
+      ? `Statement win! ${winner.name} upset ${loser.name} to make the perfect start in ${context.groupLabel}.`
+      : `${winner.name} open ${context.groupLabel} with three points.`;
+  }
+  if (context.matchday === 2) {
+    if (winnerPosition <= 2) {
+      return upset
+        ? `${winner.name} shake up ${context.groupLabel} and move into the qualifying places.`
+        : `${winner.name} take control of their qualification push in ${context.groupLabel}.`;
+    }
+    return `${winner.name} keep their qualification hopes alive with a vital win.`;
+  }
+  if (context.complete && winnerPosition <= 2) {
+    return `${winner.name} seal a place in the knockouts with victory over ${loser.name}.`;
+  }
+  if (context.complete) {
+    return `${winner.name} finish the group stage with a win over ${loser.name}.`;
+  }
+  return upset
+    ? `${winner.name} turn ${context.groupLabel} on its head, with qualification still to be settled.`
+    : `${winner.name} take a crucial win as qualification goes down to the wire.`;
+}
+
+function matchResultCommentary(match, roundIndex = state.activeRound) {
+  const home = teamById(match.homeId);
+  const away = teamById(match.awayId);
+  const winner = match.result?.winnerId
+    ? teamById(match.result.winnerId)
+    : Number(match.result?.homeGoals) > Number(match.result?.awayGoals)
+      ? home
+      : Number(match.result?.awayGoals) > Number(match.result?.homeGoals) ? away : null;
+  const loser = winner ? (winner.id === match.homeId ? away : home) : null;
+
+  if (state?.premierLeagueSeason) {
+    return window.PremierLeagueSeason?.resultCommentary?.(match, roundIndex)
+      || (winner ? `${winner.name} take all three points.` : `${home.name} and ${away.name} share the points.`);
+  }
+
+  const groupCopy = groupResultCommentary(match, winner, loser, roundIndex);
+  if (groupCopy) return groupCopy;
+  if (!winner) return `${home.name} and ${away.name} share the points.`;
+  if (roundIndex >= tournamentFinalRoundIndex() && !isThirdPlacePlayoff(match)) {
+    return `${winner.name} are champions!`;
+  }
+  const isShock = commentaryTeamRating(loser) - commentaryTeamRating(winner) >= 7;
+  return isShock
+    ? `Huge upset — ${winner.name} knock out ${loser.name}!`
+    : `${winner.name} advance.`;
+}
+
 function finishLivePlayback() {
   if (!livePlayback) return;
   playFullTimeWhistleOnce();
@@ -14173,28 +14341,13 @@ function finishLivePlayback() {
   if (finalManagement.length) match.result.retroFinalManagement = Object.fromEntries(finalManagement);
   match2dState = null;
   match.result.revealed = true;
+  const resultToast = matchResultCommentary(match, completed.roundIndex);
   clearLiveMatchCheckpoint(match.id);
   livePlayback = null;
   buildNextRound(completed.roundIndex);
   saveState();
   render();
-
-  const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
-  if (state?.premierLeagueSeason) {
-    if (!winner) {
-      showToast(`${teamById(match.homeId).name} and ${teamById(match.awayId).name} share the points.`);
-    } else {
-      showToast(`${winner.name} take all three points.`);
-    }
-    return;
-  }
-  if (!winner) {
-    showToast(`${teamById(match.homeId).name} and ${teamById(match.awayId).name} share the points.`);
-    return;
-  }
-  const loser = winner.id === match.homeId ? teamById(match.awayId) : teamById(match.homeId);
-  const isShock = loser.strength - winner.strength > 12;
-  showToast(isShock ? `Giant-killing! ${winner.name} send ${loser.name} home.` : `${winner.name} advance.`);
+  showToast(resultToast);
 }
 
 function syncPossessionResultStats(result) {
@@ -14770,22 +14923,11 @@ function revealSelected() {
   const match = selectedMatch();
   if (!match?.result) return;
   match.result.revealed = true;
+  const resultToast = matchResultCommentary(match, state.activeRound);
   buildNextRound(state.activeRound);
   saveState();
   render();
-
-  const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
-  if (state?.premierLeagueSeason) {
-    showToast(winner ? `${winner.name} take all three points.` : "The points are shared.");
-    return;
-  }
-  if (!winner) {
-    showToast("The points are shared.");
-    return;
-  }
-  const loser = winner.id === match.homeId ? teamById(match.awayId) : teamById(match.homeId);
-  const gap = loser.strength - winner.strength;
-  showToast(gap > 12 ? `Huge upset — ${winner.name} knock out ${loser.name}!` : `${winner.name} advance.`);
+  showToast(resultToast);
 }
 
 function simulateCurrentRound() {
@@ -15439,6 +15581,20 @@ function renderStage() {
   els.matchStage.classList.toggle("is-live", Boolean(isLive));
   els.matchStage.classList.toggle("is-shootout", Boolean(isShootout));
   els.matchStage.classList.toggle("pl-full-time", premierLeagueFullTime);
+  const premierLeagueResultEventRows = premierLeagueFullTime
+    ? Math.max(
+      (result.homeEvents || []).length
+        + (result.redCards || []).filter((event) => event.side === "home").length
+        + (result.injuries || []).filter((event) => event.side === "home").length,
+      (result.awayEvents || []).length
+        + (result.redCards || []).filter((event) => event.side === "away").length
+        + (result.injuries || []).filter((event) => event.side === "away").length,
+    )
+    : 0;
+  els.matchStage.style.setProperty(
+    "--pl-result-event-clearance",
+    `${Math.max(0, premierLeagueResultEventRows - 2) * 24}px`,
+  );
   els.penaltyStage.hidden = !isShootout;
   els.homeDiscipline.innerHTML = disciplineMarkup(
     isLive ? livePlayback.homeReds : revealed ? (result.redCards || []).filter((card) => card.side === "home") : [],
@@ -15918,6 +16074,30 @@ function storylineFor(match) {
   const home = teamById(match.homeId);
   const away = teamById(match.awayId);
   const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
+  const loser = winner ? (winner.id === home.id ? away : home) : null;
+  const roundIndex = state.rounds.findIndex((round) => round.includes(match));
+  const leagueCopy = state.premierLeagueSeason
+    ? window.PremierLeagueSeason?.resultCommentary?.(match, Math.max(0, roundIndex))
+    : null;
+  if (leagueCopy) {
+    const upset = winner && commentaryTeamRating(loser) - commentaryTeamRating(winner) >= 7;
+    return {
+      icon: upset ? "⚡" : winner ? "↑" : "=",
+      title: winner ? `${winner.name} beat ${loser.name}` : `${home.name} and ${away.name} draw`,
+      copy: leagueCopy,
+      priority: upset ? 4 : 1,
+    };
+  }
+  const groupCopy = groupResultCommentary(match, winner, loser, Math.max(0, roundIndex));
+  if (groupCopy) {
+    const upset = winner && commentaryTeamRating(loser) - commentaryTeamRating(winner) >= 7;
+    return {
+      icon: upset ? "⚡" : winner ? "↑" : "=",
+      title: winner ? `${winner.name} beat ${loser.name}` : `${home.name} and ${away.name} draw`,
+      copy: groupCopy,
+      priority: upset ? 4 : 1,
+    };
+  }
   if (!winner) {
     return {
       icon: "=",
@@ -15926,10 +16106,9 @@ function storylineFor(match) {
       priority: 1,
     };
   }
-  const loser = winner.id === home.id ? away : home;
   const goals = match.result.homeGoals + match.result.awayGoals;
 
-  if (loser.strength - winner.strength > 12) {
+  if (commentaryTeamRating(loser) - commentaryTeamRating(winner) >= 7) {
     return {
       icon: "⚡",
       title: `${winner.name} stun ${loser.name}`,
@@ -16479,6 +16658,25 @@ function renderLegacyDraftMode() {
   });
 }
 
+const CUSTOM_TEAM_SOURCE_OPTIONS = Object.freeze([
+  ["current", "Current teams"],
+  ["2006", "World Cup 2006"],
+  ["2010", "World Cup 2010"],
+  ["2014", "World Cup 2014"],
+  ["2016", "UEFA Euro 2016"],
+  ["2018", "World Cup 2018"],
+  ["2022", "World Cup 2022"],
+  ["all-retro", "All retro teams"],
+]);
+
+const CUSTOM_TEAM_SOURCE_IDS = new Set(CUSTOM_TEAM_SOURCE_OPTIONS.map(([value]) => value));
+
+function customTeamSourceOptionsMarkup(selectedSource = customTournamentSetup?.sourceFilter || "current") {
+  return CUSTOM_TEAM_SOURCE_OPTIONS.map(([value, label]) => (
+    `<option value="${value}" ${selectedSource === value ? "selected" : ""}>${label}</option>`
+  )).join("");
+}
+
 function defaultCustomTournamentSetup(teamCount = 32) {
   return {
     setupVersion: 3,
@@ -16518,7 +16716,7 @@ function readCustomTournamentSetup() {
       format: customTournamentRequiresGroups(teamCount) || saved?.structure === "groups" ? "full" : saved?.format === "penalties" ? "penalties" : "full",
       upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : "balanced",
       goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : "normal",
-      sourceFilter: ["current", "2010", "2014", "2018", "2022", "all-retro"].includes(String(saved?.sourceFilter))
+      sourceFilter: CUSTOM_TEAM_SOURCE_IDS.has(String(saved?.sourceFilter))
         ? String(saved.sourceFilter)
         : "current",
       managedTeamId: selectedIds.includes(saved?.managedTeamId) ? saved.managedTeamId : null,
@@ -16678,7 +16876,7 @@ function importCustomTournamentPreset(payload) {
     format: customTournamentRequiresGroups(teamCount) || payload.structure === "groups" ? "full" : payload.format === "penalties" ? "penalties" : "full",
     upset: SIMULATION_CONFIG.modes[payload.upset] ? payload.upset : "balanced",
     goals: SIMULATION_CONFIG.goals[payload.goals] ? payload.goals : "normal",
-    sourceFilter: ["current", "2010", "2014", "2018", "2022", "all-retro"].includes(String(payload.sourceFilter))
+    sourceFilter: CUSTOM_TEAM_SOURCE_IDS.has(String(payload.sourceFilter))
       ? String(payload.sourceFilter)
       : "current",
     managedTeamId: selectedIds.includes(managedTeamId) ? managedTeamId : null,
@@ -16726,7 +16924,14 @@ function customSetupTeam(id) {
 
 function customTeamDisplayName(team) {
   if (!team) return "Unknown team";
-  return team.retroWorldCup ? `${team.name} ${team.retroYear}` : team.name;
+  return team.retroWorldCup
+    ? `${team.name} ${Number(team.retroYear) === 2016 ? "Euro 2016" : team.retroYear}`
+    : team.name;
+}
+
+function customTeamCompetitionLabel(team) {
+  if (!team?.retroWorldCup) return team?.confed || "";
+  return Number(team.retroYear) === 2016 ? "UEFA Euro 2016" : `World Cup ${team.retroYear}`;
 }
 
 function customTeamSourcePool(source = customTournamentSetup.sourceFilter) {
@@ -16764,6 +16969,8 @@ function customFirstEmptyIndex() {
 
 function customPresetPool(preset) {
   if (preset === "europe") return TEAMS.filter((team) => team.confed === "UEFA");
+  if (preset === "south-america") return TEAMS.filter((team) => team.confed === "CONMEBOL");
+  if (preset === "north-america") return TEAMS.filter((team) => team.confed === "CONCACAF");
   if (preset === "asia") return TEAMS.filter((team) => team.confed === "AFC");
   if (preset === "africa") return TEAMS.filter((team) => team.confed === "CAF");
   if (preset === "guests") return TEAMS.filter((team) => team.confed === "INVITED");
@@ -16979,6 +17186,8 @@ function customBracketPanelMarkup() {
               <option value="top" ${customTournamentUi.quickFillPreset === "top" ? "selected" : ""}>Top ranked</option>
               <option value="random" ${customTournamentUi.quickFillPreset === "random" ? "selected" : ""}>Random</option>
               <option value="europe" ${customTournamentUi.quickFillPreset === "europe" ? "selected" : ""}>Only Europe</option>
+              <option value="south-america" ${customTournamentUi.quickFillPreset === "south-america" ? "selected" : ""}>Only South America</option>
+              <option value="north-america" ${customTournamentUi.quickFillPreset === "north-america" ? "selected" : ""}>Only North America</option>
               <option value="asia" ${customTournamentUi.quickFillPreset === "asia" ? "selected" : ""}>Only Asia</option>
               <option value="africa" ${customTournamentUi.quickFillPreset === "africa" ? "selected" : ""}>Only Africa</option>
               <option value="underdogs" ${customTournamentUi.quickFillPreset === "underdogs" ? "selected" : ""}>Only underdogs</option>
@@ -16996,7 +17205,7 @@ function customBracketPanelMarkup() {
             <strong>Team library</strong>
             <span>${available.length} available</span>
           </div>
-          <label class="custom-source-select"><span>Team era</span><select id="customSourceFilter" aria-label="Choose team era">${[["current", "Current teams"], ["2010", "World Cup 2010"], ["2014", "World Cup 2014"], ["2018", "World Cup 2018"], ["2022", "World Cup 2022"], ["all-retro", "All retro teams"]].map(([value, label]) => `<option value="${value}" ${customTournamentSetup.sourceFilter === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+          <label class="custom-source-select"><span>Team era</span><select id="customSourceFilter" aria-label="Choose team era">${customTeamSourceOptionsMarkup()}</select></label>
           <label class="custom-search">
             <span aria-hidden="true">&#8981;</span>
             <input type="search" id="customTeamSearch" value="${escapeHtml(customTournamentUi.search)}" placeholder="Search teams" autocomplete="off" />
@@ -17006,7 +17215,7 @@ function customBracketPanelMarkup() {
             ${available.map((team) => `
               <div class="custom-library-team">
                 ${flagMarkup(team, "custom-team-flag")}
-                <span><strong>${escapeHtml(customTeamDisplayName(team))}</strong><small>${team.retroWorldCup ? `World Cup ${team.retroYear}` : team.confed} &middot; ${team.rating}</small></span>
+                <span><strong>${escapeHtml(customTeamDisplayName(team))}</strong><small>${escapeHtml(customTeamCompetitionLabel(team))} &middot; ${team.rating}</small></span>
                 <button type="button" data-custom-action="add-team" data-team-id="${team.id}" aria-label="Add ${escapeHtml(customTeamDisplayName(team))} to the selected slot">+</button>
               </div>
             `).join("") || `<p class="custom-empty-state">No available teams match this search.</p>`}
@@ -17047,14 +17256,14 @@ function customTeamPickerModalMarkup(available) {
           <button type="button" data-custom-action="close-team-picker" aria-label="Close team picker">&times;</button>
         </header>
         <div class="custom-team-picker-tools">
-          <label><span>Team era</span><select id="customPickerSourceFilter">${[["current", "Current teams"], ["2010", "World Cup 2010"], ["2014", "World Cup 2014"], ["2018", "World Cup 2018"], ["2022", "World Cup 2022"], ["all-retro", "All retro teams"]].map(([value, label]) => `<option value="${value}" ${customTournamentSetup.sourceFilter === value ? "selected" : ""}>${label}</option>`).join("")}</select></label>
+          <label><span>Team era</span><select id="customPickerSourceFilter">${customTeamSourceOptionsMarkup()}</select></label>
           <label class="custom-picker-search"><span aria-hidden="true">&#8981;</span><input id="customPickerTeamSearch" type="search" value="${escapeHtml(customTournamentUi.search)}" placeholder="Search teams" autocomplete="off" /></label>
         </div>
         <div class="custom-team-picker-list">
           ${available.map((team) => `
             <button type="button" data-custom-action="add-team" data-team-id="${team.id}">
               ${flagMarkup(team, "custom-team-flag")}
-              <span><strong>${escapeHtml(customTeamDisplayName(team))}</strong><small>${team.retroWorldCup ? `World Cup ${team.retroYear}` : team.confed} &middot; ${team.rating}</small></span>
+              <span><strong>${escapeHtml(customTeamDisplayName(team))}</strong><small>${escapeHtml(customTeamCompetitionLabel(team))} &middot; ${team.rating}</small></span>
               <i aria-hidden="true">+</i>
             </button>
           `).join("") || `<p class="custom-empty-state">No available teams match this search.</p>`}

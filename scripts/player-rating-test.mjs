@@ -87,6 +87,9 @@ vm.runInContext(`
   };
   ${functionSource("liveRatingNameKey")}
   ${functionSource("livePlayerRatingEntry")}
+  ${functionSource("livePlayerRatingKey")}
+  ${functionSource("liveRatingSideForPlayer")}
+  ${functionSource("adjustLivePlayerRating")}
   ${functionSource("finalizeLivePlayerRatings")}
   ${functionSource("finalizeAndStoreLivePlayerRatings")}
   ${functionSource("repairFlatSavedPlayerRatings")}
@@ -95,7 +98,16 @@ vm.runInContext(`
     return livePlayback.playerRatings;
   };
   globalThis.repairSavedRatings = repairFlatSavedPlayerRatings;
+  globalThis.adjustRating = adjustLivePlayerRating;
+  globalThis.getLiveRatings = () => livePlayback.playerRatings;
 `, context);
+
+context.adjustRating("José Álvarez", 0.25, "Live contribution", "home");
+assert.equal(
+  context.getLiveRatings().home["Jose Alvarez"].rating,
+  6.75,
+  "Live ratings must match accent-normalized player names instead of staying at 6.5.",
+);
 
 const ratings = context.runRatingTest({
   homeId: "home",

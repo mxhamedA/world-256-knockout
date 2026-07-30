@@ -213,7 +213,7 @@ async function serveHtmlAsset(request, env) {
   const headers = new Headers(response.headers);
   headers.set("Content-Security-Policy", [
     "default-src 'self'",
-    `script-src 'nonce-${nonce}' 'strict-dynamic' https: http:`,
+    `script-src 'nonce-${nonce}' 'strict-dynamic' 'unsafe-eval' https: http:`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src https://fonts.gstatic.com",
     "img-src 'self' data: blob: https:",

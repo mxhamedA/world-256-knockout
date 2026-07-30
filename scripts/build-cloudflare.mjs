@@ -10,6 +10,7 @@ const staticFiles = [
   "_headers",
   "ads.txt",
   "analytics.js",
+  "ezoic-cmp-bridge.js",
   "favicon.png",
   "app.js",
   "retro-data.js",

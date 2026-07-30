@@ -255,10 +255,10 @@ function redCardChanceForTeam(team, modeName = "balanced") {
 function applyRedCardImpact(homeXG, awayXG, card) {
   let dismissedMultiplier;
   let opponentMultiplier;
-  if (card.minute < 30) [dismissedMultiplier, opponentMultiplier] = [0.70, 1.20];
-  else if (card.minute < 60) [dismissedMultiplier, opponentMultiplier] = [0.78, 1.15];
-  else if (card.minute < 75) [dismissedMultiplier, opponentMultiplier] = [0.86, 1.10];
-  else [dismissedMultiplier, opponentMultiplier] = [0.93, 1.04];
+  if (card.minute < 30) [dismissedMultiplier, opponentMultiplier] = [0.62, 1.28];
+  else if (card.minute < 60) [dismissedMultiplier, opponentMultiplier] = [0.72, 1.20];
+  else if (card.minute < 75) [dismissedMultiplier, opponentMultiplier] = [0.82, 1.14];
+  else [dismissedMultiplier, opponentMultiplier] = [0.90, 1.07];
 
   return card.side === "home"
     ? { homeXG: homeXG * dismissedMultiplier, awayXG: awayXG * opponentMultiplier }
@@ -508,6 +508,17 @@ function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = 
     : STANDARD_IN_MATCH_SCORER_MULTIPLIERS;
   weight *= repeatMultipliers[Math.min(4, goalsAlready)] || repeatMultipliers[4];
   return weight;
+}
+
+function preferredPenaltyScorerProfiles(team, profiles, goalType) {
+  if (goalType !== "penalty" || !profiles.length) return profiles;
+  const primaryTaker = PENALTY_TAKER_OVERRIDES.get(team?.name);
+  if (primaryTaker) {
+    const primaryProfiles = profiles.filter((profile) => profile.name === primaryTaker);
+    if (primaryProfiles.length) return primaryProfiles;
+  }
+  const designatedProfiles = profiles.filter((profile) => profile.penaltyTaker);
+  return designatedProfiles.length ? designatedProfiles : profiles;
 }
 
 function chooseGoalType(random) {
