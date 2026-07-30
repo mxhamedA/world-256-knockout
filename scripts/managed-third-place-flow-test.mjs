@@ -13,8 +13,8 @@ assert.match(
 );
 assert.match(
   app,
-  /const defaultManagedFinalIndex = \([\s\S]*?findIndex\(\(match\) => !isThirdPlacePlayoff\(match\)\)/,
-  "Managed progression must select the final instead of the third-place fixture.",
+  /const defaultManagedFinalIndex = state\.activeRound === tournamentFinalRoundIndex\(\)[\s\S]*?!isThirdPlacePlayoff\(match\)[\s\S]*?match\.homeId === team\.id/,
+  "A managed semi-final winner, including retro modes, must select their final instead of the third-place fixture.",
 );
 assert.match(
   app,

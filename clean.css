@@ -4749,6 +4749,74 @@ body.retro-mode-active.retro-2018-active {
   }
 }
 
+/* 2026 shootouts: keep the arena blue while preserving green/red result semantics. */
+body.retro-mode-active.retro-2026-active #mainContent .penalty-stage {
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: var(--wc26-white) !important;
+  background:
+    radial-gradient(circle at 50% 115%, rgba(55, 104, 255, 0.4), transparent 48%),
+    linear-gradient(145deg, #10286f 0%, var(--wc26-navy) 76%) !important;
+  box-shadow: 10px 12px 0 rgba(4, 28, 89, 0.55), 0 22px 42px rgba(0, 10, 45, 0.3) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-stage-head {
+  color: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-stage-head strong {
+  color: var(--wc26-white) !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-stage-head strong i,
+body.retro-mode-active.retro-2026-active #mainContent .penalty-stage-head strong b.score-pop {
+  color: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .standard-penalty-scene,
+  .match-penalty-scene
+) {
+  border-color: rgba(255, 255, 255, 0.42) !important;
+  background:
+    linear-gradient(180deg, rgba(6, 22, 79, 0.04), rgba(6, 22, 79, 0.42)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 42px, transparent 42px 84px),
+    #1769d8 !important;
+  box-shadow: inset 0 0 46px rgba(4, 28, 89, 0.26) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .match-penalty-overlay {
+  color: var(--wc26-white) !important;
+  background:
+    radial-gradient(circle at 50% 110%, rgba(55, 104, 255, 0.38), transparent 48%),
+    linear-gradient(145deg, rgba(16, 40, 111, 0.98), rgba(6, 22, 79, 0.98)) !important;
+  box-shadow: inset 0 4px 0 var(--wc26-orange), inset 0 -3px 0 rgba(55, 104, 255, 0.5) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-call :is(strong, span),
+body.retro-mode-active.retro-2026-active #mainContent .penalty-ledgers span {
+  color: var(--wc26-white) !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-mark {
+  border-color: rgba(255, 255, 255, 0.46) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-mark.goal {
+  border-color: #70e79c !important;
+  background: #1ea85b !important;
+  box-shadow: 0 0 0 3px rgba(30, 168, 91, 0.16) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .penalty-mark.miss {
+  border-color: #ff8c7d !important;
+  background: var(--wc26-red) !important;
+  box-shadow: 0 0 0 3px rgba(240, 68, 47, 0.13) !important;
+}
+
 @media (max-width: 420px) {
   .retro-lineup-tabs button {
     min-height: 34px;
@@ -9961,64 +10029,30 @@ body.standard-mode-active #newsButton {
   min-height: 152px;
   place-items: center;
   overflow: hidden;
-  background: linear-gradient(135deg, #176c52, #23a779);
+  background: linear-gradient(135deg, #3867ff, #0647f5);
 }
 
-.feature-announcement-2006 .feature-announcement-accent {
+.feature-announcement-wc-2026 .feature-announcement-accent {
   background:
-    radial-gradient(circle at 76% 16%, rgba(219, 239, 249, 0.28), transparent 28%),
-    repeating-radial-gradient(circle at 90% 4%, transparent 0 20px, rgba(219, 239, 249, 0.08) 21px 22px, transparent 23px 38px),
-    linear-gradient(135deg, #287494, #082e49);
+    radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.22), transparent 28%),
+    linear-gradient(135deg, #3867ff 0%, #0647f5 56%, #08236e 100%);
 }
 
-.feature-announcement-premier-league .feature-announcement-accent {
-  background:
-    radial-gradient(circle at 22% 10%, rgba(226, 171, 255, 0.36), transparent 30%),
-    linear-gradient(135deg, #5e2478, #260b35 72%);
-}
-
-.feature-announcement-premier-league-logo {
+.feature-announcement-wc-2026-logo {
   position: relative;
   z-index: 1;
-  width: 124px;
-  height: 124px;
-  padding: 12px;
-  object-fit: contain;
-  border: 1px solid rgba(255, 255, 255, 0.52);
-  border-radius: 28px;
-  background: #e7c9f1;
-  box-shadow: 0 12px 28px rgba(15, 0, 24, 0.32);
-}
-
-.feature-announcement-beta-badge {
-  position: absolute;
-  z-index: 2;
-  top: 18px;
-  right: 18px;
-  padding: 5px 8px;
-  color: #2a0d37;
-  font-size: 10px;
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  border-radius: 999px;
-  background: #e0a8f4;
-}
-
-.feature-announcement-2006-logo {
-  position: relative;
-  z-index: 1;
-  width: 132px;
+  width: 150px;
   height: 118px;
   object-fit: contain;
-  filter: drop-shadow(0 10px 18px rgba(0, 20, 35, 0.46));
+  filter: drop-shadow(0 12px 20px rgba(0, 17, 78, 0.48));
 }
 
-.feature-announcement-2006 .feature-announcement-accent strong {
+.feature-announcement-wc-2026 .feature-announcement-accent strong {
   position: absolute;
   right: 20px;
-  bottom: 4px;
-  color: rgba(246, 198, 58, 0.2);
-  font-size: 62px;
+  bottom: -12px;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 86px;
   font-weight: 950;
   letter-spacing: -5px;
 }
@@ -10046,12 +10080,8 @@ body.standard-mode-active #newsButton {
   letter-spacing: 0.14em;
 }
 
-.feature-announcement-2006 .feature-announcement-label {
-  color: #f6c63a;
-}
-
-.feature-announcement-premier-league .feature-announcement-label {
-  color: #dca5f1;
+.feature-announcement-wc-2026 .feature-announcement-label {
+  color: #ffd426;
 }
 
 .feature-announcement-modal h2 {
@@ -10083,27 +10113,18 @@ body.standard-mode-active #newsButton {
   transition: background-color 160ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.feature-announcement-2006 .feature-announcement-button {
-  color: #082438;
-  background: #f6c63a;
-}
-
-.feature-announcement-premier-league .feature-announcement-button {
-  color: #fff;
-  background: #7d3d99;
+.feature-announcement-wc-2026 .feature-announcement-button {
+  color: #071644;
+  background: #ff9f2e;
 }
 
 .feature-announcement-button:hover {
   background: #82e2bf;
 }
 
-.feature-announcement-2006 .feature-announcement-button:hover {
-  background: #ffdb68;
-}
-
 @media (hover: hover) and (pointer: fine) {
-  .feature-announcement-premier-league .feature-announcement-button:hover {
-    background: #9250ae;
+  .feature-announcement-wc-2026 .feature-announcement-button:hover {
+    background: #ffb24f;
   }
 }
 .feature-announcement-button:active,
@@ -11283,7 +11304,7 @@ body.standard-mode-active #newsButton {
 }
 
 .mode-card-default {
-  order: 1;
+  order: 3;
   grid-column: span 3;
   background: #121a27;
 }
@@ -11296,13 +11317,13 @@ body.standard-mode-active #newsButton {
 }
 
 .mode-card-legacy {
-  order: 3;
+  order: 4;
   grid-column: span 3;
   background: #121a27;
 }
 
 .mode-card-retro {
-  order: 2;
+  order: 1;
   grid-column: span 3;
   min-height: 420px;
   --retro-accent: #fcc40c;
@@ -11324,7 +11345,7 @@ body.standard-mode-active #newsButton {
 }
 
 .mode-card-premier-league {
-  order: 4;
+  order: 2;
   grid-column: span 3;
   min-height: 420px;
   --premier-league-accent: #381d53;
@@ -20616,7 +20637,7 @@ body.profile-mode-active #retroWorldCupScreen { display: none !important; }
 .challenge-title-flag { width: clamp(42px, 5vw, 68px); margin-right: 8px; }
 
 .mode-card-challenge {
-  order: 3;
+  order: 8;
   grid-column: span 3;
   background: #121a27;
 }
@@ -28847,6 +28868,86 @@ body.standard-mode-active .retro-third-place-playoff {
 
 #achievementsScreen[data-achievement-theme="2026"],
 #retroAchievementsModal[data-achievement-theme="2026"] {
+  --achievement-accent: #ff9e2f;
+  --achievement-accent-text: #07143d;
+  --achievement-surface: #10286f;
+  --achievement-surface-deep: #06164f;
+  --achievement-tab-surface: rgba(3, 13, 52, .86);
+  --achievement-card: rgba(18, 42, 112, .9);
+  --achievement-card-complete: #1852bb;
+  --achievement-copy: #f4f7ff;
+  --achievement-muted: #c9d7ff;
+  --achievement-points: #ffb45e;
+  --achievement-shadow: rgba(0, 10, 52, .5);
+}
+
+.achievement-unlock-banner[data-achievement-theme="2026"] {
+  border-top-color: #ff9e2f;
+  color: #f4f7ff;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(55, 104, 255, .38), transparent 40%),
+    linear-gradient(135deg, #10286f, #06164f);
+  box-shadow: 0 14px 34px rgba(0, 10, 52, .48);
+}
+
+.achievement-unlock-banner[data-achievement-theme="2026"] .achievement-unlock-banner-mark {
+  color: #07143d;
+  background: #ff9e2f;
+}
+
+.achievement-unlock-banner[data-achievement-theme="2026"] :is(
+  small,
+  .achievement-unlock-banner-arrow
+) {
+  color: #ffb45e;
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"] {
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-top: 5px solid #ff9e2f;
+  color: #f4f7ff;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(55, 104, 255, .34), transparent 38%),
+    linear-gradient(145deg, #10286f, #06164f);
+  box-shadow: 0 28px 72px rgba(0, 10, 52, .56);
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"]::backdrop {
+  background: rgba(1, 7, 30, .8);
+  backdrop-filter: blur(5px);
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"] .achievement-unlock-mark {
+  color: #07143d;
+  background: #ff9e2f;
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"] :is(
+  .achievement-unlock-kicker,
+  .achievement-unlock-close
+) {
+  color: #ffb45e;
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"] p {
+  color: #c9d7ff;
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"] .achievement-unlock-action {
+  border-color: #ff9e2f;
+  color: #07143d;
+  background: #ff9e2f;
+  box-shadow: 0 5px 0 #d47a12;
+  transition: transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 140ms ease;
+}
+
+.achievement-unlock-modal[data-achievement-theme="2026"] .achievement-unlock-action:active {
+  transform: translateY(2px) scale(.98);
+  box-shadow: 0 2px 0 #d47a12;
+}
+
+#achievementsScreen[data-achievement-theme="pl"],
+#retroAchievementsModal[data-achievement-theme="pl"] {
   --achievement-accent: #c98cf0;
   --achievement-accent-text: #21082f;
   --achievement-surface: #48205f;
@@ -33112,6 +33213,94 @@ body.retro-mode-active.retro-2006-active *::-webkit-scrollbar-thumb {
   }
 }
 
+/* 2026 modal and utility controls must not inherit the 2014 green theme. */
+body.retro-mode-active.retro-2026-active :is(
+  .settings-modal,
+  .news-modal,
+  .bug-report-modal,
+  #retroRestartModal
+) {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 0 24px 70px rgba(0, 8, 45, 0.56) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .settings-option,
+  .settings-keybind-list,
+  .settings-keybind-row,
+  .settings-keybind-button,
+  .bug-report-message,
+  .news-entry
+) {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .settings-option-copy strong,
+  .settings-keybind-row strong,
+  .news-modal h2,
+  .news-modal p
+) {
+  color: var(--wc26-white) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .settings-option-copy small,
+  .settings-note,
+  .settings-keybind-row small,
+  .bug-report-message::placeholder,
+  .bug-report-status
+) {
+  color: var(--wc26-muted) !important;
+}
+
+body.retro-mode-active.retro-2026-active .settings-switch {
+  background: #183783 !important;
+}
+
+body.retro-mode-active.retro-2026-active .settings-option:is(.is-enabled, [aria-pressed="true"]) .settings-switch {
+  background: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .settings-keybind-button,
+  .bug-report-submit,
+  #retroRestartModal .danger-button
+) {
+  border-color: var(--wc26-orange) !important;
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-orange) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active :is(
+  .settings-modal .icon-button,
+  .news-modal-close,
+  .bug-report-close,
+  #retroRestartModal .secondary-button
+) {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  color: var(--wc26-white) !important;
+  background: #183783 !important;
+}
+
+body.retro-mode-active.retro-2026-active #retroRestartModal .confirm-icon {
+  color: var(--wc26-orange) !important;
+  background: #183783 !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-screen-restart,
+body.retro-mode-active.retro-2026-active .retro-screen-restart::before {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  color: var(--wc26-white) !important;
+  background: transparent !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   body.retro-mode-active.retro-2006-active *,
   .mode-card-retro[data-retro-edition="2006"] * {
@@ -33475,7 +33664,7 @@ body.retro-mode-active.retro-2026-active {
   --wc26-ink: #07143d;
   --wc26-muted: #c9d7ff;
   --wc26-orange: #ff9e2f;
-  --wc26-green: #15933b;
+  --wc26-success: #2768d8;
   --wc26-red: #f0442f;
   --wc26-line: rgba(255, 255, 255, 0.28);
   color: var(--wc26-white);
@@ -33869,7 +34058,7 @@ body.retro-mode-active.retro-2026-active :is(
   .penalty-mark.goal
 ) {
   color: #eaffef !important;
-  background: var(--wc26-green) !important;
+  background: var(--wc26-success) !important;
 }
 
 body.retro-mode-active.retro-2026-active :is(
@@ -33992,5 +34181,717 @@ body.retro-mode-active.retro-2026-active ::selection {
 @media (prefers-reduced-motion: reduce) {
   body.retro-mode-active.retro-2026-active :is(button, .fixture, .retro-manager-player) {
     transition: none !important;
+  }
+}
+
+/* 2026 shared match-centre reset: prevent Brazil 2014 surfaces leaking through. */
+body.retro-mode-active.retro-2026-active .retro-tournament-heading {
+  min-height: 24px;
+  height: 24px;
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading > * {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-heading::after {
+  content: none;
+}
+
+body.retro-mode-active.retro-2026-active .retro-view-tabs::before,
+body.retro-mode-active.retro-2026-active .retro-view-tabs::after {
+  content: none !important;
+}
+
+/* Keep the 2026 squad directory deliberately simple: names and shirt numbers only. */
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-view,
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-groups {
+  border: 0 !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-view {
+  overflow: hidden;
+  border-radius: 14px !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-groups {
+  margin: 0;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-heading label > span {
+  color: var(--wc26-muted) !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-position-group {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  border-radius: 10px !important;
+  background: #0c2468 !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-position-group > h2 {
+  margin: 0;
+  padding: 0 14px;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-position-group .retro-squad-row,
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-position-group .retro-squad-row:nth-child(even) {
+  min-height: 52px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  padding: 8px 14px;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active .retro-tournament-body .retro-squad-row strong {
+  color: var(--wc26-white) !important;
+}
+
+/* Replace the inherited Brazil-green fixture controls and team popover. */
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  #unresolvedFilter,
+  #historyRoundButton,
+  #newerRoundButton,
+  .team-filter-chip
+) {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  #unresolvedFilter,
+  #historyRoundButton,
+  #newerRoundButton
+).active {
+  border-color: var(--wc26-orange) !important;
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .team-filter-control .search-result-popover {
+  overflow: hidden;
+  border: 2px solid var(--wc26-orange) !important;
+  border-radius: 10px;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 8px 10px 0 rgba(4, 28, 89, 0.66), 0 18px 38px rgba(0, 10, 45, 0.34) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .team-filter-control .search-result {
+  border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .team-filter-control .search-result small {
+  color: var(--wc26-muted) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.retro-mode-active.retro-2026-active #mainContent :is(
+    #unresolvedFilter,
+    #historyRoundButton,
+    #newerRoundButton,
+    .team-filter-chip
+  ):hover {
+    border-color: rgba(255, 255, 255, 0.42) !important;
+    background: #183783 !important;
+  }
+
+  body.retro-mode-active.retro-2026-active #mainContent .team-filter-control .search-result:hover {
+    background: #183783 !important;
+  }
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .board-actions :is(
+  #historyRoundButton,
+  #newerRoundButton
+) {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  #snapshotButton,
+  .snapshot-trigger
+) {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active .snapshot-modal form {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 10px 12px 0 rgba(4, 28, 89, 0.55) !important;
+}
+
+body.retro-mode-active.retro-2026-active .snapshot-modal :is(
+  .icon-button,
+  .close-modal
+) {
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel {
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 0 14px 30px rgba(0, 13, 66, 0.24) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel > summary,
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel[open] > summary {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .retro-live-ratings-side,
+  .retro-live-rating-list
+) {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-white) !important;
+  background: #081c59 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-ratings-side > header {
+  border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-ratings-side header small {
+  color: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-rating-row {
+  border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+  background: #0c2468 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-rating-row small {
+  color: var(--wc26-muted) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-rating-row > b {
+  border-color: var(--wc26-orange) !important;
+  color: var(--wc26-orange) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-rating-row > b.is-excellent {
+  border-color: #63d8ff !important;
+  color: #9ae8ff !important;
+  background: #0c315f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-rating-row > b.is-good {
+  border-color: var(--wc26-white) !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-live-rating-row > b.is-poor {
+  border-color: #ff8794 !important;
+  color: #ffb1ba !important;
+  background: #48142a !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.retro-mode-active.retro-2026-active #mainContent :is(
+    #snapshotButton,
+    .snapshot-trigger
+  ):hover,
+  body.retro-mode-active.retro-2026-active .snapshot-modal :is(
+    .icon-button,
+    .close-modal
+  ):hover {
+    border-color: rgba(255, 255, 255, 0.42) !important;
+    background: #183783 !important;
+  }
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+) {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 14px !important;
+  color: var(--wc26-white) !important;
+  background: linear-gradient(138deg, #0b246d 0%, var(--wc26-navy) 78%) !important;
+  box-shadow: 0 14px 30px rgba(0, 13, 66, 0.24) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .match-analysis
+)::before {
+  content: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .match-stage {
+  background:
+    radial-gradient(circle at 50% 120%, rgba(55, 104, 255, 0.42), transparent 46%),
+    linear-gradient(138deg, #0d2b82 0%, var(--wc26-navy) 78%) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .matchup,
+  .team-name,
+  .scoreline,
+  .match-score,
+  .score-separator,
+  .match-analysis-heading,
+  .match-analysis-heading strong,
+  .standard-match-tactics > span,
+  .story-card strong,
+  .story-card small
+) {
+  color: var(--wc26-white) !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .stage-round,
+  .match-analysis-heading span,
+  .standard-match-tactics > span,
+  .story-card span
+) {
+  color: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .match-analysis-heading {
+  min-height: 58px;
+  padding: 0 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+  background: #0c2468 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .match-stat-row,
+  .match-stats-empty,
+  .story-card p
+) {
+  color: var(--wc26-muted) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .standard-tactic-buttons {
+  gap: 7px;
+  padding: 7px !important;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  border-radius: 10px !important;
+  background: #081c59 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .standard-tactic-buttons button {
+  min-height: 46px;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--wc26-muted) !important;
+  background: #10286f !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .standard-tactic-buttons button.active {
+  border-color: var(--wc26-orange) !important;
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-orange) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .match-commentary-feed,
+  .search.team-filter-search
+) {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-white) !important;
+  background: #091d5b !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .penalty-scene,
+  .match-penalty-scene,
+  .standard-penalty-scene
+) {
+  background:
+    linear-gradient(rgba(6, 22, 79, 0.08), rgba(6, 22, 79, 0.34)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 42px, transparent 42px 84px),
+    #1769d8 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .champion-award,
+  .champion-extra-awards > *
+) {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-white) !important;
+  background: #0c2468 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent #championStage .champion-place {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 10px !important;
+  color: var(--wc26-white) !important;
+  background: #0c2468 !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent #championStage .champion-place.place-1 {
+  border-color: var(--wc26-orange) !important;
+  background: #12317f !important;
+  box-shadow: inset 0 4px var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent #championStage .champion-place :is(strong, small) {
+  color: var(--wc26-white) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent #championStage .champion-place small {
+  color: var(--wc26-muted) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent #championStage .champion-place > b {
+  color: var(--wc26-orange) !important;
+}
+
+/* Cleaner, compact starting-XI workspace. */
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel {
+  margin-top: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 14px !important;
+  color: var(--wc26-white) !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: 0 14px 30px rgba(0, 13, 66, 0.22) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel > summary,
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel[open] > summary {
+  position: relative;
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  padding: 0 50px 0 20px;
+  border: 0 !important;
+  border-bottom: 1px solid transparent !important;
+  color: var(--wc26-white) !important;
+  background: #0c2468 !important;
+  font-size: 0.86rem;
+  font-weight: 850;
+  list-style: none;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel[open] > summary {
+  border-bottom-color: rgba(255, 255, 255, 0.13) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel > summary::before {
+  content: "XI";
+  display: grid;
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--wc26-ink);
+  background: var(--wc26-orange);
+  font: 900 0.68rem/1 Manrope, sans-serif;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel > summary::after {
+  content: "+";
+  position: absolute;
+  right: 20px;
+  color: var(--wc26-muted);
+  font: 500 1.35rem/1 Manrope, sans-serif;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel[open] > summary::after {
+  content: "−";
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-match-lineups-panel > .retro-lineups-grid {
+  gap: 0;
+  padding: 0 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-workspace {
+  gap: 0;
+  border: 0;
+  background: var(--wc26-navy);
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-tabs {
+  gap: 6px;
+  padding: 8px;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13) !important;
+  background: #081c59 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-tabs button {
+  min-height: 46px;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  color: var(--wc26-muted) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+  font-size: 0.75rem;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-tabs button.active {
+  border-color: var(--wc26-white) !important;
+  color: var(--wc26-navy) !important;
+  background: var(--wc26-white) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-lineup {
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--wc26-navy) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-hint {
+  margin: 0;
+  padding: 12px 16px;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--wc26-muted);
+  background: #0c2468;
+  font-size: 0.76rem;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-layout {
+  gap: 14px;
+  padding: 14px;
+  background: var(--wc26-navy);
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-pitch-box {
+  overflow: hidden;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.13) !important;
+  border-radius: 12px !important;
+  background: #0c2468 !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-pitch {
+  border-radius: 9px;
+  box-shadow: inset 0 0 28px rgba(4, 17, 65, 0.3) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-corner-control {
+  top: 8px;
+  left: 8px;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-corner-control [data-retro-manager-formation] {
+  width: 96px !important;
+  min-width: 96px !important;
+  min-height: 32px !important;
+  height: 32px;
+  padding: 0 26px 0 10px !important;
+  border: 1px solid var(--wc26-orange) !important;
+  border-radius: 6px !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+  font: 800 0.66rem/1 Manrope, sans-serif !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-sub-counter {
+  top: 8px;
+  right: 8px;
+  gap: 7px;
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-radius: 6px !important;
+  color: var(--wc26-white) !important;
+  background: #10286f !important;
+  box-shadow: none !important;
+  font: 800 0.62rem/1 Manrope, sans-serif !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-sub-counter span {
+  color: var(--wc26-white) !important;
+  white-space: nowrap;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-player {
+  width: clamp(62px, 16%, 82px);
+  min-height: 52px;
+  gap: 2px;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  touch-action: manipulation;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-player b {
+  width: 31px;
+  height: 31px;
+  border: 2px solid var(--wc26-white);
+  border-radius: 50%;
+  color: var(--wc26-white);
+  background: #2768d8;
+  box-shadow: 0 3px 10px rgba(0, 8, 42, 0.4);
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-player span {
+  padding: 1px 3px;
+  color: var(--wc26-white);
+  background: rgba(6, 22, 79, 0.72);
+  font-size: 0.58rem;
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-player i {
+  min-width: 27px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  font-size: 0.55rem;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-section.is-bench {
+  padding: 0 0 0 14px;
+  border-left-color: rgba(255, 255, 255, 0.13);
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player {
+  min-height: 46px;
+  border-width: 0 0 1px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player.is-selected {
+  border-color: var(--wc26-orange) !important;
+  background: rgba(255, 158, 47, 0.1) !important;
+  box-shadow: inset 3px 0 var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-pitch-player.is-drop-target b {
+  border-color: var(--wc26-orange) !important;
+  color: var(--wc26-ink) !important;
+  background: var(--wc26-orange) !important;
+  box-shadow: 0 0 0 5px rgba(255, 158, 47, 0.28) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player.is-drop-target {
+  border-color: var(--wc26-orange) !important;
+  background: rgba(255, 158, 47, 0.14) !important;
+  box-shadow: inset 4px 0 var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .retro-pitch-player,
+  .retro-manager-player
+):not(:disabled) {
+  cursor: grab;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent :is(
+  .retro-pitch-player,
+  .retro-manager-player
+).is-dragging {
+  cursor: grabbing;
+  opacity: 0.36;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player :is(b, i),
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-section-title span {
+  color: var(--wc26-orange) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player small {
+  display: none;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-manager-section.is-bench .retro-manager-player {
+  grid-template-columns: 28px minmax(0, 1fr) 30px 34px;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .standard-tactic-buttons {
+  gap: 4px;
+  padding: 5px !important;
+  border-radius: 9px !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .standard-tactic-buttons button {
+  min-height: 36px !important;
+  padding: 5px 8px !important;
+  border-radius: 6px !important;
+  font-size: 0.68rem !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side,
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side:nth-child(2) {
+  border-color: rgba(255, 255, 255, 0.13) !important;
+  background: var(--wc26-navy) !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side header,
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side:nth-child(2) header {
+  border-bottom-color: rgba(255, 255, 255, 0.13) !important;
+  background: #0c2468 !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side li:nth-child(even) {
+  background: rgba(255, 255, 255, 0.035) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.36) !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.retro-mode-active.retro-2026-active #mainContent .retro-manager-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body.retro-mode-active.retro-2026-active #mainContent .retro-manager-section.is-bench {
+    height: auto;
+    min-height: 0;
+    padding: 14px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.13);
+    border-left: 0;
   }
 }

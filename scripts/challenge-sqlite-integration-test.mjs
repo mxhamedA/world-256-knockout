@@ -314,6 +314,26 @@ assert.equal(completed.payload.achievement.total, 32);
 assert.equal(completed.payload.unlockedTeam.points, 8);
 assert.equal(completed.payload.achievement.completedPoints, completed.payload.unlockedTeam.points);
 
+const retro2026Seed = 2026061101;
+const retro2026Started = await request("/achievements/retro-2026", {
+  method: "POST",
+  body: { seed: retro2026Seed, teamName: "Cabo Verde", phase: "start", champion: null },
+});
+assert.equal(retro2026Started.response.status, 200);
+assert.equal(retro2026Started.payload.unlockedTeam.attempts, 1);
+assert.equal(retro2026Started.payload.achievement.total, 48);
+
+const retro2026Completed = await request("/achievements/retro-2026", {
+  method: "POST",
+  body: { seed: retro2026Seed, teamName: "Cabo Verde", phase: "complete", champion: "Cabo Verde" },
+});
+assert.equal(retro2026Completed.response.status, 200);
+assert.equal(retro2026Completed.payload.countryUnlocked, true);
+assert.equal(retro2026Completed.payload.unlockedTeam.won, true);
+assert.equal(retro2026Completed.payload.achievement.id, "retro-2026-world-tour");
+assert.equal(retro2026Completed.payload.achievement.completed, 1);
+assert.equal(retro2026Completed.payload.achievement.total, 48);
+
 const euro2016Teams = [
   "France", "Romania", "Albania", "Switzerland",
   "England", "Russia", "Wales", "Slovakia",
@@ -423,11 +443,12 @@ assert.equal(
   false,
 );
 const hardenedFinalistBoard = await request("/achievements/leaderboard");
-assert.equal(hardenedFinalistBoard.payload.currentUser.achievements, 26);
+assert.equal(hardenedFinalistBoard.payload.currentUser.achievements, 27);
 assert.equal(
   hardenedFinalistBoard.payload.currentUser.points,
   retro2006Win.payload.unlockedTeam.points
     + completed.payload.unlockedTeam.points
+    + retro2026Completed.payload.unlockedTeam.points
     + euroMastered.completedPoints,
 );
 
@@ -551,18 +572,19 @@ assert.equal(premierLeagueWon.payload.unlockedTeam.objectiveLabel, "Win the Prem
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
 assert.equal(achievementBoard.payload.leaderboard[0].username, username);
-assert.equal(achievementBoard.payload.leaderboard[0].achievements, 29);
+assert.equal(achievementBoard.payload.leaderboard[0].achievements, 30);
 assert.equal(
   achievementBoard.payload.leaderboard[0].points,
   retro2006Win.payload.unlockedTeam.points
     + completed.payload.unlockedTeam.points
+    + retro2026Completed.payload.unlockedTeam.points
     + euroMastered.completedPoints
     + spainChampion.payload.unlockedTeam.points
     + nauruRoundOf16.payload.unlockedTeam.points
     + premierLeagueWon.payload.unlockedTeam.points,
 );
 assert.equal(achievementBoard.payload.currentUser.rank, 1);
-assert.equal(achievementBoard.payload.totalAchievements, 460);
+assert.equal(achievementBoard.payload.totalAchievements, 508);
 
 const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
 assert.equal(publicAchievementBoard.response.status, 200);
@@ -638,6 +660,10 @@ assert.equal(
 assert.equal((await accountForGoogleClaims(db, { sub: "google-subject-sqlite", email })).id, linkedAccount.id);
 assert.equal(
   sqlite.prepare("SELECT COUNT(*) AS total FROM retro_2022_attempts WHERE account_id = (SELECT id FROM accounts WHERE username = ?)").get(username).total,
+  1,
+);
+assert.equal(
+  sqlite.prepare("SELECT COUNT(*) AS total FROM retro_2026_attempts WHERE account_id = (SELECT id FROM accounts WHERE username = ?)").get(username).total,
   1,
 );
 assert.equal(

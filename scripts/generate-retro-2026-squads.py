@@ -94,6 +94,118 @@ CAPTAIN_HINTS = {
     "USA": "Christian Pulisic",
 }
 
+TEAM_ABILITY_BONUSES = {
+    "Cabo Verde": 5,
+}
+
+TEAM_SQUAD_BONUSES = {
+    "Cabo Verde": 3,
+}
+
+PLAYER_OVERALL_OVERRIDES = {
+    ("Cabo Verde", 1): 79,   # Vozinha
+    ("Cabo Verde", 13): 78,  # Sidny Lopes Cabral
+    ("England", 3): 83,      # Nico O'Reilly
+    ("England", 25): 82,     # Djed Spence
+}
+
+PLAYER_DISPLAY_NAME_OVERRIDES = {
+    ("Spain", 2): "Marc Pubill",
+    ("Spain", 13): "Joan García",
+    ("Spain", 22): "Pau Cubarsí",
+    ("Spain", 25): "Víctor Muñoz",
+}
+
+PLAYER_POSITION_OVERRIDES = {
+    ("England", 3): "LB",   # Nico O'Reilly
+    ("England", 25): "LB",  # Djed Spence
+}
+
+# Tournament roles are deliberately separate from the FC 26 snapshot. The
+# snapshot predates several of these call-ups, so a missing EA match must not
+# turn into a team-average rating or an automatic starting place.
+#
+# Spain: RFEF's World Cup final team sheet and FIFA's post-tournament awards.
+# France: the recurring XI in FFF/FIFA match reports, with the attacking ratings
+# reflecting Mbappe's Golden Boot-level output and the production of Dembele,
+# Olise and Barcola throughout the tournament.
+TOURNAMENT_TEAM_PROFILES = {
+    "England": {
+        "formation": "4-3-3",
+        # Pickford; O'Reilly, Stones, Guehi, James; Rice, Bellingham,
+        # Anderson; Gordon, Kane, Saka.
+        "startingXI": [1, 3, 5, 6, 24, 4, 10, 8, 18, 9, 7],
+        "players": {
+            3: (83, "starter"),
+            25: (82, "rotation"),
+        },
+    },
+    "Spain": {
+        "formation": "4-2-3-1",
+        "startingXI": [23, 24, 22, 14, 12, 16, 8, 15, 10, 19, 21],
+        "players": {
+            1: (81, "unused"),
+            2: (72, "fringe"),
+            3: (78, "unused"),
+            4: (80, "fringe"),
+            5: (82, "rotation"),
+            6: (85, "rotation"),
+            7: (87, "impact"),
+            8: (87, "starter"),
+            9: (81, "rotation"),
+            10: (87, "starter"),
+            11: (78, "rotation"),
+            12: (85, "starter"),
+            13: (76, "unused"),
+            14: (87, "starter"),
+            15: (85, "starter"),
+            16: (93, "tournament-star"),
+            17: (86, "impact"),
+            18: (80, "fringe"),
+            19: (90, "tournament-star"),
+            20: (87, "rotation"),
+            21: (86, "starter"),
+            22: (89, "tournament-star"),
+            23: (90, "tournament-star"),
+            24: (88, "tournament-star"),
+            25: (68, "unused"),
+            26: (78, "fringe"),
+        },
+    },
+    "France": {
+        "formation": "4-2-3-1",
+        "startingXI": [16, 3, 17, 4, 5, 6, 14, 12, 11, 7, 10],
+        "players": {
+            1: (81, "rotation"),
+            2: (80, "rotation"),
+            3: (83, "starter"),
+            4: (87, "starter"),
+            5: (88, "starter"),
+            6: (86, "starter"),
+            7: (91, "tournament-star"),
+            8: (87, "starter"),
+            9: (82, "rotation"),
+            10: (95, "tournament-star"),
+            11: (89, "tournament-star"),
+            12: (87, "starter"),
+            13: (80, "fringe"),
+            14: (85, "starter"),
+            15: (83, "rotation"),
+            16: (88, "starter"),
+            17: (88, "starter"),
+            18: (80, "fringe"),
+            19: (84, "rotation"),
+            20: (85, "impact"),
+            21: (82, "rotation"),
+            22: (81, "rotation"),
+            23: (72, "unused"),
+            24: (83, "impact"),
+            25: (79, "fringe"),
+            26: (82, "rotation"),
+        },
+    },
+}
+
 
 def normalize(value: str | None) -> str:
     value = unicodedata.normalize("NFKD", value or "")
@@ -103,6 +215,38 @@ def normalize(value: str | None) -> str:
 def clean_pdf_text(value: str | None) -> str:
     # A few embedded glyphs have no Unicode mapping in the official PDF.
     return (value or "").replace("\x00", "i").strip()
+
+
+def smart_title(value: str | None) -> str:
+    """Turn FIFA's all-caps name fields into normal display case."""
+    return re.sub(
+        r"[^\s-]+",
+        lambda match: match.group(0) if not match.group(0).isupper() else match.group(0).title(),
+        value or "",
+    )
+
+
+def display_player_name(official: dict, matched: dict | None) -> str:
+    """Use the concise first-name + surname style from the other WC modes."""
+    if matched:
+        common_name = (matched.get("commonName") or "").strip()
+        if common_name:
+            return common_name
+        first_name = (matched.get("firstName") or "").strip().split()
+        last_name = (matched.get("lastName") or "").strip()
+        if first_name or last_name:
+            return " ".join([*(first_name[:1]), last_name]).strip()
+    listed_value = (official.get("listedName") or "").strip()
+    listed_name = listed_value.split()
+    last_name = smart_title(official.get("lastName") or official.get("shirtName"))
+    if listed_value:
+        if len(listed_name) == 1 or listed_value.isupper():
+            return smart_title(listed_value)
+        if normalize(listed_name[0]) == normalize(official.get("lastName")):
+            return " ".join([listed_name[-1], last_name]).strip()
+        return smart_title(listed_value)
+    first_name = (official.get("firstNames") or "").strip().split()[:1]
+    return " ".join([*first_name, last_name]).strip()
 
 
 def app_team_name(pdf_name: str) -> str:
@@ -141,25 +285,43 @@ def parse_official_squads() -> dict[str, dict]:
             if not tables:
                 raise RuntimeError(f"No squad table found for {team_name}")
             table = tables[0]
+            header = [clean_pdf_text(cell).upper() for cell in table[0]]
+
+            def column_index(label: str) -> int:
+                try:
+                    return header.index(label)
+                except ValueError as error:
+                    raise RuntimeError(f"{team_name} squad table is missing the {label} column") from error
+
+            number_index = column_index("#")
+            position_index = column_index("POS")
+            listed_name_index = column_index("PLAYER NAME")
+            first_names_index = column_index("FIRST NAME(S)")
+            last_name_index = column_index("LAST NAME(S)")
+            shirt_name_index = column_index("NAME ON SHIRT")
+            club_index = column_index("CLUB")
+            caps_index = column_index("CAPS")
+            goals_index = column_index("GOALS")
             players = []
             for row in table[1:]:
-                if not row or not str(row[0] or "").isdigit():
+                if not row or not str(row[number_index] or "").isdigit():
                     continue
-                row = [*row, *([None] * max(0, 15 - len(row)))]
-                number = int(row[0])
-                position = clean_pdf_text(row[1])
-                listed_name = clean_pdf_text(row[2])
-                first_names = clean_pdf_text(row[4])
-                last_name = clean_pdf_text(row[5])
-                shirt_name = clean_pdf_text(row[7])
-                club = clean_pdf_text(row[10])
-                caps = int(row[13] or 0)
-                goals = int(row[14] or 0)
+                number = int(row[number_index])
+                position = clean_pdf_text(row[position_index])
+                listed_name = clean_pdf_text(row[listed_name_index])
+                first_names = clean_pdf_text(row[first_names_index])
+                last_name = clean_pdf_text(row[last_name_index])
+                shirt_name = clean_pdf_text(row[shirt_name_index])
+                club = clean_pdf_text(row[club_index])
+                caps = int(row[caps_index] or 0)
+                goals = int(row[goals_index] or 0)
                 display_name = re.sub(r"\s+", " ", f"{first_names} {last_name}").strip()
                 players.append({
                     "number": number,
                     "position": position,
                     "name": display_name,
+                    "firstNames": first_names,
+                    "lastName": last_name,
                     "listedName": listed_name,
                     "shirtName": shirt_name,
                     "club": club,
@@ -263,20 +425,61 @@ def generate() -> dict[str, dict]:
         used_ids: set[int] = set()
         matched_count = 0
         player_rows = []
+        place = finish_by_team[team_name]
+        points = TOURNAMENT_POINTS[team_name]
+        fifa_name = {
+            "Cabo Verde": "Cape Verde",
+            "Congo DR": "DR Congo",
+            "CÃ´te d'Ivoire": "Ivory Coast",
+            "IR Iran": "Iran",
+            "Korea Republic": "South Korea",
+            "TÃ¼rkiye": "TÃ¼rkiye",
+        }.get(team_name, team_name)
+        fifa_rank = fifa_ranks.get(fifa_name, 100)
+        fifa_component = max(68, 94 - (fifa_rank - 1) * 0.38)
+        tournament_component = stage_rating(place, points)
+        team_context = fifa_component * 0.56 + tournament_component * 0.44
+        tournament_profile = TOURNAMENT_TEAM_PROFILES.get(team_name, {})
+        tournament_players = tournament_profile.get("players", {})
         for official in squad["players"]:
             matched = match_fc26_player(official, candidates, used_ids)
             if matched:
                 used_ids.add(matched["id"])
                 matched_count += 1
-            baseline = 69 + min(7, math.log2(max(1, official["caps"] + 1))) + min(3, official["internationalGoals"] / 10)
-            overall = int(matched["overall"]) if matched else clamp_round(baseline, 60, 79)
+            experience_bonus = min(3.5, math.log2(max(1, official["caps"] + 1)) * 0.55)
+            scoring_bonus = min(2.0, official["internationalGoals"] / 12)
+            baseline = team_context - 8 + experience_bonus + scoring_bonus
+            if matched:
+                context_adjustment = max(-2, min(2, round((team_context - 80) * 0.10)))
+                overall = clamp_round(int(matched["overall"]) + context_adjustment, 60, 95)
+            else:
+                # No FC 26 match is evidence of uncertainty, not permission to
+                # inherit an elite team's average. Keep the fallback
+                # conservative until tournament evidence supplies an override.
+                overall = clamp_round(baseline - 4, 64, 79)
+            overall = clamp_round(overall + TEAM_SQUAD_BONUSES.get(team_name, 0), 60, 95)
+            overall = PLAYER_OVERALL_OVERRIDES.get((team_name, official["number"]), overall)
+            tournament_player = tournament_players.get(official["number"])
+            if tournament_player:
+                overall = tournament_player[0]
             stats = matched.get("stats", {}) if matched else {}
+            position_override = PLAYER_POSITION_OVERRIDES.get((team_name, official["number"]))
+            detailed_position = position_override or (matched.get("position") if matched else official["position"])
+            detailed_positions = list(dict.fromkeys([
+                detailed_position,
+                *([position for position in matched.get("alternatePositions", []) if position] if matched else []),
+                official["position"],
+            ]))
             player = {
                 "number": official["number"],
-                "name": official["name"],
-                "position": official["position"],
-                "positions": [official["position"]],
-                "club": official["club"],
+                "name": PLAYER_DISPLAY_NAME_OVERRIDES.get(
+                    (team_name, official["number"]),
+                    display_player_name(official, matched),
+                ),
+                "position": detailed_position,
+                "positions": detailed_positions,
+                "squadGroup": official["position"],
+                "club": matched.get("team") if matched else official["club"],
                 "overall": overall,
                 "attributes": {
                     "pace": stats.get("pace", overall),
@@ -295,23 +498,30 @@ def generate() -> dict[str, dict]:
                 "internationalGoals": official["internationalGoals"],
                 "preferredFoot": preferred_foot(matched.get("preferredFoot")) if matched else None,
                 "fc26Overall": int(matched["overall"]) if matched else None,
+                "tournamentRole": tournament_player[1] if tournament_player else None,
                 "captain": normalize(official["name"]) == normalize(CAPTAIN_HINTS.get(team_name)),
             }
             player_rows.append(player)
 
+        formation = tournament_profile.get("formation", "4-3-3")
         by_position = {
             position: sorted(
-                [player for player in player_rows if player["position"] == position],
+                [player for player in player_rows if player["squadGroup"] == position],
                 key=lambda player: (-player["overall"], player["number"]),
             )
             for position in ("GK", "DF", "MF", "FW")
         }
-        starters = (
-            by_position["GK"][:1]
-            + by_position["DF"][:4]
-            + by_position["MF"][:3]
-            + by_position["FW"][:3]
-        )
+        preferred_starter_numbers = tournament_profile.get("startingXI")
+        if preferred_starter_numbers:
+            player_by_number = {player["number"]: player for player in player_rows}
+            starters = [player_by_number[number] for number in preferred_starter_numbers]
+        else:
+            starters = (
+                by_position["GK"][:1]
+                + by_position["DF"][:4]
+                + by_position["MF"][:3]
+                + by_position["FW"][:3]
+            )
         if len(starters) < 11:
             starter_numbers = {player["number"] for player in starters}
             starters += sorted(
@@ -333,7 +543,12 @@ def generate() -> dict[str, dict]:
         fifa_component = max(68, 94 - (fifa_rank - 1) * 0.38)
         fc_component = average([player["overall"] for player in starters], 72)
         tournament_component = stage_rating(place, points)
-        overall = clamp_round(fc_component * 0.40 + fifa_component * 0.32 + tournament_component * 0.28, 68, 93)
+        ability_bonus = TEAM_ABILITY_BONUSES.get(team_name, 0)
+        overall = clamp_round(
+            fc_component * 0.40 + fifa_component * 0.32 + tournament_component * 0.28 + ability_bonus,
+            68,
+            93,
+        )
         tournament_delta = (tournament_component - 78) * 0.22
 
         def line_rating(position: str, count: int, fallback: float = fc_component) -> float:
@@ -378,7 +593,7 @@ def generate() -> dict[str, dict]:
         generated[team_name] = {
             "coach": squad["coach"],
             "captain": captain,
-            "formation": "4-3-3",
+            "formation": formation,
             "startingXI": [player["number"] for player in starters],
             "penaltyTakers": penalty_takers,
             "players": player_rows,

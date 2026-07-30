@@ -21,8 +21,7 @@ const TOURNAMENT_HISTORY_MIGRATION_KEY = "world-256-tournament-history-indexeddb
 const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
 const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
-const PREMIER_LEAGUE_ANNOUNCEMENT_KEY = "world-256-announcement-premier-league-beta-v1";
-const RETRO_2006_ANNOUNCEMENT_KEY = "world-256-announcement-retro-2006-v1";
+const WC_2026_ANNOUNCEMENT_KEY = "world-256-announcement-wc-2026-launch-v1";
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -340,12 +339,9 @@ const els = {
   newsButton: $("#newsButton"),
   newsModal: $("#newsModal"),
   newsCloseButton: $("#newsCloseButton"),
-  premierLeagueAnnouncementModal: $("#premierLeagueAnnouncementModal"),
-  premierLeagueAnnouncementClose: $("#premierLeagueAnnouncementClose"),
-  premierLeagueAnnouncementAction: $("#premierLeagueAnnouncementAction"),
-  retro2006AnnouncementModal: $("#retro2006AnnouncementModal"),
-  retro2006AnnouncementClose: $("#retro2006AnnouncementClose"),
-  retro2006AnnouncementAction: $("#retro2006AnnouncementAction"),
+  wc2026AnnouncementModal: $("#wc2026AnnouncementModal"),
+  wc2026AnnouncementClose: $("#wc2026AnnouncementClose"),
+  wc2026AnnouncementAction: $("#wc2026AnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   removeInjuriesSetting: $("#removeInjuriesSetting"),
   removeInjuriesLabel: $("#removeInjuriesLabel"),
@@ -7042,6 +7038,26 @@ function completedCount() {
   return allMatches().filter((match) => match?.result && !match.result.bye).length;
 }
 
+function tournamentPlayerNameKey(name) {
+  return String(name || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .match(/[a-z0-9]+/g)
+    ?.sort()
+    .join("") || "";
+}
+
+function canonicalTournamentPlayerName(team, name) {
+  const rawName = String(name || "").trim();
+  if (!team || !rawName) return rawName;
+  const profiles = playerProfilesForTeam(team);
+  const exact = profiles.find((player) => player.name === rawName);
+  if (exact) return exact.name;
+  const key = tournamentPlayerNameKey(rawName);
+  return profiles.find((player) => tournamentPlayerNameKey(player.name) === key)?.name || rawName;
+}
+
 function calculateRetroGoalscorerTable() {
   if (!retroTournament) return [];
   const year = Number(retroTournament.year);
@@ -7064,10 +7080,12 @@ function calculateRetroGoalscorerTable() {
       appearances.set(teamName, (appearances.get(teamName) || 0) + 1);
       (match.result[`${side}Events`] || []).forEach((event) => {
         if (!event?.scorer || event.goalType === "ownGoal" || event.ownGoal) return;
-        const key = `${teamName}\u0000${event.scorer}`;
+        const teamId = retroTeamId(teamName, year);
+        const player = canonicalTournamentPlayerName(teamById(teamId), event.scorer);
+        const key = `${teamName}\u0000${player}`;
         const current = scorers.get(key) || {
-          player: event.scorer,
-          teamId: retroTeamId(teamName, year),
+          player,
+          teamId,
           teamName,
           goals: 0,
           penalties: 0,
@@ -11436,11 +11454,12 @@ function advanceSpectatedRun() {
     const pendingThirdPlaceIndex = state.activeRound === tournamentFinalRoundIndex()
       ? selectedRound().findIndex((match) => isThirdPlacePlayoff(match) && !match.result?.revealed)
       : -1;
-    const defaultManagedFinalIndex = (
-      state.activeRound === tournamentFinalRoundIndex()
-      && !state.customTournament
-      && !isRetroSimulatorState()
-    ) ? selectedRound().findIndex((match) => !isThirdPlacePlayoff(match)) : -1;
+    const defaultManagedFinalIndex = state.activeRound === tournamentFinalRoundIndex()
+      ? selectedRound().findIndex((match) => (
+          !isThirdPlacePlayoff(match)
+          && (match.homeId === team.id || match.awayId === team.id)
+        ))
+      : -1;
     const nextMatchIndex = defaultManagedFinalIndex >= 0
       ? defaultManagedFinalIndex
       : pendingThirdPlaceIndex >= 0
@@ -11894,6 +11913,28 @@ function retroLiveTeamManagement(teamId) {
   if (!livePlayback || !teamId) return null;
   return [livePlayback.managerSubstitutions, livePlayback.oppositionManagement]
     .find((management) => management?.teamId === teamId) || null;
+}
+
+function upgradeRetroLiveManagementSlotOrder(management) {
+  if (
+    !management
+    || management.slotOrderVersion === RETRO_LINEUP_SLOT_ORDER_VERSION
+    || management.activeStarters?.length !== 11
+  ) return;
+  const team = teamById(management.teamId);
+  const squad = retroManagerSquadForTeam(team);
+  const players = management.activeStarters
+    .map((number) => squad?.players.find((player) => player.number === number))
+    .filter(Boolean);
+  if (players.length === 11) {
+    const missingEntries = Object.values(management.missingSlots || {});
+    management.activeStarters = retroOrderStarterNumbers(
+      players,
+      RETRO_MANAGER_FORMATIONS.includes(management.formation) ? management.formation : "4-3-3",
+    );
+    retroRemapMissingSlots(management, missingEntries);
+  }
+  management.slotOrderVersion = RETRO_LINEUP_SLOT_ORDER_VERSION;
 }
 
 function retroLiveMissingPlayer(management, playerNumber) {
@@ -14383,6 +14424,7 @@ function finishLivePlayback() {
     .map((management) => [management.teamId, {
       formation: management.formation,
       activeStarters: [...management.activeStarters],
+      slotOrderVersion: RETRO_LINEUP_SLOT_ORDER_VERSION,
       subbedOut: [...management.subbedOut],
       unavailableNumbers: [...(management.unavailableNumbers || [])],
       missingSlots: { ...(management.missingSlots || {}) },
@@ -14669,6 +14711,7 @@ function startLivePlayback(match) {
         teamId: managedTeam.id,
         formation: managerLineup.formation,
         activeStarters: [...managerLineup.starters],
+        slotOrderVersion: RETRO_LINEUP_SLOT_ORDER_VERSION,
         used: 0,
         stoppages: 0,
         windowOpen: false,
@@ -14695,6 +14738,7 @@ function startLivePlayback(match) {
           opponentPreferredNumbers,
           opponentFormation,
         ),
+        slotOrderVersion: RETRO_LINEUP_SLOT_ORDER_VERSION,
         used: 0,
         nextSubIndex: 0,
         subbedOut: [],
@@ -14710,6 +14754,8 @@ function startLivePlayback(match) {
   if (resumeCheckpoint?.oppositionManagement) {
     livePlayback.oppositionManagement = resumeCheckpoint.oppositionManagement;
   }
+  upgradeRetroLiveManagementSlotOrder(livePlayback.managerSubstitutions);
+  upgradeRetroLiveManagementSlotOrder(livePlayback.oppositionManagement);
   repairLiveGoalParticipants(match);
   livePlayback.presentationClock = MatchPresentation.createClock({
     initialMinute: resumeMinute,
@@ -15302,9 +15348,12 @@ let confettiChampionId = null;
 function renderChampionConfetti(championId) {
   if (confettiChampionId === championId || !els.championConfetti) return;
   confettiChampionId = championId;
-  const colours = isRetroSimulatorState() && Number(retroTournament?.year) === 2006
+  const retroYear = isRetroSimulatorState() ? Number(retroTournament?.year) : 0;
+  const colours = retroYear === 2006
     ? ["#f3d566", "#d8eff7", "#78b0c7", "#f4fbff", "#0b5274"]
-    : ["#f2c45f", "#5f8cff", "#f4f7fb", "#34c77b", "#ef5b5b"];
+    : retroYear === 2026
+      ? ["#ff9e2f", "#3768ff", "#ffffff", "#10286f", "#f0442f"]
+      : ["#f2c45f", "#5f8cff", "#f4f7fb", "#34c77b", "#ef5b5b"];
   els.championConfetti.innerHTML = Array.from({ length: 120 }, (_, index) => {
     const random = mulberry32(stableHash(`${championId}-confetti-${index}`));
     const x = Math.round(random() * 100);
@@ -18789,7 +18838,7 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   const isEuros = selectedCompetition === "euros";
   const isCopa = selectedCompetition === "copa";
   const selectedYear = isCopa ? 2024 : isEuros ? RETRO_EURO_2016.year : year;
-  const playable = isEuros || (!isCopa && ["2006", "2010", "2014", "2018", "2022"].includes(String(selectedYear)));
+  const playable = isEuros || (!isCopa && ["2006", "2010", "2014", "2018", "2022", "2026"].includes(String(selectedYear)));
   const hasTeamField = isCopa
     ? Boolean(RETRO_COPA_2024.teams.length)
     : isEuros
@@ -19045,25 +19094,17 @@ function renderRetroSquadsView() {
     ["Attackers", "FW"],
   ];
   els.retroTournamentBody.innerHTML = `
-    <section class="retro-squad-view${isEuro2016 ? " is-compact-squad" : ""}">
+    <section class="retro-squad-view${isEuro2016 ? " is-compact-squad" : ""}${isWorldCup2026 ? " is-2026-squad" : ""}">
       <div class="retro-squad-heading">
         <div>${retroFlag(retroSquadTeamName, "retro-squad-flag")}<span>${isEuro2016
           ? `<small>UEFA EURO 2016 · Official ${squad.players.length}-player squad</small><strong>${escapeHtml(retroSquadTeamName)}</strong><em>Coach ${escapeHtml(squad.coach)}</em>`
-          : `<small>Coach · ${squad.players.length}-player official squad</small><strong>${escapeHtml(squad.coach)}</strong><em>${escapeHtml(squad.formation)} · Captain ${escapeHtml(squad.captain || "—")}</em>`
+          : `<small>Coach · ${squad.players.length}-player official squad</small><strong>${escapeHtml(squad.coach)}</strong><em>${escapeHtml(squad.formation)}${isWorldCup2026 ? "" : ` · Captain ${escapeHtml(squad.captain || "—")}`}</em>`
         }</span></div>
         <label>
           <span>Country</span>
           <select id="retroSquadTeamSelect">${available.map((team) => `<option value="${escapeHtml(team.name)}" ${team.name === retroSquadTeamName ? "selected" : ""}>${escapeHtml(team.name)}</option>`).join("")}</select>
         </label>
       </div>
-      ${isWorldCup2026 ? `
-        <div class="retro-rating-method" aria-label="${escapeHtml(retroSquadTeamName)} rating breakdown">
-          <div><span>Team rating</span><strong>${squad.teamRatings.overall}</strong></div>
-          <div><span>FC 26 squad</span><strong>${Number(squad.ratingBlend.fc26Squad).toFixed(1)}</strong></div>
-          <div><span>FIFA rank</span><strong>#${squad.ratingBlend.fifaRank}</strong></div>
-          <div><span>WC finish</span><strong>#${squad.ratingBlend.tournamentFinish}</strong></div>
-          <p>Rating blend: 40% FC 26 squad quality · 32% FIFA ranking · 28% 2026 tournament performance.</p>
-        </div>` : ""}
       <div class="retro-squad-groups">
         ${positionGroups.map(([label, position]) => {
           const players = squad.players.filter((player) => retroBroadPosition(player.position) === position);
@@ -19072,13 +19113,13 @@ function renderRetroSquadsView() {
               <h2><span>${label}</span><b>${players.length}</b></h2>
               <div class="retro-squad-list">
                 ${players.map((player) => `
-                  <div class="retro-squad-row${!isEuro2016 && startingNumbers.has(player.number) ? " is-likely-starter" : ""}"${!isEuro2016 && player.ratingJustification ? ` title="${escapeHtml(player.ratingJustification)}"` : ""}>
+                  <div class="retro-squad-row${!isEuro2016 && !isWorldCup2026 && startingNumbers.has(player.number) ? " is-likely-starter" : ""}"${!isEuro2016 && !isWorldCup2026 && player.ratingJustification ? ` title="${escapeHtml(player.ratingJustification)}"` : ""}>
                     <b class="retro-squad-number">${player.number}</b>
                     <span>
-                      <strong>${escapeHtml(player.name)}${player.captain ? " (C)" : ""}</strong>
-                      <small>${escapeHtml(player.club || player.position)}${!isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>
+                      <strong>${escapeHtml(player.name)}${player.captain && !isWorldCup2026 ? " (C)" : ""}</strong>
+                      ${isWorldCup2026 ? "" : `<small>${escapeHtml(player.club || player.position)}${!isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>`}
                     </span>
-                    ${isEuro2016 ? "" : `<em>${escapeHtml(player.position)}</em><i>${player.overall}</i>`}
+                    ${isEuro2016 || isWorldCup2026 ? "" : `<em>${escapeHtml(player.position)}</em><i>${player.overall}</i>`}
                   </div>
                 `).join("")}
               </div>
@@ -19106,7 +19147,7 @@ const RETRO_MANAGER_FORMATIONS = Object.freeze([
   "5-2-2-1",
   "5-2-3",
 ]);
-const RETRO_LINEUP_SLOT_ORDER_VERSION = 5;
+const RETRO_LINEUP_SLOT_ORDER_VERSION = 10;
 const RETRO_MANAGER_SLOT_POSITIONS = Object.freeze({
   "4-3-3": Object.freeze(["GK", "LB", "CB", "CB", "RB", "LCM", "CM", "RCM", "LW", "ST", "RW"]),
   "4-2-3-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "LW", "CAM", "RW", "ST"]),
@@ -19220,7 +19261,7 @@ function retroManagerSquadForTeam(teamOrName) {
       ));
       const sourcePositions = [player.position, ...(player.positions || [])].filter(Boolean);
       const detailedPositions = sourcePositions.filter((position) => !["DF", "MF", "FW"].includes(position));
-      const sourceGroup = retroBroadPosition(player.position);
+      const sourceGroup = player.squadGroup || retroBroadPosition(player.position);
       const sameGroupPosition = detailedPositions.find((position) => retroBroadPosition(position) === sourceGroup);
       const position = ["DF", "MF", "FW"].includes(player.position)
         ? sameGroupPosition || profile?.position || detailedPositions[0] || player.position
@@ -19233,15 +19274,15 @@ function retroManagerSquadForTeam(teamOrName) {
 
 const RETRO_POSITION_FIT = Object.freeze({
   GK: Object.freeze({ GK: 140 }),
-  LB: Object.freeze({ LB: 140, LWB: 124, CB: 66, RB: 34, LM: 28 }),
-  RB: Object.freeze({ RB: 140, RWB: 124, CB: 66, LB: 34, RM: 28 }),
-  CB: Object.freeze({ CB: 140, LB: 72, RB: 72, CDM: 68, LWB: 48, RWB: 48 }),
+  LB: Object.freeze({ LB: 140, LWB: 124, CB: 30, RB: 16, LM: 28 }),
+  RB: Object.freeze({ RB: 140, RWB: 124, CB: 30, LB: 16, RM: 28 }),
+  CB: Object.freeze({ CB: 140, LB: 24, RB: 24, CDM: 54, LWB: 18, RWB: 18 }),
   LWB: Object.freeze({ LWB: 140, LB: 132, LM: 106, LW: 78, CB: 50 }),
   RWB: Object.freeze({ RWB: 140, RB: 132, RM: 106, RW: 78, CB: 50 }),
   CDM: Object.freeze({ CDM: 140, DM: 140, CM: 112, CB: 92, CAM: 42 }),
   CM: Object.freeze({ CM: 140, CDM: 120, DM: 120, CAM: 112, LM: 92, RM: 92 }),
-  LCM: Object.freeze({ CAM: 140, AM: 140, CM: 132, LM: 118, CDM: 92, DM: 92, RM: 72 }),
-  RCM: Object.freeze({ CAM: 140, AM: 140, CM: 132, RM: 118, CDM: 92, DM: 92, LM: 72 }),
+  LCM: Object.freeze({ CM: 140, CDM: 126, DM: 126, CAM: 122, AM: 122, LM: 118, RM: 72 }),
+  RCM: Object.freeze({ CM: 140, CDM: 126, DM: 126, CAM: 122, AM: 122, RM: 118, LM: 72 }),
   CAM: Object.freeze({ CAM: 140, AM: 140, CM: 112, CF: 108, LW: 82, RW: 82, ST: 64 }),
   LM: Object.freeze({ LM: 140, LW: 126, LWB: 108, CM: 96, CAM: 86 }),
   RM: Object.freeze({ RM: 140, RW: 126, RWB: 108, CM: 96, CAM: 86 }),
@@ -19293,15 +19334,23 @@ function retroPlayerSlotAssignmentScore(player, slot) {
     && !crossedWideEquivalent;
   const primaryPosition = positions[0];
   let groupFit;
-  if (slot === "CM") {
+  if (slot === "CB") {
+    groupFit = positions.includes("CB") ? 280 : primaryPosition === "DF" ? 180 : primaryGroup === "DF" ? 20 : 0;
+  } else if (slot === "LB" || slot === "LWB") {
+    groupFit = positions.some((position) => ["LB", "LWB"].includes(position))
+      ? 270 : primaryPosition === "DF" ? 160 : primaryGroup === "DF" ? 24 : 0;
+  } else if (slot === "RB" || slot === "RWB") {
+    groupFit = positions.some((position) => ["RB", "RWB"].includes(position))
+      ? 270 : primaryPosition === "DF" ? 160 : primaryGroup === "DF" ? 24 : 0;
+  } else if (slot === "CM") {
     groupFit = ["CM", "CDM", "DM"].includes(primaryPosition)
       ? 230
       : ["CAM", "AM"].includes(primaryPosition) ? 40 : 120;
   } else if (["LCM", "RCM"].includes(slot)) {
-    groupFit = ["CAM", "AM"].includes(primaryPosition)
-      ? 220
-      : primaryPosition === "CM" ? 170
-        : ["CDM", "DM"].includes(primaryPosition) ? 70 : 120;
+    groupFit = primaryPosition === "CM"
+      ? 230
+      : ["CDM", "DM"].includes(primaryPosition) ? 205
+        : ["CAM", "AM"].includes(primaryPosition) ? 165 : 120;
   } else {
     groupFit = exactWideRole || naturalWideEquivalent
       ? 190
@@ -19372,6 +19421,10 @@ function retroSelectBestStarterNumbers(players, preferredNumbers, formation) {
   const slots = RETRO_MANAGER_SLOT_POSITIONS[formation] || RETRO_MANAGER_SLOT_POSITIONS["4-3-3"];
   if (players.length < slots.length) return [];
   const preferred = new Set(preferredNumbers || []);
+  const england2026Midfield = new Set(["Declan Rice", "Jude Bellingham", "Elliot Anderson"]);
+  const lockEngland2026Midfield = [...england2026Midfield].every(
+    (name) => players.some((player) => player.name === name),
+  );
   const eligibleForSlot = (player, slot) => {
     const slotGroup = retroBroadPosition(slot);
     const primaryGroup = player.squadGroup || retroBroadPosition(player.position);
@@ -19394,6 +19447,7 @@ function retroSelectBestStarterNumbers(players, preferredNumbers, formation) {
     if (!eligibleForSlot(player, slot)) return -1_000_000_000;
     return retroPlayerSlotAssignmentScore(player, slot) * 1000
       + (preferred.has(player.number) ? 26000 : 0)
+      + (lockEngland2026Midfield && england2026Midfield.has(player.name) ? 300000 : 0)
       + (Number(player.startingXILikelihood) || 0) * 5000
       + (Number(player.overall) || 0) * 10;
   }));
@@ -20308,7 +20362,7 @@ function renderRetroWorldCupMode() {
   els.retroTournamentKicker.textContent = RETRO_WORLD_CUP_EDITIONS[retroTournament.year].label.toUpperCase();
   els.retroTournamentTitle.textContent = isEuros ? "UEFA Euro 2016" : `World Cup ${retroTournament.year}`;
   if (els.retroAchievementsButton) {
-    els.retroAchievementsButton.hidden = Number(retroTournament.year) === 2026;
+    els.retroAchievementsButton.hidden = false;
   }
   els.retroWorldCupRestartButton.hidden = !retroTournamentHasProgress();
   if (retroTournament.phase === "complete" && !retroTournament.savedTournamentView) {
@@ -20843,8 +20897,7 @@ $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.
 els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
 
 let featureAnnouncementRetryTimer = null;
-let premierLeagueAnnouncementShownThisPage = false;
-let retro2006AnnouncementShownThisPage = false;
+let wc2026AnnouncementShownThisPage = false;
 
 function announcementWasSeen(storageKey) {
   try {
@@ -20866,66 +20919,38 @@ function openNextFeatureAnnouncement() {
   clearTimeout(featureAnnouncementRetryTimer);
   featureAnnouncementRetryTimer = null;
   const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
-    dialog !== els.premierLeagueAnnouncementModal
-    &&
-    dialog !== els.retro2006AnnouncementModal
+    dialog !== els.wc2026AnnouncementModal
   ));
   if (anotherDialogIsOpen) {
     featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
     return;
   }
   if (
-    els.premierLeagueAnnouncementModal
-    && !premierLeagueAnnouncementShownThisPage
-    && !announcementWasSeen(PREMIER_LEAGUE_ANNOUNCEMENT_KEY)
+    els.wc2026AnnouncementModal
+    && !wc2026AnnouncementShownThisPage
+    && !announcementWasSeen(WC_2026_ANNOUNCEMENT_KEY)
   ) {
-    premierLeagueAnnouncementShownThisPage = true;
-    els.premierLeagueAnnouncementModal.showModal();
-    return;
-  }
-  if (
-    els.retro2006AnnouncementModal
-    && !retro2006AnnouncementShownThisPage
-    && !announcementWasSeen(RETRO_2006_ANNOUNCEMENT_KEY)
-  ) {
-    retro2006AnnouncementShownThisPage = true;
-    els.retro2006AnnouncementModal.showModal();
+    wc2026AnnouncementShownThisPage = true;
+    els.wc2026AnnouncementModal.showModal();
   }
 }
 
-function closePremierLeagueAnnouncement() {
-  rememberAnnouncement(PREMIER_LEAGUE_ANNOUNCEMENT_KEY);
-  if (els.premierLeagueAnnouncementModal?.open) els.premierLeagueAnnouncementModal.close();
+function closeWc2026Announcement() {
+  rememberAnnouncement(WC_2026_ANNOUNCEMENT_KEY);
+  if (els.wc2026AnnouncementModal?.open) els.wc2026AnnouncementModal.close();
 }
 
-els.premierLeagueAnnouncementClose?.addEventListener("click", closePremierLeagueAnnouncement);
-els.premierLeagueAnnouncementModal?.addEventListener("cancel", () => {
-  rememberAnnouncement(PREMIER_LEAGUE_ANNOUNCEMENT_KEY);
+els.wc2026AnnouncementClose?.addEventListener("click", closeWc2026Announcement);
+els.wc2026AnnouncementModal?.addEventListener("cancel", () => {
+  rememberAnnouncement(WC_2026_ANNOUNCEMENT_KEY);
 });
-els.premierLeagueAnnouncementModal?.addEventListener("close", () => {
-  rememberAnnouncement(PREMIER_LEAGUE_ANNOUNCEMENT_KEY);
+els.wc2026AnnouncementModal?.addEventListener("close", () => {
+  rememberAnnouncement(WC_2026_ANNOUNCEMENT_KEY);
 });
-els.premierLeagueAnnouncementAction?.addEventListener("click", () => {
-  closePremierLeagueAnnouncement();
-  document.querySelector("#premierLeagueModeCard")?.scrollIntoView({ behavior: "smooth", block: "center" });
-});
-
-function closeRetro2006Announcement() {
-  rememberAnnouncement(RETRO_2006_ANNOUNCEMENT_KEY);
-  if (els.retro2006AnnouncementModal?.open) els.retro2006AnnouncementModal.close();
-}
-
-els.retro2006AnnouncementClose?.addEventListener("click", closeRetro2006Announcement);
-els.retro2006AnnouncementModal?.addEventListener("cancel", () => {
-  rememberAnnouncement(RETRO_2006_ANNOUNCEMENT_KEY);
-});
-els.retro2006AnnouncementModal?.addEventListener("close", () => {
-  rememberAnnouncement(RETRO_2006_ANNOUNCEMENT_KEY);
-});
-els.retro2006AnnouncementAction?.addEventListener("click", () => {
-  closeRetro2006Announcement();
+els.wc2026AnnouncementAction?.addEventListener("click", () => {
+  closeWc2026Announcement();
   setRetroCompetition("wc");
-  setRetroWorldCupYear("2006");
+  setRetroWorldCupYear("2026");
   window.setTimeout(() => {
     els.retroModeCard?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 120);
@@ -20946,7 +20971,7 @@ els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.cli
 $("#profileFeedbackButton")?.addEventListener("click", () => els.bugReportButton.click());
 $("#profileAchievementsButton")?.addEventListener("click", () => els.openAchievementsButton.click());
 els.retroAchievementsButton?.addEventListener("click", () => {
-  if ([2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))) {
+  if ([2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;
   }
@@ -21469,6 +21494,21 @@ els.retroMatchLineupsBody?.addEventListener("dragstart", (event) => {
   event.dataTransfer.setData("text/plain", String(retroLineupDragNumber));
 });
 
+function retroLineupDropTarget(event) {
+  const directTarget = event.target.closest("[data-retro-lineup-player]");
+  if (directTarget) return directTarget;
+  const region = event.target.closest(".retro-manager-pitch, .retro-manager-player-list.is-bench-list");
+  if (!region) return null;
+  const candidates = [...region.querySelectorAll("[data-retro-lineup-player]:not(:disabled)")];
+  if (!candidates.length) return null;
+  return candidates.reduce((closest, candidate) => {
+    const bounds = candidate.getBoundingClientRect();
+    const distance = ((bounds.left + bounds.width / 2) - event.clientX) ** 2
+      + ((bounds.top + bounds.height / 2) - event.clientY) ** 2;
+    return !closest || distance < closest.distance ? { candidate, distance } : closest;
+  }, null)?.candidate || null;
+}
+
 els.retroMatchLineupsBody?.addEventListener("dragover", (event) => {
   const substitutionTarget = event.target.closest("[data-retro-sub-player]");
   if (
@@ -21484,16 +21524,18 @@ els.retroMatchLineupsBody?.addEventListener("dragover", (event) => {
     substitutionTarget.classList.add("is-drop-target");
     return;
   }
-  const target = event.target.closest("[data-retro-lineup-player]");
+  const target = retroLineupDropTarget(event);
   if (!target || retroLineupDragNumber === null) return;
   event.preventDefault();
   event.dataTransfer.dropEffect = "move";
+  els.retroMatchLineupsBody.querySelectorAll("[data-retro-lineup-player].is-drop-target").forEach((node) => {
+    if (node !== target) node.classList.remove("is-drop-target");
+  });
   target.classList.add("is-drop-target");
 });
 
 els.retroMatchLineupsBody?.addEventListener("dragleave", (event) => {
   event.target.closest("[data-retro-sub-player]")?.classList.remove("is-drop-target");
-  event.target.closest("[data-retro-lineup-player]")?.classList.remove("is-drop-target");
 });
 
 els.retroMatchLineupsBody?.addEventListener("drop", (event) => {
@@ -21521,14 +21563,15 @@ els.retroMatchLineupsBody?.addEventListener("drop", (event) => {
     retroLiveSubDrag = null;
     return;
   }
-  const target = event.target.closest("[data-retro-lineup-player]");
+  const target = retroLineupDropTarget(event);
   const match = selectedMatch();
   const team = spectatedTeam();
   const lineup = retroManagerLineupForTeam(team);
   if (!target || !match || !lineup || retroLineupDragNumber === null) return;
   event.preventDefault();
   const targetNumber = Number(target.dataset.retroLineupPlayer);
-  target.classList.remove("is-drop-target");
+  els.retroMatchLineupsBody.querySelectorAll("[data-retro-lineup-player].is-drop-target")
+    .forEach((node) => node.classList.remove("is-drop-target"));
   if (targetNumber !== retroLineupDragNumber && applyRetroLineupSwap(lineup, retroLineupDragNumber, targetNumber)) {
     commitRetroLineupChange(team, match, "Lineup position updated.");
   }

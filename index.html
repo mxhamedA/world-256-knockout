@@ -79,7 +79,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=pl-beta-announcement-2" />
+    <link rel="stylesheet" href="./clean.css?v=wc-2026-announcement-1" />
     <link rel="stylesheet" href="./premier-league.css?v=pl-mobile-header-2" />
   </head>
   <body class="before-start">
@@ -569,7 +569,8 @@
               <button type="button" role="tab" data-achievement-year="2016" aria-selected="false">EURO 16</button>
               <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
               <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
-              <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">PL 26/27</button>
+              <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">2026</button>
+              <button type="button" role="tab" data-achievement-year="pl" aria-selected="false">PL 26/27</button>
             </div>
             <div class="achievement-challenge-heading">
               <h2 id="achievementChallengeTitle">Win the 2014 WC with every country</h2>
@@ -1095,8 +1096,6 @@
         </section>
         <nav class="retro-view-tabs" aria-label="Retro World Cup views">
           <button class="active" type="button" data-retro-view="matches">Match centre</button>
-          <button type="button" data-retro-view="groups">Standings</button>
-          <button type="button" data-retro-view="lineups">Lineups</button>
           <button type="button" data-retro-view="squads">Squads</button>
         </nav>
         <div class="retro-tournament-body" id="retroTournamentBody"></div>
@@ -1870,35 +1869,19 @@
       </form>
     </dialog>
 
-    <dialog class="feature-announcement-modal feature-announcement-premier-league" id="premierLeagueAnnouncementModal">
+    <dialog class="feature-announcement-modal feature-announcement-wc-2026" id="wc2026AnnouncementModal">
       <div class="feature-announcement-accent" aria-hidden="true">
-        <img class="feature-announcement-premier-league-logo" src="./assets/prem-logo.webp" alt="" />
-        <span class="feature-announcement-beta-badge">BETA</span>
+        <img class="feature-announcement-wc-2026-logo" src="./assets/world-cup-2026-logo.png" alt="" />
+        <strong>26</strong>
       </div>
       <div class="feature-announcement-content">
         <span class="feature-announcement-label">OUT NOW</span>
-        <h2>Premier League mode is out</h2>
-        <p>Take charge of a club across the full 2026/27 season. The mode is live and still in beta, so more improvements are on the way.</p>
-        <button class="feature-announcement-button" id="premierLeagueAnnouncementAction" type="button">
-          Try Premier League mode <span aria-hidden="true">&rarr;</span>
+        <h2>WC 2026 mode now out</h2>
+        <p>Take charge of one of the 48 qualified nations with updated squads, lineups, ratings and World Cup achievements.</p>
+        <button class="feature-announcement-button" id="wc2026AnnouncementAction" type="button">
+          Explore WC 2026 <span aria-hidden="true">&rarr;</span>
         </button>
-        <button class="feature-announcement-dismiss" id="premierLeagueAnnouncementClose" type="button">Not now</button>
-      </div>
-    </dialog>
-
-    <dialog class="feature-announcement-modal feature-announcement-2006" id="retro2006AnnouncementModal">
-      <div class="feature-announcement-accent" aria-hidden="true">
-        <img class="feature-announcement-2006-logo" src="./assets/retro-world-cup-2006.png" alt="" />
-        <strong>2006</strong>
-      </div>
-      <div class="feature-announcement-content">
-        <span class="feature-announcement-label">OUT NOW</span>
-        <h2>2006 World Cup mode is out</h2>
-        <p>Relive Germany 2006 with all 32 official teams, era-specific squads, authentic groups and achievements.</p>
-        <button class="feature-announcement-button" id="retro2006AnnouncementAction" type="button">
-          Explore Germany 2006 <span aria-hidden="true">&rarr;</span>
-        </button>
-        <button class="feature-announcement-dismiss" id="retro2006AnnouncementClose" type="button">Not now</button>
+        <button class="feature-announcement-dismiss" id="wc2026AnnouncementClose" type="button">Not now</button>
       </div>
     </dialog>
 
@@ -2020,7 +2003,8 @@
         <button type="button" role="tab" data-achievement-year="2016" aria-selected="false">EURO 16</button>
         <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
         <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
-        <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">PL 26/27</button>
+        <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">2026</button>
+        <button type="button" role="tab" data-achievement-year="pl" aria-selected="false">PL 26/27</button>
       </div>
       <div class="retro-achievements-progress">
         <span id="retroAchievementProgressLabel">COUNTRIES COMPLETE</span>

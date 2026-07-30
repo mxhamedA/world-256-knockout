@@ -26,6 +26,21 @@ assert.match(css, /@media \(max-width: 520px\)[\s\S]*achievement-year-tabs butto
   "The single-row tabs need a compact mobile treatment.");
 assert.match(css, /#retroAchievementsModal\[data-achievement-theme\] \.achievement-login-button/,
   "The World Cup popup login action must inherit the selected achievement theme.");
+assert.match(
+  css,
+  /\.achievement-unlock-banner\[data-achievement-theme="2026"\][\s\S]*linear-gradient\(135deg,\s*#10286f,\s*#06164f\)/,
+  "The 2026 achievement notification must use the blue World Cup palette.",
+);
+assert.match(
+  css,
+  /\.achievement-unlock-modal\[data-achievement-theme="2026"\][\s\S]*border-top:\s*5px solid #ff9e2f[\s\S]*linear-gradient\(145deg,\s*#10286f,\s*#06164f\)/,
+  "The 2026 achievement detail popup must not inherit the 2014 green theme.",
+);
+assert.match(
+  css,
+  /\.achievement-unlock-modal\[data-achievement-theme="2026"\] \.achievement-unlock-action[\s\S]*background:\s*#ff9e2f/,
+  "The 2026 achievement action must use the orange accent.",
+);
 assert.match(challenge, /function syncAchievementTheme\(year = activeAchievementYear\)/,
   "Achievement theme changes need one shared controller.");
 assert.match(challenge, /\[elements\.achievementsScreen, elements\.retroAchievementModal\][\s\S]*dataset\.achievementTheme = theme/,
@@ -34,7 +49,7 @@ assert.match(challenge, /if \(team\.badge\)[\s\S]*achievement-club-badge[\s\S]*t
   "Premier League achievements must render club badges instead of national flags.");
 assert.match(
   challenge,
-  /function openRetroAchievementsModal\(year = 2014\)[\s\S]*Number\(year\) === 2026[\s\S]*achievementState\?\.\(\)[\s\S]*trackPremierLeagueSeason\(savedSeason\)[\s\S]*loadAchievements\(year\)/,
+  /function openRetroAchievementsModal\(year = 2014\)[\s\S]*normalizeAchievementKey\(year\) === "pl"[\s\S]*achievementState\?\.\(\)[\s\S]*trackPremierLeagueSeason\(savedSeason\)[\s\S]*loadAchievements\(year\)/,
   "Opening PL achievements must recover and sync a completed local season before loading progress.",
 );
 assert.match(css, /\.achievement-country-flag\.achievement-club-badge[\s\S]*object-fit:\s*contain/,

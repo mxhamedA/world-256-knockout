@@ -12,6 +12,7 @@ const squadFiles = [
   "retro-euro-2016-squads.js",
   "retro-2018-squads.js",
   "retro-2022-squads.js",
+  "retro-2026-squads.js",
 ];
 squadFiles.forEach((file) => vm.runInContext(readFileSync(join(root, file), "utf8"), context));
 
@@ -31,6 +32,7 @@ globalThis.__squadsByYear = {
   2016: RETRO_EURO_2016_SQUADS,
   2018: RETRO_2018_SQUADS,
   2022: RETRO_2022_SQUADS,
+  2026: RETRO_2026_SQUADS,
 };`, context);
 
 let teamCount = 0;
@@ -122,5 +124,72 @@ const midfieldPlayerAt = (slot) => midfieldPrioritySquad.find(
 assert.equal(midfieldPlayerAt("CM")?.position, "CDM", "The holding midfielder should occupy the central midfield slot.");
 assert.equal(midfieldPlayerAt("LCM")?.position, "CAM", "A CAM used in midfield should favour a side slot.");
 assert.equal(midfieldPlayerAt("RCM")?.position, "CAM", "A second CAM should favour the other side slot.");
+
+const germany2026 = context.__squadsByYear[2026].Germany;
+const germanyNumbers = context.__lineup.select(germany2026.players, germany2026.startingXI, "4-3-3");
+const germanySlots = context.__lineup.slots["4-3-3"];
+const germanyPlayerAt = (slot) => germany2026.players.find(
+  (player) => player.number === germanyNumbers[germanySlots.indexOf(slot)],
+);
+assert.ok(
+  [germanyPlayerAt("LW")?.position, ...(germanyPlayerAt("LW")?.positions || [])].some(
+    (position) => ["LW", "LM"].includes(position),
+  ),
+  "Germany's left wing must be filled by a natural left-sided attacker.",
+);
+assert.ok(
+  [germanyPlayerAt("RW")?.position, ...(germanyPlayerAt("RW")?.positions || [])].some(
+    (position) => ["RW", "RM"].includes(position),
+  ),
+  "Germany's right wing must be filled by a natural right-sided attacker.",
+);
+assert.ok(
+  [germanyPlayerAt("ST")?.position, ...(germanyPlayerAt("ST")?.positions || [])].some(
+    (position) => ["ST", "CF"].includes(position),
+  ),
+  "Germany's centre-forward slot must be filled by a striker.",
+);
+
+const england2026 = context.__squadsByYear[2026].England;
+const england2026Numbers = context.__lineup.select(england2026.players, england2026.startingXI, "4-3-3");
+assert.equal(
+  england2026Numbers[1],
+  3,
+  "Nico O'Reilly must occupy England's starting left-back slot.",
+);
+assert.ok(
+  england2026Numbers.includes(4),
+  "Declan Rice must start in England's default 2026 midfield.",
+);
+assert.ok(
+  england2026Numbers.includes(10),
+  "Jude Bellingham must start in England's default 2026 midfield.",
+);
+assert.ok(
+  england2026Numbers.includes(8),
+  "Elliot Anderson must start in England's default 2026 midfield.",
+);
+
+Object.entries(context.__squadsByYear[2026]).forEach(([team, squad]) => {
+  const slots = context.__lineup.slots[squad.formation];
+  const numbers = context.__lineup.select(squad.players, squad.startingXI, squad.formation);
+  const playerAt = (index) => squad.players.find((player) => player.number === numbers[index]);
+  slots.forEach((slot, index) => {
+    const player = playerAt(index);
+    const positions = [player?.position, ...(player?.positions || [])];
+    if (slot === "CB") {
+      assert.ok(
+        positions.includes("CB") || player?.position === "DF",
+        `${team}: ${player?.name} must not be an explicit fullback in a CB slot.`,
+      );
+    }
+    if (["LB", "LWB"].includes(slot) && squad.players.some((candidate) => [candidate.position, ...(candidate.positions || [])].some((position) => ["LB", "LWB"].includes(position)))) {
+      assert.ok(positions.some((position) => ["LB", "LWB"].includes(position)), `${team}: ${player?.name} must be a natural left back.`);
+    }
+    if (["RB", "RWB"].includes(slot) && squad.players.some((candidate) => [candidate.position, ...(candidate.positions || [])].some((position) => ["RB", "RWB"].includes(position)))) {
+      assert.ok(positions.some((position) => ["RB", "RWB"].includes(position)), `${team}: ${player?.name} must be a natural right back.`);
+    }
+  });
+});
 
 console.log(`Retro lineup positions passed for ${teamCount} teams across every managed edition.`);
