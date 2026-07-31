@@ -252,7 +252,7 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
     const ensureAwardRow = (teamId, player) => {
       const key = teamId + ":" + player;
       const row = awardPlayerRows.get(key) || {
-        player, teamId, goals: 0, assists: 0, appearances: 0,
+        player, teamId, goals: 0, assists: 0, appearances: 0, cleanSheets: 0,
       };
       awardPlayerRows.set(key, row);
       return row;
@@ -273,22 +273,23 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
       assister.assists += 1;
       awardPlayerRows.set(assistKey, assister);
     };
-    const cleanSheetsByClub = new Map(clubs.map((club) => [club.id, 0]));
     state.rounds.flat().forEach((match) => {
       (match.result.homeEvents || []).forEach((event) => addAwardEvent(match.homeId, event));
       (match.result.awayEvents || []).forEach((event) => addAwardEvent(match.awayId, event));
-      if (match.result.awayGoals === 0) cleanSheetsByClub.set(match.homeId, cleanSheetsByClub.get(match.homeId) + 1);
-      if (match.result.homeGoals === 0) cleanSheetsByClub.set(match.awayId, cleanSheetsByClub.get(match.awayId) + 1);
       [
         [match.homeId, match.result.playerAppearances?.home || []],
         [match.awayId, match.result.playerAppearances?.away || []],
       ].forEach(([teamId, names]) => names.forEach((name) => {
-        if (youngPlayerNames.has(name)) ensureAwardRow(teamId, name).appearances += 1;
+        if (!youngPlayerNames.has(name)) return;
+        const playerRow = ensureAwardRow(teamId, name);
+        playerRow.appearances += 1;
+        const conceded = teamId === match.homeId ? match.result.awayGoals : match.result.homeGoals;
+        if (conceded === 0) playerRow.cleanSheets += 1;
       }));
     });
     const tableByClub = new Map(table.map((row) => [row.club.id, row]));
     const youngPlayer = [...awardPlayerRows.values()]
-      .filter((row) => youngPlayerNames.has(row.player))
+      .filter((row) => youngPlayerNames.has(row.player) && row.appearances >= 8)
       .map((row) => {
         const club = plClubById.get(row.teamId);
         const profile = club?.playerProfiles.find((player) => player.name === row.player);
@@ -302,7 +303,7 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
             goals: row.goals,
             assists: row.assists,
             appearances: row.appearances,
-            cleanSheets: cleanSheetsByClub.get(row.teamId) || 0,
+            cleanSheets: row.cleanSheets || 0,
             clubPoints,
             seasonSeed: state.drawSeed,
             teamId: row.teamId,
@@ -375,6 +376,8 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
       youngPlayer: youngPlayer?.player || "None",
       youngPlayerGoals: youngPlayer?.goals || 0,
       youngPlayerAssists: youngPlayer?.assists || 0,
+      youngPlayerAppearances: youngPlayer?.appearances || 0,
+      youngPlayerCleanSheets: youngPlayer?.cleanSheets || 0,
     });
   }
   return report;
@@ -468,6 +471,16 @@ if (seasonCount >= 10) {
     `The main YPOTY tier must contain several genuine winners; received ${distinctMainContenderWinners}.`,
   );
 }
+report.seasons.forEach((season) => {
+  assert.ok(
+    season.youngPlayerAppearances >= 8,
+    `${season.youngPlayer} cannot win YPOTY with only ${season.youngPlayerAppearances} appearances.`,
+  );
+  assert.ok(
+    season.youngPlayerCleanSheets <= season.youngPlayerAppearances,
+    `${season.youngPlayer} cannot have more clean sheets than appearances.`,
+  );
+});
 assert.ok(assistedGoalRate >= 0.4 && assistedGoalRate <= 0.72,
   `Assists must be recorded at a plausible rate; received ${(assistedGoalRate * 100).toFixed(1)}%.`);
 assert.ok(averageTopAssists >= 7 && averageTopAssists <= 22,
@@ -512,6 +525,6 @@ console.log(JSON.stringify({
   mainContenderAwardCount,
   distinctMainContenderWinners,
   youngPlayers: report.seasons.map((season) => (
-    `${season.youngPlayer} (${season.youngPlayerGoals}G, ${season.youngPlayerAssists}A)`
+    `${season.youngPlayer} (${season.youngPlayerAppearances} apps, ${season.youngPlayerCleanSheets} CS, ${season.youngPlayerGoals}G, ${season.youngPlayerAssists}A)`
   )),
 }, null, 2));

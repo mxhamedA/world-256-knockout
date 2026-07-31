@@ -10032,29 +10032,60 @@ body.standard-mode-active #newsButton {
   background: linear-gradient(135deg, #3867ff, #0647f5);
 }
 
-.feature-announcement-wc-2026 .feature-announcement-accent {
+.feature-announcement-custom .feature-announcement-accent {
   background:
-    radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.22), transparent 28%),
-    linear-gradient(135deg, #3867ff 0%, #0647f5 56%, #08236e 100%);
+    radial-gradient(circle at 76% 18%, rgba(255, 255, 255, 0.2), transparent 28%),
+    linear-gradient(135deg, #2b5cff 0%, #613be8 56%, #24115e 100%);
 }
 
-.feature-announcement-wc-2026-logo {
+.feature-announcement-custom-visual {
   position: relative;
   z-index: 1;
-  width: 150px;
-  height: 118px;
-  object-fit: contain;
-  filter: drop-shadow(0 12px 20px rgba(0, 17, 78, 0.48));
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.feature-announcement-wc-2026 .feature-announcement-accent strong {
-  position: absolute;
-  right: 20px;
-  bottom: -12px;
-  color: rgba(255, 255, 255, 0.15);
-  font-size: 86px;
+.feature-announcement-custom-card {
+  display: grid;
+  width: 92px;
+  height: 92px;
+  place-content: center;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  background: rgba(10, 17, 45, 0.68);
+  box-shadow: 0 14px 28px rgba(16, 5, 58, 0.3);
+}
+
+.feature-announcement-custom-card strong {
+  color: #fff;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.feature-announcement-custom-card small {
+  margin-top: 7px;
+  color: #cbd7ff;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+}
+
+.feature-announcement-custom-team {
+  transform: rotate(-5deg);
+}
+
+.feature-announcement-custom-match {
+  transform: rotate(5deg);
+}
+
+.feature-announcement-custom-vs {
+  color: #fff;
+  font-size: 14px;
   font-weight: 950;
-  letter-spacing: -5px;
+  letter-spacing: 0.08em;
 }
 
 .feature-announcement-accent::after {
@@ -10080,8 +10111,8 @@ body.standard-mode-active #newsButton {
   letter-spacing: 0.14em;
 }
 
-.feature-announcement-wc-2026 .feature-announcement-label {
-  color: #ffd426;
+.feature-announcement-custom .feature-announcement-label {
+  color: #9cb4ff;
 }
 
 .feature-announcement-modal h2 {
@@ -10113,9 +10144,9 @@ body.standard-mode-active #newsButton {
   transition: background-color 160ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.feature-announcement-wc-2026 .feature-announcement-button {
-  color: #071644;
-  background: #ff9f2e;
+.feature-announcement-custom .feature-announcement-button {
+  color: #fff;
+  background: #5f7dff;
 }
 
 .feature-announcement-button:hover {
@@ -10123,8 +10154,8 @@ body.standard-mode-active #newsButton {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .feature-announcement-wc-2026 .feature-announcement-button:hover {
-    background: #ffb24f;
+  .feature-announcement-custom .feature-announcement-button:hover {
+    background: #7892ff;
   }
 }
 .feature-announcement-button:active,

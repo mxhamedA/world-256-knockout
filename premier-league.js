@@ -643,6 +643,7 @@
         goals: 0,
         assists: 0,
         appearances: 0,
+        cleanSheets: 0,
       };
       playerRows.set(key, row);
       return row;
@@ -675,7 +676,12 @@
         [match.awayId, appearances?.away || []],
       ].forEach(([teamId, names]) => names.forEach((name) => {
         if (!youngPlayerNames.has(name)) return;
-        ensurePlayerRow(teamId, name).appearances += 1;
+        const playerRow = ensurePlayerRow(teamId, name);
+        playerRow.appearances += 1;
+        const conceded = teamId === match.homeId
+          ? Number(match.result.awayGoals) || 0
+          : Number(match.result.homeGoals) || 0;
+        if (conceded === 0) playerRow.cleanSheets += 1;
       }));
       [
         [match.homeId, Number(match.result.awayGoals) || 0],
@@ -698,7 +704,7 @@
       const team = clubById.get(row.teamId);
       const profile = team?.playerProfiles.find((player) => player.name === row.player);
       const clubPoints = tableByClub.get(row.teamId)?.points || 0;
-      const cleanSheets = goalkeeperRows.get(row.teamId)?.cleanSheets || 0;
+      const cleanSheets = row.cleanSheets || 0;
       return {
         ...row,
         team,
@@ -731,7 +737,7 @@
       .sort((left, right) => right.awardScore - left.awardScore || byGoals(left, right))[0]
       || goldenBoot;
     const youngPlayerOfTheYear = enrichedPlayers
-      .filter((row) => youngPlayerNames.has(row.player))
+      .filter((row) => youngPlayerNames.has(row.player) && row.appearances >= 8)
       .sort((left, right) => right.youngAwardScore - left.youngAwardScore || byGoals(left, right))[0]
       || null;
     const gloveRow = [...goalkeeperRows.values()].sort((left, right) => (

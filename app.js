@@ -23,7 +23,7 @@ const TOURNAMENT_HISTORY_MIGRATION_KEY = "world-256-tournament-history-indexeddb
 const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
 const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
-const WC_2026_ANNOUNCEMENT_KEY = "world-256-announcement-wc-2026-launch-v1";
+const CUSTOM_FEATURES_ANNOUNCEMENT_KEY = "world-256-announcement-custom-matches-teams-v1";
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -343,9 +343,9 @@ const els = {
   newsButton: $("#newsButton"),
   newsModal: $("#newsModal"),
   newsCloseButton: $("#newsCloseButton"),
-  wc2026AnnouncementModal: $("#wc2026AnnouncementModal"),
-  wc2026AnnouncementClose: $("#wc2026AnnouncementClose"),
-  wc2026AnnouncementAction: $("#wc2026AnnouncementAction"),
+  customFeaturesAnnouncementModal: $("#customFeaturesAnnouncementModal"),
+  customFeaturesAnnouncementClose: $("#customFeaturesAnnouncementClose"),
+  customFeaturesAnnouncementAction: $("#customFeaturesAnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   removeInjuriesSetting: $("#removeInjuriesSetting"),
   removeInjuriesLabel: $("#removeInjuriesLabel"),
@@ -21656,7 +21656,7 @@ $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.
 els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
 
 let featureAnnouncementRetryTimer = null;
-let wc2026AnnouncementShownThisPage = false;
+let customFeaturesAnnouncementShownThisPage = false;
 
 function announcementWasSeen(storageKey) {
   try {
@@ -21678,40 +21678,40 @@ function openNextFeatureAnnouncement() {
   clearTimeout(featureAnnouncementRetryTimer);
   featureAnnouncementRetryTimer = null;
   const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
-    dialog !== els.wc2026AnnouncementModal
+    dialog !== els.customFeaturesAnnouncementModal
   ));
   if (anotherDialogIsOpen) {
     featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
     return;
   }
   if (
-    els.wc2026AnnouncementModal
-    && !wc2026AnnouncementShownThisPage
-    && !announcementWasSeen(WC_2026_ANNOUNCEMENT_KEY)
+    els.customFeaturesAnnouncementModal
+    && !customFeaturesAnnouncementShownThisPage
+    && !announcementWasSeen(CUSTOM_FEATURES_ANNOUNCEMENT_KEY)
   ) {
-    wc2026AnnouncementShownThisPage = true;
-    els.wc2026AnnouncementModal.showModal();
+    customFeaturesAnnouncementShownThisPage = true;
+    els.customFeaturesAnnouncementModal.showModal();
   }
 }
 
-function closeWc2026Announcement() {
-  rememberAnnouncement(WC_2026_ANNOUNCEMENT_KEY);
-  if (els.wc2026AnnouncementModal?.open) els.wc2026AnnouncementModal.close();
+function closeCustomFeaturesAnnouncement() {
+  rememberAnnouncement(CUSTOM_FEATURES_ANNOUNCEMENT_KEY);
+  if (els.customFeaturesAnnouncementModal?.open) els.customFeaturesAnnouncementModal.close();
 }
 
-els.wc2026AnnouncementClose?.addEventListener("click", closeWc2026Announcement);
-els.wc2026AnnouncementModal?.addEventListener("cancel", () => {
-  rememberAnnouncement(WC_2026_ANNOUNCEMENT_KEY);
+els.customFeaturesAnnouncementClose?.addEventListener("click", closeCustomFeaturesAnnouncement);
+els.customFeaturesAnnouncementModal?.addEventListener("cancel", () => {
+  rememberAnnouncement(CUSTOM_FEATURES_ANNOUNCEMENT_KEY);
 });
-els.wc2026AnnouncementModal?.addEventListener("close", () => {
-  rememberAnnouncement(WC_2026_ANNOUNCEMENT_KEY);
+els.customFeaturesAnnouncementModal?.addEventListener("close", () => {
+  rememberAnnouncement(CUSTOM_FEATURES_ANNOUNCEMENT_KEY);
 });
-els.wc2026AnnouncementAction?.addEventListener("click", () => {
-  closeWc2026Announcement();
-  setRetroCompetition("wc");
-  setRetroWorldCupYear("2026");
+els.customFeaturesAnnouncementAction?.addEventListener("click", () => {
+  closeCustomFeaturesAnnouncement();
+  setAppModeUrl("home");
+  render();
   window.setTimeout(() => {
-    els.retroModeCard?.scrollIntoView({ behavior: "smooth", block: "center" });
+    els.openCustomTournamentButton?.closest(".mode-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, 120);
 });
 
