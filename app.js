@@ -17185,7 +17185,12 @@ function customTeamCreatorMarkup() {
           <input id="customTeamSaveToAccount" type="checkbox" ${draft.saveToAccount ? "checked" : ""} ${customTeamAccount ? "" : "disabled"} />
           <span><strong>Save to my account</strong><small>${customTeamAccount ? "Sync this team across devices and keep it in My custom teams." : "Log in to save this team across devices."}</small></span>
         </label>
-        <footer class="custom-team-creator-actions"><p id="customTeamCreatorMessage" aria-live="polite"></p><button class="secondary-button" type="button" data-custom-action="close-team-creator">Cancel</button><button class="primary-button" type="submit">Save team</button></footer>
+        <footer class="custom-team-creator-actions">
+          <p id="customTeamCreatorMessage" aria-live="polite"></p>
+          ${customTournamentUi.editingCustomTeamId ? `<button class="custom-team-delete-button" type="button" data-custom-action="delete-custom-team">Delete team</button>` : ""}
+          <button class="secondary-button" type="button" data-custom-action="close-team-creator">Cancel</button>
+          <button class="primary-button" type="submit">Save team</button>
+        </footer>
       </form>
     </div>`;
 }
@@ -17295,6 +17300,68 @@ async function saveCustomTeamDraft() {
   }
   renderCustomTournamentSetup();
   showToast(existingIndex >= 0 ? "Custom team updated." : "Custom team created.");
+}
+
+function replaceDeletedCustomMatchTeam(side, deletedTeamId) {
+  if (customMatchSetup[`${side}Id`] !== deletedTeamId) return;
+  const opposingSide = side === "home" ? "away" : "home";
+  const opposingId = customMatchSetup[`${opposingSide}Id`];
+  const replacementCustomTeam = customTeamLibrary.find((team) => team.id !== opposingId);
+  if (replacementCustomTeam) {
+    customMatchSetup[`${side}Source`] = "custom";
+    customMatchSetup[`${side}Id`] = replacementCustomTeam.id;
+    return;
+  }
+  const replacementCurrentTeam = TEAMS.find((team) => team.id !== opposingId) || TEAMS[0] || null;
+  customMatchSetup[`${side}Source`] = "current";
+  customMatchSetup[`${side}Id`] = replacementCurrentTeam?.id || null;
+}
+
+async function deleteCustomTeam(teamId) {
+  const team = customTeamLibrary.find((candidate) => candidate.id === teamId);
+  if (!team) return;
+  if (!window.confirm(`Delete ${team.name}? This cannot be undone.`)) return;
+  const message = els.customTournamentBody.querySelector("#customTeamCreatorMessage");
+  if (team.accountSaved && !customTeamAccount) {
+    if (message) message.textContent = "Log in to delete this team from your account.";
+    return;
+  }
+  try {
+    if (team.accountSaved) await removeCustomTeamFromAccount(team.id);
+  } catch (error) {
+    if (message) message.textContent = error.message || "This team could not be deleted from your account.";
+    return;
+  }
+
+  customTeamLibrary = customTeamLibrary.filter((candidate) => candidate.id !== team.id);
+  TEAM_BY_ID.delete(team.id);
+  clearPlayerProfileCacheForTeam(team.id);
+  const wasSelected = customTournamentSetup.selectedIds.includes(team.id);
+  customTournamentSetup.selectedIds = customTournamentSetup.selectedIds.map((selectedId) => selectedId === team.id ? null : selectedId);
+  if (customTournamentSetup.managedTeamId === team.id) customTournamentSetup.managedTeamId = null;
+  if (customTournamentUi.ratingTeamId === team.id) customTournamentUi.ratingTeamId = customTournamentSetup.selectedIds.find(Boolean) || null;
+  delete customTournamentSetup.abilityOverrides[team.id];
+  if (wasSelected) customTournamentSetup.scripts = {};
+  replaceDeletedCustomMatchTeam("home", team.id);
+  replaceDeletedCustomMatchTeam("away", team.id);
+  delete customMatchSetup.abilityOverrides[team.id];
+  saveCustomTeamLibrary();
+  saveCustomTournamentSetup();
+  saveCustomMatchSetup();
+
+  const returnMode = customTournamentUi.teamCreatorReturnMode;
+  customTournamentUi.teamCreatorOpen = false;
+  customTournamentUi.editingCustomTeamId = null;
+  customTournamentUi.customTeamDraft = null;
+  customTournamentUi.teamCreatorReturnMode = null;
+  if (returnMode === "customMatch") {
+    customMatchSetupViewOpen = true;
+    setAppModeUrl("customMatch");
+    render();
+  } else {
+    renderCustomTournamentSetup();
+  }
+  showToast(`${team.name} deleted.`);
 }
 
 function defaultCustomMatchSetup() {
@@ -18485,6 +18552,10 @@ function handleCustomTournamentAction(button) {
     customTournamentUi.editingCustomTeamId = team.id;
     customTournamentUi.customTeamDraft = newCustomTeamDraft(team);
     renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "delete-custom-team") {
+    void deleteCustomTeam(customTournamentUi.editingCustomTeamId);
     return;
   }
   if (action === "close-team-creator") {

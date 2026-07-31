@@ -35130,6 +35130,8 @@ body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side li:nth-
 .custom-player-attributes .custom-penalty-taker input { width: 16px; }
 .custom-team-creator-actions { z-index: 3; justify-content: flex-end; border-top: 1px solid rgba(135, 151, 184, .16); border-bottom: 0; position: sticky; bottom: 0; background: #121b29; box-shadow: 0 -12px 28px rgba(2, 7, 14, .5); }
 .custom-team-creator-actions p { margin-right: auto; color: #ff9a9a; }
+.custom-team-delete-button { padding: 10px 14px; color: #ff9f9f; font: inherit; font-weight: 800; border: 1px solid rgba(255, 96, 96, .42); border-radius: 9px; background: rgba(160, 30, 45, .14); cursor: pointer; }
+.custom-team-delete-button:hover { color: #fff; border-color: rgba(255, 96, 96, .7); background: rgba(190, 38, 54, .28); }
 .mode-card-custom .custom-match-card-button { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 
 .custom-match-builder { width: min(1100px, calc(100% - 32px)); margin: 28px auto; padding: 26px; }
