@@ -214,6 +214,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2016) return RETRO_EURO_2016_GROUP_SCHEDULE;
     if (Number(year) === 2018) return RETRO_2018_GROUP_SCHEDULE;
     if (Number(year) === 2022) return RETRO_2022_GROUP_SCHEDULE;
+    if (Number(year) === 2026) return RETRO_2026_GROUP_SCHEDULE;
     return {};
   }
 
@@ -224,6 +225,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2016) return RETRO_EURO_2016_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2018) return RETRO_2018_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2022) return RETRO_2022_KNOCKOUT_SCHEDULE;
+    if (Number(year) === 2026) return RETRO_2026_KNOCKOUT_SCHEDULE;
     return {};
   }
 

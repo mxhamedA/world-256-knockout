@@ -14,19 +14,30 @@ const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 const sources = [
   "retro-data.js",
   "retro-2026-squads.js",
+  "retro-2026-schedule.js",
   "retro-engine.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
 
 vm.runInContext(`${sources}
 globalThis.__data = RETRO_WORLD_CUPS;
 globalThis.__squads = RETRO_2026_SQUADS;
+globalThis.__groupSchedule = RETRO_2026_GROUP_SCHEDULE;
+globalThis.__knockoutSchedule = RETRO_2026_KNOCKOUT_SCHEDULE;
 globalThis.__engine = RETRO_WORLD_CUP_ENGINE;`, context);
 
 const data = context.__data[2026];
 const squads = context.__squads;
+const groupSchedule = context.__groupSchedule;
+const knockoutSchedule = context.__knockoutSchedule;
 const engine = context.__engine;
 
 assert.match(indexSource, /data-retro-year="2026"/, "2026 must be selectable on the mode card");
+assert.match(indexSource, /retro-2026-schedule\.js/, "the 2026 schedule must load before the tournament engine");
+assert.match(
+  appSource,
+  /match\.schedule\.dateLabel,\s*\[match\.schedule\.stadium, match\.schedule\.city\]/,
+  "fixture cards must show only the date and venue metadata",
+);
 assert.doesNotMatch(indexSource, /data-retro-view="groups"/, "retro navigation should not add a Standings tab");
 assert.doesNotMatch(indexSource, /data-retro-view="lineups"/, "retro navigation should not add a Lineups tab");
 assert.match(
@@ -41,6 +52,16 @@ assert.match(cleanCss, /retro-2026-active \.retro-tournament-heading::after \{\s
 assert.match(cleanCss, /retro-2026-active \.retro-view-tabs::before,[\s\S]*?content: none !important;/);
 assert.match(cleanCss, /retro-2026-active #mainContent \.team-filter-control \.search-result-popover/);
 assert.match(cleanCss, /retro-2026-active #mainContent \.retro-manager-player small \{\s*display: none;/);
+assert.match(
+  cleanCss,
+  /retro-2026-active #mainContent \.bracket-fixture \.fixture-team\.winner[\s\S]*?background:\s*transparent !important/,
+  "The 2026 knockout bracket must not fill winning team rows with a highlight colour.",
+);
+assert.match(
+  cleanCss,
+  /retro-2026-active #mainContent \.bracket-fixture \.fixture-team\.winner \.fixture-winner-marker[\s\S]*?display:\s*none !important/,
+  "The 2026 knockout bracket must hide the winner-row arrow.",
+);
 assert.match(cleanCss, /retro-2026-active #mainContent \.retro-pitch-corner-control \[data-retro-manager-formation\][\s\S]*?background: #10286f !important;/);
 assert.match(cleanCss, /retro-2026-active #mainContent \.retro-pitch-sub-counter[\s\S]*?background: #10286f !important;/);
 assert.match(cleanCss, /retro-2026-active #mainContent \.standard-tactic-buttons button \{\s*min-height: 36px !important;/);
@@ -94,6 +115,11 @@ assert.match(appSource, /defaultManagedFinalIndex[\s\S]*?!isThirdPlacePlayoff\(m
 
 assert.equal(data.teams.length, 48, "2026 must contain all 48 qualified teams");
 assert.equal(Object.keys(squads).length, 48, "2026 must contain 48 official squads");
+assert.equal(Object.keys(groupSchedule).length, 72, "2026 must contain all 72 group-stage schedules");
+assert.equal(Object.keys(knockoutSchedule).length, 32, "2026 must contain all 32 knockout schedules");
+assert.equal(groupSchedule["Mexico|South Africa"].stadium, "Mexico City Stadium");
+assert.equal(groupSchedule["Mexico|South Africa"].localTime, "13:00");
+assert.equal(knockoutSchedule["ko-final"].stadium, "New York New Jersey Stadium");
 Object.entries(squads).forEach(([team, squad]) => {
   assert.equal(squad.players.length, 26, `${team} must have a 26-player squad`);
   assert.equal(new Set(squad.players.map((player) => player.number)).size, 26, `${team} shirt numbers must be unique`);
@@ -172,6 +198,7 @@ const tournament = engine.createTournament({ year: 2026, seed: 20260719, managed
 assert.equal(engine.teamEntry(2026, "Spain").rating, squads.Spain.teamRatings.overall);
 assert.equal(engine.teamEntry(2026, "Argentina").rating, squads.Argentina.teamRatings.overall);
 assert.equal(tournament.groupMatches.length, 72, "12 groups must produce 72 group matches");
+assert.ok(tournament.groupMatches.every((match) => match.schedule), "every 2026 group match must include date, time, and venue data");
 assert.equal(engine.validate(tournament), true, "new 2026 tournaments must validate");
 
 while (tournament.phase === "group") engine.simulateActiveStage(tournament);
@@ -187,5 +214,6 @@ assert.deepEqual(
 );
 assert.ok(tournament.champion, "completed tournament must crown a champion");
 assert.equal(engine.allMatches(tournament).length, 104, "full 2026 tournament must contain 104 matches");
+assert.ok(engine.allMatches(tournament).every((match) => match.schedule), "every 2026 fixture must retain its schedule metadata");
 
 console.log("2026 World Cup squads, ratings, format, and completion flow verified.");

@@ -5434,7 +5434,9 @@ function normalizeDistinctGoalMinutes(result) {
     const start = event.minute > 90 ? 91 : 2;
     const dismissal = (result.redCards || []).find((card) => card.side === side && card.player === event.scorer);
     const segmentEnd = event.minute > 90 ? 120 : 90;
-    const end = dismissal ? Math.min(segmentEnd, dismissal.minute) : segmentEnd;
+    // A scorer's goal must remain strictly before their dismissal. Keeping both
+    // events on the same minute can render the red card first in the timeline.
+    const end = dismissal ? Math.min(segmentEnd, Math.max(start, dismissal.minute - 1)) : segmentEnd;
     let minute = Math.min(end, Math.max(start, event.minute));
     if (usedMinutes.has(minute)) {
       for (let offset = 1; offset <= end - start; offset += 1) {
@@ -5819,6 +5821,20 @@ function repairRetroResultPlayers(match) {
   const absences = removeImpossiblePlayerAbsenceEvents(result.redCards || [], result.injuries || []);
   result.redCards = absences.redCards;
   result.injuries = absences.injuries;
+  result.homeEvents = removeDismissedPlayersFromFutureGoals(
+    result.homeEvents || [],
+    "home",
+    result.redCards,
+    match,
+    result.injuries,
+  );
+  result.awayEvents = removeDismissedPlayersFromFutureGoals(
+    result.awayEvents || [],
+    "away",
+    result.redCards,
+    match,
+    result.injuries,
+  );
   (result.shootout || []).forEach((attempt, index) => {
     const teamName = attempt.side === "away" ? match.away : match.home;
     if (!new Set(rosterFor(teamName)).has(attempt.player)) {
@@ -5831,6 +5847,13 @@ function adaptRetroMatch(match) {
   match.homeId = retroTeamId(match.home, retroTournament.year);
   match.awayId = retroTeamId(match.away, retroTournament.year);
   match.allowDraw = match.stage === "group";
+  if (!match.schedule && Number(retroTournament.year) === 2026) {
+    const groupScheduleKey = `${match.home}|${match.away}`;
+    const reverseGroupScheduleKey = `${match.away}|${match.home}`;
+    match.schedule = match.stage === "group"
+      ? RETRO_2026_GROUP_SCHEDULE[groupScheduleKey] || RETRO_2026_GROUP_SCHEDULE[reverseGroupScheduleKey]
+      : RETRO_2026_KNOCKOUT_SCHEDULE[match.id];
+  }
   if (match.schedule && (!match.schedule.dateLabel || !match.schedule.timeLabel)) {
     const details = retroScheduleDetails(match);
     match.schedule = {
@@ -9730,6 +9753,19 @@ function repairDefaultKnockoutRosterResults(candidate = state) {
       match.result.injuries = absences.injuries;
       repaired = true;
     }
+    ["home", "away"].forEach((side) => {
+      const key = `${side}Events`;
+      const currentEvents = match.result[key] || [];
+      const repairedEvents = removeDismissedPlayersFromFutureGoals(
+        currentEvents,
+        side,
+        match.result.redCards || [],
+        match,
+        match.result.injuries || [],
+      );
+      if (repairedEvents.some((event, index) => event !== currentEvents[index])) repaired = true;
+      match.result[key] = repairedEvents;
+    });
     (match.result.shootout || []).forEach((attempt, index) => {
       const side = attempt.side === "away" ? "away" : "home";
       replaceInvalid(attempt, `shootout:${side}:${index}`, outfield[side], match.id);
@@ -9951,7 +9987,7 @@ function weightedScorer(
   const squadProfiles = playerProfilesForTeam(team);
   const profiles = preferredPenaltyScorerProfiles(
     team,
-    eligibleScorerProfiles(team, minute, [], excludedPlayers),
+    eligibleScorerProfiles(team, goalType === "penalty" ? 1 : minute, [], excludedPlayers),
     goalType,
   );
   return selectWeightedProfile(profiles, random, (profile) => scorerWeightForGoalType(
@@ -9962,6 +9998,7 @@ function weightedScorer(
       team,
       opponent,
       squadProfiles,
+      seasonSeed: state?.drawSeed,
       tournamentTeamGoals: tournamentScoring.teamGoals || 0,
       tournamentPlayerGoals: (tournamentScoring.playerGoals?.get(profile.name) || 0)
         + (inMatchGoals.get(profile.name) || 0),
@@ -9983,7 +10020,7 @@ function availableScorer(
   const squadProfiles = playerProfilesForTeam(team);
   const profiles = preferredPenaltyScorerProfiles(
     team,
-    eligibleScorerProfiles(team, minute, cards, suspendedPlayers),
+    eligibleScorerProfiles(team, goalType === "penalty" ? 1 : minute, cards, suspendedPlayers),
     goalType,
   );
   return selectWeightedProfile(profiles, random, (profile) => scorerWeightForGoalType(
@@ -9994,6 +10031,7 @@ function availableScorer(
       team,
       opponent,
       squadProfiles,
+      seasonSeed: state?.drawSeed,
       tournamentTeamGoals: tournamentScoring.teamGoals || 0,
       tournamentPlayerGoals: (tournamentScoring.playerGoals?.get(profile.name) || 0)
         + (inMatchGoals.get(profile.name) || 0),
@@ -11793,24 +11831,63 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
 function removeDismissedPlayersFromFutureGoals(events, side, redCards, match, injuries = []) {
   const team = teamById(side === "home" ? match.homeId : match.awayId);
   if (!team) return events;
+  const defendingSide = side === "home" ? "away" : "home";
+  const defendingTeam = teamById(defendingSide === "home" ? match.homeId : match.awayId);
+  const participantKey = (name) => repairPlayerText(String(name || "").replace(/\s*\(OG\)\s*$/i, ""))
+    .toLocaleLowerCase();
+  const eventBelongsToSide = (event, eventSide, eventTeam) => (
+    event?.side === eventSide
+    || (!event?.side && event?.teamId === eventTeam?.id)
+  );
   return events.map((event, index) => {
     const unavailable = new Set([
       ...redCards
-        .filter((card) => card.side === side && card.minute <= event.minute)
-        .map((card) => card.player),
+        .filter((card) => eventBelongsToSide(card, side, team) && card.minute <= event.minute)
+        .map((card) => participantKey(card.player)),
       ...injuries
-        .filter((injury) => injury.side === side && injury.minute <= event.minute)
-        .map((injury) => injury.player),
+        .filter((injury) => eventBelongsToSide(injury, side, team) && injury.minute <= event.minute)
+        .map((injury) => participantKey(injury.player)),
     ]);
-    if (!unavailable.has(event.scorer) && !unavailable.has(event.assist)) return event;
-    const eligible = eligibleScorerProfiles(team, event.minute, redCards.filter((card) => card.side === side))
-      .filter((profile) => !unavailable.has(profile.name));
+
+    if (event.ownGoal) {
+      if (!defendingTeam) return event;
+      const defendingUnavailable = new Set([
+        ...redCards
+          .filter((card) => eventBelongsToSide(card, defendingSide, defendingTeam) && card.minute <= event.minute)
+          .map((card) => participantKey(card.player)),
+        ...injuries
+          .filter((injury) => eventBelongsToSide(injury, defendingSide, defendingTeam) && injury.minute <= event.minute)
+          .map((injury) => participantKey(injury.player)),
+      ]);
+      const ownGoalBy = participantKey(event.ownGoalBy || event.scorer);
+      if (!defendingUnavailable.has(ownGoalBy)) return event;
+      const defendingCards = redCards.filter((card) => eventBelongsToSide(card, defendingSide, defendingTeam));
+      const candidates = eligibleScorerProfiles(defendingTeam, event.minute, defendingCards)
+        .filter((profile) => !defendingUnavailable.has(participantKey(profile.name)));
+      const preferred = candidates.filter((profile) => (
+        ["GK", "CB", "LB", "RB", "LWB", "RWB", "CDM", "DM"].includes(profile.position)
+      ));
+      const pool = preferred.length ? preferred : candidates;
+      if (!pool.length) return event;
+      const replacement = pool[stableHash(`${match.id}:${side}:${event.minute}:${index}:own-goal-dismissal`) % pool.length];
+      return { ...event, ownGoalBy: replacement.name, scorer: `${replacement.name} (OG)` };
+    }
+
+    const scorerUnavailable = unavailable.has(participantKey(event.scorer));
+    const assistUnavailable = unavailable.has(participantKey(event.assist));
+    if (!scorerUnavailable && !assistUnavailable) return event;
+    const sideCards = redCards.filter((card) => eventBelongsToSide(card, side, team));
+    const eligible = eligibleScorerProfiles(team, event.goalType === "penalty" ? 1 : event.minute, sideCards)
+      .filter((profile) => !unavailable.has(participantKey(profile.name)));
     if (!eligible.length) return event;
     const start = stableHash(`${match.id}:${side}:${event.minute}:${index}:dismissal-replacement`) % eligible.length;
-    const replacement = eligible[start];
-    const scorer = unavailable.has(event.scorer) ? replacement.name : event.scorer;
+    const scorerPool = event.goalType === "penalty"
+      ? preferredPenaltyScorerProfiles(team, eligible, "penalty")
+      : eligible;
+    const replacement = scorerPool[start % scorerPool.length];
+    const scorer = scorerUnavailable ? replacement.name : event.scorer;
     const assistPool = eligible.filter((profile) => profile.name !== scorer);
-    const replacedAssist = unavailable.has(event.assist)
+    const replacedAssist = assistUnavailable
       ? (assistPool.length ? assistPool[start % assistPool.length].name : null)
       : event.assist;
     return {
@@ -15932,7 +16009,10 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
       </span>
       ${isRetroSimulatorState() && match?.schedule ? `
         <span class="retro-standard-fixture-meta">
-          ${escapeHtml(match.schedule.dateLabel)} · ${escapeHtml(match.schedule.stadium)}, ${escapeHtml(match.schedule.city)}
+          ${escapeHtml([
+            match.schedule.dateLabel,
+            [match.schedule.stadium, match.schedule.city].filter(Boolean).join(", "),
+          ].filter(Boolean).join(" · "))}
         </span>
       ` : ""}
     </button>

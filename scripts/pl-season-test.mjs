@@ -15,6 +15,17 @@ const wranglerSource = fs.readFileSync(path.join(root, "wrangler.jsonc"), "utf8"
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const css = fs.readFileSync(path.join(root, "premier-league.css"), "utf8");
 const menuCss = fs.readFileSync(path.join(root, "clean.css"), "utf8");
+const youngPlayerPoolSource = seasonSource.match(/const youngPlayerCandidateNames = Object\.freeze\(\[[\s\S]*?\]\);/)?.[0] || "";
+assert.ok(youngPlayerPoolSource, "The PL Young Player award must define an explicit age-eligible pool.");
+[
+  "Wilfried Gnonto", "Jaka Bijol", "Ao Tanaka", "Romeo Lavia",
+  "Abdukodir Khusanov", "Savinho", "Carlos Baleba", "Yasin Ayari", "Brajan Gruda",
+].forEach((overagePlayer) => {
+  assert.ok(
+    !youngPlayerPoolSource.includes(`"${overagePlayer}"`),
+    `${overagePlayer} must not be eligible for the 2026/27 Young Player award.`,
+  );
+});
 assert.match(
   seasonSource,
   /seasonAchievementsButton\?\.addEventListener\("click",[\s\S]*openRetroModal\(2026\)/,
@@ -60,6 +71,25 @@ assert.match(css, /\.pl-fixture-score small\s*\{[\s\S]*?font:\s*700 9px "Manrope
 
 const clubs = context.window.PREMIER_LEAGUE_2026_27_CLUBS;
 const schedule = context.window.createPremierLeagueSchedule();
+const registeredPlayerNames = new Set(
+  clubs.flatMap((club) => club.playerProfiles.map((player) => player.name)),
+);
+const configuredYoungPlayerNames = [...youngPlayerPoolSource.matchAll(/"([^"]+)"/g)]
+  .map((match) => match[1]);
+assert.ok(
+  configuredYoungPlayerNames.every((name) => registeredPlayerNames.has(name)),
+  `Every YPOTY candidate must belong to a current Premier League squad. Missing: ${configuredYoungPlayerNames.filter((name) => !registeredPlayerNames.has(name)).join(", ")}`,
+);
+assert.match(
+  seasonSource,
+  /youngPlayerCandidateNames\.filter\(\(name\) => registeredPremierLeaguePlayerNames\.has\(name\)\)/,
+  "YPOTY eligibility must be intersected with the current 20-club squad dataset at runtime.",
+);
+assert.doesNotMatch(
+  seasonSource,
+  /enrichedPlayers\.filter\(\(row\) => row\.overall <= 82\)/,
+  "YPOTY must not fall back to an unrelated low-rated or overage player.",
+);
 assert.equal(clubs.length, 20, "The season must contain 20 clubs");
 assert.equal(new Set(clubs.map((club) => club.id)).size, 20, "Club ids must be unique");
 assert.equal(clubs.reduce((total, club) => total + club.playerProfiles.length, 0), 564, "The simulator must include every player in the current official FPL feed");

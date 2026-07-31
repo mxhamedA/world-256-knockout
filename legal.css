@@ -31,29 +31,6 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-.privacy-settings-link {
-  appearance: none;
-  padding: 0;
-  border: 0;
-  color: var(--blue);
-  background: transparent;
-  font: inherit;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-}
-
-.privacy-settings-link:hover {
-  color: var(--text);
-}
-
-.privacy-settings-link:focus-visible {
-  outline: 2px solid var(--blue);
-  outline-offset: 4px;
-  border-radius: 2px;
-}
-
 .legal-nav {
   display: flex;
   min-height: 72px;

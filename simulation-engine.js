@@ -321,7 +321,23 @@ function buildPlayerProfiles(team, names, generated = false) {
   const penaltyOverride = PENALTY_TAKER_OVERRIDES.get(team.name);
   const defaultPenaltyTakerIndex = generated
     ? 0
-    : positions.findIndex((position) => ["ST", "CF"].includes(position));
+    : names.findIndex((entry, index) => {
+      const sourceProfile = typeof entry === "string" ? { name: entry } : entry;
+      const profileOverride = sourceProfile.simulatorRating
+        ? {}
+        : PLAYER_PROFILE_OVERRIDES.get(sourceProfile.name) || {};
+      const position = profileOverride.position
+        || sourceProfile.position
+        || positions[index % positions.length];
+      return ["ST", "CF", "SS"].includes(position);
+    });
+  const hasExplicitPenaltyTaker = names.some((entry) => {
+    const sourceProfile = typeof entry === "string" ? { name: entry } : entry;
+    const profileOverride = sourceProfile.simulatorRating
+      ? {}
+      : PLAYER_PROFILE_OVERRIDES.get(sourceProfile.name) || {};
+    return profileOverride.penaltyTaker === true || sourceProfile.penaltyTaker === true;
+  });
 
   return names.map((entry, index) => {
     const sourceProfile = typeof entry === "string" ? { name: entry } : entry;
@@ -350,8 +366,14 @@ function buildPlayerProfiles(team, names, generated = false) {
       overallMaximum,
     );
     const attackingRole = profileOverride.attackingRole
-      || (sourceProfile.retroWorldCup ? sourceProfile.attackingRole : null)
-      || roleForProfile(position, index);
+      || sourceProfile.attackingRole
+      || (sourceProfile.simulatorRating && sourceProfile.startingXI
+        ? ["ST", "CF", "SS"].includes(position)
+          ? "primary"
+          : ["LW", "RW", "CAM", "AM"].includes(position)
+            ? "secondary"
+            : roleForProfile(position, index)
+        : roleForProfile(position, index));
     const finishingVariation = (stableHash(`${team.id}:${name}:finishing`) % 9) - 4;
     const finishingMaximum = profileOverride.finishing !== undefined
       ? 99
@@ -364,10 +386,16 @@ function buildPlayerProfiles(team, names, generated = false) {
       finishingMaximum,
     );
     const penaltyTaker = profileOverride.penaltyTaker
-      ?? (sourceProfile.retroWorldCup && sourceProfile.penaltyTaker !== undefined ? sourceProfile.penaltyTaker : null)
-      ?? (position === "GK" ? false : penaltyOverride ? name === penaltyOverride : index === defaultPenaltyTakerIndex);
+      ?? (sourceProfile.penaltyTaker !== undefined ? Boolean(sourceProfile.penaltyTaker) : null)
+      ?? (position === "GK"
+        ? false
+        : penaltyOverride
+          ? name === penaltyOverride
+          : hasExplicitPenaltyTaker
+            ? false
+            : index === defaultPenaltyTakerIndex);
     const expectedMinutesShare = profileOverride.expectedMinutesShare
-      ?? (sourceProfile.retroWorldCup ? sourceProfile.expectedMinutesShare : null)
+      ?? sourceProfile.expectedMinutesShare
       ?? expectedMinutesForProfile(attackingRole, position, index);
 
     return {
@@ -481,6 +509,12 @@ function premierLeagueSeasonScorerMultiplier(playerGoals, teamGoals) {
   return multiplier;
 }
 
+function premierLeagueScorerFormMultiplier(profile, team, seasonSeed) {
+  if (!team?.premierLeague || !Number.isFinite(Number(seasonSeed))) return 1;
+  const formRoll = stableHash(`${Number(seasonSeed)}:${team.id}:${profile.name}:pl-scorer-form`) % 1001;
+  return 0.78 + (formRoll / 1000) * 0.44;
+}
+
 function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = {}) {
   const squad = context.squadProfiles || null;
   let weight = calculateScorerWeight(profile, context.team, squad);
@@ -502,6 +536,7 @@ function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = 
       context.tournamentPlayerGoals || 0,
       context.tournamentTeamGoals || 0,
     );
+    weight *= premierLeagueScorerFormMultiplier(profile, context.team, context.seasonSeed);
   }
   if (goalType === "penalty") weight *= profile.penaltyTaker ? 8 : 0.70;
   if (goalType === "setPiece") {
@@ -524,7 +559,15 @@ function preferredPenaltyScorerProfiles(team, profiles, goalType) {
     if (primaryProfiles.length) return primaryProfiles;
   }
   const designatedProfiles = profiles.filter((profile) => profile.penaltyTaker);
-  return designatedProfiles.length ? designatedProfiles : profiles;
+  if (designatedProfiles.length) return designatedProfiles;
+  const attackingProfiles = profiles.filter((profile) => (
+    ["ST", "CF", "SS", "LW", "RW", "CAM", "AM"].includes(profile.position)
+  ));
+  if (attackingProfiles.length) return attackingProfiles;
+  const midfieldProfiles = profiles.filter((profile) => (
+    ["CM", "LM", "RM"].includes(profile.position)
+  ));
+  return midfieldProfiles.length ? midfieldProfiles : profiles;
 }
 
 function chooseGoalType(random) {

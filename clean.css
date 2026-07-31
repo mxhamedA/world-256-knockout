@@ -11904,6 +11904,66 @@ body.standard-mode-active #newsButton {
   text-align: center;
 }
 
+.home-achievement-modal {
+  width: min(760px, calc(100% - 28px));
+  max-height: min(760px, calc(100vh - 32px));
+  padding: 28px;
+  border: 1px solid #2d4565;
+  border-radius: 8px;
+  background: #111b2a;
+  color: #fff;
+}
+
+.home-achievement-modal::backdrop {
+  background: rgba(3, 8, 16, .78);
+}
+
+.home-achievement-modal header {
+  padding-right: 34px;
+  margin-bottom: 20px;
+}
+
+.home-achievement-modal header p {
+  margin: 8px 0 0;
+  color: #9aa9bd;
+  font-size: 12px;
+}
+
+.home-achievement-modal h2 {
+  margin: 8px 0 0;
+  color: #f4f7fb;
+  font-size: 28px;
+}
+
+.home-achievement-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  border: 0;
+  background: transparent;
+  color: #99a7bc;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.home-achievement-modal-table {
+  max-height: min(560px, calc(100vh - 190px));
+  overflow: auto;
+  border: 1px solid #202c3d;
+  border-radius: 5px;
+}
+
+.home-achievement-modal-table .home-achievement-row {
+  background: #101722;
+}
+
+.home-achievement-modal-table .home-achievement-row.is-heading {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #17253a;
+}
+
 @media (min-width: 1160px) {
   .field-overview {
     display: grid;
@@ -33865,6 +33925,13 @@ body.retro-mode-active.retro-2026-active #mainContent .fixture {
   border-radius: 12px !important;
 }
 
+body.retro-mode-active.retro-2026-active #mainContent .retro-standard-fixture-meta {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: var(--wc26-orange) !important;
+  font-size: 0.62rem;
+  line-height: 1.35;
+}
+
 body.retro-mode-active.retro-2026-active :is(
   .retro-section-heading,
   .retro-lineups-heading,
@@ -34840,6 +34907,17 @@ body.retro-mode-active.retro-2026-active #mainContent .retro-manager-section-tit
 
 body.retro-mode-active.retro-2026-active #mainContent .retro-manager-player small {
   display: none;
+}
+
+/* Completed bracket rows stay neutral; the score already communicates who advanced. */
+body.retro-mode-active.retro-2026-active #mainContent .bracket-fixture .fixture-team.winner {
+  color: var(--wc26-white) !important;
+  background: transparent !important;
+}
+
+body.retro-mode-active.retro-2026-active #mainContent .bracket-fixture .fixture-team.winner .fixture-winner-marker {
+  display: none !important;
+  border-right-color: transparent !important;
 }
 
 body.retro-mode-active.retro-2026-active #mainContent .retro-manager-section.is-bench .retro-manager-player {

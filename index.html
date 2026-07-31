@@ -1,16 +1,6 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script data-cfasync="false" src="https://cmp.gatekeeperconsent.com/min.js"></script>
-    <script data-cfasync="false" src="https://the.gatekeeperconsent.com/cmp.min.js"></script>
-
-    <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
-    <script>
-      window.ezstandalone = window.ezstandalone || {};
-      ezstandalone.cmd = ezstandalone.cmd || [];
-    </script>
-    <script src="//ezoicanalytics.com/analytics.js"></script>
-    <script src="/ezoic-cmp-bridge.js"></script>
     <meta charset="UTF-8" />
     <base href="/" />
     <script src="./redirect.js"></script>
@@ -480,13 +470,23 @@
           <section class="home-achievement-leaderboard" aria-labelledby="homeAchievementLeaderboardTitle">
             <header>
               <h2 id="homeAchievementLeaderboardTitle">Leaderboard</h2>
-              <button class="home-achievement-action" id="homeAchievementAction" type="button">View achievements</button>
+              <button class="home-achievement-action" id="homeAchievementAction" type="button" aria-expanded="false">View top 50</button>
             </header>
             <div class="home-achievement-table" id="homeAchievementLeaderboard" aria-live="polite">
               <p class="home-achievement-empty">Loading standings...</p>
             </div>
             <div class="home-achievement-own" id="homeAchievementOwn" hidden></div>
           </section>
+
+          <dialog class="home-achievement-modal" id="homeAchievementModal" aria-labelledby="homeAchievementModalTitle">
+            <button class="home-achievement-modal-close" id="homeAchievementModalClose" type="button" aria-label="Close">&times;</button>
+            <header>
+              <span class="achievements-mode-label">GLOBAL STANDINGS</span>
+              <h2 id="homeAchievementModalTitle">Top 50 achievements</h2>
+              <p>Players ranked by achievement points and total unlocks.</p>
+            </header>
+            <div class="home-achievement-modal-table" id="homeAchievementModalTable" aria-live="polite"></div>
+          </dialog>
 
           <section class="home-editorial" aria-labelledby="homeEditorialTitle">
             <div class="home-editorial-copy">
@@ -2033,6 +2033,7 @@
     <script src="./retro-2022-squads.js?v=retro-squads-2022-1"></script>
     <script src="./retro-2022-schedule.js?v=retro-schedule-2022-1"></script>
     <script src="./retro-2026-squads.js?v=world-cup-2026-official-1"></script>
+    <script src="./retro-2026-schedule.js?v=world-cup-2026-schedule-1"></script>
     <script src="./retro-engine.js?v=penalties-ratings-reds-1"></script>
     <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
     <script src="./simulation-engine.js?v=penalties-ratings-reds-1"></script>

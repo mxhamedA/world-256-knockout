@@ -117,6 +117,9 @@
     homeAchievementLeaderboard: $("#homeAchievementLeaderboard"),
     homeAchievementOwn: $("#homeAchievementOwn"),
     homeAchievementAction: $("#homeAchievementAction"),
+    homeAchievementModal: $("#homeAchievementModal"),
+    homeAchievementModalClose: $("#homeAchievementModalClose"),
+    homeAchievementModalTable: $("#homeAchievementModalTable"),
   };
   let dashboard = null;
   let authMode = "login";
@@ -548,21 +551,26 @@
     return [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
   }
 
-  function knockoutObjectiveForTeam(team) {
+  function knockoutObjectiveForTeam(team, teamIndex = -1) {
     if (team?.id === "team-25" || team?.name === "Israel") {
       return { objectiveLabel: "Lose in the Round of 256", points: 4 };
     }
+    if (team?.name === "Norfolk Island") {
+      return { objectiveLabel: "Reach the Round of 32", points: 8 };
+    }
+    const rank = teamIndex + 1;
     const rating = Number(team?.simulationRatings?.overall) || 0;
-    if (rating >= 50) {
+    if (rank >= 1 && rank <= 65) {
       return {
         objectiveLabel: "Win the tournament",
-        points: rating >= 90 ? 1 : rating >= 80 ? 1 : rating >= 70 ? 2 : rating >= 60 ? 2 : 3,
+        points: rating >= 80 ? 1 : 2,
       };
     }
-    if (rating >= 45) return { objectiveLabel: "Reach the final", points: 3 };
-    if (rating >= 40) return { objectiveLabel: "Reach the semi-finals", points: 4 };
-    if (rating >= 35) return { objectiveLabel: "Reach the quarter-finals", points: 4 };
-    return { objectiveLabel: "Reach the Round of 16", points: 5 };
+    if (rank <= 159) return { objectiveLabel: "Reach the semi-finals", points: rank <= 112 ? 3 : 4 };
+    if (rank <= 182) return { objectiveLabel: "Reach the quarter-finals", points: 5 };
+    if (rank <= 207) return { objectiveLabel: "Reach the Round of 16", points: 8 };
+    if (rank <= 232) return { objectiveLabel: "Reach the Round of 32", points: 8 };
+    return { objectiveLabel: "Reach the Round of 64", points: 8 };
   }
 
   function syncAchievementTheme(year = activeAchievementYear) {
@@ -605,13 +613,13 @@
           ...premierLeagueObjectiveForClub(club),
         }))
       : activeAchievementYear === 256
-      ? (typeof TEAMS !== "undefined" ? TEAMS.map((team) => ({
+      ? (typeof TEAMS !== "undefined" ? TEAMS.map((team, teamIndex) => ({
           teamId: team.id,
           teamName: team.name,
           attempts: 0,
           complete: false,
           won: false,
-          ...knockoutObjectiveForTeam(team),
+          ...knockoutObjectiveForTeam(team, teamIndex),
         })) : [])
       : (typeof RETRO_WORLD_CUPS !== "undefined"
         ? RETRO_WORLD_CUPS[activeAchievementYear].teams.map((team) => ({ teamName: team.name, attempts: 0, won: false, wonOnAttempt: null }))
@@ -1054,19 +1062,24 @@
   function renderAchievementLeaderboard() {
     if (!elements.homeAchievementLeaderboard) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
+    const visibleEntries = entries.slice(0, 10);
     elements.homeAchievementLeaderboard.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
       </div>
-      ${entries.slice(0, 10).map((entry) => `
+      ${visibleEntries.map((entry) => `
           <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}">
             <strong>${entry.rank}</strong>
             <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
             <strong>${Number(entry.points || 0).toLocaleString()}</strong>
             <span>${Number(entry.achievements || 0)} / ${Number(achievementLeaderboardPayload.totalAchievements || 128)}</span>
           </div>
-        `).join("")}
+      `).join("")}
     ` : '<p class="home-achievement-empty">No achievements unlocked yet. The first points are waiting.</p>';
+    if (elements.homeAchievementAction) {
+      elements.homeAchievementAction.textContent = "View top 50";
+      elements.homeAchievementAction.setAttribute("aria-expanded", "false");
+    }
     const own = achievementLeaderboardPayload?.currentUser;
     if (elements.homeAchievementOwn) {
       elements.homeAchievementOwn.hidden = !own;
@@ -1074,6 +1087,24 @@
         ? `<span>Your standing</span><strong>${own.rank ? `#${own.rank}` : "Unranked"}</strong><b>${Number(own.points || 0).toLocaleString()} pts · ${Number(own.achievements || 0)} achievements</b>`
         : "";
     }
+  }
+
+  function renderAchievementLeaderboardModal() {
+    if (!elements.homeAchievementModalTable) return;
+    const entries = achievementLeaderboardPayload?.leaderboard || [];
+    elements.homeAchievementModalTable.innerHTML = entries.length ? `
+      <div class="home-achievement-row is-heading">
+        <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
+      </div>
+      ${entries.slice(0, 50).map((entry) => `
+        <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}">
+          <strong>${entry.rank}</strong>
+          <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
+          <strong>${Number(entry.points || 0).toLocaleString()}</strong>
+          <span>${Number(entry.achievements || 0)} / ${Number(achievementLeaderboardPayload.totalAchievements || 128)}</span>
+        </div>
+      `).join("")}
+    ` : '<p class="home-achievement-empty">No achievements unlocked yet.</p>';
   }
 
   async function loadAchievementLeaderboard() {
@@ -1383,7 +1414,14 @@
   });
   elements.retroAchievementModalClose?.addEventListener("click", () => elements.retroAchievementModal.close());
   elements.retroAchievementLogin?.addEventListener("click", () => openAuth("login"));
-  elements.homeAchievementAction?.addEventListener("click", () => document.querySelector("#openAchievementsButton")?.click());
+  elements.homeAchievementAction?.addEventListener("click", () => {
+    renderAchievementLeaderboardModal();
+    elements.homeAchievementModal?.showModal();
+  });
+  elements.homeAchievementModalClose?.addEventListener("click", () => elements.homeAchievementModal?.close());
+  elements.homeAchievementModal?.addEventListener("click", (event) => {
+    if (event.target === elements.homeAchievementModal) elements.homeAchievementModal.close();
+  });
   document.querySelectorAll("[data-achievement-year]").forEach((button) => {
     button.addEventListener("click", () => void loadAchievements(normalizeAchievementKey(button.dataset.achievementYear)));
   });

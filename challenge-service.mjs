@@ -139,6 +139,8 @@ const RETRO_TEAM_RATINGS = Object.freeze({
 const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2006, 2010, 2014, 2016, 2018, 2022, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
+// Moderation hold: preserve the account and achievement records, but omit this user from public achievement standings.
+const HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES = new Set(["przemexx"]);
 const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
   ["arsenal", "Arsenal", 1, 2],
   ["aston-villa", "Aston Villa", 4, 4],
@@ -1084,7 +1086,8 @@ export function retroAchievementPoints(year, teamName) {
 }
 
 export function knockout256AchievementDefinition(teamId) {
-  const team = DRAFT_TEAMS.find((entry) => entry.id === teamId);
+  const teamIndex = DRAFT_TEAMS.findIndex((entry) => entry.id === teamId);
+  const team = DRAFT_TEAMS[teamIndex];
   if (!team) return null;
   if (team.id === "team-25") {
     return {
@@ -1096,27 +1099,48 @@ export function knockout256AchievementDefinition(teamId) {
       points: 4,
     };
   }
+  if (team.name === "Norfolk Island") {
+    return {
+      teamId,
+      teamName: team.name,
+      objective: "reach",
+      objectiveLabel: "Reach the Round of 32",
+      targetRoundIndex: 3,
+      points: 8,
+    };
+  }
+  const rank = teamIndex + 1;
   const rating = Number(team.simulationRatings?.overall) || 0;
-  if (rating >= 50) {
+  if (rank <= 65) {
     return {
       teamId,
       teamName: team.name,
       objective: "champion",
       objectiveLabel: "Win the tournament",
       targetRoundIndex: 7,
-      points: rating >= 90 ? 1 : rating >= 80 ? 1 : rating >= 70 ? 2 : rating >= 60 ? 2 : 3,
+      points: rating >= 80 ? 1 : 2,
     };
   }
-  if (rating >= 45) {
-    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the final", targetRoundIndex: 7, points: 3 };
+  if (rank <= 159) {
+    return {
+      teamId,
+      teamName: team.name,
+      objective: "reach",
+      objectiveLabel: "Reach the semi-finals",
+      targetRoundIndex: 6,
+      points: rank <= 112 ? 3 : 4,
+    };
   }
-  if (rating >= 40) {
-    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the semi-finals", targetRoundIndex: 6, points: 4 };
+  if (rank <= 182) {
+    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the quarter-finals", targetRoundIndex: 5, points: 5 };
   }
-  if (rating >= 35) {
-    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the quarter-finals", targetRoundIndex: 5, points: 4 };
+  if (rank <= 207) {
+    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the Round of 16", targetRoundIndex: 4, points: 8 };
   }
-  return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the Round of 16", targetRoundIndex: 4, points: 5 };
+  if (rank <= 232) {
+    return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the Round of 32", targetRoundIndex: 3, points: 8 };
+  }
+  return { teamId, teamName: team.name, objective: "reach", objectiveLabel: "Reach the Round of 64", targetRoundIndex: 2, points: 8 };
 }
 
 export function knockout256ObjectiveAchieved(definition, {
@@ -1144,76 +1168,38 @@ export function knockout256ObjectiveAchieved(definition, {
 
 async function knockout256AchievementProgress(db, account) {
   const rows = account ? (await db.prepare(`
-    WITH account_attempts AS (
-      SELECT team_id, champion, achieved, best_round_index, started_at, completed_at
-      FROM knockout_256_attempts
-      WHERE account_id = ?
-    ),
-    first_achievements AS (
-      SELECT team_id,
-        MIN(CASE
-          WHEN team_id = 'team-25'
-            AND best_round_index = 0
-            AND completed_at IS NOT NULL
-            AND champion = 0
-            THEN COALESCE(completed_at, started_at)
-          WHEN team_id <> 'team-25' AND achieved = 1
-            THEN COALESCE(completed_at, started_at)
-        END) AS first_unlock_at,
-        MIN(CASE WHEN champion = 1 THEN COALESCE(completed_at, started_at) END) AS first_champion_at
-      FROM account_attempts
-      GROUP BY team_id
-    )
-    SELECT attempts.team_id,
-      COUNT(*) AS attempts,
-      MAX(attempts.champion) AS champion,
-      MAX(attempts.achieved) AS achieved,
-      MAX(CASE
-        WHEN attempts.team_id = 'team-25'
-          AND attempts.best_round_index = 0
-          AND attempts.completed_at IS NOT NULL
-          AND attempts.champion = 0
-          THEN 1
-        ELSE 0
-      END) AS lost_round_256,
-      MAX(attempts.best_round_index) AS best_round_index,
-      SUM(CASE
-        WHEN first_achievements.first_unlock_at IS NOT NULL
-          AND attempts.started_at <= first_achievements.first_unlock_at THEN 1
-        ELSE 0
-      END) AS achieved_on_attempt,
-      SUM(CASE
-        WHEN first_achievements.first_champion_at IS NOT NULL
-          AND attempts.started_at <= first_achievements.first_champion_at THEN 1
-        ELSE 0
-      END) AS champion_on_attempt,
-      MAX(first_achievements.first_unlock_at) AS unlocked_at,
-      MAX(first_achievements.first_champion_at) AS champion_at
-    FROM account_attempts attempts
-    LEFT JOIN first_achievements ON first_achievements.team_id = attempts.team_id
-    GROUP BY attempts.team_id
+    SELECT team_id, champion, best_round_index, started_at, completed_at
+    FROM knockout_256_attempts
+    WHERE account_id = ?
+    ORDER BY started_at ASC
   `).bind(account.id).all()).results : [];
-  const byTeam = new Map(rows.map((row) => [row.team_id, row]));
+  const byTeam = new Map();
+  rows.forEach((row) => {
+    if (!byTeam.has(row.team_id)) byTeam.set(row.team_id, []);
+    byTeam.get(row.team_id).push(row);
+  });
   const teams = DRAFT_TEAMS.map((team) => {
     const definition = knockout256AchievementDefinition(team.id);
-    const row = byTeam.get(team.id);
-    const championObjective = definition.objective === "champion";
-    const loseFirstRoundObjective = definition.objective === "lose-round-256";
-    const complete = championObjective
-      ? Number(row?.champion || 0) === 1
-      : loseFirstRoundObjective
-        ? Number(row?.lost_round_256 || 0) === 1
-        : Number(row?.achieved || 0) === 1;
-    const achievedOnAttempt = Number(
-      championObjective ? row?.champion_on_attempt : row?.achieved_on_attempt,
-    ) || null;
-    const unlockedAt = Number(championObjective ? row?.champion_at : row?.unlocked_at) || null;
+    const attempts = byTeam.get(team.id) || [];
+    const achievedIndex = attempts.findIndex((attempt) => knockout256ObjectiveAchieved(definition, {
+      bestRoundIndex: Number(attempt.best_round_index || 0),
+      championTeamId: Number(attempt.champion || 0) === 1 ? team.id : null,
+      phase: attempt.completed_at ? "complete" : "progress",
+    }) === 1);
+    const achievedAttempt = achievedIndex >= 0 ? attempts[achievedIndex] : null;
+    const achievedOnAttempt = achievedAttempt ? achievedIndex + 1 : null;
+    const unlockedAt = achievedAttempt
+      ? Number(achievedAttempt.completed_at || achievedAttempt.started_at || 0) || null
+      : null;
     return {
       ...definition,
-      attempts: Number(row?.attempts || 0),
-      bestRoundIndex: Number(row?.best_round_index || 0),
-      complete,
-      won: complete,
+      attempts: attempts.length,
+      bestRoundIndex: attempts.reduce(
+        (best, attempt) => Math.max(best, Number(attempt.best_round_index || 0)),
+        0,
+      ),
+      complete: Boolean(achievedAttempt),
+      won: Boolean(achievedAttempt),
       achievedOnAttempt,
       wonOnAttempt: achievedOnAttempt,
       unlockedAt,
@@ -1400,17 +1386,10 @@ async function achievementLeaderboard(request, env) {
     `).all(),
     env.CHALLENGE_DB.prepare(`
       SELECT account_id, 256 AS year, team_id AS team_name, MAX(champion) AS champion,
+        MAX(best_round_index) AS best_round_index,
+        MAX(CASE WHEN completed_at IS NOT NULL THEN 1 ELSE 0 END) AS completed,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM knockout_256_attempts
-      WHERE (
-        team_id = 'team-25'
-        AND best_round_index = 0
-        AND completed_at IS NOT NULL
-        AND champion = 0
-      ) OR (
-        team_id <> 'team-25'
-        AND achieved = 1
-      )
       GROUP BY account_id, team_id
     `).all(),
     env.CHALLENGE_DB.prepare(`
@@ -1448,9 +1427,11 @@ async function achievementLeaderboard(request, env) {
       const premierLeagueDefinition = String(row.year) === PREMIER_LEAGUE_KEY
         ? premierLeagueAchievementDefinition(row.team_name)
         : null;
-      const validUnlock = !knockoutDefinition
-        || knockoutDefinition.objective !== "champion"
-        || Number(row.champion) === 1;
+      const validUnlock = !knockoutDefinition || knockout256ObjectiveAchieved(knockoutDefinition, {
+        bestRoundIndex: Number(row.best_round_index || 0),
+        championTeamId: Number(row.champion) === 1 ? row.team_name : null,
+        phase: Number(row.completed) === 1 ? "complete" : "progress",
+      }) === 1;
       if (!validUnlock) {
         return;
       }
@@ -1463,7 +1444,11 @@ async function achievementLeaderboard(request, env) {
       entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
     }
   });
+  const isHiddenFromLeaderboard = (entry) => HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES.has(
+    String(entry.username || "").trim().toLowerCase(),
+  );
   const ranked = [...byAccount.values()]
+    .filter((entry) => !isHiddenFromLeaderboard(entry))
     .sort((left, right) => right.points - left.points
       || right.achievements - left.achievements
       || left.latestUnlock - right.latestUnlock
@@ -1476,7 +1461,7 @@ async function achievementLeaderboard(request, env) {
       achievements: entry.achievements,
       isCurrentUser: entry.accountId === account?.id,
     }));
-  const currentUser = account ? ranked.find((entry) => entry.isCurrentUser) || {
+  const currentUser = account && !isHiddenFromLeaderboard(account) ? ranked.find((entry) => entry.isCurrentUser) || {
     rank: null,
     username: account.username,
     profileCountryId: account.profile_country_id || null,

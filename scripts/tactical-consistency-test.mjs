@@ -76,7 +76,10 @@ for (let seed = 1; seed <= 500; seed += 1) {
 
 assert.match(app, /const homeGoalRandom = matchGoalRandom\(randomSeed, match\.id, "home"\)/);
 assert.match(app, /const awayGoalRandom = matchGoalRandom\(randomSeed, match\.id, "away"\)/);
-assert.match(app, /standardTacticOpponent\.textContent = opponentTacticName[\s\S]*standardTacticFeedback\.textContent = tacticalFeedback\?\.label/);
+assert.match(app, /els\.standardTacticOpponent\.textContent = state\.premierLeagueSeason/);
+assert.match(app, /\? opponentTacticName \? `Tactics · Opponent: \$\{opponentTacticName\}` : "Tactics"/);
+assert.match(app, /: opponentTacticName \? `Opponent: \$\{opponentTacticName\}` : ""/);
+assert.match(app, /els\.standardTacticFeedback\.textContent = tacticalFeedback\?\.label \|\| ""/);
 assert.match(
   html,
   /id="standardTacticOpponent"[\s\S]*id="standardTacticButtons"[\s\S]*id="standardTacticFeedback"/,

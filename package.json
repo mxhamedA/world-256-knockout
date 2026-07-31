@@ -29,6 +29,7 @@
     "test:default-restart": "node scripts/default-restart-flow-test.mjs",
     "test:managed-third-place": "node scripts/managed-third-place-flow-test.mjs",
     "test:managed-256": "node scripts/default-managed-balance-test.mjs",
+    "test:pl-awards": "node scripts/pl-awards-test.mjs",
     "test:mode-isolation": "node scripts/mode-state-isolation-test.mjs",
     "test:player-ratings": "node scripts/player-rating-test.mjs",
     "test:player-absences": "node scripts/player-absence-test.mjs",

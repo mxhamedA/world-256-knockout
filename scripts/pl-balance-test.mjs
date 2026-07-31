@@ -117,6 +117,7 @@ const files = [
   "retro-2018-schedule.js",
   "retro-2022-squads.js",
   "retro-2022-schedule.js",
+  "retro-2026-squads.js",
   "retro-engine.js",
   "presentation-engine.js",
   "simulation-engine.js",
@@ -158,7 +159,22 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
     homeWins: 0,
     draws: 0,
     awayWins: 0,
+    penaltyGoals: 0,
   };
+  clubs.forEach((club) => {
+    const profiles = playerProfilesForTeam(club);
+    const penaltyTakers = profiles.filter((player) => player.penaltyTaker);
+    assert.equal(penaltyTakers.length, 1, club.name + " must have exactly one designated penalty taker.");
+    assert.ok(
+      ["ST", "CF", "SS", "LW", "RW", "CAM", "AM"].includes(penaltyTakers[0].position),
+      club.name + "'s designated penalty taker cannot be a defender: " + JSON.stringify(penaltyTakers[0]),
+    );
+    assert.equal(
+      penaltyTakers[0].startingXI,
+      true,
+      club.name + "'s designated penalty taker must be part of the likely starting XI: " + JSON.stringify(penaltyTakers[0]),
+    );
+  });
   for (let seasonIndex = 0; seasonIndex < seasonCount; seasonIndex += 1) {
     state.drawSeed = 8_100_000 + seasonIndex * 91_919;
     state.settings = { ...defaultSettings, upset: "balanced", goals: "normal", realNames: true, realPlayersOnly: true };
@@ -176,6 +192,20 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
         match.result.revealed = true;
         report.totalGoals += match.result.homeGoals + match.result.awayGoals;
         report.totalMatches += 1;
+        [
+          [match.homeId, match.result.homeEvents || []],
+          [match.awayId, match.result.awayEvents || []],
+        ].forEach(([teamId, events]) => events.forEach((event) => {
+          if (event.goalType !== "penalty") return;
+          report.penaltyGoals += 1;
+          const scorer = playerProfilesForTeam(plClubById.get(teamId))
+            .find((player) => player.name === event.scorer);
+          assert.ok(scorer, "A Premier League penalty scorer must belong to the scoring club: " + event.scorer);
+          assert.ok(
+            !["GK", "CB", "LB", "RB", "LWB", "RWB", "CDM", "DM"].includes(scorer.position),
+            "A defender cannot take a Premier League regulation penalty: " + JSON.stringify({ scorer, event }),
+          );
+        }));
         report.homeGoals += match.result.homeGoals;
         report.awayGoals += match.result.awayGoals;
         if (match.result.homeGoals > match.result.awayGoals) report.homeWins += 1;
@@ -273,6 +303,11 @@ const fullSeasonScorerRate = report.scorerRowsWith38Appearances / Math.max(1, re
 const averageChampionPoints = average(report.championPoints);
 const averageBottomPoints = average(report.bottomPoints);
 const distinctGoldenBootWinners = new Set(report.seasons.map((season) => season.topScorer)).size;
+const goldenBootWinnerCounts = report.seasons.reduce((counts, season) => {
+  counts[season.topScorer] = (counts[season.topScorer] || 0) + 1;
+  return counts;
+}, {});
+const mostGoldenBootsByOnePlayer = Math.max(...Object.values(goldenBootWinnerCounts));
 const assistedGoalRate = report.assistedGoals / Math.max(1, report.assistEligibleGoals);
 const averageTopAssists = average(report.topAssistCounts);
 const averageForestPosition = average(report.forestPositions);
@@ -308,6 +343,13 @@ assert.ok(Math.max(...report.sakaGoals) <= 40,
   `Saka must not produce an implausible 40+ goal league season; received ${Math.max(...report.sakaGoals)}.`);
 assert.ok(distinctGoldenBootWinners >= Math.min(4, seasonCount),
   `Golden Boot results must not collapse onto one player; received ${distinctGoldenBootWinners} distinct winners.`);
+assert.ok(report.penaltyGoals > 0, "The balance sample must exercise regulation-time penalty selection.");
+if (seasonCount >= 10) {
+  assert.ok(
+    mostGoldenBootsByOnePlayer <= Math.ceil(seasonCount * 0.35),
+    `Golden Boot winners must vary by season; one player won ${mostGoldenBootsByOnePlayer} of ${seasonCount}.`,
+  );
+}
 assert.ok(assistedGoalRate >= 0.4 && assistedGoalRate <= 0.72,
   `Assists must be recorded at a plausible rate; received ${(assistedGoalRate * 100).toFixed(1)}%.`);
 assert.ok(averageTopAssists >= 7 && averageTopAssists <= 22,
@@ -347,4 +389,5 @@ console.log(JSON.stringify({
     }, {})).sort((left, right) => right[1] - left[1]),
   ),
   goldenBoots: report.seasons.map((season) => `${season.topScorer} (${season.topScorerGoals})`),
+  goldenBootWinnerCounts,
 }, null, 2));

@@ -35,17 +35,22 @@
   const seasonAccountLabel = document.querySelector("#plSeasonAccountLabel");
   const tabs = [...document.querySelectorAll("[data-pl-view]")];
   const clubById = new Map(clubs.map((club) => [club.id, club]));
-  const youngPlayerNames = new Set([
+  const youngPlayerCandidateNames = Object.freeze([
     "Max Dowman", "Ethan Nwaneri", "Myles Lewis-Skelly", "Josh Acheampong",
-    "Tyrique George", "Romeo Lavia", "Estevao", "Estevão", "Kendry Paez",
-    "Kendry Páez", "Nico O'Reilly", "Rico Lewis", "Abdukodir Khusanov",
-    "Claudio Echeverri", "Savinho", "Leny Yoro", "Kobbie Mainoo", "Chido Obi",
+    "Tyrique George", "Estêvão",
+    "Nico O'Reilly", "Rico Lewis", "Claudio Echeverri", "Leny Yoro",
+    "Kobbie Mainoo", "Chido Obi",
     "Patrick Dorgu", "Harry Amass", "Ayden Heaven", "Rio Ngumoha", "Trey Nyoni",
     "Lewis Miley", "Archie Gray", "Lucas Bergvall", "Mikey Moore", "Wilson Odobert",
-    "Chris Rigg", "Jobe Bellingham", "Eli Junior Kroupi", "Junior Kroupi",
-    "Stefanos Tzimas", "Brajan Gruda", "Yasin Ayari", "Carlos Baleba",
-    "Jaka Bijol", "Ao Tanaka", "Wilfried Gnonto",
+    "Chris Rigg", "Junior Kroupi",
+    "Stefanos Tzimas",
   ]);
+  const registeredPremierLeaguePlayerNames = new Set(
+    clubs.flatMap((club) => club.playerProfiles.map((player) => player.name)),
+  );
+  const youngPlayerNames = new Set(
+    youngPlayerCandidateNames.filter((name) => registeredPremierLeaguePlayerNames.has(name)),
+  );
 
   clubs.forEach((club) => {
     TEAM_BY_ID.set(club.id, club);
@@ -692,8 +697,7 @@
     const youngPlayerOfTheYear = enrichedPlayers
       .filter((row) => youngPlayerNames.has(row.player))
       .sort((left, right) => right.awardScore - left.awardScore || byGoals(left, right))[0]
-      || enrichedPlayers.filter((row) => row.overall <= 82).sort((left, right) => right.awardScore - left.awardScore)[0]
-      || goldenBoot;
+      || null;
     const gloveRow = [...goalkeeperRows.values()].sort((left, right) => (
       right.cleanSheets - left.cleanSheets
       || left.conceded - right.conceded

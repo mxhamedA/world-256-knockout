@@ -123,7 +123,7 @@ assert.deepEqual(
     objective: knockout256AchievementDefinition("team-221").objectiveLabel,
     points: knockout256AchievementDefinition("team-221").points,
   },
-  { objective: "Reach the Round of 16", points: 5 },
+  { objective: "Reach the Round of 64", points: 8 },
 );
 
 async function request(pathname, { method = "GET", body, session = true, cookie = null } = {}) {
