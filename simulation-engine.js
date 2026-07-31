@@ -515,6 +515,50 @@ function premierLeagueScorerFormMultiplier(profile, team, seasonSeed) {
   return 0.78 + (formRoll / 1000) * 0.44;
 }
 
+function premierLeagueYoungPlayerAwardScore({
+  profile,
+  goals = 0,
+  assists = 0,
+  appearances = 0,
+  cleanSheets = 0,
+  clubPoints = 0,
+  seasonSeed = 0,
+  teamId = "",
+  mainContender = false,
+}) {
+  const position = profile?.position || "CM";
+  let goalWeight = 3.1;
+  let assistWeight = 2.5;
+  let cleanSheetWeight = 0.2;
+  if (["CM", "LCM", "RCM", "CDM", "DM"].includes(position)) {
+    goalWeight = 4.5;
+    assistWeight = 3.5;
+    cleanSheetWeight = 0.7;
+  } else if (["CB", "LB", "RB", "LWB", "RWB"].includes(position)) {
+    goalWeight = 6;
+    assistWeight = 4.5;
+    cleanSheetWeight = 1.8;
+  } else if (["ST", "CF", "SS", "LW", "RW", "LF", "RF"].includes(position)) {
+    goalWeight = 2.7;
+    assistWeight = 2.1;
+    cleanSheetWeight = 0.1;
+  }
+  const performance = goals * goalWeight
+    + assists * assistWeight
+    + appearances * 0.42
+    + cleanSheets * cleanSheetWeight
+    + clubPoints * 0.08
+    + (Number(profile?.overall) || 0) * 0.07;
+  const formRoll = stableHash(`${Number(seasonSeed) || 0}:${teamId}:${profile?.name || "player"}:pl-ypoty-form`) % 1001;
+  // Young-player awards should reflect breakout seasons, not simply crown the
+  // highest-rated starting attacker every year. Most of the score remains tied
+  // to output, while a seeded judging/form component creates credible variation.
+  if (mainContender) {
+    return performance * 0.48 + (formRoll / 1000) * 95 + 8;
+  }
+  return performance * 0.65 + (formRoll / 1000) * 72;
+}
+
 function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = {}) {
   const squad = context.squadProfiles || null;
   let weight = calculateScorerWeight(profile, context.team, squad);

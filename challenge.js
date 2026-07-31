@@ -182,6 +182,20 @@
     );
   }
 
+  async function submitAchievementPhase(path, body) {
+    if (body.phase === "complete") {
+      await challengeApi(path, {
+        method: "POST",
+        body: { ...body, phase: "start" },
+      });
+    }
+    return challengeApi(path, {
+      method: "POST",
+      keepalive: body.phase === "complete",
+      body,
+    });
+  }
+
   function commandId() {
     return crypto.randomUUID();
   }
@@ -786,15 +800,11 @@
     const phase = tournament.phase === "complete" && champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
     if (trackedRetroRequests.has(key)) return trackedRetroRequests.get(key);
-    const request = challengeApi(`/achievements/retro-${year}`, {
-      method: "POST",
-      keepalive: phase === "complete",
-      body: {
+    const request = submitAchievementPhase(`/achievements/retro-${year}`, {
         seed: Number(tournament.seed),
         teamName: tournament.managedTeam,
         phase,
         champion,
-      },
     }).then((payload) => {
       achievementPayloads.set(year, payload);
       activeAchievementYear = year;
@@ -832,16 +842,12 @@
       tournament.phase,
     ].join(":");
     if (trackedKnockoutRequests.has(key)) return trackedKnockoutRequests.get(key);
-    const request = challengeApi("/achievements/knockout-256", {
-      method: "POST",
-      keepalive: tournament.phase === "complete",
-      body: {
+    const request = submitAchievementPhase("/achievements/knockout-256", {
         seed: Number(tournament.seed),
         teamId: tournament.teamId,
         bestRoundIndex: Number(tournament.bestRoundIndex),
         championTeamId: tournament.championTeamId || null,
         phase: tournament.phase,
-      },
     }).then((payload) => {
       achievementPayloads.set(256, payload);
       renderAchievements();
@@ -873,15 +879,11 @@
       seasonState.finalPosition || "",
     ].join(":");
     if (trackedPremierLeagueRequests.has(key)) return trackedPremierLeagueRequests.get(key);
-    const request = challengeApi("/achievements/premier-league", {
-      method: "POST",
-      keepalive: seasonState.phase === "complete",
-      body: {
+    const request = submitAchievementPhase("/achievements/premier-league", {
         seed: Number(seasonState.seed),
         clubId: seasonState.clubId,
         phase: seasonState.phase,
         finalPosition: seasonState.phase === "complete" ? Number(seasonState.finalPosition) : null,
-      },
     }).then((payload) => {
       achievementPayloads.set("pl", payload);
       renderAchievements();

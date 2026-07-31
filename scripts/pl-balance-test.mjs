@@ -8,6 +8,18 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const countArgument = process.argv.find((argument) => /^--count=\d+$/.test(argument));
 const seasonCount = countArgument ? Number(countArgument.split("=")[1]) : 20;
 if (seasonCount < 1 || seasonCount > 30) throw new Error("PL balance validation supports 1-30 seasons.");
+const premierLeagueSeasonSource = fs.readFileSync(path.join(root, "premier-league.js"), "utf8");
+const youngPlayerCandidateSource = premierLeagueSeasonSource.match(
+  /const youngPlayerCandidateNames = Object\.freeze\((\[[\s\S]*?\])\);/,
+)?.[1];
+if (!youngPlayerCandidateSource) throw new Error("Unable to read the PL YPOTY candidate pool.");
+const youngPlayerCandidates = vm.runInNewContext(youngPlayerCandidateSource);
+const youngPlayerMainContenderSource = premierLeagueSeasonSource.match(
+  /const youngPlayerMainContenders = new Set\((\[[\s\S]*?\])\.filter/,
+)?.[1];
+if (!youngPlayerMainContenderSource) throw new Error("Unable to read the PL YPOTY main-contender pool.");
+const youngPlayerMainContenders = vm.runInNewContext(youngPlayerMainContenderSource);
+const youngPlayerMainContenderSet = new Set(youngPlayerMainContenders);
 
 function mockElement() {
   return {
@@ -98,6 +110,8 @@ context.window = {
 };
 context.localStorage = { getItem() { return null; }, setItem() {}, removeItem() {} };
 context.navigator = {};
+context.__youngPlayerCandidates = youngPlayerCandidates;
+context.__youngPlayerMainContenders = youngPlayerMainContenders;
 context.window.navigator = context.navigator;
 vm.createContext(context);
 
@@ -133,6 +147,8 @@ vm.runInContext(`${sources}
 globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCount) {
   const clubs = window.PREMIER_LEAGUE_2026_27_CLUBS;
   const plClubById = new Map(clubs.map((club) => [club.id, club]));
+  const youngPlayerNames = new Set(globalThis.__youngPlayerCandidates || []);
+  const youngPlayerMainContenders = new Set(globalThis.__youngPlayerMainContenders || []);
   clubs.forEach((club) => {
     TEAM_BY_ID.set(club.id, club);
     clearPlayerProfileCacheForTeam(club.id);
@@ -232,6 +248,75 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
       .sort((left, right) => right.points - left.points || right.gd - left.gd || right.gf - left.gf);
     const scorers = calculateGoalscorerTable();
     const topScorer = scorers[0];
+    const awardPlayerRows = new Map();
+    const ensureAwardRow = (teamId, player) => {
+      const key = teamId + ":" + player;
+      const row = awardPlayerRows.get(key) || {
+        player, teamId, goals: 0, assists: 0, appearances: 0,
+      };
+      awardPlayerRows.set(key, row);
+      return row;
+    };
+    clubs.forEach((club) => club.playerProfiles.forEach((player) => {
+      if (youngPlayerNames.has(player.name)) ensureAwardRow(club.id, player.name);
+    }));
+    const addAwardEvent = (teamId, event) => {
+      if (!event || event.goalType === "ownGoal" || event.ownGoal) return;
+      const scorerKey = teamId + ":" + event.scorer;
+      const scorer = ensureAwardRow(teamId, event.scorer);
+      scorer.goals += 1;
+      awardPlayerRows.set(scorerKey, scorer);
+      const assistName = event.assist || event.metadata?.assist || null;
+      if (!assistName || assistName === event.scorer) return;
+      const assistKey = teamId + ":" + assistName;
+      const assister = ensureAwardRow(teamId, assistName);
+      assister.assists += 1;
+      awardPlayerRows.set(assistKey, assister);
+    };
+    const cleanSheetsByClub = new Map(clubs.map((club) => [club.id, 0]));
+    state.rounds.flat().forEach((match) => {
+      (match.result.homeEvents || []).forEach((event) => addAwardEvent(match.homeId, event));
+      (match.result.awayEvents || []).forEach((event) => addAwardEvent(match.awayId, event));
+      if (match.result.awayGoals === 0) cleanSheetsByClub.set(match.homeId, cleanSheetsByClub.get(match.homeId) + 1);
+      if (match.result.homeGoals === 0) cleanSheetsByClub.set(match.awayId, cleanSheetsByClub.get(match.awayId) + 1);
+      [
+        [match.homeId, match.result.playerAppearances?.home || []],
+        [match.awayId, match.result.playerAppearances?.away || []],
+      ].forEach(([teamId, names]) => names.forEach((name) => {
+        if (youngPlayerNames.has(name)) ensureAwardRow(teamId, name).appearances += 1;
+      }));
+    });
+    const tableByClub = new Map(table.map((row) => [row.club.id, row]));
+    const youngPlayer = [...awardPlayerRows.values()]
+      .filter((row) => youngPlayerNames.has(row.player))
+      .map((row) => {
+        const club = plClubById.get(row.teamId);
+        const profile = club?.playerProfiles.find((player) => player.name === row.player);
+        const overall = Number(profile?.overall) || Number(club?.rating) || 0;
+        const clubPoints = tableByClub.get(row.teamId)?.points || 0;
+        return {
+          ...row,
+          overall,
+          awardScore: premierLeagueYoungPlayerAwardScore({
+            profile,
+            goals: row.goals,
+            assists: row.assists,
+            appearances: row.appearances,
+            cleanSheets: cleanSheetsByClub.get(row.teamId) || 0,
+            clubPoints,
+            seasonSeed: state.drawSeed,
+            teamId: row.teamId,
+            mainContender: youngPlayerMainContenders.has(row.player),
+          }),
+        };
+      })
+      .sort((left, right) => (
+        right.awardScore - left.awardScore
+        || right.goals - left.goals
+        || right.assists - left.assists
+        || right.overall - left.overall
+        || left.player.localeCompare(right.player)
+      ))[0] || null;
     scorers.forEach((row) => {
       assert.ok(row.matches >= row.goals,
         row.player + " cannot score " + row.goals + " goals in only " + row.matches + " appearances.");
@@ -287,6 +372,9 @@ globalThis.__runPremierLeagueBalance = function runPremierLeagueBalance(seasonCo
       bottomPoints: table.at(-1).points,
       topScorer: topScorer?.player || "None",
       topScorerGoals: topScorer?.goals || 0,
+      youngPlayer: youngPlayer?.player || "None",
+      youngPlayerGoals: youngPlayer?.goals || 0,
+      youngPlayerAssists: youngPlayer?.assists || 0,
     });
   }
   return report;
@@ -308,6 +396,20 @@ const goldenBootWinnerCounts = report.seasons.reduce((counts, season) => {
   return counts;
 }, {});
 const mostGoldenBootsByOnePlayer = Math.max(...Object.values(goldenBootWinnerCounts));
+const youngPlayerWinnerCounts = report.seasons.reduce((counts, season) => {
+  counts[season.youngPlayer] = (counts[season.youngPlayer] || 0) + 1;
+  return counts;
+}, {});
+const distinctYoungPlayerWinners = Object.keys(youngPlayerWinnerCounts).length;
+const mostYoungPlayerAwards = Math.max(...Object.values(youngPlayerWinnerCounts));
+const mainContenderAwardCount = report.seasons.filter((season) => (
+  youngPlayerMainContenderSet.has(season.youngPlayer)
+)).length;
+const distinctMainContenderWinners = new Set(
+  report.seasons
+    .map((season) => season.youngPlayer)
+    .filter((player) => youngPlayerMainContenderSet.has(player)),
+).size;
 const assistedGoalRate = report.assistedGoals / Math.max(1, report.assistEligibleGoals);
 const averageTopAssists = average(report.topAssistCounts);
 const averageForestPosition = average(report.forestPositions);
@@ -348,6 +450,22 @@ if (seasonCount >= 10) {
   assert.ok(
     mostGoldenBootsByOnePlayer <= Math.ceil(seasonCount * 0.35),
     `Golden Boot winners must vary by season; one player won ${mostGoldenBootsByOnePlayer} of ${seasonCount}.`,
+  );
+  assert.ok(
+    distinctYoungPlayerWinners >= Math.min(4, seasonCount),
+    `YPOTY must not collapse onto one player; received ${distinctYoungPlayerWinners} winners.`,
+  );
+  assert.ok(
+    mostYoungPlayerAwards <= Math.ceil(seasonCount * 0.5),
+    `One player cannot dominate YPOTY; received ${mostYoungPlayerAwards} wins in ${seasonCount} seasons.`,
+  );
+  assert.ok(
+    mainContenderAwardCount >= Math.floor(seasonCount * 0.7),
+    `The requested main YPOTY tier must win most seasons; received ${mainContenderAwardCount} of ${seasonCount}.`,
+  );
+  assert.ok(
+    distinctMainContenderWinners >= Math.min(5, youngPlayerMainContenderSet.size, seasonCount),
+    `The main YPOTY tier must contain several genuine winners; received ${distinctMainContenderWinners}.`,
   );
 }
 assert.ok(assistedGoalRate >= 0.4 && assistedGoalRate <= 0.72,
@@ -390,4 +508,10 @@ console.log(JSON.stringify({
   ),
   goldenBoots: report.seasons.map((season) => `${season.topScorer} (${season.topScorerGoals})`),
   goldenBootWinnerCounts,
+  youngPlayerWinnerCounts,
+  mainContenderAwardCount,
+  distinctMainContenderWinners,
+  youngPlayers: report.seasons.map((season) => (
+    `${season.youngPlayer} (${season.youngPlayerGoals}G, ${season.youngPlayerAssists}A)`
+  )),
 }, null, 2));

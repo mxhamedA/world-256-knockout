@@ -139,6 +139,8 @@ const RETRO_TEAM_RATINGS = Object.freeze({
 const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2006, 2010, 2014, 2016, 2018, 2022, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
+// Moderation hold: preserve the account and achievement records, but omit this user from public achievement standings.
+const HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES = new Set(["przemexx"]);
 const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
   ["arsenal", "Arsenal", 1, 2],
   ["aston-villa", "Aston Villa", 4, 4],
@@ -1442,7 +1444,11 @@ async function achievementLeaderboard(request, env) {
       entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
     }
   });
+  const isHiddenFromLeaderboard = (entry) => HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES.has(
+    String(entry.username || "").trim().toLowerCase(),
+  );
   const ranked = [...byAccount.values()]
+    .filter((entry) => !isHiddenFromLeaderboard(entry))
     .sort((left, right) => right.points - left.points
       || right.achievements - left.achievements
       || left.latestUnlock - right.latestUnlock
@@ -1455,7 +1461,7 @@ async function achievementLeaderboard(request, env) {
       achievements: entry.achievements,
       isCurrentUser: entry.accountId === account?.id,
     }));
-  const currentUser = account ? ranked.find((entry) => entry.isCurrentUser) || {
+  const currentUser = account && !isHiddenFromLeaderboard(account) ? ranked.find((entry) => entry.isCurrentUser) || {
     rank: null,
     username: account.username,
     profileCountryId: account.profile_country_id || null,
@@ -1493,6 +1499,18 @@ async function knockout256Achievement(request, env, account) {
     || bestRoundIndex > 7
   ) {
     throw new ChallengeRequestError("Invalid 256 knockout tournament.", 400);
+  }
+
+  if (phase === "complete") {
+    const startedAttempt = await env.CHALLENGE_DB.prepare(`
+      SELECT 1 AS started
+      FROM knockout_256_attempts
+      WHERE account_id = ? AND tournament_seed = ? AND team_id = ?
+      LIMIT 1
+    `).bind(account.id, seed, definition.teamId).first();
+    if (!startedAttempt) {
+      throw new ChallengeRequestError("Start the knockout before submitting a completion.", 409);
+    }
   }
 
   const before = await knockout256AchievementProgress(env.CHALLENGE_DB, account);
@@ -1566,6 +1584,18 @@ async function premierLeagueAchievement(request, env, account) {
     throw new ChallengeRequestError("Invalid Premier League season.", 400);
   }
 
+  if (phase === "complete") {
+    const startedAttempt = await env.CHALLENGE_DB.prepare(`
+      SELECT 1 AS started
+      FROM premier_league_attempts
+      WHERE account_id = ? AND season_seed = ? AND club_id = ?
+      LIMIT 1
+    `).bind(account.id, seed, definition.clubId).first();
+    if (!startedAttempt) {
+      throw new ChallengeRequestError("Start the season before submitting a completion.", 409);
+    }
+  }
+
   const before = await premierLeagueAchievementProgress(env.CHALLENGE_DB, account);
   const previousClub = before.teams.find((team) => team.clubId === definition.clubId);
   const now = Date.now();
@@ -1611,6 +1641,18 @@ async function retroAchievement(request, env, account, year) {
     throw new ChallengeRequestError(`Invalid ${config.year} World Cup tournament.`, 400);
   }
 
+  if (phase === "complete") {
+    const startedAttempt = await env.CHALLENGE_DB.prepare(`
+      SELECT 1 AS started
+      FROM ${config.table}
+      WHERE account_id = ? AND tournament_seed = ? AND team_name = ?
+      LIMIT 1
+    `).bind(account.id, seed, teamName).first();
+    if (!startedAttempt) {
+      throw new ChallengeRequestError("Start the tournament before submitting a completion.", 409);
+    }
+  }
+
   const before = await retroAchievementProgress(env.CHALLENGE_DB, account, config.year);
   const previousTeam = before.teams.find((team) => team.teamName === teamName);
   const now = Date.now();
@@ -1637,6 +1679,95 @@ async function retroAchievement(request, env, account, year) {
     challengeUnlocked: !before.unlocked && achievement.unlocked,
     unlockedTeam: currentTeam,
   });
+}
+
+function sanitizeAccountCustomTeam(value) {
+  const teamId = String(value?.id || "");
+  const name = String(value?.name || "").trim().slice(0, 50);
+  if (!/^custom-[a-z0-9-]{6,80}$/.test(teamId) || !name) {
+    throw new ChallengeRequestError("The custom team is invalid.", 400);
+  }
+  const rating = (input, fallback = 75) => Math.max(1, Math.min(99, Math.round(Number(input) || fallback)));
+  const overall = rating(value?.simulationRatings?.overall);
+  const allowedPositions = new Set(["GK", "LB", "LWB", "CB", "RB", "RWB", "CDM", "CM", "CAM", "LM", "RM", "LW", "RW", "CF", "ST"]);
+  const players = Array.isArray(value?.playerProfiles) ? value.playerProfiles.slice(0, 26).map((player, index) => {
+    const position = String(player?.position || "CM").toUpperCase();
+    const playerOverall = rating(player?.overall);
+    return {
+      name: String(player?.name || `Player ${index + 1}`).trim().slice(0, 50) || `Player ${index + 1}`,
+      position: allowedPositions.has(position) ? position : "CM",
+      overall: playerOverall,
+      finishing: rating(player?.finishing, position === "GK" ? 5 : playerOverall),
+      pace: rating(player?.pace, playerOverall),
+      shooting: rating(player?.shooting, position === "GK" ? 5 : playerOverall),
+      passing: rating(player?.passing, playerOverall),
+      dribbling: rating(player?.dribbling, playerOverall),
+      defending: rating(player?.defending, playerOverall),
+      physical: rating(player?.physical, playerOverall),
+      goalkeeping: rating(player?.goalkeeping, position === "GK" ? playerOverall : 5),
+      penaltyTaker: player?.penaltyTaker === true,
+      simulatorRating: true,
+    };
+  }) : [];
+  if (players.length < 11) throw new ChallengeRequestError("Custom teams need at least 11 players.", 400);
+  const customFlag = typeof value?.customFlag === "string"
+    && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(value.customFlag)
+    ? value.customFlag.slice(0, 1_500_000)
+    : "";
+  return {
+    id: teamId,
+    name,
+    code: "XX",
+    flag: "⚑",
+    confed: "CUSTOM",
+    customTeam: true,
+    customFlag,
+    rating: overall,
+    strength: overall,
+    simulationRatings: {
+      overall,
+      attack: rating(value?.simulationRatings?.attack, overall),
+      midfield: rating(value?.simulationRatings?.midfield, overall),
+      defence: rating(value?.simulationRatings?.defence, overall),
+      goalkeeper: rating(value?.simulationRatings?.goalkeeper, overall),
+      squadDepth: rating(value?.simulationRatings?.squadDepth, overall),
+      experience: rating(value?.simulationRatings?.experience, overall),
+      penalties: rating(value?.simulationRatings?.penalties, overall),
+      discipline: rating(value?.simulationRatings?.discipline, 70),
+    },
+    players: players.map((player) => player.name),
+    playerProfiles: players,
+    nameCulture: "british",
+  };
+}
+
+async function accountCustomTeams(request, env, account, teamId = null) {
+  if (request.method === "GET" && !teamId) {
+    const rows = (await env.CHALLENGE_DB.prepare(`
+      SELECT team_json FROM account_custom_teams
+      WHERE account_id = ? ORDER BY updated_at DESC
+    `).bind(account.id).all()).results || [];
+    return responseJson({ teams: rows.map((row) => JSON.parse(row.team_json)) });
+  }
+  if (request.method === "POST" && !teamId) {
+    const body = await readJson(request, 1_600_000);
+    const team = sanitizeAccountCustomTeam(body.team);
+    await env.CHALLENGE_DB.prepare(`
+      INSERT INTO account_custom_teams (account_id, team_id, team_json, updated_at)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(account_id, team_id) DO UPDATE SET
+        team_json = excluded.team_json,
+        updated_at = excluded.updated_at
+    `).bind(account.id, team.id, JSON.stringify(team), Date.now()).run();
+    return responseJson({ team }, 200);
+  }
+  if (request.method === "DELETE" && teamId) {
+    if (!/^custom-[a-z0-9-]{6,80}$/.test(teamId)) throw new ChallengeRequestError("The custom team is invalid.", 400);
+    await env.CHALLENGE_DB.prepare("DELETE FROM account_custom_teams WHERE account_id = ? AND team_id = ?")
+      .bind(account.id, teamId).run();
+    return responseJson({ deleted: true });
+  }
+  return responseJson({ error: "Method not allowed." }, 405);
 }
 
 export async function handleChallengeRequest(request, env, url) {
@@ -1682,6 +1813,9 @@ export async function handleChallengeRequest(request, env, url) {
     const account = await authenticatedAccount(request, env.CHALLENGE_DB, true, env.LOCAL_DEV_AUTH === "true");
     if (url.pathname === "/api/challenge/profile") return await profile(request, env, account);
     if (url.pathname === "/api/challenge/profile/deletion-request") return await requestAccountDeletion(request, env, account);
+    if (url.pathname === "/api/challenge/custom-teams") return await accountCustomTeams(request, env, account);
+    const customTeamMatch = url.pathname.match(/^\/api\/challenge\/custom-teams\/(custom-[a-z0-9-]{6,80})$/);
+    if (customTeamMatch) return await accountCustomTeams(request, env, account, customTeamMatch[1]);
     const assetPackMatch = url.pathname.match(/^\/api\/challenge\/assets\/([a-z0-9-]+)$/);
     if (assetPackMatch) return await installAssetPack(request, env, account, assetPackMatch[1]);
     if (url.pathname === "/api/challenge/runs" && request.method === "POST") return await startRun(request, env, account);

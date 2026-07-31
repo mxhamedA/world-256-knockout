@@ -83,7 +83,7 @@ assert.equal(knockout256ObjectiveAchieved(israel, {
 assert.match(appSource, /function standardKnockoutAchievementState\(candidate = state\)/);
 assert.match(appSource, /window\.AccountAchievements\?\.trackKnockoutTournament\(knockoutAchievement\)/);
 assert.match(challengeSource, /async function trackKnockoutTournament\(tournament\)/);
-assert.match(challengeSource, /challengeApi\("\/achievements\/knockout-256"/);
+assert.match(challengeSource, /submitAchievementPhase\("\/achievements\/knockout-256"/);
 assert.match(challengeSource, /function knockoutObjectiveForTeam\(team, teamIndex = -1\)/);
 assert.match(challengeSource, /Reach the Round of 64/);
 assert.doesNotMatch(challengeSource, /Loading objective/);

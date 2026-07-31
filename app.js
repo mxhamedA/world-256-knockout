@@ -16,6 +16,8 @@ const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
 const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
 const PREMIER_LEAGUE_SETUP_STORAGE_KEY = "world-256-premier-league-2026-27-setup-v1";
 const CUSTOM_TOURNAMENT_SETUP_KEY = "world-256-custom-tournament-setup-v1";
+const CUSTOM_TEAM_LIBRARY_KEY = "world-256-custom-team-library-v1";
+const CUSTOM_MATCH_SETUP_KEY = "world-256-custom-match-setup-v1";
 const TOURNAMENT_HISTORY_STORAGE_KEY = "world-256-tournament-history-v1";
 const TOURNAMENT_HISTORY_MIGRATION_KEY = "world-256-tournament-history-indexeddb-v1";
 const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
@@ -198,6 +200,7 @@ const STANDARD_TACTIC_MATCHUPS = Object.freeze({
 const $ = (selector) => document.querySelector(selector);
 const els = {
   roundNav: $("#roundNav"),
+  goldenBootPanel: $(".golden-boot-panel"),
   progressPercent: $("#progressPercent"),
   progressBar: $("#progressBar"),
   progressCopy: $("#progressCopy"),
@@ -210,6 +213,7 @@ const els = {
   championConfetti: $("#championConfetti"),
   championFlag: $("#championFlag"),
   championName: $("#championName"),
+  championAwardsGrid: $("#championAwardsGrid"),
   championTopScorerAward: $("#championTopScorerAward"),
   championTopScorerName: $("#championTopScorerName"),
   championTopScorerFlag: $("#championTopScorerFlag"),
@@ -349,6 +353,9 @@ const els = {
   keybindsToggleLabel: $("#keybindsToggleLabel"),
   keybindSettingsList: $("#keybindSettingsList"),
   resetModal: $("#resetModal"),
+  resetModalTitle: $("#resetModalTitle"),
+  resetModalCopy: $("#resetModalCopy"),
+  resetModalCancelButton: $("#resetModalCancelButton"),
   simulateRoundModal: $("#simulateRoundModal"),
   snapshotModal: $("#snapshotModal"),
   snapshotModalKicker: $("#snapshotModalKicker"),
@@ -374,6 +381,13 @@ const els = {
   customHeaderTeamCount: $("#customHeaderTeamCount"),
   customHeaderStartButton: $("#customHeaderStartButton"),
   customLiveBackButton: $("#customLiveBackButton"),
+  customMatchScreen: $("#customMatchScreen"),
+  customMatchBody: $("#customMatchBody"),
+  customMatchBackButton: $("#customMatchBackButton"),
+  customMatchCreateTeamButton: $("#customMatchCreateTeamButton"),
+  customMatchStartButton: $("#customMatchStartButton"),
+  openCustomMatchButton: $("#openCustomMatchButton"),
+  restartCustomMatchButton: $("#restartCustomMatchButton"),
   achievementsScreen: $("#achievementsScreen"),
   openAchievementsButton: $("#openAchievementsButton"),
   mainContent: $("#mainContent"),
@@ -717,6 +731,144 @@ function normalizeSettings(settings = {}) {
 const FICTIONAL_PLAYER_NAMES = new Set(["The Conspiracy"]);
 
 const TEAM_BY_ID = new Map(TEAMS.map((team) => [team.id, team]));
+
+function sanitizeCustomPlayer(player, index = 0) {
+  const position = String(player?.position || "CM").toUpperCase();
+  const allowedPositions = new Set(["GK", "LB", "LWB", "CB", "RB", "RWB", "CDM", "CM", "CAM", "LM", "RM", "LW", "RW", "CF", "ST"]);
+  const rating = (key, fallback) => simulationClamp(Math.round(Number(player?.[key]) || fallback), 1, 99);
+  const overall = rating("overall", 75);
+  return {
+    name: String(player?.name || `Player ${index + 1}`).trim().slice(0, 50) || `Player ${index + 1}`,
+    position: allowedPositions.has(position) ? position : "CM",
+    overall,
+    finishing: rating("finishing", position === "GK" ? 5 : overall),
+    pace: rating("pace", overall),
+    shooting: rating("shooting", position === "GK" ? 5 : overall),
+    passing: rating("passing", overall),
+    dribbling: rating("dribbling", overall),
+    defending: rating("defending", overall),
+    physical: rating("physical", overall),
+    goalkeeping: rating("goalkeeping", position === "GK" ? overall : 5),
+    penaltyTaker: player?.penaltyTaker === true,
+    simulatorRating: true,
+  };
+}
+
+function sanitizeCustomTeam(team) {
+  const id = String(team?.id || "");
+  if (!/^custom-[a-z0-9-]{6,80}$/.test(id)) return null;
+  const name = String(team?.name || "").trim().slice(0, 50);
+  if (!name) return null;
+  const clampRating = (key, fallback = 75) => simulationClamp(Math.round(Number(team?.simulationRatings?.[key]) || fallback), 1, 99);
+  const overall = clampRating("overall");
+  const players = Array.isArray(team?.playerProfiles)
+    ? team.playerProfiles.slice(0, 26).map(sanitizeCustomPlayer)
+    : [];
+  const customFlag = typeof team?.customFlag === "string" && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(team.customFlag)
+    ? team.customFlag.slice(0, 2_500_000)
+    : "";
+  return {
+    id,
+    name,
+    code: "XX",
+    flag: String(team?.flag || "⚑").slice(0, 4),
+    confed: "CUSTOM",
+    customTeam: true,
+    customFlag,
+    rating: overall,
+    strength: overall,
+    simulationRatings: {
+      overall,
+      attack: clampRating("attack", overall),
+      midfield: clampRating("midfield", overall),
+      defence: clampRating("defence", overall),
+      goalkeeper: clampRating("goalkeeper", overall),
+      squadDepth: clampRating("squadDepth", overall),
+      experience: clampRating("experience", overall),
+      penalties: clampRating("penalties", overall),
+      discipline: clampRating("discipline", 70),
+    },
+    players: players.map((player) => player.name),
+    playerProfiles: players,
+    nameCulture: "british",
+    accountSaved: team?.accountSaved === true,
+  };
+}
+
+function readCustomTeamLibrary() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CUSTOM_TEAM_LIBRARY_KEY));
+    return Array.isArray(saved) ? saved.map(sanitizeCustomTeam).filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+}
+
+const CUSTOM_PREMIER_LEAGUE_TEAMS = Object.freeze(
+  Array.isArray(window.PREMIER_LEAGUE_2026_27_CLUBS) ? [...window.PREMIER_LEAGUE_2026_27_CLUBS] : [],
+);
+CUSTOM_PREMIER_LEAGUE_TEAMS.forEach((team) => TEAM_BY_ID.set(team.id, team));
+
+let customTeamLibrary = readCustomTeamLibrary();
+customTeamLibrary.forEach((team) => TEAM_BY_ID.set(team.id, team));
+
+function saveCustomTeamLibrary() {
+  localStorage.setItem(CUSTOM_TEAM_LIBRARY_KEY, JSON.stringify(customTeamLibrary));
+}
+
+let customTeamAccount = null;
+
+async function syncAccountCustomTeams() {
+  const accountId = customTeamAccount?.id;
+  if (!accountId) return;
+  try {
+    const response = await fetch("/api/challenge/custom-teams", { credentials: "include" });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(payload.error || "Account teams could not be loaded.");
+    if (customTeamAccount?.id !== accountId) return;
+    const remoteTeams = (Array.isArray(payload.teams) ? payload.teams : [])
+      .map((team) => sanitizeCustomTeam({ ...team, accountSaved: true }))
+      .filter(Boolean);
+    remoteTeams.forEach((team) => {
+      const existingIndex = customTeamLibrary.findIndex((candidate) => candidate.id === team.id);
+      if (existingIndex >= 0) customTeamLibrary[existingIndex] = team;
+      else customTeamLibrary.push(team);
+      TEAM_BY_ID.set(team.id, team);
+    });
+    saveCustomTeamLibrary();
+    if (els.customTournamentScreen && !els.customTournamentScreen.hidden) renderCustomTournamentSetup();
+    if (els.customMatchScreen && !els.customMatchScreen.hidden) renderCustomMatchSetup();
+  } catch (error) {
+    console.warn("Custom account teams could not be synced.", error instanceof Error ? error.message : error);
+  }
+}
+
+function setCustomTeamAccount(account) {
+  customTeamAccount = account || null;
+  if (customTeamAccount) void syncAccountCustomTeams();
+  if (customTournamentUi?.teamCreatorOpen) renderCustomTournamentSetup();
+}
+
+async function saveCustomTeamToAccount(team) {
+  const response = await fetch("/api/challenge/custom-teams", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ team }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.error || "This team could not be saved to your account.");
+  return sanitizeCustomTeam({ ...payload.team, accountSaved: true });
+}
+
+async function removeCustomTeamFromAccount(teamId) {
+  const response = await fetch(`/api/challenge/custom-teams/${encodeURIComponent(teamId)}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(payload.error || "This team could not be removed from your account.");
+}
 const LEGACY_FORMATIONS = Object.freeze({
   "433": {
     label: "4-3-3",
@@ -1095,7 +1247,7 @@ function preferredPenaltyFoot(team, player, random) {
 }
 
 function flagMarkup(team, className = "") {
-  if (state?.premierLeagueSeason && team?.badge) {
+  if (team?.premierLeague && team?.badge) {
     const classes = ["country-flag", "pl-club-flag", className].filter(Boolean).join(" ");
     const fallback = `<span class="flag-fallback pl-club-code" aria-hidden="true">${escapeHtml(team.code || "PL")}</span>`;
     if (!premierLeagueAssetsInstalled) {
@@ -1106,6 +1258,10 @@ function flagMarkup(team, className = "") {
         <img src="${team.badge}" alt="" loading="lazy" decoding="async" />
       </span>
     `;
+  }
+  if (team?.customFlag) {
+    const classes = ["country-flag", "custom-uploaded-flag", className].filter(Boolean).join(" ");
+    return `<span class="${classes}" role="img" aria-label="${escapeHtml(team.name)} flag"><span class="flag-fallback" aria-hidden="true">${escapeHtml(team.flag || "⚑")}</span><img src="${team.customFlag}" alt="" loading="lazy" /></span>`;
   }
   const imageOverride = FLAG_IMAGE_OVERRIDES[team.name];
   const imageClassName = team.name === "Belarus" ? "flag-belarus" : "";
@@ -1206,7 +1362,7 @@ function clearRetroRouteLoadingState() {
 function enforceModeScreenVisibility(mode = currentAppMode()) {
   const activeRetroYear = Number(retroTournament?.year || retroWorldCupYearFromPath() || readRetroWorldCupYear());
   document.body.classList.toggle("standard-mode-active", mode === "standard");
-  if (els.newsButton) els.newsButton.hidden = mode === "standard" || mode === "custom";
+  if (els.newsButton) els.newsButton.hidden = mode === "standard" || mode === "custom" || mode === "customMatch";
   if (mode !== "retro") {
     if (els.appShell) {
       els.appShell.style.removeProperty("display");
@@ -1341,6 +1497,7 @@ function recoverFromStartupError(error, context = "startup") {
   if (els.onlineRoomScreen) els.onlineRoomScreen.hidden = true;
   if (els.achievementsScreen) els.achievementsScreen.hidden = true;
   if (els.customTournamentScreen) els.customTournamentScreen.hidden = true;
+  if (els.customMatchScreen) els.customMatchScreen.hidden = true;
   if (els.legacyDraftScreen) els.legacyDraftScreen.hidden = true;
   if (els.mainContent) els.mainContent.hidden = false;
   if (els.fieldOverview) els.fieldOverview.hidden = false;
@@ -1573,6 +1730,7 @@ const APP_MODE_PATHS = Object.freeze({
   home: "/",
   achievements: "/achievements",
   custom: "/custom-tournament",
+  customMatch: "/custom-matches",
   challenge: "/palestine-challenge",
   standard: "/default-mode",
   legacy: "/draft-mode",
@@ -5511,7 +5669,7 @@ function isValidCustomTournamentState(candidate) {
   const structure = candidate?.customTournament?.structure === "groups" ? "groups" : "knockout";
   const openingMatchCount = structure === "groups" ? (count / 4) * 6 : customTournamentBracketSize(count) / 2;
   return candidate?.customTournament?.active === true
-    && CUSTOM_TOURNAMENT_TEAM_COUNTS.includes(count)
+    && (CUSTOM_TOURNAMENT_TEAM_COUNTS.includes(count) || (count === 2 && candidate.customTournament.customMatch === true))
     && Array.isArray(candidate.rounds)
     && candidate.rounds[0]?.length === openingMatchCount;
 }
@@ -5577,6 +5735,8 @@ if (matchSoundsEnabled === null) {
 let standardTournamentState = state;
 let defaultKnockoutState = isDefaultKnockoutState(state) ? state : null;
 let customTournamentState = isValidCustomTournamentState(state) ? state : null;
+let customMatchState = isValidCustomTournamentState(state) && state.customTournament?.customMatch === true ? state : null;
+if (customMatchState) customTournamentState = null;
 let retroSimulatorState = null;
 let activeTournamentHistoryRecord = null;
 let activeTournamentHistoryRound = 0;
@@ -5642,6 +5802,7 @@ function tournamentRoundNames() {
   }
   if (isRetroSimulatorState()) return retroRoundNames();
   if (isValidCustomTournamentState(state)) {
+    if (state.customTournament?.customMatch === true) return ["Custom match"];
     return customRoundNames(state.customTournament.teamCount, state.customTournament.structure);
   }
   return ROUND_NAMES;
@@ -6102,6 +6263,7 @@ if (state.legacyTournament && state.spectateTeamId?.startsWith("legacy-")) {
 standardTournamentState = state;
 
 function saveState() {
+  const previousCustomTournamentState = customTournamentState;
   if (state?.savedTournamentView || retroTournament?.savedTournamentView) return;
   if (state?.premierLeagueSeason) {
     window.PremierLeagueSeason?.saveEngineState?.(state);
@@ -6113,6 +6275,10 @@ function saveState() {
   }
   if (isDefaultKnockoutState(state)) defaultKnockoutState = state;
   if (isValidCustomTournamentState(state)) customTournamentState = state;
+  if (state.customTournament?.customMatch === true) {
+    customMatchState = state;
+    customTournamentState = previousCustomTournamentState;
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   if (isValidLegacyTournamentState(state)) {
     localStorage.setItem(LEGACY_TOURNAMENT_SESSION_KEY, JSON.stringify(state));
@@ -7682,8 +7848,9 @@ function currentTournamentHistoryRecord() {
 
 function syncChampionTournamentHistoryButton() {
   if (!els.championSaveTournament || !els.championSaveTournamentLabel) return;
-  els.championSaveTournament.hidden = state?.savedTournamentView === true;
-  if (state?.savedTournamentView) return;
+  const customMatch = state?.customTournament?.customMatch === true;
+  els.championSaveTournament.hidden = state?.savedTournamentView === true || customMatch;
+  if (state?.savedTournamentView || customMatch) return;
   const savedRecord = currentTournamentHistoryRecord();
   els.championSaveTournament.classList.toggle("is-saved", Boolean(savedRecord));
   els.championSaveTournament.dataset.historyTheme = isRetroSimulatorState()
@@ -8162,6 +8329,7 @@ function openTournamentHistory(
     standardTournamentState,
     defaultKnockoutState,
     customTournamentState,
+    customMatchState,
     retroSimulatorState,
     retroTournament,
     standardTournamentUiState,
@@ -8243,6 +8411,7 @@ function closeTournamentHistory({ updateUrl = true } = {}) {
   standardTournamentState = previous.standardTournamentState;
   defaultKnockoutState = previous.defaultKnockoutState;
   customTournamentState = previous.customTournamentState;
+  customMatchState = previous.customMatchState;
   retroSimulatorState = previous.retroSimulatorState;
   retroTournament = previous.retroTournament;
   standardTournamentUiState = previous.standardTournamentUiState;
@@ -8728,8 +8897,10 @@ async function createMatchSnapshotCanvas() {
   const retroTheme = retroSnapshot ? retroSnapshotPalette(retroYear) : null;
   const premierLeagueSnapshot = Boolean(state.premierLeagueSeason);
   const championSnapshot = Boolean(state.championView && revealed);
+  const customMatchSnapshot = state.customTournament?.customMatch === true;
+  const snapshotShowsAward = championSnapshot && !customMatchSnapshot;
   const championId = championSnapshot ? result.winnerId : null;
-  const goldenBootWinner = championSnapshot ? calculateTopGoalscorer() : null;
+  const goldenBootWinner = snapshotShowsAward ? calculateTopGoalscorer() : null;
   const homeGoalLines = revealed ? snapshotGoalLines(result.homeEvents) : [];
   const awayGoalLines = revealed ? snapshotGoalLines(result.awayEvents) : [];
   const homeShootout = revealed
@@ -8757,7 +8928,7 @@ async function createMatchSnapshotCanvas() {
     shootoutBottom(homeGoalLines, homeShootout),
     shootoutBottom(awayGoalLines, awayShootout),
   );
-  const goldenBootY = championSnapshot ? Math.max(438, detailBottom + 34) : null;
+  const goldenBootY = snapshotShowsAward ? Math.max(438, detailBottom + 34) : null;
   const contentBottom = goldenBootY === null ? detailBottom : goldenBootY + 116;
   const canvasHeight = Math.max(675, Math.ceil(contentBottom + 110));
   const [homeFlagImage, awayFlagImage] = await Promise.all([
@@ -8807,7 +8978,7 @@ async function createMatchSnapshotCanvas() {
       ? Number(retroYear) === 2016
         ? "FRANCE 2016 EUROPEAN CHAMPIONS"
         : `${RETRO_WORLD_CUP_EDITIONS[retroYear].host.toUpperCase()} ${retroYear} WORLD CHAMPIONS`
-      : "256 TEAMS WC CHAMPIONS"
+      : customMatchSnapshot ? "CUSTOM MATCH WINNER" : "256 TEAMS WC CHAMPIONS"
     : premierLeagueSnapshot
       ? `PL 26/27 · ${tournamentMatchRoundName(match, roundIndex).toUpperCase()}`
       : tournamentMatchRoundName(match, roundIndex).toUpperCase();
@@ -8875,7 +9046,7 @@ async function createMatchSnapshotCanvas() {
       188,
       detailStartY,
       "left",
-      championSnapshot ? 290 : 420,
+      snapshotShowsAward ? 290 : 420,
       retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#aab4c4"),
     );
     drawSnapshotGoalLines(
@@ -8884,16 +9055,16 @@ async function createMatchSnapshotCanvas() {
       1012,
       detailStartY,
       "right",
-      championSnapshot ? 290 : 420,
+      snapshotShowsAward ? 290 : 420,
       retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#aab4c4"),
     );
     if (homeShootoutY !== null) {
-      drawSnapshotShootout(context, homeShootout, 188, homeShootoutY, "left", championSnapshot ? 290 : 420);
+      drawSnapshotShootout(context, homeShootout, 188, homeShootoutY, "left", snapshotShowsAward ? 290 : 420);
     }
     if (awayShootoutY !== null) {
-      drawSnapshotShootout(context, awayShootout, 1012, awayShootoutY, "right", championSnapshot ? 290 : 420);
+      drawSnapshotShootout(context, awayShootout, 1012, awayShootoutY, "right", snapshotShowsAward ? 290 : 420);
     }
-    if (championSnapshot) drawSnapshotGoldenBoot(context, goldenBootWinner, goldenBootY, retroTheme);
+    if (snapshotShowsAward) drawSnapshotGoldenBoot(context, goldenBootWinner, goldenBootY, retroTheme);
   } else {
     snapshotText(context, "VS", 600, premierLeagueSnapshot ? 250 : 307, 180, 52, {
       weight: 800,
@@ -8929,7 +9100,7 @@ async function createMatchSnapshotCanvas() {
       family: "Manrope, Arial, sans-serif",
     });
   } else if (state.customTournament) {
-    snapshotText(context, "CUSTOM TOURNAMENT", 600, canvasHeight - 43, 360, 17, {
+    snapshotText(context, state.customTournament.customMatch ? "CUSTOM MATCH" : "CUSTOM TOURNAMENT", 600, canvasHeight - 43, 360, 17, {
       minimumSize: 14,
       weight: 800,
       color: "#8aa9ff",
@@ -9534,7 +9705,7 @@ function clearPlayerProfileCacheForTeam(teamId) {
 function playerProfilesForTeam(team) {
   const historicalTournament = isRetroSimulatorState() || state.legacyTournament === true;
   const officialRetroSquad = Boolean(historicalTournament && team.retroWorldCup && team.playerProfiles?.length);
-  const canonicalCurrentTeam = historicalTournament || state?.premierLeagueSeason
+  const canonicalCurrentTeam = historicalTournament || state?.premierLeagueSeason || team.customTeam
     ? null
     : TEAMS.find((candidate) => candidate.name === team.name) || null;
   const rosterTeam = canonicalCurrentTeam || team;
@@ -15583,7 +15754,8 @@ function renderStage() {
     const final = tournamentFinalMatch(finalRound);
     const champion = final?.result ? teamById(final.result.winnerId) : null;
     if (champion) {
-      const topScorer = calculateTopGoalscorer();
+      const customMatch = state.customTournament?.customMatch === true;
+      const topScorer = customMatch ? null : calculateTopGoalscorer();
       placeSnapshotButtonOnChampionScreen(true);
       const trophy = els.championStage.querySelector(".trophy");
       const summary = els.championStage.querySelector(".champion-content > p");
@@ -15593,7 +15765,7 @@ function renderStage() {
             ? "FRANCE 2016 EUROPEAN CHAMPIONS"
             : `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
           : isValidCustomTournamentState(state)
-            ? `${state.customTournament.teamCount} TEAM CUSTOM TOURNAMENT CHAMPIONS`
+            ? state.customTournament.customMatch ? "CUSTOM MATCH WINNER" : `${state.customTournament.teamCount} TEAM CUSTOM TOURNAMENT CHAMPIONS`
           : "256 TEAMS WC CHAMPIONS";
       }
       if (summary) {
@@ -15608,7 +15780,7 @@ function renderStage() {
             ? "Seven matches. One unforgettable European Championship."
             : "Seven matches. One unforgettable World Cup."
           : isValidCustomTournamentState(state)
-            ? `${customChampionMatches} ${customChampionMatches === 1 ? "match" : "matches"}. A field of ${state.customTournament.teamCount} conquered.`
+            ? state.customTournament.customMatch ? "One match, one winner." : `${customChampionMatches} ${customChampionMatches === 1 ? "match" : "matches"}. A field of ${state.customTournament.teamCount} conquered.`
           : "Eight wins. A field of 256 conquered.";
       }
       els.matchContent.hidden = true;
@@ -15617,6 +15789,8 @@ function renderStage() {
       els.championName.textContent = champion.name;
       renderChampionConfetti(champion.id);
       els.snapshotButton.hidden = !final.result.revealed;
+      els.championTeamJourney.hidden = customMatch;
+      els.championAwardsGrid.hidden = customMatch;
       els.championTopScorerAward.hidden = !topScorer;
       els.championTopScorerAward.style.display = topScorer ? "" : "none";
       if (topScorer) {
@@ -16839,6 +17013,8 @@ function renderLegacyDraftMode() {
 
 const CUSTOM_TEAM_SOURCE_OPTIONS = Object.freeze([
   ["current", "Current teams"],
+  ["premier-league", "Premier League clubs"],
+  ["custom", "My custom teams"],
   ["2006", "World Cup 2006"],
   ["2010", "World Cup 2010"],
   ["2014", "World Cup 2014"],
@@ -16908,7 +17084,8 @@ function readCustomTournamentSetup() {
   }
 }
 
-[2006, 2010, 2014, 2016, 2018, 2022, 2026].forEach((year) => installRetroTeams(year));
+[2006, 2010, 2014, 2016, 2018, 2022].forEach((year) => installRetroTeams(year));
+installRetroTeams(2026);
 let customTournamentSetup = readCustomTournamentSetup();
 let customTournamentSetupViewOpen = false;
 let customGroupTablesCollapsed = false;
@@ -16925,7 +17102,398 @@ let customTournamentUi = {
   matchEditorOpen: false,
   scriptDraftKey: null,
   scriptDraft: null,
+  teamCreatorOpen: false,
+  editingCustomTeamId: null,
+  customTeamDraft: null,
+  teamCreatorReturnMode: null,
 };
+
+const CUSTOM_PLAYER_POSITIONS = Object.freeze(["GK", "LB", "LWB", "CB", "RB", "RWB", "CDM", "CM", "CAM", "LM", "RM", "LW", "RW", "CF", "ST"]);
+const CUSTOM_DEFAULT_XI = Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CM", "CAM", "LW", "ST", "RW"]);
+
+function newCustomTeamDraft(team = null) {
+  const basePlayers = team?.playerProfiles?.length
+    ? team.playerProfiles.map((player) => ({ ...player }))
+    : CUSTOM_DEFAULT_XI.map((position, index) => sanitizeCustomPlayer({ name: `Player ${index + 1}`, position, overall: 75 }, index));
+  const ratings = team?.simulationRatings || {};
+  return {
+    name: team?.name || "",
+    customFlag: team?.customFlag || "",
+    saveToAccount: team?.accountSaved === true,
+    simulationRatings: {
+      overall: ratings.overall || 75,
+      attack: ratings.attack || 75,
+      midfield: ratings.midfield || 75,
+      defence: ratings.defence || 75,
+      goalkeeper: ratings.goalkeeper || 75,
+      squadDepth: ratings.squadDepth || 75,
+      experience: ratings.experience || 75,
+      penalties: ratings.penalties || 75,
+      discipline: ratings.discipline || 70,
+    },
+    playerProfiles: basePlayers,
+  };
+}
+
+function customTeamCreatorMarkup() {
+  if (!customTournamentUi.teamCreatorOpen) return "";
+  const draft = customTournamentUi.customTeamDraft || newCustomTeamDraft();
+  customTournamentUi.customTeamDraft = draft;
+  const ratingFields = [
+    ["overall", "Overall"], ["attack", "Attack"], ["midfield", "Midfield"], ["defence", "Defence"],
+    ["goalkeeper", "Goalkeeper"], ["squadDepth", "Squad depth"], ["experience", "Experience"],
+    ["penalties", "Penalties"], ["discipline", "Discipline"],
+  ];
+  const attributeFields = [
+    ["finishing", "FIN"], ["pace", "PAC"], ["shooting", "SHO"], ["passing", "PAS"],
+    ["dribbling", "DRI"], ["defending", "DEF"], ["physical", "PHY"], ["goalkeeping", "GK"],
+  ];
+  return `
+    <div class="custom-editor-modal custom-team-creator-modal" role="dialog" aria-modal="true" aria-label="${customTournamentUi.editingCustomTeamId ? "Edit" : "Create"} custom team">
+      <button class="custom-editor-backdrop" type="button" data-custom-action="close-team-creator" aria-label="Close team creator"></button>
+      <form class="custom-workspace-panel custom-team-creator" id="customTeamCreatorForm">
+        <header class="custom-team-creator-header">
+          <div><span>CUSTOM SQUAD</span><h2>${customTournamentUi.editingCustomTeamId ? "Edit team" : "Create a team"}</h2><p>Build a reusable squad for custom tournaments and matches.</p></div>
+          <button type="button" data-custom-action="close-team-creator" aria-label="Close team creator">&times;</button>
+        </header>
+        <div class="custom-team-identity">
+          <div class="custom-team-flag-preview">${draft.customFlag ? `<img src="${draft.customFlag}" alt="Uploaded flag preview" />` : `<span aria-hidden="true">⚑</span>`}</div>
+          <label><span>Team name</span><input name="customTeamName" maxlength="50" required value="${escapeHtml(draft.name)}" placeholder="Team name" data-custom-team-field="name" /></label>
+          <label class="custom-flag-upload"><span>Flag image</span><input id="customTeamFlagFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" /><small>PNG, JPG, WebP, GIF or SVG. Stored on this device and optionally with your account.</small></label>
+        </div>
+        <section class="custom-team-ratings-section">
+          <div class="custom-section-title"><div><span>TEAM ABILITY</span><h3>Ratings</h3></div><small>1–99</small></div>
+          <div class="custom-rating-grid">${ratingFields.map(([key, label]) => `<label><span>${label}</span><input type="number" min="1" max="99" value="${draft.simulationRatings[key]}" data-custom-team-rating="${key}" /></label>`).join("")}</div>
+        </section>
+        <section class="custom-player-builder">
+          <div class="custom-section-title"><div><span>SQUAD</span><h3>Players</h3></div><button type="button" data-custom-action="add-custom-player" ${draft.playerProfiles.length >= 26 ? "disabled" : ""}>+ Add player</button></div>
+          <p class="custom-player-help">Add at least 11 players. Open attributes to tune how each player performs, scores and defends.</p>
+          <div class="custom-player-rows">
+            ${draft.playerProfiles.map((player, index) => `<article class="custom-player-row">
+              <div class="custom-player-main-fields">
+                <span class="custom-player-number">${index + 1}</span>
+                <input aria-label="Player ${index + 1} name" maxlength="50" value="${escapeHtml(player.name)}" data-custom-player-index="${index}" data-custom-player-field="name" required />
+                <select aria-label="Player ${index + 1} position" data-custom-player-index="${index}" data-custom-player-field="position">${CUSTOM_PLAYER_POSITIONS.map((position) => `<option value="${position}" ${position === player.position ? "selected" : ""}>${position}</option>`).join("")}</select>
+                <label><span>OVR</span><input type="number" min="1" max="99" value="${player.overall}" data-custom-player-index="${index}" data-custom-player-field="overall" /></label>
+                <button type="button" data-custom-action="remove-custom-player" data-index="${index}" aria-label="Remove ${escapeHtml(player.name)}" ${draft.playerProfiles.length <= 11 ? "disabled" : ""}>&times;</button>
+              </div>
+              <details><summary>Attributes</summary><div class="custom-player-attributes">${attributeFields.map(([key, label]) => `<label><span>${label}</span><input type="number" min="1" max="99" value="${player[key]}" data-custom-player-index="${index}" data-custom-player-field="${key}" /></label>`).join("")}<label class="custom-penalty-taker"><input type="checkbox" ${player.penaltyTaker ? "checked" : ""} data-custom-player-index="${index}" data-custom-player-field="penaltyTaker" /><span>Penalty taker</span></label></div></details>
+            </article>`).join("")}
+          </div>
+        </section>
+        <label class="custom-account-save-option">
+          <input id="customTeamSaveToAccount" type="checkbox" ${draft.saveToAccount ? "checked" : ""} ${customTeamAccount ? "" : "disabled"} />
+          <span><strong>Save to my account</strong><small>${customTeamAccount ? "Sync this team across devices and keep it in My custom teams." : "Log in to save this team across devices."}</small></span>
+        </label>
+        <footer class="custom-team-creator-actions"><p id="customTeamCreatorMessage" aria-live="polite"></p><button class="secondary-button" type="button" data-custom-action="close-team-creator">Cancel</button><button class="primary-button" type="submit">Save team</button></footer>
+      </form>
+    </div>`;
+}
+
+function syncCustomTeamDraftFromInput(input) {
+  const draft = customTournamentUi.customTeamDraft;
+  if (!draft) return;
+  if (input.dataset.customTeamField === "name") draft.name = input.value;
+  if (input.dataset.customTeamRating) draft.simulationRatings[input.dataset.customTeamRating] = simulationClamp(Number(input.value) || 1, 1, 99);
+  if (input.dataset.customPlayerField) {
+    const player = draft.playerProfiles[Number(input.dataset.customPlayerIndex)];
+    if (!player) return;
+    const key = input.dataset.customPlayerField;
+    player[key] = key === "name" || key === "position" ? input.value
+      : key === "penaltyTaker" ? input.checked
+        : simulationClamp(Number(input.value) || 1, 1, 99);
+  }
+}
+
+function customFlagDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    if (!file?.type?.startsWith("image/")) return reject(new Error("Choose an image file for the flag."));
+    if (file.size > 5_000_000) return reject(new Error("Please choose a flag image smaller than 5 MB."));
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("The flag image could not be read."));
+    reader.onload = () => {
+      const source = String(reader.result || "");
+      const image = new Image();
+      image.onerror = () => reject(new Error("The flag image format is not supported."));
+      image.onload = () => {
+        const scale = Math.min(1, 480 / Math.max(1, image.naturalWidth), 320 / Math.max(1, image.naturalHeight));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/webp", 0.88));
+      };
+      image.src = source;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveCustomTeamDraft() {
+  const draft = customTournamentUi.customTeamDraft;
+  const message = els.customTournamentBody.querySelector("#customTeamCreatorMessage");
+  const name = String(draft?.name || "").trim();
+  const players = (draft?.playerProfiles || []).map(sanitizeCustomPlayer);
+  if (!name) {
+    if (message) message.textContent = "Enter a team name.";
+    return;
+  }
+  if (players.length < 11 || players.some((player) => !player.name)) {
+    if (message) message.textContent = "Add names for at least 11 players.";
+    return;
+  }
+  const duplicateName = customTeamLibrary.some((team) => team.id !== customTournamentUi.editingCustomTeamId && team.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+  if (duplicateName) {
+    if (message) message.textContent = "A custom team with that name already exists.";
+    return;
+  }
+  const id = customTournamentUi.editingCustomTeamId || `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  const existingTeam = customTeamLibrary.find((item) => item.id === id) || null;
+  let team = sanitizeCustomTeam({ id, name, customFlag: draft.customFlag, simulationRatings: draft.simulationRatings, playerProfiles: players });
+  const existingIndex = customTeamLibrary.findIndex((item) => item.id === id);
+  if (existingIndex >= 0) customTeamLibrary[existingIndex] = team;
+  else customTeamLibrary.push(team);
+  TEAM_BY_ID.set(id, team);
+  clearPlayerProfileCacheForTeam(id);
+  try {
+    saveCustomTeamLibrary();
+  } catch {
+    if (message) message.textContent = "This team could not be saved. Try a smaller flag image.";
+    return;
+  }
+  try {
+    if (draft.saveToAccount) {
+      if (!customTeamAccount) throw new Error("Log in before saving this team to your account.");
+      team = await saveCustomTeamToAccount(team);
+      customTeamLibrary[customTeamLibrary.findIndex((item) => item.id === id)] = team;
+      TEAM_BY_ID.set(id, team);
+      saveCustomTeamLibrary();
+    } else if (existingTeam?.accountSaved && customTeamAccount) {
+      await removeCustomTeamFromAccount(id);
+    }
+  } catch (error) {
+    customTournamentUi.editingCustomTeamId = id;
+    if (message) message.textContent = error.message || "This team could not be synced to your account.";
+    return;
+  }
+  customTournamentSetup.sourceFilter = "custom";
+  customTournamentUi.teamCreatorOpen = false;
+  customTournamentUi.editingCustomTeamId = null;
+  customTournamentUi.customTeamDraft = null;
+  const returnMode = customTournamentUi.teamCreatorReturnMode;
+  customTournamentUi.teamCreatorReturnMode = null;
+  saveCustomTournamentSetup();
+  if (returnMode === "customMatch") {
+    customMatchSetup.homeSource = "custom";
+    customMatchSetup.homeId = id;
+    saveCustomMatchSetup();
+    customMatchSetupViewOpen = true;
+    setAppModeUrl("customMatch");
+    render();
+    showToast(existingIndex >= 0 ? "Custom team updated." : "Custom team created.");
+    return;
+  }
+  renderCustomTournamentSetup();
+  showToast(existingIndex >= 0 ? "Custom team updated." : "Custom team created.");
+}
+
+function defaultCustomMatchSetup() {
+  return {
+    homeId: TEAMS[0]?.id || null,
+    awayId: TEAMS[1]?.id || null,
+    homeSource: "current",
+    awaySource: "current",
+    upset: "balanced",
+    goals: "normal",
+    format: "full",
+    managedSide: "neutral",
+    abilityOverrides: {},
+  };
+}
+
+function readCustomMatchSetup() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CUSTOM_MATCH_SETUP_KEY));
+    const fallback = defaultCustomMatchSetup();
+    const homeId = TEAM_BY_ID.has(saved?.homeId) ? saved.homeId : fallback.homeId;
+    const awayId = TEAM_BY_ID.has(saved?.awayId) ? saved.awayId : fallback.awayId;
+    const sourceForTeam = (teamId) => {
+      const team = TEAM_BY_ID.get(teamId);
+      if (team?.customTeam) return "custom";
+      if (team?.premierLeague) return "premier-league";
+      if (team?.retroWorldCup) return String(team.retroYear);
+      return "current";
+    };
+    return {
+      homeId,
+      awayId,
+      homeSource: CUSTOM_TEAM_SOURCE_IDS.has(saved?.homeSource) ? saved.homeSource : sourceForTeam(homeId),
+      awaySource: CUSTOM_TEAM_SOURCE_IDS.has(saved?.awaySource) ? saved.awaySource : sourceForTeam(awayId),
+      upset: SIMULATION_CONFIG.modes[saved?.upset] ? saved.upset : "balanced",
+      goals: SIMULATION_CONFIG.goals[saved?.goals] ? saved.goals : "normal",
+      format: saved?.format === "penalties" ? "penalties" : "full",
+      managedSide: ["home", "away"].includes(saved?.managedSide) ? saved.managedSide : "neutral",
+      abilityOverrides: saved?.abilityOverrides && typeof saved.abilityOverrides === "object" ? saved.abilityOverrides : {},
+    };
+  } catch {
+    return defaultCustomMatchSetup();
+  }
+}
+
+let customMatchSetup = readCustomMatchSetup();
+let customMatchSetupViewOpen = false;
+
+function customMatchCanResume(candidate = customMatchState) {
+  if (!isValidCustomTournamentState(candidate) || candidate.customTournament?.customMatch !== true || !candidate.started) return false;
+  const fixture = candidate.rounds?.[0]?.find((match) => !isThirdPlacePlayoff(match));
+  return candidate.championView !== true && fixture?.result?.revealed !== true;
+}
+
+function saveCustomMatchSetup() {
+  localStorage.setItem(CUSTOM_MATCH_SETUP_KEY, JSON.stringify(customMatchSetup));
+}
+
+function customMatchTeamOptions(source, selectedId) {
+  return customTeamSourcePool(source)
+    .map((team) => `<option value="${team.id}" ${selectedId === team.id ? "selected" : ""}>${escapeHtml(customTeamDisplayName(team))}</option>`)
+    .join("");
+}
+
+function customMatchRatingFields(team, side) {
+  const override = customMatchSetup.abilityOverrides[team?.id] || {};
+  const base = team?.simulationRatings || {};
+  return [["overall", "Overall"], ["attack", "Attack"], ["midfield", "Midfield"], ["defence", "Defence"], ["goalkeeper", "Goalkeeper"]]
+    .map(([key, label]) => `<label><span>${label}</span><input type="number" min="1" max="99" value="${override[key] ?? base[key] ?? team?.rating ?? 75}" data-custom-match-rating="${key}" data-side="${side}" /></label>`).join("");
+}
+
+function renderCustomMatchSetup() {
+  if (!els.customMatchBody) return;
+  const home = TEAM_BY_ID.get(customMatchSetup.homeId);
+  const away = TEAM_BY_ID.get(customMatchSetup.awayId);
+  const active = !customMatchSetupViewOpen && isValidCustomTournamentState(customMatchState) && customMatchState.customTournament?.customMatch === true && customMatchState.started;
+  els.customMatchStartButton.disabled = !active && (!home || !away || home.id === away.id);
+  els.customMatchStartButton.innerHTML = active
+    ? 'Return to match <span aria-hidden="true">&rarr;</span>'
+    : 'Play match <span aria-hidden="true">&rarr;</span>';
+  els.customMatchBody.innerHTML = `
+    <section class="custom-match-builder custom-workspace-panel">
+      <div class="custom-match-teams">
+        ${[["home", home, "Home team"], ["away", away, "Away team"]].map(([side, team, label]) => `<section class="custom-match-team-card">
+          <header><span>${label}</span>${team ? flagMarkup(team, "custom-match-team-flag") : ""}</header>
+          <div class="custom-match-team-selectors">
+            <label><span>Squad collection</span><select data-custom-match-source="${side}" aria-label="${label} squad collection">${customTeamSourceOptionsMarkup(customMatchSetup[`${side}Source`])}</select></label>
+            <label><span>Team</span><select data-custom-match-team="${side}" aria-label="${label}">${customMatchTeamOptions(customMatchSetup[`${side}Source`], team?.id)}</select></label>
+          </div>
+          ${team ? `<div class="custom-match-team-name"><strong>${escapeHtml(customTeamDisplayName(team))}</strong></div><div class="custom-rating-grid">${customMatchRatingFields(team, side)}</div>` : ""}
+          <button class="custom-match-reset-ratings" type="button" data-custom-match-action="reset-ratings" data-team-id="${team?.id || ""}">Restore ratings</button>
+        </section>`).join('<div class="custom-match-versus" aria-hidden="true">VS</div>')}
+      </div>
+      ${home?.id === away?.id ? `<p class="custom-match-error">Choose two different teams.</p>` : ""}
+      <section class="custom-match-options">
+        <div class="custom-config-group"><span>Match type</span><div class="custom-segmented"><button type="button" data-custom-match-action="format" data-value="full" class="${customMatchSetup.format === "full" ? "active" : ""}">Full match</button><button type="button" data-custom-match-action="format" data-value="penalties" class="${customMatchSetup.format === "penalties" ? "active" : ""}">Penalties only</button></div></div>
+        <div class="custom-config-group"><span>Simulation style</span><div class="custom-segmented"><button type="button" data-custom-match-action="upset" data-value="realistic" class="${customMatchSetup.upset === "realistic" ? "active" : ""}">Realistic</button><button type="button" data-custom-match-action="upset" data-value="balanced" class="${customMatchSetup.upset === "balanced" ? "active" : ""}">Standard</button><button type="button" data-custom-match-action="upset" data-value="chaos" class="${customMatchSetup.upset === "chaos" ? "active" : ""}">Pure chaos</button></div></div>
+        <div class="custom-config-group"><span>Goal level</span><div class="custom-segmented"><button type="button" data-custom-match-action="goals" data-value="tight" class="${customMatchSetup.goals === "tight" ? "active" : ""}">Tight</button><button type="button" data-custom-match-action="goals" data-value="normal" class="${customMatchSetup.goals === "normal" ? "active" : ""}">Normal</button><button type="button" data-custom-match-action="goals" data-value="wild" class="${customMatchSetup.goals === "wild" ? "active" : ""}">Goal fest</button></div></div>
+        <div class="custom-config-group"><span>Your role</span><div class="custom-segmented"><button type="button" data-custom-match-action="managed-side" data-value="neutral" class="${customMatchSetup.managedSide === "neutral" ? "active" : ""}">Neutral</button><button type="button" data-custom-match-action="managed-side" data-value="home" class="${customMatchSetup.managedSide === "home" ? "active" : ""}">Home</button><button type="button" data-custom-match-action="managed-side" data-value="away" class="${customMatchSetup.managedSide === "away" ? "active" : ""}">Away</button></div></div>
+      </section>
+    </section>`;
+  els.customMatchBody.querySelectorAll("[data-custom-match-source]").forEach((select) => select.addEventListener("change", () => {
+    const side = select.dataset.customMatchSource;
+    const source = CUSTOM_TEAM_SOURCE_IDS.has(select.value) ? select.value : "current";
+    customMatchSetup[`${side}Source`] = source;
+    const pool = customTeamSourcePool(source);
+    const currentTeamId = customMatchSetup[`${side}Id`];
+    if (!pool.some((team) => team.id === currentTeamId)) {
+      const opposingId = customMatchSetup[`${side === "home" ? "away" : "home"}Id`];
+      customMatchSetup[`${side}Id`] = pool.find((team) => team.id !== opposingId)?.id || pool[0]?.id || null;
+    }
+    saveCustomMatchSetup();
+    renderCustomMatchSetup();
+  }));
+  els.customMatchBody.querySelectorAll("[data-custom-match-team]").forEach((select) => select.addEventListener("change", () => {
+    customMatchSetup[`${select.dataset.customMatchTeam}Id`] = select.value;
+    saveCustomMatchSetup();
+    renderCustomMatchSetup();
+  }));
+  els.customMatchBody.querySelectorAll("[data-custom-match-rating]").forEach((input) => input.addEventListener("change", () => {
+    const teamId = customMatchSetup[`${input.dataset.side}Id`];
+    customMatchSetup.abilityOverrides[teamId] ||= {};
+    customMatchSetup.abilityOverrides[teamId][input.dataset.customMatchRating] = simulationClamp(Number(input.value) || 1, 1, 99);
+    input.value = customMatchSetup.abilityOverrides[teamId][input.dataset.customMatchRating];
+    saveCustomMatchSetup();
+  }));
+  els.customMatchBody.querySelectorAll("[data-custom-match-action]").forEach((button) => button.addEventListener("click", () => {
+    const action = button.dataset.customMatchAction;
+    if (action === "create-team") {
+      customTournamentSetup.sourceFilter = "custom";
+      customTournamentUi.teamCreatorOpen = true;
+      customTournamentUi.editingCustomTeamId = null;
+      customTournamentUi.customTeamDraft = newCustomTeamDraft();
+      customTournamentUi.teamCreatorReturnMode = "customMatch";
+      setAppModeUrl("custom");
+      render();
+      return;
+    }
+    if (action === "reset-ratings") delete customMatchSetup.abilityOverrides[button.dataset.teamId];
+    else if (action === "format") customMatchSetup.format = button.dataset.value === "penalties" ? "penalties" : "full";
+    else if (action === "upset") customMatchSetup.upset = SIMULATION_CONFIG.modes[button.dataset.value] ? button.dataset.value : "balanced";
+    else if (action === "goals") customMatchSetup.goals = SIMULATION_CONFIG.goals[button.dataset.value] ? button.dataset.value : "normal";
+    else if (action === "managed-side") customMatchSetup.managedSide = ["home", "away"].includes(button.dataset.value) ? button.dataset.value : "neutral";
+    saveCustomMatchSetup();
+    renderCustomMatchSetup();
+  }));
+}
+
+function createCustomMatchState() {
+  const homeId = customMatchSetup.homeId;
+  const awayId = customMatchSetup.awayId;
+  const managedTeamId = customMatchSetup.managedSide === "home" ? homeId : customMatchSetup.managedSide === "away" ? awayId : null;
+  return {
+    version: STATE_VERSION,
+    drawSeed: Date.now() % 2147483647,
+    settings: normalizeSettings({ ...state?.settings, upset: customMatchSetup.upset, goals: customMatchSetup.goals }),
+    rounds: [[{ id: "r0-m0", homeId, awayId, result: null }]],
+    activeRound: 0,
+    selectedMatch: 0,
+    championView: false,
+    started: true,
+    predictionTeamId: null,
+    spectateTeamId: managedTeamId,
+    neutralView: !managedTeamId,
+    standardTactic: "balanced",
+    customTournament: {
+      active: true,
+      customMatch: true,
+      teamCount: 2,
+      structure: "knockout",
+      thirdPlace: false,
+      format: customMatchSetup.format,
+      upset: customMatchSetup.upset,
+      goals: customMatchSetup.goals,
+      abilityOverrides: structuredClone(customMatchSetup.abilityOverrides),
+      scripts: {},
+    },
+  };
+}
+
+function startCustomMatch() {
+  if (!TEAM_BY_ID.has(customMatchSetup.homeId) || !TEAM_BY_ID.has(customMatchSetup.awayId) || customMatchSetup.homeId === customMatchSetup.awayId) {
+    showToast("Choose two different teams first.");
+    return;
+  }
+  stopStandardPlaybackForNavigation();
+  if (isDefaultKnockoutState(state)) defaultKnockoutState = state;
+  state = createCustomMatchState();
+  customMatchState = state;
+  standardTournamentState = state;
+  customMatchSetupViewOpen = false;
+  fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+  filterUnresolved = false;
+  teamFilterId = null;
+  saveState();
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  showToast("Custom match is ready.");
+}
 
 function saveCustomTournamentSetup() {
   localStorage.setItem(CUSTOM_TOURNAMENT_SETUP_KEY, JSON.stringify(customTournamentSetup));
@@ -17109,12 +17677,16 @@ function customTeamDisplayName(team) {
 }
 
 function customTeamCompetitionLabel(team) {
+  if (team?.customTeam) return "Custom squad";
+  if (team?.premierLeague) return "Premier League";
   if (!team?.retroWorldCup) return team?.confed || "";
   return Number(team.retroYear) === 2016 ? "UEFA Euro 2016" : `World Cup ${team.retroYear}`;
 }
 
 function customTeamSourcePool(source = customTournamentSetup.sourceFilter) {
   if (source === "current") return [...TEAMS];
+  if (source === "premier-league") return [...CUSTOM_PREMIER_LEAGUE_TEAMS].sort((left, right) => left.name.localeCompare(right.name));
+  if (source === "custom") return [...customTeamLibrary].sort((left, right) => left.name.localeCompare(right.name));
   const retroTeams = [...TEAM_BY_ID.values()].filter((team) => team.retroWorldCup);
   if (source === "all-retro") return retroTeams.sort((left, right) => (
     right.retroYear - left.retroYear
@@ -17381,8 +17953,8 @@ function customBracketPanelMarkup() {
         <div class="custom-draw-main">${customTournamentSetup.structure === "groups" ? groupBuilder : knockoutBuilder}</div>
         <aside class="custom-team-library">
           <div class="custom-library-heading">
-            <strong>Team library</strong>
-            <span>${available.length} available</span>
+            <div><strong>Team library</strong><span>${available.length} available</span></div>
+            <button type="button" data-custom-action="open-team-creator">+ Create team</button>
           </div>
           <label class="custom-source-select"><span>Team era</span><select id="customSourceFilter" aria-label="Choose team era">${customTeamSourceOptionsMarkup()}</select></label>
           <label class="custom-search">
@@ -17395,6 +17967,7 @@ function customBracketPanelMarkup() {
               <div class="custom-library-team">
                 ${flagMarkup(team, "custom-team-flag")}
                 <span><strong>${escapeHtml(customTeamDisplayName(team))}</strong><small>${escapeHtml(customTeamCompetitionLabel(team))} &middot; ${team.rating}</small></span>
+                ${team.customTeam ? `<button class="custom-library-edit" type="button" data-custom-action="edit-custom-team" data-team-id="${team.id}" aria-label="Edit ${escapeHtml(team.name)}">Edit</button>` : ""}
                 <button type="button" data-custom-action="add-team" data-team-id="${team.id}" aria-label="Add ${escapeHtml(customTeamDisplayName(team))} to the selected slot">+</button>
               </div>
             `).join("") || `<p class="custom-empty-state">No available teams match this search.</p>`}
@@ -17405,6 +17978,7 @@ function customBracketPanelMarkup() {
       ${customTournamentUi.ratingEditorOpen ? customRatingsPanelMarkup() : ""}
       ${customTournamentUi.targetIndex !== null ? customTeamPickerModalMarkup(available) : ""}
       ${customTournamentUi.managerPickerOpen ? customManagerPickerModalMarkup() : ""}
+      ${customTeamCreatorMarkup()}
     </section>
   `;
 }
@@ -17702,7 +18276,7 @@ function customInlineMatchEditorMarkup() {
 function renderCustomTournamentSetup() {
   if (!els.customTournamentBody) return;
   const selectedCount = customTournamentSetup.selectedIds.filter(Boolean).length;
-  const activeTournament = isValidCustomTournamentState(state) && state.started;
+  const activeTournament = isValidCustomTournamentState(state) && state.customTournament?.customMatch !== true && state.started;
   const selectedTeams = customTournamentSetup.selectedIds.map(customSetupTeam).filter(Boolean);
   const managedTeamId = selectedTeams.some((team) => team.id === customTournamentSetup.managedTeamId)
     ? customTournamentSetup.managedTeamId
@@ -17725,13 +18299,21 @@ function renderCustomTournamentSetup() {
           <span>Third-place play-off</span>
         </button>
       </div>
+      <div class="custom-config-group custom-manager-control">
+        <span>Team to manage</span>
+        <button type="button" data-custom-action="open-manager-picker" ${selectedTeams.length ? "" : "disabled"}>
+          ${managedTeamId
+            ? `${flagMarkup(customSetupTeam(managedTeamId), "custom-manager-button-flag")}<span><strong>${escapeHtml(customTeamDisplayName(customSetupTeam(managedTeamId)))}</strong><small>Managing this team</small></span>`
+            : `<span class="custom-manager-neutral" aria-hidden="true">N</span><span><strong>${selectedTeams.length ? "Choose team" : "Add teams first"}</strong><small>${selectedTeams.length ? "Or remain neutral" : "Fill tournament slots to continue"}</small></span>`}
+          <i aria-hidden="true">&rsaquo;</i>
+        </button>
+      </div>
       <details class="custom-setup-more">
-        <summary>Role &amp; match settings</summary>
+        <summary>Match settings</summary>
         <div>
           <div class="custom-config-group"><span>Match type</span><div class="custom-segmented"><button type="button" data-custom-action="format" data-format="full" class="${customTournamentSetup.format === "full" ? "active" : ""}">Full match</button><button type="button" data-custom-action="format" data-format="penalties" class="${customTournamentSetup.format === "penalties" ? "active" : ""}" ${customTournamentSetup.structure === "groups" ? "disabled title=\"Penalty-only tournaments use knockout format\"" : ""}>Penalties only</button></div></div>
           <div class="custom-config-group"><span>Sim style</span><div class="custom-segmented"><button type="button" data-custom-action="sim-style" data-value="realistic" class="${customTournamentSetup.upset === "realistic" ? "active" : ""}">Realistic</button><button type="button" data-custom-action="sim-style" data-value="balanced" class="${customTournamentSetup.upset === "balanced" ? "active" : ""}">Standard</button><button type="button" data-custom-action="sim-style" data-value="chaos" class="${customTournamentSetup.upset === "chaos" ? "active" : ""}">Pure chaos</button></div></div>
           <div class="custom-config-group"><span>Goal level</span><div class="custom-segmented"><button type="button" data-custom-action="goal-level" data-value="tight" class="${customTournamentSetup.goals === "tight" ? "active" : ""}">Tight</button><button type="button" data-custom-action="goal-level" data-value="normal" class="${customTournamentSetup.goals === "normal" ? "active" : ""}">Normal</button><button type="button" data-custom-action="goal-level" data-value="wild" class="${customTournamentSetup.goals === "wild" ? "active" : ""}">Goal fest</button></div></div>
-          <div class="custom-config-group custom-manager-control"><span>Choose team</span><button type="button" data-custom-action="open-manager-picker">${managedTeamId ? `${flagMarkup(customSetupTeam(managedTeamId), "custom-manager-button-flag")}<span><strong>${escapeHtml(customTeamDisplayName(customSetupTeam(managedTeamId)))}</strong><small>Manage team</small></span>` : `<span class="custom-manager-neutral" aria-hidden="true">N</span><span><strong>Neutral</strong><small>Spectate every match</small></span>`}<i aria-hidden="true">&rsaquo;</i></button></div>
         </div>
       </details>
     </section>
@@ -17750,6 +18332,24 @@ function customGoalRowsFromForm() {
 
 function bindCustomTournamentSetup() {
   const body = els.customTournamentBody;
+  body.querySelectorAll("[data-custom-team-field], [data-custom-team-rating], [data-custom-player-field]").forEach((input) => {
+    input.addEventListener("input", () => syncCustomTeamDraftFromInput(input));
+    input.addEventListener("change", () => syncCustomTeamDraftFromInput(input));
+  });
+  body.querySelector("#customTeamFlagFile")?.addEventListener("change", async (event) => {
+    try {
+      customTournamentUi.customTeamDraft.customFlag = await customFlagDataUrl(event.target.files?.[0]);
+      renderCustomTournamentSetup();
+    } catch (error) {
+      showToast(error.message || "The flag image could not be uploaded.");
+    }
+  });
+  body.querySelector("#customTeamCreatorForm")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    event.currentTarget.querySelectorAll("[data-custom-team-field], [data-custom-team-rating], [data-custom-player-field]").forEach(syncCustomTeamDraftFromInput);
+    customTournamentUi.customTeamDraft.saveToAccount = Boolean(event.currentTarget.querySelector("#customTeamSaveToAccount")?.checked);
+    void saveCustomTeamDraft();
+  });
   body.querySelector("#customQuickFill")?.addEventListener("change", (event) => {
     customTournamentUi.quickFillPreset = event.target.value;
   });
@@ -17870,6 +18470,51 @@ function bindCustomTournamentSetup() {
 
 function handleCustomTournamentAction(button) {
   const action = button.dataset.customAction;
+  if (action === "open-team-creator") {
+    customTournamentUi.teamCreatorOpen = true;
+    customTournamentUi.editingCustomTeamId = null;
+    customTournamentUi.customTeamDraft = newCustomTeamDraft();
+    customTournamentUi.teamCreatorReturnMode = null;
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "edit-custom-team") {
+    const team = customTeamLibrary.find((item) => item.id === button.dataset.teamId);
+    if (!team) return;
+    customTournamentUi.teamCreatorOpen = true;
+    customTournamentUi.editingCustomTeamId = team.id;
+    customTournamentUi.customTeamDraft = newCustomTeamDraft(team);
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "close-team-creator") {
+    const returnMode = customTournamentUi.teamCreatorReturnMode;
+    customTournamentUi.teamCreatorOpen = false;
+    customTournamentUi.editingCustomTeamId = null;
+    customTournamentUi.customTeamDraft = null;
+    customTournamentUi.teamCreatorReturnMode = null;
+    if (returnMode === "customMatch") {
+      customMatchSetupViewOpen = true;
+      setAppModeUrl("customMatch");
+      render();
+      return;
+    }
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "add-custom-player") {
+    els.customTournamentBody.querySelectorAll("[data-custom-team-field], [data-custom-team-rating], [data-custom-player-field]").forEach(syncCustomTeamDraftFromInput);
+    const index = customTournamentUi.customTeamDraft.playerProfiles.length;
+    customTournamentUi.customTeamDraft.playerProfiles.push(sanitizeCustomPlayer({ name: `Player ${index + 1}`, position: "CM", overall: 75 }, index));
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "remove-custom-player") {
+    els.customTournamentBody.querySelectorAll("[data-custom-team-field], [data-custom-team-rating], [data-custom-player-field]").forEach(syncCustomTeamDraftFromInput);
+    if (customTournamentUi.customTeamDraft.playerProfiles.length > 11) customTournamentUi.customTeamDraft.playerProfiles.splice(Number(button.dataset.index), 1);
+    renderCustomTournamentSetup();
+    return;
+  }
   if (action === "tab") {
     customTournamentUi.tab = button.dataset.tab;
     customTournamentUi.matchEditorOpen = false;
@@ -18452,7 +19097,7 @@ function startCustomTournament() {
 }
 
 function handleCustomTournamentStartAction() {
-  if (isValidCustomTournamentState(state) && state.started) {
+  if (isValidCustomTournamentState(state) && state.customTournament?.customMatch !== true && state.started) {
     stopStandardPlaybackForNavigation();
     customTournamentSetupViewOpen = false;
     saveState();
@@ -18500,17 +19145,27 @@ function render() {
   els.retroWorldCupScreen.hidden = true;
   const mode = premierLeagueMatchActive ? "standard" : currentAppMode();
   if (mode !== "custom") customTournamentSetupViewOpen = false;
+  if (mode !== "customMatch") customMatchSetupViewOpen = false;
   const customTournamentActive = mode === "custom"
     && isValidCustomTournamentState(state)
+    && state.customTournament?.customMatch !== true
     && state.started
     && !customTournamentSetupViewOpen;
+  const customMatchActive = mode === "customMatch"
+    && isValidCustomTournamentState(state)
+    && state.customTournament?.customMatch === true
+    && state.started
+    && !customMatchSetupViewOpen;
+  els.roundNav.hidden = customMatchActive;
+  els.roundBoard.hidden = customMatchActive;
+  if (els.goldenBootPanel) els.goldenBootPanel.hidden = customMatchActive;
   const sharedBackLabel = els.legacyDraftBackButton.querySelector(".legacy-back-label");
   const savedTournamentActive = state?.savedTournamentView === true;
   if (savedTournamentActive) {
     els.legacyDraftBackButton.dataset.savedTournament = "true";
     els.legacyDraftBackButton.setAttribute("aria-label", "Back to saved tournaments");
     if (sharedBackLabel) sharedBackLabel.textContent = "Back to saved tournaments";
-  } else if (customTournamentActive) {
+  } else if (customTournamentActive || customMatchActive) {
     delete els.legacyDraftBackButton.dataset.savedTournament;
     els.legacyDraftBackButton.dataset.customSettings = "true";
     els.legacyDraftBackButton.setAttribute("aria-label", "Back to settings");
@@ -18522,8 +19177,10 @@ function render() {
     if (sharedBackLabel) sharedBackLabel.textContent = "Back to modes";
   }
   els.customTournamentScreen.hidden = mode !== "custom" || customTournamentActive;
-  document.body.classList.toggle("custom-tournament-mode-active", mode === "custom");
-  if (els.customLiveBackButton) els.customLiveBackButton.hidden = !customTournamentActive;
+  if (els.customMatchScreen) els.customMatchScreen.hidden = mode !== "customMatch" || customMatchActive;
+  document.body.classList.toggle("custom-tournament-mode-active", mode === "custom" || mode === "customMatch");
+  document.body.classList.toggle("custom-match-mode-active", mode === "customMatch");
+  if (els.customLiveBackButton) els.customLiveBackButton.hidden = !(customTournamentActive || customMatchActive);
   if (mode === "custom" && !customTournamentActive) {
     els.pageHeading.hidden = true;
     els.fieldOverview.hidden = true;
@@ -18533,6 +19190,17 @@ function render() {
     els.legacyHeaderBackButton.hidden = true;
     els.mainContent.hidden = true;
     renderCustomTournamentSetup();
+    return;
+  }
+  if (mode === "customMatch" && !customMatchActive) {
+    els.pageHeading.hidden = true;
+    els.fieldOverview.hidden = true;
+    els.achievementsScreen.hidden = true;
+    els.legacyDraftScreen.hidden = true;
+    els.legacyDraftBackButton.hidden = true;
+    els.legacyHeaderBackButton.hidden = true;
+    els.mainContent.hidden = true;
+    renderCustomMatchSetup();
     return;
   }
   if (currentAppMode() === "legacy") {
@@ -18546,7 +19214,7 @@ function render() {
   els.legacyDraftBackButton.hidden = false;
   els.legacyHeaderBackButton.hidden = false;
   const achievementsMode = mode === "achievements";
-  const beforeStart = (!savedTournamentActive && mode !== "standard" && !customTournamentActive) || !state.started;
+  const beforeStart = (!savedTournamentActive && mode !== "standard" && !customTournamentActive && !customMatchActive) || !state.started;
   els.pageHeading.hidden = !beforeStart;
   renderSpectatePicker();
   syncSoundToggle();
@@ -18568,9 +19236,14 @@ function render() {
     els.startTournamentButton.innerHTML = `${standardTournamentActive ? "Resume tournament" : "Start tournament"} <span aria-hidden="true">→</span>`;
     els.homeRestartButton.hidden = !standardTournamentActive;
     if (els.openCustomTournamentButton) {
-      const customActive = isValidCustomTournamentState(state) && state.started;
+      const customActive = isValidCustomTournamentState(customTournamentState) && customTournamentState.started;
       els.openCustomTournamentButton.innerHTML = `${customActive ? "Resume tournament" : "Build tournament"} <span aria-hidden="true">&rarr;</span>`;
       if (els.restartCustomTournamentButton) els.restartCustomTournamentButton.hidden = !customActive;
+    }
+    if (els.openCustomMatchButton) {
+      const matchActive = customMatchCanResume();
+      els.openCustomMatchButton.innerHTML = `${matchActive ? "Resume match" : "Set up match"} <span aria-hidden="true">&rarr;</span>`;
+      if (els.restartCustomMatchButton) els.restartCustomMatchButton.hidden = !matchActive;
     }
     const activeLegacySession = Boolean(legacyDraft) || Boolean(state.legacyTournament && state.started);
     els.startLegacyDraftButton.innerHTML = `${activeLegacySession ? "Resume tournament" : "Start draft"} <span aria-hidden="true">→</span>`;
@@ -18597,14 +19270,14 @@ function render() {
     : state.championView
     ? "TOURNAMENT COMPLETE"
     : historyMode ? "ROUND ARCHIVE" : state.customTournament
-      ? `${state.customTournament.teamCount} TEAM CUSTOM ${state.customTournament.structure === "groups" ? "TOURNAMENT" : "KNOCKOUT"}`
+      ? state.customTournament.customMatch ? "CUSTOM MATCH" : `${state.customTournament.teamCount} TEAM CUSTOM ${state.customTournament.structure === "groups" ? "TOURNAMENT" : "KNOCKOUT"}`
       : "256 TEAMS WC KNOCKOUT";
   els.pageTitle.textContent = state.premierLeagueSeason
     ? roundName
     : state.legacyTournament
     ? `${legacyDraft?.nation?.name || "Legacy"} XI`
     : state.championView
-    ? "Final"
+    ? state.customTournament?.customMatch === true ? "Custom match" : "Final"
     : roundName;
   els.boardTitle.textContent = state.premierLeagueSeason
     ? `${roundName} fixtures`
@@ -20642,6 +21315,12 @@ function openRestartConfirmation() {
 }
 
 function openDefaultResetModal(returnToSetup = false) {
+  const customMatch = state.customTournament?.customMatch === true || currentAppMode() === "customMatch";
+  els.resetModalTitle.textContent = customMatch ? "Start a fresh custom match?" : "Start a fresh tournament?";
+  els.resetModalCopy.textContent = customMatch
+    ? "This clears the current match and returns to custom match setup."
+    : "This clears every result and creates a fresh opening draw.";
+  els.resetModalCancelButton.textContent = customMatch ? "Keep this match" : "Keep this one";
   els.resetModal.dataset.returnToSetup = String(returnToSetup);
   els.resetModal.showModal();
 }
@@ -21038,7 +21717,8 @@ els.wc2026AnnouncementAction?.addEventListener("click", () => {
 
 function openCustomTournamentSettings() {
   stopStandardPlaybackForNavigation();
-  customTournamentSetupViewOpen = true;
+  if (currentAppMode() === "customMatch" || state.customTournament?.customMatch === true) customMatchSetupViewOpen = true;
+  else customTournamentSetupViewOpen = true;
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -21367,7 +22047,9 @@ els.plAssetPackCloseButton?.addEventListener("click", () => els.plAssetPackModal
 els.plAssetPackCancelButton?.addEventListener("click", () => els.plAssetPackModal?.close());
 els.plAssetPackConfirmButton?.addEventListener("click", installPremierLeagueAssetPack);
 window.addEventListener("accountstatechange", (event) => {
-  setPremierLeagueAssetAccount(event.detail?.account || null);
+  const account = event.detail?.account || null;
+  setPremierLeagueAssetAccount(account);
+  setCustomTeamAccount(account);
 });
 els.spectateSearch.addEventListener("input", (event) => renderSpectateList(event.target.value));
 els.spectateList.addEventListener("click", (event) => {
@@ -21872,6 +22554,7 @@ $("#confirmResetButton").addEventListener("click", () => {
   const returnToSetup = els.resetModal.dataset.returnToSetup === "true";
   delete els.resetModal.dataset.returnToSetup;
   const wasCustomTournament = isValidCustomTournamentState(state);
+  const wasCustomMatch = wasCustomTournament && state.customTournament?.customMatch === true;
   const wasDefaultKnockout = Boolean(
     state.started
     && !state.retroWorldCup
@@ -21882,7 +22565,10 @@ $("#confirmResetButton").addEventListener("click", () => {
   const restartDefaultInPlace = wasDefaultKnockout && !returnToSetup;
   const previousSettings = { ...state.settings };
   const previousSpectateTeamId = state._activeSpectateId || state.spectateTeamId;
-  if (wasCustomTournament) customTournamentState = null;
+  if (wasCustomTournament) {
+    if (wasCustomMatch) customMatchState = null;
+    else customTournamentState = null;
+  }
   state = createInitialState();
   state.settings = previousSettings;
   state.spectateTeamId = previousSpectateTeamId;
@@ -21898,11 +22584,12 @@ $("#confirmResetButton").addEventListener("click", () => {
     if (previousSpectateTeamId) focusSpectatedTeam(0);
   }
   saveState();
-  setAppModeUrl(wasCustomTournament ? "custom" : restartDefaultInPlace ? "standard" : "home", { replace: true });
+  if (wasCustomMatch) customMatchSetupViewOpen = true;
+  setAppModeUrl(wasCustomMatch ? "customMatch" : wasCustomTournament ? "custom" : restartDefaultInPlace ? "standard" : "home", { replace: true });
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (wasCustomTournament) {
-    showToast("Custom tournament returned to the builder.");
+    showToast(wasCustomMatch ? "Custom match returned to setup." : "Custom tournament returned to the builder.");
   } else if (returnToSetup && wasDefaultKnockout) {
     showToast("Tournament reset. Change your team or settings when you're ready.");
   } else if (restartDefaultInPlace && previousSpectateTeamId) {
@@ -22081,6 +22768,9 @@ els.openCustomTournamentButton?.addEventListener("click", () => {
     state = customTournamentState;
     standardTournamentState = state;
     customTournamentSetupViewOpen = false;
+  } else if (state.customTournament?.customMatch === true) {
+    state = isDefaultKnockoutState(defaultKnockoutState) ? defaultKnockoutState : createInitialState();
+    standardTournamentState = state;
   }
   setAppModeUrl("custom");
   render();
@@ -22088,21 +22778,64 @@ els.openCustomTournamentButton?.addEventListener("click", () => {
 });
 els.restartCustomTournamentButton?.addEventListener("click", () => openDefaultResetModal(false));
 
+els.openCustomMatchButton?.addEventListener("click", () => {
+  stopStandardPlaybackForNavigation();
+  if (customMatchCanResume()) {
+    state = customMatchState;
+    standardTournamentState = state;
+    customMatchSetupViewOpen = false;
+  } else {
+    customMatchSetupViewOpen = true;
+  }
+  setAppModeUrl("customMatch");
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+els.restartCustomMatchButton?.addEventListener("click", () => {
+  customMatchSetupViewOpen = true;
+  setAppModeUrl("customMatch");
+  render();
+});
+
 els.customTournamentBackButton?.addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
   setAppModeUrl("home");
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
+els.customMatchBackButton?.addEventListener("click", () => {
+  stopStandardPlaybackForNavigation();
+  setAppModeUrl("home");
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+els.customMatchCreateTeamButton?.addEventListener("click", () => {
+  customTournamentSetup.sourceFilter = "custom";
+  customTournamentUi.teamCreatorOpen = true;
+  customTournamentUi.editingCustomTeamId = null;
+  customTournamentUi.customTeamDraft = newCustomTeamDraft();
+  customTournamentUi.teamCreatorReturnMode = "customMatch";
+  setAppModeUrl("custom");
+  render();
+});
 
 document.querySelector("[data-custom-header-action='save-preset']")?.addEventListener("click", downloadCustomTournamentPreset);
 document.querySelector("[data-custom-header-action='import-preset']")?.addEventListener("click", () => els.customPresetFile?.click());
 els.customHeaderStartButton?.addEventListener("click", handleCustomTournamentStartAction);
+els.customMatchStartButton?.addEventListener("click", () => {
+  if (!customMatchSetupViewOpen && isValidCustomTournamentState(state) && state.customTournament?.customMatch === true && state.started) {
+    customMatchSetupViewOpen = false;
+    render();
+    return;
+  }
+  startCustomMatch();
+});
 els.customPresetFile?.addEventListener("change", (event) => readCustomTournamentPresetFile(event.target.files?.[0]));
 
 els.startTournamentButton.addEventListener("click", () => {
   if (isValidCustomTournamentState(state)) {
-    customTournamentState = state;
+    if (state.customTournament?.customMatch === true) customMatchState = state;
+    else customTournamentState = state;
     state = isDefaultKnockoutState(defaultKnockoutState)
       ? defaultKnockoutState
       : createInitialState();

@@ -51,6 +51,16 @@
   const youngPlayerNames = new Set(
     youngPlayerCandidateNames.filter((name) => registeredPremierLeaguePlayerNames.has(name)),
   );
+  const youngPlayerMainContenders = new Set([
+    "Kobbie Mainoo",
+    "Wilson Odobert",
+    "Junior Kroupi",
+    "Nico O'Reilly",
+    "Estêvão",
+    "Max Dowman",
+    "Myles Lewis-Skelly",
+    "Rio Ngumoha",
+  ].filter((name) => youngPlayerNames.has(name)));
 
   clubs.forEach((club) => {
     TEAM_BY_ID.set(club.id, club);
@@ -625,35 +635,48 @@
     const goalkeeperRows = new Map();
     const table = leagueTable();
     const tableByClub = new Map(table.map((row) => [row.club.id, row]));
-    const addPlayerEvent = (teamId, event) => {
-      if (!event || event.goalType === "ownGoal" || event.ownGoal) return;
-      const scorerKey = `${teamId}:${event.scorer}`;
-      const scorer = playerRows.get(scorerKey) || {
-        player: event.scorer,
+    const ensurePlayerRow = (teamId, player) => {
+      const key = `${teamId}:${player}`;
+      const row = playerRows.get(key) || {
+        player,
         teamId,
         goals: 0,
         assists: 0,
+        appearances: 0,
       };
+      playerRows.set(key, row);
+      return row;
+    };
+    clubs.forEach((club) => club.playerProfiles.forEach((player) => {
+      if (youngPlayerNames.has(player.name)) ensurePlayerRow(club.id, player.name);
+    }));
+    const addPlayerEvent = (teamId, event) => {
+      if (!event || event.goalType === "ownGoal" || event.ownGoal) return;
+      const scorerKey = `${teamId}:${event.scorer}`;
+      const scorer = ensurePlayerRow(teamId, event.scorer);
       scorer.goals += 1;
       playerRows.set(scorerKey, scorer);
       const assistName = event.assist || event.metadata?.assist || null;
       if (assistName && assistName !== event.scorer) {
         const assistKey = `${teamId}:${assistName}`;
-        const assister = playerRows.get(assistKey) || {
-          player: assistName,
-          teamId,
-          goals: 0,
-          assists: 0,
-        };
+        const assister = ensurePlayerRow(teamId, assistName);
         assister.assists += 1;
         playerRows.set(assistKey, assister);
       }
     };
 
-    season.rounds.forEach((round) => round.forEach((match) => {
+    season.rounds.forEach((round, roundIndex) => round.forEach((match) => {
       if (!match.result?.revealed) return;
       (match.result.homeEvents || []).forEach((event) => addPlayerEvent(match.homeId, event));
       (match.result.awayEvents || []).forEach((event) => addPlayerEvent(match.awayId, event));
+      const appearances = ensurePremierLeaguePlayerAppearances(match, roundIndex);
+      [
+        [match.homeId, appearances?.home || []],
+        [match.awayId, appearances?.away || []],
+      ].forEach(([teamId, names]) => names.forEach((name) => {
+        if (!youngPlayerNames.has(name)) return;
+        ensurePlayerRow(teamId, name).appearances += 1;
+      }));
       [
         [match.homeId, Number(match.result.awayGoals) || 0],
         [match.awayId, Number(match.result.homeGoals) || 0],
@@ -675,12 +698,25 @@
       const team = clubById.get(row.teamId);
       const profile = team?.playerProfiles.find((player) => player.name === row.player);
       const clubPoints = tableByClub.get(row.teamId)?.points || 0;
+      const cleanSheets = goalkeeperRows.get(row.teamId)?.cleanSheets || 0;
       return {
         ...row,
         team,
         profile,
         overall: Number(profile?.overall) || Number(team?.rating) || 0,
+        cleanSheets,
         awardScore: row.goals * 4 + row.assists * 2.2 + clubPoints * 0.08 + (Number(profile?.overall) || 0) * 0.06,
+        youngAwardScore: premierLeagueYoungPlayerAwardScore({
+          profile,
+          goals: row.goals,
+          assists: row.assists,
+          appearances: row.appearances,
+          cleanSheets,
+          clubPoints,
+          seasonSeed: season.drawSeed,
+          teamId: row.teamId,
+          mainContender: youngPlayerMainContenders.has(row.player),
+        }),
       };
     });
     const byGoals = (left, right) => (
@@ -696,7 +732,7 @@
       || goldenBoot;
     const youngPlayerOfTheYear = enrichedPlayers
       .filter((row) => youngPlayerNames.has(row.player))
-      .sort((left, right) => right.awardScore - left.awardScore || byGoals(left, right))[0]
+      .sort((left, right) => right.youngAwardScore - left.youngAwardScore || byGoals(left, right))[0]
       || null;
     const gloveRow = [...goalkeeperRows.values()].sort((left, right) => (
       right.cleanSheets - left.cleanSheets
@@ -737,6 +773,14 @@
     `;
   }
 
+  function youngPlayerAwardDetail(award) {
+    const defensive = ["CB", "LB", "RB", "LWB", "RWB", "CDM", "DM"]
+      .includes(award.profile?.position);
+    return defensive
+      ? `${award.appearances} apps · ${award.cleanSheets} team clean sheets`
+      : `${award.appearances} apps · ${award.goals} goals · ${award.assists} assists`;
+  }
+
   function premierLeagueHistorySourceKey() {
     const championId = leagueTable()[0]?.club?.id || "unfinished";
     return `premier-league:2026-27:${Number(season?.drawSeed) || 0}:${championId}`;
@@ -771,7 +815,7 @@
             ${finaleAwardMarkup("GOLDEN BOOT", awards.goldenBoot, "⚽", (award) => `${award.goals} goals`)}
             ${finaleAwardMarkup("GOLDEN GLOVE", awards.goldenGlove, "🧤", (award) => `${award.cleanSheets} clean sheets`)}
             ${finaleAwardMarkup("PLAYER OF THE SEASON", awards.playerOfTheYear, "🏆", (award) => `${award.goals} goals · ${award.assists} assists`)}
-            ${finaleAwardMarkup("YOUNG PLAYER OF THE SEASON", awards.youngPlayerOfTheYear, "🌟", (award) => `${award.goals} goals · ${award.assists} assists`)}
+            ${finaleAwardMarkup("YOUNG PLAYER OF THE SEASON", awards.youngPlayerOfTheYear, "🌟", youngPlayerAwardDetail)}
           </div>
           <div class="pl-finale-actions">
             <button class="is-primary" type="button" data-pl-finale-action="snapshot">Create snapshot</button>
