@@ -51,17 +51,6 @@
   const youngPlayerNames = new Set(
     youngPlayerCandidateNames.filter((name) => registeredPremierLeaguePlayerNames.has(name)),
   );
-  const youngPlayerMainContenders = new Set([
-    "Kobbie Mainoo",
-    "Wilson Odobert",
-    "Junior Kroupi",
-    "Nico O'Reilly",
-    "Estêvão",
-    "Max Dowman",
-    "Myles Lewis-Skelly",
-    "Rio Ngumoha",
-  ].filter((name) => youngPlayerNames.has(name)));
-
   clubs.forEach((club) => {
     TEAM_BY_ID.set(club.id, club);
     clearPlayerProfileCacheForTeam(club.id);
@@ -665,12 +654,42 @@
         playerRows.set(assistKey, assister);
       }
     };
+    const awardAppearancesForMatch = (match, roundIndex) => {
+      if (
+        Array.isArray(match.result?.playerAppearances?.home)
+        && Array.isArray(match.result?.playerAppearances?.away)
+      ) return match.result.playerAppearances;
+
+      // The shared appearance helper reads the active tournament state. Award
+      // calculations can run while the main app state is active, so temporarily
+      // expose this Premier League season while generating any missing line-ups.
+      const previousState = state;
+      state = season;
+      try {
+        const generated = ensurePremierLeaguePlayerAppearances(match, roundIndex);
+        if (generated) return generated;
+      } finally {
+        state = previousState;
+      }
+
+      // Old/corrupt saves may not contain line-ups. At minimum, credit players
+      // who are recorded as having directly contributed in this match.
+      const involvedPlayers = (events) => [...new Set(events.flatMap((event) => (
+        event?.goalType === "ownGoal" || event?.ownGoal
+          ? []
+          : [event?.scorer, event?.assist || event?.metadata?.assist].filter(Boolean)
+      )))];
+      return {
+        home: involvedPlayers(match.result?.homeEvents || []),
+        away: involvedPlayers(match.result?.awayEvents || []),
+      };
+    };
 
     season.rounds.forEach((round, roundIndex) => round.forEach((match) => {
       if (!match.result?.revealed) return;
       (match.result.homeEvents || []).forEach((event) => addPlayerEvent(match.homeId, event));
       (match.result.awayEvents || []).forEach((event) => addPlayerEvent(match.awayId, event));
-      const appearances = ensurePremierLeaguePlayerAppearances(match, roundIndex);
+      const appearances = awardAppearancesForMatch(match, roundIndex);
       [
         [match.homeId, appearances?.home || []],
         [match.awayId, appearances?.away || []],
@@ -719,9 +738,6 @@
           appearances: row.appearances,
           cleanSheets,
           clubPoints,
-          seasonSeed: season.drawSeed,
-          teamId: row.teamId,
-          mainContender: youngPlayerMainContenders.has(row.player),
         }),
       };
     });
@@ -736,10 +752,17 @@
       .slice()
       .sort((left, right) => right.awardScore - left.awardScore || byGoals(left, right))[0]
       || goldenBoot;
-    const youngPlayerOfTheYear = enrichedPlayers
-      .filter((row) => youngPlayerNames.has(row.player) && row.appearances >= 8)
-      .sort((left, right) => right.youngAwardScore - left.youngAwardScore || byGoals(left, right))[0]
-      || null;
+    const youngPlayerStatRows = enrichedPlayers
+      .filter((row) => youngPlayerNames.has(row.player) && row.appearances > 0);
+    const qualifiedYoungPlayers = youngPlayerStatRows
+      .filter((row) => row.appearances >= 8);
+    const youngPlayerOfTheYear = (qualifiedYoungPlayers.length
+      ? qualifiedYoungPlayers
+      : youngPlayerStatRows
+    ).sort((left, right) => (
+      right.youngAwardScore - left.youngAwardScore
+      || byGoals(left, right)
+    ))[0] || null;
     const gloveRow = [...goalkeeperRows.values()].sort((left, right) => (
       right.cleanSheets - left.cleanSheets
       || left.conceded - right.conceded
@@ -783,7 +806,7 @@
     const defensive = ["CB", "LB", "RB", "LWB", "RWB", "CDM", "DM"]
       .includes(award.profile?.position);
     return defensive
-      ? `${award.appearances} apps · ${award.cleanSheets} team clean sheets`
+      ? `${award.appearances} apps · ${award.cleanSheets} clean sheets while playing`
       : `${award.appearances} apps · ${award.goals} goals · ${award.assists} assists`;
   }
 

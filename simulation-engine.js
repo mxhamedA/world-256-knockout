@@ -522,9 +522,6 @@ function premierLeagueYoungPlayerAwardScore({
   appearances = 0,
   cleanSheets = 0,
   clubPoints = 0,
-  seasonSeed = 0,
-  teamId = "",
-  mainContender = false,
 }) {
   const position = profile?.position || "CM";
   let goalWeight = 3.1;
@@ -543,20 +540,12 @@ function premierLeagueYoungPlayerAwardScore({
     assistWeight = 2.1;
     cleanSheetWeight = 0.1;
   }
-  const performance = goals * goalWeight
+  return goals * goalWeight
     + assists * assistWeight
-    + appearances * 0.42
+    + appearances * 0.2
     + cleanSheets * cleanSheetWeight
-    + clubPoints * 0.08
-    + (Number(profile?.overall) || 0) * 0.07;
-  const formRoll = stableHash(`${Number(seasonSeed) || 0}:${teamId}:${profile?.name || "player"}:pl-ypoty-form`) % 1001;
-  // Young-player awards should reflect breakout seasons, not simply crown the
-  // highest-rated starting attacker every year. Most of the score remains tied
-  // to output, while a seeded judging/form component creates credible variation.
-  if (mainContender) {
-    return performance * 0.48 + (formRoll / 1000) * 95 + 8;
-  }
-  return performance * 0.65 + (formRoll / 1000) * 72;
+    + clubPoints * 0.04
+    + (Number(profile?.overall) || 0) * 0.03;
 }
 
 function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = {}) {
