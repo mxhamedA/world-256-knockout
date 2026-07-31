@@ -1062,17 +1062,18 @@
   function renderAchievementLeaderboard() {
     if (!elements.homeAchievementLeaderboard) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
+    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 128);
     const visibleEntries = entries.slice(0, 10);
     elements.homeAchievementLeaderboard.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
       </div>
       ${visibleEntries.map((entry) => `
-          <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}">
+          <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}${Number(entry.achievements || 0) >= totalAchievements ? " is-all-achievements" : ""}">
             <strong>${entry.rank}</strong>
             <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
             <strong>${Number(entry.points || 0).toLocaleString()}</strong>
-            <span>${Number(entry.achievements || 0)} / ${Number(achievementLeaderboardPayload.totalAchievements || 128)}</span>
+            <span>${Number(entry.achievements || 0)} / ${totalAchievements}</span>
           </div>
       `).join("")}
     ` : '<p class="home-achievement-empty">No achievements unlocked yet. The first points are waiting.</p>';
@@ -1092,16 +1093,17 @@
   function renderAchievementLeaderboardModal() {
     if (!elements.homeAchievementModalTable) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
+    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 128);
     elements.homeAchievementModalTable.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
       </div>
       ${entries.slice(0, 50).map((entry) => `
-        <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}">
+        <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}${Number(entry.achievements || 0) >= totalAchievements ? " is-all-achievements" : ""}">
           <strong>${entry.rank}</strong>
           <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
           <strong>${Number(entry.points || 0).toLocaleString()}</strong>
-          <span>${Number(entry.achievements || 0)} / ${Number(achievementLeaderboardPayload.totalAchievements || 128)}</span>
+          <span>${Number(entry.achievements || 0)} / ${totalAchievements}</span>
         </div>
       `).join("")}
     ` : '<p class="home-achievement-empty">No achievements unlocked yet.</p>';
