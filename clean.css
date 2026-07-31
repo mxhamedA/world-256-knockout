@@ -11836,20 +11836,48 @@ body.standard-mode-active #newsButton {
   box-shadow: inset 3px 0 #6f96ff;
 }
 
-.home-achievement-row.is-all-achievements .home-achievement-player b {
+.home-achievement-row:is(.is-all-achievements, .is-podium-gold) .home-achievement-player b {
   color: #ffe58a;
   text-shadow: 0 0 6px rgba(255, 205, 72, .85), 0 0 16px rgba(255, 174, 38, .55);
 }
 
+.home-achievement-row.is-podium-silver .home-achievement-player b {
+  color: #e6edf5;
+  text-shadow: 0 0 6px rgba(210, 224, 240, .9), 0 0 16px rgba(159, 181, 204, .55);
+}
+
+.home-achievement-row.is-podium-bronze .home-achievement-player b {
+  color: #e8ad78;
+  text-shadow: 0 0 6px rgba(226, 153, 98, .9), 0 0 16px rgba(180, 102, 57, .55);
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  .home-achievement-row.is-all-achievements .home-achievement-player b {
+  .home-achievement-row:is(.is-all-achievements, .is-podium-gold) .home-achievement-player b {
     animation: achievement-gold-glow 2.2s ease-in-out infinite;
+  }
+
+  .home-achievement-row.is-podium-silver .home-achievement-player b {
+    animation: achievement-silver-glow 2.2s ease-in-out infinite;
+  }
+
+  .home-achievement-row.is-podium-bronze .home-achievement-player b {
+    animation: achievement-bronze-glow 2.2s ease-in-out infinite;
   }
 }
 
 @keyframes achievement-gold-glow {
   0%, 100% { text-shadow: 0 0 5px rgba(255, 205, 72, .65), 0 0 12px rgba(255, 174, 38, .35); }
   50% { text-shadow: 0 0 8px rgba(255, 230, 133, 1), 0 0 20px rgba(255, 174, 38, .75); }
+}
+
+@keyframes achievement-silver-glow {
+  0%, 100% { text-shadow: 0 0 5px rgba(210, 224, 240, .65), 0 0 12px rgba(159, 181, 204, .35); }
+  50% { text-shadow: 0 0 8px rgba(242, 248, 255, 1), 0 0 20px rgba(159, 181, 204, .75); }
+}
+
+@keyframes achievement-bronze-glow {
+  0%, 100% { text-shadow: 0 0 5px rgba(226, 153, 98, .65), 0 0 12px rgba(180, 102, 57, .35); }
+  50% { text-shadow: 0 0 8px rgba(255, 206, 163, 1), 0 0 20px rgba(180, 102, 57, .75); }
 }
 
 .home-achievement-row > strong {

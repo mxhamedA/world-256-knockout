@@ -1069,7 +1069,7 @@
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
       </div>
       ${visibleEntries.map((entry) => `
-          <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}${Number(entry.achievements || 0) >= totalAchievements ? " is-all-achievements" : ""}">
+          <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}${Number(entry.achievements || 0) >= totalAchievements ? " is-all-achievements" : ""}${entry.rank === 1 ? " is-podium-gold" : entry.rank === 2 ? " is-podium-silver" : entry.rank === 3 ? " is-podium-bronze" : ""}">
             <strong>${entry.rank}</strong>
             <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
             <strong>${Number(entry.points || 0).toLocaleString()}</strong>
@@ -1099,7 +1099,7 @@
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
       </div>
       ${entries.slice(0, 50).map((entry) => `
-        <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}${Number(entry.achievements || 0) >= totalAchievements ? " is-all-achievements" : ""}">
+        <div class="home-achievement-row${entry.isCurrentUser ? " is-current" : ""}${Number(entry.achievements || 0) >= totalAchievements ? " is-all-achievements" : ""}${entry.rank === 1 ? " is-podium-gold" : entry.rank === 2 ? " is-podium-silver" : entry.rank === 3 ? " is-podium-bronze" : ""}">
           <strong>${entry.rank}</strong>
           <span class="home-achievement-player"><b>${escapeHtml(entry.username)}</b></span>
           <strong>${Number(entry.points || 0).toLocaleString()}</strong>
