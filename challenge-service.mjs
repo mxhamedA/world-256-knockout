@@ -139,8 +139,6 @@ const RETRO_TEAM_RATINGS = Object.freeze({
 const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2006, 2010, 2014, 2016, 2018, 2022, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
-// Moderation hold: preserve the account and achievement records, but omit this user from public achievement standings.
-const HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES = new Set(["przemexx"]);
 const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
   ["arsenal", "Arsenal", 1, 2],
   ["aston-villa", "Aston Villa", 4, 4],
@@ -1444,11 +1442,7 @@ async function achievementLeaderboard(request, env) {
       entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
     }
   });
-  const isHiddenFromLeaderboard = (entry) => HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES.has(
-    String(entry.username || "").trim().toLowerCase(),
-  );
   const ranked = [...byAccount.values()]
-    .filter((entry) => !isHiddenFromLeaderboard(entry))
     .sort((left, right) => right.points - left.points
       || right.achievements - left.achievements
       || left.latestUnlock - right.latestUnlock
@@ -1461,7 +1455,7 @@ async function achievementLeaderboard(request, env) {
       achievements: entry.achievements,
       isCurrentUser: entry.accountId === account?.id,
     }));
-  const currentUser = account && !isHiddenFromLeaderboard(account) ? ranked.find((entry) => entry.isCurrentUser) || {
+  const currentUser = account ? ranked.find((entry) => entry.isCurrentUser) || {
     rank: null,
     username: account.username,
     profileCountryId: account.profile_country_id || null,
