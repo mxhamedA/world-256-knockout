@@ -285,6 +285,16 @@ assert.match(wranglerSource, /"\/api\/\*"/);
 assert.match(wranglerSource, /"\/\*\.html"/);
 assert.match(htmlSource, /class="mode-card mode-card-legacy"/);
 assert.match(htmlSource, /id="startLegacyDraftButton"/);
+assert.match(htmlSource, /id="legacySetupModal"[\s\S]*id="legacyLandingSetup"[\s\S]*id="confirmLegacyDraftButton"/,
+  "Legacy Draft settings must live in the setup dialog instead of the compact mode card.");
+assert.match(appSource, /startLegacyDraftButton\?\.addEventListener[\s\S]*legacySetupModal\?\.showModal\(\)/,
+  "The compact Legacy Draft card must open its setup dialog before starting a new draft.");
+assert.match(appSource, /confirmLegacyDraftButton\?\.addEventListener[\s\S]*startLegacyDraft\(legacySetup\.nationId\)/,
+  "The Legacy Draft setup confirmation must start the configured draft.");
+assert.match(cleanCssSource, /\.mode-card-legacy\s*{[^}]*order:\s*6;[^}]*grid-column:\s*span 2;/,
+  "Legacy Draft must use the compact card slot.");
+assert.match(cleanCssSource, /\.mode-card-ucl\s*{[^}]*order:\s*4;[^}]*grid-column:\s*span 3;/,
+  "The UCL simulator must use Legacy Draft's former large card slot.");
 assert.match(htmlSource, /id="legacyDraftScreen"/);
 assert.match(appSource, /data-legacy-action="snapshot"[^>]*>Snapshot<\/button>/);
 assert.match(appSource, /function createLegacyDraftSnapshotCanvas/);

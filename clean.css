@@ -11348,9 +11348,10 @@ body.standard-mode-active #newsButton {
 }
 
 .mode-card-legacy {
-  order: 4;
-  grid-column: span 3;
-  background: #121a27;
+  order: 6;
+  grid-column: span 2;
+  min-height: 210px;
+  background: #0e151f;
 }
 
 .mode-card-retro {
@@ -11449,11 +11450,248 @@ body.standard-mode-active #newsButton {
 }
 
 .mode-card-ucl {
-  order: 6;
+  order: 4;
+  grid-column: span 3;
+  min-height: 340px;
+  background:
+    radial-gradient(circle at 86% 16%, rgba(104, 136, 255, .24), transparent 34%),
+    linear-gradient(145deg, #111a31, #0b1020 68%);
 }
 
 .mode-card-coming-soon .mode-card-copy {
   margin-bottom: 18px;
+}
+
+.ucl-mode-heading {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  margin-top: 0;
+}
+
+.ucl-mode-logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
+.ucl-mode-heading h3 {
+  margin-bottom: 6px;
+}
+
+.ucl-install-button {
+  min-height: 30px;
+  margin: 0 0 9px;
+  padding: 0 11px;
+  border: 1px solid rgba(119, 147, 236, .48);
+  border-radius: 5px;
+  color: #e8edff;
+  background: rgba(22, 37, 76, .72);
+  font: 800 10px "Manrope", sans-serif;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.ucl-install-button:active {
+  transform: scale(0.97);
+}
+
+.ucl-install-button.is-installed {
+  border-color: #8da9ff;
+  color: #ffffff;
+  background: #304d9a;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ucl-install-button:hover {
+    border-color: #a9bdff;
+    background: rgba(40, 64, 124, .92);
+  }
+
+  .ucl-install-button.is-installed:hover {
+    background: #3d5eb6;
+  }
+}
+
+.ucl-mode-heading p {
+  max-width: 430px;
+}
+
+.ucl-landing-settings {
+  grid-template-columns: 1fr;
+  margin-bottom: 22px;
+}
+
+.ucl-team-picker {
+  border-color: rgba(119, 147, 236, .32);
+  background: rgba(10, 17, 36, .62);
+}
+
+.ucl-team-picker:hover {
+  background: rgba(16, 27, 57, .78);
+}
+
+.ucl-team-mark img,
+.ucl-neutral-mark img {
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
+.ucl-team-mark.is-club,
+.ucl-club-code {
+  display: grid;
+  place-items: center;
+  color: #dce5ff;
+  background: #1a2a50;
+  font: 800 10px/1 "DM Mono", monospace;
+}
+
+.ucl-club-code {
+  width: 42px;
+  height: 32px;
+  flex: 0 0 42px;
+  border: 1px solid rgba(124, 154, 247, .28);
+  border-radius: 5px;
+}
+
+.ucl-club-badge {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.ucl-team-mark .ucl-club-badge {
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.ucl-picker-badge {
+  justify-self: center;
+}
+
+.ucl-neutral-mark {
+  overflow: hidden;
+  background: #17233e;
+}
+
+/* UCL marks are transparent crests, not code tiles. Keep the home picker square so
+   tall or wide artwork never gets cropped by the shared 44x34 flag treatment. */
+.mode-card-ucl .ucl-team-picker .spectate-picker-mark {
+  width: 46px;
+  height: 46px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.mode-card-ucl .ucl-team-picker .ucl-team-mark img {
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  object-fit: contain;
+}
+
+.mode-card-ucl .ucl-team-picker .ucl-team-mark.is-club {
+  color: inherit;
+  background: transparent;
+  font-size: 0;
+}
+
+.spectate-modal .ucl-neutral-mark {
+  width: 38px;
+  height: 38px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.spectate-modal .ucl-neutral-mark img,
+.spectate-modal .ucl-picker-badge {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  object-fit: contain;
+}
+
+.legacy-setup-modal {
+  width: min(620px, calc(100vw - 28px));
+  padding: 0;
+  overflow: hidden;
+  color: #edf2fb;
+  border: 1px solid #34435c;
+  border-radius: 16px;
+  background: #101824;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, .7);
+}
+
+.legacy-setup-modal::backdrop {
+  background: rgba(2, 7, 14, .82);
+  backdrop-filter: blur(6px);
+}
+
+.legacy-setup-modal-card > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 24px 26px 20px;
+  border-bottom: 1px solid rgba(135, 151, 184, .15);
+}
+
+.legacy-setup-modal-card > header span {
+  color: #789cff;
+  font: 900 9px/1.2 "DM Mono", monospace;
+  letter-spacing: .15em;
+}
+
+.legacy-setup-modal-card > header h2 {
+  margin: 6px 0 5px;
+  font-size: clamp(23px, 5vw, 31px);
+}
+
+.legacy-setup-modal-card > header p {
+  margin: 0;
+  color: #8f9bb1;
+  font-size: 12px;
+}
+
+.legacy-setup-modal-close {
+  padding: 0 4px;
+  color: #aab5c7;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.legacy-setup-modal .legacy-landing-settings {
+  margin: 0;
+  padding: 24px 26px;
+}
+
+.legacy-setup-modal-card > footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 18px 26px;
+  border-top: 1px solid rgba(135, 151, 184, .15);
+  background: #121c2a;
+}
+
+.legacy-setup-modal-card > footer button {
+  min-height: 46px;
+  padding-inline: 18px;
 }
 
 .premier-league-heading {
@@ -11791,6 +12029,27 @@ body.standard-mode-active #newsButton {
   .pl-asset-pack-actions button {
     width: 100%;
   }
+}
+
+.ucl-asset-pack-modal {
+  color: #edf2ff;
+  background: #0b1126;
+}
+
+.ucl-asset-pack-modal .pl-asset-pack-intro {
+  background: #172c66;
+}
+
+.ucl-asset-pack-modal .pl-asset-pack-badge {
+  background: rgba(113, 143, 229, .12);
+}
+
+.ucl-asset-pack-modal .pl-asset-pack-actions .primary-button {
+  color: #12214c;
+}
+
+.ucl-asset-pack-modal .pl-asset-pack-credit {
+  color: #7180a5;
 }
 
 .field-overview > .overview-intro,

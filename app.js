@@ -18,6 +18,7 @@ const PREMIER_LEAGUE_SETUP_STORAGE_KEY = "world-256-premier-league-2026-27-setup
 const CUSTOM_TOURNAMENT_SETUP_KEY = "world-256-custom-tournament-setup-v1";
 const CUSTOM_TEAM_LIBRARY_KEY = "world-256-custom-team-library-v1";
 const CUSTOM_MATCH_SETUP_KEY = "world-256-custom-match-setup-v1";
+const UCL_2026_27_TEAM_KEY = "world-256-ucl-2026-27-team-v1";
 const TOURNAMENT_HISTORY_STORAGE_KEY = "world-256-tournament-history-v1";
 const TOURNAMENT_HISTORY_MIGRATION_KEY = "world-256-tournament-history-indexeddb-v1";
 const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
@@ -35,6 +36,7 @@ const TOURNAMENT_HISTORY_VERSION = 1;
 const TOURNAMENT_HISTORY_LIMIT = 50;
 
 const PREMIER_LEAGUE_ASSET_PACK_ID = "pl-26-27";
+const UCL_ASSET_PACK_ID = "ucl-26-27";
 const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
   { id: "arsenal", name: "Arsenal", code: "ARS", badge: "./assets/pl-26-27/badges/arsenal.webp" },
   { id: "aston-villa", name: "Aston Villa", code: "AVL", badge: "./assets/pl-26-27/badges/aston-villa.webp" },
@@ -57,6 +59,57 @@ const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
   { id: "sunderland", name: "Sunderland", code: "SUN", badge: "./assets/pl-26-27/badges/sunderland.webp" },
   { id: "tottenham-hotspur", name: "Tottenham Hotspur", code: "TOT", badge: "./assets/pl-26-27/badges/tottenham-hotspur.webp" },
 ]);
+
+const UCL_2026_27_BADGE_PATHS = Object.freeze({
+  arsenal: "./assets/ucl-26-27/badges/arsenal.png",
+  "aston-villa": "./assets/ucl-26-27/badges/aston-villa.png",
+  "atletico-madrid": "./assets/ucl-26-27/badges/atletico-madrid.png",
+  "borussia-dortmund": "./assets/ucl-26-27/badges/borussia-dortmund.png",
+  barcelona: "./assets/ucl-26-27/badges/barcelona.png",
+  "bayern-munich": "./assets/ucl-26-27/badges/bayern-munich.png",
+  "club-brugge": "./assets/ucl-26-27/badges/club-brugge.png",
+  como: "./assets/ucl-26-27/badges/como.png",
+  feyenoord: "./assets/ucl-26-27/badges/feyenoord.png",
+  galatasaray: "./assets/ucl-26-27/badges/galatasaray.png",
+  "inter-milan": "./assets/ucl-26-27/badges/inter-milan.png",
+  "rb-leipzig": "./assets/ucl-26-27/badges/rb-leipzig.png",
+  lens: "./assets/ucl-26-27/badges/lens.png",
+  lille: "./assets/ucl-26-27/badges/lille.png",
+  liverpool: "./assets/ucl-26-27/badges/liverpool.png",
+  "manchester-city": "./assets/ucl-26-27/badges/manchester-city.png",
+  "manchester-united": "./assets/ucl-26-27/badges/manchester-united.png",
+  napoli: "./assets/ucl-26-27/badges/napoli.png",
+  "paris-saint-germain": "./assets/ucl-26-27/badges/paris-saint-germain.png",
+  porto: "./assets/ucl-26-27/badges/porto.png",
+  "psv-eindhoven": "./assets/ucl-26-27/badges/psv-eindhoven.png",
+  "real-betis": "./assets/ucl-26-27/badges/real-betis.png",
+  "real-madrid": "./assets/ucl-26-27/badges/real-madrid.png",
+  roma: "./assets/ucl-26-27/badges/roma.png",
+  "shakhtar-donetsk": "./assets/ucl-26-27/badges/shakhtar-donetsk.png",
+  "slavia-prague": "./assets/ucl-26-27/badges/slavia-prague.png",
+  "sporting-cp": "./assets/ucl-26-27/badges/sporting-cp.png",
+  stuttgart: "./assets/ucl-26-27/badges/stuttgart.png",
+  villarreal: "./assets/ucl-26-27/badges/villarreal.png",
+});
+
+const UCL_2026_27_QUALIFIED_TEAMS = Object.freeze([
+  ["arsenal", "Arsenal", "ENG", "ARS"], ["aston-villa", "Aston Villa", "ENG", "AVL"], ["atletico-madrid", "Atlético Madrid", "ESP", "ATM"],
+  ["borussia-dortmund", "Borussia Dortmund", "GER", "BVB"], ["barcelona", "Barcelona", "ESP", "BAR"], ["bayern-munich", "Bayern Munich", "GER", "BAY"],
+  ["club-brugge", "Club Brugge", "BEL", "BRU"], ["como", "Como", "ITA", "COM"], ["feyenoord", "Feyenoord", "NED", "FEY"],
+  ["galatasaray", "Galatasaray", "TUR", "GAL"], ["inter-milan", "Inter Milan", "ITA", "INT"], ["rb-leipzig", "RB Leipzig", "GER", "RBL"],
+  ["lens", "Lens", "FRA", "LEN"], ["lille", "Lille", "FRA", "LIL"], ["liverpool", "Liverpool", "ENG", "LIV"],
+  ["manchester-city", "Manchester City", "ENG", "MCI"], ["manchester-united", "Manchester United", "ENG", "MUN"], ["napoli", "Napoli", "ITA", "NAP"],
+  ["paris-saint-germain", "Paris Saint-Germain", "FRA", "PSG"], ["porto", "Porto", "POR", "POR"], ["psv-eindhoven", "PSV Eindhoven", "NED", "PSV"],
+  ["real-betis", "Real Betis", "ESP", "BET"], ["real-madrid", "Real Madrid", "ESP", "RMA"], ["roma", "Roma", "ITA", "ROM"],
+  ["shakhtar-donetsk", "Shakhtar Donetsk", "UKR", "SHK"], ["slavia-prague", "Slavia Prague", "CZE", "SLA"], ["sporting-cp", "Sporting CP", "POR", "SCP"],
+  ["stuttgart", "Stuttgart", "GER", "VFB"], ["villarreal", "Villarreal", "ESP", "VIL"],
+].map(([id, name, association, code]) => Object.freeze({
+  id,
+  name,
+  association,
+  code,
+  badge: UCL_2026_27_BADGE_PATHS[id],
+})));
 
 const RETRO_WORLD_CUP_PATHS = Object.freeze({
   2006: "/retro-06-world-cup",
@@ -395,6 +448,10 @@ const els = {
   startTournamentButton: $("#startTournamentButton"),
   homeRestartButton: $("#homeRestartButton"),
   defaultModeCard: $("#defaultModeCard"),
+  uclTeamPickerButton: $("#uclTeamPickerButton"),
+  uclTeamPickerMark: $("#uclTeamPickerMark"),
+  uclTeamLabel: $("#uclTeamLabel"),
+  uclTeamHint: $("#uclTeamHint"),
   startLegacyDraftButton: $("#startLegacyDraftButton"),
   restartLegacyDraftButton: $("#restartLegacyDraftButton"),
   retroModeCard: $("#retroModeCard"),
@@ -420,6 +477,13 @@ const els = {
   plAssetPackConfirmButton: $("#plAssetPackConfirmButton"),
   plAssetPackBadgeGrid: $("#plAssetPackBadgeGrid"),
   plAssetPackStatus: $("#plAssetPackStatus"),
+  uclInstallButton: $("#uclInstallButton"),
+  uclAssetPackModal: $("#uclAssetPackModal"),
+  uclAssetPackCloseButton: $("#uclAssetPackCloseButton"),
+  uclAssetPackCancelButton: $("#uclAssetPackCancelButton"),
+  uclAssetPackConfirmButton: $("#uclAssetPackConfirmButton"),
+  uclAssetPackBadgeGrid: $("#uclAssetPackBadgeGrid"),
+  uclAssetPackStatus: $("#uclAssetPackStatus"),
   startRetroWorldCupButton: $("#startRetroWorldCupButton"),
   restartRetroWorldCupButton: $("#restartRetroWorldCupButton"),
   retroWorldCupScreen: $("#retroWorldCupScreen"),
@@ -438,6 +502,9 @@ const els = {
   retroRestartModal: $("#retroRestartModal"),
   confirmRetroRestartButton: $("#confirmRetroRestartButton"),
   legacyLandingSetup: $("#legacyLandingSetup"),
+  legacySetupModal: $("#legacySetupModal"),
+  legacySetupModalClose: $("#legacySetupModalClose"),
+  confirmLegacyDraftButton: $("#confirmLegacyDraftButton"),
   legacyDraftScreen: $("#legacyDraftScreen"),
   legacyDraftBody: $("#legacyDraftBody"),
   legacyDraftBackButton: $("#legacyDraftBackButton"),
@@ -1546,10 +1613,14 @@ let livePlayback = null;
 let match2dState = null;
 const matchPresentationCache = new Map();
 let spectatePickerMode = "all";
+let uclMenuTeamId = readUclMenuTeamId();
 let premierLeagueMenuSetup = readPremierLeagueMenuSetup();
 let premierLeagueAssetAccount = undefined;
 let premierLeagueAssetsInstalled = false;
 let premierLeagueAssetInstallBusy = false;
+let uclAssetAccount = undefined;
+let uclAssetsInstalled = false;
+let uclAssetInstallBusy = false;
 let retroTournament = readRetroTournamentState();
 let retroMenuSettings = readRetroWorldCupSettings();
 let retroTournamentView = "matches";
@@ -6671,6 +6742,10 @@ function renderSpectateList(query = "") {
     renderRetroWorldCupTeamList(query);
     return;
   }
+  if (spectatePickerMode === "ucl") {
+    renderUclTeamList(query);
+    return;
+  }
   if (spectatePickerMode === "premier-league") {
     renderPremierLeagueTeamList(query);
     return;
@@ -6705,6 +6780,88 @@ function openSpectatePicker(mode = "all") {
   els.spectateSearch.placeholder = "Search all 256 teams";
   els.spectateSearch.value = "";
   renderSpectateList();
+  els.spectateModal.showModal();
+  requestAnimationFrame(() => els.spectateSearch.focus());
+}
+
+function readUclMenuTeamId() {
+  try {
+    const teamId = localStorage.getItem(UCL_2026_27_TEAM_KEY);
+    return UCL_2026_27_QUALIFIED_TEAMS.some((team) => team.id === teamId) ? teamId : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveUclMenuTeamId(teamId) {
+  uclMenuTeamId = UCL_2026_27_QUALIFIED_TEAMS.some((team) => team.id === teamId) ? teamId : null;
+  try {
+    if (uclMenuTeamId) localStorage.setItem(UCL_2026_27_TEAM_KEY, uclMenuTeamId);
+    else localStorage.removeItem(UCL_2026_27_TEAM_KEY);
+  } catch {
+    // The selected club remains active for the current page when storage is unavailable.
+  }
+}
+
+function accountHasUclAssets(account) {
+  return Array.isArray(account?.assetPacks) && account.assetPacks.includes(UCL_ASSET_PACK_ID);
+}
+
+function uclClubBadgeMarkup(team, className = "ucl-club-badge") {
+  return `<img class="${className}" src="${team.badge}" alt="" loading="lazy" decoding="async" />`;
+}
+
+function renderUclTeamPicker() {
+  if (!els.uclTeamPickerButton) return;
+  const team = UCL_2026_27_QUALIFIED_TEAMS.find((candidate) => candidate.id === uclMenuTeamId) || null;
+  els.uclTeamPickerButton.classList.toggle("has-team", Boolean(team));
+  els.uclTeamPickerMark.classList.toggle("is-club", Boolean(team));
+  if (!team) {
+    els.uclTeamPickerMark.innerHTML = '<img src="./assets/ucl-starball-white.png" alt="" />';
+    els.uclTeamLabel.textContent = "Neutral";
+    els.uclTeamHint.textContent = `${UCL_2026_27_QUALIFIED_TEAMS.length} qualified clubs available`;
+    els.uclTeamPickerButton.setAttribute("aria-label", "Choose a 2026/27 Champions League club. Current view: Neutral");
+    return;
+  }
+  els.uclTeamPickerMark.innerHTML = uclAssetsInstalled
+    ? uclClubBadgeMarkup(team)
+    : team.code;
+  els.uclTeamLabel.textContent = team.name;
+  els.uclTeamHint.textContent = "2026/27 league-phase qualifier";
+  els.uclTeamPickerButton.setAttribute("aria-label", `Change ${team.name} as your Champions League club`);
+}
+
+function renderUclTeamList(query = "") {
+  const normalized = query.trim().toLowerCase();
+  const teams = UCL_2026_27_QUALIFIED_TEAMS.filter((team) => (
+    team.name.toLowerCase().includes(normalized) || team.association.toLowerCase().includes(normalized)
+  ));
+  const neutralOption = normalized
+    ? ""
+    : `
+      <button class="prediction-option spectate-neutral-option ${uclMenuTeamId ? "" : "selected"}" type="button" data-ucl-team-id="">
+        <span class="spectate-neutral-mark ucl-neutral-mark" aria-hidden="true"><img src="./assets/ucl-starball-white.png" alt="" /></span>
+        <span><strong>Neutral</strong><small>Follow the whole league phase</small></span>
+        <i aria-hidden="true">${uclMenuTeamId ? "" : "&#10003;"}</i>
+      </button>
+    `;
+  els.spectateList.innerHTML = neutralOption + teams.map((team) => `
+    <button class="prediction-option ${team.id === uclMenuTeamId ? "selected" : ""}" type="button" data-ucl-team-id="${team.id}">
+      ${uclAssetsInstalled
+        ? uclClubBadgeMarkup(team, "ucl-club-badge ucl-picker-badge")
+        : `<span class="ucl-club-code" aria-hidden="true">${team.code}</span>`}
+      <span><strong>${escapeHtml(team.name)}</strong><small>${team.association} &middot; League-phase qualifier</small></span>
+      <i aria-hidden="true">${team.id === uclMenuTeamId ? "&#10003;" : ""}</i>
+    </button>
+  `).join("") || `<div class="overview-empty">No qualified club matches that search.</div>`;
+}
+
+function openUclTeamPicker() {
+  spectatePickerMode = "ucl";
+  els.spectateModalTitle.textContent = "Choose a Champions League club";
+  els.spectateSearch.placeholder = `Search ${UCL_2026_27_QUALIFIED_TEAMS.length} qualified clubs`;
+  els.spectateSearch.value = "";
+  renderUclTeamList();
   els.spectateModal.showModal();
   requestAnimationFrame(() => els.spectateSearch.focus());
 }
@@ -6849,6 +7006,106 @@ async function installPremierLeagueAssetPack() {
   } finally {
     premierLeagueAssetInstallBusy = false;
     renderPremierLeagueAssetState();
+  }
+}
+
+function renderUclAssetPackPreview() {
+  if (!els.uclAssetPackBadgeGrid) return;
+  els.uclAssetPackBadgeGrid.innerHTML = UCL_2026_27_QUALIFIED_TEAMS.map((team) => `
+    <span class="pl-asset-pack-badge" title="${escapeHtml(team.name)}">
+      ${uclClubBadgeMarkup(team)}
+    </span>
+  `).join("");
+}
+
+function renderUclAssetState() {
+  uclAssetsInstalled = accountHasUclAssets(uclAssetAccount);
+  if (els.uclInstallButton) {
+    els.uclInstallButton.textContent = uclAssetsInstalled ? "Assets installed" : "Install assets";
+    els.uclInstallButton.classList.toggle("is-installed", uclAssetsInstalled);
+    els.uclInstallButton.setAttribute("aria-pressed", String(uclAssetsInstalled));
+  }
+  if (els.uclAssetPackConfirmButton) {
+    els.uclAssetPackConfirmButton.disabled = uclAssetInstallBusy || uclAssetsInstalled;
+    els.uclAssetPackConfirmButton.textContent = uclAssetsInstalled
+      ? "Installed"
+      : uclAssetAccount
+        ? "Install asset pack"
+        : "Log in to install";
+  }
+  renderUclTeamPicker();
+  if (spectatePickerMode === "ucl" && els.spectateModal?.open) {
+    renderUclTeamList(els.spectateSearch?.value || "");
+  }
+}
+
+function setUclAssetAccount(account) {
+  uclAssetAccount = account || null;
+  renderUclAssetState();
+}
+
+function openUclAssetPack() {
+  renderUclAssetPackPreview();
+  if (els.uclAssetPackStatus) {
+    els.uclAssetPackStatus.textContent = uclAssetsInstalled
+      ? "This asset pack is installed on your account."
+      : uclAssetAccount
+        ? `Ready to install for ${uclAssetAccount.username}.`
+        : "Log in to save this asset pack to your account.";
+    els.uclAssetPackStatus.classList.toggle("is-success", uclAssetsInstalled);
+    els.uclAssetPackStatus.classList.remove("is-error");
+  }
+  renderUclAssetState();
+  if (!els.uclAssetPackModal?.open) els.uclAssetPackModal?.showModal();
+}
+
+async function installUclAssetPack() {
+  if (uclAssetInstallBusy || uclAssetsInstalled) return;
+  if (!uclAssetAccount) {
+    els.uclAssetPackModal?.close();
+    document.querySelector("#mainAccountButton")?.click();
+    showToast("Log in, then install the UCL 26/27 Asset Pack.");
+    return;
+  }
+  uclAssetInstallBusy = true;
+  renderUclAssetState();
+  if (els.uclAssetPackStatus) {
+    els.uclAssetPackStatus.textContent = "Installing 29 club badges...";
+    els.uclAssetPackStatus.classList.remove("is-error", "is-success");
+  }
+  try {
+    const response = await fetch(`/api/challenge/assets/${UCL_ASSET_PACK_ID}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || "The asset pack could not be installed.");
+      error.status = response.status;
+      throw error;
+    }
+    setUclAssetAccount(payload.account || {
+      ...uclAssetAccount,
+      assetPacks: [...new Set([...(uclAssetAccount.assetPacks || []), UCL_ASSET_PACK_ID])],
+    });
+    if (els.uclAssetPackStatus) {
+      els.uclAssetPackStatus.textContent = "Installed. The UCL mark and all 29 club crests are now active.";
+      els.uclAssetPackStatus.classList.add("is-success");
+    }
+    showToast("UCL 26/27 Asset Pack installed.");
+  } catch (error) {
+    if (error.status === 401) uclAssetAccount = null;
+    if (els.uclAssetPackStatus) {
+      els.uclAssetPackStatus.textContent = error.status === 401
+        ? "Your session expired. Log in again to install this pack."
+        : error.message;
+      els.uclAssetPackStatus.classList.add("is-error");
+    }
+  } finally {
+    uclAssetInstallBusy = false;
+    renderUclAssetState();
   }
 }
 
@@ -19317,13 +19574,14 @@ function render() {
       if (els.restartCustomMatchButton) els.restartCustomMatchButton.hidden = !matchActive;
     }
     const activeLegacySession = Boolean(legacyDraft) || Boolean(state.legacyTournament && state.started);
-    els.startLegacyDraftButton.innerHTML = `${activeLegacySession ? "Resume tournament" : "Start draft"} <span aria-hidden="true">→</span>`;
+    els.startLegacyDraftButton.innerHTML = `${activeLegacySession ? "Resume tournament" : "Start tournament"} <span aria-hidden="true">→</span>`;
     els.restartLegacyDraftButton.hidden = !activeLegacySession;
     syncRetroWorldCupCardAction();
     els.pageKicker.textContent = "256 TEAMS WC · NEW TOURNAMENT";
     els.pageTitle.textContent = "Choose your mode";
     syncLandingSettings();
     syncStandardTournamentCardLock();
+    renderUclTeamPicker();
     renderLegacyLandingSetup();
     renderParticipantOverview(els.overviewSearch.value);
     renderProgress();
@@ -22111,21 +22369,36 @@ els.spectatePickerButton.addEventListener("click", () => {
   openSpectatePicker("all");
 });
 els.retroTeamPickerButton?.addEventListener("click", openRetroWorldCupTeamPicker);
+els.uclTeamPickerButton?.addEventListener("click", openUclTeamPicker);
 els.premierLeagueTeamPickerButton?.addEventListener("click", openPremierLeagueTeamPicker);
 window.addEventListener("premier-league-season-state", renderPremierLeagueTeamPicker);
 els.premierLeagueInstallButton?.addEventListener("click", openPremierLeagueAssetPack);
 els.plAssetPackCloseButton?.addEventListener("click", () => els.plAssetPackModal?.close());
 els.plAssetPackCancelButton?.addEventListener("click", () => els.plAssetPackModal?.close());
 els.plAssetPackConfirmButton?.addEventListener("click", installPremierLeagueAssetPack);
+els.uclInstallButton?.addEventListener("click", openUclAssetPack);
+els.uclAssetPackCloseButton?.addEventListener("click", () => els.uclAssetPackModal?.close());
+els.uclAssetPackCancelButton?.addEventListener("click", () => els.uclAssetPackModal?.close());
+els.uclAssetPackConfirmButton?.addEventListener("click", installUclAssetPack);
 window.addEventListener("accountstatechange", (event) => {
   const account = event.detail?.account || null;
   setPremierLeagueAssetAccount(account);
+  setUclAssetAccount(account);
   setCustomTeamAccount(account);
 });
 els.spectateSearch.addEventListener("input", (event) => renderSpectateList(event.target.value));
 els.spectateList.addEventListener("click", (event) => {
   const option = event.target.closest(".prediction-option");
   if (!option) return;
+  if (spectatePickerMode === "ucl") {
+    const teamId = option.dataset.uclTeamId || null;
+    const team = UCL_2026_27_QUALIFIED_TEAMS.find((candidate) => candidate.id === teamId) || null;
+    saveUclMenuTeamId(team?.id || null);
+    renderUclTeamPicker();
+    els.spectateModal.close();
+    showToast(team ? `${team.name} selected for the UCL simulator.` : "Neutral Champions League view selected.");
+    return;
+  }
   if (spectatePickerMode === "premier-league") {
     if (window.PremierLeagueSeason?.hasStarted?.()) {
       els.spectateModal.close();
@@ -22988,6 +23261,12 @@ els.startLegacyDraftButton?.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
+  renderLegacyLandingSetup();
+  els.legacySetupModal?.showModal();
+});
+
+els.confirmLegacyDraftButton?.addEventListener("click", () => {
+  els.legacySetupModal?.close();
   legacyDraft = null;
   localStorage.removeItem("legacyDraftState");
   startLegacyDraft(legacySetup.nationId);
@@ -22995,6 +23274,7 @@ els.startLegacyDraftButton?.addEventListener("click", () => {
 });
 
 els.restartLegacyDraftButton?.addEventListener("click", () => {
+  els.legacySetupModal?.close();
   const legacyTeamId = legacyDraft?.nationId ? `legacy-${legacyDraft.nationId}-xi` : state.spectateTeamId;
   if (typeof legacyTeamId === "string" && legacyTeamId.startsWith("legacy-")) TEAM_BY_ID.delete(legacyTeamId);
   legacyDraft = null;

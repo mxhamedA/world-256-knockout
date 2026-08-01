@@ -65,6 +65,7 @@ const staticFiles = [
     "assets/euro-2016-logo.png",
     "assets/copa-america-2024-logo.png",
     "assets/prem-logo.webp",
+    "assets/ucl-starball-white.png",
     "assets/world-cup-2026-logo.png",
     "assets/retro-2010/south-africa-sunburst-desktop.webp",
     "assets/retro-2010/south-africa-sunburst-portrait.webp",
@@ -101,6 +102,11 @@ if (existsSync(flagAssetsRoot)) {
 const premierLeagueAssetPackRoot = join(projectRoot, "assets", "pl-26-27");
 if (existsSync(premierLeagueAssetPackRoot)) {
   cpSync(premierLeagueAssetPackRoot, join(outputRoot, "assets", "pl-26-27"), { recursive: true });
+}
+
+const uclAssetPackRoot = join(projectRoot, "assets", "ucl-26-27");
+if (existsSync(uclAssetPackRoot)) {
+  cpSync(uclAssetPackRoot, join(outputRoot, "assets", "ucl-26-27"), { recursive: true });
 }
 
 const sourceHtml = readFileSync(join(projectRoot, "index.html"), "utf8");

@@ -25,6 +25,7 @@ const SESSION_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
 const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
 const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
 const PL_ASSET_PACK_ID = "pl-26-27";
+const UCL_ASSET_PACK_ID = "ucl-26-27";
 const RETRO_2006_TEAMS = Object.freeze([
   "Germany", "Costa Rica", "Poland", "Ecuador",
   "England", "Paraguay", "Trinidad and Tobago", "Sweden",
@@ -497,13 +498,19 @@ function publicChallenge(challenge, now = Date.now()) {
 function publicAccount(account) {
   if (!account) return null;
   const country = DRAFT_TEAMS.find((team) => team.id === account.profile_country_id) || null;
+  const assetPacks = Array.isArray(account.assetPacks)
+    ? account.assetPacks.filter((packId) => [PL_ASSET_PACK_ID, UCL_ASSET_PACK_ID].includes(packId))
+    : [
+        Number(account.pl_26_27_assets_installed) === 1 ? PL_ASSET_PACK_ID : null,
+        Number(account.ucl_26_27_assets_installed) === 1 ? UCL_ASSET_PACK_ID : null,
+      ].filter(Boolean);
   return {
     id: account.id,
     username: account.username,
     profileCountryId: country?.id || null,
     profileCountryName: country?.name || null,
     usernameNeedsReview: account.usernameNeedsReview === true,
-    assetPacks: Number(account.pl_26_27_assets_installed) === 1 ? [PL_ASSET_PACK_ID] : [],
+    assetPacks,
   };
 }
 
@@ -539,6 +546,10 @@ async function authenticatedAccount(request, db, required = true, allowLocalSess
           SELECT 1 FROM account_asset_packs
           WHERE account_id = accounts.id AND pack_id = '${PL_ASSET_PACK_ID}'
         ) AS pl_26_27_assets_installed,
+        EXISTS(
+          SELECT 1 FROM account_asset_packs
+          WHERE account_id = accounts.id AND pack_id = '${UCL_ASSET_PACK_ID}'
+        ) AS ucl_26_27_assets_installed,
         (
           SELECT provider_subject FROM auth_identities
           WHERE account_id = accounts.id AND provider = 'google'
@@ -643,7 +654,11 @@ async function login(request, env) {
       EXISTS(
         SELECT 1 FROM account_asset_packs
         WHERE account_id = accounts.id AND pack_id = '${PL_ASSET_PACK_ID}'
-      ) AS pl_26_27_assets_installed
+      ) AS pl_26_27_assets_installed,
+      EXISTS(
+        SELECT 1 FROM account_asset_packs
+        WHERE account_id = accounts.id AND pack_id = '${UCL_ASSET_PACK_ID}'
+      ) AS ucl_26_27_assets_installed
     FROM accounts
     WHERE ${accountLookup}
   `).bind(email || username).first();
@@ -706,7 +721,11 @@ async function profile(request, env, account) {
       EXISTS(
         SELECT 1 FROM account_asset_packs
         WHERE account_id = accounts.id AND pack_id = '${PL_ASSET_PACK_ID}'
-      ) AS pl_26_27_assets_installed
+      ) AS pl_26_27_assets_installed,
+      EXISTS(
+        SELECT 1 FROM account_asset_packs
+        WHERE account_id = accounts.id AND pack_id = '${UCL_ASSET_PACK_ID}'
+      ) AS ucl_26_27_assets_installed
     FROM accounts WHERE accounts.id = ?
   `)
     .bind(account.id).first();
@@ -715,7 +734,7 @@ async function profile(request, env, account) {
 
 async function installAssetPack(request, env, account, packId) {
   if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
-  if (packId !== PL_ASSET_PACK_ID) return responseJson({ error: "Asset pack not found." }, 404);
+  if (![PL_ASSET_PACK_ID, UCL_ASSET_PACK_ID].includes(packId)) return responseJson({ error: "Asset pack not found." }, 404);
   const installedAt = Date.now();
   await env.CHALLENGE_DB.prepare(`
     INSERT INTO account_asset_packs (account_id, pack_id, installed_at)
@@ -732,7 +751,10 @@ async function installAssetPack(request, env, account, packId) {
       installed: true,
       installedAt: installed?.installed_at || installedAt,
     },
-    account: publicAccount({ ...account, pl_26_27_assets_installed: 1 }),
+    account: publicAccount({
+      ...account,
+      assetPacks: [...new Set([...(publicAccount(account)?.assetPacks || []), packId])],
+    }),
   });
 }
 

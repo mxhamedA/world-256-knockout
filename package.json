@@ -26,6 +26,7 @@
     "test:retro-elimination": "node scripts/retro-elimination-ui-test.mjs",
     "test:custom-third-place": "node scripts/custom-third-place-test.mjs",
     "test:custom-teams": "node scripts/custom-team-match-test.mjs",
+    "test:legacy-menu": "node scripts/legacy-menu-layout-test.mjs",
     "test:setup-lock": "node scripts/default-setup-lock-test.mjs",
     "test:default-restart": "node scripts/default-restart-flow-test.mjs",
     "test:managed-third-place": "node scripts/managed-third-place-flow-test.mjs",

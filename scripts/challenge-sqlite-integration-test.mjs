@@ -251,8 +251,17 @@ assert.equal(
   installedAssetPack.payload.assetPack.installedAt,
 );
 
+const installedUclAssetPack = await request("/assets/ucl-26-27", {
+  method: "POST",
+  body: {},
+});
+assert.equal(installedUclAssetPack.response.status, 200);
+assert.equal(installedUclAssetPack.payload.assetPack.id, "ucl-26-27");
+assert.equal(installedUclAssetPack.payload.assetPack.installed, true);
+assert.deepEqual(installedUclAssetPack.payload.account.assetPacks, ["pl-26-27", "ucl-26-27"]);
+
 const dashboardWithAssets = await request("");
-assert.deepEqual(dashboardWithAssets.payload.account.assetPacks, ["pl-26-27"]);
+assert.deepEqual(dashboardWithAssets.payload.account.assetPacks, ["pl-26-27", "ucl-26-27"]);
 
 const retro2006FirstSeed = 2006060901;
 const retro2006Started = await request("/achievements/retro-2006", {

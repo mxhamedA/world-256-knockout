@@ -1,0 +1,43 @@
+{
+  "id": "ucl-26-27",
+  "name": "UCL 26/27 Asset Pack",
+  "version": 1,
+  "season": "2026/27",
+  "competitionLogo": "../../ucl-starball-white.png",
+  "source": {
+    "name": "wc26-assets and football-logos.cc / escudosfc.com.br",
+    "url": "https://sachawd.github.io/wc26-assets/",
+    "usage": "Editorial and reference use. Club crests remain trademarks of their respective owners."
+  },
+  "teams": [
+    { "id": "arsenal", "name": "Arsenal", "code": "ARS", "badge": "./badges/arsenal.png" },
+    { "id": "aston-villa", "name": "Aston Villa", "code": "AVL", "badge": "./badges/aston-villa.png" },
+    { "id": "atletico-madrid", "name": "Atlético Madrid", "code": "ATM", "badge": "./badges/atletico-madrid.png" },
+    { "id": "borussia-dortmund", "name": "Borussia Dortmund", "code": "BVB", "badge": "./badges/borussia-dortmund.png" },
+    { "id": "barcelona", "name": "Barcelona", "code": "BAR", "badge": "./badges/barcelona.png" },
+    { "id": "bayern-munich", "name": "Bayern Munich", "code": "BAY", "badge": "./badges/bayern-munich.png" },
+    { "id": "club-brugge", "name": "Club Brugge", "code": "BRU", "badge": "./badges/club-brugge.png" },
+    { "id": "como", "name": "Como", "code": "COM", "badge": "./badges/como.png" },
+    { "id": "feyenoord", "name": "Feyenoord", "code": "FEY", "badge": "./badges/feyenoord.png" },
+    { "id": "galatasaray", "name": "Galatasaray", "code": "GAL", "badge": "./badges/galatasaray.png" },
+    { "id": "inter-milan", "name": "Inter Milan", "code": "INT", "badge": "./badges/inter-milan.png" },
+    { "id": "rb-leipzig", "name": "RB Leipzig", "code": "RBL", "badge": "./badges/rb-leipzig.png" },
+    { "id": "lens", "name": "Lens", "code": "LEN", "badge": "./badges/lens.png" },
+    { "id": "lille", "name": "Lille", "code": "LIL", "badge": "./badges/lille.png" },
+    { "id": "liverpool", "name": "Liverpool", "code": "LIV", "badge": "./badges/liverpool.png" },
+    { "id": "manchester-city", "name": "Manchester City", "code": "MCI", "badge": "./badges/manchester-city.png" },
+    { "id": "manchester-united", "name": "Manchester United", "code": "MUN", "badge": "./badges/manchester-united.png" },
+    { "id": "napoli", "name": "Napoli", "code": "NAP", "badge": "./badges/napoli.png" },
+    { "id": "paris-saint-germain", "name": "Paris Saint-Germain", "code": "PSG", "badge": "./badges/paris-saint-germain.png" },
+    { "id": "porto", "name": "Porto", "code": "POR", "badge": "./badges/porto.png" },
+    { "id": "psv-eindhoven", "name": "PSV Eindhoven", "code": "PSV", "badge": "./badges/psv-eindhoven.png" },
+    { "id": "real-betis", "name": "Real Betis", "code": "BET", "badge": "./badges/real-betis.png" },
+    { "id": "real-madrid", "name": "Real Madrid", "code": "RMA", "badge": "./badges/real-madrid.png" },
+    { "id": "roma", "name": "Roma", "code": "ROM", "badge": "./badges/roma.png" },
+    { "id": "shakhtar-donetsk", "name": "Shakhtar Donetsk", "code": "SHK", "badge": "./badges/shakhtar-donetsk.png" },
+    { "id": "slavia-prague", "name": "Slavia Prague", "code": "SLA", "badge": "./badges/slavia-prague.png" },
+    { "id": "sporting-cp", "name": "Sporting CP", "code": "SCP", "badge": "./badges/sporting-cp.png" },
+    { "id": "stuttgart", "name": "Stuttgart", "code": "VFB", "badge": "./badges/stuttgart.png" },
+    { "id": "villarreal", "name": "Villarreal", "code": "VIL", "badge": "./badges/villarreal.png" }
+  ]
+}
