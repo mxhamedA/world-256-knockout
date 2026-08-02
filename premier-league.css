@@ -1060,6 +1060,18 @@ body.pl-match-mode-active .pl-club-flag img {
   font-size: 13px;
 }
 
+/* The overview table sits in a half-width card, so keep the key standings
+   columns visible instead of clipping GD and points off the right edge. */
+.pl-overview-grid .pl-table-head,
+.pl-overview-grid .pl-table-row {
+  grid-template-columns: 36px minmax(120px, 1fr) 38px 42px 42px;
+}
+
+.pl-overview-grid .pl-table-head > :nth-child(n + 4):nth-child(-n + 8),
+.pl-overview-grid .pl-table-row > :nth-child(n + 4):nth-child(-n + 8) {
+  display: none;
+}
+
 .pl-full-table-panel .pl-table-row {
   min-height: 62px;
 }
@@ -1322,6 +1334,12 @@ body.pl-match-mode-active .pl-club-flag img {
   .pl-table-head,
   .pl-table-row {
     grid-template-columns: 34px minmax(150px, 1fr) 38px 38px 38px 42px;
+  }
+
+  .pl-overview-grid .pl-table-head,
+  .pl-overview-grid .pl-table-row {
+    min-width: 0;
+    grid-template-columns: 30px minmax(112px, 1fr) 34px 38px 40px;
   }
 
   .pl-table-head > :nth-child(5),

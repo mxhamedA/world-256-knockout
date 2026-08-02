@@ -459,7 +459,7 @@
       .sort((left, right) => Number(right.managed) - Number(left.managed));
   }
 
-  function leagueTable({ includeLive = false } = {}) {
+  function leagueTable() {
     const rows = new Map(clubs.map((club) => [club.id, {
       club,
       played: 0,
@@ -472,15 +472,11 @@
       points: 0,
     }]));
     season?.rounds.forEach((round) => round.forEach((match) => {
-      const activeLiveMatch = includeLive
-        && !match.result?.revealed
-        && typeof livePlayback !== "undefined"
-        && livePlayback?.matchId === match.id;
-      if (!match.result?.revealed && !activeLiveMatch) return;
+      if (!match.result?.revealed) return;
       const home = rows.get(match.homeId);
       const away = rows.get(match.awayId);
-      const homeGoals = activeLiveMatch ? Number(livePlayback.homeScore) || 0 : Number(match.result.homeGoals) || 0;
-      const awayGoals = activeLiveMatch ? Number(livePlayback.awayScore) || 0 : Number(match.result.awayGoals) || 0;
+      const homeGoals = Number(match.result.homeGoals) || 0;
+      const awayGoals = Number(match.result.awayGoals) || 0;
       home.played += 1;
       away.played += 1;
       home.gf += homeGoals;
@@ -1236,7 +1232,7 @@
     engineTablePanel.hidden = !active;
     liveBackButton.hidden = !active;
     if (!active) return;
-    const fullTable = leagueTable({ includeLive: true });
+    const fullTable = leagueTable();
     const selectedIndex = season.spectateTeamId
       ? fullTable.findIndex((row) => row.club.id === season.spectateTeamId)
       : -1;
