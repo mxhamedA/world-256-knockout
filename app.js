@@ -22721,7 +22721,7 @@ els.openAchievementsButton?.addEventListener("click", () => {
     || document.body.classList.contains("pl-season-open")
     || document.body.classList.contains("pl-match-mode-active")
   ) {
-    window.AccountAchievements?.openRetroModal(2026);
+    window.AccountAchievements?.openRetroModal("pl");
     return;
   }
   if (

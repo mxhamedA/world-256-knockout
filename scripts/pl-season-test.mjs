@@ -28,12 +28,12 @@ assert.ok(youngPlayerPoolSource, "The PL Young Player award must define an expli
 });
 assert.match(
   seasonSource,
-  /seasonAchievementsButton\?\.addEventListener\("click",[\s\S]*openRetroModal\(2026\)/,
+  /seasonAchievementsButton\?\.addEventListener\("click",[\s\S]*openRetroModal\("pl"\)/,
   "The PL season header must open the PL achievements popup.",
 );
 assert.match(
   appSource,
-  /state\?\.premierLeagueSeason[\s\S]*openRetroModal\(2026\)/,
+  /state\?\.premierLeagueSeason[\s\S]*openRetroModal\("pl"\)/,
   "The shared match header must keep PL achievements in the popup.",
 );
 assert.doesNotMatch(

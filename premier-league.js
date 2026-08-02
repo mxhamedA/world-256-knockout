@@ -1431,7 +1431,7 @@
   seasonSettingsButton?.addEventListener("click", () => document.querySelector("#settingsButton")?.click());
   seasonFeedbackButton?.addEventListener("click", () => document.querySelector("#bugReportButton")?.click());
   seasonAchievementsButton?.addEventListener("click", () => {
-    window.AccountAchievements?.openRetroModal(2026);
+    window.AccountAchievements?.openRetroModal("pl");
   });
   seasonDonateButton?.addEventListener("click", () => document.querySelector("#donateButton")?.click());
   seasonAccountButton?.addEventListener("click", () => document.querySelector("#mainAccountButton")?.click());

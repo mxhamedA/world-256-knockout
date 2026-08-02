@@ -617,6 +617,8 @@ const premierLeagueWon = await request("/achievements/premier-league", {
 assert.equal(premierLeagueWon.response.status, 200);
 assert.equal(premierLeagueWon.payload.countryUnlocked, true);
 assert.equal(premierLeagueWon.payload.unlockedTeam.objectiveLabel, "Win the Premier League");
+assert.equal(premierLeagueWon.payload.unlockedTeam.points, 2);
+assert.equal(premierLeagueWon.payload.achievement.completedPoints, 2);
 
 const uclRealStarted = await request("/achievements/ucl", {
   method: "POST",
