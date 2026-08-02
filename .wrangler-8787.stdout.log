@@ -6294,3 +6294,30 @@ Useful routes:
 {"type":"worker-request-complete","timestamp":"2026-08-02T02:17:28.350Z","requestId":"474e1a73-6272-4318-9e41-c556f19b651e","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":1}
 {"type":"worker-request","timestamp":"2026-08-02T02:17:29.187Z","requestId":"948584aa-9d3c-431b-8aa0-eaa5677336c0","method":"GET","route":"/cdn-cgi/ProxyWorker/play"}
 {"type":"worker-request-complete","timestamp":"2026-08-02T02:17:29.187Z","requestId":"948584aa-9d3c-431b-8aa0-eaa5677336c0","method":"GET","route":"/cdn-cgi/ProxyWorker/play","status":404,"elapsedMs":0}
+{"type":"worker-request","timestamp":"2026-08-02T02:36:23.586Z","requestId":"e5a93e92-1cd3-4a61-8584-cd42cea437c1","method":"GET","route":"/cdn-cgi/ProxyWorker/pause"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:23.587Z","requestId":"e5a93e92-1cd3-4a61-8584-cd42cea437c1","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":1}
+⎔ Reloading local server...
+{"type":"worker-request","timestamp":"2026-08-02T02:36:24.080Z","requestId":"93847597-98a5-4534-be02-e5f67ec70ac0","method":"GET","route":"/cdn-cgi/ProxyWorker/pause"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:24.081Z","requestId":"93847597-98a5-4534-be02-e5f67ec70ac0","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":1}
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-08-02T02:36:25.735Z","requestId":"2c62e0f7-171f-45da-ad7f-7594fa463296","method":"GET","route":"/cdn-cgi/ProxyWorker/pause"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:25.746Z","requestId":"2c62e0f7-171f-45da-ad7f-7594fa463296","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":11}
+{"type":"worker-request","timestamp":"2026-08-02T02:36:25.807Z","requestId":"b1f37d63-8902-494f-b5c9-631d33f0dde7","method":"GET","route":"/cdn-cgi/ProxyWorker/pause"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:25.809Z","requestId":"b1f37d63-8902-494f-b5c9-631d33f0dde7","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":2}
+{"type":"worker-request","timestamp":"2026-08-02T02:36:25.821Z","requestId":"1e6ed9d2-9ac9-46d0-b3f9-8767021de142","method":"GET","route":"/cdn-cgi/ProxyWorker/pause"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:25.823Z","requestId":"1e6ed9d2-9ac9-46d0-b3f9-8767021de142","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":2}
+{"type":"worker-request","timestamp":"2026-08-02T02:36:25.831Z","requestId":"4eacd1b0-3a7d-4531-9e08-ecbfebb59ff9","method":"GET","route":"/cdn-cgi/ProxyWorker/pause"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:25.832Z","requestId":"4eacd1b0-3a7d-4531-9e08-ecbfebb59ff9","method":"GET","route":"/cdn-cgi/ProxyWorker/pause","status":404,"elapsedMs":1}
+{"type":"worker-request","timestamp":"2026-08-02T02:36:26.397Z","requestId":"cd95f94c-1c90-4c9a-b458-78ba2c4f40a9","method":"GET","route":"/cdn-cgi/ProxyWorker/play"}
+{"type":"worker-request-complete","timestamp":"2026-08-02T02:36:26.398Z","requestId":"cd95f94c-1c90-4c9a-b458-78ba2c4f40a9","method":"GET","route":"/cdn-cgi/ProxyWorker/play","status":404,"elapsedMs":1}
+[wrangler:info] ✨ Parsed 3 valid header rules.
+[wrangler:error] MiniflareCoreError [ERR_RUNTIME_FAILURE]: The Workers runtime failed to restart after an unexpected crash.
+    at C:\Users\moham\Documents\256 team wc tourney\node_modules\miniflare\dist\src\index.js:104185:37
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Mutex.runWith (C:\Users\moham\Documents\256 team wc tourney\node_modules\miniflare\dist\src\index.js:72004:48)
+Caused by: Error: write EOF
+    at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)

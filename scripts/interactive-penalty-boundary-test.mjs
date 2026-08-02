@@ -5,9 +5,25 @@ const appSource = fs.readFileSync(new URL("../app.js", import.meta.url), "utf8")
 const boundarySource = appSource.match(
   /function reconcileInteractiveMatchBoundary\(match, playback\) \{[\s\S]*?\n\}/,
 )?.[0];
+const decidingScoreSource = appSource.match(
+  /function decidingMatchScore\(match, homeGoals, awayGoals\) \{[\s\S]*?\n\}/,
+)?.[0];
+const decidingLevelSource = appSource.match(
+  /function decidingMatchIsLevel\(match, homeGoals, awayGoals\) \{[\s\S]*?\n\}/,
+)?.[0];
+const decidingWinnerSource = appSource.match(
+  /function decidingMatchWinnerId\(match, homeGoals, awayGoals\) \{[\s\S]*?\n\}/,
+)?.[0];
 
 assert.ok(boundarySource, "The interactive match-boundary reconciler must exist.");
-const reconcileInteractiveMatchBoundary = Function(`return (${boundarySource});`)();
+assert.ok(decidingScoreSource && decidingLevelSource && decidingWinnerSource, "The deciding-match aggregate helpers must exist.");
+const reconcileInteractiveMatchBoundary = Function(`
+  ${decidingScoreSource}
+  ${decidingLevelSource}
+  ${decidingWinnerSource}
+  return reconcileInteractiveMatchBoundary;
+  ${boundarySource}
+`)();
 
 const englandPanama = {
   homeId: "england",
@@ -60,6 +76,24 @@ assert.equal(reconcileInteractiveMatchBoundary(levelAfterRegulation, levelPlayba
 assert.equal(levelAfterRegulation.result.extraTime, true);
 assert.equal(levelPlayback.maxMinute, 120);
 assert.equal(levelAfterRegulation.result.homeEvents.some((event) => event.minute === 111), true);
+
+const aggregateLevelAfterRegulation = {
+  homeId: "home",
+  awayId: "away",
+  allowDraw: false,
+  uclAggregateBefore: { home: 0, away: 1 },
+  result: {
+    homeEvents: [{ minute: 44 }, { minute: 111 }],
+    awayEvents: [],
+    homeGoals: 2,
+    awayGoals: 0,
+    extraTime: true,
+  },
+};
+const aggregatePlayback = { maxMinute: 90 };
+assert.equal(reconcileInteractiveMatchBoundary(aggregateLevelAfterRegulation, aggregatePlayback), true);
+assert.equal(aggregateLevelAfterRegulation.result.extraTime, true);
+assert.equal(aggregatePlayback.maxMinute, 120);
 
 assert.match(
   appSource,

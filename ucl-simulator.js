@@ -151,6 +151,35 @@
     try {
       const candidate = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
       if (!Engine.validSeason(candidate)) return null;
+      candidate.league.flat().forEach((match) => {
+        match.stage = "league";
+        match.allowDraw = true;
+        if (!match.result?.extraTime && !match.result?.penalties && !match.result?.shootout) return;
+        const regulationHomeEvents = (match.result.homeEvents || []).filter((event) => Number(event.minute) <= 90);
+        const regulationAwayEvents = (match.result.awayEvents || []).filter((event) => Number(event.minute) <= 90);
+        const regulationHome = Number.isFinite(Number(match.result.regulationHome))
+          ? Number(match.result.regulationHome)
+          : regulationHomeEvents.length || Number(match.result.home) || 0;
+        const regulationAway = Number.isFinite(Number(match.result.regulationAway))
+          ? Number(match.result.regulationAway)
+          : regulationAwayEvents.length || Number(match.result.away) || 0;
+        Object.assign(match.result, {
+          home: regulationHome,
+          away: regulationAway,
+          homeGoals: regulationHome,
+          awayGoals: regulationAway,
+          regulationHome,
+          regulationAway,
+          homeEvents: regulationHomeEvents,
+          awayEvents: regulationAwayEvents,
+          extraTime: false,
+          penalties: null,
+          shootout: null,
+          winnerId: regulationHome === regulationAway
+            ? null
+            : regulationHome > regulationAway ? match.homeId : match.awayId,
+        });
+      });
       ["quarter-finals", "semi-finals", "final"].forEach((key) => {
         const round = candidate.knockout?.rounds?.[key];
         if (!round) return;
@@ -713,13 +742,19 @@
     const playedLeg = visibleKnockoutLegs(tie)[legIndex] || null;
     const homeGoals = Number(playedLeg?.home) || 0;
     const awayGoals = Number(playedLeg?.away) || 0;
+    const previousLeg = legIndex > 0 ? visibleKnockoutLegs(tie)[legIndex - 1] : null;
+    const aggregateBefore = previousLeg ? {
+      home: previousLeg.awayId === fixture.homeId ? Number(previousLeg.away) || 0 : Number(previousLeg.home) || 0,
+      away: previousLeg.homeId === fixture.awayId ? Number(previousLeg.home) || 0 : Number(previousLeg.away) || 0,
+    } : null;
     return {
       id: `${tie.id}:leg-${legIndex + 1}`,
       homeId: fixture.homeId,
       awayId: fixture.awayId,
       stage: round.key,
       uclKnockoutLeg: true,
-      allowDraw: round.legs === 2,
+      allowDraw: round.legs === 2 && legIndex === 0,
+      uclAggregateBefore: aggregateBefore,
       result: playedLeg ? {
         home: homeGoals,
         away: awayGoals,

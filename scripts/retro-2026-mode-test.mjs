@@ -96,6 +96,20 @@ assert.doesNotMatch(appSource, /isWorldCup2026 \? `\s*<div class="retro-rating-m
 assert.match(appSource, /const RETRO_LINEUP_SLOT_ORDER_VERSION = 10;/);
 assert.match(appSource, /retroAchievementsButton\.hidden = false;/, "2026 must expose the in-mode achievement popup button");
 assert.match(appSource, /\[2006, 2010, 2014, 2016, 2018, 2022, 2026\]\.includes/, "2026 must use the shared retro achievement popup");
+const retroAchievementStateSource = appSource.slice(
+  appSource.indexOf("function savedRetroAchievementTournamentStates"),
+  appSource.indexOf("function retroTournamentHasProgress"),
+);
+assert.match(
+  retroAchievementStateSource,
+  /\[2006, 2010, 2014, 2016, 2018, 2022, 2026\]/g,
+  "2026 completed runs must be replayed after login or reload",
+);
+assert.match(
+  appSource,
+  /els\.retroWorldCupScreen\?\.hidden === false[\s\S]*?\[2006, 2010, 2014, 2016, 2018, 2022, 2026\]\.includes\(Number\(retroTournament\?\.year\)\)/,
+  "the shared achievements button must stay on the 2026 achievement set",
+);
 assert.match(indexSource, /data-achievement-year="2026"[^>]*>2026</, "2026 must have its own achievement tab");
 assert.match(indexSource, /data-achievement-year="pl"[^>]*>PL 26\/27</, "Premier League achievements must remain separate");
 assert.match(challengeSource, /activeAchievementYear === 2026 \? 48/, "2026 achievement progress must cover all 48 countries");

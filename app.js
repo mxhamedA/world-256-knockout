@@ -11419,6 +11419,24 @@ function managedRetroTacticalBoost(ratingGap, edge) {
 }
 
 function managedStandardTournamentBoost(controlledTeam, opponentTeam, roundIndex = state.activeRound) {
+  const isManagedUclMode = Boolean(
+    state.uclSeason
+    && state.spectateTeamId
+    && !state.neutralView
+    && controlledTeam?.id === state.spectateTeamId
+  );
+  if (isManagedUclMode) {
+    const ratingGap = Math.max(
+      0,
+      teamSimulationRatings(opponentTeam).overall - teamSimulationRatings(controlledTeam).overall,
+    );
+    const underdogScale = simulationClamp(ratingGap / 24, 0, 1);
+    return {
+      attack: 1.07 + underdogScale * 0.05,
+      defence: 0.95 - underdogScale * 0.03,
+      assistance: 0.65,
+    };
+  }
   const isManaged256Mode = Boolean(
     state.spectateTeamId
     && !state.neutralView
@@ -11509,6 +11527,26 @@ function standardTacticalFeedback(tacticKey, opponentTacticKey) {
   if (edge <= -0.18) return { edge, label: "Major tactical risk" };
   if (edge <= -0.06) return { edge, label: "Tactical risk" };
   return { edge, label: "Even tactical matchup" };
+}
+
+function decidingMatchScore(match, homeGoals, awayGoals) {
+  const aggregate = match?.uclAggregateBefore;
+  return {
+    home: Number(homeGoals) + (Number(aggregate?.home) || 0),
+    away: Number(awayGoals) + (Number(aggregate?.away) || 0),
+  };
+}
+
+function decidingMatchIsLevel(match, homeGoals, awayGoals) {
+  if (match?.allowDraw) return false;
+  const score = decidingMatchScore(match, homeGoals, awayGoals);
+  return score.home === score.away;
+}
+
+function decidingMatchWinnerId(match, homeGoals, awayGoals) {
+  const score = decidingMatchScore(match, homeGoals, awayGoals);
+  if (score.home === score.away) return null;
+  return score.home > score.away ? match.homeId : match.awayId;
 }
 
 function customMatchScript(match, roundIndex) {
@@ -11853,7 +11891,7 @@ function simulateMatch(match, roundIndex) {
   let penalties = null;
   let shootout = null;
 
-  if (!forceShootout && !match.allowDraw && homeGoals === awayGoals) {
+  if (!forceShootout && decidingMatchIsLevel(match, homeGoals, awayGoals)) {
     extraTime = true;
     const homeDepth = teamSimulationRatings(home).squadDepth;
     const awayDepth = teamSimulationRatings(away).squadDepth;
@@ -11869,7 +11907,7 @@ function simulateMatch(match, roundIndex) {
     );
   }
 
-  if (!match.allowDraw && homeGoals === awayGoals) {
+  if (decidingMatchIsLevel(match, homeGoals, awayGoals)) {
     const shootoutUnavailable = {
       home: [...new Set([
         ...(suspendedPlayers.home || []),
@@ -11894,7 +11932,9 @@ function simulateMatch(match, roundIndex) {
 
   const winnerId = penalties
     ? penalties.home > penalties.away ? home.id : away.id
-    : homeGoals === awayGoals ? null : homeGoals > awayGoals ? home.id : away.id;
+    : match.allowDraw
+      ? homeGoals === awayGoals ? null : homeGoals > awayGoals ? home.id : away.id
+      : decidingMatchWinnerId(match, homeGoals, awayGoals);
 
   const usedGoalMinutes = new Set();
   let homeEvents = goalEvents(
@@ -12500,7 +12540,7 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
   awayEvents = removeDismissedPlayersFromFutureGoals(awayEvents, "away", redCards, match, injuries);
   const regulationHome = homeEvents.filter((event) => event.minute <= 90).length;
   const regulationAway = awayEvents.filter((event) => event.minute <= 90).length;
-  const extraTime = !match.allowDraw && regulationHome === regulationAway;
+  const extraTime = decidingMatchIsLevel(match, regulationHome, regulationAway);
 
   if (!extraTime) {
     homeEvents = homeEvents.filter((event) => event.minute <= 90);
@@ -12514,7 +12554,7 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
   let penalties = null;
   let shootout = null;
   let winnerId;
-  if (!match.allowDraw && homeGoals === awayGoals) {
+  if (decidingMatchIsLevel(match, homeGoals, awayGoals)) {
     const shootoutRandom = mulberry32(
       state.drawSeed + stableHash(`${match.id}-${state.standardTactic}-live-tactical-shootout`),
     );
@@ -12541,8 +12581,9 @@ function mergeLiveTacticalResult(current, candidate, cutoffMinute, match) {
     shootout = penaltyResult.sequence;
     winnerId = penalties.home > penalties.away ? match.homeId : match.awayId;
   } else {
-    winnerId = homeGoals > awayGoals ? match.homeId : match.awayId;
-    if (homeGoals === awayGoals) winnerId = null;
+    winnerId = match.allowDraw
+      ? homeGoals === awayGoals ? null : homeGoals > awayGoals ? match.homeId : match.awayId
+      : decidingMatchWinnerId(match, homeGoals, awayGoals);
   }
 
   return {
@@ -15277,7 +15318,7 @@ function reconcileInteractiveMatchBoundary(match, playback) {
   const result = match.result;
   result.regulationHome = (result.homeEvents || []).filter((event) => event.minute <= 90).length;
   result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
-  const extraTime = !match.allowDraw && result.regulationHome === result.regulationAway;
+  const extraTime = decidingMatchIsLevel(match, result.regulationHome, result.regulationAway);
   result.extraTime = extraTime;
   if (!extraTime) {
     result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
@@ -15286,9 +15327,11 @@ function reconcileInteractiveMatchBoundary(match, playback) {
     result.awayGoals = result.regulationAway;
     result.penalties = null;
     result.shootout = null;
-    result.winnerId = result.homeGoals === result.awayGoals
-      ? null
-      : result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
+    result.winnerId = match.allowDraw
+      ? result.homeGoals === result.awayGoals
+        ? null
+        : result.homeGoals > result.awayGoals ? match.homeId : match.awayId
+      : decidingMatchWinnerId(match, result.homeGoals, result.awayGoals);
   }
   if (playback) playback.maxMinute = extraTime ? 120 : 90;
   return extraTime;
@@ -15320,7 +15363,7 @@ function resolveInteractiveExtraTime(match, playback) {
       : result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
     return;
   }
-  if (result.regulationHome !== result.regulationAway) {
+  if (!decidingMatchIsLevel(match, result.regulationHome, result.regulationAway)) {
     result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
     result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
     result.homeGoals = result.regulationHome;
@@ -15328,14 +15371,14 @@ function resolveInteractiveExtraTime(match, playback) {
     result.extraTime = false;
     result.penalties = null;
     result.shootout = null;
-    result.winnerId = result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
+    result.winnerId = decidingMatchWinnerId(match, result.homeGoals, result.awayGoals);
     return;
   }
   result.extraTime = true;
-  if (result.homeGoals !== result.awayGoals) {
+  if (!decidingMatchIsLevel(match, result.homeGoals, result.awayGoals)) {
     result.penalties = null;
     result.shootout = null;
-    result.winnerId = result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
+    result.winnerId = decidingMatchWinnerId(match, result.homeGoals, result.awayGoals);
     return;
   }
   if (result.penalties && result.shootout?.length) return;
@@ -20239,7 +20282,7 @@ function savedRetroAchievementTournamentStates() {
   return readTournamentHistoryRecords()
     .filter((record) => (
       record?.mode === "retro"
-      && [2006, 2010, 2014, 2016, 2018, 2022].includes(Number(record.year))
+      && [2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(record.year))
       && record.managedTeamId
       && record.championId
     ))
@@ -20262,7 +20305,7 @@ function savedRetroAchievementTournamentStates() {
 
 window.getRetroAchievementTournamentStates = () => {
   const tournaments = [
-    ...[2006, 2010, 2014, 2016, 2018, 2022]
+    ...[2006, 2010, 2014, 2016, 2018, 2022, 2026]
       .map((year) => readRetroTournamentState(year))
       .filter(Boolean),
     ...savedRetroAchievementTournamentStates(),
@@ -22533,7 +22576,7 @@ els.openAchievementsButton?.addEventListener("click", () => {
   }
   if (
     els.retroWorldCupScreen?.hidden === false
-    && [2006, 2010, 2014, 2016, 2018, 2022].includes(Number(retroTournament?.year))
+    && [2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))
   ) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;

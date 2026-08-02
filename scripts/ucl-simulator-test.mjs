@@ -86,6 +86,10 @@ assert.ok(
   "Every league-phase matchday must contain 18 fixtures.",
 );
 assert.equal(season.league.flat().length, 144, "The league phase must contain 144 matches.");
+assert.ok(
+  season.league.flat().every((match) => match.stage === "league" && match.allowDraw === true),
+  "Every league-phase fixture must end at full time and allow a draw.",
+);
 assert.deepEqual(engine.validateSchedule(season.league), { valid: true, errors: [] });
 
 activeTeams.forEach((club) => {
@@ -401,6 +405,31 @@ assert.doesNotMatch(simulatorSource, /const y = \(\(index \* 41\)/, "Pot balls m
 assert.equal(engine.team("napoli").badge, "./assets/ucl-26-27/badges/napoli-2007.png", "Napoli must use the supplied 2007 crest.");
 assert.match(simulatorSource, /function\s+openManagedMatchday\(/, "Team mode must hand the managed fixture to the live match engine.");
 assert.match(simulatorSource, /function\s+openManagedKnockoutMatch\(/, "Managed knockout ties must open in the live match engine.");
+assert.match(
+  simulatorSource,
+  /allowDraw:\s*round\.legs === 2 && legIndex === 0[\s\S]{0,120}uclAggregateBefore:\s*aggregateBefore/,
+  "Only a two-legged tie's first leg may end as a draw; the deciding leg must carry its aggregate score into extra time.",
+);
+assert.match(
+  appSource,
+  /function decidingMatchIsLevel[\s\S]{0,260}decidingMatchScore[\s\S]{0,160}score\.home === score\.away/,
+  "Extra time and penalties must be decided from the knockout aggregate score.",
+);
+assert.match(
+  appSource,
+  /function startPenaltyShootout[\s\S]{0,700}controlledStandardShootoutSide\(match\)[\s\S]{0,260}createInteractiveShootoutSequence\(match, controlledSide\)/,
+  "A managed club's knockout shootout must switch to interactive user control.",
+);
+assert.match(
+  appSource,
+  /function createInteractiveShootoutSequence[\s\S]{0,2200}interactionRole:\s*"keeper"[\s\S]{0,1200}interactionRole:\s*"taker"/,
+  "Managed shootouts must let the user control both their takers and their goalkeeper dives.",
+);
+assert.match(
+  appSource,
+  /const isManagedUclMode[\s\S]{0,500}attack:\s*1\.07[\s\S]{0,120}defence:\s*0\.95/,
+  "Managing a UCL club must apply the managed-team assistance boost in addition to tactical effects.",
+);
 assert.match(simulatorSource, /function\s+openKnockoutMatch\([\s\S]{0,2600}season\.spectateTeamId = managedMatch \? season\.managedTeamId : null[\s\S]{0,120}season\.neutralView = !managedMatch/, "Any current knockout tie must open in managed or spectator mode as appropriate.");
 assert.match(simulatorSource, /function knockoutTieWatchable\([\s\S]{0,500}round\.key === season\?\.knockout\?\.currentKey[\s\S]{0,300}!tie\.result/, "Only unplayed ties in the active knockout round may be watched.");
 assert.match(simulatorSource, /function knockoutTieViewable[\s\S]*?visibleKnockoutLegs\(tie\)\.some\(Boolean\)/, "Played knockout ties must remain viewable from the bracket.");

@@ -318,7 +318,12 @@
         pot: team.pot,
       })),
       { seed },
-    ).map((round) => round.map((match) => ({ ...match, result: null })));
+    ).map((round) => round.map((match) => ({
+      ...match,
+      stage: "league",
+      allowDraw: true,
+      result: null,
+    })));
   }
 
   function createSeason(managedTeamId = null, seedValue = null) {
