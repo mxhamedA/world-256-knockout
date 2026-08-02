@@ -515,6 +515,24 @@ function premierLeagueScorerFormMultiplier(profile, team, seasonSeed) {
   return 0.78 + (formRoll / 1000) * 0.44;
 }
 
+function uclSeasonScorerMultiplier(profile, playerGoals, teamGoals, team, seasonSeed) {
+  const position = profile.position || "CM";
+  let multiplier = ["ST", "CF", "SS", "LW", "RW", "CAM", "AM"].includes(position) ? 0.96
+    : ["CM", "LCM", "RCM", "LM", "RM", "CDM", "DM"].includes(position) ? 1.28
+      : ["LB", "RB", "LWB", "RWB", "CB", "SW"].includes(position) ? 1.52 : 1;
+  if (teamGoals >= 3) {
+    const share = playerGoals / Math.max(1, teamGoals);
+    if (share >= 0.55) multiplier *= profile.finishing >= 90 ? 0.68 : 0.48;
+    else if (share >= 0.4) multiplier *= profile.finishing >= 90 ? 0.82 : 0.67;
+    else if (share >= 0.3) multiplier *= 0.86;
+  }
+  if (Number.isFinite(Number(seasonSeed))) {
+    const formRoll = stableHash(`${Number(seasonSeed)}:${team?.id}:${profile.name}:ucl-scorer-form`) % 1001;
+    multiplier *= 0.88 + (formRoll / 1000) * 0.24;
+  }
+  return multiplier;
+}
+
 function premierLeagueYoungPlayerAwardScore({
   profile,
   goals = 0,
@@ -564,7 +582,15 @@ function scorerWeightForGoalType(profile, goalType, goalsAlready = 0, context = 
     context.tournamentPlayerGoals || 0,
     context.tournamentTeamGoals || 0,
   );
-  if (context.team?.premierLeague) {
+  if (context.team?.uclClub) {
+    weight *= uclSeasonScorerMultiplier(
+      profile,
+      context.tournamentPlayerGoals || 0,
+      context.tournamentTeamGoals || 0,
+      context.team,
+      context.seasonSeed,
+    );
+  } else if (context.team?.premierLeague) {
     weight *= premierLeagueSeasonScorerMultiplier(
       context.tournamentPlayerGoals || 0,
       context.tournamentTeamGoals || 0,

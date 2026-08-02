@@ -75,9 +75,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=ucl-team-picker-2" />
+    <link rel="stylesheet" href="./clean.css?v=ucl-news-announcement-1" />
     <link rel="stylesheet" href="./premier-league.css?v=pl-mobile-header-2" />
-    <link rel="stylesheet" href="./ucl-simulator.css?v=ucl-managed-match-1" />
+    <link rel="stylesheet" href="./ucl-simulator.css?v=ucl-knockout-leg-history-1" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -492,8 +492,8 @@
                   </div>
                 </div>
                 <div class="mode-card-actions">
-                  <button class="primary-button start-tournament ucl-launch-button" id="startUclSimulatorButton" type="button" disabled aria-disabled="true">
-                    Coming soon
+                  <button class="primary-button start-tournament ucl-launch-button" id="startUclSimulatorButton" type="button">
+                    Play UCL mode <span aria-hidden="true">&rarr;</span>
                   </button>
                   <button class="premier-league-menu-restart" id="restartUclSimulatorButton" type="button" hidden>
                     Restart
@@ -768,6 +768,12 @@
                   <div class="team-match-events event-side away" id="awayEventSide" hidden></div>
                 </div>
               </div>
+
+              <nav class="ucl-leg-switcher" id="uclLegSwitcher" aria-label="Knockout tie legs" hidden>
+                <button id="uclPreviousLegButton" type="button" aria-label="View first leg">&larr;</button>
+                <span id="uclLegSwitcherLabel">Leg 1 of 2</span>
+                <button id="uclNextLegButton" type="button" aria-label="View second leg">&rarr;</button>
+              </nav>
 
               <section class="match-2d-viewer" id="match2dViewer" hidden aria-label="Live two-dimensional match view">
                 <div class="match-2d-toolbar">
@@ -2155,48 +2161,22 @@
       </form>
     </dialog>
 
-    <dialog class="modal news-modal" id="newsModal">
-      <form method="dialog" class="news-modal-card">
-        <button class="icon-button close-modal news-modal-close" id="newsCloseButton" type="button" aria-label="Close">&times;</button>
-        <article class="news-entry">
-          <span class="news-update-label">OUT NOW</span>
-          <h2>2014 and 2018 WC modes</h2>
-        </article>
-        <article class="news-entry">
-          <span class="news-update-label">NEW</span>
-          <h2>Achievements added for World Cup</h2>
-          <p>Try and win with every country!</p>
-        </article>
-        <article class="news-entry">
-          <span class="news-update-label">LATEST UPDATE</span>
-          <h2>Retro commentary timing</h2>
-          <p>Commentary now follows the visible match clock, scorer minutes stay in sync, and highlights move more smoothly at faster speeds.</p>
-        </article>
-      </form>
-    </dialog>
-
-    <dialog class="feature-announcement-modal feature-announcement-custom" id="customFeaturesAnnouncementModal">
+    <dialog class="feature-announcement-modal feature-announcement-ucl" id="uclFeaturesAnnouncementModal">
       <div class="feature-announcement-accent" aria-hidden="true">
-        <div class="feature-announcement-custom-visual">
-          <span class="feature-announcement-custom-card feature-announcement-custom-team">
-            <strong>+</strong>
-            <small>TEAM</small>
-          </span>
-          <span class="feature-announcement-custom-vs">VS</span>
-          <span class="feature-announcement-custom-card feature-announcement-custom-match">
-            <strong>2</strong>
-            <small>SIDES</small>
-          </span>
+        <div class="feature-announcement-ucl-visual">
+          <span class="feature-announcement-ucl-glow"></span>
+          <img src="./assets/ucl-starball-white.png" alt="" />
+          <small>2026/27</small>
         </div>
       </div>
       <div class="feature-announcement-content">
         <span class="feature-announcement-label">OUT NOW</span>
-        <h2>Custom matches &amp; teams out now</h2>
-        <p>Create your own teams, upload an emblem, build custom squads and play any two sides in a one-off match.</p>
-        <button class="feature-announcement-button" id="customFeaturesAnnouncementAction" type="button">
-          Explore custom features <span aria-hidden="true">&rarr;</span>
+        <h2>The UCL simulator is here</h2>
+        <p>Choose your club, play the league phase and follow the road through the knockouts to the final.</p>
+        <button class="feature-announcement-button" id="uclFeaturesAnnouncementAction" type="button">
+          Play UCL mode <span aria-hidden="true">&rarr;</span>
         </button>
-        <button class="feature-announcement-dismiss" id="customFeaturesAnnouncementClose" type="button">Not now</button>
+        <button class="feature-announcement-dismiss" id="uclFeaturesAnnouncementClose" type="button">Not now</button>
       </div>
     </dialog>
 
@@ -2352,7 +2332,7 @@
     <script src="./retro-2026-schedule.js?v=world-cup-2026-schedule-1"></script>
     <script src="./retro-engine.js?v=penalties-ratings-reds-1"></script>
     <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
-    <script src="./simulation-engine.js?v=penalties-ratings-reds-1"></script>
+    <script src="./simulation-engine.js?v=ucl-scorer-diversity-1"></script>
     <script src="./legacy-data/catalog.generated.js?v=legacy-draft-data-172"></script>
     <script src="./premier-league-squads.generated.js?v=pl-live-squads-2"></script>
     <script src="./premier-league-fc26-ratings.js?v=fc26-official-1"></script>
@@ -2360,10 +2340,10 @@
     <script src="./ucl-draw-solver.js?v=ucl-pool-2"></script>
     <script src="./ucl-engine.js?v=ucl-managed-match-1"></script>
     <script src="./ucl-squads.generated.js?v=fc27-ucl-squads-1"></script>
-    <script src="./ucl-squad-calibration.js?v=ucl-squad-balance-1"></script>
-  <script src="./app.js?v=ucl-managed-match-1"></script>
+    <script src="./ucl-squad-calibration.js?v=ucl-squad-balance-2"></script>
+  <script src="./app.js?v=ucl-news-announcement-1"></script>
     <script src="./premier-league.js?v=pl-mobile-header-1"></script>
-    <script src="./ucl-simulator.js?v=ucl-managed-match-1"></script>
+    <script src="./ucl-simulator.js?v=ucl-release-launch-1"></script>
     <script src="./challenge.js?v=achievement-top50-modal-2"></script>
     <script>
       window.va = window.va || function () {

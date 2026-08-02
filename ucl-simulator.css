@@ -532,7 +532,62 @@ body.ucl-simulator-open #appShell {
 }
 
 .ucl-overview-grid.has-golden-boot {
-  grid-template-columns: minmax(0, 0.94fr) minmax(220px, 0.58fr) minmax(320px, 1.06fr);
+  grid-template-columns: minmax(0, 0.94fr) minmax(320px, 1.06fr) minmax(220px, 0.58fr);
+}
+
+.ucl-overview-grid.is-knockout-overview {
+  grid-template-columns: minmax(280px, 0.82fr) minmax(320px, 1.06fr) minmax(220px, 0.58fr);
+}
+
+.ucl-overview-knockout-list {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+}
+
+.ucl-overview-knockout-list .ucl-bracket-tie.is-revealed .ucl-bracket-team b {
+  animation: none;
+}
+
+.ucl-overview-knockout-empty {
+  display: grid;
+  min-height: 230px;
+  place-items: center;
+  align-content: center;
+  gap: 9px;
+  color: #8fa6dc;
+  text-align: center;
+}
+
+.ucl-overview-knockout-empty img {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 4px;
+  opacity: 0.66;
+}
+
+.ucl-overview-knockout-empty strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.ucl-overview-knockout-empty span {
+  font-size: 11px;
+}
+
+.ucl-complete-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 0.3fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.ucl-complete-overview-grid > .ucl-golden-boot.is-overview {
+  align-self: start;
+  overflow: hidden;
+  border: 1px solid var(--ucl-line);
+  border-radius: 13px;
+  box-shadow: 0 18px 55px rgba(1, 5, 17, 0.18);
 }
 
 .ucl-panel {
@@ -770,6 +825,7 @@ body.ucl-simulator-open #appShell {
 .ucl-team-mark-medium[data-team-id],
 .ucl-team-mark-large[data-team-id] {
   --ucl-badge-scale: 1.03;
+  --ucl-badge-y: 0px;
   box-sizing: border-box;
   overflow: visible !important;
   padding: 0;
@@ -786,7 +842,7 @@ body.ucl-simulator-open #appShell {
   padding: 0 !important;
   display: block;
   object-fit: contain;
-  transform: scale(var(--ucl-badge-scale));
+  transform: translateY(var(--ucl-badge-y)) scale(var(--ucl-badge-scale));
   transform-origin: center;
 }
 
@@ -823,6 +879,7 @@ body.ucl-simulator-open #appShell {
 .ucl-team-mark-medium[data-team-id="club-brugge"],
 .ucl-team-mark-large[data-team-id="club-brugge"] {
   --ucl-badge-scale: 0.9;
+  --ucl-badge-y: -2px;
 }
 
 .ucl-club-flag[data-team-id="agf-aarhus"],
@@ -844,6 +901,7 @@ body.ucl-simulator-open #appShell {
 .ucl-team-mark-medium[data-team-id="olympiacos"],
 .ucl-team-mark-large[data-team-id="olympiacos"] {
   --ucl-badge-scale: 0.9;
+  --ucl-badge-y: -4px;
 }
 
 .ucl-club-flag[data-team-id="shakhtar-donetsk"],
@@ -851,6 +909,7 @@ body.ucl-simulator-open #appShell {
 .ucl-team-mark-medium[data-team-id="shakhtar-donetsk"],
 .ucl-team-mark-large[data-team-id="shakhtar-donetsk"] {
   --ucl-badge-scale: 0.9;
+  --ucl-badge-y: -6px;
 }
 
 .ucl-club-flag[data-team-id="porto"],
@@ -858,6 +917,21 @@ body.ucl-simulator-open #appShell {
 .ucl-team-mark-medium[data-team-id="porto"],
 .ucl-team-mark-large[data-team-id="porto"] {
   --ucl-badge-scale: 0.95;
+  --ucl-badge-y: -5px;
+}
+
+.ucl-club-flag[data-team-id="slovan-bratislava"],
+.ucl-team-mark-small[data-team-id="slovan-bratislava"],
+.ucl-team-mark-medium[data-team-id="slovan-bratislava"],
+.ucl-team-mark-large[data-team-id="slovan-bratislava"] {
+  --ucl-badge-y: -4px;
+}
+
+.ucl-club-flag[data-team-id="crvena-zvezda"],
+.ucl-team-mark-small[data-team-id="crvena-zvezda"],
+.ucl-team-mark-medium[data-team-id="crvena-zvezda"],
+.ucl-team-mark-large[data-team-id="crvena-zvezda"] {
+  --ucl-badge-y: -2px;
 }
 
 .ucl-club-flag:is(
@@ -901,6 +975,13 @@ body.ucl-simulator-open #appShell {
   [data-team-id="sporting-cp"]
 ) {
   --ucl-badge-scale: 0.9;
+}
+
+.ucl-club-flag[data-team-id="gnk-dinamo-zagreb"],
+.ucl-team-mark-small[data-team-id="gnk-dinamo-zagreb"],
+.ucl-team-mark-medium[data-team-id="gnk-dinamo-zagreb"],
+.ucl-team-mark-large[data-team-id="gnk-dinamo-zagreb"] {
+  --ucl-badge-y: -2px;
 }
 
 /* Managed league-phase fixtures use the shared live engine with a UCL broadcast skin. */
@@ -1205,7 +1286,7 @@ body.pl-match-mode-active.ucl-match-mode-active .snapshot-actions button.primary
   min-width: 0;
 }
 
-.ucl-overview-grid.has-golden-boot > .ucl-panel:last-child .ucl-table-wrap {
+.ucl-overview-grid.has-golden-boot > .ucl-overview-table .ucl-table-wrap {
   overflow: hidden;
 }
 
@@ -1665,18 +1746,80 @@ body.pl-match-mode-active.ucl-match-mode-active .snapshot-actions button.primary
   transition: border-color 180ms ease, background-color 180ms ease, transform 180ms var(--ucl-ease-out), box-shadow 180ms ease;
 }
 
-.ucl-bracket-tie.is-playable {
+.ucl-bracket-tie.is-playable,
+.ucl-bracket-tie.is-watchable,
+.ucl-bracket-tie.is-viewable {
   cursor: pointer;
   border-color: rgba(111, 145, 255, 0.56);
   box-shadow: 0 8px 24px rgba(18, 49, 135, 0.2);
 }
 
 .ucl-bracket-tie.is-playable:hover,
-.ucl-bracket-tie.is-playable:focus-visible {
+.ucl-bracket-tie.is-playable:focus-visible,
+.ucl-bracket-tie.is-watchable:hover,
+.ucl-bracket-tie.is-watchable:focus-visible,
+.ucl-bracket-tie.is-viewable:hover,
+.ucl-bracket-tie.is-viewable:focus-visible {
   outline: 0;
   border-color: #8eacff;
   background: rgba(30, 62, 139, 0.92);
   transform: translateY(-2px);
+}
+
+.ucl-leg-switcher {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 10px;
+  margin: -14px auto 2px;
+  padding: 5px;
+  border: 1px solid rgba(143, 178, 255, 0.24);
+  border-radius: 999px;
+  color: #dce7ff;
+  background: rgba(6, 20, 49, 0.92);
+}
+
+.ucl-leg-switcher[hidden] {
+  display: none !important;
+}
+
+.ucl-leg-switcher button {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid rgba(143, 178, 255, 0.25);
+  border-radius: 50%;
+  color: #f4f7ff;
+  background: #0b2c72;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.ucl-leg-switcher button:hover:not(:disabled),
+.ucl-leg-switcher button:focus-visible {
+  outline: 0;
+  border-color: #9dbbff;
+  background: #17449d;
+}
+
+.ucl-leg-switcher button:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.ucl-leg-switcher button:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+
+.ucl-leg-switcher span {
+  min-width: 82px;
+  text-align: center;
+  font: 800 10px "DM Mono", monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .ucl-bracket-tie.is-partial {
@@ -2915,6 +3058,11 @@ body.ucl-fast-mode .ucl-trophy {
   }
 
   .ucl-overview-grid.has-golden-boot {
+    grid-template-columns: 1fr;
+  }
+
+  .ucl-overview-grid.is-knockout-overview,
+  .ucl-complete-overview-grid {
     grid-template-columns: 1fr;
   }
 

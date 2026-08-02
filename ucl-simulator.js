@@ -377,7 +377,10 @@
   function uclScorerCandidates(teamId) {
     const squad = typeof UCL_FC27_SQUADS !== "undefined" ? UCL_FC27_SQUADS[teamId] : null;
     return (squad?.players || [])
-      .filter((player) => player?.name && player.position !== "GK")
+      .filter((player) => player?.name
+        && player.position !== "GK"
+        && player.selectionEligible !== false
+        && Number(player.expectedMinutesShare ?? 1) >= 0.15)
       .sort((left, right) => (
         ((Number(right.overall) || 0) + (Number(right.finishing) || Number(right.shooting) || 0) * 0.45)
         - ((Number(left.overall) || 0) + (Number(left.finishing) || Number(left.shooting) || 0) * 0.45)
@@ -385,8 +388,135 @@
       ));
   }
 
+  function uclFallbackScorer(teamId, matchId, side, goalIndex, scorers) {
+    const candidates = uclScorerCandidates(teamId);
+    if (!candidates.length) return `${Engine.team(teamId)?.name || "Club"} Player`;
+    const positionWeight = (position) => {
+      if (["ST", "CF", "SS"].includes(position)) return 1;
+      if (["LW", "RW", "CAM", "AM", "LM", "RM"].includes(position)) return 0.72;
+      if (["CM", "LCM", "RCM"].includes(position)) return 0.38;
+      if (["CDM", "DM"].includes(position)) return 0.22;
+      if (["LB", "RB", "LWB", "RWB"].includes(position)) return 0.15;
+      if (["CB", "SW"].includes(position)) return 0.1;
+      return 0.24;
+    };
+    const weights = candidates.map((player) => {
+      const finishing = Number(player.finishing) || Number(player.shooting) || Number(player.overall) || 70;
+      const overall = Number(player.overall) || 70;
+      const minutes = Math.max(0.15, Math.min(1, Number(player.expectedMinutesShare) || 0.5));
+      const previousGoals = scorers.get(`${teamId}:${player.name}`)?.goals || 0;
+      return positionWeight(player.position)
+        * ((finishing / 75) ** 1.7)
+        * ((overall / 75) ** 0.8)
+        * (0.35 + minutes * 0.65)
+        / (1 + previousGoals * 0.34);
+    });
+    const total = weights.reduce((sum, weight) => sum + weight, 0);
+    let roll = (uclScorerHash(`${matchId}:${side}:${goalIndex}:ucl-scorer`) / 4294967296) * total;
+    for (let index = 0; index < candidates.length; index += 1) {
+      roll -= weights[index];
+      if (roll <= 0) return candidates[index].name;
+    }
+    return candidates[candidates.length - 1].name;
+  }
+
+  function addUclScorerCount(scorers, teamId, scorer) {
+    if (!teamId || !scorer) return;
+    const key = `${teamId}:${scorer}`;
+    const current = scorers.get(key) || { teamId, name: scorer, goals: 0 };
+    current.goals += 1;
+    scorers.set(key, current);
+  }
+
+  function uclBackfilledGoalMinute(matchId, side, goalIndex, goalTotal, extraTime = false) {
+    const maximum = extraTime ? 120 : 90;
+    const spacing = maximum / Math.max(2, goalTotal + 1);
+    const jitter = (uclScorerHash(`${matchId}:${side}:${goalIndex}:ucl-goal-minute`) % 11) - 5;
+    return Math.max(1, Math.min(maximum, Math.round(spacing * (goalIndex + 1) + jitter)));
+  }
+
+  function ensureUclResultScorers(match, result, scorers) {
+    if (!match?.id || !result) return false;
+    let changed = false;
+    ["home", "away"].forEach((side) => {
+      const teamId = side === "home" ? match.homeId : match.awayId;
+      const goalTotal = Number(result[side] ?? result[`${side}Goals`]) || 0;
+      const key = `${side}Events`;
+      const events = Array.isArray(result[key]) ? result[key].map((event) => ({ ...event })) : [];
+      events.forEach((event, goalIndex) => {
+        if (!event.scorer && event.goalType !== "ownGoal" && event.ownGoal !== true) {
+          event.scorer = uclFallbackScorer(teamId, match.id, side, goalIndex, scorers);
+          event.player ||= event.scorer;
+          event.type ||= "goal";
+          changed = true;
+        }
+        if (event?.scorer && event.goalType !== "ownGoal" && event.ownGoal !== true) {
+          addUclScorerCount(scorers, teamId, event.scorer);
+        }
+      });
+      while (events.length < goalTotal) {
+        const goalIndex = events.length;
+        const scorer = uclFallbackScorer(teamId, match.id, side, goalIndex, scorers);
+        events.push({
+          minute: uclBackfilledGoalMinute(match.id, side, goalIndex, goalTotal, result.extraTime === true),
+          scorer,
+          player: scorer,
+          assist: null,
+          goalType: "openPlay",
+          type: "goal",
+          backfilled: true,
+        });
+        addUclScorerCount(scorers, teamId, scorer);
+        changed = true;
+      }
+      events.sort((left, right) => Number(left.minute) - Number(right.minute));
+      if (!Array.isArray(result[key]) || result[key].length !== events.length) changed = true;
+      result[key] = events;
+    });
+    return changed;
+  }
+
+  function repairUclScorerEvents() {
+    if (!season) return false;
+    const scorers = new Map();
+    let changed = false;
+    season.league?.flat().forEach((match) => {
+      if (match?.result) changed = ensureUclResultScorers(match, match.result, scorers) || changed;
+    });
+    Engine.ROUND_CONFIG.forEach((config) => {
+      const round = season.knockout?.rounds?.[config.key];
+      round?.ties?.forEach((tie) => {
+        for (let legIndex = 0; legIndex < config.legs; legIndex += 1) {
+          const resultLeg = tie.result?.legs?.[legIndex];
+          const playedLeg = tie.playedLegs?.[legIndex];
+          const sourceLeg = (playedLeg?.homeEvents?.length || playedLeg?.awayEvents?.length)
+            ? playedLeg
+            : resultLeg || playedLeg;
+          if (!sourceLeg) continue;
+          const legMatch = {
+            id: `${tie.id}:leg-${legIndex + 1}`,
+            homeId: sourceLeg.homeId || knockoutLegFixture(round, tie, legIndex).homeId,
+            awayId: sourceLeg.awayId || knockoutLegFixture(round, tie, legIndex).awayId,
+          };
+          changed = ensureUclResultScorers(legMatch, sourceLeg, scorers) || changed;
+          [resultLeg, playedLeg].filter((leg) => leg && leg !== sourceLeg).forEach((leg) => {
+            const sourceSignature = JSON.stringify([sourceLeg.homeEvents, sourceLeg.awayEvents]);
+            const targetSignature = JSON.stringify([leg.homeEvents || [], leg.awayEvents || []]);
+            if (sourceSignature !== targetSignature) {
+              leg.homeEvents = sourceLeg.homeEvents.map((event) => ({ ...event }));
+              leg.awayEvents = sourceLeg.awayEvents.map((event) => ({ ...event }));
+              changed = true;
+            }
+          });
+        }
+      });
+    });
+    return changed;
+  }
+
   function uclGoldenBootRows(limit = 5) {
     const scorers = new Map();
+    const appearances = new Map();
     const add = (teamId, name, goals) => {
       if (!teamId || !name || !goals) return;
       const key = `${teamId}:${name}`;
@@ -394,24 +524,44 @@
       current.goals += Number(goals) || 0;
       scorers.set(key, current);
     };
-    season?.league?.flat().forEach((match) => {
+    const addMatch = (match) => {
       const result = match.result;
       if (!result?.revealed) return;
+      appearances.set(match.homeId, (appearances.get(match.homeId) || 0) + 1);
+      appearances.set(match.awayId, (appearances.get(match.awayId) || 0) + 1);
       ["home", "away"].forEach((side) => {
         const teamId = side === "home" ? match.homeId : match.awayId;
         const events = Array.isArray(result[`${side}Events`]) ? result[`${side}Events`] : [];
         const goalTotal = Number(result[side === "home" ? "home" : "away"] ?? result[`${side}Goals`]) || 0;
         const creditedEvents = events.filter((event) => event?.type !== "ownGoal" && event?.ownGoal !== true && event?.scorer);
         creditedEvents.forEach((event) => add(teamId, event.scorer, 1));
-        const candidates = uclScorerCandidates(teamId);
-        const fallback = candidates[0]?.name || `${Engine.team(teamId)?.name || "Club"} Player`;
-        for (let goalIndex = creditedEvents.length; goalIndex < goalTotal; goalIndex += 1) {
-          const candidate = candidates[(uclScorerHash(`${match.id}:${side}:${goalIndex}`) % Math.max(1, Math.min(5, candidates.length)))]?.name || fallback;
-          add(teamId, candidate, 1);
+        for (let goalIndex = events.length; goalIndex < goalTotal; goalIndex += 1) {
+          add(teamId, uclFallbackScorer(teamId, match.id, side, goalIndex, scorers), 1);
         }
+      });
+    };
+    season?.league?.flat().forEach(addMatch);
+    Engine.ROUND_CONFIG.forEach((config) => {
+      const round = season?.knockout?.rounds?.[config.key];
+      round?.ties?.forEach((tie) => {
+        visibleKnockoutLegs(tie).forEach((leg, legIndex) => {
+          if (!leg) return;
+          addMatch({
+            id: `${tie.id}:leg-${legIndex + 1}`,
+            homeId: leg.homeId,
+            awayId: leg.awayId,
+            result: {
+              ...leg,
+              homeGoals: Number(leg.home) || 0,
+              awayGoals: Number(leg.away) || 0,
+              revealed: true,
+            },
+          });
+        });
       });
     });
     return [...scorers.values()]
+      .map((row) => ({ ...row, matches: appearances.get(row.teamId) || 0 }))
       .sort((left, right) => right.goals - left.goals || left.name.localeCompare(right.name))
       .slice(0, Math.max(1, Number(limit) || 5));
   }
@@ -420,7 +570,7 @@
     const rows = uclGoldenBootRows(limit);
     return `
       <section class="ucl-golden-boot ${variant ? `is-${variant}` : ""}">
-        <header><h3>Top Scorer</h3></header>
+        <header><h3>Top Scorers</h3></header>
         ${rows.length ? `<div class="ucl-golden-boot-list">${rows.map((row, index) => `
           <div class="ucl-golden-boot-row">
             <b>${index + 1}</b>
@@ -560,8 +710,7 @@
 
   function knockoutLegMatch(round, tie, legIndex) {
     const fixture = knockoutLegFixture(round, tie, legIndex);
-    const playedLeg = tie.playedLegs?.[legIndex]
-      || (tie.revealed ? tie.result?.legs?.[legIndex] : null);
+    const playedLeg = visibleKnockoutLegs(tie)[legIndex] || null;
     const homeGoals = Number(playedLeg?.home) || 0;
     const awayGoals = Number(playedLeg?.away) || 0;
     return {
@@ -578,19 +727,36 @@
         awayGoals,
         winnerId: homeGoals === awayGoals ? null : homeGoals > awayGoals ? fixture.homeId : fixture.awayId,
         revealed: true,
-        homeEvents: [],
-        awayEvents: [],
+        homeEvents: (playedLeg.homeEvents || []).map((event) => ({ ...event })),
+        awayEvents: (playedLeg.awayEvents || []).map((event) => ({ ...event })),
       } : null,
     };
   }
 
-  function openManagedKnockoutMatch(roundKey, tieId) {
-    if (!season?.managedTeamId || season.phase === "complete") return false;
+  function visibleKnockoutLegs(tie) {
+    if (tie?.result && (tie.revealed || season?.phase === "complete")) return tie.result.legs || [];
+    return tie?.playedLegs || [];
+  }
+
+  function openKnockoutMatch(roundKey, tieId, options = {}) {
+    if (!season) return false;
     const round = season.knockout?.rounds?.[roundKey];
     const tie = round?.ties?.find((candidate) => candidate.id === tieId);
-    if (!round || !tie || !knockoutTiePlayable(roundKey, tie)) return false;
-    const legIndex = tie.playedLegs?.length || 0;
+    if (!round || !tie) return false;
+    const availableLegIndices = visibleKnockoutLegs(tie)
+      .map((leg, index) => leg ? index : null)
+      .filter(Number.isInteger);
+    const canWatchNextLeg = knockoutTieWatchable(roundKey, tie);
+    const requestedLegIndex = Number(options.legIndex);
+    const legIndex = Number.isInteger(requestedLegIndex)
+      ? requestedLegIndex
+      : canWatchNextLeg
+        ? (tie.playedLegs?.filter(Boolean).length || 0)
+        : availableLegIndices.at(-1);
+    if (!Number.isInteger(legIndex) || legIndex < 0) return false;
     if (legIndex >= round.legs) return false;
+    const reviewOnly = availableLegIndices.includes(legIndex);
+    if (!reviewOnly && !canWatchNextLeg) return false;
     const fixture = knockoutLegFixture(round, tie, legIndex);
     const knockoutMatches = round.ties.map((candidate) => knockoutLegMatch(round, candidate, legIndex));
     const selectedMatchIndex = round.ties.findIndex((candidate) => candidate.id === tie.id);
@@ -611,8 +777,10 @@
     season.activeRound = 0;
     season.viewRound = 0;
     season.selectedMatch = selectedMatchIndex;
-    season.spectateTeamId = season.managedTeamId;
-    season.neutralView = false;
+    const managedMatch = Boolean(season.managedTeamId)
+      && [tie.teamAId, tie.teamBId].includes(season.managedTeamId);
+    season.spectateTeamId = managedMatch ? season.managedTeamId : null;
+    season.neutralView = !managedMatch;
     season.standardTactic ||= "balanced";
     season.standardFormation ||= "4-3-3";
     season.managerLineups ||= {};
@@ -628,6 +796,10 @@
       roundLabel: round.legs === 2 ? `${round.label} · Leg ${legIndex + 1}` : round.label,
       homeId: fixture.homeId,
       awayId: fixture.awayId,
+      spectator: !managedMatch,
+      reviewOnly,
+      legCount: round.legs,
+      availableLegIndices,
     };
     saveSeason();
     state = season;
@@ -641,6 +813,10 @@
     renderEngineTable();
     window.scrollTo({ top: 0, behavior: "auto" });
     return true;
+  }
+
+  function openManagedKnockoutMatch(roundKey, tieId) {
+    return openKnockoutMatch(roundKey, tieId);
   }
 
   function managedKnockoutTieResult(round, tie, legs) {
@@ -690,6 +866,10 @@
   function finishManagedKnockoutMatch(roundIndex, matchIndex) {
     if (!state?.uclSeason || !season?.uclKnockoutMatch) return false;
     const metadata = season.uclKnockoutMatch;
+    if (metadata.reviewOnly) {
+      returnToSimulator({ view: "knockout" });
+      return true;
+    }
     const round = season.knockout?.rounds?.[metadata.roundKey];
     const tie = round?.ties?.find((candidate) => candidate.id === metadata.tieId);
     const match = state.rounds?.[Number(roundIndex)]?.[Number(matchIndex)];
@@ -712,6 +892,8 @@
       extraTime: result.extraTime === true,
       penalties: result.penalties ? { ...result.penalties } : null,
       shootout: Array.isArray(result.shootout) ? result.shootout.map((attempt) => ({ ...attempt })) : null,
+      homeEvents: (result.homeEvents || []).map((event) => ({ ...event })),
+      awayEvents: (result.awayEvents || []).map((event) => ({ ...event })),
     };
     tie.playedLegs = [...(tie.playedLegs || [])];
     tie.playedLegs[metadata.legIndex] = leg;
@@ -730,11 +912,16 @@
     const roundComplete = round.ties.every((candidate) => candidate.result && candidate.winnerId);
     if (roundComplete) Engine.completeKnockoutRound(season, round.key);
     saveSeason();
-    const managedWon = tie.winnerId === season.managedTeamId;
+    const managedTie = Boolean(season.managedTeamId)
+      && [tie.teamAId, tie.teamBId].includes(season.managedTeamId);
+    const managedWon = managedTie && tie.winnerId === season.managedTeamId;
+    const watchedTieLabel = `${Engine.team(tie.teamAId)?.name || "The match"} vs ${Engine.team(tie.teamBId)?.name || "the opponent"}`;
     returnToSimulator({ view: "knockout" });
     showToastMessage(roundComplete
       ? managedWon ? `${Engine.team(season.managedTeamId)?.name || "Your club"} advance to the next round.` : "The knockout round is complete."
-      : managedWon ? "Your tie is complete. Reveal the other ties when you are ready." : "Your knockout tie is complete.");
+      : managedTie
+        ? managedWon ? "Your tie is complete. Reveal the other ties when you are ready." : "Your knockout tie is complete."
+        : `${watchedTieLabel} is complete.`);
     if (season.phase === "complete") window.setTimeout(showChampionMoment, motionDuration(500, 40));
     return true;
   }
@@ -1298,10 +1485,13 @@
 
   function syncMenuState() {
     const hasSeason = Engine.validSeason(season);
-    startButton.textContent = "Coming soon";
-    startButton.disabled = true;
-    startButton.setAttribute("aria-disabled", "true");
-    menuRestartButton.hidden = true;
+    startButton.innerHTML = `
+      <span>${hasSeason ? "Resume UCL mode" : "Play UCL mode"}</span>
+      <span aria-hidden="true">&rarr;</span>
+    `;
+    startButton.disabled = false;
+    startButton.removeAttribute("aria-disabled");
+    if (menuRestartButton) menuRestartButton.hidden = !hasSeason;
     menuCard?.classList.toggle("is-season-started", hasSeason);
     const picker = $("#uclTeamPickerButton");
     if (picker) {
@@ -1407,11 +1597,11 @@
           </div>
           ${teamMode ? "" : '<footer class="ucl-panel-footer"><button type="button" data-ucl-open-view="fixtures">View the full matchday &rarr;</button></footer>'}
         </section>
-        ${teamMode ? uclGoldenBootMarkup(10, "overview") : ""}
-        <section class="ucl-panel">
+        <section class="ucl-panel ucl-overview-table">
           <header><div><h2>League phase table</h2></div><button type="button" data-ucl-open-view="table">Full table</button></header>
           ${renderTeamTable({ limit: 12, compact: true })}
         </section>
+        ${teamMode ? uclGoldenBootMarkup(10, "overview") : ""}
       </div>
     `;
   }
@@ -1420,51 +1610,56 @@
     if (season.phase === "complete" && season.championId) {
       const champion = Engine.team(season.championId);
       return `
-        <section class="ucl-panel ucl-champion-overview">
-          <article class="ucl-champion-card is-embedded" aria-labelledby="uclEmbeddedChampionName">
-            <span class="ucl-champion-kicker">2026/27 CHAMPIONS OF EUROPE</span>
-            <div class="ucl-trophy" aria-hidden="true">
-              <svg viewBox="0 0 180 250" focusable="false">
-                <path d="M53 20h74v34c0 44-13 78-37 88-24-10-37-44-37-88V20Z" />
-                <path d="M53 39H24c0 43 15 70 47 78M127 39h29c0 43-15 70-47 78" />
-                <path d="M90 141v53M62 220h56M72 194h36l10 26H62l10-26Z" />
-              </svg>
-            </div>
-            <div class="ucl-champion-badge">${teamMark(champion, "large", { eager: true })}</div>
-            <h1 id="uclEmbeddedChampionName">${escapeHtml(champion.name)}</h1>
-            <p>${escapeHtml(championDetailCopy())}</p>
-            <div class="ucl-champion-actions">
-              <button class="ucl-primary-action" type="button" data-ucl-champion-action="share">Share image</button>
-              <button class="ucl-secondary-action" type="button" data-ucl-champion-action="bracket">View the bracket</button>
-            </div>
-          </article>
-        </section>
+        <div class="ucl-complete-overview-grid">
+          <section class="ucl-panel ucl-champion-overview">
+            <article class="ucl-champion-card is-embedded" aria-labelledby="uclEmbeddedChampionName">
+              <span class="ucl-champion-kicker">2026/27 CHAMPIONS OF EUROPE</span>
+              <div class="ucl-trophy" aria-hidden="true">
+                <svg viewBox="0 0 180 250" focusable="false">
+                  <path d="M53 20h74v34c0 44-13 78-37 88-24-10-37-44-37-88V20Z" />
+                  <path d="M53 39H24c0 43 15 70 47 78M127 39h29c0 43-15 70-47 78" />
+                  <path d="M90 141v53M62 220h56M72 194h36l10 26H62l10-26Z" />
+                </svg>
+              </div>
+              <div class="ucl-champion-badge">${teamMark(champion, "large", { eager: true })}</div>
+              <h1 id="uclEmbeddedChampionName">${escapeHtml(champion.name)}</h1>
+              <p>${escapeHtml(championDetailCopy())}</p>
+              <div class="ucl-champion-actions">
+                <button class="ucl-primary-action" type="button" data-ucl-champion-action="share">Share image</button>
+                <button class="ucl-secondary-action" type="button" data-ucl-champion-action="bracket">View the bracket</button>
+              </div>
+            </article>
+          </section>
+          ${uclGoldenBootMarkup(10, "overview")}
+        </div>
       `;
     }
-    const table = Engine.leagueTable(season);
-    const managedStatus = season.managedTeamId ? Engine.qualificationStatus(season, season.managedTeamId) : null;
     const current = currentKnockoutRound();
+    const ties = current?.ties || [];
+    const managedTie = managedKnockoutTie(current);
+    const managedTieIndex = managedTie ? ties.indexOf(managedTie) : -1;
+    const visibleTieStart = managedTieIndex < 0
+      ? 0
+      : Math.max(0, Math.min(managedTieIndex - 1, ties.length - 4));
+    const visibleTies = ties.slice(visibleTieStart, visibleTieStart + 4);
     return `
-      <div class="ucl-overview-grid">
-        <section class="ucl-panel">
-          <header><div><span class="ucl-panel-kicker">LEAGUE PHASE COMPLETE</span><h2>${managedStatus ? `${ordinal(managedStatus.position)} · ${managedStatus.label}` : "The knockout field"}</h2></div></header>
-          <div class="ucl-opponent-list">
-            ${table.slice(0, 8).map((row) => `
-              <article class="ucl-opponent-card">
-                <span class="ucl-opponent-number">${row.position}</span>${teamMark(row.team, "medium")}
-                <span class="ucl-opponent-copy"><strong>${escapeHtml(row.team.name)}</strong><small>${row.points} pts · ${row.gd >= 0 ? "+" : ""}${row.gd} GD</small></span>
-                <span class="ucl-opponent-venue">R16</span>
-              </article>
-            `).join("")}
-          </div>
-          <footer class="ucl-panel-footer"><button type="button" data-ucl-open-view="table">View final league table &rarr;</button></footer>
-        </section>
-        <section class="ucl-panel">
-          <header><div><span class="ucl-panel-kicker">NEXT UP</span><h2>${escapeHtml(current?.label || "Knockout phase")}</h2></div></header>
-          <div class="ucl-empty-state" style="min-height: 330px; border: 0; border-radius: 0;">
-            <div><img src="./assets/ucl-starball-white.png" alt="" /><h2>${current?.drawComplete ? "The ties are set" : "A new draw awaits"}</h2><p>${current?.drawComplete ? "Open the knockout bracket, then reveal every aggregate score." : "The smaller knockout draw pairs the surviving clubs before the next round begins."}</p><button class="ucl-primary-action" type="button" data-ucl-open-view="knockout">Open knockouts</button></div>
+      <div class="ucl-overview-grid has-golden-boot is-knockout-overview">
+        <section class="ucl-panel ucl-overview-knockout">
+          <header>
+            <div><h2>${escapeHtml(current?.label || "Knockout phase")}</h2></div>
+            <button type="button" data-ucl-open-view="knockout">View all</button>
+          </header>
+          <div class="ucl-overview-knockout-list">
+            ${current?.drawComplete && visibleTies.length
+              ? visibleTies.map((tie) => bracketTieMarkup(tie, current.key)).join("")
+              : '<div class="ucl-overview-knockout-empty"><img src="./assets/ucl-starball-white.png" alt="" /><strong>The draw is ready</strong><span>Open the knockout bracket to begin.</span></div>'}
           </div>
         </section>
+        <section class="ucl-panel ucl-overview-table">
+          <header><div><h2>League phase table</h2></div><button type="button" data-ucl-open-view="table">Full table</button></header>
+          ${renderTeamTable({ limit: 12, compact: true })}
+        </section>
+        ${uclGoldenBootMarkup(10, "overview")}
       </div>
     `;
   }
@@ -1514,6 +1709,28 @@
     );
   }
 
+  function knockoutTieWatchable(roundKey, tie) {
+    const round = season?.knockout?.rounds?.[roundKey];
+    return Boolean(
+      round
+      && round.key === season?.knockout?.currentKey
+      && round.drawComplete
+      && !round.complete
+      && !revealRun
+      && tie?.teamAId
+      && tie?.teamBId
+      && !tie.result,
+    );
+  }
+
+  function knockoutTieViewable(tie) {
+    return Boolean(
+      tie?.teamAId
+      && tie?.teamBId
+      && visibleKnockoutLegs(tie).some(Boolean),
+    );
+  }
+
   function bracketTeamMarkup(teamId, tie, side) {
     const team = Engine.team(teamId);
     const won = tie.winnerId === teamId;
@@ -1547,16 +1764,28 @@
         ? `Leg ${tie.playedLegs.length} complete · ${tie.playedLegs.length === 1 ? "second leg ready" : "tie ready"}`
       : tie.teamAId ? "Tie ready" : "Awaiting draw";
     const playable = knockoutTiePlayable(roundKey, tie);
-    const attributes = playable
-      ? ` data-ucl-knockout-tie="${escapeHtml(tie.id)}" data-ucl-knockout-round="${escapeHtml(roundKey)}" role="button" tabindex="0" aria-label="Play ${escapeHtml(Engine.team(season.managedTeamId)?.name || "your club")} knockout match"`
+    const watchable = knockoutTieWatchable(roundKey, tie);
+    const viewable = knockoutTieViewable(tie);
+    const interactive = watchable || viewable;
+    const managedMatch = Boolean(season.managedTeamId) && [tie.teamAId, tie.teamBId].includes(season.managedTeamId);
+    const teamA = Engine.team(tie.teamAId);
+    const teamB = Engine.team(tie.teamBId);
+    const attributes = interactive
+      ? ` data-ucl-knockout-tie="${escapeHtml(tie.id)}" data-ucl-knockout-round="${escapeHtml(roundKey)}" role="button" tabindex="0" aria-label="${managedMatch ? `Play ${escapeHtml(Engine.team(season.managedTeamId)?.name || "your club")} knockout match` : `Watch ${escapeHtml(teamA?.name || "team A")} vs ${escapeHtml(teamB?.name || "team B")}`}"`
       : "";
     const classes = [
       "ucl-bracket-tie",
       visible && tie.result ? "is-revealed" : "",
       partial ? "is-partial" : "",
       playable ? "is-playable" : "",
+      watchable && !playable ? "is-watchable" : "",
+      viewable && !watchable ? "is-viewable" : "",
     ].filter(Boolean).join(" ");
-    return `<article class="${classes}"${attributes}>${bracketTeamMarkup(tie.teamAId, displayTie, "a")}${bracketTeamMarkup(tie.teamBId, displayTie, "b")}<div class="ucl-bracket-decider">${note}</div></article>`;
+    const actionNote = watchable
+      ? partial ? `Leg ${tie.playedLegs.length} complete · ${managedMatch ? "Play next leg" : "Watch next leg"}` : managedMatch ? "Play match" : "Watch match"
+      : viewable ? `${note} · ${roundKey === "final" ? "View match" : "View legs"}`
+      : note;
+    return `<article class="${classes}"${attributes}>${bracketTeamMarkup(tie.teamAId, displayTie, "a")}${bracketTeamMarkup(tie.teamBId, displayTie, "b")}<div class="ucl-bracket-decider">${actionNote}</div></article>`;
   }
 
   function bracketMarkup() {
@@ -1652,6 +1881,7 @@
 
   function render(previousPositions = null) {
     if (!season) return;
+    if (repairUclScorerEvents()) saveSeason();
     syncUclUtilityHeader();
     tabs.forEach((tab) => {
       const active = tab.dataset.uclView === activeView;
@@ -2216,7 +2446,7 @@
     if (!round.drawComplete) startKnockoutDraw(round);
     else if (!round.complete) {
       const managedTie = managedKnockoutTie(round);
-      if (knockoutTiePlayable(round.key, managedTie)) openManagedKnockoutMatch(round.key, managedTie.id);
+      if (knockoutTiePlayable(round.key, managedTie)) openKnockoutMatch(round.key, managedTie.id);
       else revealKnockoutRound(round);
     }
   }
@@ -2251,17 +2481,33 @@
   function closeSimulator({ updateUrl = true } = {}) {
     abortAnimations();
     sounds.dispose();
+    stopStandardPlaybackForNavigation?.();
     drawStage.hidden = true;
     momentOverlay.hidden = true;
     championOverlay.hidden = true;
     screen.hidden = true;
     appShell.hidden = false;
-    document.body.classList.remove("ucl-simulator-open");
+    document.body.classList.remove(
+      "ucl-simulator-open",
+      "ucl-match-mode-active",
+      "pl-match-mode-active",
+      "pl-match-detail-active",
+    );
+    if (state?.uclSeason) {
+      season = state;
+      season.matchViewActive = false;
+      season.rounds = season.league;
+      delete season.uclKnockoutMatch;
+      saveSeason();
+      state = standardStateBeforeMatch || standardTournamentState;
+    }
+    standardStateBeforeMatch = null;
     document.documentElement.classList.remove("route-ucl-loading");
     if (updateUrl && typeof window.currentAppMode === "function" && typeof window.setAppModeUrl === "function" && window.currentAppMode() === "ucl") {
       window.setAppModeUrl("home");
     }
     syncMenuState();
+    window.render?.();
     window.scrollTo({ top: 0, behavior: "auto" });
   }
 
@@ -2354,10 +2600,20 @@
       renderEngineTable();
     },
     renderEngineTable,
+    topScorerRows(limit = 5) {
+      if (repairUclScorerEvents()) saveSeason();
+      return uclGoldenBootRows(limit).map((row) => ({
+        player: row.name,
+        teamId: row.teamId,
+        goals: row.goals,
+        matches: row.matches,
+      }));
+    },
     returnToSimulator,
     finishManagedMatchday,
     finishManagedKnockoutMatch,
     returnToManagedMatchday,
+    openKnockoutMatch,
     openManagedKnockoutMatch,
   };
 
@@ -2411,7 +2667,7 @@
     }
     const knockoutTie = event.target.closest("[data-ucl-knockout-tie]");
     if (knockoutTie) {
-      openManagedKnockoutMatch(knockoutTie.dataset.uclKnockoutRound, knockoutTie.dataset.uclKnockoutTie);
+      openKnockoutMatch(knockoutTie.dataset.uclKnockoutRound, knockoutTie.dataset.uclKnockoutTie);
       return;
     }
     if (event.target.closest("[data-ucl-knockout-simulate-others]")) {
@@ -2422,9 +2678,10 @@
   });
 
   content.addEventListener("keydown", (event) => {
-    if (!event.target.closest("[data-ucl-fixture-id]") || !["Enter", " "].includes(event.key)) return;
+    const interactiveMatch = event.target.closest("[data-ucl-fixture-id], [data-ucl-knockout-tie]");
+    if (!interactiveMatch || !["Enter", " "].includes(event.key)) return;
     event.preventDefault();
-    event.target.closest("[data-ucl-fixture-id]").click();
+    interactiveMatch.click();
   });
 
   momentOverlay.addEventListener("click", (event) => {

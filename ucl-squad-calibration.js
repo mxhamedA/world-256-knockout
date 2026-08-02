@@ -51,6 +51,10 @@
     "Samuel Iling-Junior": 76, "Evann Guessand": 80, "Berat Luş": 68, "Armando Güner": 69,
   });
 
+  const selectionExclusions = Object.freeze({
+    "real-madrid": new Set(["Thiago Pitarch", "Manuel Ángel"]),
+  });
+
   const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(maximum, Math.round(value)));
   const average = (players, fallback) => players.length
     ? players.reduce((sum, player) => sum + Number(player.overall || 0), 0) / players.length
@@ -117,10 +121,11 @@
           player.ratingSource = `${player.ratingSource}; role-calibrated`;
         }
         player.startingXI = starters.has(player.name);
+        player.selectionEligible = !selectionExclusions[teamId]?.has(player.name);
       });
       const bestOverall = Math.max(...squad.players.map((player) => Number(player.overall) || 0));
       squad.players.forEach((player) => {
-        player.expectedMinutesShare = roleMinutes(player, starters, bestOverall);
+        player.expectedMinutesShare = player.selectionEligible === false ? 0 : roleMinutes(player, starters, bestOverall);
         player.squadRole = starters.has(player.name) ? "starter" : player.expectedMinutesShare >= 0.38 ? "rotation" : "squad";
       });
       if (squad.players.filter((player) => player.startingXI).length !== 11) {

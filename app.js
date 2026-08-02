@@ -24,7 +24,7 @@ const TOURNAMENT_HISTORY_MIGRATION_KEY = "world-256-tournament-history-indexeddb
 const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
 const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
-const CUSTOM_FEATURES_ANNOUNCEMENT_KEY = "world-256-announcement-custom-matches-teams-v1";
+const UCL_FEATURES_ANNOUNCEMENT_KEY = "world-256-announcement-ucl-mode-v1";
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -322,6 +322,10 @@ const els = {
   homeScore: $("#homeScore"),
   awayScore: $("#awayScore"),
   resultNote: $("#resultNote"),
+  uclLegSwitcher: $("#uclLegSwitcher"),
+  uclLegSwitcherLabel: $("#uclLegSwitcherLabel"),
+  uclPreviousLegButton: $("#uclPreviousLegButton"),
+  uclNextLegButton: $("#uclNextLegButton"),
   spoilerPanel: $("#spoilerPanel"),
   spoilerTitle: $("#spoilerTitle"),
   spoilerCopy: $("#spoilerCopy"),
@@ -409,11 +413,9 @@ const els = {
   settingsButton: $("#settingsButton"),
   onlineSettingsButton: $("#onlineSettingsButton"),
   newsButton: $("#newsButton"),
-  newsModal: $("#newsModal"),
-  newsCloseButton: $("#newsCloseButton"),
-  customFeaturesAnnouncementModal: $("#customFeaturesAnnouncementModal"),
-  customFeaturesAnnouncementClose: $("#customFeaturesAnnouncementClose"),
-  customFeaturesAnnouncementAction: $("#customFeaturesAnnouncementAction"),
+  uclFeaturesAnnouncementModal: $("#uclFeaturesAnnouncementModal"),
+  uclFeaturesAnnouncementClose: $("#uclFeaturesAnnouncementClose"),
+  uclFeaturesAnnouncementAction: $("#uclFeaturesAnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   removeInjuriesSetting: $("#removeInjuriesSetting"),
   removeInjuriesLabel: $("#removeInjuriesLabel"),
@@ -10056,9 +10058,9 @@ async function createUclSeasonSnapshotCanvas(summary) {
   const [championBadge, potsBadge, ypotsBadge, scorerBadge] = loadedBadges;
   const canvas = document.createElement("canvas");
   canvas.width = 1200;
-  canvas.height = 900;
+  canvas.height = 720;
   const context = canvas.getContext("2d");
-  const background = context.createLinearGradient(0, 0, 1200, 900);
+  const background = context.createLinearGradient(0, 0, 1200, canvas.height);
   background.addColorStop(0, "#10275d");
   background.addColorStop(0.48, "#061432");
   background.addColorStop(1, "#020817");
@@ -10143,28 +10145,12 @@ async function createUclSeasonSnapshotCanvas(summary) {
     });
   });
 
-  snapshotRoundedRect(context, 48, 672, 1104, 112, 18);
-  context.fillStyle = "rgba(7, 22, 54, 0.9)";
-  context.fill();
-  context.strokeStyle = "rgba(143, 178, 255, 0.18)";
-  context.lineWidth = 2;
-  context.stroke();
-  snapshotText(context, "POTS · YPOTS · TOP SCORER", 600, 716, 820, 30, {
-    minimumSize: 22,
-    weight: 900,
-    color: "#ffffff",
-  });
-  snapshotText(context, "THE 2026/27 CHAMPIONS LEAGUE AWARDS", 600, 756, 760, 14, {
-    weight: 900,
-    color: "#e5c46e",
-    family: "DM Mono, monospace",
-  });
-  snapshotText(context, "UCL 26/27 SIMULATION", 64, 852, 500, 14, {
+  snapshotText(context, "UCL 26/27 SIMULATION", 64, 688, 500, 14, {
     weight: 800,
     align: "left",
     color: "#8095c3",
   });
-  snapshotText(context, "256teams.com", 1136, 852, 380, 14, {
+  snapshotText(context, "256teams.com", 1136, 688, 380, 14, {
     weight: 800,
     align: "right",
     color: "#8095c3",
@@ -10226,7 +10212,7 @@ function clearPlayerProfileCacheForTeam(teamId) {
 function playerProfilesForTeam(team) {
   const historicalTournament = isRetroSimulatorState() || state.legacyTournament === true;
   const officialRetroSquad = Boolean(historicalTournament && team.retroWorldCup && team.playerProfiles?.length);
-  const canonicalCurrentTeam = historicalTournament || state?.premierLeagueSeason || team.customTeam
+  const canonicalCurrentTeam = historicalTournament || state?.premierLeagueSeason || state?.uclSeason || team.uclClub || team.customTeam
     ? null
     : TEAMS.find((candidate) => candidate.name === team.name) || null;
   const rosterTeam = canonicalCurrentTeam || team;
@@ -10665,7 +10651,10 @@ function onPitchPlayerProfiles(team) {
   const rotated = new Map(starters.map((profile) => [profile.name, profile]));
   const rotationTarget = stableHash(`${match.id}:${team.id}:ucl-rotation-count`) % 3;
   const replacementPool = squadProfiles
-    .filter((profile) => !rotated.has(profile.name) && profile.position !== "GK" && profile.expectedMinutesShare >= 0.2)
+    .filter((profile) => profile.selectionEligible !== false
+      && !rotated.has(profile.name)
+      && profile.position !== "GK"
+      && profile.expectedMinutesShare >= 0.2)
     .map((profile) => ({
       profile,
       score: profile.expectedMinutesShare * 4 + profile.overall / 25 + rotationRandom(),
@@ -16325,6 +16314,7 @@ function renderStage() {
   els.matchCommentaryView.hidden = true;
   els.matchPenaltyOverlay.hidden = !livePlayback?.matchPenaltyActive;
   els.matchStage.classList.remove("is-shootout", "pl-full-time");
+  if (els.uclLegSwitcher) els.uclLegSwitcher.hidden = true;
   els.snapshotButton.hidden = true;
   if (els.retroMatchLineupsPanel) els.retroMatchLineupsPanel.hidden = true;
   els.spectateEliminationActions.hidden = true;
@@ -16498,6 +16488,26 @@ function renderStage() {
     : isLive ? livePlayback.awayScore : revealed ? result.awayGoals : result ? "–" : "0";
   els.resultNote.hidden = isLive || !revealed;
   els.resultNote.textContent = revealed ? resultSuffix(result) : "";
+  const knockoutLeg = state?.uclKnockoutMatch;
+  const availableLegs = Array.isArray(knockoutLeg?.availableLegIndices)
+    ? knockoutLeg.availableLegIndices.map(Number).filter(Number.isInteger)
+    : [];
+  const showLegSwitcher = Boolean(
+    knockoutLeg?.reviewOnly
+    && Number(knockoutLeg.legCount) > 1
+    && availableLegs.length > 1
+    && revealed
+    && !isLive,
+  );
+  if (els.uclLegSwitcher) {
+    els.uclLegSwitcher.hidden = !showLegSwitcher;
+    if (showLegSwitcher) {
+      const currentLeg = Number(knockoutLeg.legIndex) || 0;
+      els.uclLegSwitcherLabel.textContent = `Leg ${currentLeg + 1} of ${knockoutLeg.legCount}`;
+      els.uclPreviousLegButton.disabled = !availableLegs.some((legIndex) => legIndex < currentLeg);
+      els.uclNextLegButton.disabled = !availableLegs.some((legIndex) => legIndex > currentLeg);
+    }
+  }
   els.spoilerPanel.hidden = !pendingReveal;
   if (pendingReveal) {
     const checkpoint = readLiveMatchCheckpoint(match);
@@ -16573,7 +16583,7 @@ function renderStage() {
     && result.winnerId !== state.spectateTeamId
   ));
   const revealedAction = state.uclSeason
-    ? isControlledMatch ? "Complete matchday" : "Back to your match"
+    ? state.uclKnockoutMatch ? "Back to knockouts" : isControlledMatch ? "Complete matchday" : "Back to your match"
     : state.premierLeagueSeason
     ? "Next match"
     : thirdPlacePlayoff
@@ -17233,8 +17243,11 @@ function renderGoldenBoot() {
     renderRetroLiveGroupTable();
     return;
   }
-  els.goldenBootTitle.textContent = "GOLDEN BOOT";
-  const rankedScorers = calculateGoalscorerTable().map((leader, index) => ({
+  els.goldenBootTitle.textContent = state?.uclSeason ? "TOP SCORERS" : "GOLDEN BOOT";
+  const competitionScorers = state?.uclSeason && window.UclSeason?.topScorerRows
+    ? window.UclSeason.topScorerRows(500)
+    : calculateGoalscorerTable();
+  const rankedScorers = competitionScorers.map((leader, index) => ({
     ...leader,
     goldenBootRank: index + 1,
   }));
@@ -22243,6 +22256,21 @@ els.pauseLiveButton.addEventListener("click", toggleLivePause);
 els.speedButton.addEventListener("click", cycleLiveSpeed);
 els.skipLiveButton.addEventListener("click", skipLivePlayback);
 els.skipShootoutButton.addEventListener("click", skipPenaltyShootout);
+function switchUclKnockoutLeg(direction) {
+  const metadata = state?.uclKnockoutMatch;
+  const availableLegs = Array.isArray(metadata?.availableLegIndices)
+    ? metadata.availableLegIndices.map(Number).filter(Number.isInteger).sort((a, b) => a - b)
+    : [];
+  const currentPosition = availableLegs.indexOf(Number(metadata?.legIndex));
+  const targetLeg = availableLegs[currentPosition + direction];
+  if (!metadata || !Number.isInteger(targetLeg) || livePlayback) return;
+  window.UclSeason?.openKnockoutMatch?.(metadata.roundKey, metadata.tieId, {
+    legIndex: targetLeg,
+    reviewOnly: true,
+  });
+}
+els.uclPreviousLegButton?.addEventListener("click", () => switchUclKnockoutLeg(-1));
+els.uclNextLegButton?.addEventListener("click", () => switchUclKnockoutLeg(1));
 els.simulateRoundButton.addEventListener("click", () => {
   if (state?.uclSeason) {
     if (state.uclKnockoutMatch && !livePlayback) {
@@ -22348,10 +22376,10 @@ els.settingsButton.addEventListener("click", () => {
 });
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.click());
-els.newsButton?.addEventListener("click", () => els.newsModal?.showModal());
+els.newsButton?.addEventListener("click", () => els.uclFeaturesAnnouncementModal?.showModal());
 
 let featureAnnouncementRetryTimer = null;
-let customFeaturesAnnouncementShownThisPage = false;
+let uclFeaturesAnnouncementShownThisPage = false;
 
 function announcementWasSeen(storageKey) {
   try {
@@ -22373,40 +22401,40 @@ function openNextFeatureAnnouncement() {
   clearTimeout(featureAnnouncementRetryTimer);
   featureAnnouncementRetryTimer = null;
   const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
-    dialog !== els.customFeaturesAnnouncementModal
+    dialog !== els.uclFeaturesAnnouncementModal
   ));
   if (anotherDialogIsOpen) {
     featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
     return;
   }
   if (
-    els.customFeaturesAnnouncementModal
-    && !customFeaturesAnnouncementShownThisPage
-    && !announcementWasSeen(CUSTOM_FEATURES_ANNOUNCEMENT_KEY)
+    els.uclFeaturesAnnouncementModal
+    && !uclFeaturesAnnouncementShownThisPage
+    && !announcementWasSeen(UCL_FEATURES_ANNOUNCEMENT_KEY)
   ) {
-    customFeaturesAnnouncementShownThisPage = true;
-    els.customFeaturesAnnouncementModal.showModal();
+    uclFeaturesAnnouncementShownThisPage = true;
+    els.uclFeaturesAnnouncementModal.showModal();
   }
 }
 
-function closeCustomFeaturesAnnouncement() {
-  rememberAnnouncement(CUSTOM_FEATURES_ANNOUNCEMENT_KEY);
-  if (els.customFeaturesAnnouncementModal?.open) els.customFeaturesAnnouncementModal.close();
+function closeUclFeaturesAnnouncement() {
+  rememberAnnouncement(UCL_FEATURES_ANNOUNCEMENT_KEY);
+  if (els.uclFeaturesAnnouncementModal?.open) els.uclFeaturesAnnouncementModal.close();
 }
 
-els.customFeaturesAnnouncementClose?.addEventListener("click", closeCustomFeaturesAnnouncement);
-els.customFeaturesAnnouncementModal?.addEventListener("cancel", () => {
-  rememberAnnouncement(CUSTOM_FEATURES_ANNOUNCEMENT_KEY);
+els.uclFeaturesAnnouncementClose?.addEventListener("click", closeUclFeaturesAnnouncement);
+els.uclFeaturesAnnouncementModal?.addEventListener("cancel", () => {
+  rememberAnnouncement(UCL_FEATURES_ANNOUNCEMENT_KEY);
 });
-els.customFeaturesAnnouncementModal?.addEventListener("close", () => {
-  rememberAnnouncement(CUSTOM_FEATURES_ANNOUNCEMENT_KEY);
+els.uclFeaturesAnnouncementModal?.addEventListener("close", () => {
+  rememberAnnouncement(UCL_FEATURES_ANNOUNCEMENT_KEY);
 });
-els.customFeaturesAnnouncementAction?.addEventListener("click", () => {
-  closeCustomFeaturesAnnouncement();
+els.uclFeaturesAnnouncementAction?.addEventListener("click", () => {
+  closeUclFeaturesAnnouncement();
   setAppModeUrl("home");
   render();
   window.setTimeout(() => {
-    els.openCustomTournamentButton?.closest(".mode-card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.querySelector("#startUclSimulatorButton")?.click();
   }, 120);
 });
 
@@ -22419,7 +22447,6 @@ function openCustomTournamentSettings() {
 }
 
 els.customLiveBackButton?.addEventListener("click", openCustomTournamentSettings);
-els.newsCloseButton?.addEventListener("click", () => els.newsModal?.close());
 els.retroSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 els.retroNewsButton?.addEventListener("click", () => els.newsButton.click());
 els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.click());
