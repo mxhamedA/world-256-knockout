@@ -11,12 +11,14 @@ const challenge = fs.readFileSync(path.join(root, "challenge.js"), "utf8");
 for (const year of [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026]) {
   assert.match(html, new RegExp(`data-achievement-year="${year}"`, "g"), `${year} needs a tab in both achievement views.`);
 }
+assert.match(html, /data-achievement-year="ucl"/g, "UCL needs a tab in both achievement views.");
 
 assert.match(css, /#achievementsScreen\[data-achievement-theme\]/,
   "The shared base achievement theme is missing.");
 for (const year of [256, 2006, 2010, 2016, 2018, 2022, 2026]) {
   assert.match(css, new RegExp(`data-achievement-theme="${year}"`), `${year} needs an achievement theme override.`);
 }
+assert.match(css, /#achievementsScreen\[data-achievement-theme="ucl"\][\s\S]*#f2c94c/, "UCL needs a dark-blue/gold achievement theme.");
 
 assert.match(css, /grid-template-columns:\s*repeat\(8,\s*minmax\(0,\s*1fr\)\)/,
   "All eight achievement tabs must stay in one responsive row.");
@@ -40,6 +42,21 @@ assert.match(
   css,
   /\.achievement-unlock-modal\[data-achievement-theme="2026"\] \.achievement-unlock-action[\s\S]*background:\s*#ff9e2f/,
   "The 2026 achievement action must use the orange accent.",
+);
+assert.match(
+  css,
+  /\.achievement-unlock-banner\[data-achievement-theme="ucl"\][\s\S]*linear-gradient\(135deg,\s*#123a83,\s*#061a4a\)/,
+  "The UCL achievement notification must use the dark-blue palette.",
+);
+assert.match(
+  css,
+  /\.achievement-unlock-modal\[data-achievement-theme="ucl"\][\s\S]*linear-gradient\(145deg,\s*#123a83,\s*#061a4a\)/,
+  "The UCL achievement detail popup must use the dark-blue palette.",
+);
+assert.match(
+  css,
+  /\.achievement-unlock-modal\[data-achievement-theme="ucl"\] \.achievement-unlock-action[\s\S]*background:\s*#f2c94c/,
+  "The UCL achievement action must use the gold accent.",
 );
 assert.match(challenge, /function syncAchievementTheme\(year = activeAchievementYear\)/,
   "Achievement theme changes need one shared controller.");

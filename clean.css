@@ -12733,6 +12733,72 @@ body.standard-mode-active #newsButton {
   background: #92ebff;
 }
 
+.achievement-unlock-banner[data-achievement-theme="ucl"] {
+  border-top-color: #f2c94c;
+  color: #f4f7ff;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(83, 151, 255, .28), transparent 36%),
+    linear-gradient(135deg, #123a83, #061a4a);
+  box-shadow: 0 14px 34px rgba(1, 9, 35, .52);
+}
+
+.achievement-unlock-banner[data-achievement-theme="ucl"] .achievement-unlock-banner-mark {
+  color: #07152f;
+  background: #f2c94c;
+}
+
+.achievement-unlock-banner[data-achievement-theme="ucl"] :is(
+  small,
+  .achievement-unlock-banner-arrow
+) {
+  color: #f5d46d;
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"] {
+  border-color: rgba(242, 201, 76, .62);
+  border-top: 5px solid #f2c94c;
+  color: #f4f7ff;
+  background:
+    radial-gradient(circle at 94% 2%, rgba(83, 151, 255, .24), transparent 36%),
+    linear-gradient(145deg, #123a83, #061a4a);
+  box-shadow: 0 28px 72px rgba(1, 9, 35, .58);
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"]::backdrop {
+  background: rgba(1, 7, 30, .82);
+  backdrop-filter: blur(5px);
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"] .achievement-unlock-mark {
+  color: #07152f;
+  background: #f2c94c;
+  box-shadow: 0 0 0 6px rgba(242, 201, 76, .12), 0 10px 26px rgba(1, 9, 35, .32);
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"] :is(
+  .achievement-unlock-kicker,
+  .achievement-unlock-close
+) {
+  color: #f5d46d;
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"] p {
+  color: #c7d9ff;
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"] .achievement-unlock-action {
+  border-color: #f2c94c;
+  color: #07152f;
+  background: #f2c94c;
+  box-shadow: 0 5px 0 #b58b15;
+  transition: transform 140ms cubic-bezier(.23, 1, .32, 1), box-shadow 140ms ease;
+}
+
+.achievement-unlock-modal[data-achievement-theme="ucl"] .achievement-unlock-action:active {
+  transform: translateY(2px) scale(.98);
+  box-shadow: 0 2px 0 #b58b15;
+}
+
 .retro-achievements-modal {
   width: min(980px, calc(100% - 32px));
   max-height: min(760px, calc(100vh - 48px));
