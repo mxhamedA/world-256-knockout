@@ -13348,7 +13348,18 @@ function recordPossessionGoal(event) {
 }
 
 function match2dEventKey(event) {
-  return `${event.type}:${event.side}:${event.minute}:${event.player || event.scorer || ""}`;
+  const scorer = event.player || event.scorer || event.metadata?.scorer || "";
+  const scoreAfter = event.scoreAfter
+    ? `${Number(event.scoreAfter.home) || 0}-${Number(event.scoreAfter.away) || 0}`
+    : "";
+  return [
+    event.type || "event",
+    event.side || "",
+    Number(event.minute) || 0,
+    Number(event.addedTime) || 0,
+    scorer,
+    scoreAfter,
+  ].join(":");
 }
 
 function initializeLivePlayerRatings(match) {
@@ -13773,7 +13784,16 @@ function presentationDebug(label, event, reason = "") {
 
 function acceptPresentationEvent(event) {
   if (!livePlayback || !["goal", "red", "injury", "disallowed-goal", "penalty-miss"].includes(event.type)) return;
+  const eventKey = match2dEventKey(event);
+  if (
+    match2dState?.playedEventKeys?.has(event.id)
+    || match2dState?.playedEventKeys?.has(eventKey)
+  ) {
+    presentationDebug("[PRESENTATION_DROP]", event, "already-played");
+    return;
+  }
   match2dState?.playedEventKeys?.add(event.id);
+  match2dState?.playedEventKeys?.add(eventKey);
   if (["goal", "red", "injury"].includes(event.type)) applyLiveEvent(event, Boolean(event.metadata.animate));
   updateLiveRatingsForEvent(event);
   presentationDebug(event.type === "goal" ? "[SCORE_UPDATE]" : "[SIM_EVENT]", event);
@@ -15665,6 +15685,9 @@ function startLivePlayback(match) {
         )
       : 0;
     match2dState.playedEventKeys = new Set(resumeCheckpoint.playedEventKeys || []);
+    livePlayback.feed
+      .filter(isVisibleMatchFactEvent)
+      .forEach((event) => match2dState.playedEventKeys.add(match2dEventKey(event)));
     match2dState.nextAction = performance.now() + 180;
     livePlayback.lastClockText = clockText(resumeMinute);
   }
@@ -23844,6 +23867,84 @@ window.addEventListener("keydown", (event) => {
   runKeybindShortcut(event);
 });
 
+function setupMobileModeCards() {
+  const descriptions = [
+    ["mode-card-retro", "World Cups, Euros & Copa"],
+    ["mode-card-premier-league", "League season"],
+    ["mode-card-default", "256-team knockout"],
+    ["mode-card-ucl", "League phase & knockouts"],
+    ["mode-card-custom", "Build your own"],
+    ["mode-card-legacy", "Classic squads"],
+    ["mode-card-online", "Private multiplayer"],
+    ["mode-card-challenge", "Timed tournament challenge"],
+  ];
+  const cards = [...document.querySelectorAll(".mode-grid > .mode-card")];
+
+  const syncToggle = (card) => {
+    const toggle = card.querySelector(":scope > .mode-card-mobile-toggle");
+    if (!toggle) return;
+    const heading = card.querySelector(".mode-card-copy h3");
+    const primaryAction = card.querySelector(":scope > .mode-card-actions .start-tournament, :scope > .online-mode-actions .start-tournament");
+    const title = heading?.textContent?.trim() || "Tournament mode";
+    const baseDescription = descriptions.find(([className]) => card.classList.contains(className))?.[1]
+      || "Tournament mode";
+    const titleNode = toggle.querySelector(".mode-card-mobile-title");
+    const descriptionNode = toggle.querySelector(".mode-card-mobile-description");
+    const artwork = toggle.querySelector(".mode-card-mobile-artwork img");
+    const artworkSource = card.classList.contains("mode-card-retro")
+      ? card.querySelector("#retroWorldCupLogo")?.getAttribute("src")
+      : card.classList.contains("mode-card-premier-league")
+        ? "./assets/prem-logo.webp"
+        : card.classList.contains("mode-card-ucl")
+          ? "./assets/ucl-starball-white.png"
+          : card.classList.contains("mode-card-default")
+            ? "./assets/256-teams-icon.svg"
+            : null;
+    const description = /resume/i.test(primaryAction?.textContent || "")
+      ? `Resume available · ${baseDescription}`
+      : baseDescription;
+    if (titleNode.textContent !== title) titleNode.textContent = title;
+    if (descriptionNode.textContent !== description) descriptionNode.textContent = description;
+    if (artworkSource && artwork.getAttribute("src") !== artworkSource) artwork.setAttribute("src", artworkSource);
+    if (artwork.hidden === Boolean(artworkSource)) artwork.hidden = !artworkSource;
+    toggle.setAttribute("aria-label", `${card.classList.contains("is-mobile-expanded") ? "Close" : "Open"} ${title} setup`);
+  };
+
+  cards.forEach((card, index) => {
+    if (card.querySelector(":scope > .mode-card-mobile-toggle")) return;
+    const toggle = document.createElement("button");
+    toggle.className = "mode-card-mobile-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.innerHTML = `
+      <span class="mode-card-mobile-artwork" aria-hidden="true"><img alt="" hidden /></span>
+      <span class="mode-card-mobile-copy">
+        <strong class="mode-card-mobile-title">Tournament mode</strong>
+        <small class="mode-card-mobile-description">Configure and play</small>
+      </span>
+      <span class="mode-card-mobile-chevron" aria-hidden="true">&rsaquo;</span>
+    `;
+    card.prepend(toggle);
+    toggle.addEventListener("click", () => {
+      const expand = !card.classList.contains("is-mobile-expanded");
+      cards.forEach((candidate) => {
+        candidate.classList.remove("is-mobile-expanded");
+        candidate.querySelector(":scope > .mode-card-mobile-toggle")?.setAttribute("aria-expanded", "false");
+        syncToggle(candidate);
+      });
+      if (expand) {
+        card.classList.add("is-mobile-expanded");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+      syncToggle(card);
+    });
+    const observer = new MutationObserver(() => syncToggle(card));
+    observer.observe(card, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["src", "hidden"] });
+    card.style.setProperty("--mobile-mode-index", index);
+    syncToggle(card);
+  });
+}
+
 window.addEventListener("pagehide", saveLiveMatchCheckpoint);
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "hidden") saveLiveMatchCheckpoint();
@@ -23916,6 +24017,7 @@ if (initialAppMode === "standard" && !state.started) {
   );
 }
 configureOnlineModeAvailability();
+setupMobileModeCards();
 syncOnlineRoomCard();
 renderPremierLeagueTeamPicker();
 renderPremierLeagueAssetState();

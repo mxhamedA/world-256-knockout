@@ -455,6 +455,34 @@ assert.doesNotMatch(simulatorSource, /players:\s*\[\],\s*\n\s*playerProfiles:\s*
 assert.match(simulatorSource, /finishManagedMatchday[\s\S]{0,900}Engine\.completeMatchday/, "The remaining matchday must resolve only after the managed match finishes.");
 assert.match(simulatorSource, /returnToManagedMatchday/, "Watching another UCL fixture must provide a return path to the managed match.");
 assert.match(appSource, /window\.UclSeason\?\.returnToManagedMatchday/, "The live match action must return from a watched fixture to the managed match.");
+assert.match(
+  appSource,
+  /function\s+acceptPresentationEvent\(event\)[\s\S]*playedEventKeys\?\.has\(eventKey\)[\s\S]*return;[\s\S]*applyLiveEvent\(event/,
+  "Managed-match tactical rebuilds must not apply the same logical goal more than once.",
+);
+const liveEventKeySource = appSource.slice(
+  appSource.indexOf("function match2dEventKey(event)"),
+  appSource.indexOf("function initializeLivePlayerRatings(match)"),
+);
+const liveEventKey = Function(`${liveEventKeySource}; return match2dEventKey;`)();
+const rebuiltGoal = {
+  id: "rebuilt-presentation-id",
+  type: "goal",
+  side: "home",
+  minute: 85,
+  metadata: { scorer: "Jeremy Jacquet" },
+  scoreAfter: { home: 1, away: 0 },
+};
+assert.equal(
+  liveEventKey(rebuiltGoal),
+  liveEventKey({ ...rebuiltGoal, id: "another-rebuilt-id" }),
+  "A rebuilt copy of the same goal must retain the same logical event key.",
+);
+assert.notEqual(
+  liveEventKey(rebuiltGoal),
+  liveEventKey({ ...rebuiltGoal, id: "legitimate-second-goal", scoreAfter: { home: 2, away: 0 } }),
+  "A legitimate same-minute second goal must remain distinct through its score progression.",
+);
 assert.match(appSource, /PREFERRED_FOOT_OVERRIDES/, "Penalty takers must support explicit preferred-foot corrections.");
 assert.match(appSource, /\["Erling Haaland",\s*"left"\]/, "Haaland must use his left foot for penalties.");
 assert.match(html, /id="uclLiveBackButton"/, "The live UCL match must provide a route back to the competition.");

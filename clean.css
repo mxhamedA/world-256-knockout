@@ -32232,6 +32232,284 @@ body.retro-mode-active.retro-euro-2016-active #mainContent #shootoutSkipControl 
   color: #c78fe0;
 }
 
+/* Compact mobile mode browser: show the catalogue first, then one setup at a time. */
+.mode-card-mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .mode-select {
+    padding-top: 10px;
+  }
+
+  .mode-grid {
+    gap: 10px;
+  }
+
+  .mode-grid > .mode-card {
+    min-height: 76px;
+    max-height: 76px;
+    padding: 0;
+    border: 1px solid rgba(139, 158, 198, 0.18);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.055);
+  }
+
+  .mode-card-ucl {
+    order: 3;
+  }
+
+  .mode-card-default {
+    order: 4;
+  }
+
+  .mode-grid > .mode-card > :not(.mode-card-mobile-toggle) {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded {
+    max-height: none;
+    padding: 0 16px 16px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded > :not(.mode-card-mobile-toggle) {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mode-card-mobile-toggle {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 22px;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 76px;
+    padding: 12px 14px;
+    border: 0 !important;
+    color: #f4f7ff;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1), background-color 160ms ease;
+  }
+
+  .mode-card-mobile-toggle:active {
+    transform: scale(0.985);
+  }
+
+  .is-mobile-expanded > .mode-card-mobile-toggle {
+    margin-bottom: 14px;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .mode-card-mobile-artwork {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+  }
+
+  .mode-card-mobile-artwork img {
+    display: block;
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .mode-card-mobile-artwork img[hidden] {
+    display: none;
+  }
+
+  .mode-card-premier-league .mode-card-mobile-artwork img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mode-card-ucl .mode-card-mobile-artwork img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mode-card-retro[data-retro-competition="euros"] .mode-card-mobile-artwork img {
+    object-fit: cover;
+    object-position: center top;
+    transform: none;
+  }
+
+  .mode-card.is-mobile-expanded > .mode-card-mobile-toggle {
+    grid-template-columns: 60px minmax(0, 1fr) 22px;
+    min-height: 88px;
+  }
+
+  .mode-card.is-mobile-expanded .mode-card-mobile-artwork {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mode-card:is(
+    .mode-card-retro,
+    .mode-card-premier-league,
+    .mode-card-ucl,
+    .mode-card-default
+  ).is-mobile-expanded .mode-card-mobile-artwork img {
+    width: 58px;
+    height: 58px;
+  }
+
+  .mode-card-mobile-copy {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+  }
+
+  .mode-card-mobile-copy strong,
+  .mode-card-mobile-copy small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mode-card-mobile-copy strong {
+    color: #ffffff;
+    font-size: 15px;
+    line-height: 1.15;
+  }
+
+  .mode-card-mobile-copy small {
+    color: rgba(225, 233, 249, 0.67);
+    font-size: 10px;
+  }
+
+  .mode-card-mobile-chevron {
+    color: rgba(221, 231, 255, 0.72);
+    font-size: 25px;
+    line-height: 1;
+    transform: rotate(0deg);
+    transition: transform 180ms cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  .is-mobile-expanded .mode-card-mobile-chevron {
+    transform: rotate(90deg);
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded > .mode-card-copy {
+    margin: 0 0 12px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded > .mode-card-copy h3,
+  .mode-grid > .mode-card.is-mobile-expanded .retro-mode-heading > img,
+  .mode-grid > .mode-card.is-mobile-expanded .premier-league-brand-mark,
+  .mode-grid > .mode-card.is-mobile-expanded .ucl-mode-logo {
+    display: none;
+  }
+
+  .mode-card-default.is-mobile-expanded > .mode-card-copy {
+    display: none;
+  }
+
+  .mode-card-retro.is-mobile-expanded .retro-mode-heading {
+    display: block;
+  }
+
+  .mode-card-retro.is-mobile-expanded .retro-mode-title {
+    display: grid;
+    gap: 8px;
+  }
+
+  .mode-card-premier-league.is-mobile-expanded .premier-league-heading,
+  .mode-card-ucl.is-mobile-expanded .ucl-mode-heading {
+    display: block;
+  }
+
+  .mode-card-ucl.is-mobile-expanded .ucl-mode-heading p {
+    display: none;
+  }
+
+  .mode-card-premier-league.is-mobile-expanded .premier-league-install-button,
+  .mode-card-ucl.is-mobile-expanded .ucl-install-button {
+    min-height: 30px;
+    margin-top: 0;
+  }
+
+  .mode-card-retro.is-mobile-expanded :is(.retro-competition-switch, .retro-year-switch) {
+    gap: 2px;
+    padding: 2px;
+  }
+
+  .mode-card-retro.is-mobile-expanded :is(.retro-competition-switch button, .retro-year-switch button) {
+    min-height: 34px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .landing-settings,
+  .mode-grid > .mode-card.is-mobile-expanded .retro-landing-settings {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin: 0 0 12px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .landing-setting:not(.landing-team-setting) {
+    grid-template-columns: minmax(88px, 0.42fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .landing-setting-heading {
+    min-width: 0;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .landing-setting .segmented {
+    min-width: 0;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .landing-setting .segmented button {
+    min-height: 36px;
+    padding: 7px 3px;
+    font-size: 8px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .landing-team-setting {
+    gap: 6px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .spectate-picker {
+    min-height: 56px;
+    padding-block: 7px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .mode-card-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .mode-card-actions .start-tournament {
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+  }
+
+  .mode-grid > .mode-card.is-mobile-expanded .mode-card-actions :is(
+    .legacy-restart-button,
+    .premier-league-menu-restart
+  ) {
+    min-width: 74px;
+    min-height: 46px;
+    padding-inline: 12px;
+  }
+
+  .mode-card-custom.is-mobile-expanded .mode-card-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* Saved tournament viewer: a continuous editorial archive instead of card stacks. */
 .tournament-history-screen {
   --history-rule: color-mix(in srgb, var(--history-accent) 34%, transparent);
