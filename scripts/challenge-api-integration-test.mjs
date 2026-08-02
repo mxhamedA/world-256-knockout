@@ -199,28 +199,6 @@ assert.equal(franceEuroCompleted.payload.achievement.title, "UEFA Euro 2016 Tour
 assert.equal(franceEuroCompleted.payload.achievement.total, 24);
 
 const knockoutSeed = retroSeed + 10;
-const unstartedKnockoutCompletion = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: knockoutSeed - 1,
-    teamId: "team-50",
-    bestRoundIndex: 7,
-    championTeamId: "team-50",
-    phase: "complete",
-  },
-});
-assert.equal(unstartedKnockoutCompletion.response.status, 409);
-const strongTeamMissStarted = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: knockoutSeed,
-    teamId: "team-50",
-    bestRoundIndex: 0,
-    championTeamId: null,
-    phase: "progress",
-  },
-});
-assert.equal(strongTeamMissStarted.response.status, 200);
 const strongTeamMiss = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
@@ -235,22 +213,10 @@ assert.equal(strongTeamMiss.response.status, 200);
 assert.equal(strongTeamMiss.payload.unlockedTeam.complete, false);
 assert.equal(strongTeamMiss.payload.unlockedTeam.attempts, 1);
 
-const strongTeamWinSeed = knockoutSeed + 1;
-const strongTeamWinStarted = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: strongTeamWinSeed,
-    teamId: "team-50",
-    bestRoundIndex: 0,
-    championTeamId: null,
-    phase: "progress",
-  },
-});
-assert.equal(strongTeamWinStarted.response.status, 200);
 const strongTeamWin = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
-    seed: strongTeamWinSeed,
+    seed: knockoutSeed + 1,
     teamId: "team-50",
     bestRoundIndex: 7,
     championTeamId: "team-50",
@@ -266,7 +232,7 @@ assert.equal(strongTeamWin.payload.unlockedTeam.achievedOnAttempt, 2);
 const repeatedStrongTeamWin = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
-    seed: strongTeamWinSeed,
+    seed: knockoutSeed + 1,
     teamId: "team-50",
     bestRoundIndex: 7,
     championTeamId: "team-50",

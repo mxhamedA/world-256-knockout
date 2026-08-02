@@ -22,6 +22,11 @@ assert.ok(candidateListSource, "The YPOTY candidate list must be present.");
 
 const candidates = vm.runInNewContext(candidateListSource);
 const clubs = context.window.PREMIER_LEAGUE_2026_27_CLUBS;
+const chelsea = clubs.find((club) => club.id === "chelsea");
+const brighton = clubs.find((club) => club.id === "brighton");
+assert.ok(chelsea.playerProfiles.some((player) => player.name === "Danny Welbeck"));
+assert.ok(!brighton.playerProfiles.some((player) => player.name === "Danny Welbeck"));
+assert.ok(chelsea.arrivals.includes("Danny Welbeck"));
 const registeredNames = new Set(
   clubs.flatMap((club) => club.playerProfiles.map((player) => player.name)),
 );

@@ -140,6 +140,7 @@
   const trackedRetroRequests = new Map();
   const trackedKnockoutRequests = new Map();
   const trackedPremierLeagueRequests = new Map();
+  const trackedUclRequests = new Map();
   let achievementLeaderboardPayload = null;
   let reviewedUsernameAccountId = null;
   let accountLoadVersion = 0;
@@ -180,20 +181,6 @@
     throw lastError || new Error(
       "Your account was created, but sign-in could not finish in this browser. Open www.256teams.com directly, then log in again.",
     );
-  }
-
-  async function submitAchievementPhase(path, body) {
-    if (body.phase === "complete") {
-      await challengeApi(path, {
-        method: "POST",
-        body: { ...body, phase: "start" },
-      });
-    }
-    return challengeApi(path, {
-      method: "POST",
-      keepalive: body.phase === "complete",
-      body,
-    });
   }
 
   function commandId() {
@@ -525,6 +512,36 @@
     return (window.PREMIER_LEAGUE_2026_27_CLUBS || []).find((club) => club.name === clubName) || null;
   }
 
+  function uclClubById(clubId) {
+    return window.UclEngine?.team?.(clubId) || null;
+  }
+
+  function uclClubByName(clubName) {
+    return (window.UclEngine?.TEAM_DATA || []).find((club) => club.name === clubName) || null;
+  }
+
+  const UCL_OBJECTIVE_GROUPS = Object.freeze([
+    { ids: ["real-madrid", "manchester-city", "bayern-munich", "paris-saint-germain"], targetStageIndex: 5, objectiveLabel: "Win the UCL", points: 2 },
+    { ids: ["liverpool", "barcelona"], targetStageIndex: 5, objectiveLabel: "Win the UCL", points: 3 },
+    { ids: ["inter-milan", "arsenal", "atletico-madrid"], targetStageIndex: 4, objectiveLabel: "Reach the final", points: 4 },
+    { ids: ["borussia-dortmund", "napoli", "manchester-united", "rb-leipzig"], targetStageIndex: 3, objectiveLabel: "Reach the semi-finals", points: 5 },
+    { ids: ["sporting-cp", "porto", "villarreal", "roma", "psv-eindhoven", "aston-villa"], targetStageIndex: 2, objectiveLabel: "Reach the quarter-finals", points: 6 },
+    { ids: ["galatasaray", "feyenoord", "stuttgart", "lille", "fenerbahce", "olympique-lyonnais"], targetStageIndex: 1, objectiveLabel: "Reach the Round of 16", points: 7 },
+    { ids: ["club-brugge", "shakhtar-donetsk", "real-betis", "como", "lens", "gnk-dinamo-zagreb", "crvena-zvezda", "union-saint-gilloise", "olympiacos"], targetStageIndex: 0, objectiveLabel: "Finish in the top 24", points: 8 },
+    { ids: ["slavia-prague", "agf-aarhus", "slovan-bratislava", "levski-sofia", "nk-celje"], targetStageIndex: 0, objectiveLabel: "Finish in the top 24", points: 9 },
+  ]);
+
+  function uclObjectiveForClub(club) {
+    const group = UCL_OBJECTIVE_GROUPS.find((candidate) => candidate.ids.includes(club?.id));
+    return group
+      ? {
+          targetStageIndex: group.targetStageIndex,
+          objectiveLabel: group.objectiveLabel,
+          points: group.points,
+        }
+      : { targetStageIndex: 0, objectiveLabel: "Finish in the top 24", points: 9 };
+  }
+
   function premierLeagueObjectiveForClub(club) {
     const targets = {
       arsenal: [1, 2], "aston-villa": [4, 4], bournemouth: [8, 5], brentford: [8, 5],
@@ -549,6 +566,7 @@
   function achievementEndpoint(key) {
     if (Number(key) === 256) return "/achievements/knockout-256";
     if (key === "pl") return "/achievements/premier-league";
+    if (key === "ucl") return "/achievements/ucl";
     return `/achievements/retro-${key}`;
   }
 
@@ -556,11 +574,13 @@
     if (Number(key) === 256) return "256 Knockout";
     if (Number(key) === 2016) return "UEFA Euro 2016";
     if (key === "pl") return "Premier League 26/27";
+    if (key === "ucl") return "UEFA Champions League 26/27";
     return `${key} World Cup`;
   }
 
   function normalizeAchievementKey(key) {
     if (key === "pl" || String(key).toLowerCase() === "pl") return "pl";
+    if (key === "ucl" || String(key).toLowerCase() === "ucl") return "ucl";
     const year = Number(key);
     return [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
   }
@@ -599,13 +619,14 @@
       2022: "QATAR 2022",
       2026: "CANADA, MEXICO & USA 2026",
       pl: "PREMIER LEAGUE 26/27",
+      ucl: "UEFA CHAMPIONS LEAGUE 26/27",
     };
     [elements.achievementsScreen, elements.retroAchievementModal].forEach((element) => {
       if (element) element.dataset.achievementTheme = theme;
     });
     if (elements.achievementsModeLabel) elements.achievementsModeLabel.textContent = labels[year] || labels[2014];
     if (elements.retroAchievementModeLabel) elements.retroAchievementModeLabel.textContent = labels[year] || labels[2014];
-    const progressLabel = year === "pl"
+    const progressLabel = year === "pl" || year === "ucl"
       ? "CLUBS COMPLETE"
       : Number(year) === 256 ? "TEAMS COMPLETE" : "COUNTRIES COMPLETE";
     if (elements.achievementProgressLabel) elements.achievementProgressLabel.textContent = progressLabel;
@@ -626,6 +647,15 @@
           won: false,
           ...premierLeagueObjectiveForClub(club),
         }))
+      : activeAchievementYear === "ucl"
+      ? (window.UclEngine?.TEAM_DATA || []).map((club) => ({
+          clubId: club.id,
+          teamName: club.name,
+          attempts: 0,
+          complete: false,
+          won: false,
+          ...uclObjectiveForClub(club),
+        }))
       : activeAchievementYear === 256
       ? (typeof TEAMS !== "undefined" ? TEAMS.map((team, teamIndex) => ({
           teamId: team.id,
@@ -642,6 +672,7 @@
     const total = Number(achievement?.total || (
       activeAchievementYear === 256 ? 256
         : activeAchievementYear === "pl" ? 20
+          : activeAchievementYear === "ucl" ? 39
         : activeAchievementYear === 2026 ? 48
         : activeAchievementYear === 2016 ? 24
           : 32
@@ -649,11 +680,13 @@
     const progressMarkup = teams.map((progress) => {
       const team = activeAchievementYear === "pl"
         ? premierLeagueClubById(progress.clubId) || premierLeagueClubByName(progress.teamName)
+        : activeAchievementYear === "ucl"
+          ? uclClubById(progress.clubId) || uclClubByName(progress.teamName)
         : teamByName(progress.teamName);
       const complete = progress.complete === true || progress.won === true;
       const attemptCount = Number(progress.achievedOnAttempt || progress.wonOnAttempt || progress.attempts || 0);
       const status = complete
-        ? activeAchievementYear === 256 || activeAchievementYear === "pl"
+        ? activeAchievementYear === 256 || activeAchievementYear === "pl" || activeAchievementYear === "ucl"
           ? `${progress.objectiveLabel} · ${attemptCount} ${attemptCount === 1 ? "try" : "tries"}`
           : `Won in ${attemptCount} ${attemptCount === 1 ? "try" : "tries"}`
         : progress.attempts
@@ -684,6 +717,8 @@
       ? "Complete the objective for every country in the 256-team knockout"
       : activeAchievementYear === "pl"
         ? "Complete the season objective for every Premier League club"
+        : activeAchievementYear === "ucl"
+          ? "Complete the Champions League objective for every selectable club"
       : activeAchievementYear === 2016
         ? "Win UEFA Euro 2016 with every country"
         : `Win the ${activeAchievementYear} WC with every country`;
@@ -724,32 +759,35 @@
     const knockout = year === 256;
     const euros = year === 2016;
     const premierLeague = year === "pl";
+    const ucl = year === "ucl";
     elements.achievementModalTitle.textContent = grandUnlock
-      ? knockout ? "256 Knockout mastered" : premierLeague ? "Premier League mastered" : euros ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
+      ? knockout ? "256 Knockout mastered" : premierLeague ? "Premier League mastered" : ucl ? "Champions League mastered" : euros ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete`;
     elements.achievementModalCopy.textContent = grandUnlock
       ? knockout
         ? `You have completed all 256 knockout objectives. ${payload.achievement.completedPoints} points earned in this mode.`
         : premierLeague
           ? `You have completed the objective for all 20 Premier League clubs. ${payload.achievement.completedPoints} points earned in this mode.`
+        : ucl
+          ? `You have completed the objective for all 39 Champions League clubs. ${payload.achievement.completedPoints} points earned in this mode.`
         : euros
           ? `You have won UEFA Euro 2016 with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
           : `You have won the ${year} World Cup with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this World Cup.`
-      : knockout || premierLeague
-        ? `${payload.unlockedTeam.objectiveLabel} completed in ${payload.unlockedTeam.achievedOnAttempt} ${payload.unlockedTeam.achievedOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} ${premierLeague ? "clubs" : "countries"} complete.`
+      : knockout || premierLeague || ucl
+        ? `${payload.unlockedTeam.objectiveLabel} completed in ${payload.unlockedTeam.achievedOnAttempt} ${payload.unlockedTeam.achievedOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} ${premierLeague || ucl ? "clubs" : "countries"} complete.`
         : `${euros ? "European Championship" : "World Cup"} won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} countries complete.`;
     if (!elements.achievementModal.open) elements.achievementModal.showModal();
   }
 
   function showAchievementUnlock(payload) {
-    if (!elements.achievementModal || (!payload.countryUnlocked && !payload.challengeUnlocked)) return;
+    if (!elements.achievementModal || (!payload.countryUnlocked && !payload.clubUnlocked && !payload.challengeUnlocked)) return;
     const grandUnlock = payload.challengeUnlocked === true;
     const year = normalizeAchievementKey(payload.achievement?.year);
     pendingAchievementUnlock = payload;
     elements.achievementBanner.dataset.achievementTheme = String(year);
     elements.achievementModal.dataset.achievementTheme = String(year);
     elements.achievementBannerTitle.textContent = grandUnlock
-      ? year === 256 ? "256 Knockout mastered" : year === "pl" ? "Premier League mastered" : year === 2016 ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
+      ? year === 256 ? "256 Knockout mastered" : year === "pl" ? "Premier League mastered" : year === "ucl" ? "Champions League mastered" : year === 2016 ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete · +${payload.unlockedTeam.points} pts`;
     clearTimeout(achievementBannerTimer);
     elements.achievementBanner.hidden = false;
@@ -767,6 +805,10 @@
     if (normalizeAchievementKey(year) === "pl") {
       const savedSeason = window.PremierLeagueSeason?.achievementState?.() || null;
       if (savedSeason) await trackPremierLeagueSeason(savedSeason);
+    }
+    if (normalizeAchievementKey(year) === "ucl") {
+      const savedSeason = window.UclSeason?.achievementState?.() || null;
+      if (savedSeason) await trackUclSeason(savedSeason);
     }
     await loadAchievements(year);
     if (elements.retroAchievementModal && !elements.retroAchievementModal.open) {
@@ -800,11 +842,15 @@
     const phase = tournament.phase === "complete" && champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
     if (trackedRetroRequests.has(key)) return trackedRetroRequests.get(key);
-    const request = submitAchievementPhase(`/achievements/retro-${year}`, {
+    const request = challengeApi(`/achievements/retro-${year}`, {
+      method: "POST",
+      keepalive: phase === "complete",
+      body: {
         seed: Number(tournament.seed),
         teamName: tournament.managedTeam,
         phase,
         champion,
+      },
     }).then((payload) => {
       achievementPayloads.set(year, payload);
       activeAchievementYear = year;
@@ -842,12 +888,16 @@
       tournament.phase,
     ].join(":");
     if (trackedKnockoutRequests.has(key)) return trackedKnockoutRequests.get(key);
-    const request = submitAchievementPhase("/achievements/knockout-256", {
+    const request = challengeApi("/achievements/knockout-256", {
+      method: "POST",
+      keepalive: tournament.phase === "complete",
+      body: {
         seed: Number(tournament.seed),
         teamId: tournament.teamId,
         bestRoundIndex: Number(tournament.bestRoundIndex),
         championTeamId: tournament.championTeamId || null,
         phase: tournament.phase,
+      },
     }).then((payload) => {
       achievementPayloads.set(256, payload);
       renderAchievements();
@@ -879,11 +929,15 @@
       seasonState.finalPosition || "",
     ].join(":");
     if (trackedPremierLeagueRequests.has(key)) return trackedPremierLeagueRequests.get(key);
-    const request = submitAchievementPhase("/achievements/premier-league", {
+    const request = challengeApi("/achievements/premier-league", {
+      method: "POST",
+      keepalive: seasonState.phase === "complete",
+      body: {
         seed: Number(seasonState.seed),
         clubId: seasonState.clubId,
         phase: seasonState.phase,
         finalPosition: seasonState.phase === "complete" ? Number(seasonState.finalPosition) : null,
+      },
     }).then((payload) => {
       achievementPayloads.set("pl", payload);
       renderAchievements();
@@ -898,6 +952,46 @@
     return request;
   }
 
+  async function trackUclSeason(seasonState) {
+    if (
+      !seasonState?.clubId
+      || !Number.isSafeInteger(Number(seasonState.seed))
+      || !["start", "complete"].includes(seasonState.phase)
+      || !Number.isInteger(Number(seasonState.bestStageIndex))
+      || Number(seasonState.bestStageIndex) < -1
+      || Number(seasonState.bestStageIndex) > 5
+    ) return null;
+    const key = [
+      seasonState.seed,
+      seasonState.clubId,
+      seasonState.phase,
+      seasonState.bestStageIndex,
+    ].join(":");
+    if (trackedUclRequests.has(key)) return trackedUclRequests.get(key);
+    const request = challengeApi("/achievements/ucl", {
+      method: "POST",
+      keepalive: seasonState.phase === "complete",
+      body: {
+        seed: Number(seasonState.seed),
+        clubId: seasonState.clubId,
+        phase: seasonState.phase,
+        bestStageIndex: Number(seasonState.bestStageIndex),
+      },
+    }).then((payload) => {
+      achievementPayloads.set("ucl", payload);
+      activeAchievementYear = "ucl";
+      renderAchievements();
+      showAchievementUnlock(payload);
+      return payload;
+    }).catch((error) => {
+      if (error.status !== 401) console.warn("UCL achievement tracking failed", error);
+      trackedUclRequests.delete(key);
+      return null;
+    });
+    trackedUclRequests.set(key, request);
+    return request;
+  }
+
   async function syncStoredRetroAchievements() {
     if (!dashboard?.account) return;
     const retroTournaments = typeof window.getRetroAchievementTournamentStates === "function"
@@ -907,10 +1001,12 @@
       ? window.getKnockout256AchievementTournamentState()
       : null;
     const premierLeagueSeason = window.PremierLeagueSeason?.achievementState?.() || null;
+    const uclSeason = window.UclSeason?.achievementState?.() || null;
     await Promise.all([
       ...retroTournaments.map((tournament) => trackRetroTournament(tournament)),
       knockoutTournament ? trackKnockoutTournament(knockoutTournament) : null,
       premierLeagueSeason ? trackPremierLeagueSeason(premierLeagueSeason) : null,
+      uclSeason ? trackUclSeason(uclSeason) : null,
     ]);
   }
 
@@ -938,11 +1034,11 @@
   }
 
   function renderProfileAchievements() {
-    const years = [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl"];
+    const years = [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
-      total: year === 256 ? 256 : year === 2016 ? 24 : year === 2026 ? 48 : year === "pl" ? 20 : 32,
+      total: year === 256 ? 256 : year === 2016 ? 24 : year === 2026 ? 48 : year === "pl" ? 20 : year === "ucl" ? 39 : 32,
       teams: [],
     });
     const completed = achievements.reduce((sum, achievement) => sum + Number(achievement.completed || 0), 0);
@@ -986,14 +1082,18 @@
       ? unlocked.map((achievement) => {
         const team = achievement.year === "pl"
           ? premierLeagueClubById(achievement.clubId) || premierLeagueClubByName(achievement.teamName)
-          : achievement.teamId ? teamById(achievement.teamId) : teamByName(achievement.teamName);
+          : achievement.year === "ucl"
+            ? uclClubById(achievement.clubId) || uclClubByName(achievement.teamName)
+            : achievement.teamId ? teamById(achievement.teamId) : teamByName(achievement.teamName);
         const tries = Number(achievement.achievedOnAttempt || achievement.wonOnAttempt || achievement.attempts || 1);
         const unlockedAt = formatAchievementUnlockTime(achievement.unlockedAt);
         const achievementCopy = achievement.year === 256
           ? `256 Knockout - ${achievement.objectiveLabel} in ${tries} ${tries === 1 ? "try" : "tries"}`
           : achievement.year === "pl"
             ? `Premier League 26/27 - ${achievement.objectiveLabel} in ${tries} ${tries === 1 ? "try" : "tries"}`
-          : `${achievementCompetitionLabel(achievement.year)} - Won in ${tries} ${tries === 1 ? "try" : "tries"}`;
+            : achievement.year === "ucl"
+              ? `Champions League 26/27 - ${achievement.objectiveLabel} in ${tries} ${tries === 1 ? "try" : "tries"}`
+              : `${achievementCompetitionLabel(achievement.year)} - Won in ${tries} ${tries === 1 ? "try" : "tries"}`;
         return `
           <article class="profile-unlocked-achievement">
             ${profileFlagMarkup(team, "profile-unlocked-flag")}
@@ -1064,7 +1164,7 @@
   function renderAchievementLeaderboard() {
     if (!elements.homeAchievementLeaderboard) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
-    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 128);
+    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 547);
     const visibleEntries = entries.slice(0, 10);
     elements.homeAchievementLeaderboard.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
@@ -1095,7 +1195,7 @@
   function renderAchievementLeaderboardModal() {
     if (!elements.homeAchievementModalTable) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
-    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 128);
+    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 547);
     elements.homeAchievementModalTable.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
@@ -1172,7 +1272,7 @@
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([256, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl"].map(async (year) => {
+        await Promise.all([256, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"].map(async (year) => {
           try {
             achievementPayloads.set(year, await challengeApi(achievementEndpoint(year)));
           } catch {
@@ -1464,6 +1564,7 @@
     trackRetroTournament,
     trackKnockoutTournament,
     trackPremierLeagueSeason,
+    trackUclSeason,
     openRetroModal: openRetroAchievementsModal,
   };
   syncRoute();

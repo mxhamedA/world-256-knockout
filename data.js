@@ -708,6 +708,9 @@ const TEAM_STRENGTH_ADJUSTMENTS = new Map([
   ["France", -5],
   ["Germany", 1.7],
   ["Mexico", -3.76],
+  // The FIFA points table overrates the USA for tournament simulation relative
+  // to the quality and depth of their current squad.
+  ["USA", -5],
   ["Norway", 4.6],
   ["Iran", -1.24],
   ["Denmark", -0.74],

@@ -64,7 +64,7 @@ const FIFA_RANKED_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS
 const GREAT_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank <= 20);
 const MID_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank >= 40 && team.officialFifaRank <= 90);
 const LOWER_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS.filter((team) => !team.officialFifaRank || team.officialFifaRank >= 120);
-const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/custom-matches", "/draft-mode", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026", "/retro-euro-2016", "/achievements", "/online-mode", "/pl-simulator", "/palestine-challenge", "/profile"]);
+const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/custom-matches", "/draft-mode", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026", "/retro-euro-2016", "/achievements", "/online-mode", "/pl-simulator", "/ucl-simulator", "/palestine-challenge", "/profile"]);
 const SAVED_TOURNAMENT_PATH = /^\/saved-tournaments\/[A-Za-z0-9-]+$/;
 
 export default {
@@ -217,7 +217,7 @@ async function serveHtmlAsset(request, env) {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src https://fonts.gstatic.com",
     "img-src 'self' data: blob: https:",
-    "media-src 'self'",
+    "media-src 'self' blob:",
     "connect-src 'self' https:",
     "frame-src https:",
     "object-src 'none'",

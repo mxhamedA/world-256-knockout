@@ -36,6 +36,10 @@ const positions = Object.freeze({
   4: "ST",
 });
 
+const manualTransfers = Object.freeze([
+  Object.freeze({ player: "Danny Welbeck", fromId: "brighton", toId: "chelsea" }),
+]);
+
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 function simulatorRating(player) {
@@ -74,6 +78,18 @@ for (const player of data.elements) {
     position: positions[player.element_type] || "CM",
     overall: simulatorRating(player),
   });
+}
+
+for (const transfer of manualTransfers) {
+  const normalize = (value) => String(value || "").normalize("NFKD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+  const playerIndex = squads[transfer.fromId].findIndex(
+    (player) => normalize(player.name) === normalize(transfer.player),
+  );
+  if (playerIndex < 0) continue;
+  const [player] = squads[transfer.fromId].splice(playerIndex, 1);
+  if (!squads[transfer.toId].some((candidate) => normalize(candidate.name) === normalize(transfer.player))) {
+    squads[transfer.toId].push(player);
+  }
 }
 
 for (const [clubId, players] of Object.entries(squads)) {

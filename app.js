@@ -78,7 +78,7 @@ const UCL_2026_27_BADGE_PATHS = Object.freeze({
   liverpool: "./assets/ucl-26-27/badges/liverpool.png",
   "manchester-city": "./assets/ucl-26-27/badges/manchester-city.png",
   "manchester-united": "./assets/ucl-26-27/badges/manchester-united.png",
-  napoli: "./assets/ucl-26-27/badges/napoli.png",
+  napoli: "./assets/ucl-26-27/badges/napoli-2007.png",
   "paris-saint-germain": "./assets/ucl-26-27/badges/paris-saint-germain.png",
   porto: "./assets/ucl-26-27/badges/porto.png",
   "psv-eindhoven": "./assets/ucl-26-27/badges/psv-eindhoven.png",
@@ -90,6 +90,16 @@ const UCL_2026_27_BADGE_PATHS = Object.freeze({
   "sporting-cp": "./assets/ucl-26-27/badges/sporting-cp.png",
   stuttgart: "./assets/ucl-26-27/badges/stuttgart.png",
   villarreal: "./assets/ucl-26-27/badges/villarreal.png",
+  fenerbahce: "./assets/ucl-26-27/badges/fenerbahce.svg",
+  "olympique-lyonnais": "./assets/ucl-26-27/badges/olympique-lyonnais.png",
+  "gnk-dinamo-zagreb": "./assets/ucl-26-27/badges/gnk-dinamo-zagreb.png",
+  "crvena-zvezda": "./assets/ucl-26-27/badges/crvena-zvezda.svg",
+  "union-saint-gilloise": "./assets/ucl-26-27/badges/union-saint-gilloise.svg",
+  olympiacos: "./assets/ucl-26-27/badges/olympiacos.svg",
+  "agf-aarhus": "./assets/ucl-26-27/badges/agf-aarhus.png",
+  "slovan-bratislava": "./assets/ucl-26-27/badges/slovan-bratislava.svg",
+  "levski-sofia": "./assets/ucl-26-27/badges/levski-sofia.svg",
+  "nk-celje": "./assets/ucl-26-27/badges/nk-celje.png",
 });
 
 const UCL_2026_27_QUALIFIED_TEAMS = Object.freeze([
@@ -98,11 +108,16 @@ const UCL_2026_27_QUALIFIED_TEAMS = Object.freeze([
   ["club-brugge", "Club Brugge", "BEL", "BRU"], ["como", "Como", "ITA", "COM"], ["feyenoord", "Feyenoord", "NED", "FEY"],
   ["galatasaray", "Galatasaray", "TUR", "GAL"], ["inter-milan", "Inter Milan", "ITA", "INT"], ["rb-leipzig", "RB Leipzig", "GER", "RBL"],
   ["lens", "Lens", "FRA", "LEN"], ["lille", "Lille", "FRA", "LIL"], ["liverpool", "Liverpool", "ENG", "LIV"],
-  ["manchester-city", "Manchester City", "ENG", "MCI"], ["manchester-united", "Manchester United", "ENG", "MUN"], ["napoli", "Napoli", "ITA", "NAP"],
-  ["paris-saint-germain", "Paris Saint-Germain", "FRA", "PSG"], ["porto", "Porto", "POR", "POR"], ["psv-eindhoven", "PSV Eindhoven", "NED", "PSV"],
+  ["manchester-city", "Man City", "ENG", "MCI"], ["manchester-united", "Man United", "ENG", "MUN"], ["napoli", "Napoli", "ITA", "NAP"],
+  ["paris-saint-germain", "PSG", "FRA", "PSG"], ["porto", "Porto", "POR", "POR"], ["psv-eindhoven", "PSV Eindhoven", "NED", "PSV"],
   ["real-betis", "Real Betis", "ESP", "BET"], ["real-madrid", "Real Madrid", "ESP", "RMA"], ["roma", "Roma", "ITA", "ROM"],
   ["shakhtar-donetsk", "Shakhtar Donetsk", "UKR", "SHK"], ["slavia-prague", "Slavia Prague", "CZE", "SLA"], ["sporting-cp", "Sporting CP", "POR", "SCP"],
   ["stuttgart", "Stuttgart", "GER", "VFB"], ["villarreal", "Villarreal", "ESP", "VIL"],
+  ["fenerbahce", "Fenerbahçe", "TUR", "FEN"], ["olympique-lyonnais", "Lyon", "FRA", "OL"],
+  ["gnk-dinamo-zagreb", "Dinamo Zagreb", "CRO", "DIN"], ["crvena-zvezda", "FK Crvena zvezda", "SRB", "CZV"],
+  ["union-saint-gilloise", "Union SG", "BEL", "USG"], ["olympiacos", "Olympiacos", "GRE", "OLY"],
+  ["agf-aarhus", "AGF Aarhus", "DEN", "AGF"], ["slovan-bratislava", "ŠK Slovan Bratislava", "SVK", "SLO"],
+  ["levski-sofia", "PFC Levski Sofia", "BUL", "LEV"], ["nk-celje", "NK Celje", "SVN", "CEL"],
 ].map(([id, name, association, code]) => Object.freeze({
   id,
   name,
@@ -817,8 +832,30 @@ function sanitizeCustomPlayer(player, index = 0) {
     physical: rating("physical", overall),
     goalkeeping: rating("goalkeeping", position === "GK" ? overall : 5),
     penaltyTaker: player?.penaltyTaker === true,
+    startingXI: player?.startingXI === true,
     simulatorRating: true,
   };
+}
+
+function customPlayersWithValidStartingXI(players) {
+  if (players.filter((player) => player.startingXI).length === 11) return players;
+  const ranked = players
+    .map((player, index) => ({ player, index }))
+    .sort((left, right) => right.player.overall - left.player.overall || left.index - right.index);
+  const goalkeeper = ranked.find(({ player }) => player.position === "GK");
+  const selected = new Set();
+  if (goalkeeper) selected.add(goalkeeper.index);
+  ranked
+    .filter(({ player, index }) => !selected.has(index) && (selected.size >= 11 || player.position !== "GK"))
+    .slice(0, 11 - selected.size)
+    .forEach(({ index }) => selected.add(index));
+  if (selected.size < Math.min(11, players.length)) {
+    ranked
+      .filter(({ index }) => !selected.has(index))
+      .slice(0, 11 - selected.size)
+      .forEach(({ index }) => selected.add(index));
+  }
+  return players.map((player, index) => ({ ...player, startingXI: selected.has(index) }));
 }
 
 function sanitizeCustomTeam(team) {
@@ -828,9 +865,9 @@ function sanitizeCustomTeam(team) {
   if (!name) return null;
   const clampRating = (key, fallback = 75) => simulationClamp(Math.round(Number(team?.simulationRatings?.[key]) || fallback), 1, 99);
   const overall = clampRating("overall");
-  const players = Array.isArray(team?.playerProfiles)
+  const players = customPlayersWithValidStartingXI(Array.isArray(team?.playerProfiles)
     ? team.playerProfiles.slice(0, 26).map(sanitizeCustomPlayer)
-    : [];
+    : []);
   const customFlag = typeof team?.customFlag === "string" && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(team.customFlag)
     ? team.customFlag.slice(0, 2_500_000)
     : "";
@@ -1301,9 +1338,32 @@ const TWO_FOOTED_PENALTY_TAKERS = new Set([
   "Santi Cazorla",
 ].map(repairPlayerText));
 
+const PREFERRED_FOOT_OVERRIDES = new Map([
+  ["Erling Haaland", "left"],
+  ["Mohamed Salah", "left"],
+  ["Bukayo Saka", "left"],
+  ["Phil Foden", "left"],
+  ["Cole Palmer", "left"],
+  ["Lamine Yamal", "left"],
+  ["Lionel Messi", "left"],
+  ["Michael Olise", "left"],
+  ["Antoine Griezmann", "left"],
+  ["Romelu Lukaku", "left"],
+  ["Riyad Mahrez", "left"],
+  ["Hakim Ziyech", "left"],
+  ["Bernardo Silva", "left"],
+  ["Raphinha", "left"],
+  ["Ousmane Dembélé", "both"],
+  ["Ivan Perišić", "both"],
+  ["Brahim Díaz", "both"],
+].map(([name, foot]) => [repairPlayerText(name), foot]));
+
 function preferredPenaltyFoot(team, player, random) {
   const cleanedPlayer = repairPlayerText(player);
   const profile = playerProfilesForTeam(team).find((candidate) => repairPlayerText(candidate.name) === cleanedPlayer);
+  if (PREFERRED_FOOT_OVERRIDES.has(cleanedPlayer)) return PREFERRED_FOOT_OVERRIDES.get(cleanedPlayer) === "both"
+    ? random() < 0.5 ? "left" : "right"
+    : PREFERRED_FOOT_OVERRIDES.get(cleanedPlayer);
   if (profile?.preferredFoot === "left") return "left";
   if (profile?.preferredFoot === "right") return "right";
   if (profile?.preferredFoot === "both") return random() < 0.5 ? "left" : "right";
@@ -1314,6 +1374,10 @@ function preferredPenaltyFoot(team, player, random) {
 }
 
 function flagMarkup(team, className = "") {
+  if (team?.uclClub && team?.badge) {
+    const classes = ["country-flag", "pl-club-flag", "ucl-club-flag", className].filter(Boolean).join(" ");
+    return `<span class="${classes}" data-team-id="${escapeHtml(team.id)}" role="img" aria-label="${escapeHtml(team.name)} badge"><img src="${team.badge}" alt="" loading="lazy" decoding="async" /></span>`;
+  }
   if (team?.premierLeague && team?.badge) {
     const classes = ["country-flag", "pl-club-flag", className].filter(Boolean).join(" ");
     const fallback = `<span class="flag-fallback pl-club-code" aria-hidden="true">${escapeHtml(team.code || "PL")}</span>`;
@@ -1808,6 +1872,7 @@ const APP_MODE_PATHS = Object.freeze({
   retro: "/retro-world-cup",
   online: "/online-mode",
   premierLeague: "/pl-simulator",
+  ucl: "/ucl-simulator",
 });
 
 function savedTournamentIdFromPath() {
@@ -5868,6 +5933,12 @@ function tournamentRoundNames() {
   if (state?.savedTournamentView && Array.isArray(state.savedTournamentRoundNames)) {
     return state.savedTournamentRoundNames;
   }
+  if (state?.uclSeason && state.uclKnockoutMatch) {
+    return [state.uclKnockoutMatch.roundLabel || "Knockout match"];
+  }
+  if (state?.uclSeason) {
+    return Array.from({ length: 8 }, (_, index) => `Matchday ${index + 1}`);
+  }
   if (state?.premierLeagueSeason) {
     return Array.from({ length: 38 }, (_, index) => `Matchweek ${index + 1}`);
   }
@@ -5901,6 +5972,7 @@ function tournamentMatchRoundName(match, index = state.activeRound) {
 
 function tournamentFinalRoundIndex() {
   if (state?.savedTournamentView) return Math.max(0, state.rounds.length - 1);
+  if (state?.uclSeason) return 7;
   if (state?.premierLeagueSeason) return 37;
   if (isRetroSimulatorState()) return Number(retroTournament?.year || state?.retroTournamentYear) === 2026 ? 7 : 6;
   if (isValidCustomTournamentState(state)) {
@@ -6336,6 +6408,10 @@ standardTournamentState = state;
 function saveState() {
   const previousCustomTournamentState = customTournamentState;
   if (state?.savedTournamentView || retroTournament?.savedTournamentView) return;
+  if (state?.uclSeason) {
+    window.UclSeason?.saveEngineState?.(state);
+    return;
+  }
   if (state?.premierLeagueSeason) {
     window.PremierLeagueSeason?.saveEngineState?.(state);
     return;
@@ -6531,6 +6607,10 @@ function settleInterruptedLocalMatches() {
   const checkpoint = readStoredLiveMatchCheckpoint();
   state.rounds.forEach((round) => {
     (round || []).forEach((match) => {
+      if (revealOrphanedSimulatedResult(match)) {
+        settled = true;
+        return;
+      }
       if (match.result?.engineVersion === 2 && !match.result.revealed) {
         if (
           checkpoint?.scope === "standard"
@@ -6808,7 +6888,8 @@ function accountHasUclAssets(account) {
 }
 
 function uclClubBadgeMarkup(team, className = "ucl-club-badge") {
-  return `<img class="${className}" src="${team.badge}" alt="" loading="lazy" decoding="async" />`;
+  if (!team.badge) return `<span class="ucl-club-code" aria-hidden="true">${team.code}</span>`;
+  return `<img class="${className}" data-team-id="${escapeHtml(team.id)}" src="${team.badge}" alt="" loading="lazy" decoding="async" />`;
 }
 
 function renderUclTeamPicker() {
@@ -6819,7 +6900,7 @@ function renderUclTeamPicker() {
   if (!team) {
     els.uclTeamPickerMark.innerHTML = '<img src="./assets/ucl-starball-white.png" alt="" />';
     els.uclTeamLabel.textContent = "Neutral";
-    els.uclTeamHint.textContent = `${UCL_2026_27_QUALIFIED_TEAMS.length} qualified clubs available`;
+    els.uclTeamHint.textContent = `${UCL_2026_27_QUALIFIED_TEAMS.length} league-phase and qualifying clubs`;
     els.uclTeamPickerButton.setAttribute("aria-label", "Choose a 2026/27 Champions League club. Current view: Neutral");
     return;
   }
@@ -6827,7 +6908,7 @@ function renderUclTeamPicker() {
     ? uclClubBadgeMarkup(team)
     : team.code;
   els.uclTeamLabel.textContent = team.name;
-  els.uclTeamHint.textContent = "2026/27 league-phase qualifier";
+  els.uclTeamHint.textContent = "2026/27 league-phase pool";
   els.uclTeamPickerButton.setAttribute("aria-label", `Change ${team.name} as your Champions League club`);
 }
 
@@ -6850,7 +6931,7 @@ function renderUclTeamList(query = "") {
       ${uclAssetsInstalled
         ? uclClubBadgeMarkup(team, "ucl-club-badge ucl-picker-badge")
         : `<span class="ucl-club-code" aria-hidden="true">${team.code}</span>`}
-      <span><strong>${escapeHtml(team.name)}</strong><small>${team.association} &middot; League-phase qualifier</small></span>
+      <span><strong>${escapeHtml(team.name)}</strong><small>${team.association} &middot; League-phase pool</small></span>
       <i aria-hidden="true">${team.id === uclMenuTeamId ? "&#10003;" : ""}</i>
     </button>
   `).join("") || `<div class="overview-empty">No qualified club matches that search.</div>`;
@@ -9050,9 +9131,8 @@ function drawSnapshotGoldenBoot(context, scorer, y = 438, retroTheme = null) {
   });
 }
 
-function loadSnapshotFlag(team, { premierLeague = false } = {}) {
-  const premierLeagueBadge = premierLeague
-    && premierLeagueAssetsInstalled
+function loadSnapshotFlag(team, { premierLeague = false, ucl = false } = {}) {
+  const premierLeagueBadge = (premierLeague && premierLeagueAssetsInstalled || ucl)
     && team?.badge
     ? team.badge
     : null;
@@ -9076,7 +9156,7 @@ function loadSnapshotFlag(team, { premierLeague = false } = {}) {
   });
 }
 
-function drawSnapshotFlag(context, image, team, x, y, retroTheme = null, premierLeague = false) {
+function drawSnapshotFlag(context, image, team, x, y, retroTheme = null, premierLeague = false, ucl = false) {
   if (premierLeague) {
     if (image) {
       const sourceWidth = image.naturalWidth || image.width || 1;
@@ -9092,15 +9172,15 @@ function drawSnapshotFlag(context, image, team, x, y, retroTheme = null, premier
       context.restore();
     } else {
       snapshotRoundedRect(context, x - 62, y - 54, 124, 108, 18);
-      context.fillStyle = "rgba(96, 53, 126, 0.48)";
+      context.fillStyle = ucl ? "rgba(32, 78, 170, 0.52)" : "rgba(96, 53, 126, 0.48)";
       context.fill();
-      context.strokeStyle = "rgba(217, 182, 237, 0.28)";
+      context.strokeStyle = ucl ? "rgba(143, 178, 255, 0.34)" : "rgba(217, 182, 237, 0.28)";
       context.lineWidth = 2;
       context.stroke();
       snapshotText(context, team.code || "PL", x, y, 94, 38, {
         minimumSize: 28,
         weight: 900,
-        color: "#d9b6ed",
+        color: ucl ? "#8fb2ff" : "#d9b6ed",
         family: "Manrope, Arial, sans-serif",
       });
     }
@@ -9152,7 +9232,12 @@ async function createMatchSnapshotCanvas() {
     || 2014,
   );
   const retroTheme = retroSnapshot ? retroSnapshotPalette(retroYear) : null;
+  const uclSnapshot = Boolean(state?.uclSeason || document.body.classList.contains("ucl-match-mode-active"));
   const premierLeagueSnapshot = Boolean(state.premierLeagueSeason);
+  const domesticLeagueSnapshot = premierLeagueSnapshot && !uclSnapshot;
+  const snapshotAccent = retroTheme?.accent || (uclSnapshot ? "#8fb2ff" : domesticLeagueSnapshot ? "#d9b6ed" : "#779cff");
+  const snapshotSecondary = retroTheme?.secondaryText || (uclSnapshot ? "#bfd0f3" : domesticLeagueSnapshot ? "#d2afd9" : "#aab4c4");
+  const snapshotPrimary = retroTheme?.primaryText || "#f5f7fb";
   const championSnapshot = Boolean(state.championView && revealed);
   const customMatchSnapshot = state.customTournament?.customMatch === true;
   const snapshotShowsAward = championSnapshot && !customMatchSnapshot;
@@ -9189,8 +9274,8 @@ async function createMatchSnapshotCanvas() {
   const contentBottom = goldenBootY === null ? detailBottom : goldenBootY + 116;
   const canvasHeight = Math.max(675, Math.ceil(contentBottom + 110));
   const [homeFlagImage, awayFlagImage] = await Promise.all([
-    loadSnapshotFlag(home, { premierLeague: premierLeagueSnapshot }),
-    loadSnapshotFlag(away, { premierLeague: premierLeagueSnapshot }),
+    loadSnapshotFlag(home, { premierLeague: premierLeagueSnapshot, ucl: uclSnapshot }),
+    loadSnapshotFlag(away, { premierLeague: premierLeagueSnapshot, ucl: uclSnapshot }),
   ]);
   const canvas = document.createElement("canvas");
   canvas.width = 1200;
@@ -9199,16 +9284,16 @@ async function createMatchSnapshotCanvas() {
   if (!context) throw new Error("Image creation is not supported in this browser.");
 
   const background = context.createLinearGradient(0, 0, 1200, canvasHeight);
-  background.addColorStop(0, retroTheme?.backgroundStart || (premierLeagueSnapshot ? "#1e0021" : "#0b1018"));
-  background.addColorStop(0.55, retroTheme?.backgroundMiddle || (premierLeagueSnapshot ? "#381d53" : "#111925"));
-  background.addColorStop(1, retroTheme?.backgroundEnd || (premierLeagueSnapshot ? "#1e0021" : "#0b111b"));
+  background.addColorStop(0, retroTheme?.backgroundStart || (uclSnapshot ? "#04112d" : domesticLeagueSnapshot ? "#1e0021" : "#0b1018"));
+  background.addColorStop(0.55, retroTheme?.backgroundMiddle || (uclSnapshot ? "#0b2c72" : domesticLeagueSnapshot ? "#381d53" : "#111925"));
+  background.addColorStop(1, retroTheme?.backgroundEnd || (uclSnapshot ? "#02091b" : domesticLeagueSnapshot ? "#1e0021" : "#0b111b"));
   context.fillStyle = background;
   context.fillRect(0, 0, 1200, canvasHeight);
 
   const glow = context.createRadialGradient(600, 250, 0, 600, 250, 530);
   glow.addColorStop(
     0,
-    retroTheme?.glow || (premierLeagueSnapshot ? "rgba(157, 107, 187, 0.34)" : "rgba(31, 94, 255, 0.18)"),
+    retroTheme?.glow || (uclSnapshot ? "rgba(63, 123, 255, 0.32)" : domesticLeagueSnapshot ? "rgba(157, 107, 187, 0.34)" : "rgba(31, 94, 255, 0.18)"),
   );
   glow.addColorStop(
     1,
@@ -9218,11 +9303,13 @@ async function createMatchSnapshotCanvas() {
   context.fillRect(0, 0, 1200, canvasHeight);
 
   snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, 28);
-  context.fillStyle = retroTheme?.panel || (premierLeagueSnapshot ? "rgba(40, 0, 45, 0.9)" : "rgba(17, 24, 36, 0.88)");
+  context.fillStyle = retroTheme?.panel || (uclSnapshot ? "rgba(4, 18, 48, 0.94)" : domesticLeagueSnapshot ? "rgba(40, 0, 45, 0.9)" : "rgba(17, 24, 36, 0.88)");
   context.fill();
   if (!retroSnapshot) {
-    context.strokeStyle = premierLeagueSnapshot
-      ? "rgba(217, 182, 237, 0.25)"
+    context.strokeStyle = uclSnapshot
+      ? "rgba(143, 178, 255, 0.30)"
+      : domesticLeagueSnapshot
+        ? "rgba(217, 182, 237, 0.25)"
       : "rgba(118, 145, 196, 0.24)";
     context.lineWidth = 2;
     context.stroke();
@@ -9235,7 +9322,11 @@ async function createMatchSnapshotCanvas() {
       ? Number(retroYear) === 2016
         ? "FRANCE 2016 EUROPEAN CHAMPIONS"
         : `${RETRO_WORLD_CUP_EDITIONS[retroYear].host.toUpperCase()} ${retroYear} WORLD CHAMPIONS`
-      : customMatchSnapshot ? "CUSTOM MATCH WINNER" : "256 TEAMS WC CHAMPIONS"
+      : uclSnapshot
+        ? "UCL 26/27 CHAMPIONS"
+        : customMatchSnapshot ? "CUSTOM MATCH WINNER" : "256 TEAMS WC CHAMPIONS"
+    : uclSnapshot
+      ? `UCL 26/27 · ${tournamentMatchRoundName(match, roundIndex).toUpperCase()}`
     : premierLeagueSnapshot
       ? `PL 26/27 · ${tournamentMatchRoundName(match, roundIndex).toUpperCase()}`
       : tournamentMatchRoundName(match, roundIndex).toUpperCase();
@@ -9243,19 +9334,19 @@ async function createMatchSnapshotCanvas() {
     minimumSize: 14,
     weight: 700,
     align: "right",
-    color: retroTheme?.accent || (premierLeagueSnapshot ? "#d9b6ed" : "#779cff"),
+    color: snapshotAccent,
     family: "Manrope, Arial, sans-serif",
   });
 
-  const homeSnapshotName = premierLeagueSnapshot && home.name === "Manchester United"
+  const homeSnapshotName = domesticLeagueSnapshot && home.name === "Manchester United"
     ? "Man United"
     : home.name;
-  const awaySnapshotName = premierLeagueSnapshot && away.name === "Manchester United"
+  const awaySnapshotName = domesticLeagueSnapshot && away.name === "Manchester United"
     ? "Man United"
     : away.name;
   if (premierLeagueSnapshot) {
-    drawSnapshotFlag(context, homeFlagImage, home, 405, 250, retroTheme, true);
-    drawSnapshotFlag(context, awayFlagImage, away, 795, 250, retroTheme, true);
+    drawSnapshotFlag(context, homeFlagImage, home, 405, 250, retroTheme, true, uclSnapshot);
+    drawSnapshotFlag(context, awayFlagImage, away, 795, 250, retroTheme, true, uclSnapshot);
     snapshotText(context, homeSnapshotName, 325, 250, 240, 34, {
       minimumSize: 22,
       weight: 800,
@@ -9271,8 +9362,8 @@ async function createMatchSnapshotCanvas() {
   } else {
     drawSnapshotFlag(context, homeFlagImage, home, 270, 205, retroTheme);
     drawSnapshotFlag(context, awayFlagImage, away, 930, 205, retroTheme);
-    snapshotText(context, homeSnapshotName, 270, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
-    snapshotText(context, awaySnapshotName, 930, 292, 390, 42, { minimumSize: 24, weight: 800, color: retroTheme?.primaryText || "#f5f7fb" });
+    snapshotText(context, homeSnapshotName, 270, 292, 390, 42, { minimumSize: 24, weight: 800, color: snapshotPrimary });
+    snapshotText(context, awaySnapshotName, 930, 292, 390, 42, { minimumSize: 24, weight: 800, color: snapshotPrimary });
   }
 
   if (revealed) {
@@ -9294,7 +9385,7 @@ async function createMatchSnapshotCanvas() {
     snapshotText(context, resultLabel, 600, premierLeagueSnapshot ? 340 : 370, 380, 24, {
       minimumSize: 20,
       weight: 700,
-      color: retroTheme?.accent || (premierLeagueSnapshot ? "#d9b6ed" : "#7e8ca3"),
+      color: snapshotAccent,
       family: "Manrope, Arial, sans-serif",
     });
     drawSnapshotGoalLines(
@@ -9304,7 +9395,7 @@ async function createMatchSnapshotCanvas() {
       detailStartY,
       "left",
       snapshotShowsAward ? 290 : 420,
-      retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#aab4c4"),
+      snapshotSecondary,
     );
     drawSnapshotGoalLines(
       context,
@@ -9313,7 +9404,7 @@ async function createMatchSnapshotCanvas() {
       detailStartY,
       "right",
       snapshotShowsAward ? 290 : 420,
-      retroTheme?.secondaryText || (premierLeagueSnapshot ? "#d2afd9" : "#aab4c4"),
+      snapshotSecondary,
     );
     if (homeShootoutY !== null) {
       drawSnapshotShootout(context, homeShootout, 188, homeShootoutY, "left", snapshotShowsAward ? 290 : 420);
@@ -9325,12 +9416,12 @@ async function createMatchSnapshotCanvas() {
   } else {
     snapshotText(context, "VS", 600, premierLeagueSnapshot ? 250 : 307, 180, 52, {
       weight: 800,
-      color: retroTheme?.accent || "#789cff",
+      color: snapshotAccent,
       family: "Manrope, Arial, sans-serif",
     });
     snapshotText(context, result ? "RESULT HIDDEN" : "UPCOMING FIXTURE", 600, premierLeagueSnapshot ? 340 : 370, 320, 18, {
       weight: 700,
-      color: retroTheme?.secondaryText || "#7e8ca3",
+      color: snapshotSecondary,
       family: "Manrope, Arial, sans-serif",
     });
   }
@@ -9339,10 +9430,17 @@ async function createMatchSnapshotCanvas() {
   snapshotText(context, `${mode} · ${state.settings.goals.toUpperCase()} GOALS`, 84, canvasHeight - 43, 420, 15, {
     weight: 600,
     align: "left",
-    color: retroTheme?.accent || (premierLeagueSnapshot ? "#d2afd9" : "#69778e"),
+    color: snapshotAccent,
     family: "Manrope, Arial, sans-serif",
   });
-  if (premierLeagueSnapshot) {
+  if (uclSnapshot) {
+    snapshotText(context, "UCL 26/27 SIMULATION", 600, canvasHeight - 43, 360, 17, {
+      minimumSize: 14,
+      weight: 900,
+      color: "#ffffff",
+      family: "Manrope, Arial, sans-serif",
+    });
+  } else if (premierLeagueSnapshot) {
     snapshotText(context, "PL 26/27 SIMULATION", 600, canvasHeight - 43, 360, 17, {
       minimumSize: 14,
       weight: 900,
@@ -9653,18 +9751,25 @@ async function openSnapshotModal() {
   }
   els.snapshotButton.disabled = true;
   try {
+    const uclSnapshot = Boolean(state?.uclSeason || document.body.classList.contains("ucl-match-mode-active"));
     const premierLeagueSnapshot = Boolean(state.premierLeagueSeason);
-    els.snapshotModalKicker.textContent = premierLeagueSnapshot ? "PL 26/27 SIMULATION" : "SHARE THE MOMENT";
-    els.snapshotModalTitle.textContent = premierLeagueSnapshot ? "Premier League match snapshot" : "Match snapshot";
+    els.snapshotModalKicker.textContent = uclSnapshot
+      ? "UCL 26/27 SIMULATION"
+      : premierLeagueSnapshot ? "PL 26/27 SIMULATION" : "SHARE THE MOMENT";
+    els.snapshotModalTitle.textContent = uclSnapshot
+      ? "Champions League match snapshot"
+      : premierLeagueSnapshot ? "Premier League match snapshot" : "Match snapshot";
     snapshotBlob = await canvasPngBlob(await createMatchSnapshotCanvas());
     if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
     snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
     els.snapshotImage.src = snapshotObjectUrl;
-    els.snapshotImage.alt = premierLeagueSnapshot
-      ? "Generated PL 26/27 match snapshot"
+    els.snapshotImage.alt = uclSnapshot
+      ? "Generated UCL 26/27 match snapshot"
+      : premierLeagueSnapshot
+        ? "Generated PL 26/27 match snapshot"
       : "Generated 256 TEAMS WC snapshot";
     const snapshot = snapshotMatchContext();
-    snapshotFilename = `${premierLeagueSnapshot ? "pl-26-27" : "world-256"}-${snapshot.home.name}-vs-${snapshot.away.name}`
+    snapshotFilename = `${uclSnapshot ? "ucl-26-27" : premierLeagueSnapshot ? "pl-26-27" : "world-256"}-${snapshot.home.name}-vs-${snapshot.away.name}`
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "") + ".png";
@@ -9722,9 +9827,14 @@ async function shareSnapshotImage() {
       return;
     }
     const premierLeagueSnapshot = Boolean(state?.premierLeagueSeason);
+    const uclSnapshot = Boolean(state?.uclSeason || document.body.classList.contains("ucl-match-mode-active"));
     await navigator.share({
-      title: premierLeagueSnapshot ? "PL 26/27 match snapshot" : "256 TEAMS WC match snapshot",
-      text: premierLeagueSnapshot ? "PL 26/27 simulation result" : "256 TEAMS WC tournament result",
+      title: uclSnapshot
+        ? "UCL 26/27 match snapshot"
+        : premierLeagueSnapshot ? "PL 26/27 match snapshot" : "256 TEAMS WC match snapshot",
+      text: uclSnapshot
+        ? "UCL 26/27 simulation result"
+        : premierLeagueSnapshot ? "PL 26/27 simulation result" : "256 TEAMS WC tournament result",
       files: [file],
     });
   } catch (error) {
@@ -9933,6 +10043,160 @@ async function openPremierLeagueSeasonSnapshotModal(summary, button = null) {
 
 window.openPremierLeagueSeasonSnapshotModal = openPremierLeagueSeasonSnapshotModal;
 
+async function createUclSeasonSnapshotCanvas(summary) {
+  const champion = summary?.champion;
+  if (!champion) throw new Error("The Champions League season is not complete.");
+  const topScorer = summary.topScorer;
+  const loadedBadges = await Promise.all([
+    loadSnapshotFlag(champion, { ucl: true }),
+    summary.playerOfTheSeason?.team ? loadSnapshotFlag(summary.playerOfTheSeason.team, { ucl: true }) : Promise.resolve(null),
+    summary.youngPlayerOfTheSeason?.team ? loadSnapshotFlag(summary.youngPlayerOfTheSeason.team, { ucl: true }) : Promise.resolve(null),
+    topScorer?.team ? loadSnapshotFlag(topScorer.team, { ucl: true }) : Promise.resolve(null),
+  ]);
+  const [championBadge, potsBadge, ypotsBadge, scorerBadge] = loadedBadges;
+  const canvas = document.createElement("canvas");
+  canvas.width = 1200;
+  canvas.height = 900;
+  const context = canvas.getContext("2d");
+  const background = context.createLinearGradient(0, 0, 1200, 900);
+  background.addColorStop(0, "#10275d");
+  background.addColorStop(0.48, "#061432");
+  background.addColorStop(1, "#020817");
+  context.fillStyle = background;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+
+  const glow = context.createRadialGradient(600, 185, 20, 600, 185, 360);
+  glow.addColorStop(0, "rgba(75, 119, 255, 0.34)");
+  glow.addColorStop(1, "rgba(2, 8, 23, 0)");
+  context.fillStyle = glow;
+  context.fillRect(0, 0, canvas.width, 560);
+
+  snapshotText(context, "2026/27 UEFA CHAMPIONS LEAGUE WINNERS", 600, 60, 850, 19, {
+    weight: 900,
+    color: "#8fb2ff",
+    family: "DM Mono, monospace",
+  });
+  drawSnapshotFlag(context, championBadge, champion, 600, 172, null, true, true);
+  snapshotText(context, champion.name, 600, 292, 880, 58, {
+    minimumSize: 36,
+    weight: 900,
+    color: "#ffffff",
+  });
+  snapshotText(context, "CHAMPIONS OF EUROPE", 600, 334, 620, 16, {
+    weight: 900,
+    color: "#e5c46e",
+    family: "DM Mono, monospace",
+  });
+
+  const statCards = [
+    {
+      label: "POTS",
+      value: summary.playerOfTheSeason?.player || "—",
+      detail: summary.playerOfTheSeason
+        ? `${summary.playerOfTheSeason.team?.name || "Club"} · PLAYER OF THE SEASON`
+        : "PLAYER OF THE SEASON",
+      badge: potsBadge,
+      team: summary.playerOfTheSeason?.team,
+    },
+    {
+      label: "YPOTS",
+      value: summary.youngPlayerOfTheSeason?.player || "—",
+      detail: summary.youngPlayerOfTheSeason
+        ? `${summary.youngPlayerOfTheSeason.team?.name || "Club"} · YOUNG PLAYER OF THE SEASON`
+        : "YOUNG PLAYER OF THE SEASON",
+      badge: ypotsBadge,
+      team: summary.youngPlayerOfTheSeason?.team,
+    },
+    {
+      label: "TOP SCORER",
+      value: topScorer ? `${topScorer.goals}` : "—",
+      detail: topScorer ? `${topScorer.player} · ${topScorer.goals === 1 ? "1 GOAL" : `${topScorer.goals} GOALS`}` : "NO GOALS RECORDED",
+      badge: scorerBadge,
+      team: topScorer?.team,
+    },
+  ];
+
+  statCards.forEach((card, index) => {
+    const x = 48 + index * 384;
+    const y = 404;
+    snapshotRoundedRect(context, x, y, 336, 224, 18);
+    context.fillStyle = "rgba(13, 34, 78, 0.9)";
+    context.fill();
+    context.strokeStyle = index === 2 ? "rgba(229, 196, 110, 0.42)" : "rgba(143, 178, 255, 0.2)";
+    context.lineWidth = 2;
+    context.stroke();
+    if (card.team) drawSnapshotFlag(context, card.badge, card.team, x + 168, y + 67, null, true, true);
+    snapshotText(context, card.label, x + 168, y + 132, 290, 14, {
+      weight: 900,
+      color: index === 2 ? "#e5c46e" : "#8fb2ff",
+      family: "DM Mono, monospace",
+    });
+    snapshotText(context, card.value, x + 168, y + 174, 292, index === 2 ? 38 : 24, {
+      minimumSize: index === 2 ? 28 : 15,
+      weight: 900,
+      color: "#ffffff",
+    });
+    snapshotText(context, card.detail, x + 168, y + 205, 292, 12, {
+      minimumSize: 9,
+      weight: 800,
+      color: "#a8b9df",
+    });
+  });
+
+  snapshotRoundedRect(context, 48, 672, 1104, 112, 18);
+  context.fillStyle = "rgba(7, 22, 54, 0.9)";
+  context.fill();
+  context.strokeStyle = "rgba(143, 178, 255, 0.18)";
+  context.lineWidth = 2;
+  context.stroke();
+  snapshotText(context, "POTS · YPOTS · TOP SCORER", 600, 716, 820, 30, {
+    minimumSize: 22,
+    weight: 900,
+    color: "#ffffff",
+  });
+  snapshotText(context, "THE 2026/27 CHAMPIONS LEAGUE AWARDS", 600, 756, 760, 14, {
+    weight: 900,
+    color: "#e5c46e",
+    family: "DM Mono, monospace",
+  });
+  snapshotText(context, "UCL 26/27 SIMULATION", 64, 852, 500, 14, {
+    weight: 800,
+    align: "left",
+    color: "#8095c3",
+  });
+  snapshotText(context, "256teams.com", 1136, 852, 380, 14, {
+    weight: 800,
+    align: "right",
+    color: "#8095c3",
+  });
+  return canvas;
+}
+
+async function openUclSeasonSnapshotModal(summary, button = null) {
+  if (button) button.disabled = true;
+  try {
+    els.snapshotModalKicker.textContent = "UCL 26/27 COMPETITION COMPLETE";
+    els.snapshotModalTitle.textContent = "Champions League winners image";
+    snapshotBlob = await canvasPngBlob(await createUclSeasonSnapshotCanvas(summary));
+    if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
+    snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
+    els.snapshotImage.src = snapshotObjectUrl;
+    els.snapshotImage.alt = "Generated Champions League winners image";
+    snapshotFilename = `ucl-26-27-${summary.champion.name}-champions`
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") + ".png";
+    els.shareSnapshotButton.hidden = typeof navigator.share !== "function";
+    els.snapshotModal.showModal();
+  } catch (error) {
+    showToast(error.message || "The Champions League winners image could not be created.");
+  } finally {
+    if (button) button.disabled = false;
+  }
+}
+
+window.openUclSeasonSnapshotModal = openUclSeasonSnapshotModal;
+
 function generatedPlayers(team) {
   const seed = stableHash(team.name);
   const culture = CULTURAL_NAME_POOLS[team.nameCulture] || CULTURAL_NAME_POOLS.british;
@@ -10034,6 +10298,7 @@ function playerProfilesForTeam(team) {
     }
     profiles = profiles.map((profile, index) => {
       const preferredFoot = profile.preferredFoot
+        || PREFERRED_FOOT_OVERRIDES.get(repairPlayerText(profile.name))
         || (TWO_FOOTED_PENALTY_TAKERS.has(profile.name) ? "both" : LEFT_FOOTED_PENALTY_TAKERS.has(profile.name) ? "left" : null);
       const draftedPosition = team.positionSuitability?.find((entry) => entry.player === profile.name);
       if (!draftedPosition) return { ...profile, preferredFoot };
@@ -10383,7 +10648,46 @@ function selectWeightedProfile(profiles, random, weightForProfile) {
 function onPitchPlayerProfiles(team) {
   const squadProfiles = playerProfilesForTeam(team);
   const markedStarters = squadProfiles.filter((profile) => profile.startingXI);
-  return markedStarters.length ? markedStarters : squadProfiles;
+  const starters = markedStarters.length ? markedStarters : squadProfiles;
+  if (!state?.uclSeason || starters.length !== 11) return starters;
+  const match = selectedMatch();
+  if (!match || ![match.homeId, match.awayId].includes(team.id)) return starters;
+  const groupFor = (position) => {
+    if (position === "GK") return "goalkeeper";
+    if (["CB", "LB", "RB", "LWB", "RWB"].includes(position)) return "defence";
+    if (["CDM", "CM", "CAM", "LM", "RM", "AM"].includes(position)) return "midfield";
+    return "attack";
+  };
+  const rotationRandom = mulberry32(
+    Number(state.drawSeed || 1)
+    + stableHash(`${match.id}:${team.id}:ucl-lineup-rotation`),
+  );
+  const rotated = new Map(starters.map((profile) => [profile.name, profile]));
+  const rotationTarget = stableHash(`${match.id}:${team.id}:ucl-rotation-count`) % 3;
+  const replacementPool = squadProfiles
+    .filter((profile) => !rotated.has(profile.name) && profile.position !== "GK" && profile.expectedMinutesShare >= 0.2)
+    .map((profile) => ({
+      profile,
+      score: profile.expectedMinutesShare * 4 + profile.overall / 25 + rotationRandom(),
+    }))
+    .sort((left, right) => right.score - left.score);
+  let replacements = 0;
+  for (const candidate of replacementPool) {
+    if (replacements >= rotationTarget) break;
+    const group = groupFor(candidate.profile.position);
+    const replaceable = [...rotated.values()]
+      .filter((profile) => profile.position !== "GK" && groupFor(profile.position) === group)
+      .map((profile) => ({
+        profile,
+        restScore: (1 - profile.expectedMinutesShare) * 3 + rotationRandom(),
+      }))
+      .sort((left, right) => right.restScore - left.restScore)[0]?.profile;
+    if (!replaceable) continue;
+    rotated.delete(replaceable.name);
+    rotated.set(candidate.profile.name, candidate.profile);
+    replacements += 1;
+  }
+  return [...rotated.values()];
 }
 
 function eligibleScorerProfiles(team, minute, cards = [], suspendedPlayers = []) {
@@ -11671,7 +11975,27 @@ function createLiveMatchResult(match, roundIndex) {
   };
 }
 
+function simulateAndRevealMatch(match, roundIndex) {
+  if (match.result) {
+    match.result.revealed = true;
+    return match.result;
+  }
+  const result = simulateMatch(match, roundIndex);
+  match.result = { ...result, revealed: true };
+  return match.result;
+}
+
+function revealOrphanedSimulatedResult(match) {
+  if (!match?.result || match.result.revealed !== false || match.result.engineVersion === 2) return false;
+  match.result.revealed = true;
+  return true;
+}
+
 function buildNextRound(roundIndex) {
+  if (state?.uclSeason) {
+    window.UclSeason?.syncEngineProgress?.(roundIndex);
+    return;
+  }
   if (state?.premierLeagueSeason) {
     window.PremierLeagueSeason?.syncEngineProgress?.(roundIndex);
     return;
@@ -11848,8 +12172,7 @@ function advanceSpectatedRun() {
     const completedMatchday = customGroupMatchday(match);
     round.forEach((otherMatch) => {
       if (customGroupMatchday(otherMatch) !== completedMatchday) return;
-      if (!otherMatch.result) otherMatch.result = simulateMatch(otherMatch, state.activeRound);
-      otherMatch.result.revealed = true;
+      simulateAndRevealMatch(otherMatch, state.activeRound);
     });
 
     const nextMatchIndex = round.findIndex((otherMatch) => (
@@ -11909,8 +12232,7 @@ function advanceSpectatedRun() {
   }
 
   selectedRound().forEach((otherMatch) => {
-    if (!otherMatch.result) otherMatch.result = simulateMatch(otherMatch, state.activeRound);
-    otherMatch.result.revealed = true;
+    simulateAndRevealMatch(otherMatch, state.activeRound);
   });
   buildNextRound(state.activeRound);
 
@@ -11976,6 +12298,13 @@ function advanceSpectatedRun() {
 }
 
 function goToNextTie() {
+  if (state?.uclSeason) {
+    if (window.UclSeason?.finishManagedKnockoutMatch?.(state.activeRound, state.selectedMatch)) return;
+    if (window.UclSeason?.finishManagedMatchday?.(state.activeRound, state.selectedMatch)) return;
+    if (window.UclSeason?.returnToManagedMatchday?.(state.activeRound, state.selectedMatch)) return;
+    window.UclSeason?.returnToSimulator?.();
+    return;
+  }
   if (state?.premierLeagueSeason) {
     const completedMatch = selectedMatch();
     const completedManagedMatch = Boolean(
@@ -13814,7 +14143,9 @@ function applyLiveEvent(event, animate = true) {
   els.awayDiscipline.innerHTML = disciplineMarkup(livePlayback.awayReds);
   appendLiveTimelineEvent(event, animate);
   saveLiveMatchCheckpoint();
-  if (state?.premierLeagueSeason && event.type === "goal") {
+  if (state?.uclSeason && event.type === "goal") {
+    window.UclSeason?.renderEngineTable?.();
+  } else if (state?.premierLeagueSeason && event.type === "goal") {
     window.PremierLeagueSeason?.renderEngineTable?.();
   }
   if (isRetroSimulatorState() && retroGroupStageDisplayActive()) {
@@ -15496,10 +15827,7 @@ function playSelected() {
   if (managedDefaultFinalSkipsThirdPlace(match)) {
     const thirdPlaceMatch = tournamentThirdPlaceMatch();
     if (thirdPlaceMatch && !thirdPlaceMatch.result?.revealed) {
-      if (!thirdPlaceMatch.result) {
-        thirdPlaceMatch.result = simulateMatch(thirdPlaceMatch, tournamentFinalRoundIndex());
-      }
-      thirdPlaceMatch.result.revealed = true;
+      simulateAndRevealMatch(thirdPlaceMatch, tournamentFinalRoundIndex());
       saveState();
     }
   }
@@ -15542,8 +15870,7 @@ function simulateCurrentRound() {
     const watchedMatchReady = watchedMatchIndex >= 0 && !round[watchedMatchIndex]?.result?.revealed;
     round.forEach((match, index) => {
       if (watchedMatchReady && index === watchedMatchIndex) return;
-      if (!match.result) match.result = simulateMatch(match, state.activeRound);
-      match.result.revealed = true;
+      simulateAndRevealMatch(match, state.activeRound);
     });
     if (watchedMatchReady) {
       state.selectedMatch = watchedMatchIndex;
@@ -15579,8 +15906,7 @@ function simulateCurrentRound() {
     round.forEach((match, index) => {
       if (customGroupMatchday(match) !== matchday) return;
       if (watchingActiveTeam && index === watchedMatchIndex) return;
-      if (!match.result) match.result = simulateMatch(match, state.activeRound);
-      match.result.revealed = true;
+      simulateAndRevealMatch(match, state.activeRound);
     });
 
     if (watchingActiveTeam) {
@@ -15611,8 +15937,7 @@ function simulateCurrentRound() {
   if (watchedMatchIndex >= 0 && !round[watchedMatchIndex].result?.revealed) {
     round.forEach((match, index) => {
       if (index === watchedMatchIndex) return;
-      if (!match.result) match.result = simulateMatch(match, state.activeRound);
-      match.result.revealed = true;
+      simulateAndRevealMatch(match, state.activeRound);
     });
     state.selectedMatch = watchedMatchIndex;
     state.championView = false;
@@ -15624,8 +15949,7 @@ function simulateCurrentRound() {
   }
   if (state.spectateTeamId && watchedMatchIndex >= 0 && advanceSpectatedRun()) return;
   round.forEach((match) => {
-    if (!match.result) match.result = simulateMatch(match, state.activeRound);
-    match.result.revealed = true;
+    simulateAndRevealMatch(match, state.activeRound);
   });
   buildNextRound(state.activeRound);
 
@@ -16167,7 +16491,7 @@ function renderStage() {
   setTeamName(els.homeName, premierLeagueResponsiveTeamName(home));
   setTeamName(els.awayName, premierLeagueResponsiveTeamName(away));
   els.homeScore.textContent = premierLeaguePrematch
-    ? window.PremierLeagueSeason?.kickoffForMatch?.(state.selectedMatch) || "15:00"
+    ? state.uclSeason ? "20:00" : window.PremierLeagueSeason?.kickoffForMatch?.(state.selectedMatch) || "15:00"
     : isLive ? livePlayback.homeScore : revealed ? result.homeGoals : result ? "–" : "0";
   els.awayScore.textContent = premierLeaguePrematch
     ? ""
@@ -16248,7 +16572,9 @@ function renderStage() {
     && !match.allowDraw
     && result.winnerId !== state.spectateTeamId
   ));
-  const revealedAction = state.premierLeagueSeason
+  const revealedAction = state.uclSeason
+    ? isControlledMatch ? "Complete matchday" : "Back to your match"
+    : state.premierLeagueSeason
     ? "Next match"
     : thirdPlacePlayoff
     ? "Next game"
@@ -16286,7 +16612,7 @@ function renderRoundNav() {
       >
         <span class="round-index">${complete ? "✓" : String(index + 1).padStart(2, "0")}</span>
         <strong>${name}</strong>
-        <small>${complete ? "Results" : state.premierLeagueSeason ? "10 matches" : (round ? round.length : 2 ** (tournamentFinalRoundIndex() - index))}</small>
+        <small>${complete ? "Results" : state.uclSeason ? "18 matches" : state.premierLeagueSeason ? "10 matches" : (round ? round.length : 2 ** (tournamentFinalRoundIndex() - index))}</small>
       </button>
     `;
   }).join("");
@@ -16310,7 +16636,7 @@ function roundHistoryTargets() {
   }
 
   const newer = historyMode
-    ? state.activeRound === 3 && currentRound >= 4
+    ? !state.uclSeason && state.activeRound === 3 && currentRound >= 4
       ? currentRound
       : state.activeRound + 1
     : null;
@@ -16318,6 +16644,7 @@ function roundHistoryTargets() {
 }
 
 function roundHistoryLabel(roundIndex) {
+  if (state?.uclSeason) return `View Matchday ${roundIndex + 1}`;
   return roundIndex >= (isRetroSimulatorState() ? 3 : 4)
     ? "View knockout bracket"
     : `View ${tournamentRoundName(roundIndex)}`;
@@ -17371,7 +17698,12 @@ const CUSTOM_DEFAULT_XI = Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "C
 function newCustomTeamDraft(team = null) {
   const basePlayers = team?.playerProfiles?.length
     ? team.playerProfiles.map((player) => ({ ...player }))
-    : CUSTOM_DEFAULT_XI.map((position, index) => sanitizeCustomPlayer({ name: `Player ${index + 1}`, position, overall: 75 }, index));
+    : CUSTOM_DEFAULT_XI.map((position, index) => sanitizeCustomPlayer({
+        name: `Player ${index + 1}`,
+        position,
+        overall: 75,
+        startingXI: true,
+      }, index));
   const ratings = team?.simulationRatings || {};
   return {
     name: team?.name || "",
@@ -17423,8 +17755,8 @@ function customTeamCreatorMarkup() {
           <div class="custom-rating-grid">${ratingFields.map(([key, label]) => `<label><span>${label}</span><input type="number" min="1" max="99" value="${draft.simulationRatings[key]}" data-custom-team-rating="${key}" /></label>`).join("")}</div>
         </section>
         <section class="custom-player-builder">
-          <div class="custom-section-title"><div><span>SQUAD</span><h3>Players</h3></div><button type="button" data-custom-action="add-custom-player" ${draft.playerProfiles.length >= 26 ? "disabled" : ""}>+ Add player</button></div>
-          <p class="custom-player-help">Add at least 11 players. Open attributes to tune how each player performs, scores and defends.</p>
+          <div class="custom-section-title"><div><span>SQUAD</span><h3>Players</h3></div><div><button type="button" data-custom-action="auto-pick-custom-xi">Auto-pick best XI</button><button type="button" data-custom-action="add-custom-player" ${draft.playerProfiles.length >= 26 ? "disabled" : ""}>+ Add player</button></div></div>
+          <p class="custom-player-help">Choose exactly 11 starters, or auto-pick the highest-rated goalkeeper and outfield players. Open attributes to tune how each player performs.</p>
           <div class="custom-player-rows">
             ${draft.playerProfiles.map((player, index) => `<article class="custom-player-row">
               <div class="custom-player-main-fields">
@@ -17432,6 +17764,7 @@ function customTeamCreatorMarkup() {
                 <input aria-label="Player ${index + 1} name" maxlength="50" value="${escapeHtml(player.name)}" data-custom-player-index="${index}" data-custom-player-field="name" required />
                 <select aria-label="Player ${index + 1} position" data-custom-player-index="${index}" data-custom-player-field="position">${CUSTOM_PLAYER_POSITIONS.map((position) => `<option value="${position}" ${position === player.position ? "selected" : ""}>${position}</option>`).join("")}</select>
                 <label><span>OVR</span><input type="number" min="1" max="99" value="${player.overall}" data-custom-player-index="${index}" data-custom-player-field="overall" /></label>
+                <label><span>XI</span><input type="checkbox" ${player.startingXI ? "checked" : ""} data-custom-player-index="${index}" data-custom-player-field="startingXI" aria-label="${escapeHtml(player.name)} in starting XI" /></label>
                 <button type="button" data-custom-action="remove-custom-player" data-index="${index}" aria-label="Remove ${escapeHtml(player.name)}" ${draft.playerProfiles.length <= 11 ? "disabled" : ""}>&times;</button>
               </div>
               <details><summary>Attributes</summary><div class="custom-player-attributes">${attributeFields.map(([key, label]) => `<label><span>${label}</span><input type="number" min="1" max="99" value="${player[key]}" data-custom-player-index="${index}" data-custom-player-field="${key}" /></label>`).join("")}<label class="custom-penalty-taker"><input type="checkbox" ${player.penaltyTaker ? "checked" : ""} data-custom-player-index="${index}" data-custom-player-field="penaltyTaker" /><span>Penalty taker</span></label></div></details>
@@ -17462,7 +17795,7 @@ function syncCustomTeamDraftFromInput(input) {
     if (!player) return;
     const key = input.dataset.customPlayerField;
     player[key] = key === "name" || key === "position" ? input.value
-      : key === "penaltyTaker" ? input.checked
+      : key === "penaltyTaker" || key === "startingXI" ? input.checked
         : simulationClamp(Number(input.value) || 1, 1, 99);
   }
 }
@@ -17504,6 +17837,10 @@ async function saveCustomTeamDraft() {
     if (message) message.textContent = "Add names for at least 11 players.";
     return;
   }
+  if (players.filter((player) => player.startingXI).length !== 11) {
+    if (message) message.textContent = "Choose exactly 11 players for the starting XI, or use Auto-pick best XI.";
+    return;
+  }
   const duplicateName = customTeamLibrary.some((team) => team.id !== customTournamentUi.editingCustomTeamId && team.name.toLocaleLowerCase() === name.toLocaleLowerCase());
   if (duplicateName) {
     if (message) message.textContent = "A custom team with that name already exists.";
@@ -17513,6 +17850,19 @@ async function saveCustomTeamDraft() {
   const existingTeam = customTeamLibrary.find((item) => item.id === id) || null;
   let team = sanitizeCustomTeam({ id, name, customFlag: draft.customFlag, simulationRatings: draft.simulationRatings, playerProfiles: players });
   const existingIndex = customTeamLibrary.findIndex((item) => item.id === id);
+  try {
+    if (draft.saveToAccount) {
+      if (!customTeamAccount) throw new Error("Log in before saving this team to your account.");
+      team = await saveCustomTeamToAccount(team);
+    } else if (existingTeam?.accountSaved && customTeamAccount) {
+      await removeCustomTeamFromAccount(id);
+    }
+  } catch (error) {
+    customTournamentUi.editingCustomTeamId = id;
+    if (message) message.textContent = error.message || "This team could not be synced to your account.";
+    return;
+  }
+  const previousLibrary = [...customTeamLibrary];
   if (existingIndex >= 0) customTeamLibrary[existingIndex] = team;
   else customTeamLibrary.push(team);
   TEAM_BY_ID.set(id, team);
@@ -17520,22 +17870,11 @@ async function saveCustomTeamDraft() {
   try {
     saveCustomTeamLibrary();
   } catch {
+    customTeamLibrary = previousLibrary;
+    if (existingTeam) TEAM_BY_ID.set(id, existingTeam);
+    else TEAM_BY_ID.delete(id);
+    clearPlayerProfileCacheForTeam(id);
     if (message) message.textContent = "This team could not be saved. Try a smaller flag image.";
-    return;
-  }
-  try {
-    if (draft.saveToAccount) {
-      if (!customTeamAccount) throw new Error("Log in before saving this team to your account.");
-      team = await saveCustomTeamToAccount(team);
-      customTeamLibrary[customTeamLibrary.findIndex((item) => item.id === id)] = team;
-      TEAM_BY_ID.set(id, team);
-      saveCustomTeamLibrary();
-    } else if (existingTeam?.accountSaved && customTeamAccount) {
-      await removeCustomTeamFromAccount(id);
-    }
-  } catch (error) {
-    customTournamentUi.editingCustomTeamId = id;
-    if (message) message.textContent = error.message || "This team could not be synced to your account.";
     return;
   }
   customTournamentSetup.sourceFilter = "custom";
@@ -18833,7 +19172,15 @@ function handleCustomTournamentAction(button) {
   if (action === "add-custom-player") {
     els.customTournamentBody.querySelectorAll("[data-custom-team-field], [data-custom-team-rating], [data-custom-player-field]").forEach(syncCustomTeamDraftFromInput);
     const index = customTournamentUi.customTeamDraft.playerProfiles.length;
-    customTournamentUi.customTeamDraft.playerProfiles.push(sanitizeCustomPlayer({ name: `Player ${index + 1}`, position: "CM", overall: 75 }, index));
+    customTournamentUi.customTeamDraft.playerProfiles.push(sanitizeCustomPlayer({ name: `Player ${index + 1}`, position: "CM", overall: 75, startingXI: false }, index));
+    renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "auto-pick-custom-xi") {
+    els.customTournamentBody.querySelectorAll("[data-custom-team-field], [data-custom-team-rating], [data-custom-player-field]").forEach(syncCustomTeamDraftFromInput);
+    customTournamentUi.customTeamDraft.playerProfiles = customPlayersWithValidStartingXI(
+      customTournamentUi.customTeamDraft.playerProfiles.map((player) => ({ ...player, startingXI: false })),
+    );
     renderCustomTournamentSetup();
     return;
   }
@@ -19445,6 +19792,7 @@ function render() {
     document.body.classList.add("pl-match-mode-active");
     document.body.classList.remove("pl-season-open");
   }
+  document.body.classList.toggle("ucl-match-mode-active", state?.uclSeason === true);
   enforceModeScreenVisibility(premierLeagueMatchActive ? "standard" : currentAppMode());
   if (!premierLeagueMatchActive && currentAppMode() === "retro") {
     document.body.classList.remove("legacy-mode-active", "achievements-mode-active");
@@ -19592,6 +19940,8 @@ function render() {
   const historyMode = viewingRoundHistory();
   els.pageKicker.textContent = savedTournamentActive
     ? `SAVED TOURNAMENT · ${state.savedTournamentEditionLabel || "TOURNAMENT ARCHIVE"}`
+    : state.uclSeason
+    ? "UEFA CHAMPIONS LEAGUE · LEAGUE PHASE"
     : state.premierLeagueSeason
     ? "PL 26/27 · LEAGUE SEASON"
     : state.legacyTournament
@@ -19601,14 +19951,18 @@ function render() {
     : historyMode ? "ROUND ARCHIVE" : state.customTournament
       ? state.customTournament.customMatch ? "CUSTOM MATCH" : `${state.customTournament.teamCount} TEAM CUSTOM ${state.customTournament.structure === "groups" ? "TOURNAMENT" : "KNOCKOUT"}`
       : "256 TEAMS WC KNOCKOUT";
-  els.pageTitle.textContent = state.premierLeagueSeason
+  els.pageTitle.textContent = state.uclSeason
+    ? roundName
+    : state.premierLeagueSeason
     ? roundName
     : state.legacyTournament
     ? `${legacyDraft?.nation?.name || "Legacy"} XI`
     : state.championView
     ? state.customTournament?.customMatch === true ? "Custom match" : "Final"
     : roundName;
-  els.boardTitle.textContent = state.premierLeagueSeason
+  els.boardTitle.textContent = state.uclSeason
+    ? `${roundName} fixtures`
+    : state.premierLeagueSeason
     ? `${roundName} fixtures`
     : historyMode
     ? roundName
@@ -19641,7 +19995,8 @@ function render() {
   renderQueue();
   renderGoldenBoot();
   renderStorylines();
-  if (state.premierLeagueSeason) window.PremierLeagueSeason?.renderEngineTable?.();
+  if (state.uclSeason) window.UclSeason?.renderEngineTable?.();
+  else if (state.premierLeagueSeason) window.PremierLeagueSeason?.renderEngineTable?.();
   els.unresolvedFilter.classList.toggle(
     "active",
     state.customTournament?.structure === "groups" && state.activeRound === 0
@@ -21888,7 +22243,18 @@ els.pauseLiveButton.addEventListener("click", toggleLivePause);
 els.speedButton.addEventListener("click", cycleLiveSpeed);
 els.skipLiveButton.addEventListener("click", skipLivePlayback);
 els.skipShootoutButton.addEventListener("click", skipPenaltyShootout);
-els.simulateRoundButton.addEventListener("click", requestRoundSimulation);
+els.simulateRoundButton.addEventListener("click", () => {
+  if (state?.uclSeason) {
+    if (state.uclKnockoutMatch && !livePlayback) {
+      if (window.UclSeason?.finishManagedKnockoutMatch?.(state.activeRound, state.selectedMatch)) return;
+      window.UclSeason?.returnToSimulator?.({ view: "knockout" });
+      return;
+    }
+    simulateCurrentRound();
+    return;
+  }
+  requestRoundSimulation();
+});
 $("#confirmSimulateRoundButton").addEventListener("click", simulateCurrentRound);
 els.roundNav.addEventListener("click", (event) => {
   const button = event.target.closest(".round-link.available");
@@ -22122,6 +22488,14 @@ els.keybindSettingsList?.addEventListener("click", (event) => {
 
 els.joinOnlineRoomButton.addEventListener("click", () => openOnlineRoom(true));
 els.openAchievementsButton?.addEventListener("click", () => {
+  if (
+    state?.uclSeason
+    || document.body.classList.contains("ucl-simulator-open")
+    || document.body.classList.contains("ucl-match-mode-active")
+  ) {
+    window.AccountAchievements?.openRetroModal("ucl");
+    return;
+  }
   if (
     state?.premierLeagueSeason
     || document.body.classList.contains("pl-season-open")

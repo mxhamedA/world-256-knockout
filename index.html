@@ -9,6 +9,9 @@
       if (initialPath === "/pl-simulator") {
         document.documentElement.classList.add("route-pl-loading");
       }
+      if (initialPath === "/ucl-simulator") {
+        document.documentElement.classList.add("route-ucl-loading");
+      }
       if (["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(initialPath)) {
         document.documentElement.classList.add("route-retro-loading");
         if (initialPath === "/retro-06-world-cup") document.documentElement.classList.add("route-retro-2006-loading");
@@ -19,6 +22,9 @@
       (function () {
         const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
         if (pathname === "/palestine-challenge" || pathname === "/profile") return;
+        if (pathname === "/ucl-simulator") {
+          setTimeout(() => document.documentElement.classList.remove("route-ucl-loading"), 4000);
+        }
         const isRetroRoute = ["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(pathname);
         const clearRetroLoading = () => {
           document.documentElement.classList.remove("route-retro-loading", "route-retro-2006-loading", "route-retro-2022-loading");
@@ -71,6 +77,7 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./clean.css?v=ucl-team-picker-2" />
     <link rel="stylesheet" href="./premier-league.css?v=pl-mobile-header-2" />
+    <link rel="stylesheet" href="./ucl-simulator.css?v=ucl-managed-match-1" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -460,7 +467,7 @@
                 </div>
               </article>
 
-              <article class="mode-card mode-card-coming-soon mode-card-ucl">
+              <article class="mode-card mode-card-ucl" id="uclModeCard">
                 <div class="mode-card-copy ucl-mode-heading">
                   <img class="ucl-mode-logo" src="./assets/ucl-starball-white.png" alt="" />
                   <div>
@@ -484,7 +491,14 @@
                     </button>
                   </div>
                 </div>
-                <button class="online-coming-soon" type="button" disabled>Coming soon</button>
+                <div class="mode-card-actions">
+                  <button class="primary-button start-tournament ucl-launch-button" id="startUclSimulatorButton" type="button" disabled aria-disabled="true">
+                    Coming soon
+                  </button>
+                  <button class="premier-league-menu-restart" id="restartUclSimulatorButton" type="button" hidden>
+                    Restart
+                  </button>
+                </div>
               </article>
 
             </div>
@@ -633,6 +647,7 @@
               <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
               <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">2026</button>
               <button type="button" role="tab" data-achievement-year="pl" aria-selected="false">PL 26/27</button>
+              <button type="button" role="tab" data-achievement-year="ucl" aria-selected="false">UCL 26/27</button>
             </div>
             <div class="achievement-challenge-heading">
               <h2 id="achievementChallengeTitle">Win the 2014 WC with every country</h2>
@@ -669,6 +684,10 @@
             <button class="custom-live-back-button pl-live-back-button" id="plLiveBackButton" type="button" hidden>
               <span aria-hidden="true">&larr;</span>
               <span>Back to Premier League</span>
+            </button>
+            <button class="custom-live-back-button pl-live-back-button ucl-live-back-button" id="uclLiveBackButton" type="button" hidden>
+              <span aria-hidden="true">&larr;</span>
+              <span>Back to Champions League</span>
             </button>
             <div class="stage-topline">
               <div class="stage-round" id="stageRoundLabel">ROUND OF 256</div>
@@ -982,6 +1001,15 @@
             <div id="plEngineTable"></div>
             <button class="text-button pl-engine-full-table" id="plEngineFullTableButton" type="button">View full table</button>
           </section>
+
+          <section class="panel pl-engine-table-panel ucl-engine-table-panel" id="uclEngineTablePanel" hidden>
+            <div class="panel-heading">
+              <span>LEAGUE PHASE</span>
+              <strong>Live standings</strong>
+            </div>
+            <div id="uclEngineTable"></div>
+            <button class="text-button pl-engine-full-table" id="uclEngineFullTableButton" type="button">View full table</button>
+          </section>
         </section>
 
         <section class="legacy-draft" id="legacyDraftScreen" hidden>
@@ -1016,6 +1044,197 @@
         </footer>
       </main>
     </div>
+
+    <section class="ucl-simulator-screen" id="uclSimulatorScreen" aria-label="Champions League 2026/27 simulator" hidden>
+      <header class="ucl-simulator-header">
+        <div class="ucl-header-left">
+          <button class="utility-button" id="uclSettingsButton" type="button" aria-label="Settings" title="Settings">
+            <span aria-hidden="true">&#9881;</span><span>Settings</span>
+          </button>
+          <button class="ucl-restart-button" id="uclRestartButton" type="button" aria-label="Restart Champions League" title="Restart Champions League">
+            <span aria-hidden="true">&#8635;</span>
+          </button>
+        </div>
+        <a class="ucl-site-brand" href="/" aria-label="256 Teams home">
+          <span class="brand-mark" aria-hidden="true">
+            <span class="brand-mark-number">256</span>
+            <span class="brand-mark-label">TEAMS</span>
+          </span>
+        </a>
+        <nav class="ucl-header-actions" aria-label="Site tools">
+          <button class="utility-button" id="uclFeedbackButton" type="button" aria-label="Feedback" title="Feedback">
+            <span aria-hidden="true">&#9888;</span><span>Feedback</span>
+          </button>
+          <button class="utility-button achievements-header-button" id="uclAchievementsButton" type="button" aria-label="Achievements" title="Achievements">
+            <span aria-hidden="true">&#127942;</span><span>Achievements</span>
+          </button>
+          <button class="utility-button donate-link header-donate-link" id="uclDonateButton" type="button" aria-label="Donate" title="Donate">
+            <span aria-hidden="true">$</span><span>Donate</span>
+          </button>
+          <button class="utility-button main-account-button" id="uclAccountButton" type="button" aria-label="Log in" title="Log in">
+            <span class="account-avatar-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 12.25a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5Z" />
+                <path d="M4.25 20.25c.62-3.62 3.71-6.25 7.75-6.25s7.13 2.63 7.75 6.25" />
+              </svg>
+            </span>
+            <span id="uclAccountLabel">Log in</span>
+          </button>
+        </nav>
+      </header>
+
+      <main class="ucl-simulator-main">
+        <div class="ucl-action-row">
+          <div class="ucl-stage-copy">
+            <button class="ucl-back-button" id="uclBackButton" type="button">
+              <span aria-hidden="true">&larr;</span>
+              <span>Back to modes</span>
+            </button>
+            <div class="ucl-stage-heading">
+              <img src="./assets/ucl-starball-white.png" alt="" />
+              <span>
+                <small id="uclStageKicker">LEAGUE PHASE</small>
+                <strong id="uclStageTitle">Matchday 1</strong>
+              </span>
+            </div>
+          </div>
+          <div class="ucl-matchday-date" aria-live="polite">
+            <span id="uclMatchdayDate">8–10 SEP 2026</span>
+            <strong id="uclProgressLabel">0 of 8 matchdays</strong>
+          </div>
+          <div class="ucl-primary-actions">
+            <button class="ucl-secondary-action" id="uclSimulateAllButton" type="button">Simulate league phase</button>
+            <button class="ucl-primary-action" id="uclPrimaryActionButton" type="button">Play matchday 1</button>
+          </div>
+        </div>
+
+        <nav class="ucl-view-tabs" aria-label="Champions League views">
+          <button class="active" type="button" data-ucl-view="overview">Overview</button>
+          <button type="button" data-ucl-view="fixtures">Fixtures</button>
+          <button type="button" data-ucl-view="table">Table</button>
+          <button type="button" data-ucl-view="knockout">Knockouts</button>
+        </nav>
+
+        <section class="ucl-simulator-content" id="uclSimulatorContent" aria-live="polite"></section>
+      </main>
+
+      <div class="ucl-broadcast-layer" id="uclBroadcastLayer" aria-live="assertive" aria-atomic="true"></div>
+      <button class="ucl-skip-reveals" id="uclSkipRevealsButton" type="button" hidden>Skip result reveals</button>
+    </section>
+
+    <section class="ucl-draw-stage" id="uclDrawStage" aria-labelledby="uclDrawTitle" hidden>
+      <header class="ucl-draw-header">
+        <div>
+          <img src="./assets/ucl-starball-white.png" alt="" />
+          <span><small id="uclDrawKicker">2026/27 LEAGUE PHASE</small><strong id="uclDrawTitle">The draw</strong></span>
+        </div>
+        <div class="ucl-draw-actions">
+          <button class="ucl-pause-button" id="uclPauseDrawButton" type="button" aria-pressed="false">
+            <span id="uclPauseDrawLabel">Pause draw</span>
+            <kbd aria-hidden="true">Space</kbd>
+          </button>
+          <button class="ucl-skip-button" id="uclSkipDrawButton" type="button">Skip draw</button>
+        </div>
+      </header>
+      <div class="ucl-draw-progress" aria-live="polite">
+        <span id="uclDrawStatus">Preparing the draw</span>
+        <strong><b id="uclDrawCount">0</b> / <span id="uclDrawTotal">36</span></strong>
+      </div>
+      <div class="ucl-ceremony-scene" id="uclCeremonyScene">
+        <div class="ucl-stage-beam ucl-stage-beam-left" aria-hidden="true"></div>
+        <div class="ucl-stage-beam ucl-stage-beam-right" aria-hidden="true"></div>
+        <div class="ucl-draw-pot-wrap" id="uclDrawPotWrap" aria-hidden="true">
+          <div class="ucl-draw-pot-rim"></div>
+          <div class="ucl-draw-pot">
+            <div class="ucl-pot-balls" id="uclPotBalls"></div>
+            <div class="ucl-pot-glass"></div>
+          </div>
+          <div class="ucl-pot-base"><span>UEFA CHAMPIONS LEAGUE</span></div>
+        </div>
+        <div class="ucl-feature-ball" id="uclFeatureBall" aria-hidden="true">
+          <span class="ucl-feature-ball-half is-top"></span>
+          <span class="ucl-feature-ball-half is-bottom"></span>
+          <i class="ucl-feature-ball-crack"></i>
+        </div>
+        <article class="ucl-draw-reveal" id="uclDrawReveal" aria-live="assertive">
+          <div class="ucl-reveal-copy">
+              <small id="uclRevealMeta">POSITION 01 · POT 1</small>
+              <strong id="uclRevealName">Real Madrid</strong>
+          </div>
+          <div class="ucl-reveal-badge" id="uclRevealBadge"></div>
+        </article>
+      </div>
+      <div class="ucl-drawn-strip" id="uclDrawnStrip" aria-label="Teams drawn"></div>
+    </section>
+
+    <div class="ucl-moment-overlay" id="uclMomentOverlay" hidden>
+      <div class="ucl-moment-card" id="uclMomentCard" role="dialog" aria-modal="true" aria-labelledby="uclMomentTitle"></div>
+    </div>
+
+    <div class="ucl-champion-overlay" id="uclChampionOverlay" hidden>
+      <div class="ucl-confetti" id="uclConfetti" aria-hidden="true"></div>
+      <article class="ucl-champion-card" role="dialog" aria-modal="true" aria-labelledby="uclChampionName">
+        <span class="ucl-champion-kicker">2026/27 CHAMPIONS OF EUROPE</span>
+        <div class="ucl-trophy" aria-hidden="true">
+          <svg viewBox="0 0 180 250" focusable="false">
+            <path d="M53 20h74v34c0 44-13 78-37 88-24-10-37-44-37-88V20Z" />
+            <path d="M53 39H24c0 43 15 70 47 78M127 39h29c0 43-15 70-47 78" />
+            <path d="M90 141v53M62 220h56M72 194h36l10 26H62l10-26Z" />
+          </svg>
+        </div>
+        <div class="ucl-champion-badge" id="uclChampionBadge"></div>
+        <h1 id="uclChampionName">Champions</h1>
+        <p id="uclChampionDetail">The road to Madrid is complete.</p>
+        <div class="ucl-champion-actions">
+          <button class="ucl-primary-action" id="uclChampionShareButton" type="button">Share image</button>
+          <button class="ucl-primary-action" id="uclChampionBracketButton" type="button">View the bracket</button>
+          <button class="ucl-secondary-action" id="uclChampionRestartButton" type="button">Run it again</button>
+        </div>
+      </article>
+    </div>
+
+    <dialog class="ucl-addon-dialog" id="uclMusicDialog" aria-labelledby="uclMusicDialogTitle">
+      <div class="ucl-addon-shell">
+        <header>
+          <div><span>OPTIONAL ADDON</span><h2 id="uclMusicDialogTitle">Ceremony music</h2></div>
+          <button class="ucl-dialog-close" id="uclMusicCloseButton" type="button" aria-label="Close">&times;</button>
+        </header>
+        <div class="ucl-addon-intro">
+          <span class="ucl-addon-disc" aria-hidden="true"><i></i></span>
+          <div>
+            <strong id="uclMusicStatusTitle">No music addon installed</strong>
+            <p id="uclMusicStatusCopy">The bundled UCL music is always available for draws.</p>
+          </div>
+        </div>
+        <div class="ucl-addon-file" id="uclMusicFileCard">
+          <span aria-hidden="true">MP3</span>
+          <div><strong id="uclMusicFileName">Choose your own soundtrack</strong><small id="uclMusicFileMeta">Stored only on this device</small></div>
+        </div>
+        <label class="ucl-volume-control" for="uclMusicVolume">
+          <span><strong>Music volume</strong><small id="uclMusicVolumeLabel">12% · Quiet</small></span>
+          <input id="uclMusicVolume" type="range" min="0" max="24" step="1" value="12" />
+        </label>
+        <p class="ucl-addon-note">Music is optional. Import an .mp3 you have permission to use; it never leaves this device.</p>
+        <p class="ucl-addon-message" id="uclMusicMessage" role="status" aria-live="polite"></p>
+        <div class="ucl-addon-actions">
+          <button class="ucl-remove-addon" id="uclRemoveMusicButton" type="button" hidden>Remove imported music</button>
+          <label class="ucl-import-addon" for="uclMusicFileInput">Import .mp3</label>
+          <input id="uclMusicFileInput" type="file" accept=".mp3,audio/mpeg" hidden />
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="confirm-modal ucl-restart-modal" id="uclRestartModal">
+      <form method="dialog">
+        <div class="confirm-icon">&#8635;</div>
+        <h2>Restart Champions League?</h2>
+        <p>This clears the league-phase draw, all results and the knockout bracket. Your optional music addon stays installed.</p>
+        <div class="confirm-actions">
+          <button class="secondary-button" value="cancel">Cancel</button>
+          <button class="danger-button" id="confirmUclRestartButton" value="default">Restart competition</button>
+        </div>
+      </form>
+    </dialog>
 
     <section class="pl-season-screen" id="premierLeagueSeasonScreen" aria-label="Premier League 2026/27 season" hidden>
       <header class="pl-season-header">
@@ -1305,7 +1524,7 @@
             </div>
             <div>
               <span>Achievements</span>
-              <p><strong id="profileAchievementCount">0</strong><i>/</i><strong id="profileAchievementTotal">440</strong></p>
+            <p><strong id="profileAchievementCount">0</strong><i>/</i><strong id="profileAchievementTotal">547</strong></p>
             </div>
           </div>
         </section>
@@ -2101,6 +2320,7 @@
         <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
         <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">2026</button>
         <button type="button" role="tab" data-achievement-year="pl" aria-selected="false">PL 26/27</button>
+        <button type="button" role="tab" data-achievement-year="ucl" aria-selected="false">UCL 26/27</button>
       </div>
       <div class="retro-achievements-progress">
         <span id="retroAchievementProgressLabel">COUNTRIES COMPLETE</span>
@@ -2137,8 +2357,13 @@
     <script src="./premier-league-squads.generated.js?v=pl-live-squads-2"></script>
     <script src="./premier-league-fc26-ratings.js?v=fc26-official-1"></script>
     <script src="./premier-league-data.js?v=pl-mobile-result-layout-2"></script>
-  <script src="./app.js?v=ucl-team-picker-1"></script>
+    <script src="./ucl-draw-solver.js?v=ucl-pool-2"></script>
+    <script src="./ucl-engine.js?v=ucl-managed-match-1"></script>
+    <script src="./ucl-squads.generated.js?v=fc27-ucl-squads-1"></script>
+    <script src="./ucl-squad-calibration.js?v=ucl-squad-balance-1"></script>
+  <script src="./app.js?v=ucl-managed-match-1"></script>
     <script src="./premier-league.js?v=pl-mobile-header-1"></script>
+    <script src="./ucl-simulator.js?v=ucl-managed-match-1"></script>
     <script src="./challenge.js?v=achievement-top50-modal-2"></script>
     <script>
       window.va = window.va || function () {

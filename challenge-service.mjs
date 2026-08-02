@@ -140,6 +140,7 @@ const RETRO_TEAM_RATINGS = Object.freeze({
 const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2006, 2010, 2014, 2016, 2018, 2022, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
+const UCL_KEY = "ucl";
 // Moderation hold: preserve the account and achievement records, but omit this user from public achievement standings.
 const HIDDEN_ACHIEVEMENT_LEADERBOARD_USERNAMES = new Set(["przemexx"]);
 const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
@@ -163,6 +164,49 @@ const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
   ["nottingham-forest", "Nottingham Forest", 8, 5],
   ["sunderland", "Sunderland", 10, 8],
   ["tottenham-hotspur", "Tottenham Hotspur", 1, 4],
+]);
+// Stage indexes: top-24 league finish (0), Round of 16 (1), quarter-finals (2),
+// semi-finals (3), final (4), champions (5).
+const UCL_ACHIEVEMENTS = Object.freeze([
+  ["real-madrid", "Real Madrid", 5, "Win the UCL", 2],
+  ["manchester-city", "Man City", 5, "Win the UCL", 2],
+  ["bayern-munich", "Bayern Munich", 5, "Win the UCL", 2],
+  ["paris-saint-germain", "PSG", 5, "Win the UCL", 2],
+  ["liverpool", "Liverpool", 5, "Win the UCL", 3],
+  ["barcelona", "Barcelona", 5, "Win the UCL", 3],
+  ["inter-milan", "Inter Milan", 4, "Reach the final", 4],
+  ["arsenal", "Arsenal", 4, "Reach the final", 4],
+  ["atletico-madrid", "Atlético Madrid", 4, "Reach the final", 4],
+  ["borussia-dortmund", "Borussia Dortmund", 3, "Reach the semi-finals", 5],
+  ["napoli", "Napoli", 3, "Reach the semi-finals", 5],
+  ["manchester-united", "Man United", 3, "Reach the semi-finals", 5],
+  ["rb-leipzig", "RB Leipzig", 3, "Reach the semi-finals", 5],
+  ["sporting-cp", "Sporting CP", 2, "Reach the quarter-finals", 6],
+  ["porto", "Porto", 2, "Reach the quarter-finals", 6],
+  ["villarreal", "Villarreal", 2, "Reach the quarter-finals", 6],
+  ["roma", "Roma", 2, "Reach the quarter-finals", 6],
+  ["psv-eindhoven", "PSV Eindhoven", 2, "Reach the quarter-finals", 6],
+  ["aston-villa", "Aston Villa", 2, "Reach the quarter-finals", 6],
+  ["galatasaray", "Galatasaray", 1, "Reach the Round of 16", 7],
+  ["feyenoord", "Feyenoord", 1, "Reach the Round of 16", 7],
+  ["stuttgart", "Stuttgart", 1, "Reach the Round of 16", 7],
+  ["lille", "Lille", 1, "Reach the Round of 16", 7],
+  ["fenerbahce", "Fenerbahçe", 1, "Reach the Round of 16", 7],
+  ["olympique-lyonnais", "Lyon", 1, "Reach the Round of 16", 7],
+  ["club-brugge", "Club Brugge", 0, "Finish in the top 24", 8],
+  ["shakhtar-donetsk", "Shakhtar Donetsk", 0, "Finish in the top 24", 8],
+  ["real-betis", "Real Betis", 0, "Finish in the top 24", 8],
+  ["como", "Como", 0, "Finish in the top 24", 8],
+  ["lens", "Lens", 0, "Finish in the top 24", 8],
+  ["gnk-dinamo-zagreb", "Dinamo Zagreb", 0, "Finish in the top 24", 8],
+  ["crvena-zvezda", "FK Crvena zvezda", 0, "Finish in the top 24", 8],
+  ["union-saint-gilloise", "Union SG", 0, "Finish in the top 24", 8],
+  ["olympiacos", "Olympiacos", 0, "Finish in the top 24", 8],
+  ["slavia-prague", "Slavia Prague", 0, "Finish in the top 24", 9],
+  ["agf-aarhus", "AGF Aarhus", 0, "Finish in the top 24", 9],
+  ["slovan-bratislava", "ŠK Slovan Bratislava", 0, "Finish in the top 24", 9],
+  ["levski-sofia", "PFC Levski Sofia", 0, "Finish in the top 24", 9],
+  ["nk-celje", "NK Celje", 0, "Finish in the top 24", 9],
 ]);
 const API_HEADERS = Object.freeze({
   "Cache-Control": "no-store",
@@ -1368,9 +1412,72 @@ async function premierLeagueAchievementProgress(db, account) {
   };
 }
 
+export function uclAchievementDefinition(clubId) {
+  const entry = UCL_ACHIEVEMENTS.find(([id]) => id === clubId);
+  if (!entry) return null;
+  const [id, clubName, targetStageIndex, objectiveLabel, points] = entry;
+  return {
+    clubId: id,
+    teamName: clubName,
+    targetStageIndex,
+    objectiveLabel,
+    points,
+  };
+}
+
+async function uclAchievementProgress(db, account) {
+  const rows = account ? (await db.prepare(`
+    SELECT club_id, best_stage_index, achieved, started_at, completed_at
+    FROM ucl_attempts
+    WHERE account_id = ?
+    ORDER BY started_at ASC, season_seed ASC
+  `).bind(account.id).all()).results : [];
+  const byClub = new Map();
+  rows.forEach((row) => {
+    if (!byClub.has(row.club_id)) byClub.set(row.club_id, []);
+    byClub.get(row.club_id).push(row);
+  });
+  const teams = UCL_ACHIEVEMENTS.map(([clubId]) => {
+    const definition = uclAchievementDefinition(clubId);
+    const attempts = byClub.get(clubId) || [];
+    const achievedIndex = attempts.findIndex((attempt) => Number(attempt.achieved || 0) === 1);
+    const achievedAttempt = achievedIndex >= 0 ? attempts[achievedIndex] : null;
+    const achievedOnAttempt = achievedAttempt ? achievedIndex + 1 : null;
+    const unlockedAt = achievedAttempt
+      ? Number(achievedAttempt.completed_at || achievedAttempt.started_at || 0) || null
+      : null;
+    return {
+      ...definition,
+      attempts: attempts.length,
+      bestStageIndex: attempts.reduce(
+        (best, attempt) => Math.max(best, Number(attempt.best_stage_index ?? -1)),
+        -1,
+      ),
+      complete: Boolean(achievedAttempt),
+      won: Boolean(achievedAttempt),
+      achievedOnAttempt,
+      wonOnAttempt: achievedOnAttempt,
+      unlockedAt,
+    };
+  });
+  const completed = teams.filter((team) => team.complete).length;
+  return {
+    id: "ucl-2026-27-club-objectives",
+    title: "UEFA Champions League 2026/27 Club Objectives",
+    year: UCL_KEY,
+    mode: "ucl",
+    completed,
+    completedPoints: teams.reduce((sum, team) => sum + (team.complete ? team.points : 0), 0),
+    totalPoints: teams.reduce((sum, team) => sum + team.points, 0),
+    total: teams.length,
+    unlocked: completed === teams.length,
+    teams,
+  };
+}
+
 async function achievementLeaderboard(request, env) {
   const account = await authenticatedAccount(request, env.CHALLENGE_DB, false, env.LOCAL_DEV_AUTH === "true");
-  const [accountRows, earlyRetroRows, recentRetroRows, retro2026Rows, knockoutRows, premierLeagueRows] = await Promise.all([
+  const [accountRows, earlyRetroRows, recentRetroRows, retro2026Rows, knockoutRows, premierLeagueRows, uclRows] = await Promise.all([
     env.CHALLENGE_DB.prepare(`
       SELECT id AS account_id, username, profile_country_id
       FROM accounts
@@ -1421,6 +1528,14 @@ async function achievementLeaderboard(request, env) {
       WHERE achieved = 1
       GROUP BY account_id, club_id
     `).all(),
+    env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 'ucl' AS year, club_id AS team_name,
+        MAX(best_stage_index) AS best_stage_index,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM ucl_attempts
+      WHERE achieved = 1
+      GROUP BY account_id, club_id
+    `).all(),
   ]);
   const byAccount = new Map((accountRows.results || []).map((row) => [
     row.account_id,
@@ -1439,6 +1554,7 @@ async function achievementLeaderboard(request, env) {
     ...(retro2026Rows.results || []),
     ...(knockoutRows.results || []),
     ...(premierLeagueRows.results || []),
+    ...(uclRows.results || []),
   ].forEach((row) => {
     const entry = byAccount.get(row.account_id);
     if (!entry) return;
@@ -1449,11 +1565,18 @@ async function achievementLeaderboard(request, env) {
       const premierLeagueDefinition = String(row.year) === PREMIER_LEAGUE_KEY
         ? premierLeagueAchievementDefinition(row.team_name)
         : null;
-      const validUnlock = !knockoutDefinition || knockout256ObjectiveAchieved(knockoutDefinition, {
-        bestRoundIndex: Number(row.best_round_index || 0),
-        championTeamId: Number(row.champion) === 1 ? row.team_name : null,
-        phase: Number(row.completed) === 1 ? "complete" : "progress",
-      }) === 1;
+      const uclDefinition = String(row.year) === UCL_KEY
+        ? uclAchievementDefinition(row.team_name)
+        : null;
+      const validUnlock = knockoutDefinition
+        ? knockout256ObjectiveAchieved(knockoutDefinition, {
+            bestRoundIndex: Number(row.best_round_index || 0),
+            championTeamId: Number(row.champion) === 1 ? row.team_name : null,
+            phase: Number(row.completed) === 1 ? "complete" : "progress",
+          }) === 1
+        : uclDefinition
+          ? Number(row.best_stage_index ?? -1) >= uclDefinition.targetStageIndex
+          : true;
       if (!validUnlock) {
         return;
       }
@@ -1461,7 +1584,9 @@ async function achievementLeaderboard(request, env) {
         ? knockoutDefinition?.points || 0
         : String(row.year) === PREMIER_LEAGUE_KEY
           ? premierLeagueDefinition?.points || 0
-          : retroAchievementPoints(Number(row.year), row.team_name);
+          : String(row.year) === UCL_KEY
+            ? uclDefinition?.points || 0
+            : retroAchievementPoints(Number(row.year), row.team_name);
       entry.achievements += 1;
       entry.latestUnlock = Math.max(entry.latestUnlock, Number(row.unlocked_at || 0));
     }
@@ -1496,7 +1621,7 @@ async function achievementLeaderboard(request, env) {
     currentUser,
     totalAchievements: RETRO_ACHIEVEMENT_YEARS.reduce(
       (sum, year) => sum + retroAchievementConfig(year).teams.length,
-      DRAFT_TEAMS.length + PREMIER_LEAGUE_ACHIEVEMENTS.length,
+      DRAFT_TEAMS.length + PREMIER_LEAGUE_ACHIEVEMENTS.length + UCL_ACHIEVEMENTS.length,
     ),
   });
 }
@@ -1521,18 +1646,6 @@ async function knockout256Achievement(request, env, account) {
     || bestRoundIndex > 7
   ) {
     throw new ChallengeRequestError("Invalid 256 knockout tournament.", 400);
-  }
-
-  if (phase === "complete") {
-    const startedAttempt = await env.CHALLENGE_DB.prepare(`
-      SELECT 1 AS started
-      FROM knockout_256_attempts
-      WHERE account_id = ? AND tournament_seed = ? AND team_id = ?
-      LIMIT 1
-    `).bind(account.id, seed, definition.teamId).first();
-    if (!startedAttempt) {
-      throw new ChallengeRequestError("Start the knockout before submitting a completion.", 409);
-    }
   }
 
   const before = await knockout256AchievementProgress(env.CHALLENGE_DB, account);
@@ -1606,18 +1719,6 @@ async function premierLeagueAchievement(request, env, account) {
     throw new ChallengeRequestError("Invalid Premier League season.", 400);
   }
 
-  if (phase === "complete") {
-    const startedAttempt = await env.CHALLENGE_DB.prepare(`
-      SELECT 1 AS started
-      FROM premier_league_attempts
-      WHERE account_id = ? AND season_seed = ? AND club_id = ?
-      LIMIT 1
-    `).bind(account.id, seed, definition.clubId).first();
-    if (!startedAttempt) {
-      throw new ChallengeRequestError("Start the season before submitting a completion.", 409);
-    }
-  }
-
   const before = await premierLeagueAchievementProgress(env.CHALLENGE_DB, account);
   const previousClub = before.teams.find((team) => team.clubId === definition.clubId);
   const now = Date.now();
@@ -1648,6 +1749,65 @@ async function premierLeagueAchievement(request, env, account) {
   });
 }
 
+async function uclAchievement(request, env, account) {
+  if (request.method === "GET") {
+    return responseJson({ achievement: await uclAchievementProgress(env.CHALLENGE_DB, account) });
+  }
+  if (request.method !== "POST") return responseJson({ error: "Method not allowed." }, 405);
+
+  const body = await request.json().catch(() => ({}));
+  const definition = uclAchievementDefinition(
+    typeof body.clubId === "string" ? body.clubId.trim() : "",
+  );
+  const seed = Number(body.seed);
+  const phase = body.phase === "complete" ? "complete" : "start";
+  const bestStageIndex = phase === "complete" ? Number(body.bestStageIndex) : -1;
+  if (
+    !definition
+    || !Number.isSafeInteger(seed)
+    || seed < 0
+    || (phase === "complete" && (!Number.isInteger(bestStageIndex) || bestStageIndex < -1 || bestStageIndex > 5))
+  ) {
+    throw new ChallengeRequestError("Invalid UCL season.", 400);
+  }
+
+  const before = await uclAchievementProgress(env.CHALLENGE_DB, account);
+  const previousClub = before.teams.find((team) => team.clubId === definition.clubId);
+  const now = Date.now();
+  await env.CHALLENGE_DB.prepare(`
+    INSERT OR IGNORE INTO ucl_attempts
+      (account_id, season_seed, club_id, best_stage_index, achieved, started_at)
+    VALUES (?, ?, ?, ?, 0, ?)
+  `).bind(account.id, seed, definition.clubId, bestStageIndex, now).run();
+
+  if (phase === "complete") {
+    const achieved = bestStageIndex >= definition.targetStageIndex ? 1 : 0;
+    await env.CHALLENGE_DB.prepare(`
+      UPDATE ucl_attempts
+      SET best_stage_index = MAX(best_stage_index, ?),
+        achieved = MAX(achieved, ?),
+        completed_at = COALESCE(completed_at, ?)
+      WHERE account_id = ? AND season_seed = ? AND club_id = ?
+    `).bind(
+      bestStageIndex,
+      achieved,
+      now,
+      account.id,
+      seed,
+      definition.clubId,
+    ).run();
+  }
+
+  const achievement = await uclAchievementProgress(env.CHALLENGE_DB, account);
+  const currentClub = achievement.teams.find((team) => team.clubId === definition.clubId);
+  return responseJson({
+    achievement,
+    clubUnlocked: !previousClub?.complete && currentClub?.complete === true,
+    challengeUnlocked: !before.unlocked && achievement.unlocked,
+    unlockedTeam: currentClub,
+  });
+}
+
 async function retroAchievement(request, env, account, year) {
   const config = retroAchievementConfig(year);
   if (request.method === "GET") {
@@ -1661,18 +1821,6 @@ async function retroAchievement(request, env, account, year) {
   const phase = body.phase === "complete" ? "complete" : "start";
   if (!config.teams.includes(teamName) || !Number.isSafeInteger(seed) || seed < 0) {
     throw new ChallengeRequestError(`Invalid ${config.year} World Cup tournament.`, 400);
-  }
-
-  if (phase === "complete") {
-    const startedAttempt = await env.CHALLENGE_DB.prepare(`
-      SELECT 1 AS started
-      FROM ${config.table}
-      WHERE account_id = ? AND tournament_seed = ? AND team_name = ?
-      LIMIT 1
-    `).bind(account.id, seed, teamName).first();
-    if (!startedAttempt) {
-      throw new ChallengeRequestError("Start the tournament before submitting a completion.", 409);
-    }
   }
 
   const before = await retroAchievementProgress(env.CHALLENGE_DB, account, config.year);
@@ -1728,6 +1876,7 @@ function sanitizeAccountCustomTeam(value) {
       physical: rating(player?.physical, playerOverall),
       goalkeeping: rating(player?.goalkeeping, position === "GK" ? playerOverall : 5),
       penaltyTaker: player?.penaltyTaker === true,
+      startingXI: player?.startingXI === true,
       simulatorRating: true,
     };
   }) : [];
@@ -1821,6 +1970,15 @@ export async function handleChallengeRequest(request, env, url) {
         env.LOCAL_DEV_AUTH === "true",
       );
       return await premierLeagueAchievement(request, env, achievementAccount);
+    }
+    if (url.pathname === "/api/challenge/achievements/ucl") {
+      const achievementAccount = await authenticatedAccount(
+        request,
+        env.CHALLENGE_DB,
+        request.method !== "GET",
+        env.LOCAL_DEV_AUTH === "true",
+      );
+      return await uclAchievement(request, env, achievementAccount);
     }
     const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2006|2010|2014|2016|2018|2022|2026)$/);
     if (retroAchievementMatch) {

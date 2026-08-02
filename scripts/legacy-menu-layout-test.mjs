@@ -10,7 +10,8 @@ const [html, app, css] = await Promise.all([
 assert.match(html, /class="mode-card mode-card-legacy"[\s\S]*id="startLegacyDraftButton"[\s\S]*Start tournament/);
 assert.doesNotMatch(html.match(/class="mode-card mode-card-legacy"[\s\S]*?<\/article>/)?.[0] || "", /id="legacyLandingSetup"/);
 assert.match(html, /id="legacySetupModal"[\s\S]*id="legacyLandingSetup"[\s\S]*id="confirmLegacyDraftButton"/);
-assert.match(html, /class="mode-card mode-card-coming-soon mode-card-ucl"[\s\S]*ucl-starball-white\.png[\s\S]*UCL simulator[\s\S]*id="uclTeamPickerButton"/);
+assert.match(html, /class="mode-card mode-card-ucl"[^>]*id="uclModeCard"[\s\S]*ucl-starball-white\.png[\s\S]*UCL simulator[\s\S]*id="uclTeamPickerButton"[\s\S]*id="startUclSimulatorButton"/);
+assert.doesNotMatch(html.match(/id="uclModeCard"[\s\S]*?<\/article>/)?.[0] || "", /Coming soon/);
 assert.doesNotMatch(html, /EUROPEAN CLUB FOOTBALL/);
 assert.match(app, /const UCL_2026_27_QUALIFIED_TEAMS = Object\.freeze\(\[/);
 assert.match(app, /\["arsenal", "Arsenal", "ENG", "ARS"\][\s\S]*\["villarreal", "Villarreal", "ESP", "VIL"\]/);

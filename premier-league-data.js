@@ -96,6 +96,13 @@ const PREMIER_LEAGUE_2026_27_PLAYER_RATING_OVERRIDES = Object.freeze({
   "Elliot Anderson": 85,
 });
 
+// Requested 2026/27 moves that are newer than the current FPL registration feed.
+// Keep this overlay separate so regenerating the source squads cannot restore a
+// transferred player to his former club.
+const PREMIER_LEAGUE_2026_27_SQUAD_TRANSFERS = Object.freeze([
+  Object.freeze({ player: "Danny Welbeck", fromId: "brighton", toId: "chelsea" }),
+]);
+
 const normalizePremierLeaguePlayerName = (value) => String(value || "")
   .normalize("NFKD")
   .replace(/\p{Diacritic}/gu, "")
@@ -438,7 +445,24 @@ const plClub = ({
       ? { key: candidates[0][0], override: candidates[0][1] }
       : { key, override: null };
   };
-  const baseCurrentSquad = window.PREMIER_LEAGUE_2026_27_CURRENT_SQUADS?.[id];
+  const sourceSquads = window.PREMIER_LEAGUE_2026_27_CURRENT_SQUADS;
+  const baseCurrentSquad = sourceSquads?.[id]
+    ? [...sourceSquads[id]]
+    : null;
+  PREMIER_LEAGUE_2026_27_SQUAD_TRANSFERS.forEach((transfer) => {
+    const playerKey = normalizePlayerName(transfer.player);
+    if (id === transfer.fromId && baseCurrentSquad) {
+      const playerIndex = baseCurrentSquad.findIndex((player) => normalizePlayerName(player.name) === playerKey);
+      if (playerIndex >= 0) baseCurrentSquad.splice(playerIndex, 1);
+    }
+    if (id === transfer.toId && baseCurrentSquad) {
+      const transferredPlayer = sourceSquads?.[transfer.fromId]
+        ?.find((player) => normalizePlayerName(player.name) === playerKey);
+      if (transferredPlayer && !baseCurrentSquad.some((player) => normalizePlayerName(player.name) === playerKey)) {
+        baseCurrentSquad.push(transferredPlayer);
+      }
+    }
+  });
   const trafford = window.PREMIER_LEAGUE_2026_27_CURRENT_SQUADS?.["manchester-city"]
     ?.find((player) => normalizePlayerName(player.name) === "james trafford");
   const currentSquad = id === "manchester-city"
@@ -615,10 +639,9 @@ const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
     id: "brighton", name: "Brighton & Hove Albion", code: "BHA", rating: 80,
     attack: 81, midfield: 81, defence: 78, goalkeeper: 80, depth: 82, experience: 77,
     roster: [
-      plPlayer("Danny Welbeck", "ST", 80, { penaltyTaker: true }),
       plPlayer("Kaoru Mitoma", "LW", 83),
       plPlayer("Yankuba Minteh", "RW", 81),
-      plPlayer("Georginio Rutter", "CAM", 82),
+      plPlayer("Georginio Rutter", "CAM", 82, { penaltyTaker: true }),
       plPlayer("Carlos Baleba", "CM", 84),
       plPlayer("Mats Wieffer", "CDM", 80),
       plPlayer("Mats De Cuyper", "LB", 80),
@@ -634,6 +657,7 @@ const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
   plClub({
     id: "chelsea", name: "Chelsea", code: "CHE", rating: 80,
     attack: 84, midfield: 83, defence: 78, goalkeeper: 78, depth: 86, experience: 77,
+    arrivals: ["Danny Welbeck"],
     roster: [
       plPlayer("João Pedro", "ST", 84, { penaltyTaker: true }),
       plPlayer("Pedro Neto", "LW", 83),
@@ -649,6 +673,7 @@ const PREMIER_LEAGUE_2026_27_CLUBS = Object.freeze([
       plPlayer("Liam Delap", "ST", 81),
       plPlayer("Jamie Gittens", "LW", 80),
       plPlayer("Jorrel Hato", "CB", 81),
+      plPlayer("Danny Welbeck", "ST", 80),
     ],
   }),
   plClub({

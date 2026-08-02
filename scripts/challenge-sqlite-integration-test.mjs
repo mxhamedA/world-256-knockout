@@ -9,6 +9,7 @@ import {
   knockout256AchievementDefinition,
   premierLeagueAchievementDefinition,
   retroAchievementPoints,
+  uclAchievementDefinition,
 } from "../challenge-service.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -35,6 +36,22 @@ premierLeagueTitleClubs.forEach((clubId) => {
 });
 assert.equal(premierLeagueAchievementDefinition("coventry-city")?.targetPosition, 17);
 assert.equal(premierLeagueAchievementDefinition("coventry-city")?.objectiveLabel, "Avoid relegation");
+assert.deepEqual(
+  {
+    objective: uclAchievementDefinition("real-madrid").objectiveLabel,
+    targetStageIndex: uclAchievementDefinition("real-madrid").targetStageIndex,
+    points: uclAchievementDefinition("real-madrid").points,
+  },
+  { objective: "Win the UCL", targetStageIndex: 5, points: 2 },
+);
+assert.deepEqual(
+  {
+    objective: uclAchievementDefinition("nk-celje").objectiveLabel,
+    targetStageIndex: uclAchievementDefinition("nk-celje").targetStageIndex,
+    points: uclAchievementDefinition("nk-celje").points,
+  },
+  { objective: "Finish in the top 24", targetStageIndex: 0, points: 9 },
+);
 const leaderboardSource = challengeServiceSource.slice(
   challengeServiceSource.indexOf("async function achievementLeaderboard"),
   challengeServiceSource.indexOf("async function knockout256Achievement(request"),
@@ -444,7 +461,7 @@ assert.equal(persistedEuroProgress.response.status, 200);
 assert.equal(persistedEuroProgress.payload.achievement.unlocked, true);
 assert.equal(persistedEuroProgress.payload.achievement.completed, 24);
 
-const unstartedSpainFinalist = await request("/achievements/knockout-256", {
+const spainFinalist = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
     seed: 256001,
@@ -454,35 +471,10 @@ const unstartedSpainFinalist = await request("/achievements/knockout-256", {
     phase: "complete",
   },
 });
-assert.equal(unstartedSpainFinalist.response.status, 409);
-
-const spainFinalistStarted = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: 256001,
-    teamId: "team-50",
-    bestRoundIndex: 0,
-    championTeamId: null,
-    phase: "progress",
-  },
-});
-assert.equal(spainFinalistStarted.response.status, 200);
-
-const spainFinalistRecorded = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: 256001,
-    teamId: "team-50",
-    bestRoundIndex: 7,
-    championTeamId: "team-1",
-    phase: "complete",
-  },
-});
-assert.equal(spainFinalistRecorded.response.status, 200);
-assert.equal(spainFinalistRecorded.payload.unlockedTeam.complete, false);
-assert.equal(spainFinalistRecorded.payload.unlockedTeam.attempts, 1);
-assert.equal(spainFinalistRecorded.payload.unlockedTeam.achievedOnAttempt, null);
-const spainFinalist = spainFinalistRecorded;
+assert.equal(spainFinalist.response.status, 200);
+assert.equal(spainFinalist.payload.unlockedTeam.complete, false);
+assert.equal(spainFinalist.payload.unlockedTeam.attempts, 1);
+assert.equal(spainFinalist.payload.unlockedTeam.achievedOnAttempt, null);
 
 // A malformed/stale stored flag must never turn a favourite's runner-up finish
 // into a completed achievement or leaderboard points.
@@ -508,7 +500,7 @@ assert.equal(
     + euroMastered.completedPoints,
 );
 
-const unstartedSpainChampion = await request("/achievements/knockout-256", {
+const spainChampion = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
     seed: 256002,
@@ -518,30 +510,7 @@ const unstartedSpainChampion = await request("/achievements/knockout-256", {
     phase: "complete",
   },
 });
-assert.equal(unstartedSpainChampion.response.status, 409);
-const spainChampionStarted = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: 256002,
-    teamId: "team-50",
-    bestRoundIndex: 0,
-    championTeamId: null,
-    phase: "progress",
-  },
-});
-assert.equal(spainChampionStarted.response.status, 200);
-const spainChampionRecorded = await request("/achievements/knockout-256", {
-  method: "POST",
-  body: {
-    seed: 256002,
-    teamId: "team-50",
-    bestRoundIndex: 7,
-    championTeamId: "team-50",
-    phase: "complete",
-  },
-});
-assert.equal(spainChampionRecorded.response.status, 200);
-const spainChampion = spainChampionRecorded;
+assert.equal(spainChampion.response.status, 200);
 assert.equal(spainChampion.payload.countryUnlocked, true);
 assert.equal(spainChampion.payload.unlockedTeam.complete, true);
 assert.equal(spainChampion.payload.unlockedTeam.attempts, 2);
@@ -640,16 +609,6 @@ const premierLeagueMissedTarget = await request("/achievements/premier-league", 
 assert.equal(premierLeagueMissedTarget.response.status, 200);
 assert.equal(premierLeagueMissedTarget.payload.countryUnlocked, false);
 
-const unstartedPremierLeagueWon = await request("/achievements/premier-league", {
-  method: "POST",
-  body: { seed: 26002, clubId: "arsenal", phase: "complete", finalPosition: 1 },
-});
-assert.equal(unstartedPremierLeagueWon.response.status, 409);
-const premierLeagueWonStarted = await request("/achievements/premier-league", {
-  method: "POST",
-  body: { seed: 26002, clubId: "arsenal", phase: "start" },
-});
-assert.equal(premierLeagueWonStarted.response.status, 200);
 const premierLeagueWon = await request("/achievements/premier-league", {
   method: "POST",
   body: { seed: 26002, clubId: "arsenal", phase: "complete", finalPosition: 1 },
@@ -658,10 +617,75 @@ assert.equal(premierLeagueWon.response.status, 200);
 assert.equal(premierLeagueWon.payload.countryUnlocked, true);
 assert.equal(premierLeagueWon.payload.unlockedTeam.objectiveLabel, "Win the Premier League");
 
+const uclRealStarted = await request("/achievements/ucl", {
+  method: "POST",
+  body: { seed: 27001, clubId: "real-madrid", phase: "start", bestStageIndex: -1 },
+});
+assert.equal(uclRealStarted.response.status, 200);
+assert.equal(uclRealStarted.payload.clubUnlocked, false);
+assert.equal(uclRealStarted.payload.achievement.total, 39);
+assert.equal(uclRealStarted.payload.unlockedTeam.targetStageIndex, 5);
+assert.equal(uclRealStarted.payload.unlockedTeam.attempts, 1);
+
+const uclRealFinalist = await request("/achievements/ucl", {
+  method: "POST",
+  body: { seed: 27001, clubId: "real-madrid", phase: "complete", bestStageIndex: 4 },
+});
+assert.equal(uclRealFinalist.response.status, 200);
+assert.equal(uclRealFinalist.payload.clubUnlocked, false);
+assert.equal(uclRealFinalist.payload.unlockedTeam.bestStageIndex, 4);
+
+const uclRealChampion = await request("/achievements/ucl", {
+  method: "POST",
+  body: { seed: 27002, clubId: "real-madrid", phase: "complete", bestStageIndex: 5 },
+});
+assert.equal(uclRealChampion.response.status, 200);
+assert.equal(uclRealChampion.payload.clubUnlocked, true);
+assert.equal(uclRealChampion.payload.unlockedTeam.complete, true);
+assert.equal(uclRealChampion.payload.unlockedTeam.attempts, 2);
+assert.equal(uclRealChampion.payload.unlockedTeam.achievedOnAttempt, 2);
+assert.equal(uclRealChampion.payload.unlockedTeam.points, 2);
+
+const uclArsenalFinal = await request("/achievements/ucl", {
+  method: "POST",
+  body: { seed: 27003, clubId: "arsenal", phase: "complete", bestStageIndex: 4 },
+});
+assert.equal(uclArsenalFinal.response.status, 200);
+assert.equal(uclArsenalFinal.payload.clubUnlocked, true);
+assert.equal(uclArsenalFinal.payload.unlockedTeam.complete, true);
+assert.equal(uclArsenalFinal.payload.unlockedTeam.achievedOnAttempt, 1);
+
+const uclCeljeTop24 = await request("/achievements/ucl", {
+  method: "POST",
+  body: { seed: 27004, clubId: "nk-celje", phase: "complete", bestStageIndex: 0 },
+});
+assert.equal(uclCeljeTop24.response.status, 200);
+assert.equal(uclCeljeTop24.payload.clubUnlocked, true);
+assert.equal(uclCeljeTop24.payload.unlockedTeam.complete, true);
+assert.equal(uclCeljeTop24.payload.unlockedTeam.objectiveLabel, "Finish in the top 24");
+assert.equal(uclCeljeTop24.payload.unlockedTeam.points, 9);
+
+const invalidUclStage = await request("/achievements/ucl", {
+  method: "POST",
+  body: { seed: 27005, clubId: "nk-celje", phase: "complete", bestStageIndex: 6 },
+});
+assert.equal(invalidUclStage.response.status, 400);
+
+const uclProgress = await request("/achievements/ucl");
+assert.equal(uclProgress.response.status, 200);
+assert.equal(uclProgress.payload.achievement.completed, 3);
+assert.equal(uclProgress.payload.achievement.total, 39);
+assert.equal(
+  uclProgress.payload.achievement.completedPoints,
+  uclRealChampion.payload.unlockedTeam.points
+    + uclArsenalFinal.payload.unlockedTeam.points
+    + uclCeljeTop24.payload.unlockedTeam.points,
+);
+
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
 assert.equal(achievementBoard.payload.leaderboard[0].username, username);
-assert.equal(achievementBoard.payload.leaderboard[0].achievements, 30);
+assert.equal(achievementBoard.payload.leaderboard[0].achievements, 33);
 assert.equal(
   achievementBoard.payload.leaderboard[0].points,
   retro2006Win.payload.unlockedTeam.points
@@ -670,10 +694,13 @@ assert.equal(
     + euroMastered.completedPoints
     + spainChampion.payload.unlockedTeam.points
     + nauruRoundOf16.payload.unlockedTeam.points
-    + premierLeagueWon.payload.unlockedTeam.points,
+    + premierLeagueWon.payload.unlockedTeam.points
+    + uclRealChampion.payload.unlockedTeam.points
+    + uclArsenalFinal.payload.unlockedTeam.points
+    + uclCeljeTop24.payload.unlockedTeam.points,
 );
 assert.equal(achievementBoard.payload.currentUser.rank, 1);
-assert.equal(achievementBoard.payload.totalAchievements, 508);
+assert.equal(achievementBoard.payload.totalAchievements, 547);
 
 const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
 assert.equal(publicAchievementBoard.response.status, 200);
