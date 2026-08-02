@@ -128,6 +128,7 @@ assert.equal(retroAchievementPoints(2006, "Italy"), 1);
 assert.equal(retroAchievementPoints(2006, "Saudi Arabia"), 10);
 assert.equal(retroAchievementPoints(2022, "France"), 1);
 assert.equal(retroAchievementPoints(2022, "Qatar"), 8);
+assert.equal(retroAchievementPoints(2026, "Australia"), 5);
 assert.deepEqual(
   {
     objective: knockout256AchievementDefinition("team-50").objectiveLabel,

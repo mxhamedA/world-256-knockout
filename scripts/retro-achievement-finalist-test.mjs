@@ -6,19 +6,22 @@ import vm from "node:vm";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const challengeSource = readFileSync(join(root, "challenge.js"), "utf8");
+const appSource = readFileSync(join(root, "app.js"), "utf8");
 
-function functionSource(name) {
-  const start = challengeSource.indexOf(`function ${name}(`);
+function functionSourceFrom(source, name) {
+  const start = source.indexOf(`function ${name}(`);
   assert.notEqual(start, -1, `${name} must exist.`);
-  const bodyStart = challengeSource.indexOf("{", start);
+  const bodyStart = source.indexOf("{", start);
   let depth = 0;
-  for (let index = bodyStart; index < challengeSource.length; index += 1) {
-    if (challengeSource[index] === "{") depth += 1;
-    if (challengeSource[index] === "}") depth -= 1;
-    if (depth === 0) return challengeSource.slice(start, index + 1);
+  for (let index = bodyStart; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
   }
   throw new Error(`Could not parse ${name}.`);
 }
+
+const functionSource = (name) => functionSourceFrom(challengeSource, name);
 
 const context = vm.createContext({});
 vm.runInContext(`
@@ -112,6 +115,76 @@ assert.match(
   retroEngineSource,
   /totalExpectedGoals:[\s\S]*?revealed: true,[\s\S]*?advanceTournament\(tournament\);/,
   "Instant simulations must explicitly reveal their result before tournament completion can unlock an achievement.",
+);
+
+const finalizationContext = vm.createContext({});
+vm.runInContext(`
+  const australiaId = "retro-2026-australia";
+  const finalRound = [
+    {
+      id: "ko-third-place",
+      homeId: "retro-2026-france",
+      awayId: "retro-2026-spain",
+      result: null,
+    },
+    {
+      id: "ko-final",
+      homeId: australiaId,
+      awayId: "retro-2026-argentina",
+      result: { winnerId: australiaId, revealed: true },
+    },
+  ];
+  let saveCalls = 0;
+  const state = { retroWorldCup: true, rounds: Array.from({ length: 8 }, () => []) };
+  state.rounds[7] = finalRound;
+  const retroTournament = { year: 2026, phase: "knockout", champion: null };
+  const window = {};
+  const isRetroSimulatorState = () => true;
+  const tournamentFinalRoundIndex = () => 7;
+  const tournamentFinalMatch = (round) => round.find((match) => match.id === "ko-final") || null;
+  const simulateAndRevealMatch = (match) => {
+    match.result = { winnerId: match.homeId, revealed: true };
+    return match.result;
+  };
+  const teamById = (id) => ({
+    name: id === australiaId ? "Australia" : id.split("-").at(-1),
+  });
+  const RETRO_WORLD_CUP_ENGINE = {
+    advanceTournament(tournament) {
+      if (!finalRound.every((match) => match.result?.revealed)) return;
+      tournament.phase = "complete";
+      tournament.champion = tournamentFinalMatch(finalRound).result.winner;
+    },
+  };
+  const retroSimulatorRounds = () => state.rounds;
+  const saveRetroTournamentState = () => { saveCalls += 1; };
+  ${functionSourceFrom(appSource, "settlePendingRetroFinalMatches")}
+  ${functionSourceFrom(appSource, "buildNextRound")}
+  buildNextRound(7);
+  globalThis.__finalization = {
+    phase: retroTournament.phase,
+    champion: retroTournament.champion,
+    thirdPlaceRevealed: finalRound[0].result?.revealed === true,
+    finalWinner: finalRound[1].result?.winner,
+    saveCalls,
+  };
+`, finalizationContext);
+
+assert.deepEqual(
+  JSON.parse(JSON.stringify(finalizationContext.__finalization)),
+  {
+    phase: "complete",
+    champion: "Australia",
+    thirdPlaceRevealed: true,
+    finalWinner: "Australia",
+    saveCalls: 1,
+  },
+  "A revealed 2026 final win must complete and persist immediately even if third place was still pending.",
+);
+assert.match(
+  appSource,
+  /const savedFinal = tournamentFinalMatch\(state\.rounds\[savedFinalRoundIndex\] \|\| \[\]\);[\s\S]*?buildNextRound\(savedFinalRoundIndex\);/,
+  "A saved revealed 2026 final must be repaired and replayed after reload.",
 );
 
 console.log("Retro achievement finalist-loss regression checks passed.");

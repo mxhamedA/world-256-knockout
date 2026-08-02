@@ -18,7 +18,7 @@ assert.match(
 );
 assert.match(
   app,
-  /if \(managedDefaultFinalSkipsThirdPlace\(match\)\)[\s\S]*?thirdPlaceMatch\.result = simulateMatch[\s\S]*?thirdPlaceMatch\.result\.revealed = true/,
+  /if \(managedDefaultFinalSkipsThirdPlace\(match\)\)[\s\S]*?simulateAndRevealMatch\(thirdPlaceMatch, tournamentFinalRoundIndex\(\)\)/,
   "Starting the final must simulate and reveal the unplayed third-place fixture in the background.",
 );
 assert.match(

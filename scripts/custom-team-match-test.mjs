@@ -30,6 +30,9 @@ assert.match(app, /\["premier-league", "Premier League clubs"\]/);
 assert.match(app, /data-custom-match-source=/);
 assert.match(app, /data-custom-match-action="edit-custom-team"[\s\S]{0,180}data-custom-match-action="delete-custom-team"/, "Custom Match must expose edit and delete actions for custom teams.");
 assert.match(app, /teamCreatorReturnSide = button\.dataset\.side === "away" \? "away" : "home"/, "Editing a Custom Match team must return it to the correct side.");
+assert.match(app, /customTournamentUi\.teamCreatorReturnMode === "customMatch" \? customTeamCreatorMarkup\(\) : ""/, "Custom Match must render the team editor without leaving its own route.");
+assert.doesNotMatch(app, /teamCreatorReturnMode = "customMatch";[\s\S]{0,180}setAppModeUrl\("custom"\)/, "Opening the team editor from Custom Match must keep the /custom-matches route.");
+assert.match(app, /function raiseLinkedCustomRatings\(ratings, keys, nextOverall, baselineRatings = ratings\)/, "Custom team Overall changes must have a linked-ratings helper.");
 assert.match(app, /CUSTOM_PREMIER_LEAGUE_TEAMS/);
 assert.match(app, /const CUSTOM_PREMIER_LEAGUE_TEAMS = Object\.freeze\([\s\S]*window\.PREMIER_LEAGUE_2026_27_CLUBS/);
 assert.match(app, /customMatch === true\) return \["Custom match"\]/);
@@ -85,5 +88,18 @@ assert.equal(automaticXI.filter((player) => player.startingXI).length, 11);
 assert.equal(automaticXI.find((player) => player.name === "Keeper").startingXI, true);
 assert.equal(automaticXI.find((player) => player.name === "Outfield 1").startingXI, false);
 assert.equal(automaticXI.find((player) => player.name === "Outfield 12").startingXI, true);
+
+const linkedRatingsHelperStart = app.indexOf("function raiseLinkedCustomRatings(");
+const linkedRatingsHelperEnd = app.indexOf("function customTeamCreatorContainer(", linkedRatingsHelperStart);
+assert.ok(linkedRatingsHelperStart >= 0 && linkedRatingsHelperEnd > linkedRatingsHelperStart);
+const raiseLinkedCustomRatings = new Function(
+  "simulationClamp",
+  `${app.slice(linkedRatingsHelperStart, linkedRatingsHelperEnd)}; return raiseLinkedCustomRatings;`,
+)((value, min, max) => Math.min(max, Math.max(min, value)));
+const linkedRatings = { overall: 75, attack: 78, midfield: 74, defence: 70, goalkeeper: 65 };
+raiseLinkedCustomRatings(linkedRatings, ["overall", "attack", "midfield", "defence", "goalkeeper"], 80);
+assert.deepEqual(linkedRatings, { overall: 80, attack: 83, midfield: 79, defence: 75, goalkeeper: 70 });
+raiseLinkedCustomRatings(linkedRatings, ["overall", "attack", "midfield", "defence", "goalkeeper"], 77);
+assert.deepEqual(linkedRatings, { overall: 77, attack: 83, midfield: 79, defence: 75, goalkeeper: 70 }, "Lowering Overall must not silently erase custom stat choices.");
 
 console.log("Custom team creator and custom match checks passed.");
