@@ -28,6 +28,8 @@ assert.match(app, /count === 2 && candidate\.customTournament\.customMatch === t
 assert.match(app, /customMatch: "\/custom-matches"/);
 assert.match(app, /\["premier-league", "Premier League clubs"\]/);
 assert.match(app, /data-custom-match-source=/);
+assert.match(app, /data-custom-match-action="edit-custom-team"[\s\S]{0,180}data-custom-match-action="delete-custom-team"/, "Custom Match must expose edit and delete actions for custom teams.");
+assert.match(app, /teamCreatorReturnSide = button\.dataset\.side === "away" \? "away" : "home"/, "Editing a Custom Match team must return it to the correct side.");
 assert.match(app, /CUSTOM_PREMIER_LEAGUE_TEAMS/);
 assert.match(app, /const CUSTOM_PREMIER_LEAGUE_TEAMS = Object\.freeze\([\s\S]*window\.PREMIER_LEAGUE_2026_27_CLUBS/);
 assert.match(app, /customMatch === true\) return \["Custom match"\]/);
@@ -52,6 +54,7 @@ assert.match(app, /removeCustomTeamFromAccount\(team\.id\)/);
 assert.match(app, /customTournamentSetup\.selectedIds\.map\(\(selectedId\) => selectedId === team\.id \? null : selectedId\)/);
 assert.match(app, /replaceDeletedCustomMatchTeam\("home", team\.id\)/);
 assert.match(css, /\.custom-team-delete-button/);
+assert.match(css, /\.custom-match-team-actions button\.is-danger/, "Custom Match must style its delete action as destructive.");
 assert.match(css, /custom-uploaded-flag img[^}]*object-fit: contain/);
 assert.match(css, /custom-team-flag-preview img[^}]*object-fit: contain/);
 assert.match(css, /custom-match-team-flag\.pl-club-flag img[\s\S]*object-fit: contain/);

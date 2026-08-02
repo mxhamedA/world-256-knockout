@@ -17769,6 +17769,7 @@ let customTournamentUi = {
   editingCustomTeamId: null,
   customTeamDraft: null,
   teamCreatorReturnMode: null,
+  teamCreatorReturnSide: null,
 };
 
 const CUSTOM_PLAYER_POSITIONS = Object.freeze(["GK", "LB", "LWB", "CB", "RB", "RWB", "CDM", "CM", "CAM", "LM", "RM", "LW", "RW", "CF", "ST"]);
@@ -17905,7 +17906,9 @@ function customFlagDataUrl(file) {
 
 async function saveCustomTeamDraft() {
   const draft = customTournamentUi.customTeamDraft;
-  const message = els.customTournamentBody.querySelector("#customTeamCreatorMessage");
+  const message = customTournamentUi.teamCreatorOpen
+    ? els.customTournamentBody.querySelector("#customTeamCreatorMessage")
+    : null;
   const name = String(draft?.name || "").trim();
   const players = (draft?.playerProfiles || []).map(sanitizeCustomPlayer);
   if (!name) {
@@ -17961,11 +17964,13 @@ async function saveCustomTeamDraft() {
   customTournamentUi.editingCustomTeamId = null;
   customTournamentUi.customTeamDraft = null;
   const returnMode = customTournamentUi.teamCreatorReturnMode;
+  const returnSide = customTournamentUi.teamCreatorReturnSide === "away" ? "away" : "home";
   customTournamentUi.teamCreatorReturnMode = null;
+  customTournamentUi.teamCreatorReturnSide = null;
   saveCustomTournamentSetup();
   if (returnMode === "customMatch") {
-    customMatchSetup.homeSource = "custom";
-    customMatchSetup.homeId = id;
+    customMatchSetup[`${returnSide}Source`] = "custom";
+    customMatchSetup[`${returnSide}Id`] = id;
     saveCustomMatchSetup();
     customMatchSetupViewOpen = true;
     setAppModeUrl("customMatch");
@@ -17996,15 +18001,21 @@ async function deleteCustomTeam(teamId) {
   const team = customTeamLibrary.find((candidate) => candidate.id === teamId);
   if (!team) return;
   if (!window.confirm(`Delete ${team.name}? This cannot be undone.`)) return;
-  const message = els.customTournamentBody.querySelector("#customTeamCreatorMessage");
+  const message = customTournamentUi.teamCreatorOpen
+    ? els.customTournamentBody.querySelector("#customTeamCreatorMessage")
+    : null;
   if (team.accountSaved && !customTeamAccount) {
-    if (message) message.textContent = "Log in to delete this team from your account.";
+    const copy = "Log in to delete this team from your account.";
+    if (message) message.textContent = copy;
+    else showToast(copy);
     return;
   }
   try {
     if (team.accountSaved) await removeCustomTeamFromAccount(team.id);
   } catch (error) {
-    if (message) message.textContent = error.message || "This team could not be deleted from your account.";
+    const copy = error.message || "This team could not be deleted from your account.";
+    if (message) message.textContent = copy;
+    else showToast(copy);
     return;
   }
 
@@ -18029,6 +18040,7 @@ async function deleteCustomTeam(teamId) {
   customTournamentUi.editingCustomTeamId = null;
   customTournamentUi.customTeamDraft = null;
   customTournamentUi.teamCreatorReturnMode = null;
+  customTournamentUi.teamCreatorReturnSide = null;
   if (returnMode === "customMatch") {
     customMatchSetupViewOpen = true;
     setAppModeUrl("customMatch");
@@ -18126,7 +18138,7 @@ function renderCustomMatchSetup() {
             <label><span>Squad collection</span><select data-custom-match-source="${side}" aria-label="${label} squad collection">${customTeamSourceOptionsMarkup(customMatchSetup[`${side}Source`])}</select></label>
             <label><span>Team</span><select data-custom-match-team="${side}" aria-label="${label}">${customMatchTeamOptions(customMatchSetup[`${side}Source`], team?.id)}</select></label>
           </div>
-          ${team ? `<div class="custom-match-team-name"><strong>${escapeHtml(customTeamDisplayName(team))}</strong></div><div class="custom-rating-grid">${customMatchRatingFields(team, side)}</div>` : ""}
+          ${team ? `<div class="custom-match-team-name"><strong>${escapeHtml(customTeamDisplayName(team))}</strong>${team.customTeam ? `<span class="custom-match-team-actions"><button type="button" data-custom-match-action="edit-custom-team" data-team-id="${team.id}" data-side="${side}">Edit team</button><button class="is-danger" type="button" data-custom-match-action="delete-custom-team" data-team-id="${team.id}" data-side="${side}">Delete</button></span>` : ""}</div><div class="custom-rating-grid">${customMatchRatingFields(team, side)}</div>` : ""}
           <button class="custom-match-reset-ratings" type="button" data-custom-match-action="reset-ratings" data-team-id="${team?.id || ""}">Restore ratings</button>
         </section>`).join('<div class="custom-match-versus" aria-hidden="true">VS</div>')}
       </div>
@@ -18171,8 +18183,32 @@ function renderCustomMatchSetup() {
       customTournamentUi.editingCustomTeamId = null;
       customTournamentUi.customTeamDraft = newCustomTeamDraft();
       customTournamentUi.teamCreatorReturnMode = "customMatch";
+      customTournamentUi.teamCreatorReturnSide = "home";
       setAppModeUrl("custom");
       render();
+      return;
+    }
+    if (action === "edit-custom-team") {
+      const team = customTeamLibrary.find((candidate) => candidate.id === button.dataset.teamId);
+      if (!team) return;
+      customTournamentUi.teamCreatorOpen = true;
+      customTournamentUi.editingCustomTeamId = team.id;
+      customTournamentUi.customTeamDraft = newCustomTeamDraft(team);
+      customTournamentUi.teamCreatorReturnMode = "customMatch";
+      customTournamentUi.teamCreatorReturnSide = button.dataset.side === "away" ? "away" : "home";
+      setAppModeUrl("custom");
+      render();
+      return;
+    }
+    if (action === "delete-custom-team") {
+      customTournamentUi.teamCreatorReturnMode = "customMatch";
+      customTournamentUi.teamCreatorReturnSide = button.dataset.side === "away" ? "away" : "home";
+      void deleteCustomTeam(button.dataset.teamId).finally(() => {
+        if (!customTournamentUi.teamCreatorOpen) {
+          customTournamentUi.teamCreatorReturnMode = null;
+          customTournamentUi.teamCreatorReturnSide = null;
+        }
+      });
       return;
     }
     if (action === "reset-ratings") delete customMatchSetup.abilityOverrides[button.dataset.teamId];
@@ -19217,6 +19253,7 @@ function handleCustomTournamentAction(button) {
     customTournamentUi.editingCustomTeamId = null;
     customTournamentUi.customTeamDraft = newCustomTeamDraft();
     customTournamentUi.teamCreatorReturnMode = null;
+    customTournamentUi.teamCreatorReturnSide = null;
     renderCustomTournamentSetup();
     return;
   }
@@ -19226,6 +19263,8 @@ function handleCustomTournamentAction(button) {
     customTournamentUi.teamCreatorOpen = true;
     customTournamentUi.editingCustomTeamId = team.id;
     customTournamentUi.customTeamDraft = newCustomTeamDraft(team);
+    customTournamentUi.teamCreatorReturnMode = null;
+    customTournamentUi.teamCreatorReturnSide = null;
     renderCustomTournamentSetup();
     return;
   }
@@ -19239,6 +19278,7 @@ function handleCustomTournamentAction(button) {
     customTournamentUi.editingCustomTeamId = null;
     customTournamentUi.customTeamDraft = null;
     customTournamentUi.teamCreatorReturnMode = null;
+    customTournamentUi.teamCreatorReturnSide = null;
     if (returnMode === "customMatch") {
       customMatchSetupViewOpen = true;
       setAppModeUrl("customMatch");
@@ -23626,6 +23666,7 @@ els.customMatchCreateTeamButton?.addEventListener("click", () => {
   customTournamentUi.editingCustomTeamId = null;
   customTournamentUi.customTeamDraft = newCustomTeamDraft();
   customTournamentUi.teamCreatorReturnMode = "customMatch";
+  customTournamentUi.teamCreatorReturnSide = "home";
   setAppModeUrl("custom");
   render();
 });
