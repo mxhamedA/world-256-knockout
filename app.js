@@ -16036,7 +16036,30 @@ function simulateCurrentRound() {
   }
   if (isCustomGroupStageRound()) {
     const matchday = pendingCustomGroupMatchday(round);
-    if (matchday < 0) return;
+    if (matchday < 0) {
+      buildNextRound(0);
+      const knockoutRound = state.rounds[1];
+      if (!Array.isArray(knockoutRound) || knockoutRound.length === 0) {
+        showToast("The group stage is complete, but the knockout fixtures could not be created.");
+        return;
+      }
+      state.activeRound = 1;
+      const managedMatchIndex = teamMatchIndex(1);
+      state.selectedMatch = Math.max(0, managedMatchIndex);
+      state.championView = false;
+      fixtureLimit = DEFAULT_FIXTURE_LIMIT;
+      filterUnresolved = false;
+      if (state.spectateTeamId && managedMatchIndex < 0) {
+        state.neutralView = true;
+        showToast(`${spectatedTeam()?.name || "Your team"} are out after the group stage. Continuing neutrally.`);
+      } else {
+        showToast("Group stage complete. The knockout fixtures are ready.");
+      }
+      saveState();
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     const watchedMatchIndex = teamMatchIndex(state.activeRound);
     const watchedMatch = round[watchedMatchIndex];
     const watchingActiveTeam = watchedMatch
@@ -16061,12 +16084,18 @@ function simulateCurrentRound() {
       showToast(`Group-stage matchday ${matchday + 1} complete.`);
     } else {
       buildNextRound(0);
+      const managedMatchIndex = teamMatchIndex(1);
       state.activeRound = 1;
-      state.selectedMatch = Math.max(0, teamMatchIndex(1));
+      state.selectedMatch = Math.max(0, managedMatchIndex);
       state.championView = false;
       fixtureLimit = DEFAULT_FIXTURE_LIMIT;
       filterUnresolved = false;
-      showToast("Group stage complete. The knockout fixtures are ready.");
+      if (state.spectateTeamId && managedMatchIndex < 0) {
+        state.neutralView = true;
+        showToast(`${spectatedTeam()?.name || "Your team"} are out after the group stage. Continuing neutrally.`);
+      } else {
+        showToast("Group stage complete. The knockout fixtures are ready.");
+      }
     }
     saveState();
     render();
@@ -16112,6 +16141,10 @@ function simulateCurrentRound() {
 function requestRoundSimulation() {
   if (livePlayback) {
     showToast("Finish or skip the live tie before simulating the round.");
+    return;
+  }
+  if (isCustomGroupStageRound() && pendingCustomGroupMatchday(selectedRound()) < 0) {
+    simulateCurrentRound();
     return;
   }
   const watchedMatchIndex = teamMatchIndex(state.activeRound);
@@ -20378,12 +20411,16 @@ function render() {
         : `${roundName} fixtures`;
   if (teamFilterId) els.boardTitle.textContent = `${teamById(teamFilterId).name} matches`;
   const watchedMatchIndex = teamMatchIndex(state.activeRound);
+  const completedCustomGroupStage = isCustomGroupStageRound()
+    && pendingCustomGroupMatchday(selectedRound()) < 0;
   const finalRoundIncludesThirdPlace = state.activeRound === tournamentFinalRoundIndex()
     && selectedRound().some((match) => isThirdPlacePlayoff(match));
   els.simulateRoundButton.textContent = state.premierLeagueSeason
     ? watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed
       ? "Simulate other matches"
       : "Simulate matchweek"
+    : completedCustomGroupStage
+    ? `Continue to ${tournamentRoundName(1)}`
     : watchedMatchIndex >= 0 && !selectedRound()[watchedMatchIndex]?.result?.revealed
     ? isCustomGroupStageRound() ? "Simulate other matches" : "Simulate other ties"
     : finalRoundIncludesThirdPlace ? "Simulate final round"

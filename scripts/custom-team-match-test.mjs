@@ -29,6 +29,27 @@ assert.match(app, /customFlag \|\| imageOverride \|\| `https:\/\/flagcdn\.com/,
   "Snapshots must load uploaded custom-team flags before falling back to a country flag.");
 assert.match(app, /customFlag: true|customFlag/);
 assert.match(app, /function createCustomMatchState\(\)/);
+assert.match(
+  app,
+  /if \(matchday < 0\) \{[\s\S]{0,900}buildNextRound\(0\);[\s\S]{0,900}state\.activeRound = 1;/,
+  "A completed custom group stage must open the knockout round instead of returning early.",
+);
+assert.doesNotMatch(
+  app,
+  /if \(isCustomGroupStageRound\(\)\) \{\s*const matchday = pendingCustomGroupMatchday\(round\);\s*if \(matchday < 0\) return;/,
+  "A restored tournament with every group fixture revealed must not get stuck before the Round of 32.",
+);
+assert.match(
+  app,
+  /isCustomGroupStageRound\(\) && pendingCustomGroupMatchday\(selectedRound\(\)\) < 0\) \{\s*simulateCurrentRound\(\);/,
+  "The completed group-stage button must continue immediately instead of opening another simulation prompt.",
+);
+assert.match(app, /`Continue to \$\{tournamentRoundName\(1\)\}`/);
+assert.match(
+  app,
+  /state\.spectateTeamId && managedMatchIndex < 0[\s\S]{0,180}state\.neutralView = true/,
+  "An eliminated managed team must fall back to neutral viewing when the knockouts begin.",
+);
 assert.match(app, /customMatch: true/);
 assert.match(app, /count === 2 && candidate\.customTournament\.customMatch === true/);
 assert.match(app, /customMatch: "\/custom-matches"/);
