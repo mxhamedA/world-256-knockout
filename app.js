@@ -18301,8 +18301,32 @@ function saveCustomMatchSetup() {
   localStorage.setItem(CUSTOM_MATCH_SETUP_KEY, JSON.stringify(customMatchSetup));
 }
 
+function reconcileCustomMatchTeamSelections() {
+  let changed = false;
+  ["home", "away"].forEach((side) => {
+    const source = customMatchSetup[`${side}Source`];
+    const pool = customTeamSourcePool(source);
+    const currentId = customMatchSetup[`${side}Id`];
+    const opposingSide = side === "home" ? "away" : "home";
+    const opposingId = customMatchSetup[`${opposingSide}Id`];
+    const currentIsAvailable = pool.some((team) => team.id === currentId);
+    const alternativeExists = pool.some((team) => team.id !== opposingId);
+    if (currentIsAvailable && (currentId !== opposingId || !alternativeExists)) return;
+    const nextId = pool.find((team) => team.id !== opposingId)?.id || pool[0]?.id || null;
+    if (currentId === nextId) return;
+    customMatchSetup[`${side}Id`] = nextId;
+    changed = true;
+  });
+  if (changed) saveCustomMatchSetup();
+  return changed;
+}
+
 function customMatchTeamOptions(source, selectedId) {
-  return customTeamSourcePool(source)
+  const pool = customTeamSourcePool(source);
+  if (!pool.length) {
+    return `<option value="" disabled selected>${source === "custom" ? "No custom teams yet" : "No teams available"}</option>`;
+  }
+  return pool
     .map((team) => `<option value="${team.id}" ${selectedId === team.id ? "selected" : ""}>${escapeHtml(customTeamDisplayName(team))}</option>`)
     .join("");
 }
@@ -18316,6 +18340,7 @@ function customMatchRatingFields(team, side) {
 
 function renderCustomMatchSetup() {
   if (!els.customMatchBody) return;
+  reconcileCustomMatchTeamSelections();
   const home = TEAM_BY_ID.get(customMatchSetup.homeId);
   const away = TEAM_BY_ID.get(customMatchSetup.awayId);
   const active = !customMatchSetupViewOpen && isValidCustomTournamentState(customMatchState) && customMatchState.customTournament?.customMatch === true && customMatchState.started;

@@ -34,6 +34,8 @@ assert.match(app, /count === 2 && candidate\.customTournament\.customMatch === t
 assert.match(app, /customMatch: "\/custom-matches"/);
 assert.match(app, /\["premier-league", "Premier League clubs"\]/);
 assert.match(app, /data-custom-match-source=/);
+assert.match(app, /function reconcileCustomMatchTeamSelections\(\)/);
+assert.match(app, /No custom teams yet/);
 assert.match(app, /data-custom-match-action="edit-custom-team"[\s\S]{0,180}data-custom-match-action="delete-custom-team"/, "Custom Match must expose edit and delete actions for custom teams.");
 assert.match(app, /teamCreatorReturnSide = button\.dataset\.side === "away" \? "away" : "home"/, "Editing a Custom Match team must return it to the correct side.");
 assert.match(app, /customTournamentUi\.teamCreatorReturnMode === "customMatch" \? customTeamCreatorMarkup\(\) : ""/, "Custom Match must render the team editor without leaving its own route.");
@@ -110,5 +112,27 @@ raiseLinkedCustomRatings(linkedRatings, ["overall", "attack", "midfield", "defen
 assert.deepEqual(linkedRatings, { overall: 80, attack: 83, midfield: 79, defence: 75, goalkeeper: 70 });
 raiseLinkedCustomRatings(linkedRatings, ["overall", "attack", "midfield", "defence", "goalkeeper"], 77);
 assert.deepEqual(linkedRatings, { overall: 77, attack: 83, midfield: 79, defence: 75, goalkeeper: 70 }, "Lowering Overall must not silently erase custom stat choices.");
+
+const reconcileHelperStart = app.indexOf("function reconcileCustomMatchTeamSelections(");
+const reconcileHelperEnd = app.indexOf("function customMatchTeamOptions(", reconcileHelperStart);
+assert.ok(reconcileHelperStart >= 0 && reconcileHelperEnd > reconcileHelperStart);
+const delayedCustomSetup = {
+  homeSource: "custom",
+  homeId: null,
+  awaySource: "current",
+  awayId: "england",
+};
+let customMatchSetupSaves = 0;
+const reconcileDelayedCustomTeam = new Function(
+  "customMatchSetup",
+  "customTeamSourcePool",
+  "saveCustomMatchSetup",
+  `${app.slice(reconcileHelperStart, reconcileHelperEnd)}; return reconcileCustomMatchTeamSelections;`,
+)(delayedCustomSetup, (source) => source === "custom" ? [{ id: "custom-cloud-club" }] : [{ id: "england" }], () => {
+  customMatchSetupSaves += 1;
+});
+assert.equal(reconcileDelayedCustomTeam(), true);
+assert.equal(delayedCustomSetup.homeId, "custom-cloud-club", "A custom team loaded after initial render must become the real selected team.");
+assert.equal(customMatchSetupSaves, 1);
 
 console.log("Custom team creator and custom match checks passed.");
