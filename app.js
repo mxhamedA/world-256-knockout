@@ -12988,14 +12988,13 @@ function applyRetroLivePositionSwap(match, firstNumber, secondNumber) {
   retroLiveSubOutNumber = null;
   retroLiveSubInNumber = null;
   retroLivePendingSubstitution = null;
-  livePlayback.commentaryFeed?.push({
+  publishLiveManagementCommentary({
     minute: Math.max(1, Math.ceil(displayedLiveMinute())),
     text: `${first.name} and ${second.name} switch positions for ${team.name}.`,
     type: "tactical-change",
     emphasis: "normal",
     eventId: `${match.id}:position-swap:${firstNumber}:${secondNumber}:${Date.now()}`,
   });
-  renderCommentaryFeed();
   clearPlayerProfileCacheForTeam(team.id);
   rebuildLiveMatchAfterTacticChange(match);
   renderRetroMatchLineupsPanel(match);
@@ -13081,14 +13080,13 @@ function applyRetroLiveSubstitutionBatch(match, pendingChanges = retroPendingSub
   });
   const outgoingNames = validatedChanges.map((change) => change.outgoing.name);
   const incomingNames = validatedChanges.map((change) => change.incoming.name);
-  livePlayback.commentaryFeed?.push({
+  publishLiveManagementCommentary({
     minute: substitutionMinute,
     text: `${outgoingNames.join(", ")} ${outgoingNames.length === 1 ? "comes" : "come"} off. ${incomingNames.join(", ")} ${incomingNames.length === 1 ? "is" : "are"} sent on for ${team.name}.`,
     type: "substitution",
     emphasis: "normal",
     eventId: `${match.id}:sub-window:${substitutionMinute}:${substitutions.used}`,
   });
-  renderCommentaryFeed();
   retroLiveSubOutNumber = null;
   retroLiveSubInNumber = null;
   retroLivePendingSubstitution = null;
@@ -13204,14 +13202,13 @@ function updateRetroOppositionManagement(match) {
   match.result.substitutions.push(substitutionEvent);
   livePlayback.feed.unshift(substitutionEvent);
   appendLiveTimelineEvent(substitutionEvent);
-  livePlayback.commentaryFeed?.push({
+  publishLiveManagementCommentary({
     minute: Math.ceil(minute),
     text: `${choice.outgoing.name} makes way. ${choice.incoming.name} comes on for ${team.name}.`,
     type: "substitution",
     emphasis: "normal",
     eventId: `${match.id}:opponent-sub:${management.used}`,
   });
-  renderCommentaryFeed();
   clearPlayerProfileCacheForTeam(team.id);
   rebuildLiveMatchAfterTacticChange(match);
   renderRetroMatchLineupsPanel(match);
@@ -13250,7 +13247,9 @@ function rebuildLiveMatchAfterTacticChange(match) {
   match2dState.presentation = presentation;
   match2dState.engine = presentation;
   match2dState.players = rebuildMatch2dPlayerNodes(presentation);
-  match2dState.cursor = presentation.highlights.findLastIndex((highlight) => highlight.minute <= resultCutoff);
+  // An authoritative goal can share the displayed minute with a substitution.
+  // Keep that minute eligible so the management rebuild cannot skip the goal.
+  match2dState.cursor = presentation.highlights.findLastIndex((highlight) => highlight.minute < resultCutoff);
   match2dState.activeHighlight = null;
   match2dState.actionIndex = 0;
   match2dState.fullTimeClockQueued = false;
@@ -13927,6 +13926,17 @@ function renderCommentaryFeed() {
   copy.textContent = text;
   line.append(copy);
   els.matchCommentaryFeed.replaceChildren(line);
+}
+
+function publishLiveManagementCommentary(entry) {
+  if (!livePlayback?.commentaryFeed) return false;
+  const latest = livePlayback.commentaryFeed.at(-1);
+  const goalIsStillBeingCalled = latest?.emphasis === "goal"
+    && Number(latest.minute) >= Number(entry.minute) - 1;
+  if (goalIsStillBeingCalled) return false;
+  livePlayback.commentaryFeed.push(entry);
+  renderCommentaryFeed();
+  return true;
 }
 
 function actionEmphasis(action) {

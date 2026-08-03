@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
+assert.match(appSource, /function publishLiveManagementCommentary[\s\S]*latest\?\.emphasis === "goal"[\s\S]*if \(goalIsStillBeingCalled\) return false/, "A substitution must not overwrite an active goal call.");
+assert.match(appSource, /match2dState\.cursor = presentation\.highlights\.findLastIndex\(\(highlight\) => highlight\.minute < resultCutoff\)/, "A same-minute goal must remain playable after a substitution rebuild.");
 const challengeSource = fs.readFileSync(path.join(root, "challenge.js"), "utf8");
 const challengeServiceSource = fs.readFileSync(path.join(root, "challenge-service.mjs"), "utf8");
 const indexSource = fs.readFileSync(path.join(root, "index.html"), "utf8");

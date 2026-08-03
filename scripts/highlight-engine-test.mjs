@@ -155,6 +155,17 @@ const substituteResult = {
 const substituteHighlight = createFor(substituteResult, 983144).highlights.find((highlight) => highlight.event?.scorer === "Impact Substitute");
 assert.equal(substituteHighlight.actions.findLast((action) => action.type === "shot").actor.name, "Impact Substitute");
 
+const countryLabelResult = {
+  ...penaltyResult,
+  homeEvents: [{ minute: 41, scorer: "Home", goalType: "openPlay", type: "goal" }],
+};
+const countryLabelGoal = createFor(countryLabelResult, 551209).highlights.find((highlight) => highlight.event?.type === "goal");
+assert.notEqual(countryLabelGoal.event.scorer, "Home", "A country/team label must never be presented as the goalscorer.");
+assert.ok(
+  countryLabelGoal.actions.some((action) => action.actor?.name === countryLabelGoal.event.scorer),
+  "A repaired goalscorer must remain attached to the authoritative goal sequence.",
+);
+
 const rapidGoalResult = {
   ...result,
   homeGoals: 2,

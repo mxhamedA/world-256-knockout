@@ -1861,6 +1861,22 @@ function highlightActionImportance(action) {
   return "silent";
 }
 
+function resolvedHighlightPlayerName(side, rawName, salt = "") {
+  const normalized = String(rawName || "").replace(/\s*\(OG\)\s*$/i, "").trim();
+  const teamName = String(side?.name || "").trim();
+  const normalizedKey = normalized.toLocaleLowerCase();
+  const teamKey = teamName.toLocaleLowerCase();
+  const teamLabelUsedAsPlayer = !normalized
+    || normalizedKey === teamKey
+    || normalizedKey === `${teamKey} player`
+    || normalizedKey.startsWith(`${teamKey} player `);
+  if (!teamLabelUsedAsPlayer) return normalized;
+  const outfield = (side?.players || []).filter((player) => player.position !== "GK");
+  const candidates = outfield.length ? outfield : (side?.players || []);
+  if (!candidates.length) return "A player";
+  return candidates[possessionHash(`${side.id}:${salt}:commentary-player`) % candidates.length].name;
+}
+
 function createMatchHighlightPresentation(options) {
   const seed = (options.seed ?? possessionHash(`${options.home.id}:${options.away.id}`)) >>> 0;
   const random = createHighlightRandom(seed);
@@ -1979,8 +1995,15 @@ function createMatchHighlightPresentation(options) {
     const eventSide = descriptor.event?.side || descriptor.side;
     const eventTeam = eventSide === "home" ? home : away;
     const rawScorer = descriptor.event?.scorer || descriptor.event?.player || "";
-    const normalizedScorer = rawScorer.replace(/\s*\(OG\)\s*$/i, "");
-    const scorerProfile = eventTeam.players.find((player) => player.name === normalizedScorer);
+    const ownGoal = Boolean(descriptor.event?.ownGoal || descriptor.event?.goalType === "ownGoal");
+    const actorTeam = ownGoal ? (eventSide === "home" ? away : home) : eventTeam;
+    const resolvedActor = resolvedHighlightPlayerName(
+      actorTeam,
+      ownGoal ? descriptor.event?.ownGoalBy || rawScorer : rawScorer,
+      `${seed}:${descriptorIndex}:${descriptor.minute}`,
+    );
+    const resolvedScorer = ownGoal ? `${resolvedActor} (OG)` : resolvedActor;
+    const scorerProfile = actorTeam.players.find((player) => player.name === resolvedActor);
 
     descriptor.scoreBefore = Object.freeze(scoreBefore);
     descriptor.scoreAfter = Object.freeze(scoreAfter);
@@ -1988,6 +2011,8 @@ function createMatchHighlightPresentation(options) {
     if (descriptor.event) {
       descriptor.event = MatchPresentation.createEvent({
         ...descriptor.event,
+        player: resolvedScorer,
+        scorer: resolvedScorer,
         id: `${seed}:${descriptorIndex}:${descriptor.event.type}:${descriptor.minute}:${eventSide}`,
         sequence: descriptor.sequence + 99,
         minute: descriptor.minute,
@@ -2001,11 +2026,11 @@ function createMatchHighlightPresentation(options) {
         scoreAfter,
         phase: matchEventPhase(descriptor.minute),
         metadata: {
-          scorer: descriptor.event.scorer || descriptor.event.player || null,
+          scorer: resolvedScorer,
           assist: descriptor.event.assist || null,
           goalType: descriptor.event.goalType || null,
-          ownGoal: Boolean(descriptor.event.ownGoal || descriptor.event.goalType === "ownGoal"),
-          ownGoalBy: descriptor.event.ownGoalBy || null,
+          ownGoal,
+          ownGoalBy: ownGoal ? resolvedActor : null,
           teamHadLed: teamHadLed[eventSide],
           authoritative: Boolean(descriptor.event.authoritative),
         },
