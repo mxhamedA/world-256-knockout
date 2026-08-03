@@ -20,6 +20,17 @@
     </script>
     <script>
       (function () {
+        try {
+          if (localStorage.getItem("world-256-colour-theme") === "light" || document.cookie.includes("world-256-colour-theme=light")) {
+            document.documentElement.classList.add("light-mode");
+          }
+        } catch {
+          // Keep the default dark theme when storage is unavailable.
+        }
+      })();
+    </script>
+    <script>
+      (function () {
         const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
         if (pathname === "/palestine-challenge" || pathname === "/profile") return;
         if (pathname === "/ucl-simulator") {
@@ -2084,6 +2095,13 @@
           </div>
           <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
+        <button class="settings-option" id="lightModeSetting" type="button" aria-pressed="false">
+          <span class="settings-option-copy">
+            <strong>Light mode</strong>
+            <small id="lightModeLabel">Dark appearance</small>
+          </span>
+          <span class="settings-switch" aria-hidden="true"><i></i></span>
+        </button>
         <button class="settings-option" id="realPlayersOnlySetting" type="button" aria-pressed="true">
           <span class="settings-option-copy">
             <strong>Real player names only</strong>

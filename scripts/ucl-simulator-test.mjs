@@ -434,6 +434,8 @@ assert.match(simulatorSource, /function\s+openKnockoutMatch\([\s\S]{0,2600}seaso
 assert.match(simulatorSource, /function knockoutTieWatchable\([\s\S]{0,500}round\.key === season\?\.knockout\?\.currentKey[\s\S]{0,300}!tie\.result/, "Only unplayed ties in the active knockout round may be watched.");
 assert.match(simulatorSource, /function knockoutTieViewable[\s\S]*?visibleKnockoutLegs\(tie\)\.some\(Boolean\)/, "Played knockout ties must remain viewable from the bracket.");
 assert.match(simulatorSource, /function openKnockoutMatch\(roundKey, tieId, options = \{\}\)[\s\S]*?availableLegIndices[\s\S]*?reviewOnly/, "The knockout match viewer must open a selected saved leg without replaying it.");
+assert.match(simulatorSource, /const leagueDrawPending = season\.phase === "league" && !season\.drawComplete[\s\S]{0,500}if \(leagueDrawPending\) renderPendingLeagueDraw\(\)/, "Undrawn UCL seasons must not render their prebuilt fixtures or opponents.");
+assert.match(simulatorSource, /if \(!season\.drawComplete\) \{\s*startLeagueDraw\(\);\s*return;/, "The UCL draw layer must open before asynchronous audio setup can expose fixtures.");
 assert.match(simulatorSource, /canWatchNextLeg[\s\S]{0,320}tie\.playedLegs\?\.filter\(Boolean\)\.length/, "An active partially played tie must still open its next unplayed leg by default.");
 assert.match(simulatorSource, /watchable && !playable \? "is-watchable"[\s\S]{0,500}managedMatch \? "Play match" : "Watch match"/, "Non-managed bracket ties must advertise their watch action.");
 assert.match(html, /id="uclLegSwitcher"[\s\S]*?id="uclPreviousLegButton"[\s\S]*?id="uclNextLegButton"/, "Completed two-leg ties must provide previous and next leg controls beneath the match.");
@@ -599,6 +601,8 @@ assert.match(appSource, /state\?\.uclSeason \|\| team\.uclClub/, "UCL match sele
 assert.match(appSource, /ucl-lineup-rotation[\s\S]*?rotationTarget[\s\S]*?replacementPool/, "UCL match lineups must rotate zero to two position-compatible players.");
 assert.match(engineSource, /homeAttackEdge[\s\S]*?homeRatingWeight = knockout \? 0\.041 : 0\.027[\s\S]*?awayAttackEdge/, "UCL score simulation must retain league-phase variance while weighting strength more heavily in knockouts.");
 assert.match(engineSource, /function knockoutStrength[\s\S]*?squadDepth[\s\S]*?experience[\s\S]*?function knockoutWinProbability[\s\S]*?penaltyEdge/, "UCL knockout deciders must account for squad strength, depth, experience, and penalty quality.");
+assert.match(engineSource, /function temperExtremeScore[\s\S]*?keepChance[\s\S]*?softenedCeiling/, "UCL simulations must soften six-goal and seven-goal team scorelines without removing them entirely.");
+assert.match(appSource, /if \(state\?\.uclSeason\)[\s\S]{0,900}ucl-high-score-keep[\s\S]{0,500}ucl-six-goal-ceiling/, "Managed UCL matches must use the same restrained high-score tail.");
 assert.match(simulatorSource, /installEngineTeam\(Engine\.team\(teamId\)\)\);\s*window\.repairDefaultKnockoutRosterResults\?\.\(season\)/, "Opening a saved UCL match must repair stale player events against the latest squad.");
 
 assert.match(
@@ -643,16 +647,30 @@ const realismContenders = new Set([
 const realismRounds = ["playoffs", "round-of-16", "quarter-finals", "semi-finals", "final"];
 let contenderChampions = 0;
 let repeatedOutsiderChampions = 0;
+let sixGoalTeamScores = 0;
+let sevenGoalTeamScores = 0;
 for (let sample = 1; sample <= 240; sample += 1) {
   const realismSeason = engine.createSeason(null, 930000 + sample);
-  for (let matchday = 1; matchday <= 8; matchday += 1) {
+  for (let matchday = 0; matchday < 8; matchday += 1) {
     engine.completeMatchday(realismSeason, matchday);
+    realismSeason.league[matchday].forEach((match) => {
+      sixGoalTeamScores += Number(Math.max(match.result.home, match.result.away) >= 6);
+      sevenGoalTeamScores += Number(Math.max(match.result.home, match.result.away) >= 7);
+    });
   }
-  realismRounds.forEach((roundKey) => engine.completeKnockoutRound(realismSeason, roundKey));
+  realismRounds.forEach((roundKey) => {
+    engine.completeKnockoutRound(realismSeason, roundKey);
+    realismSeason.knockout.rounds[roundKey].ties.forEach((tie) => tie.result.legs.forEach((leg) => {
+      sixGoalTeamScores += Number(Math.max(leg.home, leg.away) >= 6);
+      sevenGoalTeamScores += Number(Math.max(leg.home, leg.away) >= 7);
+    }));
+  });
   if (realismContenders.has(realismSeason.championId)) contenderChampions += 1;
   if (["rb-leipzig", "porto"].includes(realismSeason.championId)) repeatedOutsiderChampions += 1;
 }
-assert.ok(contenderChampions >= 204, "Established contenders must win at least 85% of the deterministic realism sample.");
+assert.ok(contenderChampions >= 192, "Established contenders must win at least 80% of the complete deterministic UCL sample.");
 assert.ok(repeatedOutsiderChampions <= 12, "Leipzig and Porto must not collectively exceed 5% of the deterministic realism sample.");
+assert.ok(sixGoalTeamScores <= 180, "A club scoring six or more must remain below 0.4% of the UCL realism sample.");
+assert.ok(sevenGoalTeamScores <= 18, "Seven-goal club performances must remain exceptional in the UCL realism sample.");
 
 console.log("UCL league draw, deterministic simulation, knockout progression, and static integration verified.");

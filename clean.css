@@ -17,6 +17,289 @@
   color-scheme: dark;
 }
 
+/* Optional light appearance for the shared shell, generic modes and shared dialogs.
+   Competition-branded UCL, Premier League and World Cup surfaces keep their own themes. */
+html.light-mode {
+  --bg: #f4f6fa;
+  --panel: #ffffff;
+  --panel-2: #f8f9fc;
+  --panel-3: #eef3ff;
+  --line: #dfe4ec;
+  --line-strong: #cbd3df;
+  --text: #172033;
+  --muted: #68758a;
+  --soft: #3e4a5f;
+  color-scheme: light;
+}
+
+html.light-mode body {
+  color: var(--text);
+  background: var(--bg);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .sidebar {
+  border-bottom-color: var(--line);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 1px 0 rgba(20, 28, 48, 0.04);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .brand-copy strong,
+  .topbar h1,
+  .section-heading h3,
+  .panel-heading strong,
+  .fixture-team.winner,
+  .fixture-team b,
+  .team h2,
+  .score span,
+  .plot-item strong,
+  .champion-stage
+) {
+  color: var(--text);
+}
+
+html.light-mode body.before-start .mode-card-default,
+html.light-mode body.before-start .mode-card-online,
+html.light-mode body.before-start .mode-card-legacy,
+html.light-mode body.before-start .mode-card-custom,
+html.light-mode body.before-start .mode-card-coming-soon {
+  border: 1px solid #e0e5ed;
+  color: var(--text);
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(29, 45, 70, 0.07);
+}
+
+html.light-mode body.before-start :is(
+  .mode-card-default,
+  .mode-card-online,
+  .mode-card-legacy,
+  .mode-card-custom,
+  .mode-card-coming-soon
+) :is(h3, .landing-setting-heading > span, .landing-team-setting > span, .spectate-picker-copy strong) {
+  color: #172033;
+}
+
+html.light-mode body.before-start :is(
+  .mode-card-default,
+  .mode-card-online,
+  .mode-card-legacy,
+  .mode-card-custom,
+  .mode-card-coming-soon
+) :is(p, small, .spectate-picker-copy small) {
+  color: #68758a;
+}
+
+html.light-mode body.before-start :is(
+  .mode-card-default,
+  .mode-card-online,
+  .mode-card-legacy,
+  .mode-card-custom,
+  .mode-card-coming-soon
+) :is(.segmented, .spectate-picker, .landing-setting-info-panel) {
+  border-color: #dfe4ec;
+  background: #f5f7fa;
+}
+
+html.light-mode body.before-start :is(
+  .mode-card-default,
+  .mode-card-online,
+  .mode-card-legacy,
+  .mode-card-custom,
+  .mode-card-coming-soon
+) .segmented button:not(.active) {
+  color: #647187;
+}
+
+html.light-mode body.before-start :is(.mode-card-premier-league, .mode-card-ucl) h3 {
+  color: #ffffff;
+}
+
+html.light-mode body.before-start .home-achievement-leaderboard {
+  border: 1px solid #e0e5ed;
+  color: #344158;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(29, 45, 70, 0.07);
+}
+
+html.light-mode body.before-start .home-achievement-leaderboard h2,
+html.light-mode body.before-start .home-achievement-row > strong,
+html.light-mode body.before-start .home-achievement-player b,
+html.light-mode body.before-start .home-achievement-own strong {
+  color: #172033;
+}
+
+html.light-mode body.before-start .home-achievement-row,
+html.light-mode body.before-start .home-achievement-own {
+  border-color: #e2e7ee;
+  color: #536078;
+}
+
+html.light-mode body.before-start .home-achievement-row.is-current {
+  background: #eef3ff;
+}
+
+html.light-mode body.before-start .home-achievement-action {
+  color: #31558f;
+  background: #edf2fa;
+}
+
+html.light-mode body.standard-mode-active :is(.match-stage, .round-board, .panel, .match-analysis, .standard-match-tactics, .story-card) {
+  border-color: #e0e5ed;
+  color: var(--text);
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(29, 45, 70, 0.07);
+}
+
+html.light-mode body.standard-mode-active :is(.team, .fixture, .live-feed-item, .queue-item, .plot-item, .match-stat-row) {
+  border-color: #e4e8ef;
+  color: #344158;
+  background: #f8f9fc;
+}
+
+html.light-mode body.standard-mode-active :is(.fixture.complete, .live-feed-item:nth-child(n + 3)) {
+  background: #f2f5f9;
+}
+
+html.light-mode body.standard-mode-active :is(.fixture.selected, .queue-item.current, .spoiler-panel) {
+  border-color: #9bb5f5;
+  background: #eef3ff;
+}
+
+html.light-mode body.standard-mode-active :is(.match-events, .live-sim, .standard-tactic-buttons, .match-highlight-mode) {
+  border-color: #dde3ec;
+  color: var(--text);
+  background: #f5f7fa;
+}
+
+html.light-mode body.standard-mode-active :is(.fixture-team, .queue-team, .event, .live-label, .text-button) {
+  color: #536078;
+}
+
+html.light-mode body.standard-mode-active :is(.team-name, .match-score, .fixture-team.winner .name, .fixture-team.winner b) {
+  color: #172033;
+}
+
+html.light-mode body.standard-mode-active :is(.live-control, .load-more, .ghost-button, .standard-tactic-buttons button:not(.active), .match-highlight-mode button:not(.active)) {
+  border-color: #d8dee8;
+  color: #526078;
+  background: #ffffff;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.modal, .confirm-modal, .snapshot-modal) {
+  border-color: #dbe1ea;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(29, 45, 70, 0.2);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.modal, .confirm-modal, .snapshot-modal)::backdrop {
+  background: rgba(34, 43, 60, 0.42);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.modal, .confirm-modal, .snapshot-modal) :is(h2, h3, strong) {
+  color: #172033;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.modal, .confirm-modal, .snapshot-modal) :is(p, small, label) {
+  color: #68758a;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .modal .icon-button {
+  border-color: #e0e5ed;
+  color: #536078;
+  background: #f5f7fa;
+}
+
+html.light-mode .settings-option {
+  color: #172033;
+  background: #f5f7fa;
+}
+
+html.light-mode .settings-option-copy strong {
+  color: #172033;
+}
+
+html.light-mode .settings-option-copy small,
+html.light-mode .settings-note {
+  color: #68758a;
+}
+
+html.light-mode .settings-keybind-list {
+  border-color: #dfe4ec;
+  background: #f8f9fc;
+}
+
+html.light-mode :is(.news-modal, .discord-modal, .donate-modal, .home-achievement-modal) {
+  border-color: #dbe1ea;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(29, 45, 70, 0.2);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .achievement-unlock-modal:not([data-achievement-theme]) {
+  border-color: #dbe1ea;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(29, 45, 70, 0.2);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .achievement-unlock-modal:not([data-achievement-theme]) p {
+  color: #68758a;
+}
+
+html.light-mode :is(.news-modal, .discord-modal, .donate-modal, .home-achievement-modal) :is(h2, strong) {
+  color: #172033;
+}
+
+html.light-mode :is(.news-modal, .discord-modal, .donate-modal, .home-achievement-modal) p {
+  color: #68758a;
+}
+
+html.light-mode .news-entry + .news-entry,
+html.light-mode .home-achievement-modal-table {
+  border-color: #e0e5ed;
+}
+
+html.light-mode .home-achievement-modal-table .home-achievement-row {
+  color: #344158;
+  background: #f8f9fc;
+}
+
+html.light-mode .home-achievement-modal-table .home-achievement-row.is-heading {
+  background: #eef3ff;
+}
+
+html.light-mode .toast {
+  border-color: #cbd6e7;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 14px 40px rgba(29, 45, 70, 0.16);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode .settings-option:hover {
+    background: #edf1f7;
+  }
+
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .utility-button:hover {
+    color: #172033;
+    background: #edf1f7;
+  }
+}
+
+@media (max-width: 850px) {
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.sidebar, .topbar) {
+    background: rgba(255, 255, 255, 0.97);
+  }
+
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .sidebar .round-nav {
+    border-color: #dfe4ec;
+    background: #ffffff;
+    box-shadow: 18px 22px 50px rgba(29, 45, 70, 0.16);
+  }
+}
+
 body {
   color: var(--text);
   background: var(--bg);
@@ -3680,6 +3963,600 @@ body.retro-mode-active.retro-euro-2016-active .toast {
     border-radius: 12px;
     box-shadow: 0 9px 22px rgba(0, 7, 35, 0.28);
   }
+}
+
+/* Complete light-mode coverage for every non-competition page and overlay. */
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(p, li, small, label) {
+  font-weight: 600;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .header-actions .header-donate-link,
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .header-actions .header-donate-link > span {
+  color: #ffffff;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .header-actions .header-donate-link {
+  background: #31558f;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .sidebar .header-actions .header-donate-link > span:first-child {
+  color: #ffffff;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) dialog:not(.asset-pack-dialog):not(.retro-achievements-modal):not(.achievement-unlock-dialog) :is(input, textarea, select) {
+  border-color: #cbd4e1;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) dialog:not(.asset-pack-dialog):not(.retro-achievements-modal):not(.achievement-unlock-dialog) :is(input, textarea)::placeholder {
+  color: #6b778a;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(button, input, select, textarea) {
+  font-weight: 700;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .header-actions .utility-button {
+  color: #4b5a70;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .utility-button > span:first-child,
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .side-icon {
+  color: #315fbd;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.last-updated, .footer-last-updated) {
+  color: #536078;
+  font-weight: 600;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.last-updated, .footer-last-updated) strong {
+  color: #344158;
+  font-weight: 700;
+}
+
+html.light-mode body.before-start :is(
+  .mode-card-default,
+  .mode-card-online,
+  .mode-card-legacy,
+  .mode-card-custom,
+  .mode-card-coming-soon
+) .landing-setting-info-panel strong {
+  color: #172033;
+}
+
+html.light-mode body.before-start :is(
+  .mode-card-default,
+  .mode-card-online,
+  .mode-card-legacy,
+  .mode-card-custom,
+  .mode-card-coming-soon
+) .landing-setting-info summary {
+  border-color: #aab6c7;
+  color: #41516a;
+}
+
+/* 256-team knockout */
+html.light-mode body.standard-mode-active :is(.legacy-topbar-back, .search, .overview-search) {
+  border-color: #d8dee8;
+  color: #344158;
+  background: #ffffff;
+}
+
+html.light-mode body.standard-mode-active .matchup > .team {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.standard-mode-active .team-filter-search {
+  border: 1px solid #cbd5e3;
+  color: #315fbd;
+  background: #ffffff;
+}
+
+html.light-mode body.standard-mode-active .team-filter-search:focus-within {
+  border-color: #6f95ed;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(49, 95, 189, 0.12);
+}
+
+html.light-mode body.standard-mode-active .team-filter-search input {
+  color: #172033;
+  font-weight: 700;
+}
+
+html.light-mode body.standard-mode-active .team-filter-search input::placeholder {
+  color: #637188;
+  opacity: 1;
+}
+
+html.light-mode body.standard-mode-active .team-filter-control .search-result-popover {
+  border: 1px solid #d7dee8;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 18px 46px rgba(29, 45, 70, 0.16);
+}
+
+html.light-mode body.standard-mode-active .team-filter-control .search-result {
+  border-bottom-color: #e3e8ef;
+  color: #172033;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.standard-mode-active .team-filter-control .search-result small {
+  color: #526178;
+  font-weight: 600;
+}
+
+html.light-mode body.standard-mode-active .history-round-button {
+  border: 1px solid #cbd5e3;
+  color: #29466f;
+  background: #ffffff;
+}
+
+html.light-mode body.standard-mode-active #simulateRoundButton {
+  border: 1px solid #315fbd;
+  color: #ffffff;
+  background: #315fbd;
+}
+
+html.light-mode body.standard-mode-active #unresolvedFilter {
+  min-height: 34px;
+  padding-inline: 11px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  color: #46556b;
+  background: #f5f7fa;
+}
+
+html.light-mode body.standard-mode-active #unresolvedFilter.active {
+  border-color: #b8c9ef;
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body.standard-mode-active .team-filter-control .search-result:hover,
+  html.light-mode body.standard-mode-active .history-round-button:hover {
+    color: #244f9d;
+    background: #edf3ff;
+  }
+
+  html.light-mode body.standard-mode-active #simulateRoundButton:hover {
+    color: #ffffff;
+    background: #244f9d;
+  }
+}
+
+html.light-mode body.standard-mode-active :is(.match-analysis-heading strong, .panel-heading strong, #stageRoundLabel) {
+  color: #344158;
+  font-weight: 800;
+}
+
+html.light-mode body.standard-mode-active #goldenBootTitle {
+  color: #9a6500;
+  font-weight: 800;
+}
+
+html.light-mode body.standard-mode-active :is(.fixture-meta, .team .seed, .venue, .result-note, .match-stat-row span, .plot-item p, .empty-story p) {
+  color: #536078;
+  font-weight: 600;
+}
+
+html.light-mode body.standard-mode-active .match-stats-grid {
+  border-bottom-color: #e2e7ee;
+  background: #ffffff;
+}
+
+html.light-mode body.standard-mode-active .match-stat-row {
+  color: #344158;
+  background: #f7f9fc;
+}
+
+html.light-mode body.standard-mode-active .match-stat-row b {
+  color: #1f2b40;
+  font-weight: 800;
+}
+
+html.light-mode body.standard-mode-active .golden-boot-row {
+  border-bottom-color: #e2e7ee;
+  background: #ffffff;
+}
+
+html.light-mode body.standard-mode-active .golden-boot-rank {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.standard-mode-active .golden-boot-player strong {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.standard-mode-active .golden-boot-player small {
+  color: #536078;
+  font-weight: 600;
+}
+
+html.light-mode body.standard-mode-active .golden-boot-row > b,
+html.light-mode body.standard-mode-active .golden-boot-row.leader > b,
+html.light-mode body.standard-mode-active .golden-boot-row.leader .golden-boot-rank {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+/* Achievements keeps each competition's panel artwork but fixes the shared page chrome. */
+html.light-mode body.achievements-mode-active .achievements-intro h1 {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.achievements-mode-active .achievements-intro p {
+  color: #4f5d72;
+  font-weight: 600;
+}
+
+html.light-mode body.achievements-mode-active .achievements-kicker {
+  color: #315fbd;
+}
+
+/* Custom tournament and one-off matches */
+html.light-mode body.custom-tournament-mode-active :is(.custom-tournament-header h1, .custom-panel-heading h2, .custom-bracket-edit-round > header strong, .custom-match-team-name strong) {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-tournament-header, .custom-config-bar, .custom-match-options, .custom-bracket-edit-round > header) {
+  border-color: #d9e0e9;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-config-bar {
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(29, 45, 70, 0.06);
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-back-button, .custom-preset-actions button) {
+  border-color: #cfd7e3;
+  color: #344158;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-header-team-count, .custom-config-group > span, .custom-panel-heading span, .custom-script-pickers label > span, .custom-score-script label > span, .custom-winner-select > span, .custom-match-team-card header, .custom-match-team-selectors label) {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-segmented, .custom-builder-tabs) {
+  background: #eef2f7;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-segmented button, .custom-builder-tabs button) {
+  color: #46556c;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-segmented button:hover, .custom-builder-tabs button:hover) {
+  color: #172033;
+  background: #e1e7f0;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-segmented button.active, .custom-builder-tabs button.active) {
+  color: #ffffff;
+  background: #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-manager-control select, .custom-manager-control > button, .custom-match-team-selectors select, .custom-rating-grid input, .custom-rule-fields input[type="number"], .custom-scorer-picker > button) {
+  border: 1px solid #d5dce7;
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-bracket-edit-match, .custom-group-match-edits button, .custom-group-fixture-editor article, .custom-player-row) {
+  border-color: #dce2eb;
+  color: #344158;
+  background: #ffffff;
+  box-shadow: 0 7px 20px rgba(29, 45, 70, 0.05);
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-bracket-edit-match > header, .custom-direct-match-slot, .custom-group-match-settings, .custom-group-fixture-editor) {
+  border-color: #e0e5ed;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-direct-match-slot {
+  border-bottom-color: #e0e5ed;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-preset-actions .custom-header-start {
+  border-color: #426fda;
+  color: #ffffff;
+  background: #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-direct-match-slot > button:first-child, .custom-direct-match-slot strong, .custom-group-match-edits button) {
+  color: #243149;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-direct-match-slot small, .custom-future-team, .custom-bracket-edit-match > header span, .custom-bracket-edit-match > header small) {
+  color: #5c6b80;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-bracket-edit-match > header button {
+  color: #31558f;
+  background: #eaf0f9;
+}
+
+html.light-mode body.custom-match-mode-active :is(.custom-match-builder, .custom-match-teams) {
+  border-color: #d9e0e9;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-match-mode-active .custom-match-builder {
+  box-shadow: 0 12px 34px rgba(29, 45, 70, 0.07);
+}
+
+html.light-mode body.custom-match-mode-active .custom-match-team-card {
+  border-color: #dce2eb;
+  color: #172033;
+  background: #f8f9fc;
+}
+
+html.light-mode body.custom-match-mode-active .custom-match-error {
+  color: #a32638;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-editor-modal .custom-ratings-panel, .custom-editor-modal .custom-match-rule-editor, .custom-team-picker-panel, .custom-manager-picker-panel, .custom-scorer-menu) {
+  border-color: #cfd7e3;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(29, 45, 70, 0.2);
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-editor-backdrop {
+  background: rgba(34, 43, 60, 0.42);
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.custom-match-rule-editor > header h3, .custom-account-save-option, .custom-section-title strong) {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-team-creator-actions {
+  border-color: #d9e0e9;
+  background: #f7f9fc;
+  box-shadow: 0 -12px 28px rgba(29, 45, 70, 0.1);
+}
+
+/* Legacy draft: retain the green pitch, lighten the surrounding draft workspace. */
+html.light-mode body.legacy-mode-active :is(.legacy-topbar-back, .legacy-draft-status, .legacy-left-panel, .legacy-setup-panel, .legacy-country-panel, .legacy-complete-panel, .legacy-randomiser) {
+  border-color: #d9e0e9;
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.legacy-mode-active :is(.legacy-player-card, .legacy-choice, .legacy-formation-choice button, .legacy-country-card) {
+  border-color: #dce2eb;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.legacy-mode-active :is(.legacy-player-card strong, .legacy-draft-status strong, .legacy-randomiser > strong, .legacy-choice strong, .legacy-country-card strong) {
+  color: #172033;
+}
+
+html.light-mode body.legacy-mode-active :is(.legacy-player-card small, .legacy-player-card span, .legacy-stats span, .legacy-helper small, .legacy-country-card small) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.legacy-mode-active .legacy-draft-status > div strong {
+  color: #ffffff;
+}
+
+html.light-mode body.legacy-mode-active .legacy-stats span b {
+  color: #243149;
+}
+
+html.light-mode body.legacy-mode-active .legacy-rating-badge b {
+  color: #16834b;
+}
+
+html.light-mode body.legacy-mode-active .legacy-respin-button {
+  border-color: #cfd7e3;
+  color: #31558f;
+  background: #eef3ff;
+}
+
+/* Online mode */
+html.light-mode body.online-screen-open .online-screen {
+  color: #172033;
+  background:
+    radial-gradient(circle at 78% 2%, rgba(66, 109, 210, 0.1), transparent 34%),
+    #f4f6fa;
+}
+
+html.light-mode body.online-screen-open .online-screen-topbar {
+  border-bottom: 1px solid #d9e0e9;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 0 rgba(29, 45, 70, 0.04);
+}
+
+html.light-mode body.online-screen-open :is(.online-screen-heading h1, .online-entry-panel h2, .online-private-divider span, .online-lobby-heading strong, .online-draft-head h3, .online-match-head h3, .online-results-head h2) {
+  color: #172033;
+}
+
+html.light-mode body.online-screen-open :is(.online-screen-back, .online-private-divider small, .online-field > span, .online-entry-divider, .online-screen-heading p, .online-results-head p) {
+  color: #526178;
+}
+
+html.light-mode body.online-screen-open .online-screen-action {
+  border-color: #d7dee9;
+  color: #315fbd;
+  background: #ffffff;
+}
+
+html.light-mode body.online-screen-open .online-field input {
+  border: 1px solid #cfd7e3;
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.online-screen-open .online-entry-divider::before,
+html.light-mode body.online-screen-open .online-entry-divider::after {
+  background: #d9e0e9;
+}
+
+html.light-mode body.online-screen-open :is(
+  .online-room-code-panel,
+  .online-member,
+  .online-roulette,
+  .online-draft-roster,
+  .online-active-team,
+  .online-owned-country,
+  .online-tactics,
+  .online-current-match,
+  .online-ready-panel,
+  .online-penalty-control,
+  .online-centre-match,
+  .online-my-matches,
+  .online-results,
+  .online-result-player,
+  .online-result-team,
+  .online-result-score-card,
+  .online-bracket-match,
+  .online-team-select-dialog
+) {
+  border-color: #d9e0e9;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(29, 45, 70, 0.06);
+}
+
+html.light-mode body.online-screen-open :is(.online-member strong, .online-roster-country strong, .online-active-team strong, .online-owned-country strong, .online-match-team strong, .online-centre-team strong, .online-result-player strong, .online-result-team strong, .online-bracket-match strong) {
+  color: #172033;
+}
+
+html.light-mode body.online-screen-open :is(.online-member small, .online-roster-country small, .online-active-team small, .online-owned-country small, .online-tactics-copy p, .online-match-clock small, .online-centre-head small, .online-result-team small, .online-result-team p) {
+  color: #526178;
+}
+
+html.light-mode body.online-screen-open :is(.online-live-controls .live-control, .online-tactic-buttons button, .online-match-filter button, .online-bracket-round-tabs button, .online-results-tabs button, #confirmJoinRoomButton) {
+  border-color: #cfd7e3;
+  color: #344158;
+  background: #eef2f7;
+}
+
+/* Palestine Challenge */
+html.light-mode body.challenge-mode-active .challenge-screen {
+  color: #172033;
+  background: #f4f6fa;
+}
+
+html.light-mode body.challenge-mode-active .challenge-header {
+  border-bottom-color: #d9e0e9;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+html.light-mode body.challenge-mode-active :is(.challenge-hero, .challenge-dashboard-band, .challenge-run, .challenge-leaderboard-row) {
+  border-color: #d9e0e9;
+}
+
+html.light-mode body.challenge-mode-active :is(.challenge-hero h1, .challenge-run h2, .challenge-scoring h2, .challenge-section-heading h2, .challenge-countdown strong, .challenge-player-summary strong, .challenge-match-result strong, .challenge-leaderboard-row strong) {
+  color: #172033;
+}
+
+html.light-mode body.challenge-mode-active :is(.challenge-hero p, .challenge-countdown > span, .challenge-countdown small, .challenge-run p, .challenge-scoring-grid span, .challenge-history-item dt) {
+  color: #526178;
+}
+
+html.light-mode body.challenge-mode-active :is(.challenge-prize, .challenge-player-summary div, .challenge-match-result, .challenge-scoring-grid div, .challenge-history-item, .challenge-own-rank) {
+  border-color: #d9e0e9;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(29, 45, 70, 0.05);
+}
+
+html.light-mode body.challenge-mode-active .challenge-scoring-grid {
+  background: #d9e0e9;
+}
+
+html.light-mode body.challenge-mode-active .challenge-tabs {
+  border-color: #d9e0e9;
+  background: #ffffff;
+}
+
+html.light-mode body.challenge-mode-active .challenge-tabs button {
+  color: #526178;
+}
+
+html.light-mode body.challenge-mode-active .challenge-tabs button[aria-selected="true"] {
+  color: #ffffff;
+  background: #315fbd;
+}
+
+html.light-mode body.challenge-mode-active :is(.challenge-auth-modal input, .username-review-modal input) {
+  border-color: #cfd7e3;
+  color: #172033;
+  background: #ffffff;
+}
+
+/* Profile */
+html.light-mode body.profile-mode-active .profile-screen,
+html.light-mode body.profile-mode-active .profile-header {
+  color: #172033;
+  background: #f4f6fa;
+}
+
+html.light-mode body.profile-mode-active .profile-header {
+  border-bottom: 1px solid #d9e0e9;
+}
+
+html.light-mode body.profile-mode-active :is(.profile-hero h1, .profile-preview strong, .profile-achievement-total > div > strong, .profile-achievement-total strong, .profile-unlocked-heading h2, .profile-history-section h2, .profile-danger-zone h2) {
+  color: #172033;
+}
+
+html.light-mode body.profile-mode-active :is(.profile-preview span, .profile-achievement-total span, .profile-unlocked-heading p, .profile-history-section p, .profile-danger-zone p, .profile-empty-state) {
+  color: #526178;
+}
+
+html.light-mode body.profile-mode-active :is(.profile-account-overview, .profile-edit-panel, .profile-unlocked-achievement, .profile-empty-state, .profile-history-section) {
+  border-color: #d9e0e9;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(29, 45, 70, 0.06);
+}
+
+html.light-mode body.profile-mode-active .profile-achievement-total {
+  border-left-color: #d9e0e9;
+}
+
+html.light-mode body.profile-mode-active :is(.profile-hero-actions button, .profile-header-actions .utility-button, .profile-header .legacy-topbar-back) {
+  border: 1px solid #d5dce7;
+  color: #344158;
+  background: #ffffff;
+}
+
+html.light-mode body.profile-mode-active .profile-avatar-preview {
+  background: #eef2f7;
+}
+
+html.light-mode body.profile-mode-active .profile-danger-zone {
+  border-top-color: #e1cbd0;
+}
+
+/* Specialised generic dialogs that previously bypassed the shared modal rules. */
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.username-review-modal, .profile-delete-modal, .challenge-auth-modal, .online-team-select-dialog) {
+  border-color: #d5dce7;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 24px 80px rgba(29, 45, 70, 0.2);
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.username-review-modal, .profile-delete-modal, .challenge-auth-modal, .online-team-select-dialog) :is(h2, strong) {
+  color: #172033;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.username-review-modal, .profile-delete-modal, .challenge-auth-modal, .online-team-select-dialog) :is(p, small, label > span) {
+  color: #526178;
 }
 
 @media (prefers-reduced-motion: reduce) {

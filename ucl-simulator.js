@@ -1703,6 +1703,16 @@
     content.innerHTML = season.phase === "league" ? renderLeagueOverview() : renderPostLeagueOverview();
   }
 
+  function renderPendingLeagueDraw() {
+    content.innerHTML = `
+      <section class="ucl-panel ucl-pending-draw" aria-live="polite">
+        <img src="./assets/ucl-starball-white.png" alt="" />
+        <strong>The league phase draw is about to begin</strong>
+        <span>Fixtures and opponents will appear after they have been revealed.</span>
+      </section>
+    `;
+  }
+
   function renderFixtures() {
     const roundIndex = Math.max(0, Math.min(7, Number(season.viewMatchday) || 0));
     content.innerHTML = `
@@ -1879,9 +1889,9 @@
       matchdayDate.textContent = Engine.MATCHDAY_DATES[index].toUpperCase();
       progressLabel.textContent = `Matchday ${index + 1}`;
       primaryActionButton.textContent = `${season.managedTeamId ? "Play" : "Simulate"} matchday ${index + 1}`;
-      primaryActionButton.disabled = revealRun !== null;
+      primaryActionButton.disabled = revealRun !== null || !season.drawComplete;
       simulateAllButton.hidden = !season.neutralMode;
-      simulateAllButton.disabled = revealRun !== null;
+      simulateAllButton.disabled = revealRun !== null || !season.drawComplete;
     } else {
       stageKicker.textContent = finalComplete ? "CHAMPIONS OF EUROPE" : "";
       stageTitle.textContent = finalComplete ? Engine.team(season.championId)?.name || "Champions" : knockoutRound?.shortLabel || "Knockouts";
@@ -1918,13 +1928,16 @@
     if (!season) return;
     if (repairUclScorerEvents()) saveSeason();
     syncUclUtilityHeader();
+    const leagueDrawPending = season.phase === "league" && !season.drawComplete;
     tabs.forEach((tab) => {
       const active = tab.dataset.uclView === activeView;
       tab.classList.toggle("active", active);
       tab.setAttribute("aria-current", active ? "page" : "false");
+      tab.disabled = leagueDrawPending;
     });
     updateHeader();
-    if (activeView === "fixtures") renderFixtures();
+    if (leagueDrawPending) renderPendingLeagueDraw();
+    else if (activeView === "fixtures") renderFixtures();
     else if (activeView === "table") renderTable();
     else if (activeView === "knockout") renderKnockout();
     else renderOverview();
@@ -2042,6 +2055,8 @@
       entries.slice(0, drawnCount).forEach((entry, index) => {
         drawnStrip.insertAdjacentHTML("beforeend", drawnTeamChip(Engine.team(entry.teamId), index, entry.meta));
       });
+      await ensureMusicLoaded();
+      if (token !== animationToken) return;
       await sounds.unlock();
       if (token !== animationToken) return;
       sounds.playMusic();
@@ -2061,6 +2076,8 @@
     prepareDrawStage({ type: "league", title: "The league phase draw", kicker: "2026/27 · 36 CLUBS", total: 36, drawn: season.drawnCount || 0 });
     const alreadyDrawn = season.drawOrder.slice(0, season.drawnCount || 0);
     alreadyDrawn.forEach((teamId, index) => drawnStrip.insertAdjacentHTML("beforeend", drawnTeamChip(Engine.team(teamId), index)));
+    await ensureMusicLoaded();
+    if (token !== animationToken) return;
     await sounds.unlock();
     if (token !== animationToken) return;
     sounds.playMusic();
@@ -2504,13 +2521,16 @@
     render();
     document.documentElement.classList.remove("route-ucl-loading");
     window.scrollTo({ top: 0, behavior: "auto" });
+    if (!season.drawComplete) {
+      startLeagueDraw();
+      return;
+    }
     const openToken = animationToken;
     await ensureMusicLoaded();
     if (openToken !== animationToken || screen.hidden || !document.body.classList.contains("ucl-simulator-open")) return;
     await sounds.unlock();
     if (openToken !== animationToken || screen.hidden || !document.body.classList.contains("ucl-simulator-open")) return;
-    if (!season.drawComplete) startLeagueDraw();
-    else if (season.phase === "complete" && season.championId) showChampionMoment();
+    if (season.phase === "complete" && season.championId) showChampionMoment();
   }
 
   function closeSimulator({ updateUrl = true } = {}) {

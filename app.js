@@ -4,6 +4,7 @@ const MATCH_SPEED_STORAGE_KEY = "world-256-match-speed";
 const MATCH_HIGHLIGHT_MODE_STORAGE_KEY = "world-256-highlight-mode";
 const LIVE_MATCH_CHECKPOINT_STORAGE_KEY = "world-256-live-match-checkpoint-v1";
 const REMOVE_INJURIES_STORAGE_KEY = "world-256-remove-injuries";
+const COLOUR_THEME_STORAGE_KEY = "world-256-colour-theme";
 const ONLINE_ROOM_SESSION_KEY = "world-256-online-room-v1";
 const ONLINE_MATCHMAKING_SESSION_KEY = "world-256-online-matchmaking-v1";
 const ONLINE_DISPLAY_NAME_KEY = "world-256-online-display-name-v1";
@@ -411,6 +412,8 @@ const els = {
   plotList: $("#plotList"),
   settingsModal: $("#settingsModal"),
   settingsButton: $("#settingsButton"),
+  lightModeSetting: $("#lightModeSetting"),
+  lightModeLabel: $("#lightModeLabel"),
   onlineSettingsButton: $("#onlineSettingsButton"),
   newsButton: $("#newsButton"),
   uclFeaturesAnnouncementModal: $("#uclFeaturesAnnouncementModal"),
@@ -6110,6 +6113,26 @@ function repairRetroResultPlayers(match) {
   [["home", match.home], ["away", match.away]].forEach(([side, teamName]) => {
     const officialNames = new Set(rosterFor(teamName));
     (result[`${side}Events`] || []).forEach((event, index) => {
+      const ownGoal = event.ownGoal === true
+        || event.goalType === "ownGoal"
+        || /\(OG\)\s*$/i.test(String(event.scorer || ""));
+      if (ownGoal) {
+        const defendingTeamName = side === "home" ? match.away : match.home;
+        const defendingNames = new Set(rosterFor(defendingTeamName));
+        let ownGoalBy = event.ownGoalBy
+          || String(event.scorer || "").replace(/\s*\(OG\)\s*$/i, "");
+        if (!defendingNames.has(ownGoalBy)) {
+          ownGoalBy = replacement(defendingTeamName, `${side}:own-goal:${event.minute}:${index}`, true);
+        }
+        if (ownGoalBy) {
+          event.ownGoal = true;
+          event.goalType = "ownGoal";
+          event.ownGoalBy = ownGoalBy;
+          event.scorer = `${ownGoalBy} (OG)`;
+          event.assist = null;
+        }
+        return;
+      }
       if (!officialNames.has(event.scorer)) {
         event.scorer = replacement(teamName, `${side}:goal:${event.minute}:${index}`, true);
       }
@@ -11230,6 +11253,22 @@ function removeImpossiblePlayerAbsenceEvents(redCards = [], injuries = []) {
 function applyScorelineCeiling(home, away, homeGoals, awayGoals) {
   if (homeGoals === awayGoals) return { homeGoals, awayGoals };
   const homeWon = homeGoals > awayGoals;
+  if (state?.uclSeason) {
+    const leaderGoals = homeWon ? homeGoals : awayGoals;
+    const trailerGoals = homeWon ? awayGoals : homeGoals;
+    if (leaderGoals > 5) {
+      const matchId = selectedMatch()?.id || `${home.id}:${away.id}`;
+      const keepRoll = (stableHash(`${state.drawSeed}:${matchId}:ucl-high-score-keep`) % 1000) / 1000;
+      const keepChance = leaderGoals === 6 ? 0.18 : leaderGoals === 7 ? 0.04 : 0.01;
+      if (keepRoll >= keepChance) {
+        const sixGoalRoll = (stableHash(`${state.drawSeed}:${matchId}:ucl-six-goal-ceiling`) % 1000) / 1000;
+        const ceiling = leaderGoals >= 7 && sixGoalRoll < 0.12 ? 6 : 5;
+        const softenedGoals = Math.max(trailerGoals + 1, ceiling);
+        if (homeWon) homeGoals = softenedGoals;
+        else awayGoals = softenedGoals;
+      }
+    }
+  }
   const loser = homeWon ? away : home;
   if (!loser.fifaRank || loser.fifaRank > 175) return { homeGoals, awayGoals };
   const ceiling = loser.fifaRank <= 75 ? 5 : loser.fifaRank <= 125 ? 6 : 7;
@@ -22279,6 +22318,10 @@ function restartRetroWorldCup() {
 }
 
 function syncSettingsDialog() {
+  const lightModeEnabled = document.documentElement.classList.contains("light-mode");
+  els.lightModeSetting?.setAttribute("aria-pressed", String(lightModeEnabled));
+  els.lightModeSetting?.classList.toggle("is-enabled", lightModeEnabled);
+  if (els.lightModeLabel) els.lightModeLabel.textContent = lightModeEnabled ? "Light appearance" : "Dark appearance";
   const enabled = state.settings.realPlayersOnly !== false;
   els.realPlayersOnlySetting.setAttribute("aria-pressed", String(enabled));
   els.realPlayersOnlySetting.classList.toggle("is-enabled", enabled);
@@ -22818,6 +22861,20 @@ els.realPlayersOnlySetting.addEventListener("click", () => {
   state.settings.realPlayersOnly = state.settings.realPlayersOnly === false;
   saveState();
   syncSettingsDialog();
+});
+els.lightModeSetting?.addEventListener("click", () => {
+  const enabled = !document.documentElement.classList.contains("light-mode");
+  document.documentElement.classList.toggle("light-mode", enabled);
+  document.body.classList.toggle("light-mode", enabled);
+  try {
+    localStorage.setItem(COLOUR_THEME_STORAGE_KEY, enabled ? "light" : "dark");
+  } catch {
+    // The theme still applies for this visit when storage is unavailable.
+  }
+  document.cookie = `${COLOUR_THEME_STORAGE_KEY}=${enabled ? "light" : "dark"}; path=/; max-age=31536000; samesite=lax`;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", enabled ? "#f4f6fa" : "#0b0f17");
+  syncSettingsDialog();
+  showToast(enabled ? "Light mode on." : "Dark mode on.");
 });
 els.removeInjuriesSetting?.addEventListener("click", () => {
   state.settings = normalizeSettings(state.settings);

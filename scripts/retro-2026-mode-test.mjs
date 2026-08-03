@@ -33,6 +33,39 @@ const groupSchedule = context.__groupSchedule;
 const knockoutSchedule = context.__knockoutSchedule;
 const engine = context.__engine;
 
+const repairFunctionSource = appSource.slice(
+  appSource.indexOf("function repairRetroResultPlayers(match)"),
+  appSource.indexOf("function adaptRetroMatch(match)"),
+);
+const repairContext = vm.createContext({
+  retroTournament: { year: 2026 },
+  retroSquadsForYear: () => ({
+    Spain: { players: [{ name: "Lamine Yamal", position: "FW" }] },
+    France: { players: [{ name: "Jules Koundé", position: "DF" }] },
+  }),
+  stableHash: () => 0,
+  removeImpossiblePlayerAbsenceEvents: (redCards, injuries) => ({ redCards, injuries }),
+  removeDismissedPlayersFromFutureGoals: (events) => events,
+});
+vm.runInContext(`${repairFunctionSource}\nglobalThis.__repairRetroResultPlayers = repairRetroResultPlayers;`, repairContext);
+const ownGoalMatch = {
+  id: "wc26-own-goal",
+  home: "Spain",
+  away: "France",
+  result: {
+    homeEvents: [{ minute: 52, scorer: "Jules Koundé (OG)", ownGoalBy: "Jules Koundé", ownGoal: true, goalType: "ownGoal", type: "goal" }],
+    awayEvents: [],
+    redCards: [],
+    injuries: [],
+    shootout: [],
+  },
+};
+repairContext.__repairRetroResultPlayers(ownGoalMatch);
+assert.equal(ownGoalMatch.result.homeEvents[0].scorer, "Jules Koundé (OG)", "Full-time roster repair must preserve an own-goal scorer from the defending team.");
+assert.equal(ownGoalMatch.result.homeEvents[0].ownGoalBy, "Jules Koundé");
+assert.equal(ownGoalMatch.result.homeEvents[0].ownGoal, true);
+assert.equal(ownGoalMatch.result.homeEvents[0].goalType, "ownGoal");
+
 assert.match(indexSource, /data-retro-year="2026"/, "2026 must be selectable on the mode card");
 assert.match(indexSource, /retro-2026-schedule\.js/, "the 2026 schedule must load before the tournament engine");
 assert.match(

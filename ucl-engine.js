@@ -455,6 +455,20 @@
     return clamp(probability, penalties ? 0.34 : 0.26, penalties ? 0.66 : 0.74);
   }
 
+  function temperExtremeScore(score, rng) {
+    const leader = score.home > score.away ? "home" : score.away > score.home ? "away" : null;
+    if (!leader || score[leader] <= 5) return score;
+    const trailer = leader === "home" ? "away" : "home";
+    const highGoals = score[leader];
+    const keepChance = highGoals === 6 ? 0.18 : highGoals === 7 ? 0.04 : 0.01;
+    if (rng() < keepChance) return score;
+    const softenedCeiling = highGoals >= 7 && rng() < 0.12 ? 6 : 5;
+    return {
+      ...score,
+      [leader]: Math.max(score[trailer] + 1, softenedCeiling),
+    };
+  }
+
   function simulateScore(homeId, awayId, seed, salt, { neutral = false, knockout = false } = {}) {
     const home = TEAM_BY_ID.get(homeId);
     const away = TEAM_BY_ID.get(awayId);
@@ -470,10 +484,10 @@
     const lineWeight = knockout ? 0.010 : 0.008;
     const homeExpected = clamp(1.34 + difference * homeRatingWeight + homeAttackEdge * lineWeight + (neutral ? 0 : 0.18) + formSwing, 0.22, 3.55);
     const awayExpected = clamp(1.18 - difference * awayRatingWeight + awayAttackEdge * lineWeight - formSwing * 0.68, 0.18, 3.3);
-    return {
+    return temperExtremeScore({
       home: poisson(homeExpected, rng),
       away: poisson(awayExpected, rng),
-    };
+    }, rng);
   }
 
   function isUpset(homeId, awayId, result) {
