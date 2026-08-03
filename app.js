@@ -9144,9 +9144,10 @@ function loadSnapshotFlag(team, { premierLeague = false, ucl = false } = {}) {
     && team?.badge
     ? team.badge
     : null;
+  const customFlag = typeof team?.customFlag === "string" ? team.customFlag : null;
   const imageOverride = FLAG_IMAGE_OVERRIDES[team.name];
   const code = FLAG_CODE_OVERRIDES[team.code] || team.code.toLowerCase();
-  if (!premierLeagueBadge && !imageOverride && code === "xx") return Promise.resolve(null);
+  if (!premierLeagueBadge && !customFlag && !imageOverride && code === "xx") return Promise.resolve(null);
   return new Promise((resolve) => {
     const image = new Image();
     let settled = false;
@@ -9160,7 +9161,7 @@ function loadSnapshotFlag(team, { premierLeague = false, ucl = false } = {}) {
     image.crossOrigin = "anonymous";
     image.onload = () => finish(image);
     image.onerror = () => finish(null);
-    image.src = premierLeagueBadge || imageOverride || `https://flagcdn.com/w320/${code}.png`;
+    image.src = premierLeagueBadge || customFlag || imageOverride || `https://flagcdn.com/w320/${code}.png`;
   });
 }
 
@@ -9199,21 +9200,35 @@ function drawSnapshotFlag(context, image, team, x, y, retroTheme = null, premier
   context.fill();
   if (image) {
     context.save();
+    const destinationX = retroTheme ? x - 82 : x - 75;
+    const destinationY = retroTheme ? y - 57 : y - 50;
+    const destinationWidth = retroTheme ? 164 : 150;
+    const destinationHeight = retroTheme ? 114 : 100;
     snapshotRoundedRect(
       context,
-      retroTheme ? x - 82 : x - 75,
-      retroTheme ? y - 57 : y - 50,
-      retroTheme ? 164 : 150,
-      retroTheme ? 114 : 100,
+      destinationX,
+      destinationY,
+      destinationWidth,
+      destinationHeight,
       retroTheme ? 13 : 8,
     );
     context.clip();
+    const sourceWidth = image.naturalWidth || image.width || 1;
+    const sourceHeight = image.naturalHeight || image.height || 1;
+    const sourceAspect = sourceWidth / sourceHeight;
+    const destinationAspect = destinationWidth / destinationHeight;
+    const cropWidth = sourceAspect > destinationAspect ? sourceHeight * destinationAspect : sourceWidth;
+    const cropHeight = sourceAspect > destinationAspect ? sourceHeight : sourceWidth / destinationAspect;
     context.drawImage(
       image,
-      retroTheme ? x - 82 : x - 75,
-      retroTheme ? y - 57 : y - 50,
-      retroTheme ? 164 : 150,
-      retroTheme ? 114 : 100,
+      (sourceWidth - cropWidth) / 2,
+      (sourceHeight - cropHeight) / 2,
+      cropWidth,
+      cropHeight,
+      destinationX,
+      destinationY,
+      destinationWidth,
+      destinationHeight,
     );
     context.restore();
   } else {
@@ -11438,9 +11453,9 @@ function managedStandardTournamentBoost(controlledTeam, opponentTeam, roundIndex
     );
     const underdogScale = simulationClamp(ratingGap / 24, 0, 1);
     return {
-      attack: 1.07 + underdogScale * 0.05,
-      defence: 0.95 - underdogScale * 0.03,
-      assistance: 0.65,
+      attack: 1.03 + underdogScale * 0.015,
+      defence: 0.98 - underdogScale * 0.01,
+      assistance: 0.25,
     };
   }
   const isManaged256Mode = Boolean(
@@ -17870,7 +17885,7 @@ function customTeamCreatorMarkup() {
         <div class="custom-team-identity">
           <div class="custom-team-flag-preview">${draft.customFlag ? `<img src="${draft.customFlag}" alt="Uploaded flag preview" />` : `<span aria-hidden="true">⚑</span>`}</div>
           <label><span>Team name</span><input name="customTeamName" maxlength="50" required value="${escapeHtml(draft.name)}" placeholder="Team name" data-custom-team-field="name" /></label>
-          <label class="custom-flag-upload"><span>Flag image</span><input id="customTeamFlagFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" /><small>PNG, JPG, WebP, GIF or SVG. Stored on this device and optionally with your account.</small></label>
+          <label class="custom-flag-upload"><span>Flag image</span><input id="customTeamFlagFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" /><small>Choose an image, then crop and position it to fit. Stored on this device and optionally with your account.</small></label>
         </div>
         <section class="custom-team-ratings-section">
           <div class="custom-section-title"><div><span>TEAM ABILITY</span><h3>Ratings</h3></div><small>1–99</small></div>
@@ -17952,12 +17967,95 @@ function customFlagDataUrl(file) {
       const image = new Image();
       image.onerror = () => reject(new Error("The flag image format is not supported."));
       image.onload = () => {
-        const scale = Math.min(1, 480 / Math.max(1, image.naturalWidth), 320 / Math.max(1, image.naturalHeight));
+        const editor = document.createElement("div");
+        editor.className = "custom-flag-crop-editor";
+        editor.setAttribute("role", "dialog");
+        editor.setAttribute("aria-modal", "true");
+        editor.setAttribute("aria-labelledby", "customFlagCropTitle");
+        editor.innerHTML = `
+          <button class="custom-flag-crop-backdrop" type="button" data-crop-action="cancel" aria-label="Cancel flag crop"></button>
+          <section class="custom-flag-crop-panel">
+            <header><div><span>FLAG IMAGE</span><h3 id="customFlagCropTitle">Crop your flag</h3><p>Drag the image to reposition it inside the frame.</p></div><button type="button" data-crop-action="cancel" aria-label="Cancel flag crop">&times;</button></header>
+            <div class="custom-flag-crop-canvas-wrap"><canvas width="480" height="320" aria-label="Flag crop preview"></canvas><span aria-hidden="true"></span></div>
+            <label class="custom-flag-crop-zoom"><span>Zoom</span><input type="range" min="1" max="3" value="1" step="0.01" aria-label="Flag crop zoom" /></label>
+            <footer><button class="secondary-button" type="button" data-crop-action="cancel">Cancel</button><button class="primary-button" type="button" data-crop-action="apply">Use crop</button></footer>
+          </section>`;
+        document.body.append(editor);
+
         const canvas = document.createElement("canvas");
-        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/webp", 0.88));
+        canvas.width = 480;
+        canvas.height = 320;
+        const preview = editor.querySelector("canvas");
+        const previewContext = preview.getContext("2d");
+        const outputContext = canvas.getContext("2d");
+        const zoomInput = editor.querySelector("input[type='range']");
+        let zoom = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+        let drag = null;
+
+        const cropLayout = () => {
+          const scale = Math.max(canvas.width / Math.max(1, image.naturalWidth), canvas.height / Math.max(1, image.naturalHeight)) * zoom;
+          const width = image.naturalWidth * scale;
+          const height = image.naturalHeight * scale;
+          const maxOffsetX = Math.max(0, (width - canvas.width) / 2);
+          const maxOffsetY = Math.max(0, (height - canvas.height) / 2);
+          offsetX = simulationClamp(offsetX, -maxOffsetX, maxOffsetX);
+          offsetY = simulationClamp(offsetY, -maxOffsetY, maxOffsetY);
+          return { x: (canvas.width - width) / 2 + offsetX, y: (canvas.height - height) / 2 + offsetY, width, height };
+        };
+        const drawCrop = (context) => {
+          const layout = cropLayout();
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(image, layout.x, layout.y, layout.width, layout.height);
+        };
+        const renderCrop = () => drawCrop(previewContext);
+        const cleanUp = () => {
+          document.removeEventListener("keydown", onKeyDown);
+          editor.remove();
+        };
+        const cancel = () => {
+          cleanUp();
+          reject(new DOMException("Flag crop cancelled.", "AbortError"));
+        };
+        const onKeyDown = (event) => {
+          if (event.key === "Escape") cancel();
+        };
+
+        zoomInput.addEventListener("input", () => {
+          zoom = Number(zoomInput.value) || 1;
+          renderCrop();
+        });
+        preview.addEventListener("pointerdown", (event) => {
+          drag = { x: event.clientX, y: event.clientY, offsetX, offsetY };
+          preview.setPointerCapture(event.pointerId);
+          preview.classList.add("is-dragging");
+        });
+        preview.addEventListener("pointermove", (event) => {
+          if (!drag) return;
+          const bounds = preview.getBoundingClientRect();
+          offsetX = drag.offsetX + (event.clientX - drag.x) * (canvas.width / Math.max(1, bounds.width));
+          offsetY = drag.offsetY + (event.clientY - drag.y) * (canvas.height / Math.max(1, bounds.height));
+          renderCrop();
+        });
+        const finishDrag = (event) => {
+          if (!drag) return;
+          drag = null;
+          if (preview.hasPointerCapture(event.pointerId)) preview.releasePointerCapture(event.pointerId);
+          preview.classList.remove("is-dragging");
+        };
+        preview.addEventListener("pointerup", finishDrag);
+        preview.addEventListener("pointercancel", finishDrag);
+        editor.querySelectorAll("[data-crop-action='cancel']").forEach((button) => button.addEventListener("click", cancel));
+        editor.querySelector("[data-crop-action='apply']").addEventListener("click", () => {
+          drawCrop(outputContext);
+          const croppedFlag = canvas.toDataURL("image/webp", 0.9);
+          cleanUp();
+          resolve(croppedFlag);
+        });
+        document.addEventListener("keydown", onKeyDown);
+        renderCrop();
+        editor.querySelector("[data-crop-action='apply']").focus();
       };
       image.src = source;
     };
@@ -19206,7 +19304,7 @@ function bindCustomTournamentSetup(body = els.customTournamentBody) {
       customTournamentUi.customTeamDraft.customFlag = await customFlagDataUrl(event.target.files?.[0]);
       renderCustomTeamCreatorContext();
     } catch (error) {
-      showToast(error.message || "The flag image could not be uploaded.");
+      if (error?.name !== "AbortError") showToast(error.message || "The flag image could not be uploaded.");
     }
   });
   body.querySelector("#customTeamCreatorForm")?.addEventListener("submit", (event) => {

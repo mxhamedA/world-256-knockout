@@ -427,8 +427,8 @@ assert.match(
 );
 assert.match(
   appSource,
-  /const isManagedUclMode[\s\S]{0,500}attack:\s*1\.07[\s\S]{0,120}defence:\s*0\.95/,
-  "Managing a UCL club must apply the managed-team assistance boost in addition to tactical effects.",
+  /const isManagedUclMode[\s\S]{0,500}attack:\s*1\.03 \+ underdogScale \* 0\.015[\s\S]{0,120}defence:\s*0\.98 - underdogScale \* 0\.01/,
+  "Managing a UCL club must apply only a small managed-team assistance boost in addition to tactical effects.",
 );
 assert.match(simulatorSource, /function\s+openKnockoutMatch\([\s\S]{0,2600}season\.spectateTeamId = managedMatch \? season\.managedTeamId : null[\s\S]{0,120}season\.neutralView = !managedMatch/, "Any current knockout tie must open in managed or spectator mode as appropriate.");
 assert.match(simulatorSource, /function knockoutTieWatchable\([\s\S]{0,500}round\.key === season\?\.knockout\?\.currentKey[\s\S]{0,300}!tie\.result/, "Only unplayed ties in the active knockout round may be watched.");
@@ -597,7 +597,8 @@ assert.equal(madridPlayers.find((player) => player.name === "Thiago Pitarch")?.s
 assert.equal(madridPlayers.find((player) => player.name === "Thiago Pitarch")?.selectionEligible, false, "Thiago Pitarch must be excluded from senior UCL match selection.");
 assert.match(appSource, /state\?\.uclSeason \|\| team\.uclClub/, "UCL match selection must retain the installed UCL squad instead of replacing it with the global roster.");
 assert.match(appSource, /ucl-lineup-rotation[\s\S]*?rotationTarget[\s\S]*?replacementPool/, "UCL match lineups must rotate zero to two position-compatible players.");
-assert.match(engineSource, /homeAttackEdge[\s\S]*?difference \* 0\.027[\s\S]*?awayAttackEdge/, "UCL score simulation must use calibrated squad-line strengths as well as overall rating.");
+assert.match(engineSource, /homeAttackEdge[\s\S]*?homeRatingWeight = knockout \? 0\.041 : 0\.027[\s\S]*?awayAttackEdge/, "UCL score simulation must retain league-phase variance while weighting strength more heavily in knockouts.");
+assert.match(engineSource, /function knockoutStrength[\s\S]*?squadDepth[\s\S]*?experience[\s\S]*?function knockoutWinProbability[\s\S]*?penaltyEdge/, "UCL knockout deciders must account for squad strength, depth, experience, and penalty quality.");
 assert.match(simulatorSource, /installEngineTeam\(Engine\.team\(teamId\)\)\);\s*window\.repairDefaultKnockoutRosterResults\?\.\(season\)/, "Opening a saved UCL match must repair stale player events against the latest squad.");
 
 assert.match(
@@ -624,5 +625,34 @@ assert.match(
   "The music addon must accept imported MP3 files.",
 );
 assert.match(html, /Music is optional\./, "The addon UI must clearly say that music is optional.");
+
+Object.entries(squadData.UCL_FC27_SQUADS).forEach(([teamId, squad]) => {
+  engine.applySimulationRatings(teamId, squad.simulationRatings);
+});
+const realismContenders = new Set([
+  "real-madrid",
+  "manchester-city",
+  "bayern-munich",
+  "paris-saint-germain",
+  "liverpool",
+  "barcelona",
+  "inter-milan",
+  "arsenal",
+  "atletico-madrid",
+]);
+const realismRounds = ["playoffs", "round-of-16", "quarter-finals", "semi-finals", "final"];
+let contenderChampions = 0;
+let repeatedOutsiderChampions = 0;
+for (let sample = 1; sample <= 240; sample += 1) {
+  const realismSeason = engine.createSeason(null, 930000 + sample);
+  for (let matchday = 1; matchday <= 8; matchday += 1) {
+    engine.completeMatchday(realismSeason, matchday);
+  }
+  realismRounds.forEach((roundKey) => engine.completeKnockoutRound(realismSeason, roundKey));
+  if (realismContenders.has(realismSeason.championId)) contenderChampions += 1;
+  if (["rb-leipzig", "porto"].includes(realismSeason.championId)) repeatedOutsiderChampions += 1;
+}
+assert.ok(contenderChampions >= 204, "Established contenders must win at least 85% of the deterministic realism sample.");
+assert.ok(repeatedOutsiderChampions <= 12, "Leipzig and Porto must not collectively exceed 5% of the deterministic realism sample.");
 
 console.log("UCL league draw, deterministic simulation, knockout progression, and static integration verified.");

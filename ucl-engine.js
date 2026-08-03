@@ -433,7 +433,29 @@
     return { valid: errors.length === 0, errors };
   }
 
-  function simulateScore(homeId, awayId, seed, salt, { neutral = false } = {}) {
+  function knockoutStrength(team) {
+    const ratings = team.simulationRatings || {};
+    const overall = Number(team.rating) || 75;
+    const depth = Number(ratings.squadDepth) || overall;
+    const experience = Number(ratings.experience) || overall;
+    return overall * 0.78 + depth * 0.08 + experience * 0.14;
+  }
+
+  function knockoutWinProbability(teamAId, teamBId, { penalties = false } = {}) {
+    const teamA = TEAM_BY_ID.get(teamAId);
+    const teamB = TEAM_BY_ID.get(teamBId);
+    const strengthEdge = knockoutStrength(teamA) - knockoutStrength(teamB);
+    const penaltyEdge = penalties
+      ? (Number(teamA.simulationRatings?.penalties) || teamA.rating)
+        - (Number(teamB.simulationRatings?.penalties) || teamB.rating)
+      : 0;
+    const probability = 0.5
+      + strengthEdge * (penalties ? 0.014 : 0.026)
+      + penaltyEdge * (penalties ? 0.008 : 0);
+    return clamp(probability, penalties ? 0.34 : 0.26, penalties ? 0.66 : 0.74);
+  }
+
+  function simulateScore(homeId, awayId, seed, salt, { neutral = false, knockout = false } = {}) {
     const home = TEAM_BY_ID.get(homeId);
     const away = TEAM_BY_ID.get(awayId);
     const rng = random(hash(`${seed}:${salt}:${homeId}:${awayId}`));
@@ -442,9 +464,12 @@
       - (Number(away.simulationRatings?.defence) || away.rating);
     const awayAttackEdge = (Number(away.simulationRatings?.attack) || away.rating)
       - (Number(home.simulationRatings?.defence) || home.rating);
-    const formSwing = (rng() - 0.5) * 0.30;
-    const homeExpected = clamp(1.34 + difference * 0.027 + homeAttackEdge * 0.008 + (neutral ? 0 : 0.18) + formSwing, 0.22, 3.55);
-    const awayExpected = clamp(1.18 - difference * 0.024 + awayAttackEdge * 0.008 - formSwing * 0.68, 0.18, 3.3);
+    const formSwing = (rng() - 0.5) * (knockout ? 0.18 : 0.30);
+    const homeRatingWeight = knockout ? 0.041 : 0.027;
+    const awayRatingWeight = knockout ? 0.037 : 0.024;
+    const lineWeight = knockout ? 0.010 : 0.008;
+    const homeExpected = clamp(1.34 + difference * homeRatingWeight + homeAttackEdge * lineWeight + (neutral ? 0 : 0.18) + formSwing, 0.22, 3.55);
+    const awayExpected = clamp(1.18 - difference * awayRatingWeight + awayAttackEdge * lineWeight - formSwing * 0.68, 0.18, 3.3);
     return {
       home: poisson(homeExpected, rng),
       away: poisson(awayExpected, rng),
@@ -655,7 +680,7 @@
   function simulateTie(season, round, tie) {
     if (tie.result) return tie;
     if (round.legs === 1) {
-      const score = simulateScore(tie.teamAId, tie.teamBId, season.seed, `${tie.id}:final`, { neutral: true });
+      const score = simulateScore(tie.teamAId, tie.teamBId, season.seed, `${tie.id}:final`, { neutral: true, knockout: true });
       const rng = random(hash(`${season.seed}:${tie.id}:decider`));
       let winnerId;
       let decidedBy = "90 minutes";
@@ -664,7 +689,7 @@
         winnerId = score.home > score.away ? tie.teamAId : tie.teamBId;
       } else if (rng() > 0.42) {
         decidedBy = "extra time";
-        if (rng() > 0.5) {
+        if (rng() < knockoutWinProbability(tie.teamAId, tie.teamBId)) {
           score.home += 1;
           winnerId = tie.teamAId;
         } else {
@@ -673,11 +698,12 @@
         }
       } else {
         decidedBy = "penalties";
-        const homePens = 3 + Math.floor(rng() * 3);
-        const awayPens = homePens + (rng() > 0.5 ? 1 : -1);
-        penalties = { home: homePens, away: Math.max(2, awayPens) };
-        if (penalties.home === penalties.away) penalties.home += 1;
-        winnerId = penalties.home > penalties.away ? tie.teamAId : tie.teamBId;
+        const teamAWins = rng() < knockoutWinProbability(tie.teamAId, tie.teamBId, { penalties: true });
+        const losingPens = 3 + Math.floor(rng() * 3);
+        penalties = teamAWins
+          ? { home: losingPens + 1, away: losingPens }
+          : { home: losingPens, away: losingPens + 1 };
+        winnerId = teamAWins ? tie.teamAId : tie.teamBId;
       }
       const winner = TEAM_BY_ID.get(winnerId);
       const loser = TEAM_BY_ID.get(winnerId === tie.teamAId ? tie.teamBId : tie.teamAId);
@@ -693,8 +719,8 @@
       return tie;
     }
 
-    const first = simulateScore(tie.teamBId, tie.teamAId, season.seed, `${tie.id}:leg-1`);
-    const second = simulateScore(tie.teamAId, tie.teamBId, season.seed, `${tie.id}:leg-2`);
+    const first = simulateScore(tie.teamBId, tie.teamAId, season.seed, `${tie.id}:leg-1`, { knockout: true });
+    const second = simulateScore(tie.teamAId, tie.teamBId, season.seed, `${tie.id}:leg-2`, { knockout: true });
     let aggregateA = first.away + second.home;
     let aggregateB = first.home + second.away;
     const rng = random(hash(`${season.seed}:${tie.id}:decider`));
@@ -702,7 +728,7 @@
     let penalties = null;
     if (aggregateA === aggregateB && rng() > 0.38) {
       decidedBy = "extra time";
-      if (rng() > 0.5) {
+      if (rng() < knockoutWinProbability(tie.teamAId, tie.teamBId)) {
         second.home += 1;
         aggregateA += 1;
       } else {
@@ -711,10 +737,11 @@
       }
     } else if (aggregateA === aggregateB) {
       decidedBy = "penalties";
-      const teamAPens = 3 + Math.floor(rng() * 3);
-      const teamBPens = teamAPens + (rng() > 0.5 ? 1 : -1);
-      penalties = { teamA: teamAPens, teamB: Math.max(2, teamBPens) };
-      if (penalties.teamA === penalties.teamB) penalties.teamA += 1;
+      const teamAWins = rng() < knockoutWinProbability(tie.teamAId, tie.teamBId, { penalties: true });
+      const losingPens = 3 + Math.floor(rng() * 3);
+      penalties = teamAWins
+        ? { teamA: losingPens + 1, teamB: losingPens }
+        : { teamA: losingPens, teamB: losingPens + 1 };
     }
     const winnerId = aggregateA === aggregateB
       ? (penalties.teamA > penalties.teamB ? tie.teamAId : tie.teamBId)

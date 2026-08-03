@@ -21,6 +21,10 @@ assert.match(app, /function customPlayersWithValidStartingXI\(players\)/);
 assert.match(app, /Choose exactly 11 players for the starting XI/);
 assert.match(app, /\["goalkeeping", "GK"\]/);
 assert.match(app, /function customFlagDataUrl\(file\)/);
+assert.match(app, /Crop your flag/);
+assert.match(app, /data-crop-action="apply"/);
+assert.match(app, /customFlag \|\| imageOverride \|\| `https:\/\/flagcdn\.com/,
+  "Snapshots must load uploaded custom-team flags before falling back to a country flag.");
 assert.match(app, /customFlag: true|customFlag/);
 assert.match(app, /function createCustomMatchState\(\)/);
 assert.match(app, /customMatch: true/);
@@ -58,8 +62,10 @@ assert.match(app, /customTournamentSetup\.selectedIds\.map\(\(selectedId\) => se
 assert.match(app, /replaceDeletedCustomMatchTeam\("home", team\.id\)/);
 assert.match(css, /\.custom-team-delete-button/);
 assert.match(css, /\.custom-match-team-actions button\.is-danger/, "Custom Match must style its delete action as destructive.");
-assert.match(css, /custom-uploaded-flag img[^}]*object-fit: contain/);
-assert.match(css, /custom-team-flag-preview img[^}]*object-fit: contain/);
+assert.match(css, /custom-uploaded-flag img[^}]*object-fit: cover/);
+assert.match(css, /custom-team-flag-preview img[^}]*object-fit: cover/);
+assert.match(css, /\.custom-uploaded-flag\s*{[^}]*border-radius:/);
+assert.match(css, /\.custom-flag-crop-editor/);
 assert.match(css, /custom-match-team-flag\.pl-club-flag img[\s\S]*object-fit: contain/);
 assert.match(css, /\.pl-club-flag img[\s\S]*object-fit: contain/);
 assert.match(css, /\.flag-orb:has\(\.pl-club-flag\)/);
