@@ -873,6 +873,7 @@ function sanitizeCustomTeam(team) {
   const customFlag = typeof team?.customFlag === "string" && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(team.customFlag)
     ? team.customFlag.slice(0, 2_500_000)
     : "";
+  const customFlagShape = team?.customFlagShape === "square" ? "square" : "flag";
   return {
     id,
     name,
@@ -881,6 +882,7 @@ function sanitizeCustomTeam(team) {
     confed: "CUSTOM",
     customTeam: true,
     customFlag,
+    customFlagShape,
     rating: overall,
     strength: overall,
     simulationRatings: {
@@ -1393,8 +1395,9 @@ function flagMarkup(team, className = "") {
     `;
   }
   if (team?.customFlag) {
-    const classes = ["country-flag", "custom-uploaded-flag", className].filter(Boolean).join(" ");
-    return `<span class="${classes}" role="img" aria-label="${escapeHtml(team.name)} flag"><span class="flag-fallback" aria-hidden="true">${escapeHtml(team.flag || "⚑")}</span><img src="${team.customFlag}" alt="" loading="lazy" /></span>`;
+    const isBadge = team.customFlagShape === "square";
+    const classes = ["country-flag", "custom-uploaded-flag", isBadge ? "custom-uploaded-badge" : "", className].filter(Boolean).join(" ");
+    return `<span class="${classes}" role="img" aria-label="${escapeHtml(team.name)} ${isBadge ? "badge" : "flag"}"><span class="flag-fallback" aria-hidden="true">${escapeHtml(team.flag || "⚑")}</span><img src="${team.customFlag}" alt="" loading="lazy" /></span>`;
   }
   const imageOverride = FLAG_IMAGE_OVERRIDES[team.name];
   const imageClassName = team.name === "Belarus" ? "flag-belarus" : "";
@@ -9200,10 +9203,11 @@ function drawSnapshotFlag(context, image, team, x, y, retroTheme = null, premier
   context.fill();
   if (image) {
     context.save();
-    const destinationX = retroTheme ? x - 82 : x - 75;
-    const destinationY = retroTheme ? y - 57 : y - 50;
-    const destinationWidth = retroTheme ? 164 : 150;
-    const destinationHeight = retroTheme ? 114 : 100;
+    const customBadge = team?.customFlagShape === "square";
+    const destinationWidth = customBadge ? (retroTheme ? 108 : 100) : (retroTheme ? 164 : 150);
+    const destinationHeight = customBadge ? destinationWidth : (retroTheme ? 114 : 100);
+    const destinationX = x - destinationWidth / 2;
+    const destinationY = y - destinationHeight / 2;
     snapshotRoundedRect(
       context,
       destinationX,
@@ -17845,6 +17849,7 @@ function newCustomTeamDraft(team = null) {
   return {
     name: team?.name || "",
     customFlag: team?.customFlag || "",
+    customFlagShape: team?.customFlagShape === "square" ? "square" : "flag",
     saveToAccount: team?.accountSaved === true,
     simulationRatings: {
       overall: ratings.overall || 75,
@@ -17883,9 +17888,9 @@ function customTeamCreatorMarkup() {
           <button type="button" data-custom-action="close-team-creator" aria-label="Close team creator">&times;</button>
         </header>
         <div class="custom-team-identity">
-          <div class="custom-team-flag-preview">${draft.customFlag ? `<img src="${draft.customFlag}" alt="Uploaded flag preview" />` : `<span aria-hidden="true">⚑</span>`}</div>
+          <div class="custom-team-flag-preview ${draft.customFlagShape === "square" ? "is-square" : ""}">${draft.customFlag ? `<img src="${draft.customFlag}" alt="Uploaded ${draft.customFlagShape === "square" ? "badge" : "flag"} preview" />` : `<span aria-hidden="true">⚑</span>`}</div>
           <label><span>Team name</span><input name="customTeamName" maxlength="50" required value="${escapeHtml(draft.name)}" placeholder="Team name" data-custom-team-field="name" /></label>
-          <label class="custom-flag-upload"><span>Flag image</span><input id="customTeamFlagFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" /><small>Choose an image, then crop and position it to fit. Stored on this device and optionally with your account.</small></label>
+          <label class="custom-flag-upload"><span>Team image</span><input id="customTeamFlagFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" /><small>Choose a 3:2 flag or a square club badge, then crop and position it. Stored on this device and optionally with your account.</small></label>
         </div>
         <section class="custom-team-ratings-section">
           <div class="custom-section-title"><div><span>TEAM ABILITY</span><h3>Ratings</h3></div><small>1–99</small></div>
@@ -17975,7 +17980,8 @@ function customFlagDataUrl(file) {
         editor.innerHTML = `
           <button class="custom-flag-crop-backdrop" type="button" data-crop-action="cancel" aria-label="Cancel flag crop"></button>
           <section class="custom-flag-crop-panel">
-            <header><div><span>FLAG IMAGE</span><h3 id="customFlagCropTitle">Crop your flag</h3><p>Drag the image to reposition it inside the frame.</p></div><button type="button" data-crop-action="cancel" aria-label="Cancel flag crop">&times;</button></header>
+            <header><div><span>TEAM IMAGE</span><h3 id="customFlagCropTitle">Crop your team image</h3><p>Choose a flag or badge shape, then drag to reposition.</p></div><button type="button" data-crop-action="cancel" aria-label="Cancel image crop">&times;</button></header>
+            <div class="custom-flag-crop-shapes" role="group" aria-label="Image shape"><button class="active" type="button" data-crop-shape="flag" aria-pressed="true"><span aria-hidden="true"></span><strong>Flag</strong><small>3:2</small></button><button type="button" data-crop-shape="square" aria-pressed="false"><span aria-hidden="true"></span><strong>Badge</strong><small>1:1</small></button></div>
             <div class="custom-flag-crop-canvas-wrap"><canvas width="480" height="320" aria-label="Flag crop preview"></canvas><span aria-hidden="true"></span></div>
             <label class="custom-flag-crop-zoom"><span>Zoom</span><input type="range" min="1" max="3" value="1" step="0.01" aria-label="Flag crop zoom" /></label>
             <footer><button class="secondary-button" type="button" data-crop-action="cancel">Cancel</button><button class="primary-button" type="button" data-crop-action="apply">Use crop</button></footer>
@@ -17989,6 +17995,8 @@ function customFlagDataUrl(file) {
         const previewContext = preview.getContext("2d");
         const outputContext = canvas.getContext("2d");
         const zoomInput = editor.querySelector("input[type='range']");
+        const canvasWrap = editor.querySelector(".custom-flag-crop-canvas-wrap");
+        let shape = "flag";
         let zoom = 1;
         let offsetX = 0;
         let offsetY = 0;
@@ -18026,6 +18034,23 @@ function customFlagDataUrl(file) {
           zoom = Number(zoomInput.value) || 1;
           renderCrop();
         });
+        editor.querySelectorAll("[data-crop-shape]").forEach((button) => button.addEventListener("click", () => {
+          shape = button.dataset.cropShape === "square" ? "square" : "flag";
+          const height = shape === "square" ? 480 : 320;
+          canvas.height = height;
+          preview.height = height;
+          zoom = 1;
+          offsetX = 0;
+          offsetY = 0;
+          zoomInput.value = "1";
+          canvasWrap.classList.toggle("is-square", shape === "square");
+          editor.querySelectorAll("[data-crop-shape]").forEach((shapeButton) => {
+            const active = shapeButton === button;
+            shapeButton.classList.toggle("active", active);
+            shapeButton.setAttribute("aria-pressed", String(active));
+          });
+          renderCrop();
+        }));
         preview.addEventListener("pointerdown", (event) => {
           drag = { x: event.clientX, y: event.clientY, offsetX, offsetY };
           preview.setPointerCapture(event.pointerId);
@@ -18051,7 +18076,7 @@ function customFlagDataUrl(file) {
           drawCrop(outputContext);
           const croppedFlag = canvas.toDataURL("image/webp", 0.9);
           cleanUp();
-          resolve(croppedFlag);
+          resolve({ dataUrl: croppedFlag, shape });
         });
         document.addEventListener("keydown", onKeyDown);
         renderCrop();
@@ -18089,7 +18114,7 @@ async function saveCustomTeamDraft() {
   }
   const id = customTournamentUi.editingCustomTeamId || `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
   const existingTeam = customTeamLibrary.find((item) => item.id === id) || null;
-  let team = sanitizeCustomTeam({ id, name, customFlag: draft.customFlag, simulationRatings: draft.simulationRatings, playerProfiles: players });
+  let team = sanitizeCustomTeam({ id, name, customFlag: draft.customFlag, customFlagShape: draft.customFlagShape, simulationRatings: draft.simulationRatings, playerProfiles: players });
   const existingIndex = customTeamLibrary.findIndex((item) => item.id === id);
   try {
     if (draft.saveToAccount) {
@@ -19301,7 +19326,9 @@ function bindCustomTournamentSetup(body = els.customTournamentBody) {
   });
   body.querySelector("#customTeamFlagFile")?.addEventListener("change", async (event) => {
     try {
-      customTournamentUi.customTeamDraft.customFlag = await customFlagDataUrl(event.target.files?.[0]);
+      const croppedFlag = await customFlagDataUrl(event.target.files?.[0]);
+      customTournamentUi.customTeamDraft.customFlag = croppedFlag.dataUrl;
+      customTournamentUi.customTeamDraft.customFlagShape = croppedFlag.shape;
       renderCustomTeamCreatorContext();
     } catch (error) {
       if (error?.name !== "AbortError") showToast(error.message || "The flag image could not be uploaded.");

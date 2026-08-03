@@ -1885,6 +1885,7 @@ function sanitizeAccountCustomTeam(value) {
     && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(value.customFlag)
     ? value.customFlag.slice(0, 1_500_000)
     : "";
+  const customFlagShape = value?.customFlagShape === "square" ? "square" : "flag";
   return {
     id: teamId,
     name,
@@ -1893,6 +1894,7 @@ function sanitizeAccountCustomTeam(value) {
     confed: "CUSTOM",
     customTeam: true,
     customFlag,
+    customFlagShape,
     rating: overall,
     strength: overall,
     simulationRatings: {

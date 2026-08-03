@@ -35895,12 +35895,22 @@ body.custom-match-mode-active #roundBoard {
   box-shadow: 0 2px 7px rgba(0, 0, 0, .22);
 }
 
+.custom-uploaded-flag.custom-uploaded-badge {
+  width: auto;
+  aspect-ratio: 1;
+  border-radius: 7px;
+}
+
 .custom-uploaded-flag img,
 .custom-team-flag-preview img {
   width: 100%;
   height: 100%;
   padding: 0;
   object-fit: cover;
+}
+
+.custom-team-flag-preview.is-square {
+  aspect-ratio: 1;
 }
 
 .custom-flag-crop-editor {
@@ -35966,6 +35976,55 @@ body.custom-match-mode-active #roundBoard {
   cursor: pointer;
 }
 
+.custom-flag-crop-shapes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  padding: 0 22px 16px;
+}
+
+.custom-flag-crop-shapes button {
+  display: grid;
+  grid-template-columns: 36px auto 1fr;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 8px 11px;
+  border: 1px solid rgba(143, 161, 196, .22);
+  border-radius: 10px;
+  color: #aeb9cc;
+  background: #121c2a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.custom-flag-crop-shapes button > span {
+  display: block;
+  width: 32px;
+  aspect-ratio: 3 / 2;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: rgba(120, 156, 255, .12);
+}
+
+.custom-flag-crop-shapes button[data-crop-shape="square"] > span {
+  width: 25px;
+  aspect-ratio: 1;
+  justify-self: center;
+  border-radius: 6px;
+}
+
+.custom-flag-crop-shapes button strong { font-size: 12px; }
+.custom-flag-crop-shapes button small { justify-self: end; color: #6f7e96; font-size: 10px; }
+.custom-flag-crop-shapes button.active {
+  border-color: #789cff;
+  color: #eef3ff;
+  background: rgba(84, 117, 226, .2);
+  box-shadow: inset 0 0 0 1px rgba(120, 156, 255, .18);
+}
+
+.custom-flag-crop-shapes button.active small { color: #9fb5ff; }
+
 .custom-flag-crop-canvas-wrap {
   position: relative;
   width: calc(100% - 44px);
@@ -35979,6 +36038,12 @@ body.custom-match-mode-active #roundBoard {
   background-position: 0 0, 0 8px, 8px -8px, -8px 0;
   background-size: 16px 16px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
+}
+
+.custom-flag-crop-canvas-wrap.is-square {
+  width: min(380px, calc(100% - 44px));
+  aspect-ratio: 1;
+  margin-inline: auto;
 }
 
 .custom-flag-crop-canvas-wrap canvas {
@@ -36028,7 +36093,9 @@ body.custom-match-mode-active #roundBoard {
   .custom-flag-crop-editor { align-items: end; padding: 0; }
   .custom-flag-crop-panel { width: 100%; border-radius: 16px 16px 0 0; }
   .custom-flag-crop-panel > header { padding: 18px 16px 14px; }
+  .custom-flag-crop-shapes { padding-inline: 16px; }
   .custom-flag-crop-canvas-wrap { width: calc(100% - 32px); margin-inline: 16px; }
+  .custom-flag-crop-canvas-wrap.is-square { width: min(340px, calc(100% - 32px)); margin-inline: auto; }
   .custom-flag-crop-zoom { padding-inline: 16px; }
   .custom-flag-crop-panel > footer { padding-inline: 16px; }
 }
