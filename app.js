@@ -23127,7 +23127,7 @@ document.querySelectorAll("[data-open-tournament-theme]").forEach((button) => {
 document.querySelectorAll("[data-tournament-theme-option]").forEach((button) => {
   button.addEventListener("click", () => applyTournamentTheme(button.dataset.tournamentThemeOption));
 });
-applyTournamentTheme(document.documentElement.dataset.tournamentTheme, { persist: false, announce: false });
+delete document.documentElement.dataset.tournamentTheme;
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.click());
 els.newsButton?.addEventListener("click", () => els.retro2002AnnouncementModal?.showModal());
@@ -23232,10 +23232,7 @@ els.lightModeSetting?.addEventListener("click", () => {
     // The theme still applies for this visit when storage is unavailable.
   }
   document.cookie = `${COLOUR_THEME_STORAGE_KEY}=${enabled ? "light" : "dark"}; path=/; max-age=31536000; samesite=lax`;
-  const tournamentTheme = MATCH_SCREEN_THEMES[document.documentElement.dataset.tournamentTheme]
-    ? document.documentElement.dataset.tournamentTheme
-    : "2014";
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", enabled ? "#f4f6fa" : MATCH_SCREEN_THEMES[tournamentTheme].colour);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", enabled ? "#f4f6fa" : "#0b0f17");
   syncSettingsDialog();
   showToast(enabled ? "Light mode on." : "Dark mode on.");
 });

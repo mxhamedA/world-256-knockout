@@ -24,19 +24,7 @@
           if (localStorage.getItem("world-256-colour-theme") === "light" || document.cookie.includes("world-256-colour-theme=light")) {
             document.documentElement.classList.add("light-mode");
           }
-          const savedTournamentTheme = localStorage.getItem("world-256-tournament-theme");
-          const cookieTournamentTheme = document.cookie.match(/(?:^|;\s*)world-256-tournament-theme=(2006|2010|2014|2016|2018|2022|2026|wc|euros)(?:;|$)/)?.[1];
-          const requestedTournamentTheme = savedTournamentTheme || cookieTournamentTheme || "2014";
-          document.documentElement.dataset.tournamentTheme = requestedTournamentTheme === "wc"
-            ? "2014"
-            : requestedTournamentTheme === "euros"
-              ? "2016"
-              : ["2006", "2010", "2014", "2016", "2018", "2022", "2026"].includes(requestedTournamentTheme)
-                ? requestedTournamentTheme
-                : "2014";
-        } catch {
-          document.documentElement.dataset.tournamentTheme = "2014";
-        }
+        } catch {}
       })();
     </script>
     <script>
@@ -99,7 +87,6 @@
     <link rel="stylesheet" href="./clean.css?v=penalty-scorers-7" />
     <link rel="stylesheet" href="./premier-league.css?v=pl-table-no-spoilers-1" />
     <link rel="stylesheet" href="./ucl-simulator.css?v=ucl-knockout-leg-history-1" />
-    <link rel="stylesheet" href="./match-themes.css?v=competition-match-ui-3" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -2112,52 +2099,6 @@
           </div>
           <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
-        <section class="tournament-theme-setting" aria-labelledby="tournamentThemeTitle" hidden>
-          <div class="tournament-theme-heading">
-            <div>
-              <strong id="tournamentThemeTitle">Match screen theme</strong>
-              <small>Use a real World Cup or Euros presentation in supported tournament modes</small>
-            </div>
-            <span id="tournamentThemeStatus">Brazil 2014</span>
-          </div>
-          <div class="tournament-theme-options tournament-edition-options" role="group" aria-label="Match screen theme">
-            <button type="button" data-tournament-theme-option="2006" aria-pressed="false">
-              <img src="./assets/retro-world-cup-2006.png" alt="" />
-              <span><strong>Germany 2006</strong><small>Ice blue &amp; gold</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-            <button type="button" data-tournament-theme-option="2010" aria-pressed="false">
-              <img src="./assets/retro-2010/worldcup-2010-logo.png" alt="" />
-              <span><strong>South Africa 2010</strong><small>Earth, gold &amp; sunburst</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-            <button type="button" data-tournament-theme-option="2014" aria-pressed="true">
-              <img src="./assets/retro-world-cup-2014.png" alt="" />
-              <span><strong>Brazil 2014</strong><small>Watercolour &amp; carnival</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-            <button type="button" data-tournament-theme-option="2016" aria-pressed="false">
-              <img src="./assets/euro-2016-logo.png" alt="" />
-              <span><strong>Euro 2016</strong><small>France blue &amp; cyan</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-            <button type="button" data-tournament-theme-option="2018" aria-pressed="false">
-              <img src="./assets/retro-world-cup-2018.png" alt="" />
-              <span><strong>Russia 2018</strong><small>Folk red, blue &amp; gold</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-            <button type="button" data-tournament-theme-option="2022" aria-pressed="false">
-              <img src="./assets/retro-world-cup-2022.png" alt="" />
-              <span><strong>Qatar 2022</strong><small>Night, wine &amp; gold</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-            <button type="button" data-tournament-theme-option="2026" aria-pressed="false">
-              <img src="./assets/world-cup-2026-logo.png" alt="" />
-              <span><strong>World Cup 2026</strong><small>Electric blue &amp; orange</small></span>
-              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
-            </button>
-          </div>
-        </section>
         <button class="settings-option" id="lightModeSetting" type="button" aria-pressed="false">
           <span class="settings-option-copy">
             <strong>Light mode</strong>
@@ -2425,7 +2366,7 @@
     <script src="./ucl-engine.js?v=ucl-neutral-balance-1"></script>
     <script src="./ucl-squads.generated.js?v=fc27-ucl-squads-1"></script>
     <script src="./ucl-squad-calibration.js?v=ucl-squad-balance-2"></script>
-  <script src="./app.js?v=retro-2002-achievement-retry-1"></script>
+  <script src="./app.js?v=custom-groups-randomise-1"></script>
     <script src="./premier-league.js?v=pl-table-no-spoilers-1"></script>
     <script src="./ucl-simulator.js?v=ucl-release-launch-1"></script>
     <script src="./challenge.js?v=retro-2002-achievement-retry-1"></script>
