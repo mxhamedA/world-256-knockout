@@ -1,12 +1,14 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-const [app, html, css, worker, wrangler] = await Promise.all([
+const [app, html, css, worker, wrangler, challengeService, customTeamsMigration] = await Promise.all([
   readFile(new URL("../app.js", import.meta.url), "utf8"),
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../clean.css", import.meta.url), "utf8"),
   readFile(new URL("../worker.mjs", import.meta.url), "utf8"),
   readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"),
+  readFile(new URL("../challenge-service.mjs", import.meta.url), "utf8"),
+  readFile(new URL("../migrations/0014_account_custom_teams.sql", import.meta.url), "utf8"),
 ]);
 
 assert.match(html, /id="openCustomMatchButton"/);
@@ -25,6 +27,16 @@ assert.match(app, /CUSTOM_TEAM_FLAG_DATABASE_NAME = "world-256-custom-team-flags
 assert.match(app, /function openCustomTeamFlagDatabase\(\)/);
 assert.match(app, /async function writeCustomTeamFlagAsset\(teamId, dataUrl\)/);
 assert.match(app, /async function hydrateCustomTeamFlagAssets\(\)/);
+assert.match(app, /if \(source === "custom"\) return \[\.\.\.customTeamLibrary\]/,
+  "Every saved custom team must remain available to selectors.");
+assert.doesNotMatch(app, /customTeamLibrary\.slice\(/,
+  "The custom-team library must not have an arbitrary client-side count cap.");
+assert.match(challengeService, /SELECT team_json FROM account_custom_teams\s+WHERE account_id = \? ORDER BY updated_at DESC/,
+  "Account sync must return the complete custom-team library.");
+assert.doesNotMatch(challengeService, /SELECT team_json FROM account_custom_teams[\s\S]{0,160}\bLIMIT\b/,
+  "Account sync must not silently limit the number of returned custom teams.");
+assert.doesNotMatch(customTeamsMigration, /\bCHECK\s*\(/,
+  "The custom-team table must not impose an arbitrary per-account team count.");
 assert.match(app, /const \{ customFlag, \.\.\.metadata \} = team/,
   "Local custom-team metadata must not keep image data after IndexedDB is ready.");
 assert.match(app, /await deleteCustomTeamFlagAsset\(team\.id\)/);

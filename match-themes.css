@@ -250,6 +250,27 @@ html[data-tournament-theme="2026"] {
   --match-ui-stripe: linear-gradient(90deg, #ff9e2f, #fff 30% 36%, #0a45ff 36% 75%, #ff9e2f 75%);
 }
 
+/* Theme choices affect played match screens, not the Custom setup workspace.
+   A previously active tournament can leave body.before-start unset while the
+   builder is open, so key this reset to the actually visible setup screen. */
+html[data-tournament-theme] body.custom-tournament-mode-active:has(#customTournamentScreen:not([hidden])),
+html[data-tournament-theme] body.custom-tournament-mode-active:has(#customMatchScreen:not([hidden])) {
+  --match-ui-bg: #090f18;
+  --match-ui-shell: #0b111b;
+  --match-ui-panel: #101925;
+  --match-ui-panel-soft: #151f2d;
+  --match-ui-text: #eef3fb;
+  --match-ui-muted: #8d9db3;
+  --match-ui-accent: #79a1ff;
+  --match-ui-accent-soft: #426fda;
+  --match-ui-accent-text: #08101c;
+  --match-ui-line: #273448;
+  --match-ui-shadow: none;
+  --match-ui-radius: 8px;
+  --match-ui-font: "Manrope", system-ui, sans-serif;
+  --match-ui-stripe: linear-gradient(90deg, #426fda, #79a1ff);
+}
+
 html[data-tournament-theme] body:not(.before-start) {
   color: var(--match-ui-text) !important;
   background: var(--match-ui-bg) !important;

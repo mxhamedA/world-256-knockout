@@ -26,6 +26,8 @@ assert.match(css, /\.ucl-simulator-screen/, "The competition skin should cover U
 assert.match(css, /\.pl-season-screen/, "The competition skin should cover Premier League screens.");
 assert.match(css, /max-width: 38px !important/, "Edition logos should stay compact even inside Retro modals.");
 assert.match(css, /overflow-x: hidden/, "The theme picker should never create horizontal scrolling.");
+assert.match(css, /:has\(#customTournamentScreen:not\(\[hidden\]\)\)/, "Custom Tournament setup should keep its neutral builder UI.");
+assert.match(css, /:has\(#customMatchScreen:not\(\[hidden\]\)\)/, "Custom Match setup should keep its neutral builder UI.");
 assert.doesNotMatch(html.match(/<section class="tournament-theme-setting"[\s\S]*?<\/section>/)?.[0] || "", /squad/i, "The theme picker should not add a squads tab.");
 
 console.log("Tournament theme UI checks passed.");
