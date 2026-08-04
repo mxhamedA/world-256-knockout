@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const appSource = fs.readFileSync(path.join(root, "app.js"), "utf8");
+const cssSource = fs.readFileSync(path.join(root, "clean.css"), "utf8");
 
 function functionSource(name) {
   const start = appSource.indexOf(`function ${name}(`);
@@ -218,6 +219,26 @@ assert.match(
   functionSource("removeSavedPenaltyGoal"),
   /match\.result\.winnerId = match\.result\.homeGoals === match\.result\.awayGoals[\s\S]*\? null/,
   "Saving a penalty must immediately clear a stale winner when the corrected score is level.",
+);
+assert.match(
+  cssSource,
+  /body\.retro-mode-active\.retro-2002-active #mainContent \.penalty-stage \{[\s\S]*?border-radius: 0;/,
+  "The Korea/Japan 2002 shootout panel must remain rectangular.",
+);
+assert.match(
+  cssSource,
+  /body\.retro-mode-active\.retro-2002-active #mainContent :is\([\s\S]*?\.standard-penalty-scene[\s\S]*?\) \{[\s\S]*?border-radius: 0;/,
+  "The Korea/Japan 2002 penalty scene must remain rectangular.",
+);
+assert.match(
+  cssSource,
+  /body\.retro-mode-active\.retro-2002-active #mainContent :is\([\s\S]*?\.standard-penalty-targets[\s\S]*?\) button \{[\s\S]*?border-radius: 50%;/,
+  "The Korea/Japan 2002 penalty targets must remain circular.",
+);
+assert.match(
+  cssSource,
+  /body\.retro-mode-active\.retro-2002-active #mainContent \.penalty-mark \{[\s\S]*?border-radius: 50%;/,
+  "The Korea/Japan 2002 kick markers must remain circular.",
 );
 
 console.log("Penalty scoring and animation invariants passed.");

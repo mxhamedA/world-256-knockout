@@ -187,4 +187,43 @@ assert.match(
   "A saved revealed 2026 final must be repaired and replayed after reload.",
 );
 
+const historyContext = vm.createContext({});
+vm.runInContext(`
+  const readTournamentHistoryRecords = () => [{
+    mode: "retro",
+    year: 2002,
+    sourceKey: "retro:2002:4242:retro-2002-brazil",
+    managedTeamId: "retro-2002-brazil",
+    championId: "retro-2002-brazil",
+    teams: {
+      "retro-2002-brazil": { name: "Brazil" },
+      "retro-2002-germany": { name: "Germany" },
+    },
+    rounds: [[{
+      id: "ko-final",
+      homeId: "retro-2002-brazil",
+      awayId: "retro-2002-germany",
+      result: { winnerId: "retro-2002-brazil", revealed: true },
+    }]],
+  }];
+  ${functionSourceFrom(appSource, "savedRetroAchievementTournamentStates")}
+  globalThis.__savedAchievement = savedRetroAchievementTournamentStates()[0];
+`, historyContext);
+
+assert.equal(
+  completedRetroChampion(JSON.parse(JSON.stringify(historyContext.__savedAchievement))),
+  "Brazil",
+  "A saved, revealed Brazil 2002 final must retain enough proof to recover its achievement after reload.",
+);
+assert.match(
+  challengeSource,
+  /getRetroAchievementTournamentStates\?\.\(\)[\s\S]*?Promise\.all\(savedTournaments\.map\(\(tournament\) => trackRetroTournament\(tournament\)\)\)/,
+  "Opening retro achievements must retry the saved completed tournament before loading progress.",
+);
+assert.match(
+  challengeSource,
+  /"United States":\s*"USA"/,
+  "The 2002 United States achievement must reuse the USA team flag.",
+);
+
 console.log("Retro achievement finalist-loss regression checks passed.");

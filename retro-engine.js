@@ -98,6 +98,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     "takashiinui": 2,
   });
   const PENALTY_TAKERS_BY_YEAR = Object.freeze({
+    2002: Object.fromEntries(Object.entries(typeof RETRO_2002_SQUADS !== "undefined" ? RETRO_2002_SQUADS : {})
+      .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2006: Object.fromEntries(Object.entries(typeof RETRO_2006_SQUADS !== "undefined" ? RETRO_2006_SQUADS : {})
       .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2010: Object.fromEntries(Object.entries(typeof RETRO_2010_SQUADS !== "undefined" ? RETRO_2010_SQUADS : {})
@@ -197,6 +199,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function squadsForYear(year) {
+    if (Number(year) === 2002) return typeof RETRO_2002_SQUADS !== "undefined" ? RETRO_2002_SQUADS : {};
     if (Number(year) === 2006) return typeof RETRO_2006_SQUADS !== "undefined" ? RETRO_2006_SQUADS : {};
     if (Number(year) === 2010) return typeof RETRO_2010_SQUADS !== "undefined" ? RETRO_2010_SQUADS : {};
     if (Number(year) === 2014) return typeof RETRO_2014_SQUADS !== "undefined" ? RETRO_2014_SQUADS : {};
@@ -208,6 +211,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function groupScheduleForYear(year) {
+    if (Number(year) === 2002) return RETRO_2002_GROUP_SCHEDULE;
     if (Number(year) === 2006) return RETRO_2006_GROUP_SCHEDULE;
     if (Number(year) === 2010) return RETRO_2010_GROUP_SCHEDULE;
     if (Number(year) === 2014) return RETRO_2014_GROUP_SCHEDULE;
@@ -219,6 +223,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function knockoutScheduleForYear(year) {
+    if (Number(year) === 2002) return RETRO_2002_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2006) return RETRO_2006_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2010) return RETRO_2010_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2014) return RETRO_2014_KNOCKOUT_SCHEDULE;
@@ -289,7 +294,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   function historicalGoals(yearOrPlayer, maybePlayer) {
     const year = maybePlayer ? Number(yearOrPlayer) : 2014;
     const player = maybePlayer || yearOrPlayer;
-    if (year === 2022 && Number.isFinite(Number(player?.worldCupGoals))) {
+    if ([2002, 2022].includes(year) && Number.isFinite(Number(player?.worldCupGoals))) {
       return Number(player.worldCupGoals);
     }
     if (year === 2016 && Number.isFinite(Number(player?.euroGoals))) {
@@ -651,10 +656,15 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       const table = groupStandings(tournament, group);
       return [[`${group}1`, table[0].name], [`${group}2`, table[1].name]];
     }));
-    const pairings = [
-      ["A1", "B2"], ["C1", "D2"], ["E1", "F2"], ["G1", "H2"],
-      ["B1", "A2"], ["D1", "C2"], ["F1", "E2"], ["H1", "G2"],
-    ];
+    const pairings = Number(tournament.year) === 2002
+      ? [
+          ["A1", "F2"], ["C1", "H2"], ["E1", "B2"], ["G1", "D2"],
+          ["B1", "E2"], ["D1", "G2"], ["F1", "A2"], ["H1", "C2"],
+        ]
+      : [
+          ["A1", "B2"], ["C1", "D2"], ["E1", "F2"], ["G1", "H2"],
+          ["B1", "A2"], ["D1", "C2"], ["F1", "E2"], ["H1", "G2"],
+        ];
     tournament.knockoutRounds = [{
       name: ROUND_NAMES[0],
       matches: pairings.map(([homeKey, awayKey], index) => {
@@ -897,7 +907,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function createTournament({ year = 2014, seed = Date.now(), managedTeam = null } = {}) {
-    if (![2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
+    if (![2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
       throw new Error("That retro tournament is not playable yet.");
     }
     return {
@@ -963,7 +973,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     return Boolean(
       tournament
       && tournament.version === VERSION
-      && [2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)
+      && [2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)
       && Array.isArray(tournament.groupMatches)
       && tournament.groupMatches.length === expectedGroupMatches
       && RETRO_WORLD_CUPS[tournament.year]?.teams.length === expectedTeams

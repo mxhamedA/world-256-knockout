@@ -157,13 +157,37 @@ assert.equal(substituteHighlight.actions.findLast((action) => action.type === "s
 
 const countryLabelResult = {
   ...penaltyResult,
-  homeEvents: [{ minute: 41, scorer: "Home", goalType: "openPlay", type: "goal" }],
+  homeEvents: [{ minute: 41, scorer: "Home", assist: "Home Player 4", goalType: "openPlay", type: "goal" }],
 };
 const countryLabelGoal = createFor(countryLabelResult, 551209).highlights.find((highlight) => highlight.event?.type === "goal");
 assert.notEqual(countryLabelGoal.event.scorer, "Home", "A country/team label must never be presented as the goalscorer.");
+assert.notEqual(countryLabelGoal.event.metadata.assist, "Home Player 4", "A country/team label must never be presented as the assister.");
+assert.ok(
+  countryLabelGoal.actions.every((action) => !String(action.commentary || "").includes("Home Player")),
+  "Country-based placeholder labels must not leak into goal-sequence commentary.",
+);
 assert.ok(
   countryLabelGoal.actions.some((action) => action.actor?.name === countryLabelGoal.event.scorer),
   "A repaired goalscorer must remain attached to the authoritative goal sequence.",
+);
+
+const malformedCountryProfiles = profiles("home", 86).map((profile, index) => ({
+  ...profile,
+  name: index % 2 === 0 ? "Home" : `Home Player ${index + 1}`,
+}));
+const malformedCountryPresentation = context.__createHighlights({
+  seed: 775102,
+  home,
+  away,
+  homeProfiles: malformedCountryProfiles,
+  awayProfiles: profiles("away", 82),
+  homeTactic: "balanced",
+  awayTactic: "balanced",
+  result: { ...penaltyResult, homeEvents: [], homeGoals: 0, regulationHome: 0 },
+});
+assert.ok(
+  malformedCountryPresentation.home.players.every((player) => player.name !== "Home" && !player.name.startsWith("Home Player")),
+  "Country-based lineup placeholders must be repaired before routine commentary is generated.",
 );
 
 const rapidGoalResult = {

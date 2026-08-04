@@ -478,10 +478,14 @@
       - (Number(away.simulationRatings?.defence) || away.rating);
     const awayAttackEdge = (Number(away.simulationRatings?.attack) || away.rating)
       - (Number(home.simulationRatings?.defence) || home.rating);
-    const formSwing = (rng() - 0.5) * (knockout ? 0.18 : 0.30);
-    const homeRatingWeight = knockout ? 0.041 : 0.027;
-    const awayRatingWeight = knockout ? 0.037 : 0.024;
-    const lineWeight = knockout ? 0.010 : 0.008;
+    // League-phase matches use the same clear quality separation players see
+    // in the managed-match engine. Eight fixtures are still a small sample, so
+    // keep enough form variance for upsets without letting it routinely erase
+    // a double-digit squad-rating gap.
+    const formSwing = (rng() - 0.5) * 0.18;
+    const homeRatingWeight = knockout ? 0.041 : 0.052;
+    const awayRatingWeight = knockout ? 0.037 : 0.047;
+    const lineWeight = knockout ? 0.010 : 0.013;
     const homeExpected = clamp(1.34 + difference * homeRatingWeight + homeAttackEdge * lineWeight + (neutral ? 0 : 0.18) + formSwing, 0.22, 3.55);
     const awayExpected = clamp(1.18 - difference * awayRatingWeight + awayAttackEdge * lineWeight - formSwing * 0.68, 0.18, 3.3);
     return temperExtremeScore({

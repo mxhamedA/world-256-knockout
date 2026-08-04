@@ -8,21 +8,21 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const css = fs.readFileSync(path.join(root, "clean.css"), "utf8");
 const challenge = fs.readFileSync(path.join(root, "challenge.js"), "utf8");
 
-for (const year of [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026]) {
+for (const year of [256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026]) {
   assert.match(html, new RegExp(`data-achievement-year="${year}"`, "g"), `${year} needs a tab in both achievement views.`);
 }
 assert.match(html, /data-achievement-year="ucl"/g, "UCL needs a tab in both achievement views.");
 
 assert.match(css, /#achievementsScreen\[data-achievement-theme\]/,
   "The shared base achievement theme is missing.");
-for (const year of [256, 2006, 2010, 2016, 2018, 2022, 2026]) {
+for (const year of [256, 2002, 2006, 2010, 2016, 2018, 2022, 2026]) {
   assert.match(css, new RegExp(`data-achievement-theme="${year}"`), `${year} needs an achievement theme override.`);
 }
 assert.match(css, /#achievementsScreen\[data-achievement-theme="ucl"\][\s\S]*#f2c94c/, "UCL needs a dark-blue/gold achievement theme.");
 
-assert.match(css, /grid-template-columns:\s*repeat\(8,\s*minmax\(0,\s*1fr\)\)/,
-  "All eight achievement tabs must stay in one responsive row.");
-assert.match(challenge, /\[256,\s*2006,\s*2010,\s*2014,\s*2016,\s*2018,\s*2022,\s*2026\]/,
+assert.match(css, /grid-template-columns:\s*repeat\(9,\s*minmax\(0,\s*1fr\)\)/,
+  "All nine tournament achievement tabs must stay in one responsive row.");
+assert.match(challenge, /\[256,\s*2002,\s*2006,\s*2010,\s*2014,\s*2016,\s*2018,\s*2022,\s*2026\]/,
   "Every competition must participate in achievement loading.");
 assert.match(css, /@media \(max-width: 520px\)[\s\S]*achievement-year-tabs button[\s\S]*font-size:\s*10px/,
   "The single-row tabs need a compact mobile treatment.");

@@ -703,7 +703,7 @@ assert.equal(
     + uclCeljeTop24.payload.unlockedTeam.points,
 );
 assert.equal(achievementBoard.payload.currentUser.rank, 1);
-assert.equal(achievementBoard.payload.totalAchievements, 547);
+assert.equal(achievementBoard.payload.totalAchievements, 579);
 
 const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
 assert.equal(publicAchievementBoard.response.status, 200);
@@ -792,6 +792,20 @@ assert.equal(
 assert.equal(
   sqlite.prepare("SELECT COUNT(*) AS total FROM retro_2006_attempts WHERE account_id = (SELECT id FROM accounts WHERE username = ?)").get(username).total,
   33,
+);
+
+const retro2002BrazilWin = await request("/achievements/retro-2002", {
+  method: "POST",
+  body: { seed: 2002063001, teamName: "Brazil", phase: "complete", champion: "Brazil" },
+});
+assert.equal(retro2002BrazilWin.response.status, 200);
+assert.equal(retro2002BrazilWin.payload.countryUnlocked, true);
+assert.equal(retro2002BrazilWin.payload.unlockedTeam.teamName, "Brazil");
+assert.equal(retro2002BrazilWin.payload.unlockedTeam.won, true);
+assert.equal(retro2002BrazilWin.payload.achievement.id, "retro-2002-world-tour");
+assert.equal(
+  sqlite.prepare("SELECT won FROM retro_2002_attempts WHERE account_id = (SELECT id FROM accounts WHERE username = ?) AND seed = ? AND team_name = 'Brazil'").get(username, 2002063001).won,
+  1,
 );
 
 sqlite.close();

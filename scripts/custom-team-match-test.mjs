@@ -21,6 +21,13 @@ assert.match(app, /function customPlayersWithValidStartingXI\(players\)/);
 assert.match(app, /Choose exactly 11 players for the starting XI/);
 assert.match(app, /\["goalkeeping", "GK"\]/);
 assert.match(app, /function customFlagDataUrl\(file\)/);
+assert.match(app, /CUSTOM_TEAM_FLAG_DATABASE_NAME = "world-256-custom-team-flags"/);
+assert.match(app, /function openCustomTeamFlagDatabase\(\)/);
+assert.match(app, /async function writeCustomTeamFlagAsset\(teamId, dataUrl\)/);
+assert.match(app, /async function hydrateCustomTeamFlagAssets\(\)/);
+assert.match(app, /const \{ customFlag, \.\.\.metadata \} = team/,
+  "Local custom-team metadata must not keep image data after IndexedDB is ready.");
+assert.match(app, /await deleteCustomTeamFlagAsset\(team\.id\)/);
 assert.match(app, /CUSTOM_TEAM_IMAGE_INPUT_MAX_BYTES = 25_000_000/);
 assert.match(app, /function compressedCustomFlagDataUrl\(sourceCanvas\)/);
 assert.match(app, /dataUrl\.length <= CUSTOM_TEAM_IMAGE_DATA_URL_TARGET/);

@@ -90,6 +90,22 @@ assert.match(
   /liveMatch\.result\.engineVersion !== 2[\s\S]*liveMatch\.result = null/,
   "A stale hidden result must be invalidated when the pre-match strategy changes.",
 );
+const managedRetroBoostSource = functionSource("managedRetroTacticalBoost");
+assert.match(
+  managedRetroBoostSource,
+  /Number\(retroTournament\.year\) === 2002/,
+  "Korea/Japan 2002 should receive its managed-team baseline assistance.",
+);
+assert.match(
+  managedRetroBoostSource,
+  /managementAttack = isKoreaJapan2002 \? 0\.025 : 0/,
+  "The Korea/Japan 2002 management attack boost should remain modest and bounded.",
+);
+assert.match(
+  managedRetroBoostSource,
+  /managementDefence = isKoreaJapan2002 \? 0\.015 : 0/,
+  "The Korea/Japan 2002 management defence boost should remain modest and bounded.",
+);
 assert.match(html, /app\.js\?v=[a-z0-9-]+/);
 
 console.log("Tactical causality, feedback, and stale-result checks passed.");

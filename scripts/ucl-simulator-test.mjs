@@ -599,7 +599,7 @@ assert.equal(madridPlayers.find((player) => player.name === "Thiago Pitarch")?.s
 assert.equal(madridPlayers.find((player) => player.name === "Thiago Pitarch")?.selectionEligible, false, "Thiago Pitarch must be excluded from senior UCL match selection.");
 assert.match(appSource, /state\?\.uclSeason \|\| team\.uclClub/, "UCL match selection must retain the installed UCL squad instead of replacing it with the global roster.");
 assert.match(appSource, /ucl-lineup-rotation[\s\S]*?rotationTarget[\s\S]*?replacementPool/, "UCL match lineups must rotate zero to two position-compatible players.");
-assert.match(engineSource, /homeAttackEdge[\s\S]*?homeRatingWeight = knockout \? 0\.041 : 0\.027[\s\S]*?awayAttackEdge/, "UCL score simulation must retain league-phase variance while weighting strength more heavily in knockouts.");
+assert.match(engineSource, /homeAttackEdge[\s\S]*?homeRatingWeight = knockout \? 0\.041 : 0\.052[\s\S]*?awayAttackEdge/, "UCL score simulation must preserve realistic squad separation in both league and knockout matches.");
 assert.match(engineSource, /function knockoutStrength[\s\S]*?squadDepth[\s\S]*?experience[\s\S]*?function knockoutWinProbability[\s\S]*?penaltyEdge/, "UCL knockout deciders must account for squad strength, depth, experience, and penalty quality.");
 assert.match(engineSource, /function temperExtremeScore[\s\S]*?keepChance[\s\S]*?softenedCeiling/, "UCL simulations must soften six-goal and seven-goal team scorelines without removing them entirely.");
 assert.match(appSource, /if \(state\?\.uclSeason\)[\s\S]{0,900}ucl-high-score-keep[\s\S]{0,500}ucl-six-goal-ceiling/, "Managed UCL matches must use the same restrained high-score tail.");
@@ -649,6 +649,11 @@ let contenderChampions = 0;
 let repeatedOutsiderChampions = 0;
 let sixGoalTeamScores = 0;
 let sevenGoalTeamScores = 0;
+const realismMinnows = new Set(["agf-aarhus", "slovan-bratislava", "nk-celje"]);
+let minnowLeagueEntries = 0;
+let minnowTop24Finishes = 0;
+let arsenalBottomFourFinishes = 0;
+let arsenalLastPlaceFinishes = 0;
 for (let sample = 1; sample <= 240; sample += 1) {
   const realismSeason = engine.createSeason(null, 930000 + sample);
   for (let matchday = 0; matchday < 8; matchday += 1) {
@@ -658,6 +663,16 @@ for (let sample = 1; sample <= 240; sample += 1) {
       sevenGoalTeamScores += Number(Math.max(match.result.home, match.result.away) >= 7);
     });
   }
+  engine.leagueTable(realismSeason).forEach((row) => {
+    if (realismMinnows.has(row.team.id)) {
+      minnowLeagueEntries += 1;
+      minnowTop24Finishes += Number(row.position <= 24);
+    }
+    if (row.team.id === "arsenal") {
+      arsenalBottomFourFinishes += Number(row.position >= 33);
+      arsenalLastPlaceFinishes += Number(row.position === 36);
+    }
+  });
   realismRounds.forEach((roundKey) => {
     engine.completeKnockoutRound(realismSeason, roundKey);
     realismSeason.knockout.rounds[roundKey].ties.forEach((tie) => tie.result.legs.forEach((leg) => {
@@ -670,6 +685,9 @@ for (let sample = 1; sample <= 240; sample += 1) {
 }
 assert.ok(contenderChampions >= 192, "Established contenders must win at least 80% of the complete deterministic UCL sample.");
 assert.ok(repeatedOutsiderChampions <= 12, "Leipzig and Porto must not collectively exceed 5% of the deterministic realism sample.");
+assert.ok(minnowTop24Finishes / minnowLeagueEntries <= 0.27, "Aarhus, Slovan, and Celje must not routinely survive the neutral league phase.");
+assert.ok(arsenalBottomFourFinishes <= 2, "Arsenal must remain exceptionally unlikely to finish in the bottom four.");
+assert.equal(arsenalLastPlaceFinishes, 0, "Arsenal must not finish last in the deterministic UCL realism sample.");
 assert.ok(sixGoalTeamScores <= 180, "A club scoring six or more must remain below 0.4% of the UCL realism sample.");
 assert.ok(sevenGoalTeamScores <= 18, "Seven-goal club performances must remain exceptional in the UCL realism sample.");
 

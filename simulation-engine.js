@@ -890,6 +890,19 @@ function createPossessionSide(team, profiles, side, tacticKey) {
           : null;
       })
     : buildPossessionLineup(team, availableProfiles, formation);
+  const validReserveNames = availableProfiles
+    .map((profile) => String(profile?.name || "").trim())
+    .filter((name) => !teamLabelUsedAsPlayerName(team, name));
+  const usedNames = new Set(lineup
+    .filter((profile) => profile && !teamLabelUsedAsPlayerName(team, profile.name))
+    .map((profile) => profile.name));
+  const commentarySafeLineup = lineup.map((profile, slotIndex) => {
+    if (!profile || !teamLabelUsedAsPlayerName(team, profile.name)) return profile;
+    const replacement = validReserveNames.find((name) => !usedNames.has(name));
+    const name = replacement || `Player ${slotIndex + 1}`;
+    usedNames.add(name);
+    return { ...profile, name };
+  });
   return {
     id: team.id,
     side,
@@ -897,7 +910,7 @@ function createPossessionSide(team, profiles, side, tacticKey) {
     tacticKey,
     formation,
     rating: teamSimulationRatings(team),
-    players: lineup.flatMap((profile, slotIndex) => {
+    players: commentarySafeLineup.flatMap((profile, slotIndex) => {
       if (!profile || missingSlotIndexes.has(slotIndex)) return [];
       const point = possessionPoint(side, POSSESSION_FORMATIONS[formation][slotIndex]);
       return {
@@ -1861,17 +1874,22 @@ function highlightActionImportance(action) {
   return "silent";
 }
 
-function resolvedHighlightPlayerName(side, rawName, salt = "") {
+function teamLabelUsedAsPlayerName(side, rawName) {
   const normalized = String(rawName || "").replace(/\s*\(OG\)\s*$/i, "").trim();
   const teamName = String(side?.name || "").trim();
   const normalizedKey = normalized.toLocaleLowerCase();
   const teamKey = teamName.toLocaleLowerCase();
-  const teamLabelUsedAsPlayer = !normalized
+  return !normalized
     || normalizedKey === teamKey
     || normalizedKey === `${teamKey} player`
     || normalizedKey.startsWith(`${teamKey} player `);
-  if (!teamLabelUsedAsPlayer) return normalized;
-  const outfield = (side?.players || []).filter((player) => player.position !== "GK");
+}
+
+function resolvedHighlightPlayerName(side, rawName, salt = "", excludedNames = []) {
+  const normalized = String(rawName || "").replace(/\s*\(OG\)\s*$/i, "").trim();
+  if (!teamLabelUsedAsPlayerName(side, normalized)) return normalized;
+  const excluded = new Set(excludedNames.filter(Boolean));
+  const outfield = (side?.players || []).filter((player) => player.position !== "GK" && !excluded.has(player.name));
   const candidates = outfield.length ? outfield : (side?.players || []);
   if (!candidates.length) return "A player";
   return candidates[possessionHash(`${side.id}:${salt}:commentary-player`) % candidates.length].name;
@@ -2003,6 +2021,14 @@ function createMatchHighlightPresentation(options) {
       `${seed}:${descriptorIndex}:${descriptor.minute}`,
     );
     const resolvedScorer = ownGoal ? `${resolvedActor} (OG)` : resolvedActor;
+    const resolvedAssist = descriptor.event?.assist
+      ? resolvedHighlightPlayerName(
+        eventTeam,
+        descriptor.event.assist,
+        `${seed}:${descriptorIndex}:${descriptor.minute}:assist`,
+        [resolvedActor],
+      )
+      : null;
     const scorerProfile = actorTeam.players.find((player) => player.name === resolvedActor);
 
     descriptor.scoreBefore = Object.freeze(scoreBefore);
@@ -2013,6 +2039,7 @@ function createMatchHighlightPresentation(options) {
         ...descriptor.event,
         player: resolvedScorer,
         scorer: resolvedScorer,
+        assist: resolvedAssist,
         id: `${seed}:${descriptorIndex}:${descriptor.event.type}:${descriptor.minute}:${eventSide}`,
         sequence: descriptor.sequence + 99,
         minute: descriptor.minute,
@@ -2027,7 +2054,7 @@ function createMatchHighlightPresentation(options) {
         phase: matchEventPhase(descriptor.minute),
         metadata: {
           scorer: resolvedScorer,
-          assist: descriptor.event.assist || null,
+          assist: resolvedAssist,
           goalType: descriptor.event.goalType || null,
           ownGoal,
           ownGoalBy: ownGoal ? resolvedActor : null,

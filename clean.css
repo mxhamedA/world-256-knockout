@@ -5628,41 +5628,41 @@ body.retro-mode-active.retro-2018-active {
 }
 
 /* Brazil 2014: deep green watercolor cards and rounded tournament controls. */
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs,
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-lineup {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs,
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-lineup {
   border-radius: 14px;
   box-shadow: 0 12px 28px rgba(36, 109, 75, 0.14);
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs {
   overflow: hidden;
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-workspace :is(button, select, b, i, em, small, strong) {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-workspace :is(button, select, b, i, em, small, strong) {
   font-family: "Trebuchet MS", Arial, sans-serif;
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs button {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs button {
   color: #d5e8d8;
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs button.active,
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs button[aria-selected="true"] > span {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs button.active,
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs button[aria-selected="true"] > span {
   color: #07130d;
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-hint,
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-player small,
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-player em {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-hint,
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-player small,
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-player em {
   color: #c9dfcf;
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-pitch-player {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-pitch-player {
   color: #fff;
   text-shadow: 0 2px 3px #071b14, 0 0 8px #071b14, 0 0 12px #071b14;
 }
 
-.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-pitch-player span {
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-pitch-player span {
   font-size: 10px;
 }
 
@@ -11107,6 +11107,67 @@ body.standard-mode-active #newsButton {
     linear-gradient(145deg, #153a8c 0%, #0b2259 54%, #06132f 100%);
 }
 
+[data-open-tournament-theme][hidden],
+.tournament-theme-setting[hidden] {
+  display: none !important;
+}
+
+.feature-announcement-2002 .feature-announcement-accent {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 210, 31, 0.24), transparent 34%),
+    linear-gradient(145deg, #0a5c96 0%, #073d70 48%, #061d3d 100%);
+}
+
+.feature-announcement-2002-visual {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  gap: 8px;
+}
+
+.feature-announcement-2002-visual img {
+  position: relative;
+  z-index: 1;
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.3));
+}
+
+.feature-announcement-2002-visual small {
+  position: relative;
+  z-index: 1;
+  color: #ffd21f;
+  font: 850 10px "DM Mono", monospace;
+  letter-spacing: 0.18em;
+}
+
+.feature-announcement-2002-glow {
+  position: absolute;
+  width: 136px;
+  height: 136px;
+  border: 1px solid rgba(255, 210, 31, 0.2);
+  border-radius: 50%;
+  box-shadow: 0 0 54px rgba(239, 35, 60, 0.24);
+}
+
+.feature-announcement-2002 .feature-announcement-label {
+  color: #ef233c;
+}
+
+.feature-announcement-2002 .feature-announcement-button {
+  color: #fff;
+  background: #d71935;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feature-announcement-2002 .feature-announcement-button:hover {
+    background: #ef233c;
+  }
+}
+
 .feature-announcement-ucl-visual {
   position: relative;
   z-index: 1;
@@ -14042,7 +14103,7 @@ body.standard-mode-active #newsButton {
   }
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-modal {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-modal {
   border: 0;
   border-top: 5px solid #f6d12a;
   border-radius: 6px;
@@ -14053,15 +14114,15 @@ body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retr
   box-shadow: 10px 10px 0 rgba(0, 74, 174, .3), 0 28px 70px rgba(0, 31, 22, .58);
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-modal::backdrop {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-modal::backdrop {
   background: rgba(0, 35, 25, .78);
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-modal p {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-modal p {
   color: #dcebb5;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-action {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .achievement-unlock-action {
   color: #06412e;
   background: #f6d12a;
 }
@@ -16688,70 +16749,70 @@ body.retro-mode-active .modal .icon-button {
   background: rgba(4, 91, 56, 0.88);
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option,
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-message {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option,
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-message {
   border-color: rgba(246, 209, 42, .24);
   color: #fffce8;
   background: rgba(0, 67, 45, .82);
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-list {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-list {
   border-color: rgba(246, 209, 42, 0.32);
   background: rgba(0, 55, 40, 0.9);
   box-shadow: inset 0 0 0 1px rgba(255, 252, 232, 0.04);
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-row strong {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-row strong {
   color: #fffce8;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-row small {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-row small {
   color: #c7d9b9;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-button {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-button {
   border-color: rgba(246, 209, 42, 0.42);
   color: #06412e;
   background: #f6d12a;
   box-shadow: 0 3px 0 #d79b0b;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-button.is-listening {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-keybind-button.is-listening {
   color: #fffce8;
   background: #0046ad;
   box-shadow: 0 3px 0 #003078;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option:hover {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option:hover {
   background: rgba(8, 91, 55, .96);
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option-copy strong,
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-message {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option-copy strong,
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-message {
   color: #fffce8;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option-copy small,
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-note,
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-message::placeholder,
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-status {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option-copy small,
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-note,
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-message::placeholder,
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-status {
   color: #c7d9b9;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-switch {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-switch {
   background: #07523b;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option[aria-pressed="true"] .settings-switch {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option[aria-pressed="true"] .settings-switch {
   background: #f6d12a;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option-icon {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .settings-option-icon {
   color: #f6d12a;
   background: #07523b;
 }
 
-body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-submit {
+body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .bug-report-submit {
   color: #06412e;
   background: #f6d12a;
 }
@@ -29947,7 +30008,7 @@ body.custom-tournament-mode-active #mainContent {
 
   .custom-team-count-control {
     grid-auto-flow: column;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-columns: repeat(9, minmax(0, 1fr));
     width: 100%;
   }
 
@@ -30575,7 +30636,7 @@ body.standard-mode-active .retro-third-place-playoff {
 .achievement-year-tabs,
 #retroAchievementsModal[data-achievement-theme] .achievement-year-tabs {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   width: 100%;
   gap: 4px;
   padding: 4px;
@@ -33024,10 +33085,10 @@ body.retro-mode-active.retro-euro-2016-active :is(
 }
 
 .mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"] .retro-start-button:disabled {
-  border-color: #ffd21f;
-  color: #073766;
-  background: #ffd21f;
-  box-shadow: 0 6px 0 #d59a16;
+  border-color: #ef233c;
+  color: #ffffff;
+  background: #ef233c;
+  box-shadow: 0 6px 0 #a80f24;
   cursor: not-allowed;
   opacity: 1;
 }
@@ -38045,14 +38106,14 @@ html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-com
 
 /* Brazil 2014 keeps its watercolor stadium artwork in both appearances. Other
    retro editions have their own explicit year classes and remain untouched. */
-html.light-mode body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) {
+html.light-mode body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) {
   color: #f7f4cf;
   background:
     linear-gradient(rgba(3, 73, 42, 0.22), rgba(0, 49, 38, 0.48)),
     url("./assets/retro-2014/brazil-watercolor-stadium.webp") center top / cover fixed no-repeat;
 }
 
-html.light-mode body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) .retro-tournament-screen {
+html.light-mode body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) .retro-tournament-screen {
   color: #f7f4cf;
   background:
     linear-gradient(180deg, rgba(2, 60, 35, 0.16), rgba(0, 43, 34, 0.54)),
@@ -38149,4 +38210,1405 @@ html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):n
   color: #101010 !important;
   font-weight: 900 !important;
   opacity: 1 !important;
+}
+
+/* Shared selector and custom-builder access for the persistent match-screen
+   edition themes. The real competition skins load last in match-themes.css. */
+.tournament-theme-setting {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid #253244;
+  border-radius: 10px;
+  background: #0d141f;
+}
+
+.tournament-theme-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tournament-theme-heading > div {
+  display: grid;
+  gap: 4px;
+}
+
+.tournament-theme-heading strong {
+  color: #f1f4f9;
+  font-size: 15px;
+}
+
+.tournament-theme-heading small {
+  color: #8792a5;
+  font-size: 10px;
+}
+
+.tournament-theme-heading > span {
+  padding: 5px 8px;
+  border: 1px solid #34445d;
+  border-radius: 999px;
+  color: #b9c9e4;
+  background: #151e2c;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tournament-theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.tournament-theme-options > button {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #2b3749;
+  border-radius: 8px;
+  color: #dce4ef;
+  text-align: left;
+  background: #121a26;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.tournament-theme-options > button:active {
+  transform: scale(.98);
+}
+
+.tournament-theme-options > button.is-selected {
+  border-color: #789cff;
+  background: #17243b;
+  box-shadow: inset 0 0 0 1px rgba(120, 156, 255, .2);
+}
+
+.tournament-theme-options > button > span:nth-child(2) {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tournament-theme-options strong {
+  color: #f3f6fb;
+  font-size: 12px;
+}
+
+.tournament-theme-options small {
+  overflow: hidden;
+  color: #8290a5;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tournament-theme-preview {
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 7px;
+}
+
+.tournament-theme-preview::before,
+.tournament-theme-preview::after,
+.tournament-theme-preview i {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+}
+
+.tournament-theme-preview-wc {
+  background: linear-gradient(145deg, #0b1424, #1b3a78);
+}
+
+.tournament-theme-preview-wc::before {
+  inset: 7px 8px 17px 8px;
+  background: #79a1ff;
+}
+
+.tournament-theme-preview-wc::after {
+  right: -5px;
+  bottom: -7px;
+  width: 26px;
+  height: 26px;
+  border: 5px solid rgba(244, 163, 64, .85);
+}
+
+.tournament-theme-preview-euros {
+  background: linear-gradient(145deg, #07162c, #241454 70%, #3b176c);
+}
+
+.tournament-theme-preview-euros::before {
+  top: -7px;
+  right: -6px;
+  width: 27px;
+  height: 27px;
+  border: 5px solid #53e6ff;
+}
+
+.tournament-theme-preview-euros::after {
+  bottom: 6px;
+  left: 6px;
+  width: 17px;
+  height: 5px;
+  background: #a884ff;
+  transform: rotate(-28deg);
+}
+
+.tournament-theme-check {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  place-items: center;
+  border: 1px solid #46536a;
+  border-radius: 50%;
+  color: transparent;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.tournament-theme-options > button.is-selected .tournament-theme-check {
+  border-color: #789cff;
+  color: #07101d;
+  background: #789cff;
+}
+
+.custom-header-navigation {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.custom-theme-settings-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #34445d;
+  border-radius: 6px;
+  color: #b9c7da;
+  background: #101925;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.custom-theme-settings-button:active {
+  transform: scale(.97);
+}
+
+.custom-theme-settings-icon {
+  width: 11px;
+  height: 11px;
+  border: 3px solid #79a1ff;
+  border-radius: 50%;
+  box-shadow: 6px -4px 0 -4px #f4a340;
+}
+
+html.light-mode .tournament-theme-setting {
+  border-color: #d8e0ea;
+  background: #f7f9fc;
+}
+
+html.light-mode .tournament-theme-heading strong,
+html.light-mode .tournament-theme-options strong {
+  color: #172033;
+}
+
+html.light-mode .tournament-theme-heading small,
+html.light-mode .tournament-theme-options small {
+  color: #627088;
+}
+
+html.light-mode .tournament-theme-options > button {
+  border-color: #d4dce8;
+  color: #172033;
+  background: #fff;
+}
+
+html.light-mode .tournament-theme-options > button.is-selected {
+  border-color: #426fda;
+  background: #edf3ff;
+}
+
+html[data-tournament-theme="euros"] {
+  --bg: #07162c;
+  --panel: #0b1c36;
+  --panel-2: #102442;
+  --panel-3: #172c50;
+  --line: #243b5c;
+  --line-strong: #36557e;
+  --lime: #53e6ff;
+  --lime-dark: #27bdd9;
+  --orange: #a884ff;
+}
+
+html[data-tournament-theme="euros"].light-mode {
+  --panel-3: #e8f9ff;
+  --lime: #087f9b;
+  --lime-dark: #05677e;
+  --orange: #7045c2;
+}
+
+html[data-tournament-theme="euros"] body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) {
+  background:
+    radial-gradient(circle at 82% 2%, rgba(101, 67, 210, .2), transparent 30rem),
+    radial-gradient(circle at 26% 18%, rgba(38, 201, 231, .12), transparent 27rem),
+    var(--bg);
+}
+
+html[data-tournament-theme="euros"] body::before {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(90deg, #53e6ff, #7662e8 52%, #c15be7);
+}
+
+html[data-tournament-theme="euros"] :is(
+  .progress-track span,
+  .settings-option.is-enabled .settings-switch,
+  .custom-preset-actions .custom-header-start,
+  .custom-segmented button.active,
+  .custom-builder-tabs button.active
+) {
+  background: #53e6ff;
+}
+
+html[data-tournament-theme="euros"] :is(
+  .primary-button,
+  .play-button,
+  .simulate-button
+) {
+  border-color: transparent;
+  color: #061327;
+  background: linear-gradient(135deg, #53e6ff, #93eeff);
+}
+
+html[data-tournament-theme="euros"] :is(
+  .segmented button.active,
+  .round-nav button.active,
+  .custom-segmented button.active,
+  .custom-builder-tabs button.active
+) {
+  border-color: rgba(83, 230, 255, .55);
+  color: #061327;
+}
+
+html[data-tournament-theme="euros"] .brand-mark {
+  border-color: rgba(83, 230, 255, .55);
+  background: linear-gradient(145deg, #102947, #241454);
+  box-shadow: inset 0 0 24px rgba(83, 230, 255, .1);
+}
+
+html[data-tournament-theme="euros"] .custom-theme-settings-icon {
+  border-color: #53e6ff;
+  box-shadow: 6px -4px 0 -4px #a884ff;
+}
+
+html[data-tournament-theme="euros"] .tournament-theme-options > button.is-selected {
+  border-color: #53e6ff;
+  background: #122945;
+  box-shadow: inset 0 0 0 1px rgba(83, 230, 255, .16);
+}
+
+html[data-tournament-theme="euros"] .tournament-theme-options > button.is-selected .tournament-theme-check {
+  border-color: #53e6ff;
+  color: #061327;
+  background: #53e6ff;
+}
+
+html[data-tournament-theme="euros"] .tournament-theme-heading > span {
+  border-color: rgba(83, 230, 255, .35);
+  color: #8cefff;
+  background: rgba(83, 230, 255, .08);
+}
+
+html[data-tournament-theme="euros"].light-mode .tournament-theme-options > button.is-selected {
+  border-color: #078aa7;
+  background: #e8f9ff;
+}
+
+html[data-tournament-theme="euros"].light-mode .tournament-theme-heading > span {
+  color: #08758d;
+  background: #e8f9ff;
+}
+
+html[data-tournament-theme="euros"].light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .segmented button.active,
+  .custom-segmented button.active,
+  .custom-builder-tabs button.active,
+  .round-nav button.active
+) {
+  border-color: #087f9b !important;
+  color: #fff !important;
+  background: #087f9b !important;
+  box-shadow: none !important;
+}
+
+html[data-tournament-theme="euros"].light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .primary-button:not(:disabled),
+  .play-button:not(:disabled),
+  .simulate-button:not(:disabled)
+) {
+  border-color: transparent !important;
+  color: #061327 !important;
+  background: linear-gradient(135deg, #35cce8, #82e9fb) !important;
+}
+
+html[data-tournament-theme="euros"].light-mode body.custom-tournament-mode-active .custom-preset-actions .custom-header-start:disabled {
+  border-color: #c7d4df;
+  color: #6e7c8f;
+  background: #e5ebf1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tournament-theme-options > button:hover {
+    border-color: #64799a;
+    background: #172131;
+  }
+
+  .custom-theme-settings-button:hover {
+    border-color: #79a1ff;
+    color: #fff;
+    background: #15233a;
+  }
+
+  html[data-tournament-theme="euros"] .tournament-theme-options > button:hover,
+  html[data-tournament-theme="euros"] .custom-theme-settings-button:hover {
+    border-color: #53e6ff;
+  }
+
+  html.light-mode .tournament-theme-options > button:hover {
+    border-color: #9eb0c9;
+    background: #f7f9fc;
+  }
+}
+
+@media (max-width: 700px) {
+  .custom-header-navigation {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .custom-header-navigation .custom-back-button {
+    min-height: 38px;
+  }
+
+  .custom-theme-settings-button {
+    width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .custom-theme-settings-button [data-tournament-theme-label] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .tournament-theme-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Korea/Japan 2002 — isolated early-2000s broadcast treatment. */
+body.retro-mode-active.retro-2002-active {
+  --r02-navy: #03152f;
+  --r02-blue: #075891;
+  --r02-blue-bright: #0872b8;
+  --r02-red: #ef233c;
+  --r02-red-deep: #a80f24;
+  --r02-green: #00a66a;
+  --r02-gold: #ffd21f;
+  --r02-cream: #fff8e7;
+  --r02-line: rgba(255, 210, 31, .44);
+  --q22-ink: #03152f;
+  --q22-ink-soft: #05274d;
+  --q22-panel: rgba(3, 31, 65, .96);
+  --q22-panel-soft: rgba(5, 63, 112, .94);
+  --q22-wine: #ef233c;
+  --q22-wine-bright: #ff4055;
+  --q22-line: rgba(255, 210, 31, .48);
+  --q22-line-soft: rgba(199, 220, 239, .24);
+  --q22-cream: #eaf4fb;
+  --q22-white: #fff8e7;
+  --q22-gold: #ffd21f;
+  --q22-gold-soft: #ffe169;
+  color: var(--r02-cream);
+  background: #03152f url("./assets/retro-2002/korea-japan-2002-bg-desktop.png") center top / cover fixed no-repeat;
+}
+
+body.retro-mode-active.retro-2002-active::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 13, 31, .1), rgba(2, 13, 31, .56));
+  content: "";
+  pointer-events: none;
+}
+
+.retro-2002-active .retro-tournament-screen,
+.retro-2002-active #mainContent {
+  color: var(--r02-cream);
+  background: transparent;
+}
+
+.retro-2002-active .retro-screen-header {
+  border-bottom: 3px solid var(--r02-gold);
+  color: #fff;
+  background:
+    linear-gradient(100deg, rgba(0, 166, 106, .96) 0 8px, transparent 8px),
+    linear-gradient(105deg, #062f5b 0 48%, #075891 48% 75%, #062c58 75%);
+  box-shadow: 0 8px 26px rgba(0, 7, 22, .48), inset 0 -1px rgba(255, 255, 255, .2);
+}
+
+.retro-2002-active .retro-screen-header::after {
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  width: min(34vw, 420px);
+  height: 7px;
+  background: var(--r02-red);
+  content: "";
+  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.retro-2002-active :is(.retro-screen-action, .retro-screen-restart, .retro-back-to-modes, .saved-tournament-delete-button) {
+  border: 1px solid rgba(255, 255, 255, .32);
+  border-radius: 2px;
+  color: #fff;
+  background: linear-gradient(180deg, #0a69a8, #064373);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .2), 0 3px 0 #021a36;
+  transition: transform 150ms cubic-bezier(.23, 1, .32, 1), background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.retro-2002-active :is(.retro-screen-action, .retro-screen-restart, .retro-back-to-modes, .saved-tournament-delete-button):active {
+  transform: translateY(2px) scale(.97);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .16), 0 1px 0 #021a36;
+}
+
+.retro-2002-active #retroAchievementsButton,
+.retro-2002-active .saved-tournament-delete-button {
+  border-color: rgba(255, 255, 255, .5);
+  background: linear-gradient(180deg, #ff4055, var(--r02-red-deep));
+}
+
+.retro-2002-active .retro-screen-brand .brand-mark {
+  border-color: var(--r02-gold);
+  color: var(--r02-navy);
+  background: var(--r02-gold);
+  box-shadow: 4px 4px 0 var(--r02-red-deep);
+}
+
+.retro-2002-active .retro-tournament-main {
+  width: min(1460px, calc(100% - 28px));
+  padding-top: 40px;
+}
+
+.retro-2002-active .retro-tournament-heading {
+  display: none;
+}
+
+.retro-2002-active .retro-tournament-heading > * {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.retro-2002-active .retro-tournament-heading::after {
+  position: absolute;
+  right: -35px;
+  bottom: -36px;
+  width: 180px;
+  height: 100px;
+  border: 14px solid rgba(255, 210, 31, .2);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(-12deg);
+}
+
+.retro-2002-active .retro-tournament-heading > div:first-child > span,
+.retro-2002-active .retro-section-heading span,
+.retro-2002-active .section-kicker {
+  color: var(--r02-gold);
+  font-family: "DM Mono", monospace;
+  letter-spacing: .12em;
+}
+
+.retro-2002-active .retro-tournament-heading h1,
+.retro-2002-active .retro-section-heading h2,
+.retro-2002-active #mainContent :is(.stage-round, .panel-heading h2, .match-analysis-heading) {
+  color: #fff;
+  text-shadow: 2px 2px 0 #052444;
+}
+
+.retro-2002-active .retro-tournament-progress {
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 2px;
+  background: rgba(2, 22, 47, .7);
+}
+
+.retro-2002-active .retro-tournament-progress::before,
+.retro-2002-active .retro-tournament-progress span,
+.retro-2002-active #progressBar {
+  background: linear-gradient(90deg, var(--r02-red), #ff4458 72%, var(--r02-gold));
+  box-shadow: 0 0 14px rgba(239, 35, 60, .42);
+}
+
+.retro-2002-active .retro-view-tabs {
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 2px;
+  background: rgba(2, 24, 51, .86);
+}
+
+.retro-2002-active .retro-view-tabs button {
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 1px;
+  color: #d7e8f5;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  transition: transform 150ms cubic-bezier(.23, 1, .32, 1), color 150ms ease, background-color 150ms ease;
+}
+
+.retro-2002-active .retro-view-tabs button.active,
+.retro-2002-active .retro-view-tabs button[aria-selected="true"] {
+  border-color: #ff6677;
+  color: #fff;
+  background: linear-gradient(180deg, #ff3e54, #b41027);
+  box-shadow: inset 0 -3px var(--r02-gold);
+}
+
+.retro-2002-active .retro-view-tabs button:active {
+  transform: scale(.97);
+}
+
+.retro-2002-active :is(
+  .retro-group-table,
+  .retro-fixture,
+  .retro-match-stage,
+  .retro-golden-boot,
+  .retro-third-place-card,
+  .retro-squad-view,
+  .retro-squad-position-group,
+  .retro-lineups-view,
+  .retro-lineup-side,
+  .retro-manager-lineup,
+  .retro-live-ratings-side,
+  #mainContent .match-stage,
+  #mainContent .round-board,
+  #mainContent .panel,
+  #mainContent .match-analysis,
+  #mainContent .standard-match-tactics,
+  #mainContent .story-card
+) {
+  border: 1px solid rgba(255, 210, 31, .36);
+  border-radius: 3px;
+  color: #edf7ff;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .04), transparent 38%),
+    linear-gradient(145deg, rgba(5, 78, 130, .97), rgba(2, 29, 62, .98));
+  box-shadow: 6px 7px 0 rgba(1, 13, 31, .5), 0 18px 42px rgba(0, 5, 18, .22);
+}
+
+.retro-2002-active :is(.retro-group-table h2, .retro-lineup-side header, .retro-manager-lineup > header, .retro-live-ratings-side > header, .retro-golden-boot header, #mainContent .panel-heading) {
+  border-bottom: 2px solid var(--r02-gold);
+  color: #fff;
+  background: linear-gradient(100deg, var(--r02-red) 0 9px, #064b82 9px 76%, #05335e 76%);
+}
+
+.retro-2002-active :is(.retro-table-head, .retro-live-table-head) {
+  color: var(--r02-gold);
+  background: #031f43;
+}
+
+.retro-2002-active :is(.retro-table-row, .retro-fixture, .retro-squad-row, .retro-live-table-row, .retro-live-rating-row) {
+  border-color: rgba(195, 220, 240, .2);
+  color: #e9f4fb;
+  background: rgba(4, 47, 88, .75);
+}
+
+.retro-2002-active :is(.retro-table-row, .retro-fixture, .retro-squad-row, .retro-live-table-row):nth-child(even) {
+  background: rgba(5, 84, 137, .5);
+}
+
+.retro-2002-active .retro-table-row.qualified {
+  box-shadow: inset 4px 0 var(--r02-green);
+}
+
+.retro-2002-active .retro-table-row.qualified::before {
+  background: var(--r02-green);
+}
+
+.retro-2002-active :is(.retro-fixture.is-selected, .retro-fixture.active) {
+  border-color: var(--r02-red);
+  background: linear-gradient(100deg, rgba(239, 35, 60, .88), rgba(5, 70, 119, .95) 54%);
+  box-shadow: inset 0 -3px var(--r02-gold), 6px 7px 0 rgba(1, 13, 31, .5);
+}
+
+.retro-2002-active :is(
+  #mainContent .primary-button,
+  #mainContent .play-button,
+  #mainContent .secondary-button,
+  #mainContent .live-control,
+  #mainContent .standard-tactic-buttons button.active,
+  .retro-stage-actions button,
+  .retro-screen-action,
+  .retro-match-stage button
+) {
+  border: 1px solid #ff7080;
+  border-radius: 2px;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718, inset 0 1px rgba(255, 255, 255, .22);
+  transition: transform 150ms cubic-bezier(.23, 1, .32, 1), box-shadow 150ms ease, filter 150ms ease;
+}
+
+.retro-2002-active :is(
+  #mainContent .primary-button,
+  #mainContent .play-button,
+  #mainContent .secondary-button,
+  #mainContent .live-control,
+  #mainContent .standard-tactic-buttons button,
+  .retro-stage-actions button,
+  .retro-match-stage button
+):active {
+  transform: translateY(2px) scale(.97);
+  box-shadow: 0 1px 0 #6d0718;
+}
+
+.retro-2002-active :is(select, .team-filter-search, #teamFilterControl .team-filter-chip, [data-retro-manager-formation]) {
+  border: 1px solid rgba(255, 210, 31, .58);
+  border-radius: 2px;
+  color: #fff;
+  background-color: #053f70;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .12);
+}
+
+.retro-2002-active select:focus,
+.retro-2002-active .team-filter-search:focus-within {
+  outline: 2px solid var(--r02-red);
+  outline-offset: 2px;
+}
+
+.retro-2002-active select option {
+  color: #fff;
+  background: #042f59;
+}
+
+.retro-2002-active #teamFilterControl .team-filter-chip.active {
+  border-color: #ff7080;
+  background: var(--r02-red);
+  box-shadow: inset 0 -3px var(--r02-gold);
+}
+
+.retro-2002-active .fixture-grid.bracket-mode,
+.retro-2002-active .retro-third-place-playoff {
+  border-color: rgba(255, 210, 31, .38);
+  background: rgba(2, 20, 44, .72);
+}
+
+.retro-2002-active .fixture-grid.bracket-mode::before {
+  background: linear-gradient(90deg, transparent, var(--r02-gold), transparent);
+}
+
+.retro-2002-active :is(.bracket-line, .bracket-connector, .knockout-bar, .round-progress-bar) {
+  border-color: var(--r02-gold);
+}
+
+.retro-2002-active :is(.bracket-line, .knockout-bar, .round-progress-bar) {
+  background-color: var(--r02-gold);
+}
+
+.retro-2002-active .retro-manager-pitch {
+  border-color: rgba(255, 248, 231, .64);
+  background:
+    linear-gradient(90deg, transparent 49.75%, rgba(255, 255, 255, .48) 49.75% 50.25%, transparent 50.25%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 12.5%, rgba(0, 0, 0, .035) 12.5% 25%),
+    #087153;
+}
+
+.retro-2002-active :is(.retro-lineup-workspace, .retro-match-lineups-panel, .retro-manager-layout) {
+  color: #edf7ff;
+  background: rgba(2, 27, 57, .78);
+}
+
+.retro-2002-active .retro-pitch-player b {
+  border-color: #fff8e7;
+  background: var(--r02-red);
+}
+
+.retro-2002-active .retro-pitch-player i,
+.retro-2002-active .retro-formation-badge {
+  color: #03152f;
+  background: var(--r02-gold);
+}
+
+.retro-2002-active #mainContent #snapshotButton,
+.retro-2002-active #mainContent .snapshot-trigger {
+  border: 2px solid var(--r02-gold);
+  color: #fff;
+  background: linear-gradient(145deg, var(--r02-red), var(--r02-red-deep));
+  box-shadow: 0 4px 0 #6d0718, 0 0 0 3px rgba(7, 88, 145, .7);
+}
+
+.retro-2002-active #mainContent #snapshotButton svg circle {
+  fill: var(--r02-gold);
+  stroke: var(--r02-navy);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal form, .snapshot-modal form, .retro-achievements-modal, .achievement-unlock-modal) {
+  border: 1px solid rgba(255, 210, 31, .48);
+  border-top: 5px solid var(--r02-red);
+  border-radius: 3px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(0, 166, 106, .18), transparent 30%),
+    linear-gradient(145deg, #075891, #031b3b 72%);
+  box-shadow: 0 28px 72px rgba(0, 7, 24, .62);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal, .snapshot-modal, .retro-achievements-modal, .achievement-unlock-modal)::backdrop {
+  background: rgba(1, 10, 25, .8);
+  backdrop-filter: blur(5px);
+}
+
+body.retro-mode-active.retro-2002-active .snapshot-preview {
+  border: 2px solid var(--r02-gold);
+  border-radius: 2px;
+  background: #02152f;
+  box-shadow: 6px 6px 0 rgba(168, 15, 36, .54);
+}
+
+body.retro-mode-active.retro-2002-active .snapshot-actions button,
+body.retro-mode-active.retro-2002-active .modal button {
+  border-radius: 2px;
+}
+
+#achievementsScreen[data-achievement-theme="2002"],
+#retroAchievementsModal[data-achievement-theme="2002"] {
+  --achievement-accent: #ef233c;
+  --achievement-accent-text: #fff;
+  --achievement-surface: #075891;
+  --achievement-surface-deep: #031b3b;
+  --achievement-tab-surface: rgba(2, 24, 52, .84);
+  --achievement-card: rgba(5, 70, 119, .88);
+  --achievement-card-complete: #a80f24;
+  --achievement-copy: #edf7ff;
+  --achievement-muted: #bfd4e5;
+  --achievement-points: #ffd21f;
+  --achievement-shadow: rgba(0, 11, 31, .5);
+}
+
+#retroAchievementsModal[data-achievement-theme="2002"] {
+  background:
+    radial-gradient(circle at 100% 0, rgba(239, 35, 60, .32), transparent 34%),
+    radial-gradient(circle at 0 100%, rgba(255, 210, 31, .12), transparent 36%),
+    linear-gradient(145deg, var(--achievement-surface), var(--achievement-surface-deep));
+}
+
+.achievement-unlock-banner[data-achievement-theme="2002"],
+.achievement-unlock-modal[data-achievement-theme="2002"] {
+  border-top-color: #ef233c;
+  color: #fff;
+  background:
+    radial-gradient(circle at 96% 0, rgba(239, 35, 60, .24), transparent 36%),
+    linear-gradient(135deg, #075891, #031b3b);
+}
+
+/* Korea/Japan 2002: keep shared Brazil 2014 surfaces out of this mode. */
+body.retro-mode-active.retro-2002-active #mainContent {
+  --surface: rgba(3, 31, 67, .96);
+  --surface-raised: rgba(5, 70, 119, .96);
+  --line: rgba(255, 210, 31, .34);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+) {
+  border-color: rgba(255, 210, 31, .42);
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .035), transparent 38%),
+    linear-gradient(145deg, rgba(5, 78, 130, .98), rgba(2, 29, 62, .99));
+  box-shadow: 7px 7px 0 rgba(1, 13, 31, .52), 0 18px 42px rgba(0, 5, 18, .24);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(.match-stage, .round-board, .match-analysis)::before {
+  inset: -4px 0 auto;
+  height: 4px;
+  background: var(--r02-gold);
+  clip-path: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .fixture,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture.placeholder {
+  border: 1px solid rgba(190, 218, 240, .22);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(135deg, #064c82, #032b58);
+  box-shadow: inset 4px 0 #075891;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .fixture:hover,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.selected,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture:hover,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture.selected {
+  border-color: rgba(255, 210, 31, .58);
+  background: linear-gradient(105deg, #075891, #043765 62%, #071f42);
+  box-shadow: inset 6px 0 var(--r02-red), 6px 6px 0 rgba(1, 13, 31, .48);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .fixture-card-head,
+body.retro-mode-active.retro-2002-active #mainContent .fixture :is(small, .retro-standard-fixture-meta) {
+  color: #d7e8f5;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .bracket-heads {
+  border-radius: 0;
+  color: var(--r02-gold);
+  background: #042f59;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl :is(
+  .team-filter-search,
+  .team-filter-chip,
+  .search-result-popover
+) {
+  border: 1px solid rgba(255, 210, 31, .62);
+  border-radius: 0;
+  color: #fff;
+  background: #042f59;
+  box-shadow: 4px 4px 0 rgba(1, 13, 31, .48);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .team-filter-search:focus-within {
+  border-color: #ff7080;
+  background: #053f70;
+  box-shadow: 0 0 0 2px var(--r02-red), 4px 4px 0 rgba(1, 13, 31, .48);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .team-filter-search input,
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .search-result {
+  color: #fff;
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .search-result {
+  border-bottom-color: rgba(190, 218, 240, .2);
+  border-radius: 0;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .search-result:hover {
+  color: #fff;
+  background: #075891;
+  box-shadow: inset 5px 0 var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl :is(.team-filter-check, .team-filter-clear) {
+  border-radius: 0;
+  color: #fff;
+  background: var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .round-board .board-actions > button {
+  border: 1px solid rgba(255, 210, 31, .46);
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .round-board .board-actions > #simulateRoundButton {
+  border-color: #ff7080;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-commentary-feed {
+  border-color: rgba(255, 210, 31, .44);
+  border-radius: 0;
+  color: #edf7ff;
+  background: #031f43;
+  box-shadow: inset 5px 0 var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-commentary-feed .commentary-line span,
+body.retro-mode-active.retro-2002-active #mainContent .match-commentary-feed.is-major .commentary-line span {
+  color: #edf7ff;
+}
+
+body.retro-mode-active.retro-2002-active .retro-saved-tournament-actions {
+  min-height: 42px;
+  margin-bottom: 20px;
+}
+
+body.retro-mode-active.retro-2002-active .retro-back-to-modes {
+  position: static;
+  border-color: rgba(255, 210, 31, .52);
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active .retro-back-to-modes:hover {
+  border-color: #ff7080;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active .retro-view-tabs button:not(.active),
+body.retro-mode-active.retro-2002-active .retro-view-tabs button:not(.active):hover {
+  border-color: rgba(255, 210, 31, .35);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active .retro-view-tabs button.active,
+body.retro-mode-active.retro-2002-active .retro-view-tabs button.active:hover {
+  border-color: #ff7080;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: inset 0 -3px var(--r02-gold), 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-match-tactics {
+  border-radius: 0;
+  background: linear-gradient(145deg, #064c82, #031f43);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons {
+  border-color: rgba(255, 210, 31, .34);
+  border-radius: 0;
+  background: #021d3e;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button:not(.active),
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button:not(.active):hover {
+  border: 1px solid rgba(190, 218, 240, .22);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button.active,
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button.active:hover {
+  border: 1px solid #ff7080;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .bracket-connector {
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .bracket-connector::before,
+body.retro-mode-active.retro-2002-active #mainContent .bracket-connector::after,
+body.retro-mode-active.retro-2002-active #mainContent .bracket-fixture[data-connects="true"]::after {
+  border-color: rgba(255, 210, 31, .78);
+  border-width: 1px;
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage {
+  border: 1px solid rgba(255, 210, 31, .54);
+  border-top: 6px solid var(--r02-red);
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(239, 35, 60, .2), transparent 30%),
+    linear-gradient(145deg, rgba(7, 88, 145, .98), rgba(3, 21, 47, .99) 72%);
+  box-shadow: 10px 10px 0 rgba(168, 15, 36, .42), 0 24px 54px rgba(0, 7, 24, .42);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage .trophy,
+body.retro-mode-active.retro-2002-active #mainContent .champion-section-label,
+body.retro-mode-active.retro-2002-active #mainContent .champion-place > b,
+body.retro-mode-active.retro-2002-active #mainContent .champion-award-copy > span {
+  color: var(--r02-gold);
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage h2 {
+  color: #fff;
+  text-shadow: 3px 3px 0 #03152f;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage p {
+  color: #d7e8f5;
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage .flag-orb {
+  border: 2px solid var(--r02-gold);
+  border-radius: 0;
+  background: #031f43;
+  box-shadow: 7px 7px 0 var(--r02-red-deep);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(.champion-place, .champion-award) {
+  border: 1px solid rgba(190, 218, 240, .24);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(135deg, #064c82, #032b58);
+  box-shadow: inset 4px 0 #075891;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-place.place-1 {
+  border-color: rgba(255, 210, 31, .7);
+  background: linear-gradient(105deg, rgba(239, 35, 60, .92), #073f70 72%);
+  box-shadow: inset 0 4px var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(.champion-place strong, .champion-award-copy strong) {
+  color: #fff;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .champion-place small,
+  .champion-award-copy small,
+  .champion-award-copy small b
+) {
+  color: #d7e8f5;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-award-mark {
+  border-radius: 0;
+  color: var(--r02-gold);
+  background: #031f43;
+  box-shadow: inset 0 0 0 1px rgba(255, 210, 31, .38);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-actions button {
+  border-radius: 0;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #championSaveTournament {
+  border: 1px solid rgba(255, 210, 31, .48);
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(#championTeamJourney, #championReset) {
+  border: 1px solid #ff7080;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+/* Korea/Japan 2002 penalty shootout: rectangular broadcast panels, circular targets. */
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage {
+  border: 1px solid rgba(255, 210, 31, .52);
+  border-top: 5px solid var(--r02-red);
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(239, 35, 60, .16), transparent 30%),
+    linear-gradient(145deg, #075891, #031b3b 74%);
+  box-shadow: 8px 8px 0 rgba(168, 15, 36, .38), 0 22px 44px rgba(0, 7, 24, .42);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head {
+  color: var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head strong {
+  color: #fff;
+  text-shadow: 2px 2px 0 #03152f;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head strong i,
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head strong b.score-pop {
+  color: var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-penalty-overlay {
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    radial-gradient(circle at 50% 110%, rgba(7, 114, 184, .35), transparent 48%),
+    linear-gradient(145deg, rgba(7, 88, 145, .98), rgba(3, 21, 47, .99));
+  box-shadow: inset 0 4px 0 var(--r02-red), inset 0 -3px 0 var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-penalty-decision strong {
+  color: var(--r02-gold);
+  text-shadow: 2px 2px 0 #03152f;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-penalty-decision small {
+  color: #edf7ff;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) {
+  border: 1px solid rgba(190, 218, 240, .38);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, rgba(3, 21, 47, .08), rgba(3, 21, 47, .52)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 42px, transparent 42px 84px),
+    linear-gradient(135deg, #0872b8, #04315f);
+  box-shadow: inset 0 0 46px rgba(1, 13, 31, .32);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)::before {
+  border-color: rgba(255, 248, 231, .34);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-goal {
+  border-color: #fff8e7;
+  filter: drop-shadow(0 2px 0 rgba(3, 21, 47, .7));
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-net {
+  opacity: .38;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 13px, #fff8e7 13px 14px),
+    repeating-linear-gradient(90deg, transparent 0 18px, #fff8e7 18px 19px);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-keeper {
+  color: var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-taker {
+  color: #edf7ff;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-targets,
+  .standard-penalty-targets
+) button {
+  border: 2px solid #ff7080;
+  border-radius: 50%;
+  background: rgba(239, 35, 60, .2);
+  box-shadow: 0 0 0 5px rgba(255, 210, 31, .1);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-targets,
+  .standard-penalty-targets
+) button:hover {
+  border-color: var(--r02-gold);
+  border-radius: 50%;
+  background: rgba(255, 210, 31, .3);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)[data-result="goal"] {
+  box-shadow: inset 0 0 0 999px rgba(255, 210, 31, .07);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)[data-result="save"],
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)[data-result="wide"] {
+  box-shadow: inset 0 0 0 999px rgba(239, 35, 60, .08);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-call strong,
+body.retro-mode-active.retro-2002-active #mainContent .penalty-ledgers span {
+  color: #fff;
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-call span {
+  color: #bfd4e5;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-mark {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(190, 218, 240, .58);
+  border-radius: 50%;
+  background: #031f43;
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-mark.goal {
+  border-color: var(--r02-gold);
+  border-radius: 50%;
+  background: var(--r02-gold);
+  box-shadow: 0 0 0 3px rgba(255, 210, 31, .14);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-mark.miss {
+  border-color: #ff7080;
+  border-radius: 50%;
+  background: var(--r02-red);
+  box-shadow: 0 0 0 3px rgba(239, 35, 60, .12);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal, .confirm-modal form, .snapshot-modal, .snapshot-modal form) {
+  border: 1px solid rgba(255, 210, 31, .5);
+  border-top: 5px solid var(--r02-red);
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(145deg, #075891, #031b3b 72%);
+  box-shadow: 9px 9px 0 rgba(168, 15, 36, .42), 0 28px 72px rgba(0, 7, 24, .62);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal, .snapshot-modal) :is(button, .icon-button),
+body.retro-mode-active.retro-2002-active .snapshot-actions button {
+  border: 1px solid #ff7080;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active .confirm-modal .secondary-button {
+  border-color: rgba(255, 210, 31, .52);
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active .snapshot-preview {
+  border-radius: 0;
+  background: #02152f;
+}
+
+body.retro-mode-active.retro-2002-active .retro-table-row.qualified {
+  box-shadow: inset 4px 0 var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active .retro-table-row.qualified::before {
+  background: var(--r02-red);
+}
+
+.achievement-unlock-banner[data-achievement-theme="2002"] .achievement-unlock-banner-mark,
+.achievement-unlock-modal[data-achievement-theme="2002"] .achievement-unlock-mark,
+.achievement-unlock-modal[data-achievement-theme="2002"] .achievement-unlock-action {
+  color: #03152f;
+  background: #ffd21f;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .retro-2002-active :is(.retro-screen-action, .retro-screen-restart, .retro-view-tabs button, .retro-stage-actions button, #mainContent button):hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+}
+
+@media (max-width: 760px) {
+  body.retro-mode-active.retro-2002-active {
+    background-image: url("./assets/retro-2002/korea-japan-2002-bg-portrait.png");
+    background-position: center top;
+    background-size: cover;
+    background-attachment: scroll;
+  }
+
+  .retro-2002-active .retro-screen-header {
+    background: linear-gradient(105deg, #062f5b 0 60%, #075891 60%);
+  }
+
+  .retro-2002-active .retro-tournament-main {
+    width: min(100% - 16px, 1460px);
+    padding-top: 24px;
+  }
+
+  .retro-2002-active .retro-tournament-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    box-shadow: 5px 6px 0 rgba(1, 14, 34, .48);
+  }
+
+  .retro-2002-active .retro-tournament-heading > div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .retro-2002-active .retro-tournament-heading h1 {
+    max-width: 100%;
+    font-size: clamp(28px, 10vw, 40px);
+    line-height: 1.02;
+    white-space: normal;
+  }
+
+  .retro-2002-active .retro-tournament-progress {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .retro-2002-active :is(.retro-group-table, .retro-fixture, .retro-squad-position-group, .retro-lineup-side) {
+    box-shadow: 4px 5px 0 rgba(1, 13, 31, .46);
+  }
+
+  .retro-2002-active .retro-view-tabs button {
+    min-height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retro-2002-active :is(button, .retro-fixture, .retro-pitch-player) {
+    scroll-behavior: auto;
+    transition: color 120ms ease, background-color 120ms ease, opacity 120ms ease;
+  }
+
+  .retro-2002-active :is(button, .retro-fixture, .retro-pitch-player):active {
+    transform: none;
+  }
 }

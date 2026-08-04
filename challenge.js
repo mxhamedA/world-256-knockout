@@ -206,7 +206,7 @@
   function setProfileRoute(active = true, replace = false) {
     if (active && !profileRouteActive()) {
       const currentPath = `${window.location.pathname}${window.location.search}`;
-      profileReturnPath = /^\/(?:retro-(?:06|10|14|18|22)-world-cup|retro-euro-2016)(?:\?|$)/.test(currentPath) ? currentPath : "/";
+      profileReturnPath = /^\/(?:retro-(?:02|06|10|14|18|22)-world-cup|retro-euro-2016)(?:\?|$)/.test(currentPath) ? currentPath : "/";
     }
     const path = active ? "/profile" : profileReturnPath;
     window.history[replace ? "replaceState" : "pushState"]({ appMode: active ? "profile" : "home" }, "", path);
@@ -498,6 +498,7 @@
       "Korea Republic": "South Korea",
       "Serbia and Montenegro": "Serbia",
       "Turkey": "T\u00fcrkiye",
+      "United States": "USA",
     };
     const sourceName = historicalAliases[teamName] || teamName;
     const team = (typeof TEAMS !== "undefined" ? TEAMS : []).find((candidate) => candidate.name === sourceName);
@@ -582,7 +583,7 @@
     if (key === "pl" || String(key).toLowerCase() === "pl") return "pl";
     if (key === "ucl" || String(key).toLowerCase() === "ucl") return "ucl";
     const year = Number(key);
-    return [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
+    return [256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
   }
 
   function knockoutObjectiveForTeam(team, teamIndex = -1) {
@@ -611,6 +612,7 @@
     const theme = String(year);
     const labels = {
       256: "256-TEAM KNOCKOUT",
+      2002: "KOREA/JAPAN 2002",
       2006: "GERMANY 2006",
       2010: "SOUTH AFRICA 2010",
       2014: "BRAZIL 2014",
@@ -802,11 +804,17 @@
   }
 
   async function openRetroAchievementsModal(year = 2014) {
-    if (normalizeAchievementKey(year) === "pl") {
+    const achievementKey = normalizeAchievementKey(year);
+    if (Number.isInteger(achievementKey) && achievementKey !== 256) {
+      const savedTournaments = (window.getRetroAchievementTournamentStates?.() || [])
+        .filter((tournament) => Number(tournament?.year) === achievementKey);
+      await Promise.all(savedTournaments.map((tournament) => trackRetroTournament(tournament)));
+    }
+    if (achievementKey === "pl") {
       const savedSeason = window.PremierLeagueSeason?.achievementState?.() || null;
       if (savedSeason) await trackPremierLeagueSeason(savedSeason);
     }
-    if (normalizeAchievementKey(year) === "ucl") {
+    if (achievementKey === "ucl") {
       const savedSeason = window.UclSeason?.achievementState?.() || null;
       if (savedSeason) await trackUclSeason(savedSeason);
     }
@@ -837,7 +845,7 @@
 
   async function trackRetroTournament(tournament) {
     const year = Number(tournament?.year);
-    if (![2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
+    if (![2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
     const champion = completedRetroChampion(tournament);
     const phase = tournament.phase === "complete" && champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
@@ -1034,7 +1042,7 @@
   }
 
   function renderProfileAchievements() {
-    const years = [256, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"];
+    const years = [256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
@@ -1272,7 +1280,7 @@
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([256, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"].map(async (year) => {
+        await Promise.all([256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"].map(async (year) => {
           try {
             achievementPayloads.set(year, await challengeApi(achievementEndpoint(year)));
           } catch {

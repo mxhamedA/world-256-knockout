@@ -20,6 +20,8 @@ const totals = new Map(engine.TEAM_DATA.map((team) => [team.id, {
   positions: 0,
   top8: 0,
   top24: 0,
+  bottom4: 0,
+  last: 0,
   titles: 0,
 }]));
 let totalLeagueGoals = 0;
@@ -42,6 +44,8 @@ for (let seed = 1; seed <= runs; seed += 1) {
     record.positions += row.position;
     if (row.position <= 8) record.top8 += 1;
     if (row.position <= 24) record.top24 += 1;
+    if (row.position >= 33) record.bottom4 += 1;
+    if (row.position === 36) record.last += 1;
   });
   for (const round of engine.ROUND_CONFIG) {
     engine.ensureKnockoutResults(season, round.key);
@@ -62,6 +66,8 @@ const rows = [...totals.values()]
     avgPosition: average(row.positions, row.entries),
     top8Pct: percent(row.top8, row.entries),
     top24Pct: percent(row.top24, row.entries),
+    bottom4Pct: percent(row.bottom4, row.entries),
+    lastPct: percent(row.last, row.entries),
     titlePct: percent(row.titles, row.entries),
   }))
   .sort((left, right) => right.titlePct - left.titlePct || left.avgPosition - right.avgPosition);

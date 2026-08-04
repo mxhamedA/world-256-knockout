@@ -26,6 +26,16 @@ const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
 const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
 const PL_ASSET_PACK_ID = "pl-26-27";
 const UCL_ASSET_PACK_ID = "ucl-26-27";
+const RETRO_2002_TEAMS = Object.freeze([
+  "France", "Senegal", "Uruguay", "Denmark",
+  "Spain", "Slovenia", "Paraguay", "South Africa",
+  "Brazil", "Turkey", "China", "Costa Rica",
+  "South Korea", "Poland", "United States", "Portugal",
+  "Germany", "Saudi Arabia", "Republic of Ireland", "Cameroon",
+  "Argentina", "Nigeria", "England", "Sweden",
+  "Italy", "Ecuador", "Croatia", "Mexico",
+  "Japan", "Belgium", "Russia", "Tunisia",
+]);
 const RETRO_2006_TEAMS = Object.freeze([
   "Germany", "Costa Rica", "Poland", "Ecuador",
   "England", "Paraguay", "Trinidad and Tobago", "Sweden",
@@ -95,6 +105,12 @@ const RETRO_2026_TEAMS = Object.freeze([
   "Switzerland", "Tunisia", "Türkiye", "Uruguay", "USA", "Uzbekistan",
 ]);
 const RETRO_TEAM_RATINGS = Object.freeze({
+  2002: Object.freeze([
+    90, 77, 76, 81, 86, 72, 78, 72,
+    91, 81, 67, 73, 78, 74, 80, 87,
+    84, 67, 79, 75, 89, 77, 85, 81,
+    87, 74, 78, 82, 76, 77, 75, 70,
+  ]),
   2006: Object.freeze([
     89, 73, 77, 79, 87, 79, 68, 82,
     89, 80, 76, 86, 82, 73, 70, 88,
@@ -137,7 +153,7 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     71, 76, 81, 74, 91, 78, 86, 71, 79, 80, 84, 70,
   ]),
 });
-const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2006, 2010, 2014, 2016, 2018, 2022, 2026]);
+const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
 const UCL_KEY = "ucl";
@@ -1072,6 +1088,16 @@ async function dashboard(request, env) {
 }
 
 function retroAchievementConfig(year) {
+  if (Number(year) === 2002) {
+    return {
+      year: 2002,
+      table: "retro_2002_attempts",
+      seedColumn: "seed",
+      teams: RETRO_2002_TEAMS,
+      id: "retro-2002-world-tour",
+      title: "Korea/Japan 2002 World Tour",
+    };
+  }
   if (Number(year) === 2006) {
     return {
       year: 2006,
@@ -1483,6 +1509,10 @@ async function achievementLeaderboard(request, env) {
       FROM accounts
     `).all(),
     env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 2002 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2002_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
       SELECT account_id, 2006 AS year, team_name, 1 AS champion,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2006_attempts WHERE won = 1 GROUP BY account_id, team_name
@@ -1810,6 +1840,7 @@ async function uclAchievement(request, env, account) {
 
 async function retroAchievement(request, env, account, year) {
   const config = retroAchievementConfig(year);
+  const seedColumn = config.seedColumn || "tournament_seed";
   if (request.method === "GET") {
     return responseJson({ achievement: await retroAchievementProgress(env.CHALLENGE_DB, account, config.year) });
   }
@@ -1828,7 +1859,7 @@ async function retroAchievement(request, env, account, year) {
   const now = Date.now();
   await env.CHALLENGE_DB.prepare(`
     INSERT OR IGNORE INTO ${config.table}
-      (account_id, tournament_seed, team_name, won, started_at)
+      (account_id, ${seedColumn}, team_name, won, started_at)
     VALUES (?, ?, ?, 0, ?)
   `).bind(account.id, seed, teamName, now).run();
 
@@ -1837,7 +1868,7 @@ async function retroAchievement(request, env, account, year) {
     await env.CHALLENGE_DB.prepare(`
       UPDATE ${config.table}
       SET won = MAX(won, ?), completed_at = COALESCE(completed_at, ?)
-      WHERE account_id = ? AND tournament_seed = ? AND team_name = ?
+      WHERE account_id = ? AND ${seedColumn} = ? AND team_name = ?
     `).bind(won, now, account.id, seed, teamName).run();
   }
 
@@ -1983,7 +2014,7 @@ export async function handleChallengeRequest(request, env, url) {
       );
       return await uclAchievement(request, env, achievementAccount);
     }
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2006|2010|2014|2016|2018|2022|2026)$/);
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2002|2006|2010|2014|2016|2018|2022|2026)$/);
     if (retroAchievementMatch) {
       const achievementAccount = await authenticatedAccount(
         request,
