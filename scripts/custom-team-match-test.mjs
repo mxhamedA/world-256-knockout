@@ -21,6 +21,10 @@ assert.match(app, /function customPlayersWithValidStartingXI\(players\)/);
 assert.match(app, /Choose exactly 11 players for the starting XI/);
 assert.match(app, /\["goalkeeping", "GK"\]/);
 assert.match(app, /function customFlagDataUrl\(file\)/);
+assert.match(app, /CUSTOM_TEAM_IMAGE_INPUT_MAX_BYTES = 25_000_000/);
+assert.match(app, /function compressedCustomFlagDataUrl\(sourceCanvas\)/);
+assert.match(app, /dataUrl\.length <= CUSTOM_TEAM_IMAGE_DATA_URL_TARGET/);
+assert.doesNotMatch(app, /file\.size > 5_000_000/);
 assert.match(app, /Crop your team image/);
 assert.match(app, /data-crop-action="apply"/);
 assert.match(app, /data-crop-shape="square"/);
@@ -90,6 +94,9 @@ assert.match(css, /\.custom-match-team-actions button\.is-danger/, "Custom Match
 assert.match(css, /custom-uploaded-flag img[^}]*object-fit: cover/);
 assert.match(css, /custom-team-flag-preview img[^}]*object-fit: cover/);
 assert.match(css, /\.custom-uploaded-flag\s*{[^}]*border-radius:/);
+assert.match(css, /\.custom-uploaded-flag\s*{[^}]*border:\s*0;[^}]*background:\s*transparent;[^}]*box-shadow:\s*none;/,
+  "Uploaded custom flags must not have a gray frame or backing.");
+assert.match(css, /\.custom-team-flag-preview:has\(img\)\s*{[^}]*border-color:\s*transparent/);
 assert.match(css, /\.custom-uploaded-flag\.custom-uploaded-badge\s*{[^}]*aspect-ratio:\s*1/);
 assert.match(css, /\.custom-flag-crop-editor/);
 assert.match(css, /custom-match-team-flag\.pl-club-flag img[\s\S]*object-fit: contain/);

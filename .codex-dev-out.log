@@ -1,0 +1,232 @@
+
+> predev
+> node scripts/generate-legacy-catalog.mjs
+
+Generated Legacy Draft catalog: 10 nations, 87 XIs.
+
+> dev
+> npx wrangler dev --var ONLINE_MODE_ENABLED:true --var LOCAL_DEV_AUTH:true --port 8787
+
+
+ ⛅️ wrangler 4.115.0
+────────────────────
+Using secrets defined in process.env
+Your Worker has access to the following bindings:
+Binding                                                          Resource                      Mode
+env.TOURNAMENT_ROOMS (TournamentRoom)                            Durable Object                local
+env.ONLINE_CAPACITY (OnlineCapacityCoordinator)                  Durable Object                local
+env.PUBLIC_MATCHMAKER (PublicMatchmaker)                         Durable Object                local
+env.CHALLENGE_DB (256teams-accounts)                             D1 Database                   local
+env.ONLINE_ANALYTICS (world_256_online)                          Analytics Engine Dataset      local
+env.ROOM_CREATE_LIMITER (6 requests/60s)                         Rate Limit                    local
+env.ROOM_JOIN_LIMITER (20 requests/60s)                          Rate Limit                    local
+env.ROOM_API_LIMITER (120 requests/60s)                          Rate Limit                    local
+env.ROOM_STATUS_LIMITER (360 requests/60s)                       Rate Limit                    local
+env.BUG_REPORT_LIMITER (5 requests/60s)                          Rate Limit                    local
+env.CHALLENGE_AUTH_LIMITER (10 requests/60s)                     Rate Limit                    local
+env.CHALLENGE_API_LIMITER (120 requests/60s)                     Rate Limit                    local
+env.ASSETS                                                       Assets                        local
+env.ONLINE_MODE_ENABLED ("(hidden)")                             Environment Variable          local
+env.ONLINE_MAX_ACTIVE_MATCHES ("64")                             Environment Variable          local
+env.PALESTINE_CHALLENGE_ENABLED ("true")                         Environment Variable          local
+env.LOCAL_DEV_AUTH ("(hidden)")                                  Environment Variable          local
+
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://127.0.0.1:8787/cdn-cgi/explorer/api
+Useful routes:
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api - OpenAPI schema
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/d1/database - D1 databases
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/local/workers - local Workers and bindings
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/r2/buckets - R2 buckets
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://127.0.0.1:8787/cdn-cgi/explorer/api/workflows - Workflows
+⎔ Starting local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+[wrangler:info] Ready on http://127.0.0.1:8787
+{"type":"worker-request","timestamp":"2026-08-04T12:10:40.812Z","requestId":"962d5884-9510-45f3-98f9-747a12c12fa5","method":"GET","route":"/custom-matches"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:10:40.929Z","requestId":"962d5884-9510-45f3-98f9-747a12c12fa5","method":"GET","route":"/custom-matches","status":200,"elapsedMs":117}
+[wrangler:info] GET /custom-matches 200 OK (139ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:10:52.531Z","requestId":"c2839ac2-642b-4f5a-9d42-4ddcf38d9598","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:10:52.533Z","requestId":"c2839ac2-642b-4f5a-9d42-4ddcf38d9598","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":2}
+[wrangler:info] GET /custom-tournament 200 OK (12ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (18ms)
+[wrangler:info] GET /styles.css 304 Not Modified (66ms)
+[wrangler:info] GET /clean.css 304 Not Modified (131ms)
+[wrangler:info] GET /premier-league.css 304 Not Modified (157ms)
+[wrangler:info] GET /ucl-simulator.css 304 Not Modified (184ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (203ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (222ms)
+[wrangler:info] GET /assets/ucl-starball-white.png 304 Not Modified (82ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (164ms)
+[wrangler:info] GET /assets/prem-logo.webp 304 Not Modified (179ms)
+[wrangler:info] GET /data.js 304 Not Modified (203ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (222ms)
+[wrangler:info] GET /retro-2006-squads.js 304 Not Modified (266ms)
+[wrangler:info] GET /retro-2006-schedule.js 304 Not Modified (272ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (193ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (249ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (220ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (216ms)
+[wrangler:info] GET /retro-euro-2016-squads.js 304 Not Modified (194ms)
+[wrangler:info] GET /retro-euro-2016-schedule.js 304 Not Modified (193ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (210ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (186ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (221ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (226ms)
+[wrangler:info] GET /retro-2026-squads.js 304 Not Modified (248ms)
+[wrangler:info] GET /retro-2026-schedule.js 304 Not Modified (256ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (252ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (263ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (231ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (220ms)
+[wrangler:info] GET /premier-league-squads.generated.js 304 Not Modified (174ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:10:53.721Z","requestId":"a687cca2-08f2-4139-bc2d-1bf380d64403","method":"GET","route":"/premier-league-fc26-ratings.js"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:10:53.723Z","requestId":"a687cca2-08f2-4139-bc2d-1bf380d64403","method":"GET","route":"/premier-league-fc26-ratings.js","status":404,"elapsedMs":2}
+[wrangler:info] GET /premier-league-fc26-ratings.js 404 Not Found (157ms)
+[wrangler:info] GET /premier-league-data.js 304 Not Modified (145ms)
+[wrangler:info] GET /ucl-draw-solver.js 304 Not Modified (139ms)
+[wrangler:info] GET /ucl-engine.js 304 Not Modified (129ms)
+[wrangler:info] GET /ucl-squads.generated.js 304 Not Modified (148ms)
+[wrangler:info] GET /ucl-squad-calibration.js 304 Not Modified (146ms)
+[wrangler:info] GET /app.js 200 OK (398ms)
+[wrangler:info] GET /premier-league.js 304 Not Modified (405ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (380ms)
+[wrangler:info] GET /ucl-simulator.js 304 Not Modified (422ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (410ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (5ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (23ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:10:54.485Z","requestId":"78959a45-7523-436e-a1a7-1a8cb83df3c8","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:10:54.537Z","requestId":"78959a45-7523-436e-a1a7-1a8cb83df3c8","method":"GET","route":"/api/challenge","status":200,"elapsedMs":52}
+[wrangler:info] GET /api/challenge 200 OK (57ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:10:54.629Z","requestId":"1cdab109-4586-4963-be13-b30aa74f8a7f","method":"GET","route":"/api/challenge/achievements/leaderboard"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:10:54.685Z","requestId":"1cdab109-4586-4963-be13-b30aa74f8a7f","method":"GET","route":"/api/challenge/achievements/leaderboard","status":500,"elapsedMs":56}
+[wrangler:info] GET /api/challenge/achievements/leaderboard 500 Internal Server Error (62ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:11:08.057Z","requestId":"7355eb9b-0410-4d06-a845-a8c45443b002","method":"GET","route":"/custom-matches"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:11:08.059Z","requestId":"7355eb9b-0410-4d06-a845-a8c45443b002","method":"GET","route":"/custom-matches","status":200,"elapsedMs":2}
+[wrangler:info] GET /custom-matches 200 OK (8ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (4ms)
+[wrangler:info] GET /styles.css 304 Not Modified (7ms)
+[wrangler:info] GET /clean.css 304 Not Modified (8ms)
+[wrangler:info] GET /premier-league.css 304 Not Modified (13ms)
+[wrangler:info] GET /ucl-simulator.css 304 Not Modified (17ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (24ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (13ms)
+[wrangler:info] GET /assets/ucl-starball-white.png 304 Not Modified (15ms)
+[wrangler:info] GET /assets/prem-logo.webp 304 Not Modified (14ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (18ms)
+[wrangler:info] GET /data.js 304 Not Modified (24ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (38ms)
+[wrangler:info] GET /retro-2006-squads.js 304 Not Modified (46ms)
+[wrangler:info] GET /retro-2006-schedule.js 304 Not Modified (44ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (45ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (26ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (32ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (29ms)
+[wrangler:info] GET /retro-euro-2016-squads.js 304 Not Modified (22ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (16ms)
+[wrangler:info] GET /retro-euro-2016-schedule.js 304 Not Modified (30ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (32ms)
+[wrangler:info] GET /retro-2026-schedule.js 304 Not Modified (18ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (33ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (43ms)
+[wrangler:info] GET /retro-2026-squads.js 304 Not Modified (41ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (42ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (40ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 304 Not Modified (31ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (47ms)
+[wrangler:info] GET /premier-league-squads.generated.js 304 Not Modified (45ms)
+[wrangler:info] GET /premier-league-data.js 304 Not Modified (36ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:11:08.330Z","requestId":"9d0cf1da-daf8-4c70-858a-697cad07fb67","method":"GET","route":"/premier-league-fc26-ratings.js"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:11:08.332Z","requestId":"9d0cf1da-daf8-4c70-858a-697cad07fb67","method":"GET","route":"/premier-league-fc26-ratings.js","status":404,"elapsedMs":2}
+[wrangler:info] GET /premier-league-fc26-ratings.js 404 Not Found (44ms)
+[wrangler:info] GET /ucl-draw-solver.js 304 Not Modified (47ms)
+[wrangler:info] GET /ucl-squad-calibration.js 304 Not Modified (9ms)
+[wrangler:info] GET /ucl-squads.generated.js 304 Not Modified (13ms)
+[wrangler:info] GET /ucl-engine.js 304 Not Modified (25ms)
+[wrangler:info] GET /app.js 304 Not Modified (15ms)
+[wrangler:info] GET /premier-league.js 304 Not Modified (8ms)
+[wrangler:info] GET /ucl-simulator.js 304 Not Modified (8ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (8ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (3ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (5ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (8ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:11:08.459Z","requestId":"d702ca70-c07d-4b72-9f30-5770dc088c2e","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:11:08.476Z","requestId":"d702ca70-c07d-4b72-9f30-5770dc088c2e","method":"GET","route":"/api/challenge","status":200,"elapsedMs":17}
+[wrangler:info] GET /api/challenge 200 OK (21ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:11:08.500Z","requestId":"408ebc5d-0663-4a1c-bd11-c8b71d05c34a","method":"GET","route":"/api/challenge/achievements/leaderboard"}
+[wrangler:info] GET /api/challenge/achievements/leaderboard 500 Internal Server Error (26ms)
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:11:08.521Z","requestId":"408ebc5d-0663-4a1c-bd11-c8b71d05c34a","method":"GET","route":"/api/challenge/achievements/leaderboard","status":500,"elapsedMs":21}
+{"type":"worker-request","timestamp":"2026-08-04T12:14:44.130Z","requestId":"7c585893-b0f8-446c-ba13-d818f7e213ca","method":"POST","route":"/api/challenge/achievements/ucl"}
+{"type":"worker-request","timestamp":"2026-08-04T12:14:44.179Z","requestId":"4be09553-6b4d-4bf4-83fb-ac1bdb40e1a1","method":"POST","route":"/api/challenge/achievements/ucl"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:14:44.213Z","requestId":"4be09553-6b4d-4bf4-83fb-ac1bdb40e1a1","method":"POST","route":"/api/challenge/achievements/ucl","status":500,"elapsedMs":34}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:14:44.224Z","requestId":"7c585893-b0f8-446c-ba13-d818f7e213ca","method":"POST","route":"/api/challenge/achievements/ucl","status":500,"elapsedMs":94}
+[wrangler:info] POST /api/challenge/achievements/ucl 500 Internal Server Error (87ms)
+[wrangler:info] POST /api/challenge/achievements/ucl 500 Internal Server Error (103ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+{"type":"worker-request","timestamp":"2026-08-04T12:16:23.064Z","requestId":"d68dd065-dc62-41f0-9a02-33d360e93d8c","method":"GET","route":"/custom-tournament"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:16:23.113Z","requestId":"d68dd065-dc62-41f0-9a02-33d360e93d8c","method":"GET","route":"/custom-tournament","status":200,"elapsedMs":49}
+[wrangler:info] GET /custom-tournament 200 OK (56ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (9ms)
+[wrangler:info] GET /styles.css 304 Not Modified (20ms)
+[wrangler:info] GET /ucl-simulator.css 304 Not Modified (27ms)
+[wrangler:info] GET /clean.css 200 OK (43ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (15ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (58ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (56ms)
+[wrangler:info] GET /premier-league.css 304 Not Modified (108ms)
+[wrangler:info] GET /assets/ucl-starball-white.png 304 Not Modified (55ms)
+[wrangler:info] GET /assets/prem-logo.webp 304 Not Modified (72ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (139ms)
+[wrangler:info] GET /data.js 304 Not Modified (122ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (158ms)
+[wrangler:info] GET /retro-2006-squads.js 304 Not Modified (200ms)
+[wrangler:info] GET /retro-2006-schedule.js 304 Not Modified (211ms)
+[wrangler:info] GET /retro-2010-squads.js 304 Not Modified (271ms)
+[wrangler:info] GET /retro-2010-schedule.js 304 Not Modified (195ms)
+[wrangler:info] GET /retro-2014-squads.js 304 Not Modified (218ms)
+[wrangler:info] GET /retro-2014-schedule.js 304 Not Modified (182ms)
+[wrangler:info] GET /retro-euro-2016-squads.js 304 Not Modified (200ms)
+[wrangler:info] GET /retro-euro-2016-schedule.js 304 Not Modified (162ms)
+[wrangler:info] GET /retro-2018-squads.js 304 Not Modified (182ms)
+[wrangler:info] GET /retro-2018-schedule.js 304 Not Modified (166ms)
+[wrangler:info] GET /retro-2022-squads.js 304 Not Modified (188ms)
+[wrangler:info] GET /retro-2022-schedule.js 304 Not Modified (174ms)
+[wrangler:info] GET /retro-2026-squads.js 304 Not Modified (228ms)
+[wrangler:info] GET /retro-2026-schedule.js 304 Not Modified (216ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (226ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (220ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (242ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (189ms)
+[wrangler:info] GET /premier-league-squads.generated.js 304 Not Modified (193ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:16:24.200Z","requestId":"cefe2ba3-d32c-4bd5-9bf6-1fa961cdb84a","method":"GET","route":"/premier-league-fc26-ratings.js"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:16:24.203Z","requestId":"cefe2ba3-d32c-4bd5-9bf6-1fa961cdb84a","method":"GET","route":"/premier-league-fc26-ratings.js","status":404,"elapsedMs":3}
+[wrangler:info] GET /premier-league-fc26-ratings.js 404 Not Found (159ms)
+[wrangler:info] GET /premier-league-data.js 304 Not Modified (154ms)
+[wrangler:info] GET /ucl-draw-solver.js 304 Not Modified (148ms)
+[wrangler:info] GET /ucl-squads.generated.js 304 Not Modified (143ms)
+[wrangler:info] GET /ucl-engine.js 304 Not Modified (186ms)
+[wrangler:info] GET /ucl-squad-calibration.js 304 Not Modified (168ms)
+[wrangler:info] GET /app.js 304 Not Modified (387ms)
+[wrangler:info] GET /premier-league.js 304 Not Modified (367ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (357ms)
+[wrangler:info] GET /ucl-simulator.js 304 Not Modified (408ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (6ms)
+[wrangler:info] GET /assets/world-cup-2026-logo.png 304 Not Modified (15ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:16:24.957Z","requestId":"3829836c-0e69-4d54-95c3-adeb6208c4e8","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:16:24.971Z","requestId":"3829836c-0e69-4d54-95c3-adeb6208c4e8","method":"GET","route":"/api/challenge","status":200,"elapsedMs":14}
+[wrangler:info] GET /api/challenge 200 OK (18ms)
+{"type":"worker-request","timestamp":"2026-08-04T12:16:25.014Z","requestId":"255be7f5-c606-4abb-bd49-be3d6040946e","method":"GET","route":"/api/challenge/achievements/leaderboard"}
+[wrangler:info] GET /api/challenge/achievements/leaderboard 500 Internal Server Error (75ms)
+{"type":"worker-request-complete","timestamp":"2026-08-04T12:16:25.085Z","requestId":"255be7f5-c606-4abb-bd49-be3d6040946e","method":"GET","route":"/api/challenge/achievements/leaderboard","status":500,"elapsedMs":71}
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready

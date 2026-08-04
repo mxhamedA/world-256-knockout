@@ -36766,10 +36766,10 @@ body.custom-match-mode-active #roundBoard {
 .custom-uploaded-flag {
   box-sizing: border-box;
   overflow: hidden;
-  border: 1px solid rgba(184, 202, 235, .28);
+  border: 0;
   border-radius: 5px;
-  background: #151d2a;
-  box-shadow: 0 2px 7px rgba(0, 0, 0, .22);
+  background: transparent;
+  box-shadow: none;
 }
 
 .custom-uploaded-flag.custom-uploaded-badge {
@@ -36788,6 +36788,12 @@ body.custom-match-mode-active #roundBoard {
 
 .custom-team-flag-preview.is-square {
   aspect-ratio: 1;
+}
+
+.custom-team-flag-preview:has(img) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .custom-flag-crop-editor {
@@ -36975,4 +36981,401 @@ body.custom-match-mode-active #roundBoard {
   .custom-flag-crop-canvas-wrap.is-square { width: min(340px, calc(100% - 32px)); margin-inline: auto; }
   .custom-flag-crop-zoom { padding-inline: 16px; }
   .custom-flag-crop-panel > footer { padding-inline: 16px; }
+}
+
+/* Complete light theme for the custom tournament builder and its editors. */
+html.light-mode body.custom-tournament-mode-active {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-workspace-panel,
+  .custom-team-library,
+  .custom-builder-group,
+  .custom-third-place-preview,
+  .custom-live-group,
+  .custom-rating-team-list,
+  .custom-rating-editor,
+  .custom-team-creator
+) {
+  border-color: #d8e0ea;
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-panel-heading h2,
+  .custom-library-heading strong,
+  .custom-builder-group > header strong,
+  .custom-slot-copy strong,
+  .custom-library-team strong,
+  .custom-third-place-preview > header strong,
+  .custom-rating-team-list button,
+  .custom-rating-editor h3,
+  .custom-team-picker-list strong,
+  .custom-manager-picker-panel strong,
+  .custom-match-teams strong,
+  .custom-team-creator h2,
+  .custom-team-creator h3,
+  .custom-account-save-option strong,
+  .custom-live-group > header strong
+) {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-config-group > span,
+  .custom-quick-fill > span,
+  .custom-source-select > span,
+  .custom-library-heading span,
+  .custom-builder-group > header span,
+  .custom-slot-copy small,
+  .custom-seed-number,
+  .custom-third-place-preview > header span,
+  .custom-third-place-preview > div span,
+  .custom-rating-editor p,
+  .custom-rating-grid label span,
+  .custom-team-picker-tools label > span,
+  .custom-team-picker-list small,
+  .custom-manager-picker-panel small,
+  .custom-match-teams small,
+  .custom-rule-fields label > span,
+  .custom-team-creator-header p,
+  .custom-team-identity label,
+  .custom-flag-upload small,
+  .custom-player-help,
+  .custom-player-main-fields label,
+  .custom-player-attributes label,
+  .custom-player-row summary,
+  .custom-account-save-option small,
+  .custom-live-group > header,
+  .custom-live-group > div
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-draw-toolbar,
+  .custom-library-heading,
+  .custom-builder-group > header,
+  .custom-team-picker-tools,
+  .custom-team-creator-header,
+  .custom-team-creator-actions
+) {
+  border-color: #dfe5ed;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-inline-actions button,
+  .custom-panel-heading > button,
+  .custom-ratings-toolbar button,
+  .custom-goal-script-heading button,
+  .custom-library-heading > button,
+  .custom-library-team > button,
+  .custom-library-team .custom-library-edit,
+  .custom-group-fixture-editor article > header button,
+  .custom-team-picker-panel > header button,
+  .custom-manager-picker-panel > header button,
+  .custom-match-rule-editor > header button,
+  .custom-section-title button
+) {
+  border: 1px solid #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-inline-actions button,
+  .custom-panel-heading > button,
+  .custom-ratings-toolbar button,
+  .custom-goal-script-heading button,
+  .custom-library-heading > button,
+  .custom-library-team > button,
+  .custom-group-fixture-editor article > header button,
+  .custom-team-picker-list > button,
+  .custom-manager-picker-panel > div > button,
+  .custom-section-title button
+):hover {
+  border-color: #7f9fdf;
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-quick-fill select,
+  .custom-source-select select,
+  .custom-team-picker-tools select,
+  .custom-team-picker-tools input,
+  .custom-rating-grid input,
+  .custom-rule-fields input[type="number"],
+  .custom-score-script input,
+  .custom-score-script select,
+  .custom-winner-select select,
+  .custom-goal-row input,
+  .custom-goal-row select,
+  .custom-team-identity input,
+  .custom-player-row input,
+  .custom-player-row select
+) {
+  border: 1px solid #c8d3e1;
+  color: #172033;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-search,
+  .custom-picker-search
+) {
+  border-color: #c8d3e1;
+  color: #315fbd;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-search input,
+  .custom-picker-search input
+) {
+  color: #172033;
+  background: transparent;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-search input,
+  .custom-picker-search input
+)::placeholder {
+  color: #68768a;
+  opacity: 1;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-source-select,
+  .custom-team-library-list,
+  .custom-library-team,
+  .custom-seed-slot,
+  .custom-third-place-preview > header,
+  .custom-third-place-preview > div span,
+  .custom-rating-team-list button,
+  .custom-rating-editor > header,
+  .custom-team-picker-panel > header,
+  .custom-team-picker-tools,
+  .custom-team-picker-list > button,
+  .custom-manager-picker-panel > header,
+  .custom-manager-picker-panel > div > button,
+  .custom-team-ratings-section,
+  .custom-player-builder,
+  .custom-player-row,
+  .custom-player-row details,
+  .custom-account-save-option,
+  .custom-live-group > header,
+  .custom-live-group > div,
+  .custom-group-knockout-stage
+) {
+  border-color: #dfe5ed;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-main {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-main:hover,
+html.light-mode body.custom-tournament-mode-active .custom-seed-slot.is-target {
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-actions button {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-actions button:hover {
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle {
+  border-color: #c8d3e1;
+  color: #344158;
+  background: #ffffff;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle:hover {
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle.active {
+  border-color: #426fda;
+  color: #ffffff;
+  background: #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle.active i {
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle.active i::after {
+  background: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-manager-control > button small,
+  .custom-manager-control > button > i,
+  .custom-setup-more summary
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor {
+  border-color: #dfe5ed;
+  background: #dfe5ed;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor article {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor article > header {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor article > div {
+  color: #172033;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-group-fixture-editor article > footer,
+  .custom-bracket-edit-match > footer,
+  .custom-target-note,
+  .custom-rating-team-list button > strong
+) {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-picker-list > button,
+  .custom-manager-picker-panel > div > button
+) {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-manager-picker-panel > div > button.active,
+html.light-mode body.custom-tournament-mode-active .custom-rating-team-list button.active {
+  color: #172033;
+  background: #e8f0ff;
+  box-shadow: inset 3px 0 #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-team-picker-list i {
+  color: #244f9d;
+  background: #e8f0ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-rating-editor {
+  background: #f8fafc;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-teams {
+  border-color: #dfe5ed;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-teams article {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-teams > b {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-fixed-toggle {
+  color: #344158;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-fixed-result-fields {
+  border: 1px solid #dfe5ed;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-rule-editor .secondary-button,
+html.light-mode body.custom-tournament-mode-active .custom-team-creator .secondary-button {
+  border-color: #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-team-flag-preview {
+  border-color: #c8d3e1;
+  background: #f1f4f8;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-player-row {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-player-main-fields > button {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-account-save-option {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-flag,
+  .custom-rating-flag,
+  .custom-fixture-flag,
+  .custom-manager-button-flag,
+  .custom-preview-flag,
+  .custom-match-team-flag
+) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-live-group > div.qualified {
+  color: #172033;
+  background: #edf3ff;
+  box-shadow: inset 3px 0 #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-live-group > div > b {
+  color: #526178;
+  background: #f1f4f8;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-picker-panel > header h3,
+  .custom-manager-picker-panel > header h3
+) {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-picker-panel > header span,
+  .custom-manager-picker-panel > header span,
+  .custom-match-rule-editor > header span,
+  .custom-team-creator-header span,
+  .custom-section-title > div > span
+) {
+  color: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active .header-donate-link {
+  color: #ffffff;
 }

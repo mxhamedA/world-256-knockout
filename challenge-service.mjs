@@ -1882,8 +1882,9 @@ function sanitizeAccountCustomTeam(value) {
   }) : [];
   if (players.length < 11) throw new ChallengeRequestError("Custom teams need at least 11 players.", 400);
   const customFlag = typeof value?.customFlag === "string"
+    && value.customFlag.length <= 1_000_000
     && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(value.customFlag)
-    ? value.customFlag.slice(0, 1_500_000)
+    ? value.customFlag
     : "";
   const customFlagShape = value?.customFlagShape === "square" ? "square" : "flag";
   return {

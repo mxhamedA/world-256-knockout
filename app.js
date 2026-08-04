@@ -863,6 +863,10 @@ function customPlayersWithValidStartingXI(players) {
   return players.map((player, index) => ({ ...player, startingXI: selected.has(index) }));
 }
 
+const CUSTOM_TEAM_IMAGE_INPUT_MAX_BYTES = 25_000_000;
+const CUSTOM_TEAM_IMAGE_DATA_URL_TARGET = 140_000;
+const CUSTOM_TEAM_IMAGE_DATA_URL_HARD_LIMIT = 1_000_000;
+
 function sanitizeCustomTeam(team) {
   const id = String(team?.id || "");
   if (!/^custom-[a-z0-9-]{6,80}$/.test(id)) return null;
@@ -873,8 +877,10 @@ function sanitizeCustomTeam(team) {
   const players = customPlayersWithValidStartingXI(Array.isArray(team?.playerProfiles)
     ? team.playerProfiles.slice(0, 26).map(sanitizeCustomPlayer)
     : []);
-  const customFlag = typeof team?.customFlag === "string" && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(team.customFlag)
-    ? team.customFlag.slice(0, 2_500_000)
+  const customFlag = typeof team?.customFlag === "string"
+    && team.customFlag.length <= CUSTOM_TEAM_IMAGE_DATA_URL_HARD_LIMIT
+    && /^data:image\/(?:png|jpe?g|webp|gif|svg\+xml);base64,/i.test(team.customFlag)
+    ? team.customFlag
     : "";
   const customFlagShape = team?.customFlagShape === "square" ? "square" : "flag";
   return {
@@ -18043,10 +18049,30 @@ function syncCustomTeamDraftFromInput(input) {
   }
 }
 
+function compressedCustomFlagDataUrl(sourceCanvas) {
+  const attempts = [
+    { scale: 1, quality: 0.86 },
+    { scale: 0.85, quality: 0.76 },
+    { scale: 0.7, quality: 0.68 },
+    { scale: 0.6, quality: 0.58 },
+  ];
+  let smallest = "";
+  attempts.some(({ scale, quality }) => {
+    const output = document.createElement("canvas");
+    output.width = Math.max(1, Math.round(sourceCanvas.width * scale));
+    output.height = Math.max(1, Math.round(sourceCanvas.height * scale));
+    output.getContext("2d").drawImage(sourceCanvas, 0, 0, output.width, output.height);
+    const dataUrl = output.toDataURL("image/webp", quality);
+    if (!smallest || dataUrl.length < smallest.length) smallest = dataUrl;
+    return dataUrl.startsWith("data:image/webp") && dataUrl.length <= CUSTOM_TEAM_IMAGE_DATA_URL_TARGET;
+  });
+  return smallest;
+}
+
 function customFlagDataUrl(file) {
   return new Promise((resolve, reject) => {
     if (!file?.type?.startsWith("image/")) return reject(new Error("Choose an image file for the flag."));
-    if (file.size > 5_000_000) return reject(new Error("Please choose a flag image smaller than 5 MB."));
+    if (file.size > CUSTOM_TEAM_IMAGE_INPUT_MAX_BYTES) return reject(new Error("Please choose a team image smaller than 25 MB."));
     const reader = new FileReader();
     reader.onerror = () => reject(new Error("The flag image could not be read."));
     reader.onload = () => {
@@ -18054,6 +18080,10 @@ function customFlagDataUrl(file) {
       const image = new Image();
       image.onerror = () => reject(new Error("The flag image format is not supported."));
       image.onload = () => {
+        if (image.naturalWidth > 16_000 || image.naturalHeight > 16_000 || image.naturalWidth * image.naturalHeight > 100_000_000) {
+          reject(new Error("That image resolution is too large. Please use an image under 100 megapixels."));
+          return;
+        }
         const editor = document.createElement("div");
         editor.className = "custom-flag-crop-editor";
         editor.setAttribute("role", "dialog");
@@ -18156,7 +18186,7 @@ function customFlagDataUrl(file) {
         editor.querySelectorAll("[data-crop-action='cancel']").forEach((button) => button.addEventListener("click", cancel));
         editor.querySelector("[data-crop-action='apply']").addEventListener("click", () => {
           drawCrop(outputContext);
-          const croppedFlag = canvas.toDataURL("image/webp", 0.9);
+          const croppedFlag = compressedCustomFlagDataUrl(canvas);
           cleanUp();
           resolve({ dataUrl: croppedFlag, shape });
         });
@@ -18222,7 +18252,7 @@ async function saveCustomTeamDraft() {
     if (existingTeam) TEAM_BY_ID.set(id, existingTeam);
     else TEAM_BY_ID.delete(id);
     clearPlayerProfileCacheForTeam(id);
-    if (message) message.textContent = "This team could not be saved. Try a smaller flag image.";
+    if (message) message.textContent = "Custom-team storage is full. Delete an unused custom team, then try again.";
     return;
   }
   customTournamentSetup.sourceFilter = "custom";
