@@ -288,6 +288,198 @@ html.light-mode .toast {
   }
 }
 
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .secondary-button {
+  border: 1px solid #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .danger-button {
+  border: 1px solid #d8a7ad;
+  color: #a32638;
+  background: #fff3f4;
+  font-weight: 800;
+}
+
+html.light-mode .settings-switch {
+  border: 1px solid #bfcad8;
+  background: #d8e0ea;
+}
+
+html.light-mode .settings-switch i {
+  top: 2px;
+  left: 2px;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(29, 45, 70, 0.2);
+}
+
+html.light-mode .settings-option.is-enabled .settings-switch {
+  border-color: #5f8cff;
+  background: #5f8cff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .secondary-button:hover {
+    border-color: #9bb5f5;
+    color: #244f9d;
+    background: #edf3ff;
+  }
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .champion-stage {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .champion-stage :is(h2, strong) {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .champion-stage p {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .champion-stage .flag-orb {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: 0 0 0 4px #dfe7f6, 0 12px 24px rgba(29, 45, 70, 0.14);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(.champion-award, .champion-place) {
+  border: 1px solid #d8e0ea;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .champion-place.place-1 {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+  box-shadow: inset 0 3px #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .champion-place > b,
+  .champion-section-label,
+  .champion-award-copy > span
+) {
+  color: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .champion-place small,
+  .champion-award-copy small
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .champion-award-copy small b {
+  color: #344158;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .champion-place-flag,
+  .champion-award-flag,
+  .champion-award-flag .award-flag
+) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .penalty-stage {
+  border: 1px solid #d8e0ea;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(29, 45, 70, 0.14);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .penalty-stage-head {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .penalty-stage-head strong,
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .penalty-call strong {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .penalty-stage-head strong i,
+  .penalty-call span,
+  .penalty-ledgers span
+) {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .penalty-scene {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(34, 87, 64, 0.16)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 42px, transparent 42px 84px),
+    #7fb99c;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-penalty-overlay {
+  color: #172033;
+  background: rgba(244, 247, 251, 0.96);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-penalty-decision strong {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .match-penalty-decision span,
+  .match-penalty-decision small
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #newTournamentButton {
+  border: 1px solid #cbd5e3;
+  color: #315fbd;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(29, 45, 70, 0.08);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .golden-boot-flag,
+  .hero-flag,
+  .fixture-flag,
+  .custom-group-flag
+) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .score-separator {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .timeline-event > b {
+  color: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(.primary-button, .play-button) {
+  color: #ffffff;
+  background: #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .go-to-top span {
+  color: #315fbd;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(.primary-button, .play-button):hover {
+    color: #ffffff;
+    background: #315fbd;
+  }
+}
+
 @media (max-width: 850px) {
   html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(.sidebar, .topbar) {
     background: rgba(255, 255, 255, 0.97);
@@ -37192,9 +37384,24 @@ html.light-mode body.custom-tournament-mode-active .custom-slot-actions button {
   color: #526178;
 }
 
+html.light-mode body.custom-tournament-mode-active .custom-direct-actions button {
+  color: #31558f;
+  font-weight: 800;
+}
+
 html.light-mode body.custom-tournament-mode-active .custom-slot-actions button:hover {
   color: #244f9d;
   background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-direct-actions button:hover {
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-bracket-edit-round > header span {
+  color: #526178;
+  font-weight: 700;
 }
 
 html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle {
@@ -37376,6 +37583,529 @@ html.light-mode body.custom-tournament-mode-active :is(
   color: #315fbd;
 }
 
-html.light-mode body.custom-tournament-mode-active .header-donate-link {
+html.light-mode body.custom-tournament-mode-active :is(.header-donate-link, .header-donate-link span) {
+  color: #ffffff !important;
+}
+
+/* Running custom tournaments reuse the standard match UI. Keep every shared
+   match, table and fixture surface in the same complete light palette. */
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+) {
+  border-color: #d8e0ea;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(29, 45, 70, 0.09);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .team,
+  .fixture,
+  .live-feed-item,
+  .queue-item,
+  .plot-item,
+  .match-stat-row
+) {
+  border-color: #dfe5ed;
+  color: #344158;
+  background: #f8f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture.complete,
+  .live-feed-item:nth-child(n + 3)
+) {
+  background: #f2f5f9;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture.selected,
+  .queue-item.current,
+  .spoiler-panel
+) {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+  box-shadow: 0 0 0 2px rgba(49, 95, 189, 0.08);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .match-events,
+  .live-sim,
+  .standard-tactic-buttons,
+  .match-highlight-mode
+) {
+  border-color: #d8e0ea;
+  color: #172033;
+  background: #f5f7fa;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture-team,
+  .fixture-team .name,
+  .queue-team,
+  .event,
+  .live-label,
+  .text-button
+) {
+  color: #46556b;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .team-name,
+  .match-score,
+  .fixture-team b,
+  .fixture-team.winner .name,
+  .fixture-team.winner b,
+  .match-analysis-heading strong,
+  .panel-heading strong,
+  #stageRoundLabel,
+  #boardTitle
+) {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .legacy-topbar-back,
+  .search,
+  .overview-search,
+  .live-control,
+  .load-more,
+  .ghost-button,
+  .standard-tactic-buttons button:not(.active),
+  .match-highlight-mode button:not(.active),
+  .snapshot-trigger,
+  .go-to-top
+) {
+  border-color: #cbd5e3;
+  color: #344158;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .legacy-topbar-back > span:first-child {
+  color: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .matchup > .team {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search {
+  border: 1px solid #cbd5e3;
+  color: #315fbd;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search:focus-within {
+  border-color: #6f95ed;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(49, 95, 189, 0.12);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search input {
+  color: #172033;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search input::placeholder {
+  color: #637188;
+  opacity: 1;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-control .search-result-popover {
+  border: 1px solid #d7dee8;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 18px 46px rgba(29, 45, 70, 0.16);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-control .search-result {
+  border-bottom-color: #e3e8ef;
+  color: #172033;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-control .search-result small {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .history-round-button {
+  border: 1px solid #cbd5e3;
+  color: #29466f;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #simulateRoundButton {
+  border: 1px solid #315fbd;
   color: #ffffff;
+  background: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #unresolvedFilter {
+  min-height: 34px;
+  padding-inline: 11px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  color: #46556b;
+  background: #f5f7fa;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #unresolvedFilter.active {
+  border-color: #b8c9ef;
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #goldenBootTitle {
+  color: #8a5a00;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture-meta,
+  .fixture-card-head,
+  .fixture-card-head small,
+  .team .seed,
+  .venue,
+  .result-note,
+  .match-stat-row span,
+  .plot-item p,
+  .empty-story p,
+  .golden-boot-empty,
+  .golden-boot-empty p,
+  .stage-topline,
+  #standardTacticOpponent,
+  #standardTacticFeedback
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-stats-grid {
+  border-bottom-color: #e2e7ee;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-stat-row {
+  color: #344158;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-stat-row b {
+  color: #1f2b40;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-row {
+  border-bottom-color: #e2e7ee;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-rank {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-player strong {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-player small {
+  color: #536078;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .golden-boot-row > b,
+  .golden-boot-row.leader > b,
+  .golden-boot-row.leader .golden-boot-rank
+) {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-live-group > div > span {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-group-fixture-heading {
+  border-color: #d8e0ea;
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-group-fixture-heading strong {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-group-fixture-heading span {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .hero-flag,
+  .fixture-flag,
+  .custom-group-flag,
+  .live-feed-flag,
+  .queue-flag,
+  .search-flag
+) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+    .fixture,
+    .legacy-topbar-back,
+    .live-control,
+    .standard-tactic-buttons button:not(.active),
+    .team-filter-control .search-result,
+    .history-round-button,
+    #unresolvedFilter,
+    .snapshot-trigger,
+    .go-to-top
+  ):hover {
+    border-color: #9bb5f5;
+    color: #244f9d;
+    background: #edf3ff;
+  }
+
+  html.light-mode body.custom-tournament-mode-active:not(.before-start) #simulateRoundButton:hover {
+    color: #ffffff;
+    background: #244f9d;
+  }
+}
+
+/* Shared light dialogs and settings controls outside branded competitions. */
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .modal,
+  .confirm-modal,
+  .snapshot-modal,
+  .settings-modal
+) .secondary-button {
+  border: 1px solid #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .modal,
+  .confirm-modal,
+  .snapshot-modal,
+  .settings-modal
+) .danger-button {
+  border: 1px solid #d8a7ad;
+  color: #a32638;
+  background: #fff3f4;
+  font-weight: 800;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .settings-keybind-button {
+  border: 1px solid #c8d3e1;
+  color: #344158;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+    .modal,
+    .confirm-modal,
+    .snapshot-modal,
+    .settings-modal
+  ) .secondary-button:hover,
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .settings-keybind-button:hover {
+    border-color: #9bb5f5;
+    color: #244f9d;
+    background: #edf3ff;
+  }
+}
+
+/* Live custom-tournament presentation needs its own light treatment. The clock
+   and commentary are rendered only while a match is playing, so they are not
+   covered by the static match-card selectors above. */
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock {
+  min-width: 86px;
+  padding: 6px 10px;
+  border: 1px solid #d8e0ea;
+  border-radius: 10px;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock > span {
+  color: #315fbd;
+  font-weight: 900;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock strong,
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .live-clock {
+  color: #101a2e;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock small {
+  color: #526178;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed {
+  border-color: #cbd5e3;
+  color: #172033;
+  background: #f7f9fc;
+  box-shadow: inset 4px 0 #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed :is(
+  .commentary-line,
+  .commentary-line span,
+  .commentary-line.heading span
+) {
+  color: #1f2b40;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed.is-major {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed.is-major .commentary-line span {
+  color: #172033;
+  font-weight: 850;
+}
+
+@keyframes customLightGoalFlashBg {
+  0% { background: var(--goal-flash-color, #426fda); }
+  100% { background: #f7f9fc; }
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed.is-goal-flash {
+  animation: goalPulse 0.5s ease-in-out 2, customLightGoalFlashBg 0.9s ease-out forwards !important;
+}
+
+/* Brazil 2014 keeps its watercolor stadium artwork in both appearances. Other
+   retro editions have their own explicit year classes and remain untouched. */
+html.light-mode body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) {
+  color: #f7f4cf;
+  background:
+    linear-gradient(rgba(3, 73, 42, 0.22), rgba(0, 49, 38, 0.48)),
+    url("./assets/retro-2014/brazil-watercolor-stadium.webp") center top / cover fixed no-repeat;
+}
+
+html.light-mode body.retro-mode-active:not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) .retro-tournament-screen {
+  color: #f7f4cf;
+  background:
+    linear-gradient(180deg, rgba(2, 60, 35, 0.16), rgba(0, 43, 34, 0.54)),
+    transparent;
+}
+
+/* The regular 256-team tournament uses standard-mode-active rather than the
+   custom tournament body class. Mirror the complete live light treatment. */
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock {
+  min-width: 86px;
+  padding: 6px 10px;
+  border: 1px solid #d8e0ea;
+  border-radius: 10px;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock > span {
+  color: #315fbd;
+  font-weight: 900;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock strong,
+html.light-mode body.standard-mode-active:not(.before-start) .live-clock {
+  color: #101a2e;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock small {
+  color: #526178;
+  font-weight: 800;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed {
+  border-color: #cbd5e3;
+  color: #172033;
+  background: #f7f9fc;
+  box-shadow: inset 4px 0 #426fda;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed :is(
+  .commentary-line,
+  .commentary-line span,
+  .commentary-line.heading span
+) {
+  color: #1f2b40;
+  font-weight: 750;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed.is-major {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed.is-major .commentary-line span {
+  color: #172033;
+  font-weight: 850;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed.is-goal-flash {
+  animation: goalPulse 0.5s ease-in-out 2, customLightGoalFlashBg 0.9s ease-out forwards !important;
+}
+
+/* Goalscorers are primary match information: keep player names substantially
+   heavier than the supporting minute and event metadata in light mode. */
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) :is(
+  .team-match-events .goal-event span,
+  .golden-boot-player strong
+) {
+  color: #172033;
+  font-weight: 850;
+}
+
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) .team-match-events .goal-event b {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+/* One-off custom matches add a second, route-specific body class. Lock the
+   scorer name to near-black after that route's component cascade. */
+html.light-mode body.custom-match-mode-active:not(.before-start) :is(
+  .team-match-events .timeline-event.goal-event span,
+  .team-match-events .event.goal-event span
+) {
+  color: #101010 !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+}
+
+/* Penalty takers use a separate shootout summary rather than goal-event rows. */
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) .shootout-summary-row,
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) .shootout-summary-row span {
+  color: #101010 !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
 }
