@@ -19016,6 +19016,23 @@ function customGroupLabel(index) {
   return `Group ${label}`;
 }
 
+function randomisedCustomGroupSlots(selectedIds, random = Math.random) {
+  const nextIds = [...selectedIds];
+  const occupiedIndexes = nextIds
+    .map((teamId, index) => teamId ? index : -1)
+    .filter((index) => index >= 0);
+  const currentIds = occupiedIndexes.map((index) => nextIds[index]);
+  if (currentIds.length < 2) return nextIds;
+  const randomisedIds = shuffle(currentIds, random);
+  if (randomisedIds.every((teamId, index) => teamId === currentIds[index])) {
+    randomisedIds.push(randomisedIds.shift());
+  }
+  occupiedIndexes.forEach((slotIndex, index) => {
+    nextIds[slotIndex] = randomisedIds[index];
+  });
+  return nextIds;
+}
+
 function customGroupFixturePairs() {
   return [[0, 1], [2, 3], [0, 2], [3, 1], [0, 3], [1, 2]];
 }
@@ -19253,6 +19270,7 @@ function customBracketPanelMarkup() {
           </label>
           <button type="button" data-custom-action="apply-quick-fill">Fill</button>
           <button type="button" data-custom-action="clear-field">Clear</button>
+          ${customTournamentSetup.structure === "groups" ? `<button class="custom-randomise-groups" type="button" data-custom-action="randomise-groups" ${selected.size < 2 ? 'disabled title="Add at least two teams first"' : ""}><span aria-hidden="true">&#8635;</span> Randomise groups</button>` : ""}
         </div>
       </div>
       <div class="custom-draw-layout">
@@ -19954,6 +19972,23 @@ function handleCustomTournamentAction(button) {
     customTournamentUi.ratingEditorOpen = false;
     saveCustomTournamentSetup();
     renderCustomTournamentSetup();
+    return;
+  }
+  if (action === "randomise-groups") {
+    if (customTournamentSetup.structure !== "groups") return;
+    const selectedCount = customTournamentSetup.selectedIds.filter(Boolean).length;
+    if (selectedCount < 2) {
+      showToast("Add at least two teams before randomising the groups.");
+      return;
+    }
+    customTournamentSetup.selectedIds = randomisedCustomGroupSlots(customTournamentSetup.selectedIds);
+    customTournamentSetup.scripts = {};
+    customTournamentUi.targetIndex = null;
+    customTournamentUi.matchEditorOpen = false;
+    customTournamentUi.ratingEditorOpen = false;
+    saveCustomTournamentSetup();
+    renderCustomTournamentSetup();
+    showToast("Groups randomised.");
     return;
   }
   if (action === "fill-top" || action === "fill-random") {
@@ -22658,7 +22693,7 @@ function applyTournamentTheme(theme, { persist = true, announce = true } = {}) {
   const themeColour = isLight ? "#f4f6fa" : MATCH_SCREEN_THEMES[nextTheme].colour;
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColour);
   syncSettingsDialog();
-  if (announce) showToast(`${MATCH_SCREEN_THEMES[nextTheme].label} match UI applied to every mode.`);
+  if (announce) showToast(`${MATCH_SCREEN_THEMES[nextTheme].label} match UI applied to supported tournament modes.`);
 }
 
 function isTextEntryTarget(target) {

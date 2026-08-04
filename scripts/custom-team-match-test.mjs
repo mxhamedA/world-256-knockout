@@ -52,6 +52,10 @@ assert.match(app, /customFlag \|\| imageOverride \|\| `https:\/\/flagcdn\.com/,
   "Snapshots must load uploaded custom-team flags before falling back to a country flag.");
 assert.match(app, /customFlag: true|customFlag/);
 assert.match(app, /function createCustomMatchState\(\)/);
+assert.match(app, /data-custom-action="randomise-groups"/, "Custom group builders must expose a randomise action.");
+assert.match(app, /function randomisedCustomGroupSlots\(selectedIds, random = Math\.random\)/);
+assert.match(app, /showToast\("Groups randomised\."\)/);
+assert.match(css, /\.custom-randomise-groups/, "The group randomiser must follow the custom-builder button styling.");
 assert.match(
   app,
   /if \(matchday < 0\) \{[\s\S]{0,900}buildNextRound\(0\);[\s\S]{0,900}state\.activeRound = 1;/,
@@ -146,6 +150,19 @@ assert.equal(automaticXI.filter((player) => player.startingXI).length, 11);
 assert.equal(automaticXI.find((player) => player.name === "Keeper").startingXI, true);
 assert.equal(automaticXI.find((player) => player.name === "Outfield 1").startingXI, false);
 assert.equal(automaticXI.find((player) => player.name === "Outfield 12").startingXI, true);
+
+const groupRandomiserStart = app.indexOf("function randomisedCustomGroupSlots(");
+const groupRandomiserEnd = app.indexOf("function customGroupFixturePairs(", groupRandomiserStart);
+assert.ok(groupRandomiserStart >= 0 && groupRandomiserEnd > groupRandomiserStart);
+const randomisedCustomGroupSlots = new Function(
+  "shuffle",
+  `${app.slice(groupRandomiserStart, groupRandomiserEnd)}; return randomisedCustomGroupSlots;`,
+)((items) => [...items].reverse());
+assert.deepEqual(
+  randomisedCustomGroupSlots(["a", "b", "c", "d", null, "e"]),
+  ["e", "d", "c", "b", null, "a"],
+  "Randomising groups must reshuffle selected teams without moving empty slots.",
+);
 
 const linkedRatingsHelperStart = app.indexOf("function raiseLinkedCustomRatings(");
 const linkedRatingsHelperEnd = app.indexOf("function customTeamCreatorContainer(", linkedRatingsHelperStart);

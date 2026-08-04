@@ -27850,6 +27850,24 @@ body.custom-tournament-mode-active:has(#customTournamentScreen:not([hidden])) .t
   gap: 7px;
 }
 
+.custom-inline-actions .custom-randomise-groups {
+  border-color: #4d6fa6;
+  color: #a9c0fa;
+  transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.custom-inline-actions .custom-randomise-groups:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.custom-inline-actions button:disabled {
+  color: #65738a;
+  border-color: #29364a;
+  background: #111925;
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
 .custom-quick-fill {
   display: grid;
   gap: 4px;
@@ -30147,6 +30165,11 @@ body.custom-tournament-mode-active #mainContent {
 
   .custom-inline-actions button {
     min-width: 62px;
+  }
+
+  .custom-inline-actions .custom-randomise-groups {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 
   .custom-quick-fill select {

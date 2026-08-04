@@ -250,50 +250,29 @@ html[data-tournament-theme="2026"] {
   --match-ui-stripe: linear-gradient(90deg, #ff9e2f, #fff 30% 36%, #0a45ff 36% 75%, #ff9e2f 75%);
 }
 
-/* Theme choices affect played match screens, not the Custom setup workspace.
-   A previously active tournament can leave body.before-start unset while the
-   builder is open, so key this reset to the actually visible setup screen. */
-html[data-tournament-theme] body.custom-tournament-mode-active:has(#customTournamentScreen:not([hidden])),
-html[data-tournament-theme] body.custom-tournament-mode-active:has(#customMatchScreen:not([hidden])) {
-  --match-ui-bg: #090f18;
-  --match-ui-shell: #0b111b;
-  --match-ui-panel: #101925;
-  --match-ui-panel-soft: #151f2d;
-  --match-ui-text: #eef3fb;
-  --match-ui-muted: #8d9db3;
-  --match-ui-accent: #79a1ff;
-  --match-ui-accent-soft: #426fda;
-  --match-ui-accent-text: #08101c;
-  --match-ui-line: #273448;
-  --match-ui-shadow: none;
-  --match-ui-radius: 8px;
-  --match-ui-font: "Manrope", system-ui, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #426fda, #79a1ff);
-}
-
-html[data-tournament-theme] body:not(.before-start) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) {
   color: var(--match-ui-text) !important;
   background: var(--match-ui-bg) !important;
   font-family: var(--match-ui-font) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(button, input, select, textarea) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(button, input, select, textarea) {
   font-family: var(--match-ui-font);
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(.sidebar, .topbar, .retro-screen-header, .pl-season-header, .ucl-simulator-header) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.sidebar, .topbar, .retro-screen-header, .pl-season-header, .ucl-simulator-header) {
   border-color: var(--match-ui-line) !important;
   color: var(--match-ui-text) !important;
   background: var(--match-ui-shell) !important;
   box-shadow: 0 10px 30px color-mix(in srgb, var(--match-ui-shell) 78%, transparent) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(.main, .retro-tournament-screen, .pl-season-screen, .ucl-simulator-screen) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.main, .retro-tournament-screen, .pl-season-screen, .ucl-simulator-screen) {
   color: var(--match-ui-text) !important;
   background: transparent !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) #mainContent :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(
   .match-stage,
   .round-board,
   .panel,
@@ -303,7 +282,7 @@ html[data-tournament-theme] body:not(.before-start) #mainContent :is(
   .champion-stage,
   .penalty-stage
 ),
-html[data-tournament-theme] body:not(.before-start) :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
   .custom-workspace-panel,
   .custom-team-library,
   .custom-builder-group,
@@ -323,14 +302,14 @@ html[data-tournament-theme] body:not(.before-start) :is(
   backdrop-filter: blur(10px);
 }
 
-html[data-tournament-theme] body:not(.before-start) #mainContent :is(.match-stage, .round-board, .match-analysis, .champion-stage)::before,
-html[data-tournament-theme] body:not(.before-start) :is(.retro-match-stage, .retro-active-fixtures, .retro-champion)::before {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(.match-stage, .round-board, .match-analysis, .champion-stage)::before,
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.retro-match-stage, .retro-active-fixtures, .retro-champion)::before {
   height: 7px !important;
   background: var(--match-ui-stripe) !important;
   clip-path: none !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
   .fixture,
   .team,
   .queue-item,
@@ -345,7 +324,7 @@ html[data-tournament-theme] body:not(.before-start) :is(
   background: var(--match-ui-panel-soft) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) #mainContent :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(
   .match-stats-grid,
   .match-stat-row,
   .match-events,
@@ -360,16 +339,16 @@ html[data-tournament-theme] body:not(.before-start) #mainContent :is(
   background: var(--match-ui-panel-soft) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) #mainContent :is(.team-filter-search input, .search input) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(.team-filter-search input, .search input) {
   color: var(--match-ui-text) !important;
   background: transparent !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) #mainContent :is(.team-filter-search input, .search input)::placeholder {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(.team-filter-search input, .search input)::placeholder {
   color: var(--match-ui-muted) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
   h1, h2, h3,
   .team-name,
   .match-score,
@@ -384,7 +363,7 @@ html[data-tournament-theme] body:not(.before-start) :is(
   text-shadow: none;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
   p, small,
   .venue,
   .fixture-meta,
@@ -395,7 +374,7 @@ html[data-tournament-theme] body:not(.before-start) :is(
   color: var(--match-ui-muted) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
   .primary-button:not(:disabled),
   .play-button:not(:disabled),
   .simulate-button:not(:disabled),
@@ -413,7 +392,7 @@ html[data-tournament-theme] body:not(.before-start) :is(
   box-shadow: 0 5px 0 color-mix(in srgb, var(--match-ui-accent) 68%, #000) !important;
 }
 
-html[data-tournament-theme="2014"] body:not(.before-start) :is(
+html[data-tournament-theme="2014"] body:not(.before-start):not(.custom-tournament-mode-active) :is(
   .primary-button:not(:disabled),
   .play-button:not(:disabled),
   .simulate-button:not(:disabled),
@@ -425,37 +404,37 @@ html[data-tournament-theme="2014"] body:not(.before-start) :is(
   border-radius: 999px !important;
 }
 
-html[data-tournament-theme="2022"] body:not(.before-start) :is(.match-stage, .round-board, .panel, .match-analysis) {
+html[data-tournament-theme="2022"] body:not(.before-start):not(.custom-tournament-mode-active) :is(.match-stage, .round-board, .panel, .match-analysis) {
   backdrop-filter: none;
 }
 
-html[data-tournament-theme="2026"] body:not(.before-start) :is(h1, h2, .stage-round, .board-title) {
+html[data-tournament-theme="2026"] body:not(.before-start):not(.custom-tournament-mode-active) :is(h1, h2, .stage-round, .board-title) {
   font-family: Impact, "Arial Narrow", "Manrope", sans-serif !important;
   letter-spacing: .015em;
   text-transform: uppercase;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(.stage-round, .page-kicker, .eyebrow-row, .section-kicker) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.stage-round, .page-kicker, .eyebrow-row, .section-kicker) {
   color: var(--match-ui-accent) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(.progress-track span, .match-stat-bar span) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.progress-track span, .match-stat-bar span) {
   background: var(--match-ui-accent) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) :is(.modal, .confirm-modal, .snapshot-modal) {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.modal, .confirm-modal, .snapshot-modal) {
   border-color: var(--match-ui-line) !important;
   color: var(--match-ui-text) !important;
   background: var(--match-ui-panel) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) .tournament-theme-options > button.is-selected {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) .tournament-theme-options > button.is-selected {
   border-color: var(--match-ui-accent) !important;
   background: var(--match-ui-panel-soft) !important;
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--match-ui-accent) 24%, transparent) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start) .tournament-theme-options > button.is-selected .tournament-theme-check {
+html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) .tournament-theme-options > button.is-selected .tournament-theme-check {
   border-color: var(--match-ui-accent) !important;
   color: var(--match-ui-accent-text) !important;
   background: var(--match-ui-accent) !important;
