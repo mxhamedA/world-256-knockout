@@ -64,6 +64,7 @@ const staticFiles = [
     "assets/audio/achievement-unlock.mp3",
     "assets/audio/ucl-legacy-anthem.mp3",
     "assets/256-teams-icon.svg",
+    "assets/retro-2002/worldcup-2002-logo.png",
     "assets/retro-world-cup-2006.png",
     "assets/retro-2006/germany-2006-bg.png",
     "assets/retro-world-cup-2014.png",

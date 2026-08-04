@@ -14486,7 +14486,7 @@ body.retro-2018-active .achievement-unlock-action {
 .retro-year-switch {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   width: 100%;
   gap: 3px;
   padding: 3px;
@@ -32989,6 +32989,47 @@ body.retro-mode-active.retro-euro-2016-active :is(
   color: #ffffff;
   background-color: #101a28;
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.09), 0 22px 56px rgba(0, 0, 0, 0.28);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"] {
+  background:
+    radial-gradient(circle at 86% 19%, rgba(255, 210, 31, 0.95) 0 7px, transparent 8px),
+    radial-gradient(circle at 86% 19%, transparent 0 46px, rgba(243, 19, 43, 0.86) 47px 58px, transparent 59px),
+    radial-gradient(circle at 12% 91%, transparent 0 54px, rgba(0, 166, 106, 0.72) 55px 65px, transparent 66px),
+    linear-gradient(118deg, transparent 0 59%, rgba(255, 210, 31, 0.88) 59.5% 61%, transparent 61.5%),
+    repeating-linear-gradient(132deg, transparent 0 38px, rgba(255, 255, 255, 0.035) 39px 41px),
+    linear-gradient(138deg, #062c58 0%, #075891 54%, #082d5e 100%);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"]::after {
+  position: absolute;
+  z-index: 0;
+  right: -92px;
+  bottom: -126px;
+  width: 260px;
+  height: 260px;
+  border: 24px solid rgba(243, 19, 43, 0.22);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"] .retro-mode-heading > img {
+  filter: drop-shadow(0 10px 16px rgba(0, 15, 43, 0.46));
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"] .retro-start-button:disabled {
+  border-color: #ffd21f;
+  color: #073766;
+  background: #ffd21f;
+  box-shadow: 0 6px 0 #d59a16;
+  cursor: not-allowed;
+  opacity: 1;
 }
 
 .mode-card-retro[data-retro-competition="wc"][data-retro-edition="2006"] {

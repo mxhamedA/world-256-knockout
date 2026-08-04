@@ -138,6 +138,13 @@ const RETRO_WORLD_CUP_PATHS = Object.freeze({
 });
 
 const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
+  2002: Object.freeze({
+    label: "Korea/Japan 2002",
+    host: "Korea/Japan",
+    logo: "./assets/retro-2002/worldcup-2002-logo.png",
+    accent: "#ffd21f",
+    accentText: "#073766",
+  }),
   2006: Object.freeze({
     label: "Germany 2006",
     host: "Germany",
@@ -188,6 +195,43 @@ const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
     accent: "#3463ff",
     accentText: "#ffffff",
   }),
+});
+
+const RETRO_WORLD_CUP_PREVIEW_TEAMS = Object.freeze({
+  2002: Object.freeze([
+    { name: "France", group: "A" },
+    { name: "Senegal", group: "A" },
+    { name: "Uruguay", group: "A" },
+    { name: "Denmark", group: "A" },
+    { name: "Spain", group: "B" },
+    { name: "Slovenia", group: "B" },
+    { name: "Paraguay", group: "B" },
+    { name: "South Africa", group: "B" },
+    { name: "Brazil", group: "C" },
+    { name: "Turkey", group: "C" },
+    { name: "China", group: "C" },
+    { name: "Costa Rica", group: "C" },
+    { name: "South Korea", group: "D" },
+    { name: "Poland", group: "D" },
+    { name: "United States", group: "D" },
+    { name: "Portugal", group: "D" },
+    { name: "Germany", group: "E" },
+    { name: "Saudi Arabia", group: "E" },
+    { name: "Republic of Ireland", group: "E" },
+    { name: "Cameroon", group: "E" },
+    { name: "Argentina", group: "F" },
+    { name: "Nigeria", group: "F" },
+    { name: "England", group: "F" },
+    { name: "Sweden", group: "F" },
+    { name: "Italy", group: "G" },
+    { name: "Ecuador", group: "G" },
+    { name: "Croatia", group: "G" },
+    { name: "Mexico", group: "G" },
+    { name: "Japan", group: "H" },
+    { name: "Belgium", group: "H" },
+    { name: "Russia", group: "H" },
+    { name: "Tunisia", group: "H" },
+  ].map(Object.freeze)),
 });
 
 const RETRO_EURO_2016 = Object.freeze({
@@ -7324,7 +7368,11 @@ function retroMenuTeamEntries(year = readRetroWorldCupYear()) {
   const competition = readRetroCompetition();
   if (competition === "euros") return RETRO_EURO_2016.teams;
   if (competition === "copa") return RETRO_COPA_2024.teams;
-  return RETRO_WORLD_CUPS[year]?.teams || [];
+  return retroWorldCupMenuTeams(year);
+}
+
+function retroWorldCupMenuTeams(year) {
+  return RETRO_WORLD_CUPS[year]?.teams || RETRO_WORLD_CUP_PREVIEW_TEAMS[year] || [];
 }
 
 function readRetroEuroTeam() {
@@ -7366,7 +7414,7 @@ function saveRetroCopaTeam(name) {
 function readRetroWorldCupTeam(year) {
   try {
     const name = localStorage.getItem(retroWorldCupTeamStorageKey(year));
-    return RETRO_WORLD_CUPS[year]?.teams.some((team) => team.name === name) ? name : null;
+    return retroWorldCupMenuTeams(year).some((team) => team.name === name) ? name : null;
   } catch {
     return null;
   }
@@ -7382,7 +7430,7 @@ function saveRetroWorldCupTeam(year, name) {
 }
 
 function retroWorldCupTeamData(year, name) {
-  return RETRO_WORLD_CUPS[year]?.teams.find((team) => team.name === name) || null;
+  return retroWorldCupMenuTeams(year).find((team) => team.name === name) || null;
 }
 
 function retroTournamentForYear(year) {
@@ -20568,7 +20616,7 @@ function setRetroWorldCupYear(year) {
   if (els.retroModeCard) els.retroModeCard.dataset.retroEdition = selectedYear;
   document.body.classList.toggle("retro-2006-menu-theme", selectedYear === "2006" && readRetroCompetition() === "wc");
   if (els.retroWorldCupLogo) els.retroWorldCupLogo.src = edition.logo;
-  if (els.retroTeamPickerButton) els.retroTeamPickerButton.disabled = !RETRO_WORLD_CUPS[selectedYear];
+  if (els.retroTeamPickerButton) els.retroTeamPickerButton.disabled = !retroWorldCupMenuTeams(selectedYear).length;
   renderRetroWorldCupTeamPicker(selectedYear);
   els.retroWorldCupYearSwitch?.querySelectorAll("[data-retro-year]").forEach((button) => {
     const isActive = button.dataset.retroYear === selectedYear;
@@ -20752,7 +20800,7 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
     ? Boolean(RETRO_COPA_2024.teams.length)
     : isEuros
     ? Boolean(RETRO_EURO_2016.teams.length)
-    : Boolean(RETRO_WORLD_CUPS[year]?.teams?.length);
+    : Boolean(retroWorldCupMenuTeams(year).length);
   const savedTournament = playable ? retroTournamentForYear(selectedYear) : null;
   const setupLocked = Boolean(savedTournament);
   document.querySelectorAll('[data-settings-scope="retro"]').forEach((group) => {
