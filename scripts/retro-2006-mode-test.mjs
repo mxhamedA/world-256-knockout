@@ -8,8 +8,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 const sources = [
   "retro-data.js",
-  "retro-2006-squads.js",
-  "retro-2006-schedule.js",
+  "data/retro/2006/squads.js",
+  "data/retro/2006/schedule.js",
   "retro-engine.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
 
@@ -157,8 +157,8 @@ assert.match(
   /\["2006", "2010", "2014", "2018", "2022"\]\.includes\(String\(selectedYear\)\)/,
   "The landing-card availability gate must expose Germany 2006 as playable.",
 );
-assert.match(html, /retro-2006-squads\.js/);
-assert.match(html, /retro-2006-schedule\.js/);
+assert.match(html, /data\/retro\/2006\/squads\.js/);
+assert.match(html, /data\/retro\/2006\/schedule\.js/);
 assert.equal((html.match(/data-achievement-year="2006"/g) || []).length, 2,
   "Germany 2006 must appear in both achievement views.");
 assert.match(css, /data-achievement-theme="2006"/,

@@ -31297,7 +31297,7 @@ body.standard-mode-active .retro-third-place-playoff {
 .achievement-year-tabs,
 #retroAchievementsModal[data-achievement-theme] .achievement-year-tabs {
   display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(11, minmax(0, 1fr));
   width: 100%;
   gap: 4px;
   padding: 4px;
@@ -40561,6 +40561,517 @@ body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-card, .bracke
   body.retro-mode-active.retro-1998-active .retro-tournament-heading { margin-top: 36px; }
 }
 
+/* Copa América USA 2024: isolated broadcast package. Keep this edition's
+   palette at the highest shared cascade layer so older retro skins cannot
+   leak into the match centre, manager, bracket, shootout or champions view. */
+body.retro-mode-active.retro-copa-2024-active {
+  --copa-navy: #061d54;
+  --copa-blue: #0b3f96;
+  --copa-blue-bright: #176fe4;
+  --copa-red: #e51b2b;
+  --copa-red-dark: #a70f20;
+  --copa-white: #ffffff;
+  --copa-silver: #cfd6e6;
+  --copa-ink: #071938;
+  --copa-muted: #aebbd4;
+  --copa-panel: #f7f9fd;
+  --copa-line: rgba(207, 214, 230, .46);
+  color: var(--copa-white) !important;
+  background: #041536 url("./assets/copa-america-2024-bg-desktop.svg") center top / cover fixed no-repeat !important;
+  isolation: isolate;
+}
+
+body.retro-mode-active.retro-copa-2024-active::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background: radial-gradient(circle at 12% 14%, rgba(255,255,255,.08) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 20%, rgba(229,27,43,.24) 0 2px, transparent 3px),
+    repeating-linear-gradient(118deg, transparent 0 80px, rgba(255,255,255,.018) 81px 83px);
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-screen {
+  color: var(--copa-white) !important;
+  background: linear-gradient(180deg, rgba(3, 17, 52, .15), rgba(3, 16, 49, .76)) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active :is(.retro-screen-header, .retro-saved-tournament-actions, .retro-tournament-heading, .retro-view-tabs, .retro-tournament-body) {
+  position: relative;
+  z-index: 1;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-screen-header {
+  border-bottom: 1px solid rgba(255,255,255,.24) !important;
+  color: var(--copa-white) !important;
+  background: rgba(3, 18, 57, .94) !important;
+  box-shadow: 0 8px 24px rgba(0, 9, 39, .28) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button) {
+  border: 1px solid var(--copa-line) !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: #092b70 !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button):is(:hover, :focus-visible):not(:disabled) {
+  border-color: var(--copa-white) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button):disabled {
+  color: rgba(255,255,255,.48) !important;
+  background: rgba(6,29,84,.62) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-saved-tournament-actions {
+  border-color: transparent !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-back-to-modes {
+  border-color: var(--copa-white) !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-white) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading {
+  min-height: 0 !important;
+  padding: 18px 22px !important;
+  border: 1px solid var(--copa-line) !important;
+  border-left: 6px solid var(--copa-red) !important;
+  border-radius: 6px !important;
+  color: var(--copa-white) !important;
+  background: linear-gradient(105deg, rgba(7,43,112,.96), rgba(6,29,84,.96) 68%, rgba(229,27,43,.72)) !important;
+  box-shadow: 0 12px 28px rgba(0, 9, 39, .22) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading::after {
+  position: absolute;
+  right: 20px;
+  bottom: 12px;
+  width: 86px;
+  height: 1px;
+  content: "";
+  background: var(--copa-silver);
+  opacity: .74;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading :is(h1, strong) { color: var(--copa-white) !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading :is(span, #retroTournamentKicker) { color: var(--copa-silver) !important; }
+
+body.retro-mode-active.retro-copa-2024-active .retro-view-tabs {
+  border: 1px solid var(--copa-line) !important;
+  border-radius: 5px !important;
+  background: rgba(4, 22, 62, .92) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-view-tabs button {
+  border-color: transparent !important;
+  border-radius: 3px !important;
+  color: var(--copa-muted) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-view-tabs button:is(:hover, :focus-visible):not(.active) {
+  color: var(--copa-white) !important;
+  background: rgba(23,111,228,.24) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-view-tabs button.active,
+body.retro-mode-active.retro-copa-2024-active .retro-view-tabs button[aria-selected="true"] {
+  border-color: var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .retro-group-table,
+  .retro-fixture,
+  .retro-squad-view,
+  .retro-lineups-view,
+  .retro-manager-lineup,
+  .retro-match-lineups-panel,
+  .retro-lineup-side,
+  .panel,
+  .match-stage,
+  .match-analysis,
+  .round-board,
+  .fixture-grid,
+  .fixture,
+  .stage-column,
+  .retro-live-ratings-side,
+  .retro-golden-boot,
+  .retro-golden-glove,
+  .retro-champion,
+  .champion-stage,
+  .modal,
+  .confirm-modal,
+  .snapshot-modal,
+  .achievement-unlock-modal
+) {
+  border: 1px solid rgba(7,25,56,.18) !important;
+  border-radius: 6px !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-panel) !important;
+  box-shadow: 0 10px 26px rgba(0, 12, 54, .18) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .retro-group-table h2,
+  .retro-lineup-side > header,
+  .retro-manager-lineup > header,
+  .retro-live-ratings-side > header,
+  .retro-golden-boot > header,
+  .retro-golden-glove > header,
+  .panel-heading,
+  .match-analysis-heading,
+  .round-heading,
+  .round-title,
+  .bracket-round-heading,
+  .bracket-round-title,
+  .bracket-round-header,
+  .bracket-header,
+  .bracket-column > h3
+) {
+  border-color: rgba(7,25,56,.12) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .retro-table-head,
+  .retro-live-table-head,
+  .retro-fixture header,
+  .retro-standard-fixture-meta,
+  .stage-topline,
+  .match-meta,
+  .match-header
+) {
+  color: var(--copa-navy) !important;
+  background: #e9edf5 !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .retro-table-row,
+  .retro-live-table-row,
+  .retro-fixture,
+  .retro-squad-row,
+  .retro-live-rating-row,
+  .fixture,
+  .fixture.bracket-fixture,
+  .bracket-card,
+  .bracket-match,
+  .third-place-card
+) {
+  border-color: rgba(7,25,56,.14) !important;
+  color: var(--copa-ink) !important;
+  background: #ffffff !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .retro-table-row:nth-child(even),
+  .retro-live-table-row:nth-child(even),
+  .retro-squad-row:nth-child(even)
+) { background: #eef2f8 !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.retro-table-row.qualified, .retro-live-table-row.qualification-place, .retro-manager-player.is-selected) {
+  border-left: 4px solid var(--copa-red) !important;
+  background: #e8eefb !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  h1, h2, h3, h4, strong, b, .fixture-team, .retro-lineup-player-name,
+  .retro-squad-player-name, .retro-table-row > *, .retro-fixture > *
+) { color: var(--copa-ink) !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  small, em, .stage-round, .stage-topline span, .retro-standard-fixture-meta,
+  .retro-table-row small, .retro-fixture small, .fixture-meta, .match-meta
+) { color: #53627c !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .primary-button,
+  .play-button,
+  .stage-action,
+  .live-control,
+  .secondary-button,
+  .text-button,
+  .history-round-button,
+  .snapshot-actions button,
+  .champion-actions button,
+  .achievement-unlock-action
+) {
+  border: 1px solid rgba(7,25,56,.22) !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-blue) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(
+  .primary-button,
+  .play-button,
+  .stage-action,
+  .live-control,
+  .secondary-button,
+  .text-button,
+  .history-round-button,
+  .snapshot-actions button,
+  .champion-actions button
+):is(:hover, :focus-visible):not(:disabled) {
+  border-color: var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(button, input, select, textarea):disabled {
+  color: #8592a9 !important;
+  background: #dfe5ef !important;
+  border-color: #c4cddd !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(input, select, textarea, .search, .team-filter-search, .team-filter-control, .formation-dropdown, .search-result-popover) {
+  border: 1px solid #aeb9cb !important;
+  border-radius: 4px !important;
+  color: var(--copa-ink) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(input, select, textarea, .search, .team-filter-search):focus,
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(input, select, textarea, .search, .team-filter-search):focus-visible {
+  outline: 2px solid rgba(229,27,43,.35) !important;
+  border-color: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.retro-fixture, .fixture, .fixture.bracket-fixture):is(:hover, .selected) {
+  border-color: var(--copa-red) !important;
+  box-shadow: inset 4px 0 var(--copa-red), 0 10px 22px rgba(0, 12, 54, .18) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.standard-match-tactics, .standard-tactic-buttons, .tactic-button, .lineup-tab, .formation-option) {
+  border-color: rgba(7,25,56,.18) !important;
+  color: var(--copa-ink) !important;
+  background: #eef2f8 !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.standard-tactic-buttons button, .tactic-button, .lineup-tab, .formation-option):is(:hover, :focus-visible):not(.active) {
+  border-color: var(--copa-blue-bright) !important;
+  color: var(--copa-navy) !important;
+  background: #dfe9fb !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.standard-tactic-buttons button.active, .tactic-button.active, .lineup-tab.active, .formation-option.active) {
+  border-color: var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.lineup-pitch, .retro-manager-pitch, .match-2d-pitch) {
+  border: 1px solid rgba(7,25,56,.24) !important;
+  border-radius: 5px !important;
+  background: linear-gradient(135deg, #0b3f96, #092a6c) !important;
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,.14) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.retro-pitch-player, .bench-player, .retro-manager-player, .player-card, .lineup-player-card) {
+  border-color: rgba(7,25,56,.18) !important;
+  border-radius: 5px !important;
+  color: var(--copa-ink) !important;
+  background: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0,12,54,.12) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.retro-pitch-player i, .player-number, .bench-player-number, .lineup-player-number) {
+  border-radius: 50% !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.match-commentary-view, .match-commentary-feed, .commentary-bar, .commentary-feed, .live-commentary, .match-commentary) {
+  border-color: rgba(207,214,230,.42) !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-commentary-feed .commentary-line span { color: #edf2fb !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-commentary-feed:is(.is-major, .is-goal, .is-goal-flash) {
+  border-color: var(--copa-red) !important;
+  box-shadow: inset 5px 0 var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.bracket-heads, .bracket-round-heading, .bracket-round-title, .bracket-round-header) {
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-heads span { color: var(--copa-silver) !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.bracket-connector::before, .bracket-connector::after, .bracket-line) {
+  border-color: var(--copa-silver) !important;
+  background: var(--copa-silver) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.bracket-connector, .bracket-line) { background: transparent !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture.bracket-fixture :is(.fixture-team.winner, .is-winner) { color: var(--copa-red) !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.penalty-stage, .match-penalty-overlay, .match-penalty-decision) {
+  border-color: rgba(207,214,230,.42) !important;
+  border-radius: 6px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.penalty-scene, .match-penalty-scene, .standard-penalty-scene, .penalty-pitch, .match-penalty-pitch, .online-penalty-pitch) {
+  border-color: rgba(255,255,255,.62) !important;
+  border-radius: 5px !important;
+  background: linear-gradient(135deg, #0b3f96, #061d54) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.penalty-goal, .penalty-net, .retro-pitch-halfway, .retro-pitch-circle, .match-2d-halfway, .match-2d-circle, .match-2d-box) { border-color: rgba(255,255,255,.72) !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button {
+  border: 2px solid rgba(255,255,255,.72) !important;
+  border-radius: 50% !important;
+  background: rgba(23,111,228,.9) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button:is(:hover, :focus-visible, .selected) {
+  border-color: var(--copa-red) !important;
+  background: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.penalty-marks i, .shootout-summary-row i, .penalty-score-dot, .kick-result-marker, .penalty-mark) {
+  border-radius: 50% !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.snapshot-modal, .snapshot-modal form) {
+  border-top: 5px solid var(--copa-red) !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-panel) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .snapshot-modal :is(.snapshot-modal-head, .snapshot-preview) {
+  border-color: rgba(7,25,56,.16) !important;
+  color: var(--copa-white) !important;
+  background: linear-gradient(130deg, #061d54, #0b3f96 62%, #e51b2b) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage {
+  border-top: 6px solid var(--copa-red) !important;
+  color: var(--copa-ink) !important;
+  background: #f7f9fd !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage :is(.champion-content, .champion-podium, .champion-award, .champion-extra-awards > *, .prediction-result) {
+  border-color: rgba(7,25,56,.16) !important;
+  color: var(--copa-ink) !important;
+  background: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage :is(h2, .trophy, .champion-award strong, .champion-award span) { color: var(--copa-navy) !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage :is(p, small, .champion-section-label, .champion-place > b) { color: #53627c !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage .champion-award-mark { color: var(--copa-red) !important; background: #e9edf5 !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage .place-1 { border-top: 4px solid var(--copa-red) !important; }
+
+body.retro-mode-active.retro-copa-2024-active :is(.modal, .confirm-modal, .snapshot-modal, .retro-achievements-modal, .achievement-unlock-modal)::backdrop,
+body.retro-mode-active.retro-copa-2024-active + dialog::backdrop { background: rgba(1, 9, 30, .72) !important; }
+
+.feature-announcement-copa-2024 {
+  border: 1px solid rgba(207,214,230,.62) !important;
+  border-top: 6px solid #e51b2b !important;
+  border-radius: 7px !important;
+  color: #071938 !important;
+  background: #f7f9fd !important;
+  box-shadow: 0 24px 70px rgba(0, 12, 54, .35) !important;
+}
+.feature-announcement-copa-2024::backdrop { background: rgba(1, 9, 30, .72) !important; }
+.feature-announcement-copa-2024 :is(.feature-announcement-mark, .feature-announcement-art) {
+  border-color: rgba(7,25,56,.16) !important;
+  background: linear-gradient(135deg, #061d54, #0b3f96 60%, #e51b2b) !important;
+}
+.feature-announcement-copa-2024 img { max-width: 160px; filter: drop-shadow(0 8px 12px rgba(0,9,45,.28)); }
+.feature-announcement-copa-2024 h2 { color: #061d54 !important; }
+.feature-announcement-copa-2024 p { color: #53627c !important; }
+.feature-announcement-copa-2024 .feature-announcement-button { border-color: #e51b2b !important; background: #e51b2b !important; }
+.feature-announcement-copa-2024 .feature-announcement-button:hover,
+.feature-announcement-copa-2024 .feature-announcement-button:focus-visible { background: #a70f20 !important; }
+
+#achievementsScreen[data-achievement-theme="2024"],
+#retroAchievementsModal[data-achievement-theme="2024"] {
+  --achievement-accent: #e51b2b;
+  --achievement-accent-text: #ffffff;
+  --achievement-surface: #0b3f96;
+  --achievement-surface-deep: #061d54;
+  --achievement-tab-surface: #e9edf5;
+  --achievement-card: #ffffff;
+  --achievement-card-complete: #dce8ff;
+  --achievement-copy: #071938;
+  --achievement-muted: #53627c;
+  --achievement-points: #a70f20;
+  --achievement-shadow: rgba(0,12,54,.2);
+  color: var(--achievement-copy) !important;
+  border-top: 6px solid var(--achievement-accent) !important;
+  background: #f7f9fd url("./assets/copa-america-2024-bg-portrait.svg") center / cover fixed no-repeat !important;
+}
+#achievementsScreen[data-achievement-theme="2024"] :is(.achievement-year-tabs, .retro-achievements-progress),
+#retroAchievementsModal[data-achievement-theme="2024"] :is(.achievement-year-tabs, .retro-achievements-progress) { border-color: rgba(7,25,56,.16) !important; background: #e9edf5 !important; }
+#achievementsScreen[data-achievement-theme="2024"] .achievement-year-tabs button,
+#retroAchievementsModal[data-achievement-theme="2024"] .achievement-year-tabs button { color: #53627c !important; background: transparent !important; }
+#achievementsScreen[data-achievement-theme="2024"] .achievement-year-tabs button[aria-selected="true"],
+#retroAchievementsModal[data-achievement-theme="2024"] .achievement-year-tabs button[aria-selected="true"] { color: #fff !important; background: #e51b2b !important; }
+#achievementsScreen[data-achievement-theme="2024"] .achievement-country,
+#retroAchievementsModal[data-achievement-theme="2024"] .achievement-country { border-color: rgba(7,25,56,.15) !important; color: #071938 !important; background: #fff !important; }
+#achievementsScreen[data-achievement-theme="2024"] .achievement-country.is-complete,
+#retroAchievementsModal[data-achievement-theme="2024"] .achievement-country.is-complete { border-left: 4px solid #e51b2b !important; background: #dce8ff !important; }
+#achievementsScreen[data-achievement-theme="2024"] :is(h1, h2, h3, strong),
+#retroAchievementsModal[data-achievement-theme="2024"] :is(h1, h2, h3, strong) { color: #061d54 !important; }
+#achievementsScreen[data-achievement-theme="2024"] :is(p, small, b, #achievementProgressLabel, #retroAchievementProgressLabel),
+#retroAchievementsModal[data-achievement-theme="2024"] :is(p, small, b, #achievementProgressLabel, #retroAchievementProgressLabel) { color: #53627c !important; }
+#achievementsScreen[data-achievement-theme="2024"] .achievement-progress-track,
+#retroAchievementsModal[data-achievement-theme="2024"] .achievement-progress-track { background: #cbd5e6 !important; }
+#achievementsScreen[data-achievement-theme="2024"] .achievement-progress-track span,
+#retroAchievementsModal[data-achievement-theme="2024"] .achievement-progress-track span { background: linear-gradient(90deg, #0b3f96, #e51b2b) !important; }
+
+.achievement-unlock-banner[data-achievement-theme="2024"],
+.achievement-unlock-modal[data-achievement-theme="2024"] { border-top-color: #e51b2b !important; color: #071938 !important; background: #f7f9fd !important; }
+.achievement-unlock-banner[data-achievement-theme="2024"] .achievement-unlock-banner-mark,
+.achievement-unlock-modal[data-achievement-theme="2024"] .achievement-unlock-mark,
+.achievement-unlock-modal[data-achievement-theme="2024"] .achievement-unlock-action { color: #fff !important; background: #e51b2b !important; }
+
+.tournament-history-screen[data-history-theme="2024"] {
+  --history-accent: #e51b2b;
+  --history-accent-strong: #0b3f96;
+  --history-surface: #f7f9fd;
+  --history-ink: #071938;
+  color: var(--history-ink) !important;
+  background: #f7f9fd url("./assets/copa-america-2024-bg-portrait.svg") center / cover fixed no-repeat !important;
+}
+.tournament-history-screen[data-history-theme="2024"] :is(.tournament-history-back, .tournament-history-brand-mark, .tournament-history-hero, .tournament-history-summary article, .tournament-history-rounds, .tournament-history-match, .tournament-history-fixture) {
+  border-color: rgba(7,25,56,.16) !important;
+  border-radius: 6px !important;
+  color: #071938 !important;
+  background: #ffffff !important;
+}
+.tournament-history-screen[data-history-theme="2024"] .tournament-history-hero { border-top: 6px solid #e51b2b !important; }
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-copa-2024-active { background-image: url("./assets/copa-america-2024-bg-portrait.svg") !important; background-attachment: scroll !important; }
+  body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading { padding: 14px 15px !important; border-left-width: 4px !important; }
+  body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading::after { right: 12px; bottom: 9px; width: 48px; }
+  body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid.bracket-mode,
+  body.retro-mode-active.retro-copa-2024-active #mainContent .retro-bracket,
+  body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-board { overflow-x: auto !important; overscroll-behavior-x: contain; }
+  body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-column { min-width: 170px; }
+  body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage { padding: 9px !important; }
+  body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage .champion-content { padding: 18px 10px 20px !important; }
+  body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage #championName { font-size: 38px !important; }
+  #achievementsScreen[data-achievement-theme="2024"], #retroAchievementsModal[data-achievement-theme="2024"] { background-attachment: scroll !important; }
+}
+
 /* France 1998 menu-parity visual lock: the playable mode extends the sage,
    burgundy and cream presentation used by its selector card. */
 body.retro-mode-active.retro-1998-active {
@@ -41118,4 +41629,115 @@ body.retro-mode-active.retro-1998-active .snapshot-modal .snapshot-actions .seco
     height: 92px !important;
   }
   body.retro-mode-active.retro-1998-active #mainContent .champion-stage #championName { font-size: 42px !important; }
+}
+
+/* Final cascade guard: the legacy 1998 rules below the shared retro skin
+   must not reintroduce cream, yellow or metallic decoration into Copa 2024. */
+body.retro-mode-active.retro-copa-2024-active #mainContent {
+  color: var(--copa-ink) !important;
+  border-color: var(--copa-line) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.match-stage, .round-board)::before {
+  background: linear-gradient(90deg, transparent 0%, var(--copa-red) 18%, var(--copa-white) 50%, var(--copa-blue-bright) 82%, transparent 100%) !important;
+  opacity: .86 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.match-stage, .round-board, .fixture-grid) {
+  border-color: var(--copa-line) !important;
+  box-shadow: 0 10px 26px rgba(0, 12, 54, .18) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture::before {
+  background: linear-gradient(90deg, var(--copa-red), var(--copa-white), var(--copa-blue-bright)) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-view-tabs::before,
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-analysis::before {
+  background: linear-gradient(90deg, transparent 0%, var(--copa-red) 18%, var(--copa-white) 50%, var(--copa-blue-bright) 82%, transparent 100%) !important;
+  opacity: .86 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.team-name, .match-score, .score-separator) {
+  color: var(--copa-navy) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.stage-round, .match-analysis-heading, .section-heading h2) {
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.stage-round, .section-heading h2) {
+  color: var(--copa-navy) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-analysis-heading {
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-analysis-heading > * {
+  color: var(--copa-white) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.event-live-clock strong, .live-clock, .fixture-team.winner .name, .fixture-team.winner b) {
+  color: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture-card-head, .fixture-card-head > span, .fixture-card-head .name) {
+  border-color: rgba(7,25,56,.14) !important;
+  color: var(--copa-navy) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture .name, .match-stats-empty span) {
+  color: var(--copa-ink) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-standard-fixture-meta {
+  border-color: rgba(7,25,56,.12) !important;
+  color: #53627c !important;
+  background: #e9edf5 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .panel-heading #goldenBootTitle {
+  color: var(--copa-white) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent summary {
+  color: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent summary::marker {
+  color: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-saved-tournament-actions {
+  position: relative !important;
+  z-index: 4 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-saved-tournament-actions .retro-back-to-modes {
+  position: absolute !important;
+  z-index: 5 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading > * {
+  visibility: visible !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading > div:first-child {
+  margin-left: 150px !important;
+}
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading > div:first-child {
+    margin-left: 0 !important;
+    padding-top: 50px !important;
+  }
+}
+
+.feature-announcement-copa-2024 :is(.feature-announcement-button, .feature-announcement-dismiss) {
+  border-radius: 5px !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+.feature-announcement-copa-2024 .feature-announcement-button {
+  border: 1px solid #e51b2b !important;
+  color: #ffffff !important;
+  background: #e51b2b !important;
+  outline-color: #e51b2b !important;
+}
+.feature-announcement-copa-2024 .feature-announcement-button:is(:hover, :focus-visible) {
+  border-color: #061d54 !important;
+  background: #a70f20 !important;
+}
+.feature-announcement-copa-2024 .feature-announcement-dismiss {
+  border: 1px solid transparent !important;
+  color: #53627c !important;
+  background: transparent !important;
+}
+.feature-announcement-copa-2024 .feature-announcement-dismiss:is(:hover, :focus-visible) {
+  border-color: #cfd6e6 !important;
+  color: #061d54 !important;
+  background: #eef2f8 !important;
 }

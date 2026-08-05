@@ -4,9 +4,9 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = path.join(root, "tmp", "fjelstul-worldcup", "data-csv");
-const officialClubsPath = path.join(root, "retro-2006-clubs.generated.json");
-const squadsOutputPath = path.join(root, "retro-2006-squads.js");
-const scheduleOutputPath = path.join(root, "retro-2006-schedule.js");
+const officialClubsPath = path.join(root, "data/retro/2006/clubs.generated.json");
+const squadsOutputPath = path.join(root, "data/retro/2006/squads.js");
+const scheduleOutputPath = path.join(root, "data/retro/2006/schedule.js");
 const officialClubs = JSON.parse(fs.readFileSync(officialClubsPath, "utf8"));
 
 const TEAM_RATINGS = Object.freeze({

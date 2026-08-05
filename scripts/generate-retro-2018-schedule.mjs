@@ -3,7 +3,7 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const sourcePath = path.join(root, "tmp", "worldcup-matches.csv");
-const outputPath = path.join(root, "retro-2018-schedule.js");
+const outputPath = path.join(root, "data/retro/2018/schedule.js");
 
 function parseCsv(text) {
   const rows = [];

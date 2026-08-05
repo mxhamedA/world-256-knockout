@@ -1,5 +1,5 @@
 /*
- * Generated from retro-euro-2016-squad-dataset.json.
+ * Generated from data/retro/euro-2016/squad-dataset.json.
  * Official final 23-player squads, period ratings and opening-match starting XIs.
  * Run: node scripts/generate-euro-2016-squads.mjs
  */

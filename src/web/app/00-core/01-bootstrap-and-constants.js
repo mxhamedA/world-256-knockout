@@ -14,6 +14,7 @@ const MATCH_SCREEN_THEMES = Object.freeze({
   "2016": Object.freeze({ label: "Euro 2016", colour: "#020c2d" }),
   "2018": Object.freeze({ label: "Russia 2018", colour: "#a51a16" }),
   "2022": Object.freeze({ label: "Qatar 2022", colour: "#16070d" }),
+  "2024": Object.freeze({ label: "Copa América USA 2024", colour: "#061d54" }),
   "2026": Object.freeze({ label: "World Cup 2026", colour: "#0a45ff" }),
 });
 const ONLINE_ROOM_SESSION_KEY = "world-256-online-room-v1";
@@ -40,6 +41,7 @@ const TOURNAMENT_HISTORY_DATABASE_NAME = "world-256-tournament-history";
 const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
 const RETRO_1998_ANNOUNCEMENT_KEY = "world-256-announcement-retro-1998-v1";
+const RETRO_COPA_2024_ANNOUNCEMENT_KEY = "world-256-announcement-copa-america-2024-v1";
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -150,6 +152,7 @@ const RETRO_WORLD_CUP_PATHS = Object.freeze({
   2016: "/retro-euro-2016",
   2018: "/retro-18-world-cup",
   2022: "/retro-22-world-cup",
+  2024: "/copa-america-2024",
   2026: "/world-cup-2026",
 });
 
@@ -210,6 +213,14 @@ const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
     logo: "./assets/retro-world-cup-2022.png",
     accent: "#9c143d",
     accentText: "#ffffff",
+  }),
+  2024: Object.freeze({
+    label: "Copa América USA 2024",
+    host: "United States",
+    logo: "./assets/copa-america-2024-logo.png",
+    accent: "#e51b2b",
+    accentText: "#ffffff",
+    competition: "CONMEBOL Copa América",
   }),
   2026: Object.freeze({
     label: "Canada, Mexico & USA 2026",
@@ -520,6 +531,9 @@ const els = {
   retro1998AnnouncementModal: $("#retro1998AnnouncementModal"),
   retro1998AnnouncementClose: $("#retro1998AnnouncementClose"),
   retro1998AnnouncementAction: $("#retro1998AnnouncementAction"),
+  retroCopaAnnouncementModal: $("#retroCopaAnnouncementModal"),
+  retroCopaAnnouncementClose: $("#retroCopaAnnouncementClose"),
+  retroCopaAnnouncementAction: $("#retroCopaAnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   removeInjuriesSetting: $("#removeInjuriesSetting"),
   removeInjuriesLabel: $("#removeInjuriesLabel"),

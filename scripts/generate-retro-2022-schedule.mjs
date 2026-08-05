@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = path.join(root, "tmp", "worldcup-data", "data-csv", "matches.csv");
-const outputPath = path.join(root, "retro-2022-schedule.js");
+const outputPath = path.join(root, "data/retro/2022/schedule.js");
 
 function parseCsv(text) {
   const rows = [];

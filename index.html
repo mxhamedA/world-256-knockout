@@ -662,6 +662,7 @@
               <button type="button" role="tab" data-achievement-year="2016" aria-selected="false">EURO 16</button>
               <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
               <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
+              <button type="button" role="tab" data-achievement-year="2024" aria-selected="false">COPA 24</button>
               <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">2026</button>
               <button type="button" role="tab" data-achievement-year="pl" aria-selected="false">PL 26/27</button>
               <button type="button" role="tab" data-achievement-year="ucl" aria-selected="false">UCL 26/27</button>
@@ -2204,6 +2205,25 @@
       </div>
     </dialog>
 
+    <dialog class="feature-announcement-modal feature-announcement-copa-2024" id="retroCopaAnnouncementModal">
+      <div class="feature-announcement-accent" aria-hidden="true">
+        <div class="feature-announcement-copa-visual">
+          <span class="feature-announcement-copa-ribbon"></span>
+          <img src="./assets/copa-america-2024-logo.png" alt="" />
+          <small>USA 2024</small>
+        </div>
+      </div>
+      <div class="feature-announcement-content">
+        <span class="feature-announcement-label">OUT NOW</span>
+        <h2>Copa América 2024 is here</h2>
+        <p>Take charge of any of the 16 final nations, play the official USA 2024 fixtures and rewrite Copa América history.</p>
+        <button class="feature-announcement-button" id="retroCopaAnnouncementAction" type="button">
+          Play Copa América 2024 <span aria-hidden="true">&rarr;</span>
+        </button>
+        <button class="feature-announcement-dismiss" id="retroCopaAnnouncementClose" type="button">Not now</button>
+      </div>
+    </dialog>
+
     <dialog class="modal bug-report-modal" id="bugReportModal">
       <form class="bug-report-form" id="bugReportForm">
         <button class="icon-button close-modal bug-report-close" id="bugReportCloseButton" type="button" aria-label="Close">&times;</button>
@@ -2324,6 +2344,7 @@
         <button type="button" role="tab" data-achievement-year="2016" aria-selected="false">EURO 16</button>
         <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
         <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
+        <button type="button" role="tab" data-achievement-year="2024" aria-selected="false">COPA 24</button>
         <button type="button" role="tab" data-achievement-year="2026" aria-selected="false">2026</button>
         <button type="button" role="tab" data-achievement-year="pl" aria-selected="false">PL 26/27</button>
         <button type="button" role="tab" data-achievement-year="ucl" aria-selected="false">UCL 26/27</button>
@@ -2342,24 +2363,26 @@
     <script src="./player-pools.generated.js?v=current-rosters-193"></script>
     <script src="./data.js?v=current-rosters-3"></script>
     <script src="./retro-data.js?v=retro-fields-3"></script>
-    <script src="./retro-2002-squads.js?v=retro-squads-2002-1"></script>
-    <script src="./retro-2002-schedule.js?v=retro-schedule-2002-1"></script>
-    <script src="./retro-2006-squads.js?v=retro-squads-2006-1"></script>
-    <script src="./retro-2006-schedule.js?v=retro-schedule-2006-1"></script>
-    <script src="./retro-1998-squads.js?v=retro-squads-1998-1"></script>
-    <script src="./retro-1998-schedule.js?v=retro-schedule-1998-1"></script>
-    <script src="./retro-2010-squads.js?v=retro-squads-2010-1"></script>
-    <script src="./retro-2010-schedule.js?v=retro-schedule-2010-1"></script>
-    <script src="./retro-2014-squads.js?v=retro-squads-3"></script>
-    <script src="./retro-2014-schedule.js?v=retro-schedule-1"></script>
-    <script src="./retro-euro-2016-squads.js?v=euro-2016-squads-1"></script>
-    <script src="./retro-euro-2016-schedule.js?v=euro-2016-schedule-1"></script>
-    <script src="./retro-2018-squads.js?v=retro-squads-2018-1"></script>
-    <script src="./retro-2018-schedule.js?v=retro-schedule-2018-1"></script>
-    <script src="./retro-2022-squads.js?v=retro-squads-2022-1"></script>
-    <script src="./retro-2022-schedule.js?v=retro-schedule-2022-1"></script>
-    <script src="./retro-2026-squads.js?v=world-cup-2026-official-1"></script>
-    <script src="./retro-2026-schedule.js?v=world-cup-2026-schedule-1"></script>
+    <script src="./data/retro/2002/squads.js?v=retro-squads-2002-1"></script>
+    <script src="./data/retro/2002/schedule.js?v=retro-schedule-2002-1"></script>
+    <script src="./data/retro/2006/squads.js?v=retro-squads-2006-1"></script>
+    <script src="./data/retro/2006/schedule.js?v=retro-schedule-2006-1"></script>
+    <script src="./data/retro/1998/squads.js?v=retro-squads-1998-1"></script>
+    <script src="./data/retro/1998/schedule.js?v=retro-schedule-1998-1"></script>
+    <script src="./data/retro/2010/squads.js?v=retro-squads-2010-1"></script>
+    <script src="./data/retro/2010/schedule.js?v=retro-schedule-2010-1"></script>
+    <script src="./data/retro/2014/squads.js?v=retro-squads-3"></script>
+    <script src="./data/retro/2014/schedule.js?v=retro-schedule-1"></script>
+    <script src="./data/retro/euro-2016/squads.js?v=euro-2016-squads-1"></script>
+    <script src="./data/retro/euro-2016/schedule.js?v=euro-2016-schedule-1"></script>
+    <script src="./data/retro/2018/squads.js?v=retro-squads-2018-1"></script>
+    <script src="./data/retro/2018/schedule.js?v=retro-schedule-2018-1"></script>
+    <script src="./data/retro/2022/squads.js?v=retro-squads-2022-1"></script>
+    <script src="./data/retro/2022/schedule.js?v=retro-schedule-2022-1"></script>
+    <script src="./data/retro/copa-america-2024/squads.js?v=copa-2024-squads-1"></script>
+    <script src="./data/retro/copa-america-2024/schedule.js?v=copa-2024-schedule-1"></script>
+    <script src="./data/retro/2026/squads.js?v=world-cup-2026-official-1"></script>
+    <script src="./data/retro/2026/schedule.js?v=world-cup-2026-schedule-1"></script>
     <script src="./retro-engine.js?v=penalties-ratings-reds-1"></script>
     <script src="./presentation-engine.js?v=smooth-commentary-pacing-19"></script>
     <script src="./simulation-engine.js?v=world-cup-player-commentary-1"></script>

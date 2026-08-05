@@ -5,6 +5,7 @@ function retroRoundNames(year = retroTournament?.year || state?.retroTournamentY
     "Group stage - Matchday 3",
   ];
   if (Number(year) === 2026) names.push("Round of 32");
+  if (Number(year) === 2024) return [...names, "Quarter-finals", "Semi-finals", "Finals"];
   return [...names, "Round of 16", "Quarter-Final", "Semi-Final", "Finals"];
 }
 
@@ -53,7 +54,10 @@ function tournamentFinalRoundIndex() {
   if (state?.savedTournamentView) return Math.max(0, state.rounds.length - 1);
   if (state?.uclSeason) return 7;
   if (state?.premierLeagueSeason) return 37;
-  if (isRetroSimulatorState()) return Number(retroTournament?.year || state?.retroTournamentYear) === 2026 ? 7 : 6;
+  if (isRetroSimulatorState()) {
+    const year = Number(retroTournament?.year || state?.retroTournamentYear);
+    return year === 2026 ? 7 : year === 2024 ? 5 : 6;
+  }
   if (isValidCustomTournamentState(state)) {
     return customRoundNames(state.customTournament.teamCount, state.customTournament.structure).length - 1;
   }
@@ -73,6 +77,7 @@ function retroSquadsForYear(year = retroTournament?.year || Number(readRetroWorl
   if (Number(year) === 2016) return RETRO_EURO_2016_SQUADS;
   if (Number(year) === 2018) return RETRO_2018_SQUADS;
   if (Number(year) === 2022) return RETRO_2022_SQUADS;
+  if (Number(year) === 2024) return RETRO_COPA_2024_SQUADS;
   if (Number(year) === 2026) return RETRO_2026_SQUADS;
   return RETRO_2014_SQUADS;
 }
@@ -252,19 +257,23 @@ function adaptRetroMatch(match) {
   match.homeId = retroTeamId(match.home, retroTournament.year);
   match.awayId = retroTeamId(match.away, retroTournament.year);
   match.allowDraw = match.stage === "group";
-  if (!match.schedule && Number(retroTournament.year) === 2026) {
+  if (!match.schedule && [2024, 2026].includes(Number(retroTournament.year))) {
     const groupScheduleKey = `${match.home}|${match.away}`;
     const reverseGroupScheduleKey = `${match.away}|${match.home}`;
+    const groupSchedule = Number(retroTournament.year) === 2024 ? RETRO_COPA_2024_GROUP_SCHEDULE : RETRO_2026_GROUP_SCHEDULE;
+    const knockoutSchedule = Number(retroTournament.year) === 2024 ? RETRO_COPA_2024_KNOCKOUT_SCHEDULE : RETRO_2026_KNOCKOUT_SCHEDULE;
     match.schedule = match.stage === "group"
-      ? RETRO_2026_GROUP_SCHEDULE[groupScheduleKey] || RETRO_2026_GROUP_SCHEDULE[reverseGroupScheduleKey]
-      : RETRO_2026_KNOCKOUT_SCHEDULE[match.id];
+      ? groupSchedule[groupScheduleKey] || groupSchedule[reverseGroupScheduleKey]
+      : knockoutSchedule[match.id];
   }
   if (match.schedule && (!match.schedule.dateLabel || !match.schedule.timeLabel)) {
     const details = retroScheduleDetails(match);
     match.schedule = {
       ...match.schedule,
       dateLabel: details?.date || "",
-      timeLabel: details?.time ? `${details.time} BST` : "",
+      timeLabel: details?.time
+        ? `${details.time}${Number(retroTournament.year) === 2024 ? " local" : " BST"}`
+        : "",
     };
   }
   if (match.result) {

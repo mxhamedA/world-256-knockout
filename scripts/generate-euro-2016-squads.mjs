@@ -3,8 +3,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const sourcePath = join(root, "retro-euro-2016-squad-dataset.json");
-const outputPath = join(root, "retro-euro-2016-squads.js");
+const sourcePath = join(root, "data/retro/euro-2016/squad-dataset.json");
+const outputPath = join(root, "data/retro/euro-2016/squads.js");
 const dataset = JSON.parse(readFileSync(sourcePath, "utf8"));
 
 const squads = Object.fromEntries(Object.entries(dataset.countries).map(([country, team]) => [
@@ -47,7 +47,7 @@ const squads = Object.fromEntries(Object.entries(dataset.countries).map(([countr
 
 const banner = [
   "/*",
-  " * Generated from retro-euro-2016-squad-dataset.json.",
+  " * Generated from data/retro/euro-2016/squad-dataset.json.",
   " * Official final 23-player squads, period ratings and opening-match starting XIs.",
   " * Run: node scripts/generate-euro-2016-squads.mjs",
   " */",

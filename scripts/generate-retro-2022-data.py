@@ -19,7 +19,7 @@ FIFA_23_UPDATE_DATE = "2022-11-16"
 FIFA_22_UPDATE = "64"
 FIFA_22_UPDATE_DATE = "2022-07-18"
 WORLDCUP_DATA = ROOT / "tmp" / "worldcup-data" / "data-csv"
-OUTPUT = ROOT / "retro-2022-squad-dataset.json"
+OUTPUT = ROOT / "data/retro/2022/squad-dataset.json"
 
 GROUPS = {
     "Qatar": "A", "Ecuador": "A", "Senegal": "A", "Netherlands": "A",

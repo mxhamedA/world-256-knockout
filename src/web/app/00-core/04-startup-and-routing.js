@@ -45,7 +45,7 @@ function clearRetroRouteLoadingState() {
 function enforceModeScreenVisibility(mode = currentAppMode()) {
   const activeRetroYear = Number(retroTournament?.year || retroWorldCupYearFromPath() || readRetroWorldCupYear());
   document.body.classList.toggle("standard-mode-active", mode === "standard");
-  if (els.newsButton) els.newsButton.hidden = mode === "standard" || mode === "custom" || mode === "customMatch";
+  if (els.newsButton) els.newsButton.hidden = false;
   if (mode !== "retro") {
     if (els.appShell) {
       els.appShell.style.removeProperty("display");
@@ -54,7 +54,7 @@ function enforceModeScreenVisibility(mode = currentAppMode()) {
     if (els.retroWorldCupScreen) {
       els.retroWorldCupScreen.hidden = true;
     }
-    document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-2026-active");
+    document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
     return;
   }
 
@@ -66,6 +66,7 @@ function enforceModeScreenVisibility(mode = currentAppMode()) {
   document.body.classList.toggle("retro-euro-2016-active", activeRetroYear === 2016);
   document.body.classList.toggle("retro-2018-active", activeRetroYear === 2018);
   document.body.classList.toggle("retro-2022-active", activeRetroYear === 2022);
+  document.body.classList.toggle("retro-copa-2024-active", activeRetroYear === 2024);
   document.body.classList.toggle("retro-2026-active", activeRetroYear === 2026);
   if (els.appShell) {
     els.appShell.style.setProperty("display", "none", "important");
@@ -88,7 +89,7 @@ function forceUnlockStartupState() {
   clearRetroRouteLoadingState();
   if (!isChallengeMode) document.body.classList.remove("challenge-mode-active");
   if (!isProfileMode) document.body.classList.remove("profile-mode-active");
-  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-2026-active");
+  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
 
   if (!isOnlineMode && document.body.classList.contains("online-screen-open")) {
     document.body.classList.remove("online-screen-open");
@@ -174,7 +175,7 @@ function recoverFromStartupError(error, context = "startup") {
   stopOnlineLivePresentation();
 
   document.body.classList.remove(
-    "retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-2026-active",
+    "retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active",
     "legacy-mode-active", "achievements-mode-active", "online-screen-open",
     "challenge-mode-active", "profile-mode-active", "mobile-menu-open",
   );

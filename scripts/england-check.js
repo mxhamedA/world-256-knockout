@@ -24,7 +24,7 @@ const ctx = {
 };
 vm.createContext(ctx);
 
-const files = ["player-pools.generated.js","data.js","retro-data.js","retro-2014-squads.js","retro-2014-schedule.js","retro-engine.js","presentation-engine.js","simulation-engine.js","legacy-data/catalog.generated.js","app.js"];
+const files = ["player-pools.generated.js","data.js","retro-data.js","data/retro/2014/squads.js","data/retro/2014/schedule.js","retro-engine.js","presentation-engine.js","simulation-engine.js","legacy-data/catalog.generated.js","app.js"];
 const src = files.map(f=>fs.readFileSync(root+"/"+f,"utf8")).join("\n");
 vm.runInContext(src, ctx);
 

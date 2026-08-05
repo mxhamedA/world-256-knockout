@@ -8,7 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (file) => fs.readFileSync(path.join(root, file), "utf8");
 const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 vm.runInContext(`${[
-  "retro-data.js", "retro-1998-squads.js", "retro-1998-schedule.js", "retro-engine.js",
+  "retro-data.js", "data/retro/1998/squads.js", "data/retro/1998/schedule.js", "retro-engine.js",
 ].map(read).join("\n")}
 globalThis.__data = RETRO_WORLD_CUPS[1998];
 globalThis.__engine = RETRO_WORLD_CUP_ENGINE;`, context);

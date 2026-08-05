@@ -1,5 +1,6 @@
 let featureAnnouncementRetryTimer = null;
 let retro1998AnnouncementShownThisPage = false;
+let retroCopaAnnouncementShownThisPage = false;
 
 function announcementWasSeen(storageKey) {
   try {
@@ -21,19 +22,19 @@ function openNextFeatureAnnouncement() {
   clearTimeout(featureAnnouncementRetryTimer);
   featureAnnouncementRetryTimer = null;
   const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
-    dialog !== els.retro1998AnnouncementModal
+    dialog !== els.retro1998AnnouncementModal && dialog !== els.retroCopaAnnouncementModal
   ));
   if (anotherDialogIsOpen) {
     featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
     return;
   }
   if (
-    els.retro1998AnnouncementModal
-    && !retro1998AnnouncementShownThisPage
-    && !announcementWasSeen(RETRO_1998_ANNOUNCEMENT_KEY)
+    els.retroCopaAnnouncementModal
+    && !retroCopaAnnouncementShownThisPage
+    && !announcementWasSeen(RETRO_COPA_2024_ANNOUNCEMENT_KEY)
   ) {
-    retro1998AnnouncementShownThisPage = true;
-    els.retro1998AnnouncementModal.showModal();
+    retroCopaAnnouncementShownThisPage = true;
+    els.retroCopaAnnouncementModal.showModal();
   }
 }
 
@@ -60,6 +61,23 @@ els.retro1998AnnouncementAction?.addEventListener("click", () => {
   }, 120);
 });
 
+function closeRetroCopaAnnouncement() {
+  rememberAnnouncement(RETRO_COPA_2024_ANNOUNCEMENT_KEY);
+  if (els.retroCopaAnnouncementModal?.open) els.retroCopaAnnouncementModal.close();
+}
+
+els.retroCopaAnnouncementClose?.addEventListener("click", closeRetroCopaAnnouncement);
+els.retroCopaAnnouncementModal?.addEventListener("cancel", closeRetroCopaAnnouncement);
+els.retroCopaAnnouncementModal?.addEventListener("close", () => rememberAnnouncement(RETRO_COPA_2024_ANNOUNCEMENT_KEY));
+els.retroCopaAnnouncementAction?.addEventListener("click", () => {
+  closeRetroCopaAnnouncement();
+  setRetroCompetition("copa");
+  setRetroWorldCupYear("2024");
+  setAppModeUrl("home");
+  render();
+  window.setTimeout(() => els.startRetroWorldCupButton?.click(), 120);
+});
+
 function openCustomTournamentSettings() {
   stopStandardPlaybackForNavigation();
   if (currentAppMode() === "customMatch" || state.customTournament?.customMatch === true) customMatchSetupViewOpen = true;
@@ -75,7 +93,7 @@ els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.cli
 $("#profileFeedbackButton")?.addEventListener("click", () => els.bugReportButton.click());
 $("#profileAchievementsButton")?.addEventListener("click", () => els.openAchievementsButton.click());
 els.retroAchievementsButton?.addEventListener("click", () => {
-  if ([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))) {
+  if ([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;
   }
@@ -169,7 +187,7 @@ els.openAchievementsButton?.addEventListener("click", () => {
   }
   if (
     els.retroWorldCupScreen?.hidden === false
-    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))
+    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
   ) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;

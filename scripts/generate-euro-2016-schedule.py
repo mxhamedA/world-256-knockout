@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / "tmp/euro2016/euro-history/matches/matches/euro/2016.csv"
-OUTPUT = ROOT / "retro-euro-2016-schedule.js"
+OUTPUT = ROOT / "data/retro/euro-2016/schedule.js"
 
 TEAM_ALIASES = {
     "Czechia": "Czech Republic",

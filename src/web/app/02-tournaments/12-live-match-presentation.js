@@ -1661,7 +1661,7 @@ function reconcileInteractiveMatchBoundary(match, playback) {
   const result = match.result;
   result.regulationHome = (result.homeEvents || []).filter((event) => event.minute <= 90).length;
   result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
-  const extraTime = decidingMatchIsLevel(match, result.regulationHome, result.regulationAway);
+  const extraTime = retroMatchAllowsExtraTime(match) && decidingMatchIsLevel(match, result.regulationHome, result.regulationAway);
   result.extraTime = extraTime;
   if (!extraTime) {
     result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
@@ -1692,8 +1692,26 @@ function resolveInteractiveExtraTime(match, playback) {
   result.homeGoals = (result.homeEvents || []).length;
   result.awayGoals = (result.awayEvents || []).length;
   result.regulationHome = (result.homeEvents || []).filter((event) => event.minute <= 90).length;
-  result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
-  if (match.allowDraw) {
+ result.regulationAway = (result.awayEvents || []).filter((event) => event.minute <= 90).length;
+  const runInteractiveShootout = () => {
+    if (result.penalties && result.shootout?.length) return;
+    const random = mulberry32(state.drawSeed + stableHash(`${match.id}-interactive-shootout-result`));
+    const penaltyResult = simulatePenaltyShootout(
+      teamById(match.homeId),
+      teamById(match.awayId),
+      random,
+      result.redCards || [],
+      {
+        home: shootoutUnavailablePlayers(result, "home"),
+        away: shootoutUnavailablePlayers(result, "away"),
+      },
+      state.settings.upset,
+    );
+    result.penalties = penaltyResult.penalties;
+    result.shootout = penaltyResult.sequence;
+    result.winnerId = result.penalties.home > result.penalties.away ? match.homeId : match.awayId;
+  };
+ if (match.allowDraw) {
     result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
     result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
     result.homeGoals = result.regulationHome;
@@ -1706,17 +1724,20 @@ function resolveInteractiveExtraTime(match, playback) {
       : result.homeGoals > result.awayGoals ? match.homeId : match.awayId;
     return;
   }
-  if (!decidingMatchIsLevel(match, result.regulationHome, result.regulationAway)) {
-    result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
-    result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
-    result.homeGoals = result.regulationHome;
-    result.awayGoals = result.regulationAway;
-    result.extraTime = false;
+  const canExtraTime = retroMatchAllowsExtraTime(match);
+  const regulationIsLevel = decidingMatchIsLevel(match, result.regulationHome, result.regulationAway);
+  if (!canExtraTime || !regulationIsLevel) {
+   result.homeEvents = (result.homeEvents || []).filter((event) => event.minute <= 90);
+   result.awayEvents = (result.awayEvents || []).filter((event) => event.minute <= 90);
+   result.homeGoals = result.regulationHome;
+   result.awayGoals = result.regulationAway;
+   result.extraTime = false;
     result.penalties = null;
     result.shootout = null;
-    result.winnerId = decidingMatchWinnerId(match, result.homeGoals, result.awayGoals);
-    return;
-  }
+    if (!canExtraTime && regulationIsLevel) runInteractiveShootout();
+    else result.winnerId = decidingMatchWinnerId(match, result.homeGoals, result.awayGoals);
+   return;
+ }
   result.extraTime = true;
   if (!decidingMatchIsLevel(match, result.homeGoals, result.awayGoals)) {
     result.penalties = null;
@@ -1724,22 +1745,7 @@ function resolveInteractiveExtraTime(match, playback) {
     result.winnerId = decidingMatchWinnerId(match, result.homeGoals, result.awayGoals);
     return;
   }
-  if (result.penalties && result.shootout?.length) return;
-  const random = mulberry32(state.drawSeed + stableHash(`${match.id}-interactive-shootout-result`));
-  const penaltyResult = simulatePenaltyShootout(
-    teamById(match.homeId),
-    teamById(match.awayId),
-    random,
-    result.redCards || [],
-    {
-      home: shootoutUnavailablePlayers(result, "home"),
-      away: shootoutUnavailablePlayers(result, "away"),
-    },
-    state.settings.upset,
-  );
-  result.penalties = penaltyResult.penalties;
-  result.shootout = penaltyResult.sequence;
-  result.winnerId = result.penalties.home > result.penalties.away ? match.homeId : match.awayId;
+  runInteractiveShootout();
 }
 
 function finalizeHighlightResult(match, playback) {

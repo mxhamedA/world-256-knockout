@@ -17,7 +17,7 @@ const migration = read(path.join("migrations", "0017_retro_1998_achievements.sql
 
 const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 vm.runInContext(`${[
-  "retro-data.js", "retro-1998-squads.js", "retro-1998-schedule.js", "retro-engine.js",
+  "retro-data.js", "data/retro/1998/squads.js", "data/retro/1998/schedule.js", "retro-engine.js",
 ].map(read).join("\n")}
 globalThis.__data = RETRO_WORLD_CUPS[1998];
 globalThis.__squads = RETRO_1998_SQUADS;
@@ -81,15 +81,16 @@ assert.ok(engine.goldenBoot(tournament)[0]?.goals > 0);
 assert.match(app, /1998:\s*"\/retro-98-world-cup"/);
 assert.match(app, /classList\.toggle\("retro-1998-active"/);
 assert.match(app, /if \(Number\(year\) === 1998\) return RETRO_1998_SQUADS/);
-assert.match(app, /\["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2026"\]/);
+assert.match(app, /\["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"\]/);
 assert.match(app, /France 1998 World Cup/);
-assert.match(app, /isFrance1998[\s\S]*managementAttack = isFrance1998 \? 0\.018/);
+assert.match(app, /isFrance1998[\s\S]*managementAttack = isCopa2024 \? 0\.022 : isFrance1998 \? 0\.018/);
 assert.match(app, /retroManagedTeamSheetImpact[\s\S]*fitScore[\s\S]*selectionScore[\s\S]*synergyScore/);
-assert.match(html, /retro-1998-squads\.js/);
-assert.match(html, /retro-1998-schedule\.js/);
+assert.match(html, /data\/retro\/1998\/squads\.js/);
+assert.match(html, /data\/retro\/1998\/schedule\.js/);
 assert.equal((html.match(/data-achievement-year="1998"/g) || []).length, 2);
 assert.match(worker, /"\/retro-98-world-cup"/);
-assert.match(build, /retro-1998-squads\.js/);
+assert.match(build, /const retroDataRoot = join\(projectRoot, "data", "retro"\)/);
+assert.match(build, /cpSync\(retroDataRoot, join\(outputRoot, "data", "retro"\)/);
 assert.match(build, /france-98-bg-desktop\.png/);
 assert.match(build, /france-98-bg-portrait\.png/);
 assert.match(build, /retro-1998\/yugoslavia\.webp/);
@@ -147,7 +148,7 @@ assert.match(app, /retro1998AnnouncementAction[\s\S]*setRetroWorldCupYear\("1998
 assert.match(challenge, /1998:\s*"FRANCE 1998"/);
 assert.match(challenge, /"Yugoslavia":\s*"Serbia"/);
 assert.match(challengeService, /id:\s*"retro-1998-world-tour"/);
-assert.match(challengeService, /retro-\(1998\|2002\|2006\|2010\|2014\|2016\|2018\|2022\|2026\)/);
+assert.match(challengeService, /retro-\(1998\|2002\|2006\|2010\|2014\|2016\|2018\|2022\|2024\|2026\)/);
 assert.match(migration, /CREATE TABLE IF NOT EXISTS retro_1998_attempts/);
 assert.match(migration, /\bseed INTEGER NOT NULL\b/);
 assert.doesNotMatch(migration, /tournament_seed/);

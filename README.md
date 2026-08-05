@@ -24,7 +24,9 @@ entrypoint, but its maintainable source is split into ordered files under
 the boundary map and React Native port guidance. Edit those chunks and run
 `npm run build:app`. The same source organization now exists for the stylesheet
 under [`src/web/styles`](src/web/styles), and the retro year lookup map is at
-[`src/web/modes/retro/README.md`](src/web/modes/retro/README.md). Run
+[`src/web/modes/retro/README.md`](src/web/modes/retro/README.md). Historical
+runtime squads and schedules are grouped under [`data/retro`](data/retro).
+Run
 `npm run build:styles` after editing styles; `npm run build` performs both steps
 automatically before creating `dist/`.
 

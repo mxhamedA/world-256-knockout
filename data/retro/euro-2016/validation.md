@@ -77,6 +77,6 @@ Dataset SHA-256:
 
 ## Files
 
-- `retro-euro-2016-squad-dataset.json`: complete country-grouped JSON
+- `data/retro/euro-2016/squad-dataset.json`: complete country-grouped JSON
 - `scripts/generate-euro-2016-data.py`: reproducible source and rating generator
 - `scripts/validate-euro-2016-dataset.mjs`: independent structural and historical-integrity validator

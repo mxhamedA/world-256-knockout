@@ -14,7 +14,7 @@ from retro_starting_xi import add_starting_xis
 ROOT = Path(__file__).resolve().parents[1]
 PDF_PATH = ROOT / "tmp" / "pdfs" / "fwc_2014_squadlists.pdf"
 FIFA_PATH = ROOT / "tmp" / "players_15.csv"
-OUTPUT_PATH = ROOT / "retro-2014-squads.js"
+OUTPUT_PATH = ROOT / "data/retro/2014/squads.js"
 APPEARANCES_PATH = ROOT / "tmp" / "fjelstul" / "player_appearances.csv"
 
 TEAM_NAME_MAP = {

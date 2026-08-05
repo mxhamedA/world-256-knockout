@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const datasetPath = join(root, "retro-euro-2016-squad-dataset.json");
+const datasetPath = join(root, "data/retro/euro-2016/squad-dataset.json");
 const source = readFileSync(datasetPath, "utf8");
 const dataset = JSON.parse(source);
 

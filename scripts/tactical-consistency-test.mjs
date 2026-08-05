@@ -98,13 +98,13 @@ assert.match(
 );
 assert.match(
   managedRetroBoostSource,
-  /managementAttack = isFrance1998 \? 0\.018 : isKoreaJapan2002 \? 0\.025 : 0/,
-  "France 1998 and Korea/Japan 2002 management attack boosts should remain modest and bounded.",
+  /managementAttack = isCopa2024 \? 0\.022 : isFrance1998 \? 0\.018 : isKoreaJapan2002 \? 0\.025 : 0/,
+  "Copa América, France 1998 and Korea/Japan 2002 management attack boosts should remain modest and bounded.",
 );
 assert.match(
   managedRetroBoostSource,
-  /managementDefence = isFrance1998 \? 0\.012 : isKoreaJapan2002 \? 0\.015 : 0/,
-  "France 1998 and Korea/Japan 2002 management defence boosts should remain modest and bounded.",
+  /managementDefence = isCopa2024 \? 0\.016 : isFrance1998 \? 0\.012 : isKoreaJapan2002 \? 0\.015 : 0/,
+  "Copa América, France 1998 and Korea/Japan 2002 management defence boosts should remain modest and bounded.",
 );
 const france98BoostContext = {
   retroTournament: { year: 1998, managedTeam: "France" },

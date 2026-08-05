@@ -78,6 +78,6 @@ The local FIFA PDF used by the generator has SHA-256:
 
 ## Files
 
-- `retro-2022-squad-dataset.json`: complete country-grouped dataset
+- `data/retro/2022/squad-dataset.json`: complete country-grouped dataset
 - `scripts/generate-retro-2022-data.py`: reproducible source and rating generator
 - `scripts/validate-retro-2022-dataset.mjs`: independent schema and historical-integrity validator

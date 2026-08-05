@@ -9,6 +9,7 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const css = fs.readFileSync(path.join(root, "clean.css"), "utf8");
 
 assert.match(html, /id="retro1998AnnouncementModal"[\s\S]*World Cup 1998 is here[\s\S]*Play 1998 World Cup/);
+assert.match(html, /id="retroCopaAnnouncementModal"[\s\S]*Copa Am(?:é|&eacute;)rica 2024 is here[\s\S]*Play Copa Am(?:é|&eacute;)rica 2024/);
 assert.doesNotMatch(html, /The UCL simulator is here/);
 assert.doesNotMatch(html, /data-open-tournament-theme/);
 assert.doesNotMatch(html, /class="tournament-theme-setting"/);
@@ -28,20 +29,21 @@ assert.doesNotMatch(app, /RETRO_2006_ANNOUNCEMENT_KEY|PREMIER_LEAGUE_ANNOUNCEMEN
 assert.doesNotMatch(app, /EURO_2016_ANNOUNCEMENT_KEY|PALESTINE_CHALLENGE_ANNOUNCEMENT_KEY|STARTING_XI_ANNOUNCEMENT_KEY|KNOCKOUT_256_ANNOUNCEMENT_KEY/);
 assert.match(
   app,
-  /!announcementWasSeen\(RETRO_1998_ANNOUNCEMENT_KEY\)[\s\S]*retro1998AnnouncementModal\.showModal\(\)/,
-  "The 1998 announcement must appear only when its launch version has not been seen.",
+  /!announcementWasSeen\(RETRO_COPA_2024_ANNOUNCEMENT_KEY\)[\s\S]*retroCopaAnnouncementModal\.showModal\(\)/,
+  "The Copa América announcement must appear only when its launch version has not been seen.",
 );
 assert.match(
   app,
-  /retro1998AnnouncementAction\?\.addEventListener\("click"[\s\S]*setRetroWorldCupYear\("1998"\)[\s\S]*startRetroWorldCupButton\?\.click\(\)/,
-  "The announcement action must launch the 1998 World Cup mode.",
+  /retroCopaAnnouncementAction\?\.addEventListener\("click"[\s\S]*setRetroCompetition\("copa"\)[\s\S]*setRetroWorldCupYear\("2024"\)[\s\S]*startRetroWorldCupButton\?\.click\(\)/,
+  "The announcement action must launch the Copa América 2024 mode.",
 );
-assert.match(app, /newsButton\?\.addEventListener\("click", \(\) => els\.retro1998AnnouncementModal\?\.showModal\(\)\)/, "The shared News button must open the 1998 release announcement.");
-assert.match(app, /retroNewsButton\?\.addEventListener\("click", \(\) => els\.newsButton\.click\(\)\)/, "Retro pages must route News through the shared 1998 announcement.");
+assert.match(app, /newsButton\?\.addEventListener\("click", \(\) => els\.retroCopaAnnouncementModal\?\.showModal\(\)\)/, "The shared News button must open the Copa América release announcement.");
+assert.match(app, /retroNewsButton\?\.addEventListener\("click", \(\) => els\.newsButton\.click\(\)\)/, "Retro pages must route News through the shared Copa América announcement.");
 assert.match(app, /document\.querySelectorAll\("dialog\[open\]"\)/);
 assert.match(css, /\.feature-announcement-modal\[open\][\s\S]*feature-announcement-in/);
 assert.match(css, /\.feature-announcement-1998 \.feature-announcement-accent/);
 assert.match(css, /\.feature-announcement-1998-visual/);
+assert.match(css, /\.feature-announcement-copa-2024/);
 assert.doesNotMatch(css, /\.feature-announcement-wc-2026|\.feature-announcement-wc-2026-logo/);
 assert.doesNotMatch(css, /\.feature-announcement-2006|\.feature-announcement-premier-league/);
 assert.doesNotMatch(css, /\.feature-announcement-euro|\.feature-announcement-achievements|\.feature-announcement-pitch|\.feature-announcement-trophy/);

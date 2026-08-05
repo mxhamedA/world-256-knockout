@@ -166,6 +166,7 @@ window.addEventListener("popstate", () => {
   const mode = currentAppMode();
   const routedRetroYear = retroWorldCupYearFromPath();
   if (mode === "retro" && routedRetroYear) {
+    if (Number(routedRetroYear) === 2024) setRetroCompetition("copa");
     setRetroWorldCupYear(routedRetroYear);
     retroTournament = readRetroTournamentState(routedRetroYear);
     retroSelectedMatchId = retroTournament
@@ -225,17 +226,20 @@ syncOnlineRoomCard();
 renderPremierLeagueTeamPicker();
 renderPremierLeagueAssetState();
 setRetroWorldCupYear(initialRetroYear || readRetroWorldCupYear());
-setRetroCompetition(Number(initialRetroYear) === 2016 ? "euros" : initialRetroYear ? "wc" : readRetroCompetition());
+setRetroCompetition(Number(initialRetroYear) === 2016 ? "euros" : Number(initialRetroYear) === 2024 ? "copa" : initialRetroYear ? "wc" : readRetroCompetition());
 if (
   initialAppMode === "retro"
-  && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(initialRetroYear))
+  && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(initialRetroYear))
   && !retroTournament
 ) {
   const routedYear = Number(initialRetroYear);
   const managedTeam = routedYear === 2016
     ? readRetroEuroTeam() || "France"
-    : readRetroWorldCupTeam(String(routedYear));
+    : routedYear === 2024
+      ? readRetroCopaTeam()
+      : readRetroWorldCupTeam(String(routedYear));
   if (routedYear === 2016) saveRetroEuroTeam(managedTeam);
+  if (routedYear === 2024 && !managedTeam) saveRetroCopaTeam(null);
   retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
     year: routedYear,
     seed: Date.now(),

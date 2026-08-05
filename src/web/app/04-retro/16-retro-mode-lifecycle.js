@@ -6,6 +6,7 @@ function renderRetroWorldCupMode() {
   }
   activateRetroSimulatorState();
   const isEuros = Number(retroTournament.year) === 2016;
+  const isCopa = Number(retroTournament.year) === 2024;
   document.body.classList.add("retro-mode-active");
   document.body.classList.toggle("retro-1998-active", Number(retroTournament.year) === 1998);
   document.body.classList.toggle("retro-2002-active", Number(retroTournament.year) === 2002);
@@ -14,11 +15,13 @@ function renderRetroWorldCupMode() {
   document.body.classList.toggle("retro-euro-2016-active", Number(retroTournament.year) === 2016);
   document.body.classList.toggle("retro-2018-active", Number(retroTournament.year) === 2018);
   document.body.classList.toggle("retro-2022-active", Number(retroTournament.year) === 2022);
+  document.body.classList.toggle("retro-copa-2024-active", isCopa);
   document.body.classList.toggle("retro-2026-active", Number(retroTournament.year) === 2026);
   els.retroWorldCupScreen.hidden = false;
   els.retroTournamentKicker.textContent = RETRO_WORLD_CUP_EDITIONS[retroTournament.year].label.toUpperCase();
   els.retroTournamentTitle.textContent = isEuros
     ? "UEFA Euro 2016"
+    : isCopa ? "Copa América USA 2024"
     : Number(retroTournament.year) === 1998 ? "France 1998 World Cup" : `World Cup ${retroTournament.year}`;
   if (els.retroAchievementsButton) {
     els.retroAchievementsButton.hidden = false;
@@ -42,11 +45,12 @@ function renderRetroWorldCupMode() {
 function startRetroWorldCup() {
   const year = selectedRetroTournamentYear();
   const isEuros = year === 2016;
-  if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)) {
+  const isCopa = year === 2024;
+  if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year)) {
     showToast(`The ${year} tournament is coming soon.`);
     return;
   }
-  const managedTeam = isEuros ? readRetroEuroTeam() : readRetroWorldCupTeam(String(year));
+  const managedTeam = isEuros ? readRetroEuroTeam() : isCopa ? readRetroCopaTeam() : readRetroWorldCupTeam(String(year));
   retroTournament = readRetroTournamentState(year);
   if (!retroTournament) {
     retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
@@ -102,7 +106,7 @@ function restartRetroWorldCup() {
     setAppModeUrl("home", { replace: true });
     render();
     window.scrollTo({ top: 0, behavior: "auto" });
-    showToast(`${Number(resetYear) === 2016 ? "Euro 2016" : `World Cup ${resetYear}`} reset.`);
+    showToast(`${Number(resetYear) === 2016 ? "Euro 2016" : Number(resetYear) === 2024 ? "Copa América 2024" : `World Cup ${resetYear}`} reset.`);
     return;
   }
 
@@ -131,7 +135,7 @@ function restartRetroWorldCup() {
   syncRetroWorldCupCardAction(String(year));
   render();
   window.scrollTo({ top: 0, behavior: "auto" });
-  showToast(`${Number(year) === 2016 ? "Euro 2016" : `World Cup ${year}`} restarted.`);
+  showToast(`${Number(year) === 2016 ? "Euro 2016" : Number(year) === 2024 ? "Copa América 2024" : `World Cup ${year}`} restarted.`);
 }
 
 function syncSettingsDialog() {
@@ -249,7 +253,7 @@ function openRestartConfirmation() {
   if (isRetroSimulatorState()) {
     const title = els.retroRestartModal.querySelector("h2");
     const year = Number(retroTournament?.year || 2014);
-    if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
+    if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : year === 2024 ? "Copa América 2024" : `World Cup ${year}`}?`;
     els.retroRestartModal.dataset.returnHome = "false";
     els.retroRestartModal.showModal();
     return;
@@ -629,4 +633,4 @@ document.querySelectorAll("[data-tournament-theme-option]").forEach((button) => 
 delete document.documentElement.dataset.tournamentTheme;
 els.onlineSettingsButton?.addEventListener("click", () => els.settingsButton.click());
 $("#profileSettingsButton")?.addEventListener("click", () => els.settingsButton.click());
-els.newsButton?.addEventListener("click", () => els.retro1998AnnouncementModal?.showModal());
+els.newsButton?.addEventListener("click", () => els.retroCopaAnnouncementModal?.showModal());

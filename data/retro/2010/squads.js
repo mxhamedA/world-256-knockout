@@ -1,4 +1,4 @@
-/* Generated from retro-2010-squad-dataset.json. Do not edit by hand. */
+/* Generated from data/retro/2010/squad-dataset.json. Do not edit by hand. */
 const RETRO_2010_SQUADS = Object.freeze({
   "France": {
     "formation": "4-2-3-1",

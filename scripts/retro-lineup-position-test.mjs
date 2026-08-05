@@ -7,12 +7,12 @@ import vm from "node:vm";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const context = vm.createContext({ console, Math, Object, Set, Map });
 const squadFiles = [
-  "retro-2010-squads.js",
-  "retro-2014-squads.js",
-  "retro-euro-2016-squads.js",
-  "retro-2018-squads.js",
-  "retro-2022-squads.js",
-  "retro-2026-squads.js",
+  "data/retro/2010/squads.js",
+  "data/retro/2014/squads.js",
+  "data/retro/euro-2016/squads.js",
+  "data/retro/2018/squads.js",
+  "data/retro/2022/squads.js",
+  "data/retro/2026/squads.js",
 ];
 squadFiles.forEach((file) => vm.runInContext(readFileSync(join(root, file), "utf8"), context));
 

@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = path.join(root, "tmp", "fjelstul-worldcup", "data-csv");
-const outputPath = path.join(root, "retro-2002-squads.js");
-const officialClubsPath = path.join(root, "retro-2002-clubs.generated.json");
+const outputPath = path.join(root, "data/retro/2002/squads.js");
+const officialClubsPath = path.join(root, "data/retro/2002/clubs.generated.json");
 const officialClubs = JSON.parse(fs.readFileSync(officialClubsPath, "utf8"));
 
 // Pre-tournament simulator ratings: 15 May 2002 FIFA ranking strength, then

@@ -3,8 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const dataset = JSON.parse(fs.readFileSync(path.join(root, "retro-2022-squad-dataset.json"), "utf8"));
-const outputPath = path.join(root, "retro-2022-squads.js");
+const dataset = JSON.parse(fs.readFileSync(path.join(root, "data/retro/2022/squad-dataset.json"), "utf8"));
+const outputPath = path.join(root, "data/retro/2022/squads.js");
 
 const squads = Object.fromEntries(Object.entries(dataset.countries).map(([team, country]) => [
   team,

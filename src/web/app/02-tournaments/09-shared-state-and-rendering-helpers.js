@@ -1074,7 +1074,10 @@ function tournamentHistoryMode(candidate = state) {
 
 function tournamentHistoryFinalRoundIndex(candidate = state) {
   if (candidate?.savedTournamentView) return Math.max(0, candidate.rounds.length - 1);
-  if (candidate?.retroWorldCup) return Number(candidate.retroTournamentYear) === 2026 ? 7 : 6;
+  if (candidate?.retroWorldCup) {
+    const year = Number(candidate.retroTournamentYear);
+    return year === 2026 ? 7 : year === 2024 ? 5 : 6;
+  }
   if (candidate?.customTournament) {
     return customRoundNames(
       candidate.customTournament.teamCount,
@@ -1469,7 +1472,7 @@ function createTournamentHistoryRecord() {
     sum + (match?.result?.bye ? 0 : Number(match?.result?.homeGoals || 0) + Number(match?.result?.awayGoals || 0))
   ), 0);
   const typeLabel = mode === "retro"
-    ? year === 2016 ? "UEFA Euro 2016" : `World Cup ${year}`
+    ? year === 2016 ? "UEFA Euro 2016" : year === 2024 ? "Copa América USA 2024" : `World Cup ${year}`
     : mode === "custom"
       ? `${state.customTournament.teamCount}-team custom tournament`
       : mode === "legacy"
@@ -2713,6 +2716,8 @@ async function createMatchSnapshotCanvas() {
     ? retroTheme
       ? Number(retroYear) === 2016
         ? "FRANCE 2016 EUROPEAN CHAMPIONS"
+        : Number(retroYear) === 2024
+          ? "COPA AMÉRICA USA 2024 CHAMPIONS"
         : `${RETRO_WORLD_CUP_EDITIONS[retroYear].host.toUpperCase()} ${retroYear} WORLD CHAMPIONS`
       : uclSnapshot
         ? "UCL 26/27 CHAMPIONS"

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1400" role="img" aria-label="Copa América 2024 portrait blue, red and white ribbon background">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2=".9" y2="1">
+      <stop offset="0" stop-color="#03143c"/>
+      <stop offset=".52" stop-color="#07377f"/>
+      <stop offset="1" stop-color="#041638"/>
+    </linearGradient>
+    <pattern id="texture" width="48" height="48" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <path d="M0 24h48M24 0v48" stroke="#fff" stroke-opacity=".035" stroke-width="1"/>
+      <circle cx="8" cy="8" r="1.1" fill="#fff" fill-opacity=".12"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="1400" fill="url(#sky)"/>
+  <rect width="900" height="1400" fill="url(#texture)"/>
+  <path d="M-250 1260C120 890 280 820 480 600S690 210 1120 80" fill="none" stroke="#fff" stroke-opacity=".16" stroke-width="94"/>
+  <path d="M-250 1275C120 905 280 835 480 615S690 225 1120 95" fill="none" stroke="#e51b2b" stroke-opacity=".92" stroke-width="39"/>
+  <path d="M-250 1228C120 858 280 788 480 568S690 178 1120 48" fill="none" stroke="#fff" stroke-opacity=".88" stroke-width="13"/>
+  <g fill="#fff" fill-opacity=".86">
+    <path d="m106 194 5 12 13 1-10 8 3 13-11-7-11 7 3-13-10-8 13-1z"/>
+    <path d="m730 270 4 10 11 1-8 7 2 11-9-6-9 6 3-11-9-7 11-1z"/>
+    <path d="m178 420 3 8 9 1-7 5 2 9-7-5-8 5 2-9-7-5 9-1z"/>
+    <path d="m742 872 3 8 9 1-7 5 2 9-7-5-8 5 2-9-7-5 9-1z"/>
+  </g>
+</svg>

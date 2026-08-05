@@ -21,8 +21,8 @@ PLAYERS_CSV = WORLD_CUP_SOURCE / "data-csv" / "players.csv"
 APPEARANCES_CSV = WORLD_CUP_SOURCE / "data-csv" / "player_appearances.csv"
 MATCHES_CSV = WORLD_CUP_SOURCE / "data-csv" / "matches.csv"
 RANKINGS_CSV = ROOT / "tmp" / "fifa-ranking-source" / "ranking_fifa_historical.csv"
-SQUADS_OUTPUT = ROOT / "retro-1998-squads.js"
-SCHEDULE_OUTPUT = ROOT / "retro-1998-schedule.js"
+SQUADS_OUTPUT = ROOT / "data/retro/1998/squads.js"
+SCHEDULE_OUTPUT = ROOT / "data/retro/1998/schedule.js"
 
 
 TEAM_NAME_MAP = {

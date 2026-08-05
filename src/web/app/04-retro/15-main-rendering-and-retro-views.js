@@ -31,7 +31,7 @@ function render() {
   els.fixtureGrid.classList.remove("retro-group-match-history");
   els.teamFilterControl.hidden = false;
   els.unresolvedFilter.hidden = false;
-  document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-2026-active");
+  document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
   els.retroWorldCupScreen.hidden = true;
   const mode = premierLeagueMatchActive ? "standard" : currentAppMode();
   if (mode !== "custom") customTournamentSetupViewOpen = false;
@@ -381,7 +381,8 @@ function setRetroCompetition(competition) {
         ? "Euros Simulator"
         : "WC Simulator";
   }
-  els.retroCopaComingSoon?.setAttribute("aria-hidden", String(!isCopa));
+  els.retroCopaComingSoon?.setAttribute("aria-hidden", "true");
+  if (els.retroCopaComingSoon) els.retroCopaComingSoon.hidden = true;
   if (isCopa) {
     els.retroModeCard?.style.setProperty("--retro-accent", RETRO_COPA_2024.accent);
     els.retroModeCard?.style.setProperty("--retro-accent-text", RETRO_COPA_2024.accentText);
@@ -404,7 +405,8 @@ function setRetroCompetition(competition) {
     syncRetroWorldCupCardAction(RETRO_EURO_2016.year);
     return;
   }
-  setRetroWorldCupYear(readRetroWorldCupYear());
+  const worldCupYear = readRetroWorldCupYear();
+  setRetroWorldCupYear(worldCupYear === "2024" ? "2014" : worldCupYear);
 }
 
 function retroTournamentStorageKey(year) {
@@ -444,7 +446,7 @@ function savedRetroAchievementTournamentStates() {
   return readTournamentHistoryRecords()
     .filter((record) => (
       record?.mode === "retro"
-      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(record.year))
+      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(record.year))
       && record.managedTeamId
       && record.championId
     ))
@@ -483,7 +485,7 @@ function savedRetroAchievementTournamentStates() {
 
 window.getRetroAchievementTournamentStates = () => {
   const tournaments = [
-    ...[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026]
+    ...[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026]
       .map((year) => readRetroTournamentState(year))
       .filter(Boolean),
     ...savedRetroAchievementTournamentStates(),
@@ -509,7 +511,7 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   const isEuros = selectedCompetition === "euros";
   const isCopa = selectedCompetition === "copa";
   const selectedYear = isCopa ? 2024 : isEuros ? RETRO_EURO_2016.year : year;
-  const playable = isEuros || (!isCopa && ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2026"].includes(String(selectedYear)));
+  const playable = isEuros || isCopa || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear));
   const hasTeamField = isCopa
     ? Boolean(RETRO_COPA_2024.teams.length)
     : isEuros
@@ -529,10 +531,8 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   }
   syncLandingSettings();
   els.startRetroWorldCupButton.disabled = !playable;
-  els.startRetroWorldCupButton.innerHTML = isCopa
-    ? "Coming soon"
-    : playable
-    ? `${savedTournament ? "Resume" : "Start"} ${isEuros ? "Euro 2016" : "World Cup"} <span aria-hidden="true">&rarr;</span>`
+  els.startRetroWorldCupButton.innerHTML = playable
+    ? `${savedTournament ? "Resume" : "Start"} ${isCopa ? "Copa América 2024" : isEuros ? "Euro 2016" : "World Cup"} <span aria-hidden="true">&rarr;</span>`
     : "Coming soon";
   els.restartRetroWorldCupButton.hidden = !playable || !savedTournament;
 }
@@ -545,6 +545,7 @@ function retroTeamForFlag(name) {
     "Czech Republic": "Czechia",
     "IR Iran": "Iran",
     "Korea Republic": "South Korea",
+    "México": "Mexico",
     "Serbia and Montenegro": "Serbia",
     "Turkey": "Türkiye",
     "United States": "USA",
@@ -574,6 +575,20 @@ function retroMatchStageLabel(match) {
 
 function retroScheduleDetails(match) {
   if (!match?.schedule) return null;
+  if (Number(retroTournament?.year) === 2024) {
+    const [year, month, day] = String(match.schedule.date || "").split("-").map(Number);
+    const localDate = Number.isInteger(year) && Number.isInteger(month) && Number.isInteger(day)
+      ? new Date(Date.UTC(year, month - 1, day, 12))
+      : null;
+    return {
+      date: localDate
+        ? new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" }).format(localDate)
+        : String(match.schedule.date || ""),
+      time: String(match.schedule.localTime || ""),
+      stadium: match.schedule.stadium,
+      city: match.schedule.city,
+    };
+  }
   const kickoff = new Date(`${match.schedule.date}T${match.schedule.localTime}:00${match.schedule.utcOffset}`);
   return {
     date: new Intl.DateTimeFormat("en-GB", {
@@ -596,15 +611,19 @@ function retroScheduleDetails(match) {
 function retroScheduleMarkup(match, compact = false) {
   const details = retroScheduleDetails(match);
   if (!details) return "";
+  const localKickoff = Number(retroTournament?.year) === 2024 && details.time
+    ? `${details.time} local`
+    : "";
   if (compact) {
     return `<small class="retro-fixture-details">
       <span>${escapeHtml(details.date)}</span>
+      ${localKickoff ? `<span>${escapeHtml(localKickoff)}</span>` : ""}
       <span>${escapeHtml(details.stadium)} · ${escapeHtml(details.city)}</span>
     </small>`;
   }
   return `<div class="retro-match-schedule">
     <span><b>${escapeHtml(details.date)}</b></span>
-    <span><b>${escapeHtml(details.stadium)}</b><small>${escapeHtml(details.city)}</small></span>
+    <span><b>${escapeHtml(details.stadium)}</b><small>${escapeHtml(details.city)}${localKickoff ? ` · ${escapeHtml(localKickoff)}` : ""}</small></span>
   </div>`;
 }
 
@@ -642,7 +661,7 @@ function retroMatchStageMarkup(match) {
     return `
       <section class="retro-champion">
         ${retroFlag(retroTournament.champion, "retro-champion-flag")}
-        <span>${Number(retroTournament.year) === 2016 ? "EUROPEAN CHAMPIONS" : "WORLD CHAMPIONS"}</span>
+        <span>${Number(retroTournament.year) === 2016 ? "EUROPEAN CHAMPIONS" : Number(retroTournament.year) === 2024 ? "COPA AMÉRICA USA 2024 CHAMPIONS" : "WORLD CHAMPIONS"}</span>
         <h2>${escapeHtml(retroTournament.champion)}</h2>
       </section>`;
   }
@@ -869,7 +888,7 @@ function sharedLineupManagerSupported(candidate = state) {
   if (candidate?.premierLeagueSeason) return Boolean(candidate.spectateTeamId);
   return Boolean(
     isRetroSimulatorState(candidate)
-    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))
+    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
     && retroTournament?.managedTeam,
   );
 }
@@ -1312,7 +1331,7 @@ function retroManagerLineupForTeam(team) {
   if (
     !team
     || !isRetroSimulatorState()
-    || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))
+    || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
     || team.name !== retroTournament?.managedTeam
   ) return null;
   const squad = retroManagerSquadForTeam(team);
@@ -1356,7 +1375,7 @@ function retroManagerCanEditMatch(match) {
   }
   return Boolean(
     isRetroSimulatorState()
-    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))
+    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
     && retroTournament?.managedTeam
     && !match?.result?.revealed
     && [match?.home, match?.away, teamById(match?.homeId)?.name, teamById(match?.awayId)?.name]

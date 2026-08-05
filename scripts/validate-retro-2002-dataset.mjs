@@ -14,7 +14,7 @@ function evaluate(file, exportName, globalName) {
 }
 
 const worldCups = evaluate("retro-data.js", "RETRO_WORLD_CUPS", "worldCups");
-const squads = evaluate("retro-2002-squads.js", "RETRO_2002_SQUADS", "squads");
+const squads = evaluate("data/retro/2002/squads.js", "RETRO_2002_SQUADS", "squads");
 const edition = worldCups[2002];
 
 assert.ok(edition, "2002 World Cup metadata is present");

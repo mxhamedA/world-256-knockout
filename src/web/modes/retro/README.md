@@ -1,19 +1,20 @@
 # Retro World Cup lookup map
 
 Use this file as the starting point when changing one historical World Cup.
-The browser runtime is still made from classic scripts, so the root data files
-must remain at the root; the `src/web/app` files are the maintainable UI source.
+The browser runtime is still made from classic scripts, but each edition's
+rosters, schedules and research files now live together under `data/retro/`.
+The `src/web/app` files are the maintainable UI source.
 
 ## World Cup 2010 (South Africa)
 
 Read these files in this order:
 
 1. **Player data and generation**
-   - `retro-2010-squad-dataset.json` — editable historical roster source.
+   - `data/retro/2010/squad-dataset.json` — editable historical roster source.
    - `scripts/generate-retro-2010-data.mjs` — regenerates both 2010 runtime
      files from the dataset and schedule source.
-   - `retro-2010-squads.js` — generated browser roster/player data.
-   - `retro-2010-schedule.js` — generated group and knockout fixtures.
+   - `data/retro/2010/squads.js` — generated browser roster/player data.
+   - `data/retro/2010/schedule.js` — generated group and knockout fixtures.
 2. **Shared tournament engine**
    - `retro-data.js` — `RETRO_WORLD_CUPS[2010]` edition metadata and teams.
    - `retro-engine.js` — 2010 squad lookup, schedules, goalscorer pools,
@@ -45,10 +46,10 @@ Read these files in this order:
 1. **Player data and fixtures**
    - `scripts/generate-retro-2014-squads.py` — regenerates the runtime squad
      file from the local historical source inputs in `tmp/`.
-   - `retro-2014-squads.js` — generated 2014 roster/player data.
+   - `data/retro/2014/squads.js` — generated 2014 roster/player data.
    - `scripts/generate-retro-2014-schedule.mjs` — regenerates fixtures from
      the historical match CSV.
-   - `retro-2014-schedule.js` — generated group and knockout fixtures.
+   - `data/retro/2014/schedule.js` — generated group and knockout fixtures.
 2. **Shared tournament engine**
    - `retro-data.js` — `RETRO_WORLD_CUPS[2014]` edition metadata and teams.
    - `retro-engine.js` — 2014 squad lookup, schedules, goalscorer pools,

@@ -7,10 +7,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 const sources = [
   "retro-data.js",
-  "retro-2014-squads.js",
-  "retro-2014-schedule.js",
-  "retro-2018-squads.js",
-  "retro-2018-schedule.js",
+  "data/retro/2014/squads.js",
+  "data/retro/2014/schedule.js",
+  "data/retro/2018/squads.js",
+  "data/retro/2018/schedule.js",
   "retro-engine.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
 

@@ -288,7 +288,7 @@ function shootoutPositionPriority(position) {
 }
 
 function retroShootoutActiveNames(team) {
-  if (!team?.retroWorldCup || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))) {
+  if (!team?.retroWorldCup || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))) {
     return null;
   }
   const match = selectedMatch();
@@ -1143,7 +1143,7 @@ function premierLeagueFormationTacticalImpact(tacticKey) {
 function retroManagedTeamSheetImpact(team, opponent, tacticKey) {
   if (
     !isRetroSimulatorState()
-    || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(retroTournament?.year))
+    || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
     || team?.name !== retroTournament?.managedTeam
   ) return { attack: 1, defence: 1, score: 0, fit: 0, selection: 0, synergy: 0 };
   const squad = retroManagerSquadForTeam(team);
@@ -1204,15 +1204,19 @@ function retroManagedTeamSheetImpact(team, opponent, tacticKey) {
   };
 }
 
-function managedRetroTacticalBoost(ratingGap, edge) {
+function managedRetroTacticalBoost(ratingGap, edge, controlledTeam = null) {
   if (!isRetroSimulatorState() || !retroTournament?.managedTeam) {
+    return { attack: 1, defence: 1, comebackFloor: null, favouriteCeiling: null };
+  }
+  if (Number(retroTournament.year) === 2024 && controlledTeam?.name !== retroTournament.managedTeam) {
     return { attack: 1, defence: 1, comebackFloor: null, favouriteCeiling: null };
   }
 
   const isKoreaJapan2002 = Number(retroTournament.year) === 2002;
   const isFrance1998 = Number(retroTournament.year) === 1998;
-  const managementAttack = isFrance1998 ? 0.018 : isKoreaJapan2002 ? 0.025 : 0;
-  const managementDefence = isFrance1998 ? 0.012 : isKoreaJapan2002 ? 0.015 : 0;
+  const isCopa2024 = Number(retroTournament.year) === 2024;
+  const managementAttack = isCopa2024 ? 0.022 : isFrance1998 ? 0.018 : isKoreaJapan2002 ? 0.025 : 0;
+  const managementDefence = isCopa2024 ? 0.016 : isFrance1998 ? 0.012 : isKoreaJapan2002 ? 0.015 : 0;
   if (edge <= 0) {
     return {
       attack: 1 + managementAttack,
@@ -1291,7 +1295,7 @@ function applyControlledTacticalMatchup(adjustedXG, match, controlledSide) {
   const ratingGap = Math.max(0, teamSimulationRatings(opponentTeam).overall - teamSimulationRatings(controlledTeam).overall);
   const underdogAttackBoost = edge > 0 ? 1 + Math.min(0.38, ratingGap * 0.012) * Math.min(1, edge / 0.2) : 1;
   const underdogDefenceBoost = edge > 0 ? 1 - Math.min(0.28, ratingGap * 0.008) * Math.min(1, edge / 0.2) : 1;
-  const managedBoost = managedRetroTacticalBoost(ratingGap, edge);
+  const managedBoost = managedRetroTacticalBoost(ratingGap, edge, controlledTeam);
   const standardManagedBoost = managedStandardTournamentBoost(controlledTeam, opponentTeam);
   const teamSheetImpact = retroManagedTeamSheetImpact(controlledTeam, opponentTeam, tacticKey);
   const formationImpact = premierLeagueFormationTacticalImpact(tacticKey);
@@ -1353,6 +1357,11 @@ function decidingMatchScore(match, homeGoals, awayGoals) {
     home: Number(homeGoals) + (Number(aggregate?.home) || 0),
     away: Number(awayGoals) + (Number(aggregate?.away) || 0),
   };
+}
+
+function retroMatchAllowsExtraTime(match) {
+  const year = Number(retroTournament?.year || state?.retroTournamentYear || 0);
+  return year !== 2024 || match?.id === "ko-final";
 }
 
 function decidingMatchIsLevel(match, homeGoals, awayGoals) {

@@ -9,7 +9,7 @@ const tournamentCount = Math.max(1, Number(countArgument?.split("=")[1]) || 20);
 const context = vm.createContext({ console, Date, Math, Object, Array, Map, Set, JSON });
 const source = [
   "retro-data.js",
-  "retro-2026-squads.js",
+  "data/retro/2026/squads.js",
   "retro-engine.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
 vm.runInContext(`${source}

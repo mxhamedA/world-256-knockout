@@ -60,8 +60,8 @@ assert.doesNotMatch(
 assert.match(app, /if \(Number\(year\) === 2022\) return RETRO_2022_SQUADS;/);
 assert.match(app, /classList\.toggle\("retro-2022-active", Number\(retroTournament\.year\) === 2022\)/);
 assert.match(css, /Qatar 2022 manager: editable team sheet and live performance ratings/);
-assert.match(html, /<script src="\.\/retro-2022-squads\.js/);
-assert.match(html, /<script src="\.\/retro-2022-schedule\.js/);
+assert.match(html, /<script src="\.\/data\/retro\/2022\/squads\.js/);
+assert.match(html, /<script src="\.\/data\/retro\/2022\/schedule\.js/);
 assert.match(worker, /"\/retro-22-world-cup"/);
 assert.match(build, /assets\/retro-2022\/qatar-night-landscape\.png/);
 assert.match(build, /assets\/retro-2022\/qatar-night-portrait\.png/);

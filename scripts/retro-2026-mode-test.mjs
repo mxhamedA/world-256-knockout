@@ -15,8 +15,8 @@ const cleanCss = fs.readFileSync(path.join(root, "clean.css"), "utf8");
 const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 const sources = [
   "retro-data.js",
-  "retro-2026-squads.js",
-  "retro-2026-schedule.js",
+  "data/retro/2026/squads.js",
+  "data/retro/2026/schedule.js",
   "retro-engine.js",
 ].map((file) => fs.readFileSync(path.join(root, file), "utf8")).join("\n");
 
@@ -67,7 +67,7 @@ assert.equal(ownGoalMatch.result.homeEvents[0].ownGoal, true);
 assert.equal(ownGoalMatch.result.homeEvents[0].goalType, "ownGoal");
 
 assert.match(indexSource, /data-retro-year="2026"/, "2026 must be selectable on the mode card");
-assert.match(indexSource, /retro-2026-schedule\.js/, "the 2026 schedule must load before the tournament engine");
+assert.match(indexSource, /data\/retro\/2026\/schedule\.js/, "the 2026 schedule must load before the tournament engine");
 assert.match(
   appSource,
   /match\.schedule\.dateLabel,\s*\[match\.schedule\.stadium, match\.schedule\.city\]/,
@@ -77,7 +77,7 @@ assert.doesNotMatch(indexSource, /data-retro-view="groups"/, "retro navigation s
 assert.doesNotMatch(indexSource, /data-retro-view="lineups"/, "retro navigation should not add a Lineups tab");
 assert.match(
   appSource,
-  /\["2006", "2010", "2014", "2018", "2022", "2026"\]\.includes\(String\(selectedYear\)\)/,
+  /\["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"\]\.includes\(String\(selectedYear\)\)/,
   "the mode card must treat 2026 as playable",
 );
 assert.match(cleanCss, /retro-2026-active #mainContent :is\(\s*\.match-stage,\s*\.round-board,\s*\.match-analysis,/);
@@ -130,26 +130,26 @@ assert.match(appSource, /isWorldCup2026 \? "" : ` · Captain/);
 assert.doesNotMatch(appSource, /isWorldCup2026 \? `\s*<div class="retro-rating-method"/);
 assert.match(appSource, /const RETRO_LINEUP_SLOT_ORDER_VERSION = 10;/);
 assert.match(appSource, /retroAchievementsButton\.hidden = false;/, "2026 must expose the in-mode achievement popup button");
-assert.match(appSource, /\[2006, 2010, 2014, 2016, 2018, 2022, 2026\]\.includes/, "2026 must use the shared retro achievement popup");
+assert.match(appSource, /\[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026\]\.includes/, "2026 must use the shared retro achievement popup");
 const retroAchievementStateSource = appSource.slice(
   appSource.indexOf("function savedRetroAchievementTournamentStates"),
   appSource.indexOf("function retroTournamentHasProgress"),
 );
 assert.match(
   retroAchievementStateSource,
-  /\[2006, 2010, 2014, 2016, 2018, 2022, 2026\]/g,
+  /\[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026\]/g,
   "2026 completed runs must be replayed after login or reload",
 );
 assert.match(
   appSource,
-  /els\.retroWorldCupScreen\?\.hidden === false[\s\S]*?\[2006, 2010, 2014, 2016, 2018, 2022, 2026\]\.includes\(Number\(retroTournament\?\.year\)\)/,
+  /els\.retroWorldCupScreen\?\.hidden === false[\s\S]*?\[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026\]\.includes\(Number\(retroTournament\?\.year\)\)/,
   "the shared achievements button must stay on the 2026 achievement set",
 );
 assert.match(indexSource, /data-achievement-year="2026"[^>]*>2026</, "2026 must have its own achievement tab");
 assert.match(indexSource, /data-achievement-year="pl"[^>]*>PL 26\/27</, "Premier League achievements must remain separate");
 assert.match(challengeSource, /activeAchievementYear === 2026 \? 48/, "2026 achievement progress must cover all 48 countries");
 assert.match(challengeServiceSource, /retro_2026_attempts/, "2026 achievement attempts must be persisted separately");
-assert.match(challengeServiceSource, /retro-\(2006\|2010\|2014\|2016\|2018\|2022\|2026\)/, "the API must expose the 2026 retro achievement endpoint");
+assert.match(challengeServiceSource, /retro-\(1998\|2002\|2006\|2010\|2014\|2016\|2018\|2022\|2024\|2026\)/, "the API must expose the 2026 retro achievement endpoint");
 assert.match(cleanCss, /data-achievement-theme="2026"[\s\S]*?--achievement-accent: #ff9e2f/, "2026 achievements must use the blue/orange theme");
 assert.match(cleanCss, /retro-2026-active :is\(\s*\.settings-modal,\s*\.news-modal,\s*\.bug-report-modal,\s*#retroRestartModal/, "all 2026 utility modals need explicit theme isolation");
 assert.match(appSource, /function retroLineupDropTarget\(event\)[\s\S]*?getBoundingClientRect\(\)/, "dragging must resolve the nearest pitch or bench player");

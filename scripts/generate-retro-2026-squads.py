@@ -22,7 +22,7 @@ import pdfplumber
 ROOT = Path(__file__).resolve().parents[1]
 PDF_PATH = ROOT / "tmp" / "pdfs" / "world-cup-2026-official-squads.pdf"
 FC26_PATH = ROOT / "tmp" / "fc26-national-ratings.json"
-OUTPUT_PATH = ROOT / "retro-2026-squads.js"
+OUTPUT_PATH = ROOT / "data/retro/2026/squads.js"
 
 APP_TEAM_ALIASES = {
     "Bosnia And Herzegovina": "Bosnia and Herzegovina",

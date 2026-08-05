@@ -9,8 +9,8 @@ const appSource = readFileSync(join(root, "app.js"), "utf8");
 const context = vm.createContext({ console, Date, Math, Object, Set, Map });
 const sources = [
   "retro-data.js",
-  "retro-euro-2016-squads.js",
-  "retro-euro-2016-schedule.js",
+  "data/retro/euro-2016/squads.js",
+  "data/retro/euro-2016/schedule.js",
   "retro-engine.js",
 ].map((file) => readFileSync(join(root, file), "utf8")).join("\n");
 

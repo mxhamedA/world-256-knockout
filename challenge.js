@@ -206,7 +206,7 @@
   function setProfileRoute(active = true, replace = false) {
     if (active && !profileRouteActive()) {
       const currentPath = `${window.location.pathname}${window.location.search}`;
-      profileReturnPath = /^\/(?:retro-(?:98|02|06|10|14|18|22)-world-cup|retro-euro-2016)(?:\?|$)/.test(currentPath) ? currentPath : "/";
+      profileReturnPath = /^\/(?:retro-(?:98|02|06|10|14|18|22)-world-cup|retro-euro-2016|copa-america-2024)(?:\?|$)/.test(currentPath) ? currentPath : "/";
     }
     const path = active ? "/profile" : profileReturnPath;
     window.history[replace ? "replaceState" : "pushState"]({ appMode: active ? "profile" : "home" }, "", path);
@@ -496,6 +496,7 @@
       "Czech Republic": "Czechia",
       "IR Iran": "Iran",
       "Korea Republic": "South Korea",
+      "México": "Mexico",
       "Serbia and Montenegro": "Serbia",
       "Turkey": "T\u00fcrkiye",
       "United States": "USA",
@@ -575,6 +576,7 @@
   function achievementCompetitionLabel(key) {
     if (Number(key) === 256) return "256 Knockout";
     if (Number(key) === 2016) return "UEFA Euro 2016";
+    if (Number(key) === 2024) return "Copa América USA 2024";
     if (key === "pl") return "Premier League 26/27";
     if (key === "ucl") return "UEFA Champions League 26/27";
     return `${key} World Cup`;
@@ -584,7 +586,7 @@
     if (key === "pl" || String(key).toLowerCase() === "pl") return "pl";
     if (key === "ucl" || String(key).toLowerCase() === "ucl") return "ucl";
     const year = Number(key);
-    return [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
+    return [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year) ? year : 2014;
   }
 
   function knockoutObjectiveForTeam(team, teamIndex = -1) {
@@ -621,6 +623,7 @@
       2016: "UEFA EURO 2016",
       2018: "RUSSIA 2018",
       2022: "QATAR 2022",
+      2024: "COPA AMÉRICA USA 2024",
       2026: "CANADA, MEXICO & USA 2026",
       pl: "PREMIER LEAGUE 26/27",
       ucl: "UEFA CHAMPIONS LEAGUE 26/27",
@@ -676,7 +679,8 @@
     const total = Number(achievement?.total || (
       activeAchievementYear === 256 ? 256
         : activeAchievementYear === "pl" ? 20
-          : activeAchievementYear === "ucl" ? 39
+        : activeAchievementYear === "ucl" ? 39
+        : activeAchievementYear === 2024 ? 16
         : activeAchievementYear === 2026 ? 48
         : activeAchievementYear === 2016 ? 24
           : 32
@@ -725,6 +729,8 @@
           ? "Complete the Champions League objective for every selectable club"
       : activeAchievementYear === 2016
         ? "Win UEFA Euro 2016 with every country"
+        : activeAchievementYear === 2024
+          ? "Win Copa América USA 2024 with every country"
         : `Win the ${activeAchievementYear} WC with every country`;
     if (elements.achievementChallengeTitle) elements.achievementChallengeTitle.textContent = challengeCopy;
     if (elements.retroAchievementModalDescription) elements.retroAchievementModalDescription.textContent = challengeCopy;
@@ -762,10 +768,11 @@
     elements.achievementModal.dataset.achievementTheme = String(year);
     const knockout = year === 256;
     const euros = year === 2016;
+    const copa = year === 2024;
     const premierLeague = year === "pl";
     const ucl = year === "ucl";
     elements.achievementModalTitle.textContent = grandUnlock
-      ? knockout ? "256 Knockout mastered" : premierLeague ? "Premier League mastered" : ucl ? "Champions League mastered" : euros ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
+      ? knockout ? "256 Knockout mastered" : premierLeague ? "Premier League mastered" : ucl ? "Champions League mastered" : euros ? "UEFA Euro 2016 mastered" : copa ? "Copa América 2024 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete`;
     elements.achievementModalCopy.textContent = grandUnlock
       ? knockout
@@ -776,10 +783,12 @@
           ? `You have completed the objective for all 39 Champions League clubs. ${payload.achievement.completedPoints} points earned in this mode.`
         : euros
           ? `You have won UEFA Euro 2016 with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
+        : copa
+          ? `You have won Copa América USA 2024 with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
           : `You have won the ${year} World Cup with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this World Cup.`
       : knockout || premierLeague || ucl
         ? `${payload.unlockedTeam.objectiveLabel} completed in ${payload.unlockedTeam.achievedOnAttempt} ${payload.unlockedTeam.achievedOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} ${premierLeague || ucl ? "clubs" : "countries"} complete.`
-        : `${euros ? "European Championship" : "World Cup"} won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} countries complete.`;
+        : `${euros ? "European Championship" : copa ? "Copa América" : "World Cup"} won in ${payload.unlockedTeam.wonOnAttempt} ${payload.unlockedTeam.wonOnAttempt === 1 ? "try" : "tries"}. +${payload.unlockedTeam.points} points. ${payload.achievement.completed} of ${payload.achievement.total} countries complete.`;
     if (!elements.achievementModal.open) elements.achievementModal.showModal();
   }
 
@@ -791,7 +800,7 @@
     elements.achievementBanner.dataset.achievementTheme = String(year);
     elements.achievementModal.dataset.achievementTheme = String(year);
     elements.achievementBannerTitle.textContent = grandUnlock
-      ? year === 256 ? "256 Knockout mastered" : year === "pl" ? "Premier League mastered" : year === "ucl" ? "Champions League mastered" : year === 2016 ? "UEFA Euro 2016 mastered" : `${year} World Cup mastered`
+      ? year === 256 ? "256 Knockout mastered" : year === "pl" ? "Premier League mastered" : year === "ucl" ? "Champions League mastered" : year === 2016 ? "UEFA Euro 2016 mastered" : year === 2024 ? "Copa América 2024 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete · +${payload.unlockedTeam.points} pts`;
     clearTimeout(achievementBannerTimer);
     elements.achievementBanner.hidden = false;
@@ -847,7 +856,7 @@
 
   async function trackRetroTournament(tournament) {
     const year = Number(tournament?.year);
-    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
+    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
     const champion = completedRetroChampion(tournament);
     const phase = tournament.phase === "complete" && champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
@@ -1044,11 +1053,11 @@
   }
 
   function renderProfileAchievements() {
-    const years = [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"];
+    const years = [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026, "pl", "ucl"];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
-      total: year === 256 ? 256 : year === 2016 ? 24 : year === 2026 ? 48 : year === "pl" ? 20 : year === "ucl" ? 39 : 32,
+      total: year === 256 ? 256 : year === 2016 ? 24 : year === 2024 ? 16 : year === 2026 ? 48 : year === "pl" ? 20 : year === "ucl" ? 39 : 32,
       teams: [],
     });
     const completed = achievements.reduce((sum, achievement) => sum + Number(achievement.completed || 0), 0);
@@ -1282,7 +1291,7 @@
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"].map(async (year) => {
+        await Promise.all([256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026, "pl", "ucl"].map(async (year) => {
           try {
             achievementPayloads.set(year, await challengeApi(achievementEndpoint(year)));
           } catch {

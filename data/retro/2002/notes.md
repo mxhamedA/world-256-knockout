@@ -4,7 +4,7 @@ The 2002 data layer contains all 32 finalists, each with the official 23-player 
 
 ## Squad source
 
-The squad rows, positions, shirt numbers, opening-match line-ups, appearances and goals are generated from the local copy of the Fjelstul World Cup Database (`tmp/fjelstul-worldcup/data-csv`, CC-BY-SA-4.0). This matches the historical 23-player format and gives a reproducible source for the 736-player count. Club affiliations are joined by team and shirt number from the public [2002 FIFA World Cup squads](https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_squads) tables, which date clubs and player details to 31 May 2002; the joined source is kept in `retro-2002-clubs.generated.json`.
+The squad rows, positions, shirt numbers, opening-match line-ups, appearances and goals are generated from the local copy of the Fjelstul World Cup Database (`tmp/fjelstul-worldcup/data-csv`, CC-BY-SA-4.0). This matches the historical 23-player format and gives a reproducible source for the 736-player count. Club affiliations are joined by team and shirt number from the public [2002 FIFA World Cup squads](https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_squads) tables, which date clubs and player details to 31 May 2002; the joined source is kept in `data/retro/2002/clubs.generated.json`.
 
 ## FIFA rankings
 

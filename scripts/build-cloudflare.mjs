@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import "./generate-draft-catalog.mjs";
@@ -17,24 +17,6 @@ const staticFiles = [
   "favicon.png",
   "app.js",
   "retro-data.js",
-  "retro-1998-squads.js",
-  "retro-1998-schedule.js",
-  "retro-2002-squads.js",
-  "retro-2002-schedule.js",
-  "retro-2006-squads.js",
-  "retro-2006-schedule.js",
-  "retro-2010-squads.js",
-  "retro-2010-schedule.js",
-  "retro-2014-squads.js",
-  "retro-2014-schedule.js",
-  "retro-euro-2016-squads.js",
-  "retro-euro-2016-schedule.js",
-  "retro-2018-squads.js",
-  "retro-2018-schedule.js",
-  "retro-2022-squads.js",
-  "retro-2022-schedule.js",
-  "retro-2026-squads.js",
-  "retro-2026-schedule.js",
   "retro-engine.js",
   "challenge.js",
   "clean.css",
@@ -106,6 +88,33 @@ const staticFiles = [
 
 mkdirSync(outputRoot, { recursive: true });
 
+// Remove the old flat historical-data copies left by builds before data/retro/
+// was introduced. Keep this list explicit so unrelated build output is preserved.
+const staleRetroRootFiles = [
+  "retro-1998-squads.js",
+  "retro-1998-schedule.js",
+  "retro-2002-squads.js",
+  "retro-2002-schedule.js",
+  "retro-2006-squads.js",
+  "retro-2006-schedule.js",
+  "retro-2010-squads.js",
+  "retro-2010-schedule.js",
+  "retro-2014-squads.js",
+  "retro-2014-schedule.js",
+  "retro-euro-2016-squads.js",
+  "retro-euro-2016-schedule.js",
+  "retro-2018-squads.js",
+  "retro-2018-schedule.js",
+  "retro-2022-squads.js",
+  "retro-2022-schedule.js",
+  "retro-2026-squads.js",
+  "retro-2026-schedule.js",
+];
+for (const relativePath of staleRetroRootFiles) {
+  const stalePath = join(outputRoot, relativePath);
+  if (existsSync(stalePath)) rmSync(stalePath, { force: true });
+}
+
 for (const relativePath of staticFiles) {
   const destination = join(outputRoot, relativePath);
   mkdirSync(dirname(destination), { recursive: true });
@@ -120,6 +129,11 @@ if (existsSync(legacyDataRoot)) {
 const flagAssetsRoot = join(projectRoot, "assets", "flags");
 if (existsSync(flagAssetsRoot)) {
   cpSync(flagAssetsRoot, join(outputRoot, "assets", "flags"), { recursive: true });
+}
+
+const retroDataRoot = join(projectRoot, "data", "retro");
+if (existsSync(retroDataRoot)) {
+  cpSync(retroDataRoot, join(outputRoot, "data", "retro"), { recursive: true });
 }
 
 const premierLeagueAssetPackRoot = join(projectRoot, "assets", "pl-26-27");

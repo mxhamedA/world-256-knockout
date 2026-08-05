@@ -112,6 +112,19 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     "sonheungmin": 2,
     "takashiinui": 2,
   });
+  const COPA_AMERICA_2024_GOALS = Object.freeze({
+    "lautaromartinez": 5,
+    "salomonrondon": 3,
+    "viniciusjunior": 2,
+    "jhoncordova": 2,
+    "jhonarias": 2,
+    "darwinnunez": 2,
+    "jamesrodriguez": 1,
+    "lionelmessi": 1,
+    "julianalvarez": 1,
+    "raphinha": 1,
+    "isco": 0,
+  });
   const PENALTY_TAKERS_BY_YEAR = Object.freeze({
     1998: Object.fromEntries(Object.entries(typeof RETRO_1998_SQUADS !== "undefined" ? RETRO_1998_SQUADS : {})
       .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
@@ -147,6 +160,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       Uruguay: ["luissuarez", "edinsoncavani"],
     },
     2022: Object.fromEntries(Object.entries(typeof RETRO_2022_SQUADS !== "undefined" ? RETRO_2022_SQUADS : {})
+      .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
+    2024: Object.fromEntries(Object.entries(typeof RETRO_COPA_2024_SQUADS !== "undefined" ? RETRO_COPA_2024_SQUADS : {})
       .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
   });
 
@@ -224,6 +239,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2016) return typeof RETRO_EURO_2016_SQUADS !== "undefined" ? RETRO_EURO_2016_SQUADS : {};
     if (Number(year) === 2018) return typeof RETRO_2018_SQUADS !== "undefined" ? RETRO_2018_SQUADS : {};
     if (Number(year) === 2022) return typeof RETRO_2022_SQUADS !== "undefined" ? RETRO_2022_SQUADS : {};
+    if (Number(year) === 2024) return typeof RETRO_COPA_2024_SQUADS !== "undefined" ? RETRO_COPA_2024_SQUADS : {};
     if (Number(year) === 2026) return typeof RETRO_2026_SQUADS !== "undefined" ? RETRO_2026_SQUADS : {};
     return {};
   }
@@ -237,6 +253,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2016) return RETRO_EURO_2016_GROUP_SCHEDULE;
     if (Number(year) === 2018) return RETRO_2018_GROUP_SCHEDULE;
     if (Number(year) === 2022) return RETRO_2022_GROUP_SCHEDULE;
+    if (Number(year) === 2024) return RETRO_COPA_2024_GROUP_SCHEDULE;
     if (Number(year) === 2026) return RETRO_2026_GROUP_SCHEDULE;
     return {};
   }
@@ -250,6 +267,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2016) return RETRO_EURO_2016_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2018) return RETRO_2018_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2022) return RETRO_2022_KNOCKOUT_SCHEDULE;
+    if (Number(year) === 2024) return RETRO_COPA_2024_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2026) return RETRO_2026_KNOCKOUT_SCHEDULE;
     return {};
   }
@@ -320,11 +338,18 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (year === 2016 && Number.isFinite(Number(player?.euroGoals))) {
       return Number(player.euroGoals);
     }
+    if (year === 2024) {
+      return Math.max(
+        Number.isFinite(Number(player?.copaGoals)) ? Number(player.copaGoals) : 0,
+        Number(COPA_AMERICA_2024_GOALS[normalizedPlayerName(player)] || 0),
+      );
+    }
     if (year === 2026) return 0;
     const goals = year === 1998 ? WORLD_CUP_1998_GOALS
       : year === 2006 ? WORLD_CUP_2006_GOALS
       : year === 2010 ? WORLD_CUP_2010_GOALS
-      : year === 2018 ? WORLD_CUP_2018_GOALS : WORLD_CUP_2014_GOALS;
+      : year === 2018 ? WORLD_CUP_2018_GOALS
+      : year === 2024 ? COPA_AMERICA_2024_GOALS : WORLD_CUP_2014_GOALS;
     return goals[normalizedPlayerName(player)] || 0;
   }
 
@@ -332,6 +357,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     const positions = player.positions || [player.position];
     const role = positions[0] || player.position;
     const is2022 = Number(year) === 2022;
+    const isCopa2024 = Number(year) === 2024;
     const roleWeight = role === "ST" || role === "CF" || role === "FW" ? (is2022 ? 0.9 : 1)
       : ["LW", "RW", "LM", "RM", "CAM"].includes(role) ? (is2022 ? 0.72 : 0.68)
       : ["CM", "CDM", "MF"].includes(role) ? (is2022 ? 0.18 : 0.12)
@@ -352,15 +378,17 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
         ? 1.04 + Math.min(6, tournamentGoals) * 0.09
         : Number(year) === 2016
           ? 1.02 + Math.min(6, tournamentGoals) * 0.1
+          : isCopa2024
+            ? 1 + Math.min(5, tournamentGoals) * 0.08
           : 1.05 + tournamentGoals * 0.18
-      : is2022 ? 0.88 : Number(year) === 2016 ? 0.9 : 0.82;
+      : is2022 ? 0.88 : Number(year) === 2016 ? 0.9 : isCopa2024 ? 0.92 : 0.82;
     const internationalWeight = is2022
       ? 1 + Math.min(0.18, internationalGoals / 120)
       : 1 + Math.min(0.3, internationalGoals / 65);
     const scoringRoleMultiplier = is2022 && Number.isFinite(Number(player.scoringRoleMultiplier))
       ? clamp(Number(player.scoringRoleMultiplier), 0.5, 1.5)
       : 1;
-    return roleWeight
+    const weight = roleWeight
       * (0.72 + Math.max(0, player.overall - 60) / 48)
       * (0.78 + Math.max(0, shooting - 45) / 95)
       * qualityWeight
@@ -369,6 +397,9 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       * tournamentFormWeight
       * scoringRoleMultiplier
       * (isStarter ? 1 : is2022 ? 0.22 : Number(year) === 2016 ? 0.09 : 0.16);
+    // Keep the best-known attackers favored while avoiding one superstar
+    // absorbing a quarter of a team's tournament goals on average.
+    return isCopa2024 ? Math.pow(weight, 0.78) : weight;
   }
 
   function penaltyScoringWeight(year, team, player, isStarter) {
@@ -418,7 +449,9 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
               ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.18)
               : Number(year) === 2016
                 ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.25)
-                : 1;
+                : Number(year) === 2024
+                  ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.22)
+                  : 1;
             return baseWeight * diversityWeight;
           },
         );
@@ -448,8 +481,11 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
 
   function expectedGoals(home, away, tournament = null) {
     const isEuro2016 = Number(tournament?.year) === 2016;
+    const isCopa2024 = Number(tournament?.year) === 2024;
     const managedRatingBonus = (team) => {
-      if (!isEuro2016 || !tournament?.managedTeam || team.name !== tournament.managedTeam) return 0;
+      if (!tournament?.managedTeam || team.name !== tournament.managedTeam) return 0;
+      if (isCopa2024) return clamp(2.4 + Math.max(0, 84 - team.rating) * 0.18, 2.4, 4.5);
+      if (!isEuro2016) return 0;
       return clamp(4 + Math.max(0, 84 - team.rating) * 0.45, 4, 10);
     };
     const ratingGap = (
@@ -457,19 +493,36 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     ) - (
       away.rating + managedRatingBonus(away)
     );
-    const base = isEuro2016 ? 1.08 : 1.18;
-    const ratingScale = isEuro2016 ? 0.05 : 0.037;
+    const base = isEuro2016 ? 1.08 : isCopa2024 ? 1.12 : 1.18;
+    // Copa ratings are deliberately compressed at the match layer so a strong
+    // favorite still has an edge without making the underdog's Poisson rate
+    // collapse. The source ratings remain team-strength calibrations, not EA
+    // ratings, and tournament variance should remain visible in short rounds.
+    const ratingScale = isEuro2016 ? 0.05 : isCopa2024 ? 0.032 : 0.037;
+    const minimum = isEuro2016 ? 0.14 : isCopa2024 ? 0.22 : 0.18;
+    const maximum = isEuro2016 ? 3.25 : isCopa2024 ? 2.7 : 3.45;
+    let homeExpected = clamp(base + ratingGap * ratingScale, minimum, maximum);
+    let awayExpected = clamp(base - ratingGap * ratingScale, minimum, maximum);
+    if (isCopa2024 && tournament?.managedTeam) {
+      const managedHome = home.name === tournament.managedTeam;
+      const managedAway = away.name === tournament.managedTeam;
+      const managedTeam = managedHome ? home : managedAway ? away : null;
+      if (managedTeam) {
+        const underdogLeverage = clamp((82 - managedTeam.rating) * 0.006, 0, 0.12);
+        const attackBoost = 0.035 + underdogLeverage;
+        const defensiveBoost = 0.026 + underdogLeverage * 0.7;
+        if (managedHome) {
+          homeExpected = clamp(homeExpected + attackBoost, minimum, maximum);
+          awayExpected = clamp(awayExpected - defensiveBoost, minimum, maximum);
+        } else {
+          awayExpected = clamp(awayExpected + attackBoost, minimum, maximum);
+          homeExpected = clamp(homeExpected - defensiveBoost, minimum, maximum);
+        }
+      }
+    }
     return {
-      home: clamp(
-        base + ratingGap * ratingScale,
-        isEuro2016 ? 0.14 : 0.18,
-        isEuro2016 ? 3.25 : 3.45,
-      ),
-      away: clamp(
-        base - ratingGap * ratingScale,
-        isEuro2016 ? 0.14 : 0.18,
-        isEuro2016 ? 3.25 : 3.45,
-      ),
+      home: homeExpected,
+      away: awayExpected,
     };
   }
 
@@ -542,9 +595,12 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     let penalties = null;
 
     if (match.stage !== "group" && homeGoals === awayGoals) {
-      extraTime = true;
-      homeGoals += poisson(xg.home * 0.27, random);
-      awayGoals += poisson(xg.away * 0.27, random);
+      const finalOnlyExtraTime = Number(tournament.year) === 2024;
+      if (!finalOnlyExtraTime || match.id === "ko-final") {
+        extraTime = true;
+        homeGoals += poisson(xg.home * 0.27, random);
+        awayGoals += poisson(xg.away * 0.27, random);
+      }
       if (homeGoals === awayGoals) penalties = penaltyShootout(home, away, random);
     }
 
@@ -568,6 +624,14 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       penaltyMinutes,
       scorerTotalsForTeam(tournament, away.name),
     );
+    const copaDiscipline = Number(tournament.year) === 2024
+      ? {
+          homeYellowCards: Math.floor(random() * 4),
+          awayYellowCards: Math.floor(random() * 4),
+          homeRedCards: random() < 0.025 ? 1 : 0,
+          awayRedCards: random() < 0.025 ? 1 : 0,
+        }
+      : {};
     const winner = penalties
       ? penalties.home > penalties.away ? home.name : away.name
       : homeGoals === awayGoals ? null : homeGoals > awayGoals ? home.name : away.name;
@@ -586,6 +650,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       winner,
       homeEvents,
       awayEvents,
+      ...copaDiscipline,
       stats: {
         possession: [homePossession, 100 - homePossession],
         shots: [homeShots, awayShots],
@@ -605,22 +670,88 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     return match.result;
   }
 
+  function copaDisciplineCount(match, side, kind) {
+    const value = match.result?.[`${side}${kind}`];
+    return Array.isArray(value) ? value.length : Number(value) || 0;
+  }
+
+  function copaMiniTable(tournament, group, names) {
+    const nameSet = new Set(names);
+    const mini = new Map(names.map((name) => [name, { points: 0, gf: 0, ga: 0 }]));
+    tournament.groupMatches.filter((match) => (
+      match.group === group && match.result && nameSet.has(match.home) && nameSet.has(match.away)
+    )).forEach((match) => {
+      const home = mini.get(match.home);
+      const away = mini.get(match.away);
+      home.gf += Number(match.result.homeGoals) || 0;
+      home.ga += Number(match.result.awayGoals) || 0;
+      away.gf += Number(match.result.awayGoals) || 0;
+      away.ga += Number(match.result.homeGoals) || 0;
+      if (match.result.homeGoals > match.result.awayGoals) home.points += 3;
+      else if (match.result.awayGoals > match.result.homeGoals) away.points += 3;
+      else { home.points += 1; away.points += 1; }
+    });
+    return mini;
+  }
+
+  function resolveCopaTieGroup(tournament, group, candidates) {
+    if (candidates.length <= 1) return candidates;
+    const mini = copaMiniTable(tournament, group, candidates.map((row) => row.name));
+    const miniValue = (row) => {
+      const entry = mini.get(row.name);
+      return [entry.points, entry.gf - entry.ga, entry.gf];
+    };
+    const byMini = (left, right) => {
+      const leftValue = miniValue(left);
+      const rightValue = miniValue(right);
+      return rightValue[0] - leftValue[0]
+        || rightValue[1] - leftValue[1]
+        || rightValue[2] - leftValue[2];
+    };
+    const sorted = [...candidates].sort(byMini);
+    const ordered = [];
+    for (let index = 0; index < sorted.length;) {
+      const value = miniValue(sorted[index]);
+      const tied = sorted.slice(index).filter((row) => {
+        const candidateValue = miniValue(row);
+        return candidateValue[0] === value[0] && candidateValue[1] === value[1] && candidateValue[2] === value[2];
+      });
+      if (tied.length === 1) {
+        ordered.push(tied[0]);
+      } else if (tied.length < candidates.length) {
+        ordered.push(...resolveCopaTieGroup(tournament, group, tied));
+      } else {
+        ordered.push(...tied.sort((left, right) => (
+          left.redCards - right.redCards
+          || left.yellowCards - right.yellowCards
+          || stableHash(`${tournament.seed}:${group}:${left.name}`) - stableHash(`${tournament.seed}:${group}:${right.name}`)
+        )));
+      }
+      index += tied.length;
+    }
+    return ordered;
+  }
+
   function groupStandings(tournament, group) {
     const teamNames = RETRO_WORLD_CUPS[tournament.year].teams
       .filter((team) => team.group === group)
       .map((team) => team.name);
     const table = new Map(teamNames.map((name) => [name, {
-      name, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0,
+      name, played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0, redCards: 0, yellowCards: 0,
     }]));
     tournament.groupMatches.filter((match) => match.group === group && match.result).forEach((match) => {
       const home = table.get(match.home);
       const away = table.get(match.away);
       home.played += 1;
       away.played += 1;
-      home.gf += match.result.homeGoals;
-      home.ga += match.result.awayGoals;
-      away.gf += match.result.awayGoals;
-      away.ga += match.result.homeGoals;
+      home.gf += Number(match.result.homeGoals) || 0;
+      home.ga += Number(match.result.awayGoals) || 0;
+      away.gf += Number(match.result.awayGoals) || 0;
+      away.ga += Number(match.result.homeGoals) || 0;
+      home.redCards += copaDisciplineCount(match, "home", "redCards");
+      away.redCards += copaDisciplineCount(match, "away", "redCards");
+      home.yellowCards += copaDisciplineCount(match, "home", "yellowCards");
+      away.yellowCards += copaDisciplineCount(match, "away", "yellowCards");
       if (match.result.homeGoals > match.result.awayGoals) {
         home.won += 1;
         away.lost += 1;
@@ -639,6 +770,17 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     const rows = [...table.values()].map((row) => ({ ...row, gd: row.gf - row.ga }));
     const primary = (left, right) => right.points - left.points || right.gd - left.gd || right.gf - left.gf;
     rows.sort(primary);
+    if (Number(tournament.year) === 2024) {
+      const ordered = [];
+      for (let index = 0; index < rows.length;) {
+        const tied = rows.slice(index).filter((row) => (
+          row.points === rows[index].points && row.gd === rows[index].gd && row.gf === rows[index].gf
+        ));
+        ordered.push(...(tied.length > 1 ? resolveCopaTieGroup(tournament, group, tied) : tied));
+        index += tied.length;
+      }
+      return ordered;
+    }
     if (Number(tournament.year) !== 1998) {
       return rows.sort((left, right) => (
         primary(left, right)
@@ -656,21 +798,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
         index += 1;
         continue;
       }
-      const names = new Set(tied.map((row) => row.name));
-      const mini = new Map(tied.map((row) => [row.name, { points: 0, gf: 0, ga: 0 }]));
-      tournament.groupMatches.filter((match) => (
-        match.group === group && match.result && names.has(match.home) && names.has(match.away)
-      )).forEach((match) => {
-        const home = mini.get(match.home);
-        const away = mini.get(match.away);
-        home.gf += match.result.homeGoals;
-        home.ga += match.result.awayGoals;
-        away.gf += match.result.awayGoals;
-        away.ga += match.result.homeGoals;
-        if (match.result.homeGoals > match.result.awayGoals) home.points += 3;
-        else if (match.result.awayGoals > match.result.homeGoals) away.points += 3;
-        else { home.points += 1; away.points += 1; }
-      });
+      const mini = copaMiniTable(tournament, group, tied.map((row) => row.name));
       tied.sort((left, right) => {
         const leftMini = mini.get(left.name);
         const rightMini = mini.get(right.name);
@@ -711,6 +839,37 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
         schedule: fixture.schedule,
         result: null,
       })));
+    }
+    if (Number(year) === 2024) {
+      const teamsByName = new Map(RETRO_WORLD_CUPS[year].teams.map((team) => [team.name, team]));
+      const fixturesByGroup = new Map(groupLetters(year).map((group) => [group, []]));
+      Object.entries(groupScheduleForYear(year))
+        .sort(([, left], [, right]) => left.matchNumber - right.matchNumber)
+        .forEach(([pair, schedule]) => {
+          const [home, away] = pair.split("|");
+          const group = teamsByName.get(home)?.group;
+          if (!group || teamsByName.get(away)?.group !== group) return;
+          fixturesByGroup.get(group).push({ home, away, schedule });
+        });
+      const matches = groupLetters(year).flatMap((group) => {
+        const matchdayCounts = new Map();
+        return fixturesByGroup.get(group).map((fixture) => {
+          const matchday = Number(fixture.schedule.matchday) || 1;
+          const matchIndex = (matchdayCounts.get(matchday) || 0) + 1;
+          matchdayCounts.set(matchday, matchIndex);
+          return {
+            id: `g${group}-d${matchday}-m${matchIndex}`,
+            stage: "group",
+            group,
+            matchday,
+            home: fixture.home,
+            away: fixture.away,
+            schedule: fixture.schedule,
+            result: null,
+          };
+        });
+      });
+      return matches.sort((left, right) => left.schedule.matchNumber - right.schedule.matchNumber);
     }
     return groupLetters(year).flatMap((group) => {
       const teams = RETRO_WORLD_CUPS[year].teams.filter((team) => team.group === group);
@@ -892,6 +1051,35 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     tournament.phase = "knockout";
   }
 
+  function buildCopaAmerica2024Quarterfinals(tournament) {
+    const tables = Object.fromEntries(groupLetters(tournament.year).map((group) => [
+      group,
+      groupStandings(tournament, group),
+    ]));
+    const pairings = [
+      [tables.A[0].name, tables.B[1].name],
+      [tables.B[0].name, tables.A[1].name],
+      [tables.C[0].name, tables.D[1].name],
+      [tables.D[0].name, tables.C[1].name],
+    ];
+    tournament.knockoutRounds = [{
+      name: "Quarter-finals",
+      matches: pairings.map(([home, away], index) => {
+        const id = `ko-qf-m${index + 1}`;
+        return {
+          id,
+          stage: "knockout",
+          roundIndex: 0,
+          home,
+          away,
+          schedule: knockoutScheduleForYear(tournament.year)[id],
+          result: null,
+        };
+      }),
+    }];
+    tournament.phase = "knockout";
+  }
+
   function buildRoundOf16(tournament) {
     if (Number(tournament.year) === 2026) {
       buildWorldCup2026RoundOf32(tournament);
@@ -899,6 +1087,10 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     }
     if (Number(tournament.year) === 2016) {
       buildEuro2016RoundOf16(tournament);
+      return;
+    }
+    if (Number(tournament.year) === 2024) {
+      buildCopaAmerica2024Quarterfinals(tournament);
       return;
     }
     buildWorldCupRoundOf16(tournament);
@@ -909,7 +1101,9 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (!current?.matches.every((match) => match.result)) return;
     const roundNames = Number(tournament.year) === 2026
       ? ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Finals"]
-      : ROUND_NAMES;
+      : Number(tournament.year) === 2024
+        ? ["Quarter-finals", "Semi-finals", "Finals"]
+        : ROUND_NAMES;
     const finalRoundIndex = roundNames.length - 1;
     if (current.name === "Finals") {
       tournament.phase = "complete";
@@ -968,6 +1162,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     const winners = current.matches.map((match) => match.result.winner);
     const roundId = Number(tournament.year) === 2026
       ? ["r32", "r16", "qf", "sf", "final"][nextIndex] || `r${nextIndex + 1}`
+      : Number(tournament.year) === 2024
+        ? ["sf"][nextIndex - 1] || `r${nextIndex + 1}`
       : `r${nextIndex + 1}`;
     tournament.knockoutRounds.push({
       name: roundNames[nextIndex],
@@ -995,7 +1191,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function createTournament({ year = 2014, seed = Date.now(), managedTeam = null } = {}) {
-    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
+    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
       throw new Error("That retro tournament is not playable yet.");
     }
     return {
@@ -1054,18 +1250,59 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     return [...scorers.values()].sort((left, right) => right.goals - left.goals || left.player.localeCompare(right.player));
   }
 
+  function goldenGlove(tournament) {
+    const awards = new Map();
+    groupLetters(tournament.year).forEach((group) => {
+      RETRO_WORLD_CUPS[tournament.year].teams.filter((team) => team.group === group).forEach((entry) => {
+        const goalkeeper = startingXI(tournament.year, entry.name).players.find((player) => player.position === "GK")
+          || squadsForYear(tournament.year)[entry.name]?.players?.find((player) => player.position === "GK");
+        if (goalkeeper) awards.set(entry.name, {
+          player: goalkeeper.name,
+          team: entry.name,
+          cleanSheets: 0,
+          goalsAgainst: 0,
+          appearances: 0,
+          overall: goalkeeper.overall,
+        });
+      });
+    });
+    allMatches(tournament).forEach((match) => {
+      if (!match.result) return;
+      [[match.home, match.result.homeGoals, match.result.awayGoals], [match.away, match.result.awayGoals, match.result.homeGoals]]
+        .forEach(([team, , goalsAgainst]) => {
+          const award = awards.get(team);
+          if (!award) return;
+          award.appearances += 1;
+          award.goalsAgainst += Number(goalsAgainst) || 0;
+          if ((Number(goalsAgainst) || 0) === 0) award.cleanSheets += 1;
+        });
+    });
+    return [...awards.values()].sort((left, right) => (
+      right.cleanSheets - left.cleanSheets
+      || left.goalsAgainst - right.goalsAgainst
+      || right.appearances - left.appearances
+      || right.overall - left.overall
+      || left.player.localeCompare(right.player)
+    ));
+  }
+
   function validate(tournament) {
     const year = Number(tournament?.year);
-    const expectedTeams = year === 2026 ? 48 : year === 2016 ? 24 : 32;
-    const expectedGroupMatches = year === 2026 ? 72 : year === 2016 ? 36 : 48;
+    const expectedTeams = year === 2026 ? 48 : year === 2016 ? 24 : year === 2024 ? 16 : 32;
+    const expectedGroupMatches = year === 2026 ? 72 : year === 2016 ? 36 : year === 2024 ? 24 : 48;
     return Boolean(
       tournament
       && tournament.version === VERSION
-      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)
+      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year)
       && Array.isArray(tournament.groupMatches)
       && tournament.groupMatches.length === expectedGroupMatches
       && RETRO_WORLD_CUPS[tournament.year]?.teams.length === expectedTeams
       && Object.keys(squadsForYear(tournament.year)).length === expectedTeams
+      && (year !== 2024 || (
+        groupLetters(year).length === 4
+        && groupLetters(year).every((group) => RETRO_WORLD_CUPS[year].teams.filter((team) => team.group === group).length === 4)
+        && tournament.groupMatches.every((match) => match.schedule?.matchNumber >= 1 && match.schedule?.matchNumber <= 24)
+      ))
     );
   }
 
@@ -1080,6 +1317,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     activeMatches,
     nextUnplayedMatch,
     goldenBoot,
+    goldenGlove,
     historicalGoals,
     teamEntry,
     startingXI,

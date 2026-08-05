@@ -3,9 +3,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const datasetPath = path.join(root, "retro-2010-squad-dataset.json");
-const squadsOutputPath = path.join(root, "retro-2010-squads.js");
-const scheduleOutputPath = path.join(root, "retro-2010-schedule.js");
+const datasetPath = path.join(root, "data/retro/2010/squad-dataset.json");
+const squadsOutputPath = path.join(root, "data/retro/2010/squads.js");
+const scheduleOutputPath = path.join(root, "data/retro/2010/schedule.js");
 const scheduleSourceUrl = "https://raw.githubusercontent.com/openfootball/worldcup.json/refs/heads/master/2010/worldcup.json";
 
 const appNameByDatasetName = Object.freeze({
@@ -195,7 +195,7 @@ if (Object.keys(groupSchedule).length !== 48 || Object.keys(knockoutSchedule).le
 
 fs.writeFileSync(
   squadsOutputPath,
-  `/* Generated from retro-2010-squad-dataset.json. Do not edit by hand. */\nconst RETRO_2010_SQUADS = Object.freeze(${JSON.stringify(squads, null, 2)});\n`,
+  `/* Generated from data/retro/2010/squad-dataset.json. Do not edit by hand. */\nconst RETRO_2010_SQUADS = Object.freeze(${JSON.stringify(squads, null, 2)});\n`,
   "utf8",
 );
 fs.writeFileSync(

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = path.resolve(root, process.argv[2] || ".tmp-wc2026-worldcup.json");
-const outputPath = path.join(root, "retro-2026-schedule.js");
+const outputPath = path.join(root, "data/retro/2026/schedule.js");
 const source = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
 
 const teamAliases = Object.freeze({

@@ -18,7 +18,7 @@ FIFA_17_CSV = SOURCE_DIR / "players_17.csv"
 FIFA_19_CSV = ROOT / "tmp" / "2018" / "players_19.csv"
 EURO_LINEUPS_CSV = SOURCE_DIR / "euro-history" / "euro_lineups.csv"
 EURO_MATCHES_CSV = SOURCE_DIR / "euro-history" / "matches" / "matches" / "euro" / "2016.csv"
-OUTPUT = ROOT / "retro-euro-2016-squad-dataset.json"
+OUTPUT = ROOT / "data/retro/euro-2016/squad-dataset.json"
 
 
 TEAM_ORDER = [

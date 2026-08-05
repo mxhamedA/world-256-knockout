@@ -356,6 +356,8 @@ function renderChampionConfetti(championId) {
     ? ["#ef233c", "#ffd21f", "#075891", "#fff8e7", "#ff4055"]
     : retroYear === 2006
     ? ["#f3d566", "#d8eff7", "#78b0c7", "#f4fbff", "#0b5274"]
+    : retroYear === 2024
+      ? ["#e51b2b", "#0b3f96", "#ffffff", "#cfd6e6", "#176fe4"]
     : retroYear === 2026
       ? ["#ff9e2f", "#3768ff", "#ffffff", "#10286f", "#f0442f"]
       : ["#f2c45f", "#5f8cff", "#f4f7fb", "#34c77b", "#ef5b5b"];
@@ -521,7 +523,9 @@ function renderStage() {
         trophy.textContent = isRetroSimulatorState()
           ? Number(retroTournament.year) === 2016
             ? "FRANCE 2016 EUROPEAN CHAMPIONS"
-            : `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
+            : Number(retroTournament.year) === 2024
+              ? "COPA AMÉRICA USA 2024 CHAMPIONS"
+              : `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
           : isValidCustomTournamentState(state)
             ? state.customTournament.customMatch ? "CUSTOM MATCH WINNER" : `${state.customTournament.teamCount} TEAM CUSTOM TOURNAMENT CHAMPIONS`
           : "256 TEAMS WC CHAMPIONS";
@@ -536,7 +540,9 @@ function renderStage() {
         summary.textContent = isRetroSimulatorState()
           ? Number(retroTournament.year) === 2016
             ? "Seven matches. One unforgettable European Championship."
-            : "Seven matches. One unforgettable World Cup."
+            : Number(retroTournament.year) === 2024
+              ? "32 matches. One unforgettable Copa América."
+              : "Seven matches. One unforgettable World Cup."
           : isValidCustomTournamentState(state)
             ? state.customTournament.customMatch ? "One match, one winner." : `${customChampionMatches} ${customChampionMatches === 1 ? "match" : "matches"}. A field of ${state.customTournament.teamCount} conquered.`
           : "Eight wins. A field of 256 conquered.";
@@ -966,6 +972,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
         <span class="retro-standard-fixture-meta">
           ${escapeHtml([
             match.schedule.dateLabel,
+            Number(retroTournament?.year) === 2024 ? match.schedule.timeLabel : null,
             [match.schedule.stadium, match.schedule.city].filter(Boolean).join(", "),
           ].filter(Boolean).join(" · "))}
         </span>
@@ -1439,7 +1446,7 @@ function renderGoldenBoot() {
     goldenBootRank: index + 1,
   }));
   let leaders = rankedScorers.slice(0, 5);
-  const championId = state.rounds[7]?.[0]?.result?.winnerId;
+  const championId = state.rounds[tournamentFinalRoundIndex()]?.find((match) => !isThirdPlacePlayoff(match))?.result?.winnerId;
   const championLeader = championId
     ? rankedScorers.find((leader) => leader.teamId === championId)
     : null;
@@ -1474,7 +1481,7 @@ function renderGoldenBoot() {
 function renderProgress() {
   const complete = completedCount();
   const total = isRetroSimulatorState()
-    ? 64
+    ? Number(retroTournament?.year) === 2024 ? 32 : 64
     : state.legacyTournament
       ? 16
       : state.customTournament

@@ -390,6 +390,58 @@ assert.equal(retro2026Completed.payload.achievement.id, "retro-2026-world-tour")
 assert.equal(retro2026Completed.payload.achievement.completed, 1);
 assert.equal(retro2026Completed.payload.achievement.total, 48);
 
+const copaPublicProgress = await request("/achievements/retro-2024", { session: false });
+assert.equal(copaPublicProgress.response.status, 200, "the Copa achievement GET endpoint must be public");
+assert.equal(copaPublicProgress.payload.achievement.total, 16);
+assert.equal(copaPublicProgress.payload.achievement.teams.length, 16);
+
+const copaArgentinaSeed = 2024062001;
+const copaArgentinaStarted = await request("/achievements/retro-2024", {
+  method: "POST",
+  body: { seed: copaArgentinaSeed, teamName: "Argentina", phase: "start", champion: null },
+});
+assert.equal(copaArgentinaStarted.response.status, 200);
+assert.equal(copaArgentinaStarted.payload.achievement.id, "retro-2024-copa-america-tour");
+assert.equal(copaArgentinaStarted.payload.unlockedTeam.attempts, 1);
+assert.equal(copaArgentinaStarted.payload.unlockedTeam.won, false);
+
+const copaArgentinaLoss = await request("/achievements/retro-2024", {
+  method: "POST",
+  body: { seed: copaArgentinaSeed, teamName: "Argentina", phase: "complete", champion: "Uruguay" },
+});
+assert.equal(copaArgentinaLoss.response.status, 200);
+assert.equal(copaArgentinaLoss.payload.countryUnlocked, false);
+assert.equal(copaArgentinaLoss.payload.unlockedTeam.won, false);
+
+const copaArgentinaWinningSeed = copaArgentinaSeed + 1;
+const copaArgentinaRetry = await request("/achievements/retro-2024", {
+  method: "POST",
+  body: { seed: copaArgentinaWinningSeed, teamName: "Argentina", phase: "start", champion: null },
+});
+assert.equal(copaArgentinaRetry.payload.unlockedTeam.attempts, 2);
+const copaArgentinaWin = await request("/achievements/retro-2024", {
+  method: "POST",
+  body: { seed: copaArgentinaWinningSeed, teamName: "Argentina", phase: "complete", champion: "Argentina" },
+});
+assert.equal(copaArgentinaWin.response.status, 200);
+assert.equal(copaArgentinaWin.payload.countryUnlocked, true);
+assert.equal(copaArgentinaWin.payload.unlockedTeam.won, true);
+assert.equal(copaArgentinaWin.payload.unlockedTeam.wonOnAttempt, 2);
+assert.equal(copaArgentinaWin.payload.achievement.completed, 1);
+assert.equal(copaArgentinaWin.payload.unlockedTeam.points, 1);
+
+const copaArgentinaDuplicate = await request("/achievements/retro-2024", {
+  method: "POST",
+  body: { seed: copaArgentinaWinningSeed, teamName: "Argentina", phase: "complete", champion: "Argentina" },
+});
+assert.equal(copaArgentinaDuplicate.response.status, 200);
+assert.equal(copaArgentinaDuplicate.payload.countryUnlocked, false);
+assert.equal(copaArgentinaDuplicate.payload.unlockedTeam.attempts, 2);
+
+const copaPersisted = await request("/achievements/retro-2024");
+assert.equal(copaPersisted.payload.achievement.completed, 1);
+assert.equal(copaPersisted.payload.achievement.teams.find((team) => team.teamName === "Argentina")?.won, true);
+
 const euro2016Teams = [
   "France", "Romania", "Albania", "Switzerland",
   "England", "Russia", "Wales", "Slovakia",
@@ -499,11 +551,12 @@ assert.equal(
   false,
 );
 const hardenedFinalistBoard = await request("/achievements/leaderboard");
-assert.equal(hardenedFinalistBoard.payload.currentUser.achievements, 27);
+assert.equal(hardenedFinalistBoard.payload.currentUser.achievements, 28);
 assert.equal(
   hardenedFinalistBoard.payload.currentUser.points,
   retro2006Win.payload.unlockedTeam.points
     + completed.payload.unlockedTeam.points
+    + copaArgentinaWin.payload.unlockedTeam.points
     + retro2026Completed.payload.unlockedTeam.points
     + euroMastered.completedPoints,
 );
@@ -720,11 +773,12 @@ assert.equal(
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
 assert.equal(achievementBoard.payload.leaderboard[0].username, username);
-assert.equal(achievementBoard.payload.leaderboard[0].achievements, 34);
+assert.equal(achievementBoard.payload.leaderboard[0].achievements, 35);
 assert.equal(
   achievementBoard.payload.leaderboard[0].points,
   retro2006Win.payload.unlockedTeam.points
     + completed.payload.unlockedTeam.points
+    + copaArgentinaWin.payload.unlockedTeam.points
     + retro2026Completed.payload.unlockedTeam.points
     + euroMastered.completedPoints
     + spainChampion.payload.unlockedTeam.points
@@ -736,7 +790,7 @@ assert.equal(
     + uclCeljeTop24.payload.unlockedTeam.points,
 );
 assert.equal(achievementBoard.payload.currentUser.rank, 1);
-assert.equal(achievementBoard.payload.totalAchievements, 611);
+assert.equal(achievementBoard.payload.totalAchievements, 627);
 
 const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
 assert.equal(publicAchievementBoard.response.status, 200);

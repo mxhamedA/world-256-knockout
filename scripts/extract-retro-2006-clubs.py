@@ -18,7 +18,7 @@ TEAM_NAMES = {
 def main() -> None:
     root = Path(__file__).resolve().parent.parent
     source = Path(sys.argv[1]) if len(sys.argv) > 1 else root / "tmp" / "pdfs" / "FWC_2006_SquadLists.pdf"
-    output = Path(sys.argv[2]) if len(sys.argv) > 2 else root / "retro-2006-clubs.generated.json"
+    output = Path(sys.argv[2]) if len(sys.argv) > 2 else root / "data/retro/2006/clubs.generated.json"
     clubs: dict[str, dict[str, str]] = {}
 
     with pdfplumber.open(source) as document:

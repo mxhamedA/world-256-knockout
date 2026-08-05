@@ -3299,7 +3299,7 @@ body.standard-mode-active .retro-third-place-playoff {
 .achievement-year-tabs,
 #retroAchievementsModal[data-achievement-theme] .achievement-year-tabs {
   display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(11, minmax(0, 1fr));
   width: 100%;
   gap: 4px;
   padding: 4px;

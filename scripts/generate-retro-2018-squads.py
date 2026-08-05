@@ -12,7 +12,7 @@ from retro_starting_xi import add_starting_xis
 ROOT = Path(__file__).resolve().parents[1]
 WIKI_PATH = ROOT / "tmp" / "2018" / "squads-wiki.json"
 FIFA_PATH = ROOT / "tmp" / "2018" / "players_19.csv"
-OUTPUT_PATH = ROOT / "retro-2018-squads.js"
+OUTPUT_PATH = ROOT / "data/retro/2018/squads.js"
 APPEARANCES_PATH = ROOT / "tmp" / "fjelstul" / "player_appearances.csv"
 
 TEAM_NAME_MAP = {

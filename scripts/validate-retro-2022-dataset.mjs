@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const datasetPath = path.join(root, "retro-2022-squad-dataset.json");
+const datasetPath = path.join(root, "data/retro/2022/squad-dataset.json");
 const dataset = JSON.parse(fs.readFileSync(datasetPath, "utf8"));
 
 const expectedGroups = {
