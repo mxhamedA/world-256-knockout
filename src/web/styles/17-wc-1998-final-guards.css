@@ -1,3 +1,16 @@
+/* France 1998 absolute final palette guard. */
+body.retro-mode-active.retro-1998-active {
+  color: #f7faff;
+  background: #020d29 url("./assets/retro-1998/france-98-bg-desktop.png") center top / cover fixed no-repeat !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen {
+  color: #f7faff !important;
+  background: linear-gradient(180deg, rgba(2,13,41,.12), rgba(2,13,41,.7)) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-screen-header {
+  border-color: rgba(220,229,239,.62) !important;
+  background: linear-gradient(180deg, rgba(45,91,157,.94), rgba(4,28,75,.97)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.5), 0 8px 22px rgba(0,5,22,.34) !important;
 }
 body.retro-mode-active.retro-1998-active .retro-tournament-heading {
   min-height: 0;
@@ -735,4 +748,3 @@ body.retro-mode-active.retro-1998-active .snapshot-modal .snapshot-actions .seco
   }
   body.retro-mode-active.retro-1998-active #mainContent .champion-stage #championName { font-size: 42px !important; }
 }
-

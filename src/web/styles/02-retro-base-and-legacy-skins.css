@@ -1,3 +1,4 @@
+/* Clean dark theme */
 .sidebar {
   background: rgba(14, 19, 28, 0.96);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.015);
@@ -1685,5 +1686,3 @@ body.retro-mode-active.retro-euro-2016-active .toast {
     box-shadow: 0 9px 22px rgba(0, 7, 35, 0.28);
   }
 }
-/* Complete light-mode coverage for every non-competition page and overlay. */
-html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(p, li, small, label) {

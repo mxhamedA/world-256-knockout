@@ -1,3 +1,8 @@
+/* Borderless match presentation */
+.match-stage {
+  border: 0;
+  background: #101620;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
 }
 
 .stage-topline {
@@ -2609,9 +2614,3 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-/* Euro squad groups stay content-height and use flat broadcast-style dividers. */
-body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-groups {
-  align-items: start;
-}
-
-body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-position-group {

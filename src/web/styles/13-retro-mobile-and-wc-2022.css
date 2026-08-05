@@ -1,3 +1,15 @@
+/* Retro mobile match panels mirror the standard simulator's two-column rail. */
+@media (max-width: 700px) {
+  body.retro-mode-active #mainContent.content {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "stage stage"
+      "next next"
+      "boot boot"
+      "board board";
+    gap: 10px;
+  }
+
   body.retro-mode-active #mainContent .insight-right {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1246,16 +1258,4 @@ body.retro-mode-active.retro-2022-active #mainContent .fixture.bracket-fixture.s
 .retro-2022-active .retro-match-lineups-panel .retro-lineup-side header,
 .retro-2022-active .retro-match-lineups-panel .retro-lineup-side:nth-child(2) header {
   background: #4a0d27;
-}
-/* Custom tournament builder */
-.custom-tournament-screen {
-  width: min(1440px, calc(100% - 48px));
-  max-width: 100%;
-  margin: 0 auto 80px;
-  padding: 18px 0 0;
-  overflow-x: clip;
-}
-
-.custom-tournament-screen[hidden] {
-  display: none;
 }

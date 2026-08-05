@@ -18,6 +18,11 @@ npm run build:app
 `npm run build` also rebuilds the bundle before copying the production static
 output to `dist/`.
 
+The large production stylesheet is organized the same way under
+[`src/web/styles`](styles). The year-by-year retro data and UI lookup map lives
+in [`src/web/modes/retro/README.md`](modes/retro/README.md), so a future 2014 or
+2010 change has one documented starting point.
+
 The chunks are grouped by responsibility:
 
 - bootstrap, constants, DOM references and shared setup

@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = join(projectRoot, "src", "web", "styles");
 const bundlePath = join(projectRoot, "clean.css");
+const bootstrapBundlePath = process.env.STYLE_BOOTSTRAP_BUNDLE || bundlePath;
 
 // The browser still receives one stylesheet. These ordered source files keep
 // the cascade intact while giving each mode and shared UI area a small place
@@ -30,19 +31,39 @@ const chunks = [
   ["17-wc-1998-final-guards.css", 40371, 41120],
 ];
 
+// These source ranges ended on an intentionally blank line in the original
+// cascade. Keep that separator in the generated bundle without leaving a
+// confusing blank line at the end of every source file.
+const chunksWithBlankLineAfter = new Set([
+  "00-foundations-and-shared-shell.css",
+  "01-online-results-and-theme.css",
+  "02-retro-base-and-legacy-skins.css",
+  "03-light-mode-and-mode-surfaces.css",
+  "04-shared-world-cup-manager.css",
+  "05-wc-2014-lineup-and-match-ui.css",
+  "06-shared-match-presentation.css",
+  "07-euro-2016-and-retro-search.css",
+  "08-snapshots-prediction-and-navigation.css",
+  "09-landing-and-competition-menu.css",
+  "10-wc-2014-watercolor-and-shootout.css",
+  "11-online-dashboard-and-responsive.css",
+  "12-wc-2018-and-wc-2010-themes.css",
+  "16-custom-light-and-wc-2002.css",
+]);
+
 function bootstrapStyleChunks() {
   if (chunks.every(([filename]) => existsSync(join(sourceRoot, filename)))) return;
-  if (!existsSync(bundlePath)) {
-    throw new Error(`Cannot bootstrap style sources: ${bundlePath} does not exist.`);
+  if (!existsSync(bootstrapBundlePath)) {
+    throw new Error(`Cannot bootstrap style sources: ${bootstrapBundlePath} does not exist.`);
   }
 
-  const lines = readFileSync(bundlePath, "utf8")
-    .replace(/^\/\* Generated from src\/web\/styles\. \*\/\r?\n/, "")
+  const lines = readFileSync(bootstrapBundlePath, "utf8")
+    .replace(/^\/\* Generated from src\/web\/styles\. Edit the source chunks, then run npm run build:styles\. \*\/\r?\n/, "")
     .split(/\r?\n/);
   mkdirSync(sourceRoot, { recursive: true });
   chunks.forEach(([filename, start, end]) => {
     const destination = join(sourceRoot, filename);
-    const content = lines.slice(start - 1, end).join("\n") + "\n";
+    const content = lines.slice(start - 1, end).join("\n").replace(/\n+$/, "") + "\n";
     writeFileSync(destination, content, "utf8");
   });
 }
@@ -54,10 +75,13 @@ export function buildStyleBundle() {
     .map(([filename]) => filename);
   if (missing.length) throw new Error(`Missing style source chunks: ${missing.join(", ")}`);
 
-  const source = chunks
-    .map(([filename]) => readFileSync(join(sourceRoot, filename), "utf8"))
-    .join("")
-    .replace(/\s+$/, "");
+  const source = chunks.map(([filename], index) => {
+    const content = readFileSync(join(sourceRoot, filename), "utf8").replace(/\s+$/, "");
+    const separator = index === chunks.length - 1
+      ? ""
+      : chunksWithBlankLineAfter.has(filename) ? "\n\n" : "\n";
+    return content + separator;
+  }).join("");
   writeFileSync(
     bundlePath,
     `/* Generated from src/web/styles. Edit the source chunks, then run npm run build:styles. */\n${source}\n`,

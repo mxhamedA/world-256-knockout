@@ -1,5 +1,4 @@
 /* Generated from src/web/styles. Edit the source chunks, then run npm run build:styles. */
-/* Generated from src/web/styles. Edit the source chunks, then run npm run build:styles. */
 :root {
   --bg: #0b0f17;
   --panel: #111722;
@@ -2044,6 +2043,7 @@ body::after,
     border-right: 0;
   }
 }
+
 /* Online tournament results */
 .online-results {
   width: min(100%, 1040px);
@@ -3089,6 +3089,7 @@ body::after,
     transition-duration: 0.01ms !important;
   }
 }
+
 /* Clean dark theme */
 .sidebar {
   background: rgba(14, 19, 28, 0.96);
@@ -4777,6 +4778,7 @@ body.retro-mode-active.retro-euro-2016-active .toast {
     box-shadow: 0 9px 22px rgba(0, 7, 35, 0.28);
   }
 }
+
 /* Complete light-mode coverage for every non-competition page and overlay. */
 html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(p, li, small, label) {
   font-weight: 600;
@@ -5530,6 +5532,7 @@ html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl
     width: 100%;
   }
 }
+
 /* Shared World Cup manager, recoloured and reshaped by each edition below. */
 body.retro-mode-active {
   --q22-ink: #062b20;
@@ -6245,6 +6248,7 @@ body.retro-mode-active.retro-2018-active {
   color: #ff8293;
   background: #3a0b18;
 }
+
 /* Brazil 2014: deep green watercolor cards and rounded tournament controls. */
 .retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs,
 .retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-lineup {
@@ -7061,6 +7065,7 @@ body.retro-mode-active.retro-2026-active #mainContent .penalty-mark.miss {
     display: none;
   }
 }
+
 /* Borderless match presentation */
 .match-stage {
   border: 0;
@@ -9677,6 +9682,7 @@ body.retro-mode-active.retro-2026-active #mainContent .penalty-mark.miss {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
 /* Euro squad groups stay content-height and use flat broadcast-style dividers. */
 body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-groups {
   align-items: start;
@@ -10859,6 +10865,7 @@ body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad
     min-height: 116px;
   }
 }
+
 /* Shareable match snapshots */
 .snapshot-trigger:disabled {
   cursor: wait;
@@ -12018,6 +12025,7 @@ body.standard-mode-active #newsButton {
   outline: 2px solid var(--lime);
   outline-offset: 4px;
 }
+
 /* Landing mode selection */
 .content[hidden] {
   display: none;
@@ -16246,6 +16254,7 @@ body.retro-mode-active #appShell {
     min-height: 50px;
   }
 }
+
 /* Brazil 2014: original watercolor treatment over the existing tournament layout. */
 body.retro-mode-active {
   color: #173f35;
@@ -19884,6 +19893,7 @@ body.retro-mode-active .snapshot-actions button:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 /* Desktop online dashboard */
 .online-matches {
   display: grid;
@@ -24604,6 +24614,7 @@ body.profile-mode-active #retroWorldCupScreen { display: none !important; }
     grid-template-columns: 1fr;
   }
 }
+
 /* Russia 2018 Retro edition: original folk-pattern treatment over the shared simulator. */
 body.retro-mode-active.retro-2018-active {
   --retro-2018-red: #a51a16;
@@ -26723,6 +26734,7 @@ body.retro-mode-active.retro-2010-active #mainContent .go-to-top {
     transform: none;
   }
 }
+
 /* Retro mobile match panels mirror the standard simulator's two-column rail. */
 @media (max-width: 700px) {
   body.retro-mode-active #mainContent.content {
@@ -40356,6 +40368,7 @@ body.retro-mode-active.retro-2002-active .retro-table-row.qualified::before {
     transform: none;
   }
 }
+
 /* France 1998 absolute final palette guard. */
 body.retro-mode-active.retro-1998-active {
   color: #f7faff;

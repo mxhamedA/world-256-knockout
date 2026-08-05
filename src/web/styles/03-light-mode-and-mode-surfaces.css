@@ -1,3 +1,5 @@
+/* Complete light-mode coverage for every non-competition page and overlay. */
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(p, li, small, label) {
   font-weight: 600;
 }
 
@@ -749,6 +751,3 @@ html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl
     width: 100%;
   }
 }
-/* Shared World Cup manager, recoloured and reshaped by each edition below. */
-body.retro-mode-active {
-  --q22-ink: #062b20;

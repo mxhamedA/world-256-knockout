@@ -1,3 +1,12 @@
+/* Brazil 2014: original watercolor treatment over the existing tournament layout. */
+body.retro-mode-active {
+  color: #173f35;
+  background: #fff8e8 url("./assets/retro-2014/brazil-watercolor-bg.webp") center top / cover fixed no-repeat;
+}
+
+.retro-tournament-screen {
+  min-height: 100vh;
+  color: #173f35;
   background: rgba(255, 249, 232, 0.22);
   font-family: "Trebuchet MS", Arial, sans-serif;
 }
@@ -3627,13 +3636,3 @@ body.retro-mode-active .snapshot-actions button:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* Desktop online dashboard */
-.online-matches {
-  display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(340px, 0.8fr);
-  align-items: start;
-  gap: 14px 24px;
-}
-
-.online-match-head,
-.online-fixture-heading,

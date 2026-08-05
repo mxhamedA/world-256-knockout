@@ -1,3 +1,7 @@
+/* Brazil 2014: deep green watercolor cards and rounded tournament controls. */
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs,
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-lineup {
+  border-radius: 14px;
   box-shadow: 0 12px 28px rgba(36, 109, 75, 0.14);
 }
 
@@ -810,8 +814,3 @@ body.retro-mode-active.retro-2026-active #mainContent .penalty-mark.miss {
     display: none;
   }
 }
-/* Borderless match presentation */
-.match-stage {
-  border: 0;
-  background: #101620;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);

@@ -1,3 +1,14 @@
+/* Russia 2018 Retro edition: original folk-pattern treatment over the shared simulator. */
+body.retro-mode-active.retro-2018-active {
+  --retro-2018-red: #a51a16;
+  --retro-2018-deep: #671018;
+  --retro-2018-blue: #075f9f;
+  --retro-2018-navy: #07345f;
+  --retro-2018-cream: #fff4d6;
+  --retro-2018-gold: #e9c477;
+  color: var(--retro-2018-cream);
+  background-color: var(--retro-2018-red);
+  background-image:
     radial-gradient(circle at 10% 18%, transparent 0 28px, rgba(255, 221, 159, 0.11) 29px 31px, transparent 32px),
     radial-gradient(circle at 82% 22%, transparent 0 17px, rgba(255, 221, 159, 0.09) 18px 20px, transparent 21px),
     repeating-conic-gradient(from 45deg at 75% 72%, rgba(255, 236, 195, 0.055) 0 12deg, transparent 12deg 30deg),
@@ -2106,15 +2117,3 @@ body.retro-mode-active.retro-2010-active #mainContent .go-to-top {
     transform: none;
   }
 }
-/* Retro mobile match panels mirror the standard simulator's two-column rail. */
-@media (max-width: 700px) {
-  body.retro-mode-active #mainContent.content {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas:
-      "stage stage"
-      "next next"
-      "boot boot"
-      "board board";
-    gap: 10px;
-  }
-

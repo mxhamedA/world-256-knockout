@@ -1,3 +1,15 @@
+/* Germany 2006 Retro edition: ice-blue glass, diagonal motion and championship gold.
+   This block stays year-scoped and follows every shared retro skin so Brazil cannot leak through. */
+:root.route-retro-2006-loading,
+body.retro-mode-active.retro-2006-active {
+  --wc06-ice: #d8eff7;
+  --wc06-sky: #78b0c7;
+  --wc06-blue: #0b5274;
+  --wc06-deep: #073550;
+  --wc06-navy: #031b2b;
+  --wc06-gold: #d6aa21;
+  --wc06-gold-light: #f3d566;
+  --wc06-text: #f4fbff;
   --wc06-muted: #b9d4df;
   --wc06-line: rgba(194, 225, 237, 0.28);
   background:
@@ -2563,15 +2575,3 @@ body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side li:nth-
     border-left: 0;
   }
 }
-/* Custom squad creator and one-off custom matches */
-.custom-library-heading > div { display: grid; gap: 2px; }
-.custom-library-heading > div span { color: var(--muted, #8290a8); font-size: 11px; }
-.custom-library-heading > button { border: 1px solid rgba(111, 142, 255, .45); border-radius: 9px; background: rgba(79, 112, 230, .12); color: #b9c9ff; padding: 8px 11px; font-weight: 800; cursor: pointer; }
-.custom-library-team .custom-library-edit { width: auto; padding: 5px 7px; border-radius: 7px; font-size: 10px; color: #aebeff; background: rgba(85, 113, 210, .12); }
-.custom-uploaded-flag img { width: 100%; height: 100%; padding: 0; box-sizing: border-box; object-fit: cover; }
-
-.custom-team-creator-modal {
-  z-index: 1400;
-  padding: clamp(12px, 3vh, 28px);
-}
-.custom-team-creator-modal .custom-editor-backdrop {

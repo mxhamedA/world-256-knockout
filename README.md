@@ -22,8 +22,11 @@ The browser runtime remains compatible with the existing classic `app.js`
 entrypoint, but its maintainable source is split into ordered files under
 [`src/web/app`](src/web/app). Read [`src/web/README.md`](src/web/README.md) for
 the boundary map and React Native port guidance. Edit those chunks and run
-`npm run build:app`; `npm run build` performs that step automatically before
-creating `dist/`.
+`npm run build:app`. The same source organization now exists for the stylesheet
+under [`src/web/styles`](src/web/styles), and the retro year lookup map is at
+[`src/web/modes/retro/README.md`](src/web/modes/retro/README.md). Run
+`npm run build:styles` after editing styles; `npm run build` performs both steps
+automatically before creating `dist/`.
 
 ## Verify the simulation
 

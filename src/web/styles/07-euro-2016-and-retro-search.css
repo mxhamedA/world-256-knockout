@@ -1,3 +1,9 @@
+/* Euro squad groups stay content-height and use flat broadcast-style dividers. */
+body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-groups {
+  align-items: start;
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-position-group {
   align-self: start;
   height: auto;
   overflow: visible;
@@ -1174,10 +1180,3 @@ body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad
     min-height: 116px;
   }
 }
-/* Shareable match snapshots */
-.snapshot-trigger:disabled {
-  cursor: wait;
-  opacity: 0.55;
-}
-
-.snapshot-card-button {

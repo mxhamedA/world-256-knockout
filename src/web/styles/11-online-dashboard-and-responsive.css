@@ -1,3 +1,13 @@
+/* Desktop online dashboard */
+.online-matches {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(340px, 0.8fr);
+  align-items: start;
+  gap: 14px 24px;
+}
+
+.online-match-head,
+.online-fixture-heading,
 .online-round-matches,
 .online-match-actions {
   grid-column: 1 / -1;
@@ -4708,14 +4718,3 @@ body.profile-mode-active #retroWorldCupScreen { display: none !important; }
     grid-template-columns: 1fr;
   }
 }
-/* Russia 2018 Retro edition: original folk-pattern treatment over the shared simulator. */
-body.retro-mode-active.retro-2018-active {
-  --retro-2018-red: #a51a16;
-  --retro-2018-deep: #671018;
-  --retro-2018-blue: #075f9f;
-  --retro-2018-navy: #07345f;
-  --retro-2018-cream: #fff4d6;
-  --retro-2018-gold: #e9c477;
-  color: var(--retro-2018-cream);
-  background-color: var(--retro-2018-red);
-  background-image:

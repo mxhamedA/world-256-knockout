@@ -1,3 +1,11 @@
+/* Landing mode selection */
+.content[hidden] {
+  display: none;
+}
+
+.legacy-draft[hidden] {
+  display: none;
+}
 
 .legacy-draft {
   display: grid;
@@ -4218,12 +4226,3 @@ body.retro-mode-active #appShell {
     min-height: 50px;
   }
 }
-/* Brazil 2014: original watercolor treatment over the existing tournament layout. */
-body.retro-mode-active {
-  color: #173f35;
-  background: #fff8e8 url("./assets/retro-2014/brazil-watercolor-bg.webp") center top / cover fixed no-repeat;
-}
-
-.retro-tournament-screen {
-  min-height: 100vh;
-  color: #173f35;

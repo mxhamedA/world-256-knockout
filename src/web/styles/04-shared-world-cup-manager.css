@@ -1,3 +1,6 @@
+/* Shared World Cup manager, recoloured and reshaped by each edition below. */
+body.retro-mode-active {
+  --q22-ink: #062b20;
   --q22-ink-soft: #064b35;
   --q22-panel: rgba(5, 91, 58, 0.98);
   --q22-panel-soft: rgba(8, 74, 51, 0.96);
@@ -710,7 +713,3 @@ body.retro-mode-active.retro-2018-active {
   color: #ff8293;
   background: #3a0b18;
 }
-/* Brazil 2014: deep green watercolor cards and rounded tournament controls. */
-.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs,
-.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-lineup {
-  border-radius: 14px;

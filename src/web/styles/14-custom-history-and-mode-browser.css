@@ -1,3 +1,15 @@
+/* Custom tournament builder */
+.custom-tournament-screen {
+  width: min(1440px, calc(100% - 48px));
+  max-width: 100%;
+  margin: 0 auto 80px;
+  padding: 18px 0 0;
+  overflow-x: clip;
+}
+
+.custom-tournament-screen[hidden] {
+  display: none;
+}
 
 .custom-tournament-header {
   display: grid;
@@ -7046,15 +7058,3 @@ body.retro-mode-active.retro-euro-2016-active #mainContent #championStage .champ
 ) {
   border-radius: 2px;
 }
-/* Germany 2006 Retro edition: ice-blue glass, diagonal motion and championship gold.
-   This block stays year-scoped and follows every shared retro skin so Brazil cannot leak through. */
-:root.route-retro-2006-loading,
-body.retro-mode-active.retro-2006-active {
-  --wc06-ice: #d8eff7;
-  --wc06-sky: #78b0c7;
-  --wc06-blue: #0b5274;
-  --wc06-deep: #073550;
-  --wc06-navy: #031b2b;
-  --wc06-gold: #d6aa21;
-  --wc06-gold-light: #f3d566;
-  --wc06-text: #f4fbff;

@@ -1,3 +1,10 @@
+/* Shareable match snapshots */
+.snapshot-trigger:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.snapshot-card-button {
   position: absolute;
   z-index: 80;
   top: 16px;
@@ -1149,12 +1156,4 @@ body.standard-mode-active #newsButton {
   border-radius: 4px;
   outline: 2px solid var(--lime);
   outline-offset: 4px;
-}
-/* Landing mode selection */
-.content[hidden] {
-  display: none;
-}
-
-.legacy-draft[hidden] {
-  display: none;
 }
