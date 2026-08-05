@@ -187,7 +187,7 @@ const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
   ["everton", "Everton", 8, 5],
   ["fulham", "Fulham", 8, 5],
   ["hull-city", "Hull City", 17, 8],
-  ["ipswich-town", "Ipswich Town", 10, 8],
+  ["ipswich-town", "Ipswich Town", 17, 8],
   ["leeds-united", "Leeds United", 10, 7],
   ["liverpool", "Liverpool", 1, 2],
   ["manchester-city", "Manchester City", 1, 2],

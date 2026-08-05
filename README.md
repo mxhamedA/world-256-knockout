@@ -16,6 +16,15 @@ npx serve .
 
 Then open the local address shown in the terminal.
 
+## Application source layout
+
+The browser runtime remains compatible with the existing classic `app.js`
+entrypoint, but its maintainable source is split into ordered files under
+[`src/web/app`](src/web/app). Read [`src/web/README.md`](src/web/README.md) for
+the boundary map and React Native port guidance. Edit those chunks and run
+`npm run build:app`; `npm run build` performs that step automatically before
+creating `dist/`.
+
 ## Verify the simulation
 
 Run the unit, integration, deterministic-seed and save-compatibility smoke tests:

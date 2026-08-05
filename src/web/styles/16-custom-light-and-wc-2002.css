@@ -1,0 +1,2736 @@
+  background: rgba(2, 7, 14, .86);
+  backdrop-filter: blur(5px);
+}
+.custom-team-creator {
+  position: relative;
+  z-index: 1;
+  width: min(920px, calc(100vw - 34px));
+  max-height: min(880px, calc(100dvh - 40px));
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #34445e;
+  border-radius: 14px;
+  color: #eef3ff;
+  background: #0d1521;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, .72);
+  isolation: isolate;
+}
+.custom-team-creator-header,
+.custom-team-creator-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 24px; border-bottom: 1px solid rgba(135, 151, 184, .16); }
+.custom-team-creator-header { position: sticky; top: 0; z-index: 3; background: #0d1521; }
+.custom-team-creator-header span,
+.custom-section-title > div > span { color: #789cff; font-size: 10px; font-weight: 900; letter-spacing: .16em; }
+.custom-team-creator-header h2,
+.custom-section-title h3 { margin: 3px 0; }
+.custom-team-creator-header p { margin: 0; color: #8f9bb1; }
+.custom-team-creator-header > button { border: 0; background: transparent; color: #aeb7c9; font-size: 28px; cursor: pointer; }
+.custom-team-identity { display: grid; grid-template-columns: 92px minmax(220px, 1fr) minmax(260px, 1fr); align-items: center; gap: 18px; padding: 22px 24px; }
+.custom-team-flag-preview { width: 92px; aspect-ratio: 3 / 2; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(143, 161, 196, .25); border-radius: 10px; background: #151c29; font-size: 26px; }
+.custom-team-flag-preview img { width: 100%; height: 100%; padding: 0; box-sizing: border-box; object-fit: cover; }
+.custom-team-identity label { display: grid; gap: 7px; color: #aeb7c9; font-size: 11px; font-weight: 800; }
+.custom-team-identity input,
+.custom-player-row input,
+.custom-player-row select { min-width: 0; border: 1px solid rgba(143, 161, 196, .24); border-radius: 8px; background: #111824; color: #eef3ff; padding: 10px; }
+.custom-flag-upload small { color: #737f94; font-weight: 500; line-height: 1.35; }
+.custom-team-ratings-section,
+.custom-player-builder { padding: 20px 24px; border-top: 1px solid rgba(135, 151, 184, .14); }
+.custom-account-save-option { display: flex; align-items: center; gap: 11px; padding: 16px 24px; border-top: 1px solid rgba(135, 151, 184, .14); color: #dce5f1; cursor: pointer; }
+.custom-account-save-option input { width: 18px; height: 18px; accent-color: #79a1ff; }
+.custom-account-save-option span { display: grid; gap: 3px; }
+.custom-account-save-option strong { font-size: 12px; }
+.custom-account-save-option small { color: #7f8ba1; font-size: 10px; }
+.custom-account-save-option:has(input:disabled) { cursor: not-allowed; opacity: .65; }
+.custom-section-title { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+.custom-section-title button { border: 1px solid rgba(111, 142, 255, .4); border-radius: 8px; background: rgba(79, 112, 230, .12); color: #b9c9ff; padding: 8px 11px; font-weight: 800; }
+.custom-player-help { color: #7f8ba1; font-size: 12px; }
+.custom-player-rows { display: grid; gap: 8px; }
+.custom-player-row { border: 1px solid rgba(135, 151, 184, .14); border-radius: 10px; background: rgba(10, 15, 24, .5); overflow: hidden; }
+.custom-player-main-fields { display: grid; grid-template-columns: 28px minmax(180px, 1fr) 84px 86px 34px; align-items: center; gap: 9px; padding: 10px; }
+.custom-player-number { color: #68758b; text-align: center; font: 700 11px/1 monospace; }
+.custom-player-main-fields label,
+.custom-player-attributes label { display: grid; grid-template-columns: auto 52px; align-items: center; gap: 6px; color: #7f8ba1; font-size: 9px; font-weight: 900; }
+.custom-player-main-fields label input,
+.custom-player-attributes label input { padding: 8px 6px; text-align: center; }
+.custom-player-main-fields > button { border: 0; background: transparent; color: #9ba7ba; font-size: 20px; cursor: pointer; }
+.custom-player-row details { border-top: 1px solid rgba(135, 151, 184, .1); }
+.custom-player-row summary { padding: 8px 12px; color: #7f8ba1; font-size: 10px; font-weight: 800; cursor: pointer; }
+.custom-player-attributes { display: grid; grid-template-columns: repeat(5, minmax(90px, 1fr)); gap: 9px; padding: 4px 12px 12px; }
+.custom-player-attributes .custom-penalty-taker { grid-template-columns: auto 1fr; justify-self: start; }
+.custom-player-attributes .custom-penalty-taker input { width: 16px; }
+.custom-team-creator-actions { z-index: 3; justify-content: flex-end; border-top: 1px solid rgba(135, 151, 184, .16); border-bottom: 0; position: sticky; bottom: 0; background: #121b29; box-shadow: 0 -12px 28px rgba(2, 7, 14, .5); }
+.custom-team-creator-actions p { margin-right: auto; color: #ff9a9a; }
+.custom-team-delete-button { padding: 10px 14px; color: #ff9f9f; font: inherit; font-weight: 800; border: 1px solid rgba(255, 96, 96, .42); border-radius: 9px; background: rgba(160, 30, 45, .14); cursor: pointer; }
+.custom-team-delete-button:hover { color: #fff; border-color: rgba(255, 96, 96, .7); background: rgba(190, 38, 54, .28); }
+.mode-card-custom .custom-match-card-button { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+
+.custom-match-builder { width: min(1100px, calc(100% - 32px)); margin: 28px auto; padding: 26px; }
+.custom-match-teams { display: grid; grid-template-columns: minmax(0, 1fr) 56px minmax(0, 1fr); align-items: center; gap: 16px; }
+.custom-match-team-card { padding: 20px; border: 1px solid rgba(135, 151, 184, .16); border-radius: 14px; background: rgba(10, 15, 24, .54); }
+.custom-match-team-card header { display: flex; align-items: center; justify-content: space-between; color: #7f8ba1; font-size: 10px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.custom-match-team-flag,
+.custom-match-team-flag img {
+  width: 56px;
+  height: 38px;
+}
+.custom-match-team-flag {
+  flex: 0 0 56px;
+  border-radius: 5px;
+}
+.custom-match-team-flag.pl-club-flag,
+.custom-team-flag.pl-club-flag,
+.custom-rating-flag.pl-club-flag {
+  border-color: transparent;
+  background: transparent;
+}
+.custom-match-team-flag.pl-club-flag img,
+.custom-team-flag.pl-club-flag img,
+.custom-rating-flag.pl-club-flag img {
+  box-sizing: border-box;
+  padding: 2px;
+  object-fit: contain;
+}
+.pl-club-flag {
+  border-color: transparent;
+  background: transparent;
+}
+.pl-club-flag img {
+  box-sizing: border-box;
+  padding: 6px;
+  object-fit: contain;
+}
+.flag-orb:has(.pl-club-flag) {
+  overflow: visible;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+body.custom-match-mode-active #roundNav,
+body.custom-match-mode-active .golden-boot-panel,
+body.custom-match-mode-active #roundBoard {
+  display: none !important;
+}
+.custom-match-team-selectors { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 10px; margin: 14px 0; }
+.custom-match-team-selectors label { display: grid; gap: 6px; color: #7f8ba1; font-size: 10px; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+.custom-match-team-selectors select { width: 100%; min-width: 0; border: 1px solid rgba(143, 161, 196, .24); border-radius: 9px; background: #111824; color: #eef3ff; padding: 11px; font-weight: 700; text-transform: none; }
+.custom-match-team-name { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-bottom: 16px; }
+.custom-match-team-name strong { font-size: 20px; }
+.custom-match-team-actions { display: flex; gap: 6px; }
+.custom-match-team-actions button { min-height: 32px; padding: 0 9px; border: 1px solid rgba(111, 142, 255, .38); border-radius: 7px; color: #b9c9ff; background: rgba(79, 112, 230, .1); font: inherit; font-size: 10px; font-weight: 850; cursor: pointer; }
+.custom-match-team-actions button:hover { border-color: rgba(132, 159, 255, .68); color: #fff; background: rgba(79, 112, 230, .2); }
+.custom-match-team-actions button.is-danger { border-color: rgba(255, 96, 96, .34); color: #ffaaaa; background: rgba(160, 30, 45, .1); }
+.custom-match-team-actions button.is-danger:hover { border-color: rgba(255, 96, 96, .65); color: #fff; background: rgba(190, 38, 54, .24); }
+.custom-match-team-card .custom-rating-grid { grid-template-columns: repeat(5, minmax(54px, 1fr)); }
+.custom-match-team-card .custom-rating-grid label { min-width: 0; }
+.custom-match-team-card .custom-rating-grid input { width: 100%; }
+.custom-match-reset-ratings { margin-top: 13px; border: 0; background: transparent; color: #849cff; font-size: 11px; font-weight: 800; cursor: pointer; }
+.custom-match-versus { color: #789cff; font-size: 18px; font-weight: 950; text-align: center; }
+.custom-match-error { color: #ff9a9a; text-align: center; font-weight: 700; }
+.custom-match-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(135, 151, 184, .14); }
+
+@media (max-width: 760px) {
+  .custom-match-screen .custom-tournament-header { gap: 0; padding-bottom: 8px; }
+  .custom-match-screen .custom-header-toolbar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px; }
+  .custom-match-screen .custom-back-button,
+  .custom-match-screen .custom-preset-actions > button:nth-child(1),
+  .custom-match-screen .custom-preset-actions > button:nth-child(2),
+  .custom-match-screen .custom-preset-actions .custom-header-start { grid-row: 1; min-height: 42px; padding: 0 9px; font-size: 10px; white-space: nowrap; }
+  .custom-match-screen .custom-back-button { grid-column: 1; }
+  .custom-match-screen .custom-preset-actions > button:nth-child(1) { grid-column: 2; }
+  .custom-match-screen .custom-preset-actions > button:nth-child(2),
+  .custom-match-screen .custom-preset-actions .custom-header-start { grid-column: 3; }
+  .custom-match-back-label-full,
+  .custom-match-create-label-full { display: none; }
+  .custom-match-back-label-short,
+  .custom-match-create-label-short { display: inline; }
+  .custom-team-creator-modal { align-items: end; padding: 0; }
+  .custom-team-creator { width: 100%; max-height: 94dvh; border-radius: 16px 16px 0 0; }
+  .custom-team-creator-header { padding: 17px 16px; }
+  .custom-team-ratings-section,
+  .custom-player-builder { padding-inline: 16px; }
+  .custom-team-identity { grid-template-columns: 72px 1fr; }
+  .custom-flag-upload { grid-column: 1 / -1; }
+  .custom-player-main-fields { grid-template-columns: 24px minmax(120px, 1fr) 70px 76px 28px; gap: 5px; }
+  .custom-player-attributes { grid-template-columns: repeat(2, minmax(90px, 1fr)); }
+  .custom-match-teams { grid-template-columns: 1fr; }
+  .custom-match-versus { padding: 0; }
+  .custom-match-options { grid-template-columns: 1fr; }
+  .custom-match-team-card .custom-rating-grid { grid-template-columns: repeat(3, minmax(60px, 1fr)); }
+  .custom-match-team-selectors { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 761px) {
+  .custom-match-back-label-short,
+  .custom-match-create-label-short { display: none; }
+}
+
+/* Custom flags use a single cropped 3:2 presentation everywhere. */
+.custom-uploaded-flag {
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.custom-uploaded-flag.custom-uploaded-badge {
+  width: auto;
+  aspect-ratio: 1;
+  border-radius: 7px;
+}
+
+.custom-uploaded-flag img,
+.custom-team-flag-preview img {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  object-fit: cover;
+}
+
+.custom-team-flag-preview.is-square {
+  aspect-ratio: 1;
+}
+
+.custom-team-flag-preview:has(img) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.custom-flag-crop-editor {
+  position: fixed;
+  z-index: 2200;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.custom-flag-crop-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(2, 7, 14, .9);
+  backdrop-filter: blur(7px);
+}
+
+.custom-flag-crop-panel {
+  position: relative;
+  z-index: 1;
+  width: min(560px, calc(100vw - 32px));
+  overflow: hidden;
+  border: 1px solid #3a4c69;
+  border-radius: 16px;
+  color: #eef3ff;
+  background: #0d1521;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, .72);
+}
+
+.custom-flag-crop-panel > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 22px 16px;
+}
+
+.custom-flag-crop-panel > header span {
+  color: #789cff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .16em;
+}
+
+.custom-flag-crop-panel > header h3 {
+  margin: 4px 0 3px;
+  font-size: 22px;
+}
+
+.custom-flag-crop-panel > header p {
+  margin: 0;
+  color: #8f9bb1;
+  font-size: 12px;
+}
+
+.custom-flag-crop-panel > header > button {
+  border: 0;
+  color: #aeb7c9;
+  background: transparent;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.custom-flag-crop-shapes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+  padding: 0 22px 16px;
+}
+
+.custom-flag-crop-shapes button {
+  display: grid;
+  grid-template-columns: 36px auto 1fr;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 8px 11px;
+  border: 1px solid rgba(143, 161, 196, .22);
+  border-radius: 10px;
+  color: #aeb9cc;
+  background: #121c2a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.custom-flag-crop-shapes button > span {
+  display: block;
+  width: 32px;
+  aspect-ratio: 3 / 2;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: rgba(120, 156, 255, .12);
+}
+
+.custom-flag-crop-shapes button[data-crop-shape="square"] > span {
+  width: 25px;
+  aspect-ratio: 1;
+  justify-self: center;
+  border-radius: 6px;
+}
+
+.custom-flag-crop-shapes button strong { font-size: 12px; }
+.custom-flag-crop-shapes button small { justify-self: end; color: #6f7e96; font-size: 10px; }
+.custom-flag-crop-shapes button.active {
+  border-color: #789cff;
+  color: #eef3ff;
+  background: rgba(84, 117, 226, .2);
+  box-shadow: inset 0 0 0 1px rgba(120, 156, 255, .18);
+}
+
+.custom-flag-crop-shapes button.active small { color: #9fb5ff; }
+
+.custom-flag-crop-canvas-wrap {
+  position: relative;
+  width: calc(100% - 44px);
+  aspect-ratio: 3 / 2;
+  margin: 0 22px;
+  overflow: hidden;
+  border: 1px solid rgba(196, 211, 239, .4);
+  border-radius: 12px;
+  background-color: #202a39;
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, .055) 25%, transparent 25%), linear-gradient(-45deg, rgba(255, 255, 255, .055) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, .055) 75%), linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, .055) 75%);
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-size: 16px 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .3);
+}
+
+.custom-flag-crop-canvas-wrap.is-square {
+  width: min(380px, calc(100% - 44px));
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+
+.custom-flag-crop-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+
+.custom-flag-crop-canvas-wrap canvas.is-dragging { cursor: grabbing; }
+
+.custom-flag-crop-canvas-wrap > span {
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .2);
+}
+
+.custom-flag-crop-zoom {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  color: #b7c2d6;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.custom-flag-crop-zoom input {
+  width: 100%;
+  accent-color: #789cff;
+}
+
+.custom-flag-crop-panel > footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  padding: 15px 22px 20px;
+  border-top: 1px solid rgba(135, 151, 184, .14);
+}
+
+@media (max-width: 560px) {
+  .custom-flag-crop-editor { align-items: end; padding: 0; }
+  .custom-flag-crop-panel { width: 100%; border-radius: 16px 16px 0 0; }
+  .custom-flag-crop-panel > header { padding: 18px 16px 14px; }
+  .custom-flag-crop-shapes { padding-inline: 16px; }
+  .custom-flag-crop-canvas-wrap { width: calc(100% - 32px); margin-inline: 16px; }
+  .custom-flag-crop-canvas-wrap.is-square { width: min(340px, calc(100% - 32px)); margin-inline: auto; }
+  .custom-flag-crop-zoom { padding-inline: 16px; }
+  .custom-flag-crop-panel > footer { padding-inline: 16px; }
+}
+
+/* Complete light theme for the custom tournament builder and its editors. */
+html.light-mode body.custom-tournament-mode-active {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-workspace-panel,
+  .custom-team-library,
+  .custom-builder-group,
+  .custom-third-place-preview,
+  .custom-live-group,
+  .custom-rating-team-list,
+  .custom-rating-editor,
+  .custom-team-creator
+) {
+  border-color: #d8e0ea;
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-panel-heading h2,
+  .custom-library-heading strong,
+  .custom-builder-group > header strong,
+  .custom-slot-copy strong,
+  .custom-library-team strong,
+  .custom-third-place-preview > header strong,
+  .custom-rating-team-list button,
+  .custom-rating-editor h3,
+  .custom-team-picker-list strong,
+  .custom-manager-picker-panel strong,
+  .custom-match-teams strong,
+  .custom-team-creator h2,
+  .custom-team-creator h3,
+  .custom-account-save-option strong,
+  .custom-live-group > header strong
+) {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-config-group > span,
+  .custom-quick-fill > span,
+  .custom-source-select > span,
+  .custom-library-heading span,
+  .custom-builder-group > header span,
+  .custom-slot-copy small,
+  .custom-seed-number,
+  .custom-third-place-preview > header span,
+  .custom-third-place-preview > div span,
+  .custom-rating-editor p,
+  .custom-rating-grid label span,
+  .custom-team-picker-tools label > span,
+  .custom-team-picker-list small,
+  .custom-manager-picker-panel small,
+  .custom-match-teams small,
+  .custom-rule-fields label > span,
+  .custom-team-creator-header p,
+  .custom-team-identity label,
+  .custom-flag-upload small,
+  .custom-player-help,
+  .custom-player-main-fields label,
+  .custom-player-attributes label,
+  .custom-player-row summary,
+  .custom-account-save-option small,
+  .custom-live-group > header,
+  .custom-live-group > div
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-draw-toolbar,
+  .custom-library-heading,
+  .custom-builder-group > header,
+  .custom-team-picker-tools,
+  .custom-team-creator-header,
+  .custom-team-creator-actions
+) {
+  border-color: #dfe5ed;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-inline-actions button,
+  .custom-panel-heading > button,
+  .custom-ratings-toolbar button,
+  .custom-goal-script-heading button,
+  .custom-library-heading > button,
+  .custom-library-team > button,
+  .custom-library-team .custom-library-edit,
+  .custom-group-fixture-editor article > header button,
+  .custom-team-picker-panel > header button,
+  .custom-manager-picker-panel > header button,
+  .custom-match-rule-editor > header button,
+  .custom-section-title button
+) {
+  border: 1px solid #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-inline-actions button,
+  .custom-panel-heading > button,
+  .custom-ratings-toolbar button,
+  .custom-goal-script-heading button,
+  .custom-library-heading > button,
+  .custom-library-team > button,
+  .custom-group-fixture-editor article > header button,
+  .custom-team-picker-list > button,
+  .custom-manager-picker-panel > div > button,
+  .custom-section-title button
+):hover {
+  border-color: #7f9fdf;
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-quick-fill select,
+  .custom-source-select select,
+  .custom-team-picker-tools select,
+  .custom-team-picker-tools input,
+  .custom-rating-grid input,
+  .custom-rule-fields input[type="number"],
+  .custom-score-script input,
+  .custom-score-script select,
+  .custom-winner-select select,
+  .custom-goal-row input,
+  .custom-goal-row select,
+  .custom-team-identity input,
+  .custom-player-row input,
+  .custom-player-row select
+) {
+  border: 1px solid #c8d3e1;
+  color: #172033;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-search,
+  .custom-picker-search
+) {
+  border-color: #c8d3e1;
+  color: #315fbd;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-search input,
+  .custom-picker-search input
+) {
+  color: #172033;
+  background: transparent;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-search input,
+  .custom-picker-search input
+)::placeholder {
+  color: #68768a;
+  opacity: 1;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-source-select,
+  .custom-team-library-list,
+  .custom-library-team,
+  .custom-seed-slot,
+  .custom-third-place-preview > header,
+  .custom-third-place-preview > div span,
+  .custom-rating-team-list button,
+  .custom-rating-editor > header,
+  .custom-team-picker-panel > header,
+  .custom-team-picker-tools,
+  .custom-team-picker-list > button,
+  .custom-manager-picker-panel > header,
+  .custom-manager-picker-panel > div > button,
+  .custom-team-ratings-section,
+  .custom-player-builder,
+  .custom-player-row,
+  .custom-player-row details,
+  .custom-account-save-option,
+  .custom-live-group > header,
+  .custom-live-group > div,
+  .custom-group-knockout-stage
+) {
+  border-color: #dfe5ed;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-main {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-main:hover,
+html.light-mode body.custom-tournament-mode-active .custom-seed-slot.is-target {
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-actions button {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-direct-actions button {
+  color: #31558f;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-slot-actions button:hover {
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-direct-actions button:hover {
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-bracket-edit-round > header span {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle {
+  border-color: #c8d3e1;
+  color: #344158;
+  background: #ffffff;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle:hover {
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle.active {
+  border-color: #426fda;
+  color: #ffffff;
+  background: #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle.active i {
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-third-place-toggle.active i::after {
+  background: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-manager-control > button small,
+  .custom-manager-control > button > i,
+  .custom-setup-more summary
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor {
+  border-color: #dfe5ed;
+  background: #dfe5ed;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor article {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor article > header {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-group-fixture-editor article > div {
+  color: #172033;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-group-fixture-editor article > footer,
+  .custom-bracket-edit-match > footer,
+  .custom-target-note,
+  .custom-rating-team-list button > strong
+) {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-picker-list > button,
+  .custom-manager-picker-panel > div > button
+) {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-manager-picker-panel > div > button.active,
+html.light-mode body.custom-tournament-mode-active .custom-rating-team-list button.active {
+  color: #172033;
+  background: #e8f0ff;
+  box-shadow: inset 3px 0 #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-team-picker-list i {
+  color: #244f9d;
+  background: #e8f0ff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-rating-editor {
+  background: #f8fafc;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-teams {
+  border-color: #dfe5ed;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-teams article {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-teams > b {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-fixed-toggle {
+  color: #344158;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-fixed-result-fields {
+  border: 1px solid #dfe5ed;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-match-rule-editor .secondary-button,
+html.light-mode body.custom-tournament-mode-active .custom-team-creator .secondary-button {
+  border-color: #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-team-flag-preview {
+  border-color: #c8d3e1;
+  background: #f1f4f8;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-player-row {
+  color: #172033;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-player-main-fields > button {
+  color: #526178;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-account-save-option {
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-flag,
+  .custom-rating-flag,
+  .custom-fixture-flag,
+  .custom-manager-button-flag,
+  .custom-preview-flag,
+  .custom-match-team-flag
+) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-live-group > div.qualified {
+  color: #172033;
+  background: #edf3ff;
+  box-shadow: inset 3px 0 #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active .custom-live-group > div > b {
+  color: #526178;
+  background: #f1f4f8;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-picker-panel > header h3,
+  .custom-manager-picker-panel > header h3
+) {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(
+  .custom-team-picker-panel > header span,
+  .custom-manager-picker-panel > header span,
+  .custom-match-rule-editor > header span,
+  .custom-team-creator-header span,
+  .custom-section-title > div > span
+) {
+  color: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active :is(.header-donate-link, .header-donate-link span) {
+  color: #ffffff !important;
+}
+
+/* Running custom tournaments reuse the standard match UI. Keep every shared
+   match, table and fixture surface in the same complete light palette. */
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+) {
+  border-color: #d8e0ea;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(29, 45, 70, 0.09);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .team,
+  .fixture,
+  .live-feed-item,
+  .queue-item,
+  .plot-item,
+  .match-stat-row
+) {
+  border-color: #dfe5ed;
+  color: #344158;
+  background: #f8f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture.complete,
+  .live-feed-item:nth-child(n + 3)
+) {
+  background: #f2f5f9;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture.selected,
+  .queue-item.current,
+  .spoiler-panel
+) {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+  box-shadow: 0 0 0 2px rgba(49, 95, 189, 0.08);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .match-events,
+  .live-sim,
+  .standard-tactic-buttons,
+  .match-highlight-mode
+) {
+  border-color: #d8e0ea;
+  color: #172033;
+  background: #f5f7fa;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture-team,
+  .fixture-team .name,
+  .queue-team,
+  .event,
+  .live-label,
+  .text-button
+) {
+  color: #46556b;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .team-name,
+  .match-score,
+  .fixture-team b,
+  .fixture-team.winner .name,
+  .fixture-team.winner b,
+  .match-analysis-heading strong,
+  .panel-heading strong,
+  #stageRoundLabel,
+  #boardTitle
+) {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .legacy-topbar-back,
+  .search,
+  .overview-search,
+  .live-control,
+  .load-more,
+  .ghost-button,
+  .standard-tactic-buttons button:not(.active),
+  .match-highlight-mode button:not(.active),
+  .snapshot-trigger,
+  .go-to-top
+) {
+  border-color: #cbd5e3;
+  color: #344158;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .legacy-topbar-back > span:first-child {
+  color: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .matchup > .team {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search {
+  border: 1px solid #cbd5e3;
+  color: #315fbd;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search:focus-within {
+  border-color: #6f95ed;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(49, 95, 189, 0.12);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search input {
+  color: #172033;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-search input::placeholder {
+  color: #637188;
+  opacity: 1;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-control .search-result-popover {
+  border: 1px solid #d7dee8;
+  color: #172033;
+  background: #ffffff;
+  box-shadow: 0 18px 46px rgba(29, 45, 70, 0.16);
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-control .search-result {
+  border-bottom-color: #e3e8ef;
+  color: #172033;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .team-filter-control .search-result small {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .history-round-button {
+  border: 1px solid #cbd5e3;
+  color: #29466f;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #simulateRoundButton {
+  border: 1px solid #315fbd;
+  color: #ffffff;
+  background: #315fbd;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #unresolvedFilter {
+  min-height: 34px;
+  padding-inline: 11px;
+  border: 1px solid #d8dee8;
+  border-radius: 8px;
+  color: #46556b;
+  background: #f5f7fa;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #unresolvedFilter.active {
+  border-color: #b8c9ef;
+  color: #244f9d;
+  background: #edf3ff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) #goldenBootTitle {
+  color: #8a5a00;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .fixture-meta,
+  .fixture-card-head,
+  .fixture-card-head small,
+  .team .seed,
+  .venue,
+  .result-note,
+  .match-stat-row span,
+  .plot-item p,
+  .empty-story p,
+  .golden-boot-empty,
+  .golden-boot-empty p,
+  .stage-topline,
+  #standardTacticOpponent,
+  #standardTacticFeedback
+) {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-stats-grid {
+  border-bottom-color: #e2e7ee;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-stat-row {
+  color: #344158;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-stat-row b {
+  color: #1f2b40;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-row {
+  border-bottom-color: #e2e7ee;
+  background: #ffffff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-rank {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-player strong {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .golden-boot-player small {
+  color: #536078;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .golden-boot-row > b,
+  .golden-boot-row.leader > b,
+  .golden-boot-row.leader .golden-boot-rank
+) {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-live-group > div > span {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-group-fixture-heading {
+  border-color: #d8e0ea;
+  color: #172033;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-group-fixture-heading strong {
+  color: #172033;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .custom-group-fixture-heading span {
+  color: #526178;
+  font-weight: 700;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+  .hero-flag,
+  .fixture-flag,
+  .custom-group-flag,
+  .live-feed-flag,
+  .queue-flag,
+  .search-flag
+) {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body.custom-tournament-mode-active:not(.before-start) :is(
+    .fixture,
+    .legacy-topbar-back,
+    .live-control,
+    .standard-tactic-buttons button:not(.active),
+    .team-filter-control .search-result,
+    .history-round-button,
+    #unresolvedFilter,
+    .snapshot-trigger,
+    .go-to-top
+  ):hover {
+    border-color: #9bb5f5;
+    color: #244f9d;
+    background: #edf3ff;
+  }
+
+  html.light-mode body.custom-tournament-mode-active:not(.before-start) #simulateRoundButton:hover {
+    color: #ffffff;
+    background: #244f9d;
+  }
+}
+
+/* Shared light dialogs and settings controls outside branded competitions. */
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .modal,
+  .confirm-modal,
+  .snapshot-modal,
+  .settings-modal
+) .secondary-button {
+  border: 1px solid #c8d3e1;
+  color: #31558f;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .modal,
+  .confirm-modal,
+  .snapshot-modal,
+  .settings-modal
+) .danger-button {
+  border: 1px solid #d8a7ad;
+  color: #a32638;
+  background: #fff3f4;
+  font-weight: 800;
+}
+
+html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .settings-keybind-button {
+  border: 1px solid #c8d3e1;
+  color: #344158;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+    .modal,
+    .confirm-modal,
+    .snapshot-modal,
+    .settings-modal
+  ) .secondary-button:hover,
+  html.light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) .settings-keybind-button:hover {
+    border-color: #9bb5f5;
+    color: #244f9d;
+    background: #edf3ff;
+  }
+}
+
+/* Live custom-tournament presentation needs its own light treatment. The clock
+   and commentary are rendered only while a match is playing, so they are not
+   covered by the static match-card selectors above. */
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock {
+  min-width: 86px;
+  padding: 6px 10px;
+  border: 1px solid #d8e0ea;
+  border-radius: 10px;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock > span {
+  color: #315fbd;
+  font-weight: 900;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock strong,
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .live-clock {
+  color: #101a2e;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .event-live-clock small {
+  color: #526178;
+  font-weight: 800;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed {
+  border-color: #cbd5e3;
+  color: #172033;
+  background: #f7f9fc;
+  box-shadow: inset 4px 0 #426fda;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed :is(
+  .commentary-line,
+  .commentary-line span,
+  .commentary-line.heading span
+) {
+  color: #1f2b40;
+  font-weight: 750;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed.is-major {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed.is-major .commentary-line span {
+  color: #172033;
+  font-weight: 850;
+}
+
+@keyframes customLightGoalFlashBg {
+  0% { background: var(--goal-flash-color, #426fda); }
+  100% { background: #f7f9fc; }
+}
+
+html.light-mode body.custom-tournament-mode-active:not(.before-start) .match-commentary-feed.is-goal-flash {
+  animation: goalPulse 0.5s ease-in-out 2, customLightGoalFlashBg 0.9s ease-out forwards !important;
+}
+
+/* Brazil 2014 keeps its watercolor stadium artwork in both appearances. Other
+   retro editions have their own explicit year classes and remain untouched. */
+html.light-mode body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) {
+  color: #f7f4cf;
+  background:
+    linear-gradient(rgba(3, 73, 42, 0.22), rgba(0, 49, 38, 0.48)),
+    url("./assets/retro-2014/brazil-watercolor-stadium.webp") center top / cover fixed no-repeat;
+}
+
+html.light-mode body.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-euro-2016-active):not(.retro-2018-active):not(.retro-2022-active):not(.retro-2026-active) .retro-tournament-screen {
+  color: #f7f4cf;
+  background:
+    linear-gradient(180deg, rgba(2, 60, 35, 0.16), rgba(0, 43, 34, 0.54)),
+    transparent;
+}
+
+/* The regular 256-team tournament uses standard-mode-active rather than the
+   custom tournament body class. Mirror the complete live light treatment. */
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock {
+  min-width: 86px;
+  padding: 6px 10px;
+  border: 1px solid #d8e0ea;
+  border-radius: 10px;
+  color: #172033;
+  background: #f7f9fc;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock > span {
+  color: #315fbd;
+  font-weight: 900;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock strong,
+html.light-mode body.standard-mode-active:not(.before-start) .live-clock {
+  color: #101a2e;
+  font-weight: 800;
+  text-shadow: none;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .event-live-clock small {
+  color: #526178;
+  font-weight: 800;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed {
+  border-color: #cbd5e3;
+  color: #172033;
+  background: #f7f9fc;
+  box-shadow: inset 4px 0 #426fda;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed :is(
+  .commentary-line,
+  .commentary-line span,
+  .commentary-line.heading span
+) {
+  color: #1f2b40;
+  font-weight: 750;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed.is-major {
+  border-color: #8ca9eb;
+  background: #eaf1ff;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed.is-major .commentary-line span {
+  color: #172033;
+  font-weight: 850;
+}
+
+html.light-mode body.standard-mode-active:not(.before-start) .match-commentary-feed.is-goal-flash {
+  animation: goalPulse 0.5s ease-in-out 2, customLightGoalFlashBg 0.9s ease-out forwards !important;
+}
+
+/* Goalscorers are primary match information: keep player names substantially
+   heavier than the supporting minute and event metadata in light mode. */
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) :is(
+  .team-match-events .goal-event span,
+  .golden-boot-player strong
+) {
+  color: #172033;
+  font-weight: 850;
+}
+
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) .team-match-events .goal-event b {
+  color: #315fbd;
+  font-weight: 800;
+}
+
+/* One-off custom matches add a second, route-specific body class. Lock the
+   scorer name to near-black after that route's component cascade. */
+html.light-mode body.custom-match-mode-active:not(.before-start) :is(
+  .team-match-events .timeline-event.goal-event span,
+  .team-match-events .event.goal-event span
+) {
+  color: #101010 !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+}
+
+/* Penalty takers use a separate shootout summary rather than goal-event rows. */
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) .shootout-summary-row,
+html.light-mode body:is(.standard-mode-active, .custom-tournament-mode-active):not(.before-start) .shootout-summary-row span {
+  color: #101010 !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+}
+
+/* Shared selector and custom-builder access for the persistent match-screen
+   edition themes. The real competition skins load last in match-themes.css. */
+.tournament-theme-setting {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 16px;
+  border: 1px solid #253244;
+  border-radius: 10px;
+  background: #0d141f;
+}
+
+.tournament-theme-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tournament-theme-heading > div {
+  display: grid;
+  gap: 4px;
+}
+
+.tournament-theme-heading strong {
+  color: #f1f4f9;
+  font-size: 15px;
+}
+
+.tournament-theme-heading small {
+  color: #8792a5;
+  font-size: 10px;
+}
+
+.tournament-theme-heading > span {
+  padding: 5px 8px;
+  border: 1px solid #34445d;
+  border-radius: 999px;
+  color: #b9c9e4;
+  background: #151e2c;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tournament-theme-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.tournament-theme-options > button {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #2b3749;
+  border-radius: 8px;
+  color: #dce4ef;
+  text-align: left;
+  background: #121a26;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.tournament-theme-options > button:active {
+  transform: scale(.98);
+}
+
+.tournament-theme-options > button.is-selected {
+  border-color: #789cff;
+  background: #17243b;
+  box-shadow: inset 0 0 0 1px rgba(120, 156, 255, .2);
+}
+
+.tournament-theme-options > button > span:nth-child(2) {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tournament-theme-options strong {
+  color: #f3f6fb;
+  font-size: 12px;
+}
+
+.tournament-theme-options small {
+  overflow: hidden;
+  color: #8290a5;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tournament-theme-preview {
+  position: relative;
+  display: block;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 7px;
+}
+
+.tournament-theme-preview::before,
+.tournament-theme-preview::after,
+.tournament-theme-preview i {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+}
+
+.tournament-theme-preview-wc {
+  background: linear-gradient(145deg, #0b1424, #1b3a78);
+}
+
+.tournament-theme-preview-wc::before {
+  inset: 7px 8px 17px 8px;
+  background: #79a1ff;
+}
+
+.tournament-theme-preview-wc::after {
+  right: -5px;
+  bottom: -7px;
+  width: 26px;
+  height: 26px;
+  border: 5px solid rgba(244, 163, 64, .85);
+}
+
+.tournament-theme-preview-euros {
+  background: linear-gradient(145deg, #07162c, #241454 70%, #3b176c);
+}
+
+.tournament-theme-preview-euros::before {
+  top: -7px;
+  right: -6px;
+  width: 27px;
+  height: 27px;
+  border: 5px solid #53e6ff;
+}
+
+.tournament-theme-preview-euros::after {
+  bottom: 6px;
+  left: 6px;
+  width: 17px;
+  height: 5px;
+  background: #a884ff;
+  transform: rotate(-28deg);
+}
+
+.tournament-theme-check {
+  display: grid;
+  width: 19px;
+  height: 19px;
+  place-items: center;
+  border: 1px solid #46536a;
+  border-radius: 50%;
+  color: transparent;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.tournament-theme-options > button.is-selected .tournament-theme-check {
+  border-color: #789cff;
+  color: #07101d;
+  background: #789cff;
+}
+
+.custom-header-navigation {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.custom-theme-settings-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid #34445d;
+  border-radius: 6px;
+  color: #b9c7da;
+  background: #101925;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease, transform 140ms var(--ease-out);
+}
+
+.custom-theme-settings-button:active {
+  transform: scale(.97);
+}
+
+.custom-theme-settings-icon {
+  width: 11px;
+  height: 11px;
+  border: 3px solid #79a1ff;
+  border-radius: 50%;
+  box-shadow: 6px -4px 0 -4px #f4a340;
+}
+
+html.light-mode .tournament-theme-setting {
+  border-color: #d8e0ea;
+  background: #f7f9fc;
+}
+
+html.light-mode .tournament-theme-heading strong,
+html.light-mode .tournament-theme-options strong {
+  color: #172033;
+}
+
+html.light-mode .tournament-theme-heading small,
+html.light-mode .tournament-theme-options small {
+  color: #627088;
+}
+
+html.light-mode .tournament-theme-options > button {
+  border-color: #d4dce8;
+  color: #172033;
+  background: #fff;
+}
+
+html.light-mode .tournament-theme-options > button.is-selected {
+  border-color: #426fda;
+  background: #edf3ff;
+}
+
+html[data-tournament-theme="euros"] {
+  --bg: #07162c;
+  --panel: #0b1c36;
+  --panel-2: #102442;
+  --panel-3: #172c50;
+  --line: #243b5c;
+  --line-strong: #36557e;
+  --lime: #53e6ff;
+  --lime-dark: #27bdd9;
+  --orange: #a884ff;
+}
+
+html[data-tournament-theme="euros"].light-mode {
+  --panel-3: #e8f9ff;
+  --lime: #087f9b;
+  --lime-dark: #05677e;
+  --orange: #7045c2;
+}
+
+html[data-tournament-theme="euros"] body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) {
+  background:
+    radial-gradient(circle at 82% 2%, rgba(101, 67, 210, .2), transparent 30rem),
+    radial-gradient(circle at 26% 18%, rgba(38, 201, 231, .12), transparent 27rem),
+    var(--bg);
+}
+
+html[data-tournament-theme="euros"] body::before {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(90deg, #53e6ff, #7662e8 52%, #c15be7);
+}
+
+html[data-tournament-theme="euros"] :is(
+  .progress-track span,
+  .settings-option.is-enabled .settings-switch,
+  .custom-preset-actions .custom-header-start,
+  .custom-segmented button.active,
+  .custom-builder-tabs button.active
+) {
+  background: #53e6ff;
+}
+
+html[data-tournament-theme="euros"] :is(
+  .primary-button,
+  .play-button,
+  .simulate-button
+) {
+  border-color: transparent;
+  color: #061327;
+  background: linear-gradient(135deg, #53e6ff, #93eeff);
+}
+
+html[data-tournament-theme="euros"] :is(
+  .segmented button.active,
+  .round-nav button.active,
+  .custom-segmented button.active,
+  .custom-builder-tabs button.active
+) {
+  border-color: rgba(83, 230, 255, .55);
+  color: #061327;
+}
+
+html[data-tournament-theme="euros"] .brand-mark {
+  border-color: rgba(83, 230, 255, .55);
+  background: linear-gradient(145deg, #102947, #241454);
+  box-shadow: inset 0 0 24px rgba(83, 230, 255, .1);
+}
+
+html[data-tournament-theme="euros"] .custom-theme-settings-icon {
+  border-color: #53e6ff;
+  box-shadow: 6px -4px 0 -4px #a884ff;
+}
+
+html[data-tournament-theme="euros"] .tournament-theme-options > button.is-selected {
+  border-color: #53e6ff;
+  background: #122945;
+  box-shadow: inset 0 0 0 1px rgba(83, 230, 255, .16);
+}
+
+html[data-tournament-theme="euros"] .tournament-theme-options > button.is-selected .tournament-theme-check {
+  border-color: #53e6ff;
+  color: #061327;
+  background: #53e6ff;
+}
+
+html[data-tournament-theme="euros"] .tournament-theme-heading > span {
+  border-color: rgba(83, 230, 255, .35);
+  color: #8cefff;
+  background: rgba(83, 230, 255, .08);
+}
+
+html[data-tournament-theme="euros"].light-mode .tournament-theme-options > button.is-selected {
+  border-color: #078aa7;
+  background: #e8f9ff;
+}
+
+html[data-tournament-theme="euros"].light-mode .tournament-theme-heading > span {
+  color: #08758d;
+  background: #e8f9ff;
+}
+
+html[data-tournament-theme="euros"].light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .segmented button.active,
+  .custom-segmented button.active,
+  .custom-builder-tabs button.active,
+  .round-nav button.active
+) {
+  border-color: #087f9b !important;
+  color: #fff !important;
+  background: #087f9b !important;
+  box-shadow: none !important;
+}
+
+html[data-tournament-theme="euros"].light-mode body:not(.retro-mode-active):not(.pl-match-mode-active):not(.ucl-match-mode-active) :is(
+  .primary-button:not(:disabled),
+  .play-button:not(:disabled),
+  .simulate-button:not(:disabled)
+) {
+  border-color: transparent !important;
+  color: #061327 !important;
+  background: linear-gradient(135deg, #35cce8, #82e9fb) !important;
+}
+
+html[data-tournament-theme="euros"].light-mode body.custom-tournament-mode-active .custom-preset-actions .custom-header-start:disabled {
+  border-color: #c7d4df;
+  color: #6e7c8f;
+  background: #e5ebf1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tournament-theme-options > button:hover {
+    border-color: #64799a;
+    background: #172131;
+  }
+
+  .custom-theme-settings-button:hover {
+    border-color: #79a1ff;
+    color: #fff;
+    background: #15233a;
+  }
+
+  html[data-tournament-theme="euros"] .tournament-theme-options > button:hover,
+  html[data-tournament-theme="euros"] .custom-theme-settings-button:hover {
+    border-color: #53e6ff;
+  }
+
+  html.light-mode .tournament-theme-options > button:hover {
+    border-color: #9eb0c9;
+    background: #f7f9fc;
+  }
+}
+
+@media (max-width: 700px) {
+  .custom-header-navigation {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .custom-header-navigation .custom-back-button {
+    min-height: 38px;
+  }
+
+  .custom-theme-settings-button {
+    width: 38px;
+    min-height: 38px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .custom-theme-settings-button [data-tournament-theme-label] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .tournament-theme-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Korea/Japan 2002 — isolated early-2000s broadcast treatment. */
+body.retro-mode-active.retro-2002-active {
+  --r02-navy: #03152f;
+  --r02-blue: #075891;
+  --r02-blue-bright: #0872b8;
+  --r02-red: #ef233c;
+  --r02-red-deep: #a80f24;
+  --r02-green: #00a66a;
+  --r02-gold: #ffd21f;
+  --r02-cream: #fff8e7;
+  --r02-line: rgba(255, 210, 31, .44);
+  --q22-ink: #03152f;
+  --q22-ink-soft: #05274d;
+  --q22-panel: rgba(3, 31, 65, .96);
+  --q22-panel-soft: rgba(5, 63, 112, .94);
+  --q22-wine: #ef233c;
+  --q22-wine-bright: #ff4055;
+  --q22-line: rgba(255, 210, 31, .48);
+  --q22-line-soft: rgba(199, 220, 239, .24);
+  --q22-cream: #eaf4fb;
+  --q22-white: #fff8e7;
+  --q22-gold: #ffd21f;
+  --q22-gold-soft: #ffe169;
+  color: var(--r02-cream);
+  background: #03152f url("./assets/retro-2002/korea-japan-2002-bg-desktop.png") center top / cover fixed no-repeat;
+}
+
+body.retro-mode-active.retro-2002-active::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(2, 13, 31, .1), rgba(2, 13, 31, .56));
+  content: "";
+  pointer-events: none;
+}
+
+.retro-2002-active .retro-tournament-screen,
+.retro-2002-active #mainContent {
+  color: var(--r02-cream);
+  background: transparent;
+}
+
+.retro-2002-active .retro-screen-header {
+  border-bottom: 3px solid var(--r02-gold);
+  color: #fff;
+  background:
+    linear-gradient(100deg, rgba(0, 166, 106, .96) 0 8px, transparent 8px),
+    linear-gradient(105deg, #062f5b 0 48%, #075891 48% 75%, #062c58 75%);
+  box-shadow: 0 8px 26px rgba(0, 7, 22, .48), inset 0 -1px rgba(255, 255, 255, .2);
+}
+
+.retro-2002-active .retro-screen-header::after {
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  width: min(34vw, 420px);
+  height: 7px;
+  background: var(--r02-red);
+  content: "";
+  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.retro-2002-active :is(.retro-screen-action, .retro-screen-restart, .retro-back-to-modes, .saved-tournament-delete-button) {
+  border: 1px solid rgba(255, 255, 255, .32);
+  border-radius: 2px;
+  color: #fff;
+  background: linear-gradient(180deg, #0a69a8, #064373);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .2), 0 3px 0 #021a36;
+  transition: transform 150ms cubic-bezier(.23, 1, .32, 1), background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.retro-2002-active :is(.retro-screen-action, .retro-screen-restart, .retro-back-to-modes, .saved-tournament-delete-button):active {
+  transform: translateY(2px) scale(.97);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .16), 0 1px 0 #021a36;
+}
+
+.retro-2002-active #retroAchievementsButton,
+.retro-2002-active .saved-tournament-delete-button {
+  border-color: rgba(255, 255, 255, .5);
+  background: linear-gradient(180deg, #ff4055, var(--r02-red-deep));
+}
+
+.retro-2002-active .retro-screen-brand .brand-mark {
+  border-color: var(--r02-gold);
+  color: var(--r02-navy);
+  background: var(--r02-gold);
+  box-shadow: 4px 4px 0 var(--r02-red-deep);
+}
+
+.retro-2002-active .retro-tournament-main {
+  width: min(1460px, calc(100% - 28px));
+  padding-top: 40px;
+}
+
+.retro-2002-active .retro-tournament-heading {
+  display: none;
+}
+
+.retro-2002-active .retro-tournament-heading > * {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.retro-2002-active .retro-tournament-heading::after {
+  position: absolute;
+  right: -35px;
+  bottom: -36px;
+  width: 180px;
+  height: 100px;
+  border: 14px solid rgba(255, 210, 31, .2);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(-12deg);
+}
+
+.retro-2002-active .retro-tournament-heading > div:first-child > span,
+.retro-2002-active .retro-section-heading span,
+.retro-2002-active .section-kicker {
+  color: var(--r02-gold);
+  font-family: "DM Mono", monospace;
+  letter-spacing: .12em;
+}
+
+.retro-2002-active .retro-tournament-heading h1,
+.retro-2002-active .retro-section-heading h2,
+.retro-2002-active #mainContent :is(.stage-round, .panel-heading h2, .match-analysis-heading) {
+  color: #fff;
+  text-shadow: 2px 2px 0 #052444;
+}
+
+.retro-2002-active .retro-tournament-progress {
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 2px;
+  background: rgba(2, 22, 47, .7);
+}
+
+.retro-2002-active .retro-tournament-progress::before,
+.retro-2002-active .retro-tournament-progress span,
+.retro-2002-active #progressBar {
+  background: linear-gradient(90deg, var(--r02-red), #ff4458 72%, var(--r02-gold));
+  box-shadow: 0 0 14px rgba(239, 35, 60, .42);
+}
+
+.retro-2002-active .retro-view-tabs {
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 2px;
+  background: rgba(2, 24, 51, .86);
+}
+
+.retro-2002-active .retro-view-tabs button {
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 1px;
+  color: #d7e8f5;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  transition: transform 150ms cubic-bezier(.23, 1, .32, 1), color 150ms ease, background-color 150ms ease;
+}
+
+.retro-2002-active .retro-view-tabs button.active,
+.retro-2002-active .retro-view-tabs button[aria-selected="true"] {
+  border-color: #ff6677;
+  color: #fff;
+  background: linear-gradient(180deg, #ff3e54, #b41027);
+  box-shadow: inset 0 -3px var(--r02-gold);
+}
+
+.retro-2002-active .retro-view-tabs button:active {
+  transform: scale(.97);
+}
+
+.retro-2002-active :is(
+  .retro-group-table,
+  .retro-fixture,
+  .retro-match-stage,
+  .retro-golden-boot,
+  .retro-third-place-card,
+  .retro-squad-view,
+  .retro-squad-position-group,
+  .retro-lineups-view,
+  .retro-lineup-side,
+  .retro-manager-lineup,
+  .retro-live-ratings-side,
+  #mainContent .match-stage,
+  #mainContent .round-board,
+  #mainContent .panel,
+  #mainContent .match-analysis,
+  #mainContent .standard-match-tactics,
+  #mainContent .story-card
+) {
+  border: 1px solid rgba(255, 210, 31, .36);
+  border-radius: 3px;
+  color: #edf7ff;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .04), transparent 38%),
+    linear-gradient(145deg, rgba(5, 78, 130, .97), rgba(2, 29, 62, .98));
+  box-shadow: 6px 7px 0 rgba(1, 13, 31, .5), 0 18px 42px rgba(0, 5, 18, .22);
+}
+
+.retro-2002-active :is(.retro-group-table h2, .retro-lineup-side header, .retro-manager-lineup > header, .retro-live-ratings-side > header, .retro-golden-boot header, #mainContent .panel-heading) {
+  border-bottom: 2px solid var(--r02-gold);
+  color: #fff;
+  background: linear-gradient(100deg, var(--r02-red) 0 9px, #064b82 9px 76%, #05335e 76%);
+}
+
+.retro-2002-active :is(.retro-table-head, .retro-live-table-head) {
+  color: var(--r02-gold);
+  background: #031f43;
+}
+
+.retro-2002-active :is(.retro-table-row, .retro-fixture, .retro-squad-row, .retro-live-table-row, .retro-live-rating-row) {
+  border-color: rgba(195, 220, 240, .2);
+  color: #e9f4fb;
+  background: rgba(4, 47, 88, .75);
+}
+
+.retro-2002-active :is(.retro-table-row, .retro-fixture, .retro-squad-row, .retro-live-table-row):nth-child(even) {
+  background: rgba(5, 84, 137, .5);
+}
+
+.retro-2002-active .retro-table-row.qualified {
+  box-shadow: inset 4px 0 var(--r02-green);
+}
+
+.retro-2002-active .retro-table-row.qualified::before {
+  background: var(--r02-green);
+}
+
+.retro-2002-active :is(.retro-fixture.is-selected, .retro-fixture.active) {
+  border-color: var(--r02-red);
+  background: linear-gradient(100deg, rgba(239, 35, 60, .88), rgba(5, 70, 119, .95) 54%);
+  box-shadow: inset 0 -3px var(--r02-gold), 6px 7px 0 rgba(1, 13, 31, .5);
+}
+
+.retro-2002-active :is(
+  #mainContent .primary-button,
+  #mainContent .play-button,
+  #mainContent .secondary-button,
+  #mainContent .live-control,
+  #mainContent .standard-tactic-buttons button.active,
+  .retro-stage-actions button,
+  .retro-screen-action,
+  .retro-match-stage button
+) {
+  border: 1px solid #ff7080;
+  border-radius: 2px;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718, inset 0 1px rgba(255, 255, 255, .22);
+  transition: transform 150ms cubic-bezier(.23, 1, .32, 1), box-shadow 150ms ease, filter 150ms ease;
+}
+
+.retro-2002-active :is(
+  #mainContent .primary-button,
+  #mainContent .play-button,
+  #mainContent .secondary-button,
+  #mainContent .live-control,
+  #mainContent .standard-tactic-buttons button,
+  .retro-stage-actions button,
+  .retro-match-stage button
+):active {
+  transform: translateY(2px) scale(.97);
+  box-shadow: 0 1px 0 #6d0718;
+}
+
+.retro-2002-active :is(select, .team-filter-search, #teamFilterControl .team-filter-chip, [data-retro-manager-formation]) {
+  border: 1px solid rgba(255, 210, 31, .58);
+  border-radius: 2px;
+  color: #fff;
+  background-color: #053f70;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .12);
+}
+
+.retro-2002-active select:focus,
+.retro-2002-active .team-filter-search:focus-within {
+  outline: 2px solid var(--r02-red);
+  outline-offset: 2px;
+}
+
+.retro-2002-active select option {
+  color: #fff;
+  background: #042f59;
+}
+
+.retro-2002-active #teamFilterControl .team-filter-chip.active {
+  border-color: #ff7080;
+  background: var(--r02-red);
+  box-shadow: inset 0 -3px var(--r02-gold);
+}
+
+.retro-2002-active .fixture-grid.bracket-mode,
+.retro-2002-active .retro-third-place-playoff {
+  border-color: rgba(255, 210, 31, .38);
+  background: rgba(2, 20, 44, .72);
+}
+
+.retro-2002-active .fixture-grid.bracket-mode::before {
+  background: linear-gradient(90deg, transparent, var(--r02-gold), transparent);
+}
+
+.retro-2002-active :is(.bracket-line, .bracket-connector, .knockout-bar, .round-progress-bar) {
+  border-color: var(--r02-gold);
+}
+
+.retro-2002-active :is(.bracket-line, .knockout-bar, .round-progress-bar) {
+  background-color: var(--r02-gold);
+}
+
+.retro-2002-active .retro-manager-pitch {
+  border-color: rgba(255, 248, 231, .64);
+  background:
+    linear-gradient(90deg, transparent 49.75%, rgba(255, 255, 255, .48) 49.75% 50.25%, transparent 50.25%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 12.5%, rgba(0, 0, 0, .035) 12.5% 25%),
+    #087153;
+}
+
+.retro-2002-active :is(.retro-lineup-workspace, .retro-match-lineups-panel, .retro-manager-layout) {
+  color: #edf7ff;
+  background: rgba(2, 27, 57, .78);
+}
+
+.retro-2002-active .retro-pitch-player b {
+  border-color: #fff8e7;
+  background: var(--r02-red);
+}
+
+.retro-2002-active .retro-pitch-player i,
+.retro-2002-active .retro-formation-badge {
+  color: #03152f;
+  background: var(--r02-gold);
+}
+
+.retro-2002-active #mainContent #snapshotButton,
+.retro-2002-active #mainContent .snapshot-trigger {
+  border: 2px solid var(--r02-gold);
+  color: #fff;
+  background: linear-gradient(145deg, var(--r02-red), var(--r02-red-deep));
+  box-shadow: 0 4px 0 #6d0718, 0 0 0 3px rgba(7, 88, 145, .7);
+}
+
+.retro-2002-active #mainContent #snapshotButton svg circle {
+  fill: var(--r02-gold);
+  stroke: var(--r02-navy);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal form, .snapshot-modal form, .retro-achievements-modal, .achievement-unlock-modal) {
+  border: 1px solid rgba(255, 210, 31, .48);
+  border-top: 5px solid var(--r02-red);
+  border-radius: 3px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(0, 166, 106, .18), transparent 30%),
+    linear-gradient(145deg, #075891, #031b3b 72%);
+  box-shadow: 0 28px 72px rgba(0, 7, 24, .62);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal, .snapshot-modal, .retro-achievements-modal, .achievement-unlock-modal)::backdrop {
+  background: rgba(1, 10, 25, .8);
+  backdrop-filter: blur(5px);
+}
+
+body.retro-mode-active.retro-2002-active .snapshot-preview {
+  border: 2px solid var(--r02-gold);
+  border-radius: 2px;
+  background: #02152f;
+  box-shadow: 6px 6px 0 rgba(168, 15, 36, .54);
+}
+
+body.retro-mode-active.retro-2002-active .snapshot-actions button,
+body.retro-mode-active.retro-2002-active .modal button {
+  border-radius: 2px;
+}
+
+#achievementsScreen[data-achievement-theme="2002"],
+#retroAchievementsModal[data-achievement-theme="2002"] {
+  --achievement-accent: #ef233c;
+  --achievement-accent-text: #fff;
+  --achievement-surface: #075891;
+  --achievement-surface-deep: #031b3b;
+  --achievement-tab-surface: rgba(2, 24, 52, .84);
+  --achievement-card: rgba(5, 70, 119, .88);
+  --achievement-card-complete: #a80f24;
+  --achievement-copy: #edf7ff;
+  --achievement-muted: #bfd4e5;
+  --achievement-points: #ffd21f;
+  --achievement-shadow: rgba(0, 11, 31, .5);
+}
+
+#retroAchievementsModal[data-achievement-theme="2002"] {
+  background:
+    radial-gradient(circle at 100% 0, rgba(239, 35, 60, .32), transparent 34%),
+    radial-gradient(circle at 0 100%, rgba(255, 210, 31, .12), transparent 36%),
+    linear-gradient(145deg, var(--achievement-surface), var(--achievement-surface-deep));
+}
+
+.achievement-unlock-banner[data-achievement-theme="2002"],
+.achievement-unlock-modal[data-achievement-theme="2002"] {
+  border-top-color: #ef233c;
+  color: #fff;
+  background:
+    radial-gradient(circle at 96% 0, rgba(239, 35, 60, .24), transparent 36%),
+    linear-gradient(135deg, #075891, #031b3b);
+}
+
+/* Korea/Japan 2002: keep shared Brazil 2014 surfaces out of this mode. */
+body.retro-mode-active.retro-2002-active #mainContent {
+  --surface: rgba(3, 31, 67, .96);
+  --surface-raised: rgba(5, 70, 119, .96);
+  --line: rgba(255, 210, 31, .34);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+) {
+  border-color: rgba(255, 210, 31, .42);
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .035), transparent 38%),
+    linear-gradient(145deg, rgba(5, 78, 130, .98), rgba(2, 29, 62, .99));
+  box-shadow: 7px 7px 0 rgba(1, 13, 31, .52), 0 18px 42px rgba(0, 5, 18, .24);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(.match-stage, .round-board, .match-analysis)::before {
+  inset: -4px 0 auto;
+  height: 4px;
+  background: var(--r02-gold);
+  clip-path: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .fixture,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture.placeholder {
+  border: 1px solid rgba(190, 218, 240, .22);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(135deg, #064c82, #032b58);
+  box-shadow: inset 4px 0 #075891;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .fixture:hover,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.selected,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture:hover,
+body.retro-mode-active.retro-2002-active #mainContent .fixture.bracket-fixture.selected {
+  border-color: rgba(255, 210, 31, .58);
+  background: linear-gradient(105deg, #075891, #043765 62%, #071f42);
+  box-shadow: inset 6px 0 var(--r02-red), 6px 6px 0 rgba(1, 13, 31, .48);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .fixture-card-head,
+body.retro-mode-active.retro-2002-active #mainContent .fixture :is(small, .retro-standard-fixture-meta) {
+  color: #d7e8f5;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .bracket-heads {
+  border-radius: 0;
+  color: var(--r02-gold);
+  background: #042f59;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl :is(
+  .team-filter-search,
+  .team-filter-chip,
+  .search-result-popover
+) {
+  border: 1px solid rgba(255, 210, 31, .62);
+  border-radius: 0;
+  color: #fff;
+  background: #042f59;
+  box-shadow: 4px 4px 0 rgba(1, 13, 31, .48);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .team-filter-search:focus-within {
+  border-color: #ff7080;
+  background: #053f70;
+  box-shadow: 0 0 0 2px var(--r02-red), 4px 4px 0 rgba(1, 13, 31, .48);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .team-filter-search input,
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .search-result {
+  color: #fff;
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .search-result {
+  border-bottom-color: rgba(190, 218, 240, .2);
+  border-radius: 0;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl .search-result:hover {
+  color: #fff;
+  background: #075891;
+  box-shadow: inset 5px 0 var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #teamFilterControl :is(.team-filter-check, .team-filter-clear) {
+  border-radius: 0;
+  color: #fff;
+  background: var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .round-board .board-actions > button {
+  border: 1px solid rgba(255, 210, 31, .46);
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .round-board .board-actions > #simulateRoundButton {
+  border-color: #ff7080;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-commentary-feed {
+  border-color: rgba(255, 210, 31, .44);
+  border-radius: 0;
+  color: #edf7ff;
+  background: #031f43;
+  box-shadow: inset 5px 0 var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-commentary-feed .commentary-line span,
+body.retro-mode-active.retro-2002-active #mainContent .match-commentary-feed.is-major .commentary-line span {
+  color: #edf7ff;
+}
+
+body.retro-mode-active.retro-2002-active .retro-saved-tournament-actions {
+  min-height: 42px;
+  margin-bottom: 20px;
+}
+
+body.retro-mode-active.retro-2002-active .retro-back-to-modes {
+  position: static;
+  border-color: rgba(255, 210, 31, .52);
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active .retro-back-to-modes:hover {
+  border-color: #ff7080;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active .retro-view-tabs button:not(.active),
+body.retro-mode-active.retro-2002-active .retro-view-tabs button:not(.active):hover {
+  border-color: rgba(255, 210, 31, .35);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active .retro-view-tabs button.active,
+body.retro-mode-active.retro-2002-active .retro-view-tabs button.active:hover {
+  border-color: #ff7080;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: inset 0 -3px var(--r02-gold), 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-match-tactics {
+  border-radius: 0;
+  background: linear-gradient(145deg, #064c82, #031f43);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons {
+  border-color: rgba(255, 210, 31, .34);
+  border-radius: 0;
+  background: #021d3e;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button:not(.active),
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button:not(.active):hover {
+  border: 1px solid rgba(190, 218, 240, .22);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button.active,
+body.retro-mode-active.retro-2002-active #mainContent .standard-tactic-buttons button.active:hover {
+  border: 1px solid #ff7080;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .bracket-connector {
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .bracket-connector::before,
+body.retro-mode-active.retro-2002-active #mainContent .bracket-connector::after,
+body.retro-mode-active.retro-2002-active #mainContent .bracket-fixture[data-connects="true"]::after {
+  border-color: rgba(255, 210, 31, .78);
+  border-width: 1px;
+  background: transparent;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage {
+  border: 1px solid rgba(255, 210, 31, .54);
+  border-top: 6px solid var(--r02-red);
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(239, 35, 60, .2), transparent 30%),
+    linear-gradient(145deg, rgba(7, 88, 145, .98), rgba(3, 21, 47, .99) 72%);
+  box-shadow: 10px 10px 0 rgba(168, 15, 36, .42), 0 24px 54px rgba(0, 7, 24, .42);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage .trophy,
+body.retro-mode-active.retro-2002-active #mainContent .champion-section-label,
+body.retro-mode-active.retro-2002-active #mainContent .champion-place > b,
+body.retro-mode-active.retro-2002-active #mainContent .champion-award-copy > span {
+  color: var(--r02-gold);
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage h2 {
+  color: #fff;
+  text-shadow: 3px 3px 0 #03152f;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage p {
+  color: #d7e8f5;
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-stage .flag-orb {
+  border: 2px solid var(--r02-gold);
+  border-radius: 0;
+  background: #031f43;
+  box-shadow: 7px 7px 0 var(--r02-red-deep);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(.champion-place, .champion-award) {
+  border: 1px solid rgba(190, 218, 240, .24);
+  border-radius: 0;
+  color: #edf7ff;
+  background: linear-gradient(135deg, #064c82, #032b58);
+  box-shadow: inset 4px 0 #075891;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-place.place-1 {
+  border-color: rgba(255, 210, 31, .7);
+  background: linear-gradient(105deg, rgba(239, 35, 60, .92), #073f70 72%);
+  box-shadow: inset 0 4px var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(.champion-place strong, .champion-award-copy strong) {
+  color: #fff;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .champion-place small,
+  .champion-award-copy small,
+  .champion-award-copy small b
+) {
+  color: #d7e8f5;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-award-mark {
+  border-radius: 0;
+  color: var(--r02-gold);
+  background: #031f43;
+  box-shadow: inset 0 0 0 1px rgba(255, 210, 31, .38);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .champion-actions button {
+  border-radius: 0;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent #championSaveTournament {
+  border: 1px solid rgba(255, 210, 31, .48);
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(#championTeamJourney, #championReset) {
+  border: 1px solid #ff7080;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+/* Korea/Japan 2002 penalty shootout: rectangular broadcast panels, circular targets. */
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage {
+  border: 1px solid rgba(255, 210, 31, .52);
+  border-top: 5px solid var(--r02-red);
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    radial-gradient(circle at 92% 4%, rgba(239, 35, 60, .16), transparent 30%),
+    linear-gradient(145deg, #075891, #031b3b 74%);
+  box-shadow: 8px 8px 0 rgba(168, 15, 36, .38), 0 22px 44px rgba(0, 7, 24, .42);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head {
+  color: var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head strong {
+  color: #fff;
+  text-shadow: 2px 2px 0 #03152f;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head strong i,
+body.retro-mode-active.retro-2002-active #mainContent .penalty-stage-head strong b.score-pop {
+  color: var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-penalty-overlay {
+  border-radius: 0;
+  color: #edf7ff;
+  background:
+    radial-gradient(circle at 50% 110%, rgba(7, 114, 184, .35), transparent 48%),
+    linear-gradient(145deg, rgba(7, 88, 145, .98), rgba(3, 21, 47, .99));
+  box-shadow: inset 0 4px 0 var(--r02-red), inset 0 -3px 0 var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-penalty-decision strong {
+  color: var(--r02-gold);
+  text-shadow: 2px 2px 0 #03152f;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .match-penalty-decision small {
+  color: #edf7ff;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) {
+  border: 1px solid rgba(190, 218, 240, .38);
+  border-radius: 0;
+  background:
+    linear-gradient(180deg, rgba(3, 21, 47, .08), rgba(3, 21, 47, .52)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .035) 0 42px, transparent 42px 84px),
+    linear-gradient(135deg, #0872b8, #04315f);
+  box-shadow: inset 0 0 46px rgba(1, 13, 31, .32);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)::before {
+  border-color: rgba(255, 248, 231, .34);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-goal {
+  border-color: #fff8e7;
+  filter: drop-shadow(0 2px 0 rgba(3, 21, 47, .7));
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-net {
+  opacity: .38;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 13px, #fff8e7 13px 14px),
+    repeating-linear-gradient(90deg, transparent 0 18px, #fff8e7 18px 19px);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-keeper {
+  color: var(--r02-gold);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+) .penalty-taker {
+  color: #edf7ff;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-targets,
+  .standard-penalty-targets
+) button {
+  border: 2px solid #ff7080;
+  border-radius: 50%;
+  background: rgba(239, 35, 60, .2);
+  box-shadow: 0 0 0 5px rgba(255, 210, 31, .1);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-targets,
+  .standard-penalty-targets
+) button:hover {
+  border-color: var(--r02-gold);
+  border-radius: 50%;
+  background: rgba(255, 210, 31, .3);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)[data-result="goal"] {
+  box-shadow: inset 0 0 0 999px rgba(255, 210, 31, .07);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)[data-result="save"],
+body.retro-mode-active.retro-2002-active #mainContent :is(
+  .match-penalty-scene,
+  .standard-penalty-scene
+)[data-result="wide"] {
+  box-shadow: inset 0 0 0 999px rgba(239, 35, 60, .08);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-call strong,
+body.retro-mode-active.retro-2002-active #mainContent .penalty-ledgers span {
+  color: #fff;
+  text-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-call span {
+  color: #bfd4e5;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-mark {
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(190, 218, 240, .58);
+  border-radius: 50%;
+  background: #031f43;
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-mark.goal {
+  border-color: var(--r02-gold);
+  border-radius: 50%;
+  background: var(--r02-gold);
+  box-shadow: 0 0 0 3px rgba(255, 210, 31, .14);
+}
+
+body.retro-mode-active.retro-2002-active #mainContent .penalty-mark.miss {
+  border-color: #ff7080;
+  border-radius: 50%;
+  background: var(--r02-red);
+  box-shadow: 0 0 0 3px rgba(239, 35, 60, .12);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal, .confirm-modal form, .snapshot-modal, .snapshot-modal form) {
+  border: 1px solid rgba(255, 210, 31, .5);
+  border-top: 5px solid var(--r02-red);
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(145deg, #075891, #031b3b 72%);
+  box-shadow: 9px 9px 0 rgba(168, 15, 36, .42), 0 28px 72px rgba(0, 7, 24, .62);
+}
+
+body.retro-mode-active.retro-2002-active :is(.modal, .confirm-modal, .snapshot-modal) :is(button, .icon-button),
+body.retro-mode-active.retro-2002-active .snapshot-actions button {
+  border: 1px solid #ff7080;
+  border-radius: 0;
+  color: #fff;
+  background: linear-gradient(180deg, #ff4055, #b41027);
+  box-shadow: 0 4px 0 #6d0718;
+}
+
+body.retro-mode-active.retro-2002-active .confirm-modal .secondary-button {
+  border-color: rgba(255, 210, 31, .52);
+  color: #fff;
+  background: linear-gradient(180deg, #0a639f, #053c69);
+  box-shadow: 0 4px 0 #021a36;
+}
+
+body.retro-mode-active.retro-2002-active .snapshot-preview {
+  border-radius: 0;
+  background: #02152f;
+}
+
+body.retro-mode-active.retro-2002-active .retro-table-row.qualified {
+  box-shadow: inset 4px 0 var(--r02-red);
+}
+
+body.retro-mode-active.retro-2002-active .retro-table-row.qualified::before {
+  background: var(--r02-red);
+}
+
+.achievement-unlock-banner[data-achievement-theme="2002"] .achievement-unlock-banner-mark,
+.achievement-unlock-modal[data-achievement-theme="2002"] .achievement-unlock-mark,
+.achievement-unlock-modal[data-achievement-theme="2002"] .achievement-unlock-action {
+  color: #03152f;
+  background: #ffd21f;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .retro-2002-active :is(.retro-screen-action, .retro-screen-restart, .retro-view-tabs button, .retro-stage-actions button, #mainContent button):hover:not(:disabled) {
+    filter: brightness(1.1);
+  }
+}
+
+@media (max-width: 760px) {
+  body.retro-mode-active.retro-2002-active {
+    background-image: url("./assets/retro-2002/korea-japan-2002-bg-portrait.png");
+    background-position: center top;
+    background-size: cover;
+    background-attachment: scroll;
+  }
+
+  .retro-2002-active .retro-screen-header {
+    background: linear-gradient(105deg, #062f5b 0 60%, #075891 60%);
+  }
+
+  .retro-2002-active .retro-tournament-main {
+    width: min(100% - 16px, 1460px);
+    padding-top: 24px;
+  }
+
+  .retro-2002-active .retro-tournament-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    box-shadow: 5px 6px 0 rgba(1, 14, 34, .48);
+  }
+
+  .retro-2002-active .retro-tournament-heading > div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .retro-2002-active .retro-tournament-heading h1 {
+    max-width: 100%;
+    font-size: clamp(28px, 10vw, 40px);
+    line-height: 1.02;
+    white-space: normal;
+  }
+
+  .retro-2002-active .retro-tournament-progress {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .retro-2002-active :is(.retro-group-table, .retro-fixture, .retro-squad-position-group, .retro-lineup-side) {
+    box-shadow: 4px 5px 0 rgba(1, 13, 31, .46);
+  }
+
+  .retro-2002-active .retro-view-tabs button {
+    min-height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .retro-2002-active :is(button, .retro-fixture, .retro-pitch-player) {
+    scroll-behavior: auto;
+    transition: color 120ms ease, background-color 120ms ease, opacity 120ms ease;
+  }
+
+  .retro-2002-active :is(button, .retro-fixture, .retro-pitch-player):active {
+    transform: none;
+  }
+}
+/* France 1998 absolute final palette guard. */
+body.retro-mode-active.retro-1998-active {
+  color: #f7faff;
+  background: #020d29 url("./assets/retro-1998/france-98-bg-desktop.png") center top / cover fixed no-repeat !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen {
+  color: #f7faff !important;
+  background: linear-gradient(180deg, rgba(2,13,41,.12), rgba(2,13,41,.7)) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-screen-header {
+  border-color: rgba(220,229,239,.62) !important;
+  background: linear-gradient(180deg, rgba(45,91,157,.94), rgba(4,28,75,.97)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.5), 0 8px 22px rgba(0,5,22,.34) !important;

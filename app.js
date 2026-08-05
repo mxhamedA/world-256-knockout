@@ -1,3 +1,4 @@
+/* Generated from src/web/app. Edit the source chunks, then run npm run build:app. */
 const STORAGE_KEY = "world-256-tournament-v1";
 const LEGACY_TOURNAMENT_SESSION_KEY = "world-256-legacy-tournament-v1";
 const MATCH_SPEED_STORAGE_KEY = "world-256-match-speed";

@@ -3,9 +3,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import "./generate-draft-catalog.mjs";
 import "./generate-legacy-catalog.mjs";
+import { buildAppBundle } from "./build-app-bundle.mjs";
+import { buildStyleBundle } from "./build-style-bundle.mjs";
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = join(projectRoot, "dist");
+buildAppBundle();
+buildStyleBundle();
 const staticFiles = [
   "_headers",
   "ads.txt",

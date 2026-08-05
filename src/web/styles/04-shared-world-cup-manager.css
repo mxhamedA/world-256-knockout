@@ -1,0 +1,716 @@
+  --q22-ink-soft: #064b35;
+  --q22-panel: rgba(5, 91, 58, 0.98);
+  --q22-panel-soft: rgba(8, 74, 51, 0.96);
+  --q22-wine: #07945d;
+  --q22-wine-bright: #0bbd75;
+  --q22-line: #70b491;
+  --q22-line-soft: rgba(220, 242, 218, 0.27);
+  --q22-cream: #f3f8df;
+  --q22-white: #fffef4;
+  --q22-gold: #f4c625;
+  --q22-gold-soft: #f8d54a;
+}
+
+body.retro-mode-active.retro-2010-active {
+  --q22-ink: #211c19;
+  --q22-ink-soft: #342016;
+  --q22-panel: rgba(52, 32, 22, 0.97);
+  --q22-panel-soft: rgba(81, 36, 15, 0.96);
+  --q22-wine: #a9440c;
+  --q22-wine-bright: #d46b0e;
+  --q22-line: #a96732;
+  --q22-line-soft: rgba(255, 211, 79, 0.28);
+  --q22-cream: #fff5db;
+  --q22-white: #fffaf0;
+  --q22-gold: #ffd34f;
+  --q22-gold-soft: #ffe58c;
+}
+
+body.retro-mode-active.retro-2018-active {
+  --q22-ink: #361018;
+  --q22-ink-soft: #671018;
+  --q22-panel: rgba(7, 52, 95, 0.97);
+  --q22-panel-soft: rgba(103, 16, 24, 0.96);
+  --q22-wine: #a51a16;
+  --q22-wine-bright: #c92b25;
+  --q22-line: #b37868;
+  --q22-line-soft: rgba(233, 196, 119, 0.3);
+  --q22-cream: #fff4d6;
+  --q22-white: #fffaf0;
+  --q22-gold: #e9c477;
+  --q22-gold-soft: #f3d99c;
+}
+
+.retro-mode-active .retro-match-lineups-panel > .retro-lineups-grid {
+  align-items: start;
+}
+
+.retro-lineup-workspace {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-column: 1 / -1;
+  gap: 8px;
+}
+
+.retro-lineup-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border: 1px solid var(--q22-line);
+  background: var(--q22-panel);
+}
+
+.retro-lineup-tabs button {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border: 0;
+  border-right: 1px solid var(--q22-line);
+  color: #bca5a1;
+  background: transparent;
+  font-size: 9px;
+  font-weight: 800;
+  transition: color 150ms ease, background-color 150ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.retro-lineup-tabs button:last-child {
+  border-right: 0;
+}
+
+.retro-lineup-tabs button.active {
+  color: var(--q22-ink);
+  background: var(--q22-gold-soft);
+  box-shadow: inset 0 -3px var(--q22-wine);
+}
+
+.retro-lineup-tabs button:active {
+  transform: scale(0.98);
+}
+
+.retro-lineup-tab-flag,
+.retro-lineup-tab-flag img {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.retro-mode-active .retro-manager-lineup,
+.retro-mode-active .retro-live-ratings-side {
+  min-width: 0;
+  border: 1px solid var(--q22-line);
+  color: var(--q22-cream);
+  background: var(--q22-panel);
+}
+
+.retro-formation-badge {
+  padding: 7px 9px;
+  border: 1px solid var(--q22-gold);
+  color: var(--q22-gold-soft);
+  font: 800 9px "DM Mono", monospace;
+}
+
+.retro-manager-pitch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.28;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(244, 234, 216, 0.58);
+  background:
+    linear-gradient(90deg, transparent 49.75%, rgba(244, 234, 216, 0.42) 49.75% 50.25%, transparent 50.25%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 12.5%, rgba(0, 0, 0, 0.025) 12.5% 25%),
+    #244f40;
+  box-shadow: inset 0 0 36px rgba(4, 20, 15, 0.42);
+}
+
+.retro-manager-pitch-box {
+  position: relative;
+  min-width: 0;
+}
+
+.retro-manager-lineup.is-opponent .retro-manager-pitch-box {
+  width: 100%;
+  margin: 0;
+}
+
+.retro-pitch-corner-control {
+  position: absolute;
+  z-index: 5;
+  top: 9px;
+  left: 9px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.retro-pitch-corner-control label {
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+}
+
+.retro-pitch-corner-control label > span {
+  padding: 2px 5px;
+  color: var(--q22-gold-soft);
+  background: var(--q22-ink-soft);
+  font: 800 7px "DM Mono", monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.retro-pitch-corner-control [data-retro-manager-formation] {
+  min-width: 108px;
+  min-height: 32px;
+  background: var(--q22-panel-soft);
+}
+
+.retro-pitch-corner-control .retro-formation-badge {
+  background: var(--q22-ink-soft);
+}
+
+.retro-manager-pitch::before,
+.retro-manager-pitch::after {
+  position: absolute;
+  left: 50%;
+  width: 42%;
+  height: 14%;
+  border: 1px solid rgba(244, 234, 216, 0.48);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.retro-manager-pitch::before {
+  top: -1px;
+  border-top: 0;
+}
+
+.retro-manager-pitch::after {
+  bottom: -1px;
+  border-bottom: 0;
+}
+
+.retro-pitch-halfway {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  border-top: 1px solid rgba(244, 234, 216, 0.48);
+}
+
+.retro-pitch-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 19%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(244, 234, 216, 0.48);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.retro-pitch-player {
+  position: absolute;
+  z-index: 2;
+  top: var(--pitch-y);
+  left: var(--pitch-x);
+  display: grid;
+  width: clamp(58px, 16%, 76px);
+  min-height: 54px;
+  justify-items: center;
+  gap: 1px;
+  padding: 2px;
+  border: 0;
+  color: #fffaf0;
+  background: transparent;
+  text-shadow: 0 1px 3px #071b14, 0 1px 8px #071b14;
+  cursor: grab;
+  transform: translate(-50%, -50%);
+  transition: opacity 150ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.retro-pitch-player b {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 2px solid rgba(244, 234, 216, 0.9);
+  border-radius: 50%;
+  color: #fffaf0;
+  background: var(--q22-wine);
+  box-shadow: 0 2px 6px rgba(6, 15, 11, 0.52);
+  font: 800 9px "DM Mono", monospace;
+  text-shadow: none;
+}
+
+.retro-pitch-player span {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-pitch-player i {
+  min-width: 28px;
+  padding: 2px 5px;
+  border-radius: 9px;
+  color: var(--q22-ink);
+  background: var(--q22-gold-soft);
+  font: 800 8px "DM Mono", monospace;
+  text-align: center;
+  text-shadow: none;
+}
+
+.retro-pitch-player small {
+  min-height: 9px;
+  color: #d8c4bd;
+  font: 800 7px "DM Mono", monospace;
+  text-shadow: 0 1px 3px #071b14;
+}
+
+.retro-pitch-player small.is-up {
+  color: #76e4ac;
+}
+
+.retro-pitch-player small.is-down {
+  color: #ff8798;
+}
+
+.retro-pitch-player.is-selected,
+.retro-pitch-player.is-drop-target {
+  color: var(--q22-white);
+  background: transparent;
+  box-shadow: none;
+}
+
+.retro-pitch-player.is-selected b,
+.retro-pitch-player.is-drop-target b {
+  border-color: var(--q22-white);
+  color: var(--q22-ink);
+  background: var(--q22-gold-soft);
+  box-shadow: 0 0 0 4px rgba(224, 201, 149, 0.28);
+}
+
+.retro-pitch-player.is-preview-in b {
+  border-color: #76e4ac;
+  box-shadow: 0 0 0 4px rgba(88, 214, 151, 0.28);
+}
+
+.retro-pitch-player.is-preview-in i {
+  color: #071e14;
+  background: #76e4ac;
+}
+
+.retro-manager-player.is-preview-out {
+  border-color: #e0c995;
+  background: rgba(224, 201, 149, 0.1);
+}
+
+.retro-pitch-player.is-missing {
+  cursor: default;
+  opacity: 0.88;
+}
+
+.retro-pitch-player.is-missing b {
+  border-style: dashed;
+  color: #fff;
+  background: #68142d;
+}
+
+.retro-pitch-player.is-missing i {
+  color: #fff;
+  background: #68142d;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 7px;
+}
+
+.retro-pitch-player.is-injured:not(:disabled) {
+  cursor: grab;
+}
+
+.retro-pitch-player.is-injured b {
+  border-color: #f2c66d;
+  background: #754810;
+}
+
+.retro-pitch-player.is-injured i {
+  background: #754810;
+}
+
+.retro-pitch-player.is-dragging,
+.retro-manager-player.is-dragging {
+  opacity: 0.42;
+}
+
+.retro-pitch-player:active:not(:disabled) {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+.retro-manager-player.is-drop-target {
+  border-color: var(--q22-white);
+  background: var(--q22-wine);
+  box-shadow: inset 4px 0 var(--q22-gold);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .retro-pitch-player:hover:not(:disabled) {
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+
+  .retro-pitch-player:hover:not(:disabled) b {
+    border-color: var(--q22-gold);
+    background: var(--q22-wine-bright);
+  }
+}
+
+.retro-mode-active .retro-manager-lineup > header,
+.retro-mode-active .retro-live-ratings-side > header {
+  display: grid;
+  min-height: 64px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--q22-line);
+  background: var(--q22-wine);
+}
+
+.retro-mode-active .retro-manager-lineup header > span,
+.retro-mode-active .retro-live-ratings-side header > span,
+.retro-manager-player > span,
+.retro-live-rating-row > span {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.retro-mode-active .retro-manager-lineup header small,
+.retro-mode-active .retro-live-ratings-side header small,
+.retro-mode-active .retro-manager-lineup header label > span,
+.retro-mode-active .retro-live-ratings-side header label > span {
+  color: var(--q22-gold);
+  font: 700 8px "DM Mono", monospace;
+  letter-spacing: 0.08em;
+}
+
+.retro-mode-active .retro-manager-lineup header strong,
+.retro-mode-active .retro-live-ratings-side header strong,
+.retro-manager-player strong,
+.retro-live-rating-row strong {
+  overflow: hidden;
+  color: var(--q22-white);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-mode-active .retro-manager-lineup header label,
+.retro-mode-active .retro-live-ratings-side header label {
+  display: grid;
+  gap: 4px;
+}
+
+.retro-mode-active [data-retro-manager-formation] {
+  min-height: 34px;
+  padding: 0 28px 0 9px;
+  border: 1px solid var(--q22-gold);
+  border-radius: 2px;
+  color: var(--q22-white);
+  background: var(--q22-panel-soft);
+  font: 800 10px "DM Mono", monospace;
+  cursor: pointer;
+}
+
+.retro-manager-hint {
+  margin: 0;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--q22-line-soft);
+  color: #c3aaa7;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.retro-pitch-sub-counter {
+  position: absolute;
+  z-index: 5;
+  top: 9px;
+  right: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid rgba(224, 201, 149, 0.58);
+  border-radius: 2px;
+  color: var(--q22-white);
+  background: var(--q22-panel-soft);
+  font: 800 10px "Manrope", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.retro-pitch-sub-counter.is-pending {
+  gap: 5px;
+  padding: 4px;
+}
+
+.retro-pitch-sub-counter.is-pending > span {
+  padding-inline: 4px;
+  white-space: nowrap;
+}
+
+.retro-pitch-sub-counter.is-pending button {
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--q22-line);
+  border-radius: 2px;
+  color: var(--q22-cream);
+  background: var(--q22-panel-soft);
+  font: 800 8px "Manrope", system-ui, sans-serif;
+  cursor: pointer;
+  transition: transform 140ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms ease;
+}
+
+.retro-pitch-sub-counter.is-pending button:last-child {
+  border-color: var(--q22-gold);
+  color: var(--q22-ink);
+  background: var(--q22-gold-soft);
+}
+
+.retro-pitch-sub-counter.is-pending button:active {
+  transform: scale(0.97);
+}
+
+.retro-manager-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 34%);
+  align-items: start;
+  gap: 12px;
+  padding: 12px;
+}
+
+.retro-manager-layout > .retro-manager-pitch-box {
+  width: 100%;
+  margin: 0;
+}
+
+.retro-manager-section {
+  padding: 12px;
+}
+
+.retro-manager-section.is-bench {
+  display: grid;
+  height: 0;
+  min-width: 0;
+  min-height: 100%;
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: 0 0 0 12px;
+  overflow: hidden;
+  border-left: 1px solid var(--q22-line);
+}
+
+.retro-manager-section.is-bench .retro-manager-player-list {
+  min-height: 0;
+  padding-right: 4px;
+  overflow-y: auto;
+  scrollbar-color: var(--q22-gold) rgba(57, 13, 32, 0.72);
+  scrollbar-width: thin;
+}
+
+.retro-manager-section.is-bench .retro-manager-player {
+  min-height: 50px;
+  grid-template-columns: 26px minmax(0, 1fr) 26px 30px;
+  gap: 7px;
+  padding-inline: 7px;
+}
+
+.retro-manager-section + .retro-manager-section {
+  border-top: 1px solid var(--q22-line);
+}
+
+.retro-manager-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.retro-manager-section-title strong {
+  color: var(--q22-white);
+  font-size: 10px;
+}
+
+.retro-manager-section-title span {
+  color: var(--q22-gold);
+  font: 700 8px "DM Mono", monospace;
+}
+
+.retro-manager-player-list,
+.retro-live-rating-list {
+  display: grid;
+  gap: 4px;
+}
+
+.retro-manager-player {
+  display: grid;
+  width: 100%;
+  min-height: 44px;
+  grid-template-columns: 28px minmax(0, 1fr) 28px 32px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border: 1px solid var(--q22-line-soft);
+  border-radius: 2px;
+  color: var(--q22-cream);
+  background: var(--q22-panel-soft);
+  text-align: left;
+  transition: border-color 150ms ease, background-color 150ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.retro-manager-player b {
+  color: var(--q22-gold);
+  font: 800 11px "DM Mono", monospace;
+}
+
+.retro-manager-player small,
+.retro-live-rating-row small {
+  overflow: hidden;
+  color: #b99f9c;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-manager-player strong {
+  font-size: 12px;
+}
+
+.retro-manager-player em {
+  color: #c3aaa7;
+  font: 700 9px "DM Mono", monospace;
+  text-align: center;
+}
+
+.retro-manager-player > i {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--q22-line);
+  color: var(--q22-gold);
+  font: 800 9px "DM Mono", monospace;
+}
+
+.retro-manager-player.is-bench {
+  opacity: 1;
+  background: var(--q22-ink-soft);
+}
+
+.retro-manager-player.is-selected {
+  border-color: var(--q22-gold);
+  background: var(--q22-wine);
+  box-shadow: inset 4px 0 var(--q22-gold);
+}
+
+.retro-manager-player:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .retro-manager-player:hover:not(:disabled) {
+    border-color: var(--q22-gold);
+    background: var(--q22-wine);
+  }
+}
+
+.retro-live-rating-list {
+  padding: 8px;
+}
+
+.retro-live-rating-row {
+  display: grid;
+  min-height: 42px;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px 5px 9px;
+  border-bottom: 1px solid var(--q22-line-soft);
+}
+
+.retro-live-rating-row > i {
+  color: #9c8583;
+  font: 700 8px "DM Mono", monospace;
+  text-align: right;
+}
+
+.retro-live-rating-row > i.is-up {
+  color: #5fd79a;
+}
+
+.retro-live-rating-row > i.is-down {
+  color: #ff7787;
+}
+
+.retro-live-rating-row > b {
+  display: grid;
+  width: 36px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--q22-line);
+  color: var(--q22-white);
+  background: #3a0b20;
+  font: 800 10px "DM Mono", monospace;
+}
+
+.retro-live-rating-row > b.is-excellent {
+  border-color: #21c77a;
+  color: #58d697;
+  background: #08291d;
+}
+
+.retro-live-rating-row > b.is-good {
+  border-color: #6be29e;
+  color: #83e3aa;
+  background: #102b1c;
+}
+
+.retro-live-rating-row > b.is-average {
+  border-color: #f0cc60;
+  color: #f0cc60;
+  background: #332605;
+}
+
+.retro-live-rating-row > b.is-poor {
+  border-color: #ff7185;
+  color: #ff8293;
+  background: #3a0b18;
+}
+
+.retro-pitch-player i.is-excellent {
+  color: #58d697;
+  background: #08291d;
+}
+
+.retro-pitch-player i.is-good {
+  color: #83e3aa;
+  background: #102b1c;
+}
+
+.retro-pitch-player i.is-average {
+  color: #f0cc60;
+  background: #332605;
+}
+
+.retro-pitch-player i.is-poor {
+  color: #ff8293;
+  background: #3a0b18;
+}
+/* Brazil 2014: deep green watercolor cards and rounded tournament controls. */
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-lineup-tabs,
+.retro-mode-active:not(.retro-2002-active):not(.retro-2006-active):not(.retro-2010-active):not(.retro-2018-active):not(.retro-2022-active) .retro-manager-lineup {
+  border-radius: 14px;

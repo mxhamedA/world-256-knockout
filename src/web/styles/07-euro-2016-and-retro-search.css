@@ -1,0 +1,1183 @@
+  align-self: start;
+  height: auto;
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-position-group > h2 {
+  min-height: 38px;
+  margin: 0 0 4px;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 2px solid #1cc7ee;
+  border-radius: 0 !important;
+  color: #f8fdff;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-position-group > h2 b {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  flex: 0 0 24px;
+  border: 1px solid #ffed82;
+  border-radius: 0;
+  color: #020d32;
+  background: #ffdc38;
+  font: 900 11px/1 "DM Mono", monospace;
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-row,
+body.retro-mode-active.retro-euro-2016-active #mainContent .retro-squad-view.is-compact-squad .retro-squad-row:nth-child(even) {
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0 !important;
+}
+
+/* Euro 2016 tournament archive: sharp, blue and visually tied to the simulator. */
+.profile-tournament-history-card[data-history-theme="2016"] {
+  --profile-history-accent: #ffdc38;
+  --profile-history-surface: #063f91;
+  border-color: rgba(111, 220, 249, 0.48);
+  border-radius: 0;
+  box-shadow: inset 4px 0 #1cc7ee;
+}
+
+.profile-tournament-history-card[data-history-theme="2016"] .profile-history-edition {
+  border-radius: 0;
+  background: #032b70;
+}
+
+#championSaveTournament[data-history-theme="2016"] {
+  border: 1px solid #92ebff;
+  border-radius: 0;
+  color: #f8fdff;
+  background: #0756aa;
+  box-shadow: 0 5px 0 #032a6a;
+}
+
+#championSaveTournament[data-history-theme="2016"].is-saved {
+  border-color: #ffdc38;
+  color: #020d32;
+  background: #ffdc38;
+  box-shadow: 0 5px 0 #a98700;
+}
+
+.tournament-history-screen[data-history-theme="2016"] {
+  --history-accent: #ffdc38;
+  --history-accent-strong: #1cc7ee;
+  --history-accent-ink: #020d32;
+  --history-bg: #043878;
+  --history-bg-deep: #020d32;
+  --history-surface: rgba(3, 31, 88, 0.97);
+  --history-surface-soft: rgba(7, 86, 170, 0.9);
+  --history-line: rgba(111, 220, 249, 0.46);
+  --history-text: #f8fdff;
+  --history-muted: #bfeeff;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(98, 219, 255, 0.28), transparent 27%),
+    radial-gradient(circle at 12% 90%, rgba(0, 91, 196, 0.4), transparent 32%),
+    repeating-radial-gradient(circle at 74% 28%, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 22px),
+    linear-gradient(135deg, #020c2d 0%, #043878 52%, #078fc4 100%);
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-header {
+  border-color: rgba(111, 220, 249, 0.5);
+  background: rgba(2, 13, 50, 0.96);
+  backdrop-filter: none;
+}
+
+.tournament-history-screen[data-history-theme="2016"] :is(
+  .tournament-history-back,
+  .tournament-history-brand-mark,
+  .tournament-history-hero,
+  .tournament-history-summary article,
+  .tournament-history-rounds,
+  .tournament-history-match,
+  .tournament-history-fixture,
+  .tournament-history-champion-flag.country-flag,
+  .tournament-history-match-flag.country-flag
+) {
+  border-radius: 0;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-back {
+  border-color: rgba(146, 235, 255, 0.58);
+  background: #032b70;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-brand-mark {
+  border: 1px solid #92ebff;
+  color: #020d32;
+  background: #ffdc38;
+  box-shadow: inset 0 -5px #1cc7ee;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-hero {
+  border: 2px solid #1cc7ee;
+  background: #031f58;
+  box-shadow: 10px 10px 0 rgba(255, 220, 56, 0.28);
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-edition {
+  background:
+    linear-gradient(145deg, rgba(28, 199, 238, 0.18), transparent 58%),
+    #043f91;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-champion {
+  background:
+    radial-gradient(circle at 42% 50%, rgba(28, 199, 238, 0.2), transparent 34%),
+    linear-gradient(115deg, #052c72, #0756aa);
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-summary article {
+  border-color: rgba(111, 220, 249, 0.48);
+  background: #032b70;
+  box-shadow: inset 0 3px #1cc7ee;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-summary article:nth-child(even) {
+  background: #06458f;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-rounds,
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-match,
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-fixture {
+  border-color: rgba(111, 220, 249, 0.48);
+  background: #031f58;
+  box-shadow: none;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-rounds button {
+  border-color: rgba(111, 220, 249, 0.28);
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-rounds button.is-active,
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-fixture.is-selected {
+  color: #f8fdff;
+  background: #0756aa;
+  box-shadow: inset 5px 0 #ffdc38;
+}
+
+/* Reverted: this mistakenly targeted tournament screens instead of the simulator menu. */
+@media (width < 0px) {
+/* Euro 2016 section artwork final cascade lock. */
+body.retro-mode-active.retro-euro-2016-active {
+  --e16-section-art:
+    radial-gradient(circle at 88% 10%, rgba(111, 225, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 10% 96%, rgba(0, 116, 218, 0.22), transparent 34%),
+    repeating-radial-gradient(circle at 92% 6%, transparent 0 19px, rgba(151, 235, 255, 0.055) 20px 21px, transparent 22px 38px),
+    linear-gradient(145deg, rgba(8, 75, 151, 0.44), rgba(3, 31, 88, 0.96) 56%, rgba(2, 18, 61, 0.98));
+  --e16-section-art-strong:
+    radial-gradient(circle at 84% 14%, rgba(146, 235, 255, 0.25), transparent 27%),
+    repeating-radial-gradient(circle at 88% 10%, transparent 0 25px, rgba(176, 242, 255, 0.07) 26px 27px, transparent 28px 48px),
+    linear-gradient(128deg, rgba(7, 104, 188, 0.98), rgba(3, 42, 106, 0.98) 52%, rgba(2, 19, 64, 0.99));
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-tournament-heading {
+  overflow: hidden;
+  padding-left: 24px;
+  border: 1px solid rgba(111, 220, 249, 0.3);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 80% 14%, rgba(146, 235, 255, 0.2), transparent 24%),
+    repeating-radial-gradient(circle at 86% 16%, transparent 0 24px, rgba(176, 242, 255, 0.06) 25px 26px, transparent 27px 44px),
+    linear-gradient(112deg, rgba(3, 31, 88, 0.72), rgba(6, 92, 169, 0.36));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 16px 34px rgba(0, 9, 43, 0.2);
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-view-tabs {
+  background:
+    radial-gradient(circle at 76% 0%, rgba(28, 199, 238, 0.16), transparent 38%),
+    repeating-linear-gradient(118deg, transparent 0 28px, rgba(146, 235, 255, 0.035) 29px 30px),
+    rgba(2, 19, 64, 0.82);
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+),
+body.retro-mode-active.retro-euro-2016-active :is(
+  .retro-group-table,
+  .retro-squad-view,
+  .retro-lineups-view,
+  .retro-match-lineups-panel,
+  .retro-lineup-side,
+  .retro-squad-position-group,
+  .retro-lineup-tabs,
+  .retro-manager-lineup,
+  .retro-live-ratings-side
+) {
+  background: var(--e16-section-art);
+  background-color: #031f58;
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .panel-heading,
+  .match-analysis-heading,
+  .retro-table-head,
+  .retro-squad-heading,
+  .retro-manager-lineup > header,
+  .retro-live-ratings-side > header
+),
+body.retro-mode-active.retro-euro-2016-active :is(
+  .retro-squad-position-group > h2,
+  .retro-lineup-side header
+) {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(146, 235, 255, 0.18), transparent 34%),
+    repeating-linear-gradient(118deg, transparent 0 24px, rgba(193, 247, 255, 0.045) 25px 26px),
+    linear-gradient(90deg, rgba(7, 88, 167, 0.98), rgba(4, 50, 116, 0.98));
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .fixture,
+  .retro-table-row,
+  .retro-squad-row,
+  .retro-lineup-side li,
+  .retro-manager-player,
+  .golden-boot-player
+) {
+  background-image:
+    radial-gradient(circle at 96% 0%, rgba(146, 235, 255, 0.09), transparent 38%),
+    linear-gradient(110deg, rgba(7, 91, 167, 0.14), transparent 48%);
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  #championStage,
+  .penalty-stage,
+  .match-penalty-overlay
+) {
+  background: var(--e16-section-art-strong);
+  background-color: #031f58;
+}
+
+body.retro-mode-active.retro-euro-2016-active :is(
+  .modal,
+  .confirm-modal,
+  .snapshot-modal,
+  .achievement-unlock-modal
+) {
+  background:
+    radial-gradient(circle at 94% 4%, rgba(146, 235, 255, 0.17), transparent 30%),
+    repeating-radial-gradient(circle at 100% 0%, transparent 0 22px, rgba(176, 242, 255, 0.05) 23px 24px, transparent 25px 42px),
+    linear-gradient(145deg, rgba(6, 74, 146, 0.99), rgba(2, 17, 58, 0.99));
+}
+
+.tournament-history-screen[data-history-theme="2016"] :is(
+  .tournament-history-hero,
+  .tournament-history-summary article,
+  .tournament-history-rounds,
+  .tournament-history-match,
+  .tournament-history-fixture
+) {
+  background-image:
+    radial-gradient(circle at 90% 8%, rgba(146, 235, 255, 0.13), transparent 32%),
+    repeating-radial-gradient(circle at 96% 2%, transparent 0 20px, rgba(176, 242, 255, 0.04) 21px 22px, transparent 23px 38px),
+    linear-gradient(145deg, rgba(7, 78, 154, 0.28), rgba(3, 31, 88, 0.96));
+}
+
+@media (max-width: 700px) {
+  body.retro-mode-active.retro-euro-2016-active .retro-tournament-heading {
+    padding-left: 18px;
+    background-size: auto, 240px 240px, auto;
+  }
+
+  body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+    .match-stage,
+    .round-board,
+    .panel,
+    .match-analysis,
+    .standard-match-tactics,
+    .story-card
+  ),
+  body.retro-mode-active.retro-euro-2016-active :is(
+    .retro-group-table,
+    .retro-squad-view,
+    .retro-lineups-view,
+    .retro-match-lineups-panel,
+    .retro-manager-lineup,
+    .retro-live-ratings-side
+  ) {
+    background-size: auto, auto, 260px 260px, auto;
+  }
+}
+
+}
+
+@media (width < 0px) {
+/* Euro 2016 section artwork: carry the simulator-card broadcast rings through every view. */
+body.retro-mode-active.retro-euro-2016-active {
+  --e16-section-art:
+    radial-gradient(circle at 88% 10%, rgba(111, 225, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 10% 96%, rgba(0, 116, 218, 0.22), transparent 34%),
+    repeating-radial-gradient(circle at 92% 6%, transparent 0 19px, rgba(151, 235, 255, 0.055) 20px 21px, transparent 22px 38px),
+    linear-gradient(145deg, rgba(8, 75, 151, 0.44), rgba(3, 31, 88, 0.96) 56%, rgba(2, 18, 61, 0.98));
+  --e16-section-art-strong:
+    radial-gradient(circle at 84% 14%, rgba(146, 235, 255, 0.25), transparent 27%),
+    repeating-radial-gradient(circle at 88% 10%, transparent 0 25px, rgba(176, 242, 255, 0.07) 26px 27px, transparent 28px 48px),
+    linear-gradient(128deg, rgba(7, 104, 188, 0.98), rgba(3, 42, 106, 0.98) 52%, rgba(2, 19, 64, 0.99));
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-tournament-heading {
+  overflow: hidden;
+  padding-left: 24px;
+  border: 1px solid rgba(111, 220, 249, 0.3);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 80% 14%, rgba(146, 235, 255, 0.2), transparent 24%),
+    repeating-radial-gradient(circle at 86% 16%, transparent 0 24px, rgba(176, 242, 255, 0.06) 25px 26px, transparent 27px 44px),
+    linear-gradient(112deg, rgba(3, 31, 88, 0.72), rgba(6, 92, 169, 0.36));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 16px 34px rgba(0, 9, 43, 0.2);
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-view-tabs {
+  background:
+    radial-gradient(circle at 76% 0%, rgba(28, 199, 238, 0.16), transparent 38%),
+    repeating-linear-gradient(118deg, transparent 0 28px, rgba(146, 235, 255, 0.035) 29px 30px),
+    rgba(2, 19, 64, 0.82);
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis,
+  .standard-match-tactics,
+  .story-card
+),
+body.retro-mode-active.retro-euro-2016-active :is(
+  .retro-group-table,
+  .retro-squad-view,
+  .retro-lineups-view,
+  .retro-match-lineups-panel,
+  .retro-lineup-side,
+  .retro-squad-position-group,
+  .retro-lineup-tabs,
+  .retro-manager-lineup,
+  .retro-live-ratings-side
+) {
+  background: var(--e16-section-art);
+  background-color: #031f58;
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .panel-heading,
+  .match-analysis-heading,
+  .retro-table-head,
+  .retro-squad-heading,
+  .retro-manager-lineup > header,
+  .retro-live-ratings-side > header
+),
+body.retro-mode-active.retro-euro-2016-active :is(
+  .retro-squad-position-group > h2,
+  .retro-lineup-side header
+) {
+  background:
+    radial-gradient(circle at 90% 20%, rgba(146, 235, 255, 0.18), transparent 34%),
+    repeating-linear-gradient(118deg, transparent 0 24px, rgba(193, 247, 255, 0.045) 25px 26px),
+    linear-gradient(90deg, rgba(7, 88, 167, 0.98), rgba(4, 50, 116, 0.98));
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .fixture,
+  .retro-table-row,
+  .retro-squad-row,
+  .retro-lineup-side li,
+  .retro-manager-player,
+  .golden-boot-player
+) {
+  background-image:
+    radial-gradient(circle at 96% 0%, rgba(146, 235, 255, 0.09), transparent 38%),
+    linear-gradient(110deg, rgba(7, 91, 167, 0.14), transparent 48%);
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  #championStage,
+  .penalty-stage,
+  .match-penalty-overlay
+) {
+  background: var(--e16-section-art-strong);
+  background-color: #031f58;
+}
+
+body.retro-mode-active.retro-euro-2016-active .modal,
+body.retro-mode-active.retro-euro-2016-active .confirm-modal,
+body.retro-mode-active.retro-euro-2016-active .snapshot-modal,
+body.retro-mode-active.retro-euro-2016-active .achievement-unlock-modal {
+  background:
+    radial-gradient(circle at 94% 4%, rgba(146, 235, 255, 0.17), transparent 30%),
+    repeating-radial-gradient(circle at 100% 0%, transparent 0 22px, rgba(176, 242, 255, 0.05) 23px 24px, transparent 25px 42px),
+    linear-gradient(145deg, rgba(6, 74, 146, 0.99), rgba(2, 17, 58, 0.99));
+}
+
+.tournament-history-screen[data-history-theme="2016"] :is(
+  .tournament-history-hero,
+  .tournament-history-summary article,
+  .tournament-history-rounds,
+  .tournament-history-match,
+  .tournament-history-fixture
+) {
+  background-image:
+    radial-gradient(circle at 90% 8%, rgba(146, 235, 255, 0.13), transparent 32%),
+    repeating-radial-gradient(circle at 96% 2%, transparent 0 20px, rgba(176, 242, 255, 0.04) 21px 22px, transparent 23px 38px),
+    linear-gradient(145deg, rgba(7, 78, 154, 0.28), rgba(3, 31, 88, 0.96));
+}
+
+@media (max-width: 700px) {
+  body.retro-mode-active.retro-euro-2016-active .retro-tournament-heading {
+    padding-left: 18px;
+    background-size: auto, 240px 240px, auto;
+  }
+
+  body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+    .match-stage,
+    .round-board,
+    .panel,
+    .match-analysis,
+    .standard-match-tactics,
+    .story-card
+  ),
+  body.retro-mode-active.retro-euro-2016-active :is(
+    .retro-group-table,
+    .retro-squad-view,
+    .retro-lineups-view,
+    .retro-match-lineups-panel,
+    .retro-manager-lineup,
+    .retro-live-ratings-side
+  ) {
+    background-size: auto, auto, 260px 260px, auto;
+  }
+}
+
+}
+
+/* The retro squad screen lives outside #mainContent. */
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-groups {
+  align-items: start;
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-position-group {
+  align-self: start;
+  height: auto;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-position-group > h2 {
+  min-height: 38px;
+  margin: 0 0 4px;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 2px solid #1cc7ee;
+  border-radius: 0;
+  color: #f8fdff;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-position-group > h2 b {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  flex: 0 0 24px;
+  border: 1px solid #ffed82;
+  border-radius: 0;
+  color: #020d32;
+  background: #ffdc38;
+  font: 900 11px/1 "DM Mono", monospace;
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-row,
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-row:nth-child(even) {
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.retro-mode-active.retro-euro-2016-active {
+  --e16-section-art:
+    radial-gradient(circle at 88% 10%, rgba(111, 225, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 10% 96%, rgba(0, 116, 218, 0.22), transparent 34%),
+    repeating-radial-gradient(circle at 92% 6%, transparent 0 19px, rgba(151, 235, 255, 0.055) 20px 21px, transparent 22px 38px),
+    linear-gradient(145deg, rgba(8, 75, 151, 0.44), rgba(3, 31, 88, 0.96) 56%, rgba(2, 18, 61, 0.98));
+  --e16-section-art-strong:
+    radial-gradient(circle at 84% 14%, rgba(146, 235, 255, 0.25), transparent 27%),
+    repeating-radial-gradient(circle at 88% 10%, transparent 0 25px, rgba(176, 242, 255, 0.07) 26px 27px, transparent 28px 48px),
+    linear-gradient(128deg, rgba(7, 104, 188, 0.98), rgba(3, 42, 106, 0.98) 52%, rgba(2, 19, 64, 0.99));
+}
+
+body.retro-mode-active.retro-euro-2016-active #mainContent :is(
+  .match-stage,
+  .round-board,
+  .panel,
+  .match-analysis
+),
+body.retro-mode-active.retro-euro-2016-active :is(
+  .retro-group-table,
+  .retro-squad-view,
+  .retro-lineups-view,
+  .retro-manager-lineup
+) {
+  background: var(--e16-section-art);
+  background-color: #031f58;
+}
+
+.tournament-history-screen[data-history-theme="2016"] :is(
+  .tournament-history-hero,
+  .tournament-history-summary article,
+  .tournament-history-rounds,
+  .tournament-history-match,
+  .tournament-history-fixture
+) {
+  background-image:
+    radial-gradient(circle at 90% 8%, rgba(146, 235, 255, 0.13), transparent 32%),
+    repeating-radial-gradient(circle at 96% 2%, transparent 0 20px, rgba(176, 242, 255, 0.04) 21px 22px, transparent 23px 38px),
+    linear-gradient(145deg, rgba(7, 78, 154, 0.28), rgba(3, 31, 88, 0.96));
+}
+
+body.retro-mode-active.retro-euro-2016-active .retro-squad-view.is-compact-squad .retro-squad-position-group {
+  background: transparent;
+}
+
+.tournament-history-screen[data-history-theme="2016"] .tournament-history-fixture:active,
+.profile-tournament-history-card[data-history-theme="2016"]:active {
+  transform: scale(0.98);
+}
+
+/* Retro search stays above the bracket and inherits the active World Cup theme. */
+.retro-mode-active #mainContent .round-board,
+.retro-mode-active #mainContent .section-heading,
+.retro-mode-active #mainContent .board-actions,
+.retro-mode-active #mainContent .team-filter-control {
+  overflow: visible;
+}
+
+.retro-mode-active #mainContent .section-heading {
+  position: relative;
+  z-index: 20;
+}
+
+.retro-mode-active #mainContent .team-filter-control {
+  z-index: 30;
+}
+
+.retro-mode-active:not(.retro-2022-active) #mainContent .team-filter-control .search-result-popover {
+  z-index: 40;
+  overflow: hidden;
+  border: 2px solid #f6d12a;
+  border-radius: 10px;
+  color: #fffce5;
+  background: #075b40;
+  box-shadow: 7px 8px 0 rgba(0, 72, 104, 0.52), 0 18px 38px rgba(0, 35, 25, 0.34);
+  pointer-events: auto;
+}
+
+.retro-mode-active:not(.retro-2022-active) #mainContent .team-filter-control .search-result {
+  border-bottom-color: rgba(246, 209, 42, 0.24);
+  color: #fffce5;
+  background: #075b40;
+}
+
+.retro-mode-active:not(.retro-2022-active) #mainContent .team-filter-control .search-result small {
+  color: #cae6c9;
+}
+
+.retro-mode-active:not(.retro-2022-active) #mainContent .team-filter-control .search-result:hover {
+  background: #08734d;
+}
+
+.retro-2018-active #mainContent .team-filter-control .search-result-popover {
+  border-color: #e9c477;
+  color: #fff4d6;
+  background: #075f9f;
+  box-shadow: 7px 8px 0 rgba(100, 9, 25, 0.58), 0 18px 38px rgba(44, 3, 12, 0.34);
+}
+
+.retro-2018-active #mainContent .team-filter-control .search-result {
+  border-bottom-color: rgba(233, 196, 119, 0.3);
+  color: #fff4d6;
+  background: #075f9f;
+}
+
+.retro-2018-active #mainContent .team-filter-control .search-result small {
+  color: #c5def1;
+}
+
+.retro-2018-active #mainContent .team-filter-control .search-result:hover {
+  background: #0875bd;
+}
+
+.retro-mode-active #mainContent .fixture-grid.retro-group-match-history {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 1100px) {
+  .retro-mode-active #mainContent .fixture-grid.retro-group-match-history {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .retro-mode-active #mainContent .fixture-grid.retro-group-match-history {
+    grid-template-columns: 1fr;
+  }
+
+  .retro-mode-active #mainContent .team-filter-control .search-result-popover {
+    right: 0;
+    left: auto;
+    width: min(100%, 320px);
+  }
+}
+
+@media (max-width: 640px) {
+  .fixture-grid:not(.bracket-mode) .fixture {
+    min-height: 104px;
+    padding: 12px;
+  }
+
+  .fixture-card-head {
+    margin-bottom: 9px;
+    font-size: 8px;
+  }
+
+  .fixture .fixture-team {
+    grid-template-columns: 27px minmax(0, 1fr) auto 7px;
+    gap: 7px;
+    font-size: 10px;
+  }
+
+  .fixture .fixture-team .flag {
+    width: 27px;
+    height: 18px;
+  }
+
+  .fixture .fixture-team b {
+    font-size: 13px;
+  }
+
+  .bracket-heads,
+  .bracket-canvas {
+    grid-template-columns: repeat(4, 180px);
+    min-width: 840px;
+  }
+}
+
+/* Dominant-foot penalty stance and clearer shootout results. */
+.penalty-scene[data-foot="right"] .penalty-taker {
+  left: calc(50% - 63px);
+}
+
+.penalty-scene[data-foot="left"] .penalty-taker {
+  left: calc(50% + 38px);
+}
+
+.penalty-scene[data-state="flight"][data-foot="right"] .penalty-taker,
+.penalty-scene[data-state="result"][data-foot="right"] .penalty-taker {
+  transform: translate(16px, -3px) rotate(12deg);
+}
+
+.penalty-scene[data-state="flight"][data-foot="left"] .penalty-taker,
+.penalty-scene[data-state="result"][data-foot="left"] .penalty-taker {
+  transform: translate(-16px, -3px) rotate(-12deg);
+}
+
+.penalty-marks {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 9px;
+}
+
+.penalty-mark {
+  width: 9px;
+  height: 9px;
+  box-sizing: border-box;
+  border: 1px solid #3b4659;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.penalty-mark.goal {
+  border-color: #39b86f;
+  background: #39b86f;
+  box-shadow: 0 0 8px rgba(57, 184, 111, 0.18);
+}
+
+.penalty-mark.miss {
+  border-color: #df5a55;
+  background: #df5a55;
+  box-shadow: 0 0 8px rgba(223, 90, 85, 0.16);
+}
+
+/* Completed-round navigation. */
+.sidebar {
+  flex-direction: row;
+}
+
+.round-nav {
+  height: 36px;
+  align-items: center;
+}
+
+.round-link {
+  min-height: 32px;
+  align-items: center;
+}
+
+.history-round-button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #b9c9f5;
+  background: #1a2330;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease, transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.history-round-button[hidden] {
+  display: none;
+}
+
+.history-round-button:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .history-round-button:hover {
+    color: #fff;
+    background: #202c3e;
+  }
+}
+
+@media (max-width: 850px) {
+  .sidebar {
+    flex-direction: column;
+  }
+
+  .round-nav {
+    height: auto;
+    align-items: stretch;
+  }
+
+}
+
+@media (min-width: 851px) {
+  .round-nav {
+    display: none;
+  }
+}
+
+/* Golden Boot — compact enough to stay useful beside every round. */
+.team-filter-control {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.team-filter-control.active .team-filter-search {
+  display: none;
+}
+
+.team-filter-search {
+  width: 180px;
+  height: 34px;
+}
+
+.team-filter-chip {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 8px;
+  color: #e9eef8;
+  background: #202a3a;
+  font: inherit;
+  font-size: 9px;
+  cursor: pointer;
+  transition: transform 140ms var(--ease-out), background-color 160ms ease;
+}
+
+.team-filter-chip[hidden] {
+  display: none;
+}
+
+.team-filter-chip:active {
+  transform: scale(0.97);
+}
+
+.team-filter-check {
+  display: grid;
+  width: 15px;
+  height: 15px;
+  place-items: center;
+  border-radius: 4px;
+  color: #0d1420;
+  background: #78a0ff;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.team-filter-flag {
+  width: 22px;
+  height: 15px;
+  border-radius: 2px;
+}
+
+.team-filter-clear {
+  margin-left: 2px;
+  color: #8f9bad;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.team-filter-control .search-result-popover {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
+  left: auto;
+  width: 270px;
+  transform-origin: top right;
+}
+
+.fixture-grid.team-journey-mode {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .fixture-grid.team-journey-mode {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  .round-board > .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .round-board .board-actions {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) repeat(3, auto);
+    width: 100%;
+  }
+
+  .round-board .team-filter-control,
+  .round-board .team-filter-search {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .team-filter-control,
+  .team-filter-search {
+    width: 100%;
+  }
+
+  .round-board .board-actions {
+    grid-template-columns: 1fr auto;
+  }
+
+  .round-board .team-filter-control {
+    display: block;
+    grid-column: 1 / -1;
+  }
+
+  .team-filter-control .search-result-popover {
+    right: auto;
+    left: 0;
+    width: min(280px, calc(100vw - 48px));
+  }
+
+  .fixture-grid.team-journey-mode {
+    grid-template-columns: 1fr;
+  }
+}
+
+.content > .round-board {
+  margin-top: 0;
+}
+
+.golden-boot-panel .panel-heading {
+  justify-content: center;
+  text-align: center;
+}
+
+.golden-boot-panel .panel-heading span {
+  color: #f2c45f;
+  font-size: 10px;
+  letter-spacing: 1.4px;
+}
+
+.golden-boot-list {
+  display: grid;
+}
+
+.retro-live-table-head,
+.retro-live-table-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px 28px 28px;
+  align-items: center;
+  gap: 5px;
+  min-height: 42px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.retro-live-table-head {
+  min-height: 30px;
+  color: #fff7cf;
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.retro-live-table-row:last-child {
+  border-bottom: 0;
+}
+
+.retro-live-table-row > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.retro-live-table-row > span > em {
+  width: 12px;
+  flex: 0 0 12px;
+  color: #f6d12a;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  font-style: normal;
+}
+
+.retro-live-table-row strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-live-table-head b,
+.retro-live-table-row > b {
+  color: #fffce8;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+  text-align: center;
+}
+
+.retro-live-table-row.qualification-place {
+  background: rgba(246, 209, 42, 0.08);
+}
+
+.retro-live-table-flag,
+.retro-live-table-flag img {
+  width: 24px;
+  height: 16px;
+  flex: 0 0 24px;
+  border-radius: 2px;
+}
+
+.golden-boot-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 9px;
+  min-height: 52px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.golden-boot-row:last-child {
+  border-bottom: 0;
+}
+
+.golden-boot-rank {
+  color: #637086;
+  font-family: "DM Mono", monospace;
+  font-size: 11px;
+}
+
+.golden-boot-row.leader .golden-boot-rank,
+.golden-boot-row.leader > b {
+  color: var(--lime);
+}
+
+.golden-boot-player {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.golden-boot-player strong,
+.golden-boot-player small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.golden-boot-player strong {
+  color: #e6eaf1;
+  font-size: 11px;
+}
+
+.golden-boot-player small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #788497;
+  font-size: 9px;
+}
+
+.golden-boot-flag {
+  width: 18px;
+  height: 12px;
+  flex: 0 0 auto;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.golden-boot-row > b {
+  color: #eef2f8;
+  font-family: "DM Mono", monospace;
+  font-size: 16px;
+  text-align: right;
+}
+
+.golden-boot-empty {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: center;
+  gap: 9px;
+  padding: 20px 14px;
+  color: #707d90;
+}
+
+.golden-boot-empty span {
+  color: #546176;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+}
+
+.golden-boot-empty p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.bug-report-form {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+
+.bug-report-modal {
+  width: min(420px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
+  border-radius: 12px;
+}
+
+.bug-report-modal .bug-report-form {
+  padding: 18px;
+}
+
+.bug-report-close {
+  justify-self: end;
+  display: grid;
+  width: 32px;
+  height: 32px;
+  margin: -4px -4px 0 0;
+  padding: 0;
+  place-items: center;
+  border-radius: 8px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.bug-report-message {
+  min-height: 128px;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #273346;
+  border-radius: 8px;
+  padding: 12px;
+  color: #e8eef8;
+  background: #101826;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  outline: 0;
+}
+
+.bug-report-message::placeholder {
+  color: #647187;
+}
+
+.bug-report-message:focus {
+  border-color: #5d7cff;
+  box-shadow: 0 0 0 3px rgba(93, 124, 255, 0.16);
+}
+
+.bug-report-submit {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.bug-report-submit:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.bug-report-status {
+  min-height: 14px;
+  margin: 0;
+  color: #8a96aa;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 520px) {
+  .bug-report-modal .bug-report-form {
+    padding: 16px;
+  }
+
+  .bug-report-message {
+    min-height: 116px;
+  }
+}
+/* Shareable match snapshots */
+.snapshot-trigger:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.snapshot-card-button {

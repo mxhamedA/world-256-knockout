@@ -549,7 +549,7 @@
       arsenal: [1, 2], "aston-villa": [4, 4], bournemouth: [8, 5], brentford: [8, 5],
       brighton: [6, 5], chelsea: [1, 3], "coventry-city": [17, 8],
       "crystal-palace": [6, 5], everton: [8, 5], fulham: [8, 5], "hull-city": [17, 8],
-      "ipswich-town": [10, 8], "leeds-united": [10, 7], liverpool: [1, 2],
+      "ipswich-town": [17, 8], "leeds-united": [10, 7], liverpool: [1, 2],
       "manchester-city": [1, 2], "manchester-united": [1, 3], "newcastle-united": [4, 3],
       "nottingham-forest": [8, 5], sunderland: [10, 8], "tottenham-hotspur": [1, 4],
     };

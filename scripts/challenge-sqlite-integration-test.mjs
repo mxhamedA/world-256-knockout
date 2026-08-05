@@ -29,11 +29,14 @@ premierLeagueTitleClubs.forEach((clubId) => {
     `${clubId} must require winning the league.`,
   );
 });
-["ipswich-town", "leeds-united", "sunderland"].forEach((clubId) => {
+["leeds-united", "sunderland"].forEach((clubId) => {
   const definition = premierLeagueAchievementDefinition(clubId);
   assert.equal(definition?.targetPosition, 10, `${clubId} must require a top-half finish.`);
   assert.equal(definition?.objectiveLabel, "Finish in the top half");
 });
+assert.equal(premierLeagueAchievementDefinition("ipswich-town")?.targetPosition, 17);
+assert.equal(premierLeagueAchievementDefinition("ipswich-town")?.objectiveLabel, "Avoid relegation");
+assert.equal(premierLeagueAchievementDefinition("ipswich-town")?.points, 8);
 assert.equal(premierLeagueAchievementDefinition("hull-city")?.targetPosition, 17);
 assert.equal(premierLeagueAchievementDefinition("hull-city")?.objectiveLabel, "Avoid relegation");
 assert.equal(premierLeagueAchievementDefinition("coventry-city")?.targetPosition, 17);
@@ -624,6 +627,31 @@ assert.equal(premierLeagueWon.payload.unlockedTeam.objectiveLabel, "Win the Prem
 assert.equal(premierLeagueWon.payload.unlockedTeam.points, 2);
 assert.equal(premierLeagueWon.payload.achievement.completedPoints, 2);
 
+const ipswichSurvived = await request("/achievements/premier-league", {
+  method: "POST",
+  body: { seed: 26003, clubId: "ipswich-town", phase: "complete", finalPosition: 17 },
+});
+assert.equal(ipswichSurvived.response.status, 200);
+assert.equal(ipswichSurvived.payload.countryUnlocked, true);
+assert.equal(ipswichSurvived.payload.unlockedTeam.objectiveLabel, "Avoid relegation");
+assert.equal(ipswichSurvived.payload.unlockedTeam.targetPosition, 17);
+assert.equal(ipswichSurvived.payload.unlockedTeam.points, 8);
+assert.equal(ipswichSurvived.payload.achievement.completedPoints, 10);
+
+const accountId = sqlite.prepare("SELECT id FROM accounts WHERE username = ?").get(username).id;
+sqlite.prepare(`
+  INSERT INTO premier_league_attempts
+    (account_id, season_seed, club_id, final_position, achieved, started_at, completed_at)
+  VALUES (?, 26004, 'ipswich-town', 16, 0, 1000, 2000)
+`).run(accountId);
+sqlite.exec(fs.readFileSync(path.join(root, "migrations", "0018_ipswich_avoid_relegation.sql"), "utf8"));
+assert.equal(
+  sqlite.prepare("SELECT achieved FROM premier_league_attempts WHERE account_id = ? AND season_seed = 26004 AND club_id = 'ipswich-town'").get(accountId).achieved,
+  1,
+  "The Ipswich rule change must backfill previously completed survival seasons.",
+);
+sqlite.prepare("DELETE FROM premier_league_attempts WHERE account_id = ? AND season_seed = 26004 AND club_id = 'ipswich-town'").run(accountId);
+
 const uclRealStarted = await request("/achievements/ucl", {
   method: "POST",
   body: { seed: 27001, clubId: "real-madrid", phase: "start", bestStageIndex: -1 },
@@ -692,7 +720,7 @@ assert.equal(
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
 assert.equal(achievementBoard.payload.leaderboard[0].username, username);
-assert.equal(achievementBoard.payload.leaderboard[0].achievements, 33);
+assert.equal(achievementBoard.payload.leaderboard[0].achievements, 34);
 assert.equal(
   achievementBoard.payload.leaderboard[0].points,
   retro2006Win.payload.unlockedTeam.points
@@ -702,6 +730,7 @@ assert.equal(
     + spainChampion.payload.unlockedTeam.points
     + nauruRoundOf16.payload.unlockedTeam.points
     + premierLeagueWon.payload.unlockedTeam.points
+    + ipswichSurvived.payload.unlockedTeam.points
     + uclRealChampion.payload.unlockedTeam.points
     + uclArsenalFinal.payload.unlockedTeam.points
     + uclCeljeTop24.payload.unlockedTeam.points,

@@ -1,6 +1,8 @@
 {
   "scripts": {
     "build": "node scripts/build-cloudflare.mjs",
+    "build:app": "node scripts/build-app-bundle.mjs",
+    "build:styles": "node scripts/build-style-bundle.mjs",
     "generate:legacy-data": "node scripts/generate-legacy-catalog.mjs",
     "generate:pl-squads": "node scripts/generate-pl-squads.mjs",
     "generate:ucl-squads": "node scripts/generate-ucl-squads.mjs",
