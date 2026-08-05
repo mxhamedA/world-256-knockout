@@ -9,7 +9,7 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const css = fs.readFileSync(path.join(root, "clean.css"), "utf8");
 
 assert.match(html, /id="retro1998AnnouncementModal"[\s\S]*World Cup 1998 is here[\s\S]*Play 1998 World Cup/);
-assert.match(html, /id="retroCopaAnnouncementModal"[\s\S]*Copa Am(?:é|&eacute;)rica 2024 is here[\s\S]*Play Copa Am(?:é|&eacute;)rica 2024/);
+assert.match(html, /id="retroCopaAnnouncementModal"[\s\S]*Copa Am(?:é|&eacute;)rica 2024 is coming soon[\s\S]*id="retroCopaAnnouncementAction"[^>]*disabled[\s\S]*Coming soon/);
 assert.doesNotMatch(html, /The UCL simulator is here/);
 assert.doesNotMatch(html, /data-open-tournament-theme/);
 assert.doesNotMatch(html, /class="tournament-theme-setting"/);

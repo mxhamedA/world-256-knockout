@@ -4,6 +4,12 @@ function renderRetroWorldCupMode() {
     render();
     return;
   }
+  if (Number(retroTournament.year) === 2024 && !RETRO_COPA_2024_PLAYABLE) {
+    retroTournament = null;
+    setAppModeUrl("home", { replace: true });
+    render();
+    return;
+  }
   activateRetroSimulatorState();
   const isEuros = Number(retroTournament.year) === 2016;
   const isCopa = Number(retroTournament.year) === 2024;
@@ -46,6 +52,12 @@ function startRetroWorldCup() {
   const year = selectedRetroTournamentYear();
   const isEuros = year === 2016;
   const isCopa = year === 2024;
+  if (isCopa && !RETRO_COPA_2024_PLAYABLE) {
+    showToast("Copa América 2024 is coming soon.");
+    setAppModeUrl("home", { replace: true });
+    render();
+    return;
+  }
   if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year)) {
     showToast(`The ${year} tournament is coming soon.`);
     return;

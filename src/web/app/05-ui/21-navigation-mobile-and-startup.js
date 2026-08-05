@@ -230,6 +230,7 @@ setRetroCompetition(Number(initialRetroYear) === 2016 ? "euros" : Number(initial
 if (
   initialAppMode === "retro"
   && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(initialRetroYear))
+  && (Number(initialRetroYear) !== 2024 || RETRO_COPA_2024_PLAYABLE)
   && !retroTournament
 ) {
   const routedYear = Number(initialRetroYear);

@@ -43,6 +43,8 @@ const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
 const RETRO_1998_ANNOUNCEMENT_KEY = "world-256-announcement-retro-1998-v1";
 const RETRO_COPA_2024_ANNOUNCEMENT_KEY = "world-256-announcement-copa-america-2024-v1";
+// Keep the finished dataset and engine available while the release UI remains gated.
+const RETRO_COPA_2024_PLAYABLE = false;
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -21076,8 +21078,9 @@ function setRetroCompetition(competition) {
         ? "Euros Simulator"
         : "WC Simulator";
   }
-  els.retroCopaComingSoon?.setAttribute("aria-hidden", "true");
-  if (els.retroCopaComingSoon) els.retroCopaComingSoon.hidden = true;
+  const copaComingSoon = isCopa && !RETRO_COPA_2024_PLAYABLE;
+  els.retroCopaComingSoon?.setAttribute("aria-hidden", String(!copaComingSoon));
+  if (els.retroCopaComingSoon) els.retroCopaComingSoon.hidden = !copaComingSoon;
   if (isCopa) {
     els.retroModeCard?.style.setProperty("--retro-accent", RETRO_COPA_2024.accent);
     els.retroModeCard?.style.setProperty("--retro-accent-text", RETRO_COPA_2024.accentText);
@@ -21206,12 +21209,12 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   const isEuros = selectedCompetition === "euros";
   const isCopa = selectedCompetition === "copa";
   const selectedYear = isCopa ? 2024 : isEuros ? RETRO_EURO_2016.year : year;
-  const playable = isEuros || isCopa || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear));
-  const hasTeamField = isCopa
+  const playable = !isCopa && (isEuros || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear)));
+  const hasTeamField = playable && (isCopa
     ? Boolean(RETRO_COPA_2024.teams.length)
     : isEuros
     ? Boolean(RETRO_EURO_2016.teams.length)
-    : Boolean(retroWorldCupMenuTeams(year).length);
+    : Boolean(retroWorldCupMenuTeams(year).length));
   const savedTournament = playable ? retroTournamentForYear(selectedYear) : null;
   const setupLocked = Boolean(savedTournament);
   document.querySelectorAll('[data-settings-scope="retro"]').forEach((group) => {
@@ -22735,6 +22738,12 @@ function renderRetroWorldCupMode() {
     render();
     return;
   }
+  if (Number(retroTournament.year) === 2024 && !RETRO_COPA_2024_PLAYABLE) {
+    retroTournament = null;
+    setAppModeUrl("home", { replace: true });
+    render();
+    return;
+  }
   activateRetroSimulatorState();
   const isEuros = Number(retroTournament.year) === 2016;
   const isCopa = Number(retroTournament.year) === 2024;
@@ -22777,6 +22786,12 @@ function startRetroWorldCup() {
   const year = selectedRetroTournamentYear();
   const isEuros = year === 2016;
   const isCopa = year === 2024;
+  if (isCopa && !RETRO_COPA_2024_PLAYABLE) {
+    showToast("Copa América 2024 is coming soon.");
+    setAppModeUrl("home", { replace: true });
+    render();
+    return;
+  }
   if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year)) {
     showToast(`The ${year} tournament is coming soon.`);
     return;
@@ -24983,6 +24998,7 @@ setRetroCompetition(Number(initialRetroYear) === 2016 ? "euros" : Number(initial
 if (
   initialAppMode === "retro"
   && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(initialRetroYear))
+  && (Number(initialRetroYear) !== 2024 || RETRO_COPA_2024_PLAYABLE)
   && !retroTournament
 ) {
   const routedYear = Number(initialRetroYear);

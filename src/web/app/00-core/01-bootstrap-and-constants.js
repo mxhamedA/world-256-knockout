@@ -42,6 +42,8 @@ const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
 const RETRO_1998_ANNOUNCEMENT_KEY = "world-256-announcement-retro-1998-v1";
 const RETRO_COPA_2024_ANNOUNCEMENT_KEY = "world-256-announcement-copa-america-2024-v1";
+// Keep the finished dataset and engine available while the release UI remains gated.
+const RETRO_COPA_2024_PLAYABLE = false;
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
