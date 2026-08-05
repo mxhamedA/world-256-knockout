@@ -12,7 +12,7 @@
       if (initialPath === "/ucl-simulator") {
         document.documentElement.classList.add("route-ucl-loading");
       }
-      if (["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(initialPath)) {
+      if (["/retro-98-world-cup", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(initialPath)) {
         document.documentElement.classList.add("route-retro-loading");
         if (initialPath === "/retro-06-world-cup") document.documentElement.classList.add("route-retro-2006-loading");
         if (initialPath === "/retro-22-world-cup") document.documentElement.classList.add("route-retro-2022-loading");
@@ -34,7 +34,7 @@
         if (pathname === "/ucl-simulator") {
           setTimeout(() => document.documentElement.classList.remove("route-ucl-loading"), 4000);
         }
-        const isRetroRoute = ["/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(pathname);
+        const isRetroRoute = ["/retro-98-world-cup", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(pathname);
         const clearRetroLoading = () => {
           document.documentElement.classList.remove("route-retro-loading", "route-retro-2006-loading", "route-retro-2022-loading");
           const appShell = document.getElementById("appShell");
@@ -310,6 +310,7 @@
                         <button type="button" data-retro-competition="copa" aria-pressed="false">Copa</button>
                       </div>
                       <div class="retro-year-switch" id="retroWorldCupYearSwitch" role="group" aria-label="World Cup year">
+                        <button class="retro-98-menu-button" type="button" data-retro-year="1998" aria-label="1998 World Cup" aria-pressed="false">1998</button>
                         <button type="button" data-retro-year="2002" aria-label="2002 World Cup, coming soon" aria-pressed="false">2002</button>
                         <button type="button" data-retro-year="2006" aria-pressed="false">2006</button>
                         <button type="button" data-retro-year="2010" aria-pressed="false">2010</button>
@@ -653,6 +654,7 @@
           <section class="achievement-progress-panel">
             <div class="achievement-year-tabs" role="tablist" aria-label="World Cup achievement year">
               <button type="button" role="tab" data-achievement-year="256" aria-selected="false">256 KO</button>
+              <button type="button" role="tab" data-achievement-year="1998" aria-selected="false">1998</button>
               <button type="button" role="tab" data-achievement-year="2002" aria-selected="false">2002</button>
               <button type="button" role="tab" data-achievement-year="2006" aria-selected="false">2006</button>
               <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
@@ -2183,22 +2185,22 @@
       </form>
     </dialog>
 
-    <dialog class="feature-announcement-modal feature-announcement-2002" id="retro2002AnnouncementModal">
+    <dialog class="feature-announcement-modal feature-announcement-1998" id="retro1998AnnouncementModal">
       <div class="feature-announcement-accent" aria-hidden="true">
-        <div class="feature-announcement-2002-visual">
-          <span class="feature-announcement-2002-glow"></span>
-          <img src="./assets/retro-2002/worldcup-2002-logo.png" alt="" />
-          <small>KOREA / JAPAN</small>
+        <div class="feature-announcement-1998-visual">
+          <span class="feature-announcement-1998-glow"></span>
+          <img src="./assets/retro-1998/france-98-logo.webp" alt="" />
+          <small>FRANCE 98</small>
         </div>
       </div>
       <div class="feature-announcement-content">
         <span class="feature-announcement-label">OUT NOW</span>
-        <h2>World Cup 2002 is here</h2>
-        <p>Take charge of any of the 32 original nations, play the real Korea/Japan fixtures and rewrite World Cup history.</p>
-        <button class="feature-announcement-button" id="retro2002AnnouncementAction" type="button">
-          Play 2002 World Cup <span aria-hidden="true">&rarr;</span>
+        <h2>World Cup 1998 is here</h2>
+        <p>Take charge of any of the 32 original nations, play the real France 98 fixtures and rewrite World Cup history.</p>
+        <button class="feature-announcement-button" id="retro1998AnnouncementAction" type="button">
+          Play 1998 World Cup <span aria-hidden="true">&rarr;</span>
         </button>
-        <button class="feature-announcement-dismiss" id="retro2002AnnouncementClose" type="button">Not now</button>
+        <button class="feature-announcement-dismiss" id="retro1998AnnouncementClose" type="button">Not now</button>
       </div>
     </dialog>
 
@@ -2314,6 +2316,7 @@
       </header>
       <div class="achievement-year-tabs" role="tablist" aria-label="World Cup achievement year">
         <button type="button" role="tab" data-achievement-year="256" aria-selected="false">256 KO</button>
+        <button type="button" role="tab" data-achievement-year="1998" aria-selected="false">1998</button>
         <button type="button" role="tab" data-achievement-year="2002" aria-selected="false">2002</button>
         <button type="button" role="tab" data-achievement-year="2006" aria-selected="false">2006</button>
         <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
@@ -2343,6 +2346,8 @@
     <script src="./retro-2002-schedule.js?v=retro-schedule-2002-1"></script>
     <script src="./retro-2006-squads.js?v=retro-squads-2006-1"></script>
     <script src="./retro-2006-schedule.js?v=retro-schedule-2006-1"></script>
+    <script src="./retro-1998-squads.js?v=retro-squads-1998-1"></script>
+    <script src="./retro-1998-schedule.js?v=retro-schedule-1998-1"></script>
     <script src="./retro-2010-squads.js?v=retro-squads-2010-1"></script>
     <script src="./retro-2010-schedule.js?v=retro-schedule-2010-1"></script>
     <script src="./retro-2014-squads.js?v=retro-squads-3"></script>

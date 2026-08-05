@@ -206,7 +206,7 @@
   function setProfileRoute(active = true, replace = false) {
     if (active && !profileRouteActive()) {
       const currentPath = `${window.location.pathname}${window.location.search}`;
-      profileReturnPath = /^\/(?:retro-(?:02|06|10|14|18|22)-world-cup|retro-euro-2016)(?:\?|$)/.test(currentPath) ? currentPath : "/";
+      profileReturnPath = /^\/(?:retro-(?:98|02|06|10|14|18|22)-world-cup|retro-euro-2016)(?:\?|$)/.test(currentPath) ? currentPath : "/";
     }
     const path = active ? "/profile" : profileReturnPath;
     window.history[replace ? "replaceState" : "pushState"]({ appMode: active ? "profile" : "home" }, "", path);
@@ -499,6 +499,7 @@
       "Serbia and Montenegro": "Serbia",
       "Turkey": "T\u00fcrkiye",
       "United States": "USA",
+      "Yugoslavia": "Serbia",
     };
     const sourceName = historicalAliases[teamName] || teamName;
     const team = (typeof TEAMS !== "undefined" ? TEAMS : []).find((candidate) => candidate.name === sourceName);
@@ -547,7 +548,7 @@
     const targets = {
       arsenal: [1, 2], "aston-villa": [4, 4], bournemouth: [8, 5], brentford: [8, 5],
       brighton: [6, 5], chelsea: [1, 3], "coventry-city": [17, 8],
-      "crystal-palace": [6, 5], everton: [8, 5], fulham: [8, 5], "hull-city": [10, 8],
+      "crystal-palace": [6, 5], everton: [8, 5], fulham: [8, 5], "hull-city": [17, 8],
       "ipswich-town": [10, 8], "leeds-united": [10, 7], liverpool: [1, 2],
       "manchester-city": [1, 2], "manchester-united": [1, 3], "newcastle-united": [4, 3],
       "nottingham-forest": [8, 5], sunderland: [10, 8], "tottenham-hotspur": [1, 4],
@@ -583,7 +584,7 @@
     if (key === "pl" || String(key).toLowerCase() === "pl") return "pl";
     if (key === "ucl" || String(key).toLowerCase() === "ucl") return "ucl";
     const year = Number(key);
-    return [256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
+    return [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) ? year : 2014;
   }
 
   function knockoutObjectiveForTeam(team, teamIndex = -1) {
@@ -612,6 +613,7 @@
     const theme = String(year);
     const labels = {
       256: "256-TEAM KNOCKOUT",
+      1998: "FRANCE 1998",
       2002: "KOREA/JAPAN 2002",
       2006: "GERMANY 2006",
       2010: "SOUTH AFRICA 2010",
@@ -845,7 +847,7 @@
 
   async function trackRetroTournament(tournament) {
     const year = Number(tournament?.year);
-    if (![2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
+    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
     const champion = completedRetroChampion(tournament);
     const phase = tournament.phase === "complete" && champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
@@ -1042,7 +1044,7 @@
   }
 
   function renderProfileAchievements() {
-    const years = [256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"];
+    const years = [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
@@ -1172,7 +1174,7 @@
   function renderAchievementLeaderboard() {
     if (!elements.homeAchievementLeaderboard) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
-    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 547);
+    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 611);
     const visibleEntries = entries.slice(0, 10);
     elements.homeAchievementLeaderboard.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
@@ -1203,7 +1205,7 @@
   function renderAchievementLeaderboardModal() {
     if (!elements.homeAchievementModalTable) return;
     const entries = achievementLeaderboardPayload?.leaderboard || [];
-    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 547);
+    const totalAchievements = Number(achievementLeaderboardPayload?.totalAchievements || 611);
     elements.homeAchievementModalTable.innerHTML = entries.length ? `
       <div class="home-achievement-row is-heading">
         <span>Rank</span><span>Player</span><span>Points</span><span>Unlocked</span>
@@ -1280,7 +1282,7 @@
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([256, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"].map(async (year) => {
+        await Promise.all([256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026, "pl", "ucl"].map(async (year) => {
           try {
             achievementPayloads.set(year, await challengeApi(achievementEndpoint(year)));
           } catch {

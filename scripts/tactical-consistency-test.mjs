@@ -98,13 +98,35 @@ assert.match(
 );
 assert.match(
   managedRetroBoostSource,
-  /managementAttack = isKoreaJapan2002 \? 0\.025 : 0/,
-  "The Korea/Japan 2002 management attack boost should remain modest and bounded.",
+  /managementAttack = isFrance1998 \? 0\.018 : isKoreaJapan2002 \? 0\.025 : 0/,
+  "France 1998 and Korea/Japan 2002 management attack boosts should remain modest and bounded.",
 );
 assert.match(
   managedRetroBoostSource,
-  /managementDefence = isKoreaJapan2002 \? 0\.015 : 0/,
-  "The Korea/Japan 2002 management defence boost should remain modest and bounded.",
+  /managementDefence = isFrance1998 \? 0\.012 : isKoreaJapan2002 \? 0\.015 : 0/,
+  "France 1998 and Korea/Japan 2002 management defence boosts should remain modest and bounded.",
+);
+const france98BoostContext = {
+  retroTournament: { year: 1998, managedTeam: "France" },
+  isRetroSimulatorState: () => true,
+};
+vm.createContext(france98BoostContext);
+vm.runInContext(`${managedRetroBoostSource}\nglobalThis.boost = managedRetroTacticalBoost;`, france98BoostContext);
+const france98BaselineBoost = france98BoostContext.boost(0, 0);
+assert.equal(france98BaselineBoost.attack, 1.018, "Managing a France 1998 team needs the small baseline attack boost.");
+assert.equal(france98BaselineBoost.defence, 0.988, "Managing a France 1998 team needs the small baseline defensive boost.");
+const france98UnderdogEdge = france98BoostContext.boost(18, 0.2);
+assert.ok(france98UnderdogEdge.attack > france98BaselineBoost.attack, "A correct tactic must provide more attacking leverage to a major underdog.");
+assert.ok(france98UnderdogEdge.defence < france98BaselineBoost.defence, "A correct tactic must provide more defensive leverage to a major underdog.");
+assert.match(
+  functionSource("simulateMatch"),
+  /const controlledSide = state\.spectateTeamId === match\.homeId[\s\S]*if \(controlledSide\)[\s\S]*applyControlledTacticalMatchup/,
+  "Tactical assistance must only enter the simulation through the selected managed side.",
+);
+assert.match(
+  functionSource("retroManagedTeamSheetImpact"),
+  /team\?\.name !== retroTournament\?\.managedTeam/,
+  "Team-sheet assistance must reject every team except the chosen managed team.",
 );
 assert.match(html, /app\.js\?v=[a-z0-9-]+/);
 

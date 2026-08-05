@@ -11007,7 +11007,7 @@ const RETRO_2014_SQUADS = Object.freeze({
         "height": 192,
         "caps": 77,
         "internationalGoals": 9,
-        "overall": 69,
+        "overall": 76,
         "preferredFoot": "right",
         "attributes": {
           "pace": 76,

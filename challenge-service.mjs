@@ -26,6 +26,16 @@ const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
 const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
 const PL_ASSET_PACK_ID = "pl-26-27";
 const UCL_ASSET_PACK_ID = "ucl-26-27";
+const RETRO_1998_TEAMS = Object.freeze([
+  "Brazil", "Scotland", "Morocco", "Norway",
+  "Italy", "Chile", "Cameroon", "Austria",
+  "France", "South Africa", "Saudi Arabia", "Denmark",
+  "Spain", "Bulgaria", "Nigeria", "Paraguay",
+  "Netherlands", "Belgium", "South Korea", "Mexico",
+  "Germany", "USA", "Yugoslavia", "Iran",
+  "Romania", "Colombia", "England", "Tunisia",
+  "Argentina", "Japan", "Jamaica", "Croatia",
+]);
 const RETRO_2002_TEAMS = Object.freeze([
   "France", "Senegal", "Uruguay", "Denmark",
   "Spain", "Slovenia", "Paraguay", "South Africa",
@@ -105,6 +115,12 @@ const RETRO_2026_TEAMS = Object.freeze([
   "Switzerland", "Tunisia", "Türkiye", "Uruguay", "USA", "Uzbekistan",
 ]);
 const RETRO_TEAM_RATINGS = Object.freeze({
+  1998: Object.freeze([
+    92, 76, 77, 81, 89, 79, 76, 76,
+    88, 73, 70, 80, 86, 75, 80, 78,
+    88, 77, 71, 79, 85, 73, 81, 72,
+    82, 79, 85, 71, 88, 70, 67, 82,
+  ]),
   2002: Object.freeze([
     90, 77, 76, 81, 86, 72, 78, 72,
     91, 81, 67, 73, 78, 74, 80, 87,
@@ -153,7 +169,7 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     71, 76, 81, 74, 91, 78, 86, 71, 79, 80, 84, 70,
   ]),
 });
-const RETRO_ACHIEVEMENT_YEARS = Object.freeze([2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026]);
+const RETRO_ACHIEVEMENT_YEARS = Object.freeze([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
 const UCL_KEY = "ucl";
@@ -170,7 +186,7 @@ const PREMIER_LEAGUE_ACHIEVEMENTS = Object.freeze([
   ["crystal-palace", "Crystal Palace", 6, 5],
   ["everton", "Everton", 8, 5],
   ["fulham", "Fulham", 8, 5],
-  ["hull-city", "Hull City", 10, 8],
+  ["hull-city", "Hull City", 17, 8],
   ["ipswich-town", "Ipswich Town", 10, 8],
   ["leeds-united", "Leeds United", 10, 7],
   ["liverpool", "Liverpool", 1, 2],
@@ -1088,6 +1104,16 @@ async function dashboard(request, env) {
 }
 
 function retroAchievementConfig(year) {
+  if (Number(year) === 1998) {
+    return {
+      year: 1998,
+      table: "retro_1998_attempts",
+      seedColumn: "seed",
+      teams: RETRO_1998_TEAMS,
+      id: "retro-1998-world-tour",
+      title: "France 1998 World Tour",
+    };
+  }
   if (Number(year) === 2002) {
     return {
       year: 2002,
@@ -1509,6 +1535,10 @@ async function achievementLeaderboard(request, env) {
       FROM accounts
     `).all(),
     env.CHALLENGE_DB.prepare(`
+      SELECT account_id, 1998 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_1998_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
       SELECT account_id, 2002 AS year, team_name, 1 AS champion,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2002_attempts WHERE won = 1 GROUP BY account_id, team_name
@@ -2014,7 +2044,7 @@ export async function handleChallengeRequest(request, env, url) {
       );
       return await uclAchievement(request, env, achievementAccount);
     }
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(2002|2006|2010|2014|2016|2018|2022|2026)$/);
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(1998|2002|2006|2010|2014|2016|2018|2022|2026)$/);
     if (retroAchievementMatch) {
       const achievementAccount = await authenticatedAccount(
         request,

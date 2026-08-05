@@ -52,6 +52,19 @@ assert.match(app, /customFlag \|\| imageOverride \|\| `https:\/\/flagcdn\.com/,
   "Snapshots must load uploaded custom-team flags before falling back to a country flag.");
 assert.match(app, /customFlag: true|customFlag/);
 assert.match(app, /function createCustomMatchState\(\)/);
+assert.match(
+  app,
+  /const officialRetroSquad = Boolean\(team\.retroWorldCup && team\.playerProfiles\?\.length\)/,
+  "Retro teams in Custom Match must keep their historical player profiles.",
+);
+assert.match(
+  app,
+  /const canonicalCurrentTeam = team\.retroWorldCup \|\| historicalTournament/,
+  "Retro teams must never be replaced by the same country's current 2026 roster.",
+);
+assert.match(app, /function customMatchScriptMarkup\(home, away\)/, "Standalone Custom Match must expose a result scripting panel.");
+assert.match(app, /customMatchSetup\.script \? \{ \"0:0\": structuredClone\(customMatchSetup\.script\) \} : \{\}/, "Standalone match scripts must flow into the simulation state.");
+assert.match(app, /customMatchSetup\.script = \{[\s\S]{0,260}homeGoals,[\s\S]{0,260}awayGoals,[\s\S]{0,260}goals/s, "Standalone scripts must persist scores and goal events.");
 assert.match(app, /data-custom-action="randomise-groups"/, "Custom group builders must expose a randomise action.");
 assert.match(app, /function randomisedCustomGroupSlots\(selectedIds, random = Math\.random\)/);
 assert.match(app, /showToast\("Groups randomised\."\)/);

@@ -3095,6 +3095,322 @@ body::after,
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.015);
 }
 
+/* France 1998 final cascade lock: prevents later shared retro palettes leaking in. */
+body.retro-mode-active.retro-1998-active {
+  color: #f7faff !important;
+  background-color: #020d29;
+  background-image: url("./assets/retro-1998/france-98-bg-desktop.png");
+}
+
+body.retro-mode-active.retro-1998-active :is(
+  .retro-tournament-screen, #mainContent, .app-shell, .match-screen
+) { color: #f7faff; }
+
+body.retro-mode-active.retro-1998-active :is(
+  .retro-group-table, .retro-fixture, .retro-match-stage, .retro-golden-boot,
+  .retro-active-fixtures, .retro-squad-view, .retro-lineups-view, .retro-manager-lineup,
+  #mainContent .panel, #mainContent .fixture-card, #mainContent .match-card,
+  #mainContent .round-board, #mainContent .match-stage, #mainContent .match-analysis,
+  #mainContent .penalty-stage, #mainContent .match-penalty-overlay,
+  #mainContent .champion-stage, .retro-champion, .modal, .confirm-modal, .snapshot-modal
+) {
+  border-color: rgba(220, 229, 239, 0.58);
+  color: #f7faff;
+  background-color: #041c4b;
+  background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.15), transparent 24%), linear-gradient(180deg, rgba(31, 69, 126, 0.92), rgba(4, 25, 67, 0.96));
+}
+
+body.retro-mode-active.retro-1998-active :is(.primary-button, #mainContent .primary-button, .snapshot-actions button) {
+  border-color: #dce5ef;
+  color: #ffffff;
+  background: linear-gradient(180deg, #2c69c3 0%, #0b3f96 48%, #052964 51%, #082f73 100%);
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button,
+body.retro-mode-active.retro-1998-active #mainContent :is(.shootout-summary-row i, .penalty-score-dot, .kick-result-marker) {
+  border-radius: 50% !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-connector::before, .bracket-connector::after, .bracket-line) {
+  border-color: rgba(220, 229, 239, 0.68);
+  background: rgba(220, 229, 239, 0.68);
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-card, .bracket-match, .third-place-card) {
+  border-color: rgba(220, 229, 239, 0.58);
+  background: linear-gradient(160deg, rgba(52, 96, 158, 0.94), rgba(4, 28, 75, 0.97));
+}
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active {
+    background-image: url("./assets/retro-1998/france-98-bg-portrait.png");
+  }
+}
+
+/* France 1998 release polish: keep this at the end of the stylesheet so the
+   shared Brazil-era tournament widgets cannot leak their geometry or colour. */
+body.retro-mode-active.retro-1998-active .retro-tournament-heading {
+  display: block !important;
+  min-height: 112px !important;
+  height: 112px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  pointer-events: none !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-heading > * {
+  display: none !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-heading::before,
+body.retro-mode-active.retro-1998-active .retro-tournament-heading::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .retro-scorers,
+body.retro-mode-active.retro-1998-active #mainContent .retro-no-scorers,
+body.retro-mode-active.retro-1998-active #mainContent :is(.team-match-events, .event-side) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: var(--r98-cream) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-scorers {
+  padding: 0 !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-scorers :is(span, b) {
+  border: 0 !important;
+  color: var(--r98-cream) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .team-filter-control .search-result-popover,
+body.retro-mode-active.retro-1998-active #mainContent .round-board .search-result-popover {
+  border: 1px solid rgba(226,229,191,.62) !important;
+  border-radius: 4px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, rgba(70,94,72,.98), rgba(24,45,32,.99)) !important;
+  box-shadow: 0 14px 30px rgba(18,29,20,.44) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .search-result-popover :is(button, .search-result) {
+  border-color: rgba(226,229,191,.24) !important;
+  border-radius: 2px !important;
+  color: var(--r98-cream) !important;
+  background: rgba(32,55,38,.92) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .search-result-popover :is(button, .search-result):is(:hover, :focus-visible, .selected) {
+  color: #fff !important;
+  background: linear-gradient(90deg, var(--r98-burgundy), var(--r98-pink)) !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .standard-match-tactics {
+  border: 1px solid rgba(226,229,191,.58) !important;
+  border-radius: 5px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(104,129,99,.96), rgba(31,56,39,.98) 64%, rgba(95,51,76,.82)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 8px 10px 0 rgba(31,63,105,.22) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-match-tactics > span {
+  border-color: rgba(226,229,191,.38) !important;
+  color: var(--r98-cream) !important;
+  background: rgba(24,45,32,.8) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons {
+  border: 1px solid rgba(226,229,191,.34) !important;
+  border-radius: 3px !important;
+  background: rgba(24,45,32,.68) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons button {
+  border: 1px solid rgba(226,229,191,.28) !important;
+  border-radius: 2px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, #668268, #314f3a) !important;
+  box-shadow: none !important;
+  clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons button:is(:hover, :focus-visible) {
+  background: linear-gradient(180deg, #7f987b, #48634d) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons button.active {
+  border-color: rgba(255,236,225,.8) !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #e24872, var(--r98-pink)) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-match-tactics > small {
+  border-color: rgba(226,229,191,.3) !important;
+  color: var(--r98-muted) !important;
+  background: rgba(95,51,76,.44) !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-commentary-view, .match-commentary-feed, .commentary-bar, .commentary-feed, .live-commentary, .match-commentary) {
+  border-color: rgba(226,229,191,.48) !important;
+  border-radius: 4px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, rgba(24,45,32,.97), rgba(95,51,76,.86)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed .commentary-line {
+  border-color: rgba(226,229,191,.22) !important;
+  color: var(--r98-cream) !important;
+  background: rgba(32,55,38,.76) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed .commentary-line span {
+  color: var(--r98-cream) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed.is-major,
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed.is-goal {
+  border-color: rgba(244,244,223,.72) !important;
+  background: linear-gradient(90deg, var(--r98-burgundy), #8c3556) !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-stage, .match-penalty-overlay) {
+  border: 1px solid rgba(226,229,191,.62) !important;
+  border-radius: 6px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(101,128,99,.96), rgba(24,45,32,.98) 68%, rgba(95,51,76,.72)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 0 15px 34px rgba(18,29,20,.35) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-scene, .match-penalty-scene, .standard-penalty-scene, .retro-manager-pitch, .lineup-pitch, .match-2d-pitch) {
+  border-color: rgba(244,244,223,.72) !important;
+  border-radius: 4px !important;
+  background-color: #31583e !important;
+  background-image:
+    linear-gradient(rgba(244,244,223,.11), rgba(244,244,223,.03)),
+    repeating-linear-gradient(90deg, #31583e 0 12.5%, #3f6949 12.5% 25%) !important;
+  box-shadow: inset 0 0 0 1px rgba(244,244,223,.12), inset 0 18px 28px rgba(255,255,255,.06) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-goal, .penalty-net, .retro-pitch-halfway, .retro-pitch-circle, .match-2d-halfway, .match-2d-circle, .match-2d-box) {
+  border-color: rgba(244,244,223,.72) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+  padding: 0 !important;
+  border: 2px solid var(--r98-cream) !important;
+  border-radius: 50% !important;
+  background: rgba(217,55,99,.18) !important;
+  box-shadow: 0 0 0 4px rgba(244,244,223,.08) !important;
+  clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-marks i, .shootout-summary-row i, .penalty-score-dot, .kick-result-marker) {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  border-radius: 50% !important;
+}
+
+body.retro-mode-active.retro-1998-active .snapshot-modal,
+body.retro-mode-active.retro-1998-active .snapshot-modal form {
+  border-color: rgba(226,229,191,.66) !important;
+  border-radius: 6px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(145deg, rgba(112,141,106,.98), rgba(24,45,32,.99) 66%, rgba(95,51,76,.94)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.34), 0 28px 68px rgba(18,29,20,.58) !important;
+}
+body.retro-mode-active.retro-1998-active .snapshot-modal :is(.snapshot-modal-head, .snapshot-preview) {
+  border-color: rgba(226,229,191,.48) !important;
+  border-radius: 4px !important;
+  color: var(--r98-cream) !important;
+  background: rgba(24,45,32,.84) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.14) !important;
+}
+body.retro-mode-active.retro-1998-active .snapshot-modal :is(h2, .section-kicker) { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active .snapshot-modal .snapshot-actions button,
+body.retro-mode-active.retro-1998-active .snapshot-modal .close-modal {
+  border-radius: 3px !important;
+  clip-path: none !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage {
+  border: 1px solid rgba(226,229,191,.68) !important;
+  border-radius: 6px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(145deg, rgba(122,148,116,.97), rgba(35,61,42,.98) 54%, rgba(95,51,76,.94)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.38), 0 18px 44px rgba(18,29,20,.42) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage :is(.champion-content, .champion-podium, .champion-award, .champion-extra-awards > *, .prediction-result) {
+  border-color: rgba(226,229,191,.44) !important;
+  border-radius: 4px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(76,106,79,.88), rgba(24,45,32,.94)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.2) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage :is(h2, .trophy, .champion-award strong, .champion-award span) {
+  color: var(--r98-cream) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage :is(p, small) { color: var(--r98-muted) !important; }
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award-mark { color: var(--r98-pink) !important; }
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.round-heading, .round-title, .bracket-round-heading, .bracket-round-title, .bracket-round-header, .bracket-header, .bracket-column > h3) {
+  border-color: rgba(226,229,191,.48) !important;
+  border-radius: 0 !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, #314f3a, var(--r98-burgundy) 78%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-card, .bracket-match, .third-place-card) {
+  border-radius: 4px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(92,119,91,.94), rgba(24,45,32,.98)) !important;
+}
+
+body.retro-mode-active.retro-1998-active :is(
+  .retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes,
+  .utility-button, .retro-view-tabs button, #mainContent button, .snapshot-modal button,
+  .confirm-modal button, .champion-actions button
+) {
+  border-radius: 3px !important;
+  clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(
+  .retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage,
+  .fixture-grid, .retro-manager-lineup, .retro-match-lineups-panel
+) {
+  border-radius: 6px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(
+  .retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage,
+  .fixture-grid, .standard-match-tactics
+)::before,
+body.retro-mode-active.retro-1998-active #mainContent :is(
+  .retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage,
+  .fixture-grid, .standard-match-tactics
+)::after {
+  content: none !important;
+  display: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button,
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-marks i, .shootout-summary-row i, .penalty-score-dot, .kick-result-marker) {
+  border-radius: 50% !important;
+}
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active .retro-tournament-heading {
+    min-height: 84px !important;
+    height: 84px !important;
+    margin: 0 !important;
+  }
+  body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    min-height: 26px !important;
+  }
+}
+
 .brand-mark {
   background: #5f8cff;
 }
@@ -4060,6 +4376,311 @@ body.retro-mode-active.retro-euro-2016-active :is(
   color: var(--e16-white);
   background: linear-gradient(145deg, rgba(6, 74, 146, 0.99), rgba(2, 17, 58, 0.99));
   box-shadow: 0 24px 70px rgba(0, 7, 35, 0.68);
+}
+
+/* France 1998 — isolated glossy late-1990s presentation */
+body.retro-mode-active.retro-1998-active {
+  --retro-98-blue: #0b3f96;
+  --retro-98-deep: #041c4b;
+  --retro-98-navy: #020d29;
+  --retro-98-red: #c92f4f;
+  --retro-98-silver: #dce5ef;
+  --retro-98-chrome: #91a5bb;
+  --retro-98-white: #f7faff;
+  --retro-98-muted: #bdcce0;
+  --retro-accent: var(--retro-98-blue);
+  color: var(--retro-98-white);
+  background: var(--retro-98-navy) url("./assets/retro-1998/france-98-bg-desktop.png") center top / cover fixed no-repeat;
+}
+
+.retro-1998-active .retro-tournament-screen {
+  color: var(--retro-98-white);
+  background: linear-gradient(180deg, rgba(2, 13, 41, 0.18), rgba(2, 13, 41, 0.72));
+}
+
+.retro-1998-active :is(.retro-screen-header, .retro-tournament-heading, .retro-view-tabs, .retro-filter-row) {
+  border-color: rgba(220, 229, 239, 0.54);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(148, 172, 201, 0.06) 34%, rgba(3, 25, 70, 0.86) 36%),
+    rgba(4, 28, 75, 0.78);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.7), inset 0 -1px rgba(6, 18, 46, 0.8), 0 12px 28px rgba(0, 5, 22, 0.28);
+  backdrop-filter: blur(8px) saturate(1.08);
+}
+
+.retro-1998-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button) {
+  border: 1px solid rgba(220, 229, 239, 0.62);
+  border-radius: 7px;
+  color: var(--retro-98-white);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(111, 137, 169, 0.1) 40%, rgba(4, 28, 75, 0.82) 43%);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.58), 0 4px 12px rgba(0, 5, 22, 0.28);
+}
+
+.retro-1998-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button):hover {
+  border-color: #ffffff;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(52, 93, 156, 0.3) 42%, rgba(9, 53, 131, 0.94) 45%);
+}
+
+.retro-1998-active :is(.primary-button, .retro-screen-brand .brand-mark, #retroDonateButton, .snapshot-actions button) {
+  border: 1px solid #b7c8dc;
+  border-radius: 7px;
+  color: #ffffff;
+  background: linear-gradient(180deg, #2c69c3 0%, #0b3f96 48%, #052964 51%, #082f73 100%);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.62), inset 0 -1px rgba(0, 8, 33, 0.84), 0 5px 0 #021a43, 0 9px 20px rgba(0, 5, 22, 0.28);
+  text-shadow: 0 1px 1px rgba(0, 7, 28, 0.82);
+}
+
+.retro-1998-active :is(.primary-button, .snapshot-actions button):hover:not(:disabled) {
+  border-color: #ffffff;
+  background: linear-gradient(180deg, #417bd2, #1050b4 48%, #07357c 51%, #0b438f);
+}
+
+.retro-1998-active :is(.primary-button, .secondary-button, button):focus-visible,
+[data-achievement-theme="1998"] button:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.92);
+  outline-offset: 2px;
+}
+
+.retro-1998-active :is(button, input, select):disabled {
+  filter: saturate(0.35);
+  opacity: 0.58;
+}
+
+.retro-1998-active :is(
+  .retro-group-table, .retro-fixture, .retro-match-stage, .retro-golden-boot,
+  .retro-active-fixtures, .retro-squad-panel, .retro-lineup-panel,
+  #mainContent .fixture-card, #mainContent .match-card, #mainContent .bracket-card,
+  #mainContent .tactics-panel, #mainContent .lineup-panel, #mainContent .bench-panel,
+  #mainContent .team-match-events, #mainContent .live-match-card,
+  .modal, .confirm-modal, .snapshot-modal
+) {
+  border: 1px solid rgba(220, 229, 239, 0.58);
+  border-radius: 9px;
+  color: var(--retro-98-white);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.15), transparent 24%),
+    linear-gradient(180deg, rgba(31, 69, 126, 0.88), rgba(4, 25, 67, 0.91));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.45), inset 0 -1px rgba(0, 8, 33, 0.72), 0 14px 34px rgba(0, 4, 20, 0.28);
+  backdrop-filter: blur(7px) saturate(1.08);
+}
+
+.retro-1998-active :is(.retro-group-table h2, .retro-section-heading, #mainContent .round-title, #mainContent .round-heading) {
+  border-color: rgba(220, 229, 239, 0.58);
+  color: var(--retro-98-white);
+  background: linear-gradient(90deg, #082f73, rgba(18, 72, 151, 0.92) 70%, rgba(201, 47, 79, 0.82));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.38), inset 0 -1px rgba(0, 8, 33, 0.72);
+}
+
+.retro-1998-active :is(.retro-table-head, .retro-table-row, .retro-match-schedule, .retro-fixture-details, .match-meta, .fixture-meta) {
+  border-color: rgba(202, 217, 234, 0.24);
+  color: var(--retro-98-muted);
+}
+
+.retro-1998-active .retro-table-row.qualified {
+  border-left-color: #d7e3f0;
+  background: linear-gradient(90deg, rgba(36, 88, 165, 0.42), rgba(7, 37, 91, 0.24));
+}
+
+.retro-1998-active :is(.retro-view-tabs button, .retro-filter-row button, .retro-group-controls button, .retro-squad-tabs button) {
+  border-radius: 6px;
+  color: var(--retro-98-muted);
+  background: rgba(2, 20, 57, 0.62);
+}
+
+.retro-1998-active :is(.retro-view-tabs button, .retro-filter-row button, .retro-group-controls button, .retro-squad-tabs button):hover,
+.retro-1998-active :is(.retro-view-tabs button.active, .retro-filter-row button.active, .retro-group-controls button.active, .retro-squad-tabs button.active) {
+  color: #ffffff;
+  background: linear-gradient(180deg, #326ec5, #0b3f96 52%, #06275f 54%);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.48);
+}
+
+.retro-1998-active :is(input, select, .team-filter-control, .search-control) {
+  border: 1px solid rgba(220, 229, 239, 0.58);
+  border-radius: 6px;
+  color: #ffffff;
+  background: rgba(2, 17, 49, 0.84);
+  box-shadow: inset 0 1px 5px rgba(0, 4, 20, 0.56), 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.retro-1998-active :is(input, select)::placeholder { color: #9fb2ca; }
+
+.retro-1998-active :is(.prediction-option, .team-filter-option, .retro-squad-player):hover {
+  border-color: #dce5ef;
+  background: linear-gradient(90deg, rgba(18, 76, 166, 0.84), rgba(154, 42, 72, 0.48));
+}
+
+.retro-1998-active #mainContent :is(.commentary-bar, .commentary-feed, .live-commentary, .match-commentary) {
+  border-color: rgba(220, 229, 239, 0.48);
+  color: var(--retro-98-white);
+  background: linear-gradient(90deg, rgba(4, 24, 64, 0.94), rgba(11, 63, 150, 0.82), rgba(109, 28, 58, 0.78));
+}
+
+.retro-1998-active #mainContent :is(.tactic-button, .formation-option, .lineup-tab):hover,
+.retro-1998-active #mainContent :is(.tactic-button.active, .formation-option.active, .lineup-tab.active) {
+  border-color: #e5edf6;
+  color: #ffffff;
+  background: linear-gradient(180deg, #326ec5, #0b3f96 54%, #06275f 56%);
+}
+
+.retro-1998-active #mainContent :is(.lineup-pitch, .penalty-pitch, .match-penalty-pitch, .online-penalty-pitch) {
+  border: 2px solid rgba(225, 235, 246, 0.76);
+  border-radius: 10px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.06)),
+    repeating-linear-gradient(90deg, #0a3d86 0 12.5%, #0c468f 12.5% 25%);
+  box-shadow: inset 0 0 40px rgba(0, 8, 33, 0.62), 0 12px 28px rgba(0, 4, 20, 0.3);
+}
+
+.retro-1998-active #mainContent :is(.player-card, .bench-player, .lineup-player) {
+  border-color: rgba(224, 233, 244, 0.62);
+  border-radius: 7px;
+  color: #ffffff;
+  background: linear-gradient(160deg, rgba(70, 112, 174, 0.94), rgba(5, 34, 83, 0.96));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.42), 0 5px 13px rgba(0, 5, 22, 0.3);
+}
+
+.retro-1998-active #mainContent :is(.penalty-stage, .match-penalty-overlay) {
+  border: 1px solid rgba(220, 229, 239, 0.7);
+  border-radius: 10px;
+  color: #ffffff;
+  background: linear-gradient(145deg, rgba(42, 84, 147, 0.96), rgba(3, 22, 62, 0.97));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.5), 0 18px 42px rgba(0, 4, 20, 0.42);
+}
+
+.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button {
+  width: 46px;
+  height: 46px;
+  border: 3px solid #f3f7fc;
+  border-radius: 50% !important;
+  background: rgba(201, 47, 79, 0.36);
+  box-shadow: 0 0 0 5px rgba(11, 63, 150, 0.34), 0 6px 16px rgba(0, 4, 20, 0.36);
+}
+
+.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button:hover {
+  background: rgba(201, 47, 79, 0.78);
+}
+
+.retro-1998-active #mainContent :is(.shootout-summary-row i, .penalty-score-dot, .kick-result-marker) {
+  border-radius: 50% !important;
+}
+
+.retro-1998-active #mainContent .shootout-summary-row i { background: #dce5ef; }
+.retro-1998-active #mainContent .shootout-summary-row.missed i { background: #c92f4f; }
+
+.retro-1998-active #mainContent .bracket-connector::before,
+.retro-1998-active #mainContent .bracket-connector::after,
+.retro-1998-active #mainContent .bracket-line {
+  border-color: rgba(220, 229, 239, 0.64);
+  background: rgba(220, 229, 239, 0.64);
+}
+
+.retro-1998-active #mainContent :is(.bracket-view, .bracket-scroll) {
+  overflow-x: auto;
+  scrollbar-color: #8da6c1 #031b48;
+}
+
+.retro-1998-active #mainContent .champion-stage,
+.retro-1998-active .retro-champion {
+  border: 1px solid rgba(235, 242, 249, 0.72);
+  border-radius: 11px;
+  color: #ffffff;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(255, 255, 255, 0.2), transparent 28%),
+    linear-gradient(145deg, rgba(13, 67, 151, 0.96), rgba(3, 22, 62, 0.97) 62%, rgba(102, 26, 55, 0.94));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.58), 0 22px 54px rgba(0, 4, 20, 0.42);
+}
+
+.retro-1998-active #mainContent .champion-stage :is(.award-card, .final-standing, .champion-action-card) {
+  border: 1px solid rgba(220, 229, 239, 0.52);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(88, 124, 171, 0.5), rgba(2, 21, 59, 0.76));
+}
+
+.retro-1998-active :is(.snapshot-modal, .confirm-modal)::backdrop,
+.feature-announcement-1998::backdrop,
+[data-achievement-theme="1998"]::backdrop {
+  background: rgba(1, 7, 24, 0.74);
+  backdrop-filter: blur(5px);
+}
+
+[data-achievement-theme="1998"] {
+  --achievement-accent: #2e6cc5;
+  --achievement-accent-strong: #0b3f96;
+  --achievement-ink: #f7faff;
+  --achievement-muted: #bdcce0;
+  border-color: rgba(220, 229, 239, 0.62);
+  color: #f7faff;
+  background: linear-gradient(145deg, rgba(29, 72, 135, 0.98), rgba(3, 20, 57, 0.98) 68%, rgba(105, 27, 57, 0.96));
+}
+
+[data-achievement-theme="1998"] :is(.achievement-country, .achievement-progress-track, .achievement-year-tabs) {
+  border-color: rgba(220, 229, 239, 0.42);
+  background: rgba(2, 18, 53, 0.68);
+}
+
+[data-achievement-theme="1998"] .achievement-country.is-complete,
+[data-achievement-theme="1998"] .achievement-year-tabs button[aria-selected="true"] {
+  color: #ffffff;
+  background: linear-gradient(135deg, #1c5bb7, #0b3f96 64%, #a62b4b);
+}
+
+[data-achievement-theme="1998"] .achievement-progress-track span { background: linear-gradient(90deg, #2f71d0, #c92f4f); }
+
+.achievement-unlock-banner[data-achievement-theme="1998"],
+.achievement-unlock-modal[data-achievement-theme="1998"] {
+  border-color: #dce5ef;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0b3f96, #041c4b 68%, #9c2949);
+}
+
+.feature-announcement-1998 {
+  overflow: hidden;
+  border: 1px solid rgba(230, 238, 247, 0.72);
+  border-radius: 11px;
+  color: #f7faff;
+  background: linear-gradient(145deg, rgba(32, 81, 151, 0.98), rgba(3, 20, 57, 0.99) 62%, rgba(119, 29, 61, 0.98));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.58), 0 28px 70px rgba(0, 4, 20, 0.52);
+}
+
+.feature-announcement-1998 .feature-announcement-accent {
+  background: url("./assets/retro-1998/france-98-bg-desktop.png") center / cover no-repeat;
+}
+
+.feature-announcement-1998-visual { position: relative; display: grid; place-items: center; min-height: 210px; }
+.feature-announcement-1998-visual img { position: relative; z-index: 1; width: min(210px, 68%); filter: drop-shadow(0 12px 18px rgba(0, 5, 22, 0.48)); }
+.feature-announcement-1998-visual small { position: relative; z-index: 1; color: #dce5ef; letter-spacing: 0.28em; }
+.feature-announcement-1998-glow { position: absolute; width: 230px; height: 130px; border-radius: 50%; background: rgba(255, 255, 255, 0.18); filter: blur(30px); }
+.feature-announcement-1998 .feature-announcement-button { border-color: #dce5ef; color: #fff; background: linear-gradient(180deg, #2f71d0, #0b3f96 54%, #052863 56%); }
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] {
+  border-color: rgba(220, 229, 239, 0.5);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.13), transparent 25%),
+    url("./assets/retro-1998/france-98-bg-desktop.png") center / cover no-repeat;
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] :is(.retro-competition-switch, .retro-year-switch, .landing-segmented) {
+  border-color: rgba(220, 229, 239, 0.38);
+  background: rgba(2, 18, 53, 0.78);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-start-button:not(:disabled),
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-year-switch button.active {
+  border-color: #dce5ef;
+  color: #ffffff;
+  background: linear-gradient(180deg, #2f71d0, #0b3f96 54%, #052863 56%);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.52), 0 5px 0 #021a43;
+}
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active {
+    background-image: url("./assets/retro-1998/france-98-bg-portrait.png");
+    background-attachment: scroll;
+  }
+
+  .retro-1998-active :is(.retro-screen-header, .retro-tournament-heading) { border-radius: 0 0 9px 9px; }
+  .retro-1998-active #mainContent :is(.bracket-view, .bracket-scroll) { padding-bottom: 12px; }
+  .retro-1998-active #mainContent .champion-stage { grid-template-columns: 1fr; }
+  .feature-announcement-1998 .feature-announcement-accent { background-image: url("./assets/retro-1998/france-98-bg-portrait.png"); }
 }
 
 body.retro-mode-active.retro-euro-2016-active :is(
@@ -14547,7 +15168,7 @@ body.retro-2018-active .achievement-unlock-action {
 .retro-year-switch {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   width: 100%;
   gap: 3px;
   padding: 3px;
@@ -14576,6 +15197,22 @@ body.retro-2018-active .achievement-unlock-action {
 .retro-year-switch button.active {
   color: var(--retro-accent-text);
   background: var(--retro-accent);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-year-switch button.retro-98-menu-button {
+  border: 1px solid rgba(194, 222, 187, 0.42);
+  color: #f2f5df;
+  background: linear-gradient(180deg, #5b7855, #2d4434);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2), 0 2px 0 rgba(21, 35, 26, 0.72);
+  text-shadow: 0 1px rgba(17, 31, 22, 0.7);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-year-switch button.retro-98-menu-button:hover,
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-year-switch button.retro-98-menu-button.active {
+  border-color: #d8e5bf;
+  color: #ffffff;
+  background: linear-gradient(180deg, #769a6c, #3b5941);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.32), 0 2px 0 rgba(21, 35, 26, 0.72), 0 0 14px rgba(178, 216, 157, 0.2);
 }
 
 .landing-settings {
@@ -30659,7 +31296,7 @@ body.standard-mode-active .retro-third-place-playoff {
 .achievement-year-tabs,
 #retroAchievementsModal[data-achievement-theme] .achievement-year-tabs {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   width: 100%;
   gap: 4px;
   padding: 4px;
@@ -33075,6 +33712,66 @@ body.retro-mode-active.retro-euro-2016-active :is(
   box-shadow: inset 0 1px rgba(255, 255, 255, 0.09), 0 22px 56px rgba(0, 0, 0, 0.28);
 }
 
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] {
+  isolation: isolate;
+  border-color: rgba(226, 229, 191, 0.42);
+  background:
+    linear-gradient(132deg, transparent 0 18%, rgba(237, 235, 199, 0.14) 18.5% 19.2%, transparent 19.7% 70%, rgba(229, 209, 215, 0.2) 70.5% 71.2%, transparent 71.7%),
+    radial-gradient(circle at 86% 18%, rgba(218, 55, 96, 0.8), transparent 20%),
+    radial-gradient(circle at 14% 88%, rgba(45, 83, 58, 0.7), transparent 34%),
+    linear-gradient(145deg, #a4b9a0 0%, #526d56 42%, #314637 72%, #5f334c 100%);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25), 0 22px 56px rgba(20, 28, 21, 0.34);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"]::after {
+  position: absolute;
+  z-index: -1;
+  right: -64px;
+  bottom: -104px;
+  width: 240px;
+  height: 240px;
+  border: 22px solid rgba(226, 226, 188, 0.12);
+  border-radius: 50%;
+  content: "";
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-mode-heading > img {
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(30, 35, 24, 0.42));
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] :is(
+  h3,
+  .landing-setting-heading > span,
+  .landing-team-setting > span
+) {
+  color: #f4f4df;
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] :is(
+  .retro-competition-switch,
+  .retro-year-switch,
+  .landing-segmented
+) {
+  border-color: rgba(228, 236, 207, 0.3);
+  background: rgba(32, 55, 38, 0.72);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.mode-card-retro[data-retro-competition="wc"][data-retro-edition="1998"] .retro-start-button:disabled {
+  border-color: #e8e9c7;
+  color: #2a4934;
+  background: #e8e9c7;
+  box-shadow: 0 6px 0 #91506a;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
 .mode-card-retro[data-retro-competition="wc"][data-retro-edition="2002"] {
   background:
     radial-gradient(circle at 86% 19%, rgba(255, 210, 31, 0.95) 0 7px, transparent 8px),
@@ -33114,6 +33811,41 @@ body.retro-mode-active.retro-euro-2016-active :is(
   box-shadow: 0 6px 0 #a80f24;
   cursor: not-allowed;
   opacity: 1;
+}
+
+/* Keep the 1998/2002 menu artwork from escaping its card while an information
+   panel is open, without clipping the panel itself. */
+.mode-card-retro[data-retro-competition="wc"]:is(
+  [data-retro-edition="1998"],
+  [data-retro-edition="2002"]
+):has(.landing-setting-info[open])::after {
+  opacity: 0;
+}
+
+.mode-card-retro[data-retro-competition="wc"]:is(
+  [data-retro-edition="1998"],
+  [data-retro-edition="2002"]
+) .retro-landing-settings:has(.landing-setting-info[open]) {
+  z-index: 20;
+}
+
+.mode-card-retro[data-retro-competition="wc"]:is(
+  [data-retro-edition="1998"],
+  [data-retro-edition="2002"]
+) .landing-setting:has(.landing-setting-info[open]) {
+  position: relative;
+  z-index: 21;
+}
+
+.mode-card-retro[data-retro-competition="wc"]:is(
+  [data-retro-edition="1998"],
+  [data-retro-edition="2002"]
+) .landing-setting-info,
+.mode-card-retro[data-retro-competition="wc"]:is(
+  [data-retro-edition="1998"],
+  [data-retro-edition="2002"]
+) .landing-setting-info[open] {
+  position: static;
 }
 
 .mode-card-retro[data-retro-competition="wc"][data-retro-edition="2006"] {
@@ -39634,4 +40366,755 @@ body.retro-mode-active.retro-2002-active .retro-table-row.qualified::before {
   .retro-2002-active :is(button, .retro-fixture, .retro-pitch-player):active {
     transform: none;
   }
+}
+
+/* France 1998 absolute final palette guard. */
+body.retro-mode-active.retro-1998-active {
+  color: #f7faff;
+  background: #020d29 url("./assets/retro-1998/france-98-bg-desktop.png") center top / cover fixed no-repeat !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen {
+  color: #f7faff !important;
+  background: linear-gradient(180deg, rgba(2,13,41,.12), rgba(2,13,41,.7)) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-screen-header {
+  border-color: rgba(220,229,239,.62) !important;
+  background: linear-gradient(180deg, rgba(45,91,157,.94), rgba(4,28,75,.97)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.5), 0 8px 22px rgba(0,5,22,.34) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-heading {
+  min-height: 0;
+  padding: 16px 22px;
+  border: 1px solid rgba(220,229,239,.58) !important;
+  border-radius: 8px;
+  color: #f7faff !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(31,69,126,.86) 32%, rgba(4,25,67,.94) 34%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.52), 0 10px 25px rgba(0,5,22,.3) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-heading > * {
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-heading :is(h1, strong) { color: #f7faff !important; }
+body.retro-mode-active.retro-1998-active .retro-tournament-heading :is(span, #retroTournamentKicker) { color: #dce5ef !important; }
+body.retro-mode-active.retro-1998-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button) {
+  border: 1px solid rgba(220,229,239,.68) !important;
+  border-radius: 7px !important;
+  color: #f7faff !important;
+  background: linear-gradient(180deg, rgba(75,119,180,.96), rgba(8,47,115,.98)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.5), 0 4px 10px rgba(0,5,22,.28) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-view-tabs {
+  border: 1px solid rgba(220,229,239,.58) !important;
+  background: linear-gradient(180deg, rgba(58,99,158,.9), rgba(4,28,75,.94)) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-view-tabs {
+  border: 1px solid rgba(220,229,239,.58) !important;
+  background: linear-gradient(180deg, rgba(58,99,158,.9), rgba(4,28,75,.94)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.4), 0 9px 20px rgba(0,5,22,.3) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-view-tabs button {
+  border-color: rgba(220,229,239,.38) !important;
+  color: #bdcce0 !important;
+  background: rgba(2,20,57,.82) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-view-tabs button.active {
+  color: #fff !important;
+  background: linear-gradient(180deg, #326ec5, #0b3f96 52%, #06275f 54%) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-view-tabs button {
+  border-color: rgba(220,229,239,.38) !important;
+  color: #bdcce0 !important;
+  background: rgba(2,20,57,.82) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-view-tabs button.active {
+  border-color: #dce5ef !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #326ec5, #0b3f96 52%, #06275f 54%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.48), 0 4px 0 #021a43 !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.stage-column, .match-stage, .match-analysis, .retro-match-lineups-panel, .retro-lineup-side, .fixture-grid, .fixture) {
+  border-color: rgba(220,229,239,.58) !important;
+  color: #f7faff !important;
+  background-color: #041c4b !important;
+  background-image: linear-gradient(145deg, rgba(255,255,255,.12), transparent 23%), linear-gradient(180deg, rgba(31,69,126,.94), rgba(4,25,67,.97)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.36), 0 10px 25px rgba(0,5,22,.28) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-lineup-side header {
+  color: #f7faff !important;
+  background: linear-gradient(90deg, #082f73, #0b3f96, #722344) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.live-control, .secondary-button, .text-button, .history-round-button, .stage-action) {
+  border-color: rgba(220,229,239,.62) !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #2c69c3, #0b3f96 50%, #052964 52%) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.search, .team-filter-search, .team-filter-control, input, select) {
+  border-color: rgba(220,229,239,.58) !important;
+  color: #f7faff !important;
+  background: rgba(2,17,49,.9) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.stage-round, .match-analysis-heading, .retro-standard-fixture-meta, summary, small, em) {
+  color: #bdcce0 !important;
+  border-color: rgba(220,229,239,.3) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-live-table-row.qualification-place {
+  border-color: rgba(220,229,239,.42) !important;
+  background: linear-gradient(90deg, rgba(44,105,195,.34), rgba(4,28,75,.28)) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.primary-button, .secondary-button, .live-control, .stage-action, .text-button, .history-round-button) {
+  border-color: rgba(220,229,239,.64) !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #2c69c3, #0b3f96 50%, #052964 52%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.5), 0 5px 0 #021a43 !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.stage-round, .match-analysis-heading, .retro-standard-fixture-meta, .stage-topline span, summary, small, em, b) {
+  color: #bdcce0 !important;
+  border-color: rgba(220,229,239,.3) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.team-filter-search, .search) {
+  box-shadow: inset 0 1px 5px rgba(0,4,20,.56), 0 3px 0 #021a43 !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.retro-lineup-side, .country-flag, .retro-lineup-flag) {
+  box-shadow: inset 0 1px rgba(255,255,255,.25), 0 7px 18px rgba(0,5,22,.26) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.stage-column, .match-stage, .fixture-grid)::before,
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.stage-column, .match-stage, .fixture-grid)::after {
+  border-color: rgba(220,229,239,.58) !important;
+  background: linear-gradient(90deg, #0b3f96, #c92f4f) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.retro-view-tabs, .match-analysis, .round-board)::before,
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.retro-view-tabs, .match-analysis, .round-board)::after {
+  border-color: rgba(220,229,239,.58) !important;
+  background: linear-gradient(90deg, #0b3f96, #c92f4f) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-back-to-modes span { color: #f7faff !important; }
+body.retro-mode-active.retro-1998-active #retroAchievementsModal[data-achievement-theme="1998"],
+#retroAchievementsModal[data-achievement-theme="1998"] {
+  border: 1px solid rgba(220,229,239,.68) !important;
+  border-top: 5px solid #c92f4f !important;
+  border-radius: 10px !important;
+  color: #f7faff !important;
+  background: linear-gradient(145deg, rgba(35,78,141,.99), rgba(3,20,57,.99) 66%, rgba(105,27,57,.98)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.52), 0 28px 70px rgba(0,4,20,.6) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] :is(h2, strong, b) { color: #f7faff !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] :is(p, small, .achievements-mode-label) { color: #bdcce0 !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] #retroAchievementProgressLabel { color: #dce5ef !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] :is(.achievement-year-tabs, .retro-achievements-progress) {
+  border-color: rgba(220,229,239,.42) !important;
+  background: rgba(2,18,53,.78) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.16) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-year-tabs button {
+  border-radius: 4px !important;
+  color: #bdcce0 !important;
+  background: rgba(7,35,80,.72) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-year-tabs button[aria-selected="true"] {
+  color: #fff !important;
+  background: linear-gradient(180deg, #326ec5, #0b3f96 54%, #06275f 56%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.46) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-country {
+  border: 1px solid rgba(220,229,239,.32) !important;
+  border-radius: 7px !important;
+  color: #f7faff !important;
+  background: linear-gradient(155deg, rgba(58,99,158,.78), rgba(4,28,75,.92)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.24) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-country small { color: #bdcce0 !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-country b { color: #dce5ef !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-progress-track {
+  border-color: rgba(220,229,239,.42) !important;
+  background: #021531 !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-progress-track span { background: linear-gradient(90deg, #2f71d0, #c92f4f) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] :is(.retro-achievements-close, .achievement-login-button) {
+  border-color: #dce5ef !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #2f71d0, #0b3f96 54%, #052863 56%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.48), 0 4px 0 #021a43 !important;
+}
+body.retro-mode-active.retro-1998-active :is(.retro-group-table, .retro-fixture, .retro-squad-view, .retro-lineups-view, .retro-manager-lineup, #mainContent .panel, #mainContent .match-stage, #mainContent .round-board, #mainContent .penalty-stage, #mainContent .match-penalty-overlay, #mainContent .champion-stage, .retro-champion, .modal, .confirm-modal, .snapshot-modal) {
+  border-color: rgba(220, 229, 239, .58);
+  color: #f7faff;
+  background-color: #041c4b;
+  background-image: linear-gradient(145deg, rgba(255,255,255,.15), transparent 24%), linear-gradient(180deg, rgba(31,69,126,.92), rgba(4,25,67,.96));
+}
+body.retro-mode-active.retro-1998-active :is(.primary-button, #mainContent .primary-button, .snapshot-actions button) {
+  border-color: #dce5ef;
+  color: #fff;
+  background: linear-gradient(180deg, #2c69c3, #0b3f96 48%, #052964 51%, #082f73);
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button,
+body.retro-mode-active.retro-1998-active #mainContent :is(.shootout-summary-row i, .penalty-score-dot, .kick-result-marker) { border-radius: 50% !important; }
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-connector::before, .bracket-connector::after, .bracket-line) { border-color: rgba(220,229,239,.68); background: rgba(220,229,239,.68); }
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-card, .bracket-match, .third-place-card) { border-color: rgba(220,229,239,.58); background: linear-gradient(160deg, rgba(52,96,158,.94), rgba(4,28,75,.97)); }
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active {
+    background-image: url("./assets/retro-1998/france-98-bg-portrait.png") !important;
+    background-attachment: scroll !important;
+  }
+  body.retro-mode-active.retro-1998-active .retro-tournament-heading { margin-top: 36px; }
+}
+
+/* France 1998 menu-parity visual lock: the playable mode extends the sage,
+   burgundy and cream presentation used by its selector card. */
+body.retro-mode-active.retro-1998-active {
+  --r98-sage-light: #a4b9a0;
+  --r98-sage: #526d56;
+  --r98-forest: #314637;
+  --r98-forest-deep: #182d20;
+  --r98-burgundy: #5f334c;
+  --r98-pink: #d93763;
+  --r98-cream: #f4f4df;
+  --r98-muted: #d4dcc8;
+  --r98-chrome: #e2e5bf;
+  color: var(--r98-cream) !important;
+  background-color: var(--r98-forest-deep) !important;
+  background-image:
+    linear-gradient(132deg, transparent 0 18%, rgba(237,235,199,.14) 18.5% 19.2%, transparent 19.7% 70%, rgba(229,209,215,.2) 70.5% 71.2%, transparent 71.7%),
+    radial-gradient(circle at 86% 18%, rgba(217,55,99,.7), transparent 20%),
+    radial-gradient(circle at 14% 88%, rgba(45,83,58,.72), transparent 34%),
+    linear-gradient(145deg, #a4b9a0 0%, #526d56 42%, #314637 72%, #5f334c 100%) !important;
+  background-attachment: fixed !important;
+  background-position: center top !important;
+  background-size: cover !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen {
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, rgba(24,45,32,.08), rgba(19,41,29,.56)) !important;
+}
+body.retro-mode-active.retro-1998-active :is(.retro-screen-header, .retro-tournament-heading, .retro-view-tabs) {
+  border-color: rgba(226,229,191,.58) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.16), rgba(76,105,79,.82) 34%, rgba(32,55,38,.9) 36%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.45), inset 0 -1px rgba(17,35,23,.75), 0 10px 26px rgba(20,28,21,.3) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-heading :is(h1, strong) { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active .retro-tournament-heading :is(span, #retroTournamentKicker) { color: var(--r98-muted) !important; }
+body.retro-mode-active.retro-1998-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button) {
+  border-color: rgba(226,229,191,.64) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, rgba(139,164,134,.88), rgba(45,68,52,.96)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.42), 0 4px 0 rgba(22,39,27,.7) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-view-tabs button {
+  border-color: rgba(226,229,191,.28) !important;
+  color: var(--r98-muted) !important;
+  background: rgba(32,55,38,.74) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.1) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-view-tabs button.active,
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.tactic-button.active, .lineup-tab.active, .formation-option.active) {
+  border-color: rgba(255,236,225,.76) !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #e24872, var(--r98-pink) 52%, #a92b50 54%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.42), 0 4px 0 #713047 !important;
+}
+body.retro-mode-active.retro-1998-active :is(
+  .retro-group-table, .retro-fixture, .retro-squad-view, .retro-lineups-view,
+  .retro-manager-lineup, .stage-column, .match-stage, .match-analysis,
+  .retro-match-lineups-panel, .retro-lineup-side, .fixture-grid, .fixture,
+  .round-board, .retro-champion, .modal, .confirm-modal, .snapshot-modal,
+  #mainContent .panel, #mainContent .penalty-stage, #mainContent .match-penalty-overlay,
+  #mainContent .champion-stage, #mainContent .bracket-card, #mainContent .bracket-match
+) {
+  border-color: rgba(226,229,191,.48) !important;
+  color: var(--r98-cream) !important;
+  background-color: rgba(32,55,38,.9) !important;
+  background-image: linear-gradient(145deg, rgba(255,255,255,.13), transparent 23%), linear-gradient(180deg, rgba(82,109,86,.88), rgba(24,45,32,.95)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 0 12px 28px rgba(20,28,21,.3) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.primary-button, .play-button) {
+  border-color: var(--r98-chrome) !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #4168ad, #173f87 50%, #102f69 52%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.48), 0 5px 0 #0b234f !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen :is(.secondary-button, .live-control, .stage-action, .text-button, .history-round-button) {
+  border-color: rgba(226,229,191,.58) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, #708d6a, #314f3a 52%, #243c2b 54%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.32), 0 4px 0 #182d20 !important;
+}
+body.retro-mode-active.retro-1998-active :is(.team-filter-search, .search, .team-filter-control, input, select) {
+  border-color: rgba(226,229,191,.52) !important;
+  color: var(--r98-cream) !important;
+  background: rgba(18,36,25,.88) !important;
+  box-shadow: inset 0 2px 5px rgba(7,18,10,.4), 0 3px 0 rgba(26,46,31,.7) !important;
+}
+body.retro-mode-active.retro-1998-active :is(.stage-round, .match-analysis-heading, .retro-standard-fixture-meta, .stage-topline span, summary, small, em, b) {
+  color: var(--r98-muted) !important;
+  border-color: rgba(226,229,191,.24) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-live-table-row.qualification-place {
+  border-color: rgba(226,229,191,.38) !important;
+  background: linear-gradient(90deg, rgba(217,55,99,.24), rgba(49,70,55,.26)) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-live-table-row.qualification-place {
+  border-color: rgba(226,229,191,.38) !important;
+  background: linear-gradient(90deg, rgba(217,55,99,.24), rgba(49,70,55,.26)) !important;
+}
+body.retro-mode-active.retro-1998-active :is(.retro-live-table-head, .retro-live-table-row) {
+  border-color: rgba(226,229,191,.3) !important;
+  color: var(--r98-cream) !important;
+  background: rgba(24,45,32,.72) !important;
+}
+body.retro-mode-active.retro-1998-active .retro-live-table-head {
+  background: linear-gradient(90deg, rgba(49,79,58,.94), rgba(95,51,76,.82)) !important;
+}
+body.retro-mode-active.retro-1998-active :is(.retro-live-table-row em, .retro-live-table-row strong, .retro-live-table-head span) { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active .stage-column .panel-heading {
+  border-color: rgba(226,229,191,.3) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, rgba(49,79,58,.94), rgba(95,51,76,.78)) !important;
+}
+body.retro-mode-active.retro-1998-active .stage-column .panel-heading span { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active #mainContent :is(.secondary-button, .live-control, .stage-action, .text-button, .history-round-button) {
+  border-color: rgba(226,229,191,.58) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, #708d6a, #314f3a 52%, #243c2b 54%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.32), 0 4px 0 #182d20 !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.team-filter-search, .search, .team-filter-control, input, select) {
+  border-color: rgba(226,229,191,.52) !important;
+  color: var(--r98-cream) !important;
+  background: rgba(18,36,25,.88) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.round-board h3, .fixture-grid-heading, .stage-round, .match-analysis-heading) { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active .retro-lineup-side header,
+body.retro-mode-active.retro-1998-active :is(.retro-group-table h2, .round-heading, .round-title) {
+  color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, #314f3a, #5f334c 72%, #d93763) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.lineup-pitch, .penalty-pitch, .match-penalty-pitch, .online-penalty-pitch) {
+  border-color: rgba(244,244,223,.7) !important;
+  background: repeating-linear-gradient(90deg, #375b40 0 12.5%, #42684a 12.5% 25%) !important;
+}
+body.retro-mode-active.retro-1998-active :is(.retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage, .fixture-grid)::before,
+body.retro-mode-active.retro-1998-active :is(.retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage, .fixture-grid)::after {
+  border-color: rgba(226,229,191,.5) !important;
+  background: linear-gradient(90deg, var(--r98-pink), var(--r98-burgundy)) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-connector::before, .bracket-connector::after, .bracket-line) {
+  border-color: rgba(226,229,191,.68) !important;
+  background: rgba(226,229,191,.68) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] {
+  border-color: rgba(226,229,191,.68) !important;
+  border-top-color: var(--r98-pink) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(145deg, rgba(92,119,91,.99), rgba(24,45,32,.99) 66%, rgba(95,51,76,.98)) !important;
+}
+#retroAchievementsModal[data-achievement-theme="1998"] :is(.achievement-year-tabs, .retro-achievements-progress) { background: rgba(24,45,32,.78) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-year-tabs button { color: var(--r98-muted) !important; background: rgba(32,55,38,.76) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-year-tabs button[aria-selected="true"] { color: #fff !important; background: linear-gradient(180deg, #e24872, #d93763 54%, #a92b50 56%) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-country { border-color: rgba(226,229,191,.34) !important; background: linear-gradient(155deg, rgba(91,120,85,.78), rgba(32,55,38,.92)) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] :is(h2, strong) { color: var(--r98-cream) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] :is(p, small, b, #retroAchievementProgressLabel) { color: var(--r98-muted) !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-progress-track { background: #182d20 !important; }
+#retroAchievementsModal[data-achievement-theme="1998"] .achievement-progress-track span { background: linear-gradient(90deg, var(--r98-pink), var(--r98-burgundy)) !important; }
+.feature-announcement-1998 {
+  border-color: rgba(226,229,191,.68) !important;
+  color: var(--r98-cream, #f4f4df) !important;
+  background: linear-gradient(145deg, rgba(112,141,106,.98), rgba(24,45,32,.99) 62%, rgba(95,51,76,.98)) !important;
+}
+.feature-announcement-1998 .feature-announcement-accent {
+  background:
+    linear-gradient(132deg, transparent 0 30%, rgba(237,235,199,.17) 30.5% 31.5%, transparent 32%),
+    radial-gradient(circle at 84% 16%, rgba(217,55,99,.64), transparent 32%),
+    linear-gradient(145deg, #a4b9a0, #526d56 54%, #5f334c) !important;
+}
+.feature-announcement-1998 .feature-announcement-button { border-color: #f4f4df !important; background: linear-gradient(180deg, #4168ad, #173f87 52%, #102f69 54%) !important; }
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active {
+    background-image:
+      linear-gradient(128deg, transparent 0 22%, rgba(237,235,199,.13) 22.5% 23.4%, transparent 24% 68%, rgba(229,209,215,.18) 68.5% 69.4%, transparent 70%),
+      radial-gradient(circle at 84% 12%, rgba(217,55,99,.62), transparent 24%),
+      linear-gradient(155deg, #a4b9a0 0%, #526d56 35%, #314637 68%, #5f334c 100%) !important;
+    background-attachment: scroll !important;
+  }
+}
+
+/* France 1998 final component guard. */
+body.retro-mode-active.retro-1998-active .retro-tournament-screen .retro-tournament-heading {
+  display: block !important; height: 112px !important; min-height: 112px !important;
+  margin: 0 !important; padding: 0 !important; border: 0 !important; border-radius: 0 !important;
+  background: transparent !important; background-image: none !important; box-shadow: none !important;
+  backdrop-filter: none !important; pointer-events: none !important;
+}
+body.retro-mode-active.retro-1998-active .retro-tournament-screen .retro-tournament-heading > * { display: none !important; }
+body.retro-mode-active.retro-1998-active .retro-tournament-screen .retro-tournament-heading::before,
+body.retro-mode-active.retro-1998-active .retro-tournament-screen .retro-tournament-heading::after { content: none !important; display: none !important; }
+
+body.retro-mode-active.retro-1998-active #mainContent .retro-scorers,
+body.retro-mode-active.retro-1998-active #mainContent .retro-scorers :is(span, b),
+body.retro-mode-active.retro-1998-active #mainContent .retro-no-scorers,
+body.retro-mode-active.retro-1998-active #mainContent :is(.team-match-events, .event-side) {
+  border: 0 !important; border-radius: 0 !important; color: var(--r98-cream) !important;
+  background: transparent !important; background-image: none !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .retro-scorers { padding: 0 !important; }
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.team-filter-control, .round-board) .search-result-popover {
+  border: 1px solid rgba(226,229,191,.62) !important; border-radius: 4px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, rgba(70,94,72,.98), rgba(24,45,32,.99)) !important;
+  box-shadow: 0 14px 30px rgba(18,29,20,.44) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .search-result-popover :is(button, .search-result) {
+  border-color: rgba(226,229,191,.24) !important; border-radius: 2px !important;
+  color: var(--r98-cream) !important; background: rgba(32,55,38,.92) !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .search-result-popover :is(button, .search-result):is(:hover, :focus-visible, .selected) {
+  color: #fff !important; background: linear-gradient(90deg, var(--r98-burgundy), var(--r98-pink)) !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .standard-match-tactics {
+  border: 1px solid rgba(226,229,191,.58) !important; border-radius: 5px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(104,129,99,.96), rgba(31,56,39,.98) 64%, rgba(95,51,76,.82)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 8px 10px 0 rgba(31,63,105,.22) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-match-tactics > span {
+  border-color: rgba(226,229,191,.38) !important; color: var(--r98-cream) !important; background: rgba(24,45,32,.8) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons {
+  border: 1px solid rgba(226,229,191,.34) !important; border-radius: 3px !important;
+  background: rgba(24,45,32,.68) !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons button {
+  border: 1px solid rgba(226,229,191,.28) !important; border-radius: 2px !important;
+  color: var(--r98-cream) !important; background: linear-gradient(180deg, #668268, #314f3a) !important;
+  box-shadow: none !important; clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons button:is(:hover, :focus-visible) { background: linear-gradient(180deg, #7f987b, #48634d) !important; }
+body.retro-mode-active.retro-1998-active #mainContent .standard-tactic-buttons button.active {
+  border-color: rgba(255,236,225,.8) !important; color: #fff !important;
+  background: linear-gradient(180deg, #e24872, var(--r98-pink)) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .standard-match-tactics > small {
+  border-color: rgba(226,229,191,.3) !important; color: var(--r98-muted) !important; background: rgba(95,51,76,.44) !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-commentary-view, .match-commentary-feed, .commentary-bar, .commentary-feed, .live-commentary, .match-commentary) {
+  border-color: rgba(226,229,191,.48) !important; border-radius: 4px !important; color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, rgba(24,45,32,.97), rgba(95,51,76,.86)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed .commentary-line {
+  border-color: rgba(226,229,191,.22) !important; color: var(--r98-cream) !important; background: rgba(32,55,38,.76) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed .commentary-line span { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active #mainContent .match-commentary-feed:is(.is-major, .is-goal) {
+  border-color: rgba(244,244,223,.72) !important; background: linear-gradient(90deg, var(--r98-burgundy), #8c3556) !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-stage, .match-penalty-overlay) {
+  border: 1px solid rgba(226,229,191,.62) !important; border-radius: 6px !important; color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(101,128,99,.96), rgba(24,45,32,.98) 68%, rgba(95,51,76,.72)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 0 15px 34px rgba(18,29,20,.35) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-scene, .match-penalty-scene, .standard-penalty-scene, .retro-manager-pitch, .lineup-pitch, .match-2d-pitch) {
+  border-color: rgba(244,244,223,.72) !important; border-radius: 4px !important; background-color: #31583e !important;
+  background-image: linear-gradient(rgba(244,244,223,.11), rgba(244,244,223,.03)), repeating-linear-gradient(90deg, #31583e 0 12.5%, #3f6949 12.5% 25%) !important;
+  box-shadow: inset 0 0 0 1px rgba(244,244,223,.12), inset 0 18px 28px rgba(255,255,255,.06) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-goal, .penalty-net, .retro-pitch-halfway, .retro-pitch-circle, .match-2d-halfway, .match-2d-circle, .match-2d-box) { border-color: rgba(244,244,223,.72) !important; }
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button {
+  width: 30px !important; height: 30px !important; min-width: 30px !important; min-height: 30px !important; padding: 0 !important;
+  border: 2px solid var(--r98-cream) !important; border-radius: 50% !important;
+  background: rgba(217,55,99,.18) !important; box-shadow: 0 0 0 4px rgba(244,244,223,.08) !important; clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-marks i, .shootout-summary-row i, .penalty-score-dot, .kick-result-marker) {
+  width: 18px !important; height: 18px !important; min-width: 18px !important; min-height: 18px !important; border-radius: 50% !important;
+}
+
+body.retro-mode-active.retro-1998-active .snapshot-modal,
+body.retro-mode-active.retro-1998-active .snapshot-modal form {
+  border-color: rgba(226,229,191,.66) !important; border-radius: 6px !important; color: var(--r98-cream) !important;
+  background: linear-gradient(145deg, rgba(112,141,106,.98), rgba(24,45,32,.99) 66%, rgba(95,51,76,.94)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.34), 0 28px 68px rgba(18,29,20,.58) !important;
+}
+body.retro-mode-active.retro-1998-active .snapshot-modal :is(.snapshot-modal-head, .snapshot-preview) {
+  border-color: rgba(226,229,191,.48) !important; border-radius: 4px !important; color: var(--r98-cream) !important;
+  background: rgba(24,45,32,.84) !important; box-shadow: inset 0 1px rgba(255,255,255,.14) !important;
+}
+body.retro-mode-active.retro-1998-active .snapshot-modal :is(h2, .section-kicker) { color: var(--r98-cream) !important; }
+
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage {
+  border: 1px solid rgba(226,229,191,.68) !important; border-radius: 6px !important; color: var(--r98-cream) !important;
+  background: linear-gradient(145deg, rgba(122,148,116,.97), rgba(35,61,42,.98) 54%, rgba(95,51,76,.94)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.38), 0 18px 44px rgba(18,29,20,.42) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage :is(.champion-content, .champion-podium, .champion-award, .champion-extra-awards > *, .prediction-result) {
+  border-color: rgba(226,229,191,.44) !important; border-radius: 4px !important; color: var(--r98-cream) !important;
+  background: linear-gradient(150deg, rgba(76,106,79,.88), rgba(24,45,32,.94)) !important; box-shadow: inset 0 1px rgba(255,255,255,.2) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage :is(h2, .trophy, .champion-award strong, .champion-award span) { color: var(--r98-cream) !important; }
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage :is(p, small) { color: var(--r98-muted) !important; }
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award-mark { color: var(--r98-pink) !important; }
+
+body.retro-mode-active.retro-1998-active #mainContent :is(.round-heading, .round-title, .bracket-round-heading, .bracket-round-title, .bracket-round-header, .bracket-header, .bracket-column > h3) {
+  border-color: rgba(226,229,191,.48) !important; border-radius: 0 !important; color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, #314f3a, var(--r98-burgundy) 78%) !important; box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-card, .bracket-match, .third-place-card) {
+  border-radius: 4px !important; color: var(--r98-cream) !important; background: linear-gradient(150deg, rgba(92,119,91,.94), rgba(24,45,32,.98)) !important;
+}
+
+body.retro-mode-active.retro-1998-active :is(.retro-screen-back, .retro-screen-restart, .retro-screen-action, .retro-back-to-modes, .utility-button, .retro-view-tabs button, #mainContent button, .snapshot-modal button, .confirm-modal button, .champion-actions button) {
+  border-radius: 3px !important; clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active .retro-view-tabs {
+  border-radius: 6px !important;
+  clip-path: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent :is(.retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage, .fixture-grid, .retro-manager-lineup, .retro-match-lineups-panel) { border-radius: 6px !important; }
+body.retro-mode-active.retro-1998-active #mainContent :is(.retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage, .fixture-grid, .standard-match-tactics)::before,
+body.retro-mode-active.retro-1998-active #mainContent :is(.retro-view-tabs, .match-analysis, .round-board, .stage-column, .match-stage, .fixture-grid, .standard-match-tactics)::after { content: none !important; display: none !important; }
+body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button,
+body.retro-mode-active.retro-1998-active #mainContent :is(.penalty-marks i, .shootout-summary-row i, .penalty-score-dot, .kick-result-marker) { border-radius: 50% !important; }
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active .retro-tournament-screen .retro-tournament-heading { height: 84px !important; min-height: 84px !important; margin: 0 !important; }
+  body.retro-mode-active.retro-1998-active #mainContent :is(.match-penalty-targets, .standard-penalty-targets) button {
+    width: 26px !important; height: 26px !important; min-width: 26px !important; min-height: 26px !important;
+  }
+}
+
+/* France 1998 finals, bracket and share-card correction pass. */
+body.retro-mode-active.retro-1998-active #mainContent .team-match-events {
+  overflow: visible !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .team-match-events.away .shootout-summary {
+  width: calc(100% - 8px) !important;
+  margin-right: 8px !important;
+  overflow: visible !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .team-match-events.away .shootout-summary-row {
+  grid-template-columns: minmax(0, 1fr) 18px !important;
+  padding-right: 2px !important;
+  overflow: visible !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .team-match-events.away .shootout-summary-row i {
+  justify-self: center !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .bracket-heads {
+  min-height: 42px !important;
+  border: 1px solid rgba(226,229,191,.56) !important;
+  border-radius: 3px 3px 0 0 !important;
+  color: var(--r98-cream) !important;
+  background:
+    linear-gradient(105deg, rgba(255,255,255,.11), transparent 28%),
+    linear-gradient(90deg, #314f3a 0%, #526d56 46%, #5f334c 100%) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 0 5px 14px rgba(18,29,20,.24) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .bracket-heads span {
+  color: var(--r98-cream) !important;
+  text-shadow: 0 1px rgba(18,29,20,.7) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .fixture.bracket-fixture,
+body.retro-mode-active.retro-1998-active #mainContent .retro-third-place-card .fixture {
+  border: 1px solid rgba(226,229,191,.48) !important;
+  border-radius: 3px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(155deg, rgba(103,132,100,.96), rgba(24,45,32,.98)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.24), 0 5px 12px rgba(18,29,20,.28) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .bracket-fixture .fixture-team {
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .bracket-connector::before,
+body.retro-mode-active.retro-1998-active #mainContent .bracket-connector::after {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .bracket-connector::before {
+  border: 0 !important;
+  border-top: 1px solid rgba(244,244,223,.58) !important;
+  border-right: 1px solid rgba(244,244,223,.58) !important;
+  border-bottom: 1px solid rgba(244,244,223,.58) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .bracket-connector::after,
+body.retro-mode-active.retro-1998-active #mainContent .bracket-fixture[data-connects="true"]::after {
+  border: 0 !important;
+  border-top: 1px solid rgba(244,244,223,.58) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage {
+  min-height: 0 !important;
+  padding: 18px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(226,229,191,.66) !important;
+  border-radius: 6px !important;
+  background:
+    linear-gradient(126deg, transparent 0 23%, rgba(244,244,223,.1) 23.5% 24.2%, transparent 24.8%),
+    radial-gradient(circle at 86% 14%, rgba(217,55,99,.3), transparent 28%),
+    linear-gradient(145deg, rgba(126,151,120,.96), rgba(49,70,55,.98) 58%, rgba(95,51,76,.96)) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-content {
+  display: block !important;
+  width: min(1040px, 100%) !important;
+  margin: 0 auto !important;
+  padding: 24px clamp(18px, 4vw, 42px) 28px !important;
+  box-sizing: border-box !important;
+  border: 1px solid rgba(244,244,223,.58) !important;
+  border-radius: 5px !important;
+  color: var(--r98-cream) !important;
+  text-align: center !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.13), transparent 25%),
+    linear-gradient(180deg, rgba(67,94,70,.94), rgba(24,45,32,.96)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.3), 0 16px 35px rgba(18,29,20,.36) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .trophy {
+  display: block !important;
+  margin: -24px calc(clamp(18px, 4vw, 42px) * -1) 20px !important;
+  padding: 13px 18px !important;
+  border-bottom: 1px solid rgba(244,244,223,.48) !important;
+  border-radius: 4px 4px 0 0 !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(90deg, #314f3a, #5f334c 72%, #a83258) !important;
+  letter-spacing: 3px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .flag-orb {
+  width: 190px !important;
+  height: 124px !important;
+  margin: 8px auto 14px !important;
+  padding: 0 !important;
+  border: 1px solid rgba(244,244,223,.62) !important;
+  border-radius: 4px !important;
+  background: rgba(24,45,32,.72) !important;
+  box-shadow: 7px 7px 0 rgba(95,51,76,.44), 0 13px 28px rgba(18,29,20,.28) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .flag-orb :is(.country-flag, img) {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 3px !important;
+  object-fit: cover !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage #championName {
+  margin: 0 !important;
+  color: var(--r98-cream) !important;
+  font-size: clamp(44px, 6vw, 72px) !important;
+  line-height: 1 !important;
+  text-shadow: 0 3px rgba(18,29,20,.52) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-content > p {
+  margin: 13px 0 22px !important;
+  color: var(--r98-muted) !important;
+  font-size: 15px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-podium {
+  margin: 0 0 13px !important;
+  padding: 14px !important;
+  border: 1px solid rgba(226,229,191,.4) !important;
+  border-radius: 4px !important;
+  background: rgba(24,45,32,.58) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-section-label {
+  color: var(--r98-cream) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-place {
+  border: 1px solid rgba(226,229,191,.4) !important;
+  border-radius: 3px !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, rgba(94,124,91,.9), rgba(31,56,39,.96)) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-place.place-1 {
+  border-color: rgba(244,244,223,.78) !important;
+  background: linear-gradient(180deg, rgba(119,146,112,.94), rgba(49,79,58,.98)) !important;
+  box-shadow: inset 0 3px var(--r98-pink) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-place > b {
+  color: var(--r98-cream) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-awards-grid {
+  gap: 9px !important;
+  margin: 10px 0 16px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award {
+  grid-template-columns: 34px minmax(0, 1fr) !important;
+  gap: 10px !important;
+  min-height: 72px !important;
+  padding: 10px 12px !important;
+  border: 1px solid rgba(226,229,191,.42) !important;
+  border-radius: 4px !important;
+  background: linear-gradient(145deg, rgba(95,51,76,.72), rgba(24,45,32,.95)) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.18) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award-mark {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  color: var(--r98-cream) !important;
+  background: rgba(217,55,99,.32) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award-copy > span {
+  color: var(--r98-cream) !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award-copy strong {
+  font-size: 12px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-award-copy small {
+  margin-top: 3px !important;
+  font-size: 8px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-actions {
+  padding-top: 4px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-actions button {
+  min-height: 48px !important;
+  border-radius: 3px !important;
+}
+body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-save-button {
+  border-color: rgba(244,244,223,.68) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, #78506a, #5f334c) !important;
+  box-shadow: 0 4px 0 #3f2233 !important;
+}
+
+body.retro-mode-active.retro-1998-active .snapshot-modal .snapshot-modal-head {
+  border: 1px solid rgba(226,229,191,.42) !important;
+  background: linear-gradient(90deg, #314f3a, #5f334c) !important;
+}
+body.retro-mode-active.retro-1998-active .snapshot-modal .snapshot-preview {
+  border: 1px solid rgba(226,229,191,.56) !important;
+  background:
+    linear-gradient(132deg, transparent 0 30%, rgba(244,244,223,.11) 30.5% 31.4%, transparent 32%),
+    linear-gradient(145deg, #7d9878, #526d56 54%, #5f334c) !important;
+}
+body.retro-mode-active.retro-1998-active .snapshot-modal .snapshot-actions .secondary-button {
+  border-color: rgba(226,229,191,.58) !important;
+  color: var(--r98-cream) !important;
+  background: linear-gradient(180deg, #708d6a, #314f3a) !important;
+  box-shadow: 0 4px 0 #182d20 !important;
+}
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-1998-active #mainContent .team-match-events.away .shootout-summary-row {
+    grid-template-columns: minmax(0, 1fr) 14px !important;
+  }
+  body.retro-mode-active.retro-1998-active #mainContent .champion-stage { padding: 8px !important; }
+  body.retro-mode-active.retro-1998-active #mainContent .champion-stage .champion-content { padding: 18px 10px 20px !important; }
+  body.retro-mode-active.retro-1998-active #mainContent .champion-stage .trophy {
+    margin: -18px -10px 16px !important;
+    letter-spacing: 1.5px !important;
+  }
+  body.retro-mode-active.retro-1998-active #mainContent .champion-stage .flag-orb {
+    width: 142px !important;
+    height: 92px !important;
+  }
+  body.retro-mode-active.retro-1998-active #mainContent .champion-stage #championName { font-size: 42px !important; }
 }

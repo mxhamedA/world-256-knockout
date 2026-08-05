@@ -50,6 +50,7 @@ PLAYER_NAME_OVERRIDES = {
 
 PLAYER_OVERALL_OVERRIDES = {
     ("Brazil", "fred"): 82,
+    ("Greece", "georgiossamaras"): 76,
 }
 
 

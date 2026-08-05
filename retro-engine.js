@@ -6,6 +6,21 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     [[3, 0], [1, 2]],
   ]);
   const ROUND_NAMES = Object.freeze(["Round of 16", "Quarter-finals", "Semi-finals", "Finals"]);
+  const WORLD_CUP_1998_GOALS = Object.freeze({
+    "davorsuker": 6,
+    "gabrielbatistuta": 5,
+    "christianvieri": 5,
+    "ronaldo": 4,
+    "marcelosalas": 4,
+    "luishernandez": 4,
+    "dennisbergkamp": 3,
+    "bebeto": 3,
+    "cesarsampaio": 3,
+    "rivaldo": 3,
+    "thierryhenry": 3,
+    "oliverbierhoff": 3,
+    "jurgenklinsmann": 3,
+  });
   const WORLD_CUP_2014_GOALS = Object.freeze({
     "jamesrodriguez": 6,
     "thomasmuller": 5,
@@ -98,6 +113,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     "takashiinui": 2,
   });
   const PENALTY_TAKERS_BY_YEAR = Object.freeze({
+    1998: Object.fromEntries(Object.entries(typeof RETRO_1998_SQUADS !== "undefined" ? RETRO_1998_SQUADS : {})
+      .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2002: Object.fromEntries(Object.entries(typeof RETRO_2002_SQUADS !== "undefined" ? RETRO_2002_SQUADS : {})
       .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2006: Object.fromEntries(Object.entries(typeof RETRO_2006_SQUADS !== "undefined" ? RETRO_2006_SQUADS : {})
@@ -199,6 +216,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function squadsForYear(year) {
+    if (Number(year) === 1998) return typeof RETRO_1998_SQUADS !== "undefined" ? RETRO_1998_SQUADS : {};
     if (Number(year) === 2002) return typeof RETRO_2002_SQUADS !== "undefined" ? RETRO_2002_SQUADS : {};
     if (Number(year) === 2006) return typeof RETRO_2006_SQUADS !== "undefined" ? RETRO_2006_SQUADS : {};
     if (Number(year) === 2010) return typeof RETRO_2010_SQUADS !== "undefined" ? RETRO_2010_SQUADS : {};
@@ -211,6 +229,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function groupScheduleForYear(year) {
+    if (Number(year) === 1998) return RETRO_1998_GROUP_SCHEDULE;
     if (Number(year) === 2002) return RETRO_2002_GROUP_SCHEDULE;
     if (Number(year) === 2006) return RETRO_2006_GROUP_SCHEDULE;
     if (Number(year) === 2010) return RETRO_2010_GROUP_SCHEDULE;
@@ -223,6 +242,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function knockoutScheduleForYear(year) {
+    if (Number(year) === 1998) return RETRO_1998_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2002) return RETRO_2002_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2006) return RETRO_2006_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2010) return RETRO_2010_KNOCKOUT_SCHEDULE;
@@ -301,7 +321,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       return Number(player.euroGoals);
     }
     if (year === 2026) return 0;
-    const goals = year === 2006 ? WORLD_CUP_2006_GOALS
+    const goals = year === 1998 ? WORLD_CUP_1998_GOALS
+      : year === 2006 ? WORLD_CUP_2006_GOALS
       : year === 2010 ? WORLD_CUP_2010_GOALS
       : year === 2018 ? WORLD_CUP_2018_GOALS : WORLD_CUP_2014_GOALS;
     return goals[normalizedPlayerName(player)] || 0;
@@ -615,15 +636,53 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
         away.points += 1;
       }
     });
-    return [...table.values()]
-      .map((row) => ({ ...row, gd: row.gf - row.ga }))
-      .sort((left, right) => (
-        right.points - left.points
-        || right.gd - left.gd
-        || right.gf - left.gf
+    const rows = [...table.values()].map((row) => ({ ...row, gd: row.gf - row.ga }));
+    const primary = (left, right) => right.points - left.points || right.gd - left.gd || right.gf - left.gf;
+    rows.sort(primary);
+    if (Number(tournament.year) !== 1998) {
+      return rows.sort((left, right) => (
+        primary(left, right)
         || teamEntry(tournament.year, right.name).rating - teamEntry(tournament.year, left.name).rating
         || left.name.localeCompare(right.name)
       ));
+    }
+    const ordered = [];
+    for (let index = 0; index < rows.length;) {
+      const tied = rows.filter((row) => (
+        row.points === rows[index].points && row.gd === rows[index].gd && row.gf === rows[index].gf
+      ));
+      if (tied.length === 1) {
+        ordered.push(rows[index]);
+        index += 1;
+        continue;
+      }
+      const names = new Set(tied.map((row) => row.name));
+      const mini = new Map(tied.map((row) => [row.name, { points: 0, gf: 0, ga: 0 }]));
+      tournament.groupMatches.filter((match) => (
+        match.group === group && match.result && names.has(match.home) && names.has(match.away)
+      )).forEach((match) => {
+        const home = mini.get(match.home);
+        const away = mini.get(match.away);
+        home.gf += match.result.homeGoals;
+        home.ga += match.result.awayGoals;
+        away.gf += match.result.awayGoals;
+        away.ga += match.result.homeGoals;
+        if (match.result.homeGoals > match.result.awayGoals) home.points += 3;
+        else if (match.result.awayGoals > match.result.homeGoals) away.points += 3;
+        else { home.points += 1; away.points += 1; }
+      });
+      tied.sort((left, right) => {
+        const leftMini = mini.get(left.name);
+        const rightMini = mini.get(right.name);
+        return rightMini.points - leftMini.points
+          || (rightMini.gf - rightMini.ga) - (leftMini.gf - leftMini.ga)
+          || rightMini.gf - leftMini.gf
+          || stableHash(`${tournament.seed}:${group}:${left.name}`) - stableHash(`${tournament.seed}:${group}:${right.name}`);
+      });
+      ordered.push(...tied);
+      index += tied.length;
+    }
+    return ordered;
   }
 
   function groupLetters(year) {
@@ -631,6 +690,28 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function buildGroupMatches(year) {
+    if (Number(year) === 1998) {
+      const teamsByName = new Map(RETRO_WORLD_CUPS[year].teams.map((team) => [team.name, team]));
+      const fixturesByGroup = new Map(groupLetters(year).map((group) => [group, []]));
+      Object.entries(groupScheduleForYear(year))
+        .sort(([, left], [, right]) => left.matchNumber - right.matchNumber)
+        .forEach(([pair, schedule]) => {
+          const [home, away] = pair.split("|");
+          const group = teamsByName.get(home)?.group;
+          if (!group || teamsByName.get(away)?.group !== group) return;
+          fixturesByGroup.get(group).push({ home, away, schedule });
+        });
+      return groupLetters(year).flatMap((group) => fixturesByGroup.get(group).map((fixture, index) => ({
+        id: `g${group}-d${Math.floor(index / 2) + 1}-m${index % 2 + 1}`,
+        stage: "group",
+        group,
+        matchday: Math.floor(index / 2) + 1,
+        home: fixture.home,
+        away: fixture.away,
+        schedule: fixture.schedule,
+        result: null,
+      })));
+    }
     return groupLetters(year).flatMap((group) => {
       const teams = RETRO_WORLD_CUPS[year].teams.filter((team) => team.group === group);
       return GROUP_FIXTURE_PATTERN.flatMap((fixtures, matchdayIndex) => fixtures.map(([homeIndex, awayIndex], fixtureIndex) => {
@@ -656,7 +737,14 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       const table = groupStandings(tournament, group);
       return [[`${group}1`, table[0].name], [`${group}2`, table[1].name]];
     }));
-    const pairings = Number(tournament.year) === 2002
+    const pairings = Number(tournament.year) === 1998
+      ? [
+          // France 98's bracket crossed the A/B and C/D runners-up before the
+          // quarter-finals; this order also keeps the later rounds historical.
+          ["A1", "B2"], ["D1", "C2"], ["E1", "F2"], ["H1", "G2"],
+          ["B1", "A2"], ["C1", "D2"], ["F1", "E2"], ["G1", "H2"],
+        ]
+      : Number(tournament.year) === 2002
       ? [
           ["A1", "F2"], ["C1", "H2"], ["E1", "B2"], ["G1", "D2"],
           ["B1", "E2"], ["D1", "G2"], ["F1", "A2"], ["H1", "C2"],
@@ -907,7 +995,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function createTournament({ year = 2014, seed = Date.now(), managedTeam = null } = {}) {
-    if (![2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
+    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
       throw new Error("That retro tournament is not playable yet.");
     }
     return {
@@ -973,7 +1061,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     return Boolean(
       tournament
       && tournament.version === VERSION
-      && [2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)
+      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026].includes(year)
       && Array.isArray(tournament.groupMatches)
       && tournament.groupMatches.length === expectedGroupMatches
       && RETRO_WORLD_CUPS[tournament.year]?.teams.length === expectedTeams

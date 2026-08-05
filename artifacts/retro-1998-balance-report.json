@@ -1,0 +1,434 @@
+{
+  "tournament": "France 1998 World Cup",
+  "simulations": 20,
+  "matches": 1280,
+  "averageGoalsPerMatch": 2.377,
+  "championCounts": [
+    {
+      "country": "Brazil",
+      "count": 6,
+      "rate": 30
+    },
+    {
+      "country": "Italy",
+      "count": 4,
+      "rate": 20
+    },
+    {
+      "country": "Spain",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Argentina",
+      "count": 2,
+      "rate": 10
+    },
+    {
+      "country": "Croatia",
+      "count": 2,
+      "rate": 10
+    },
+    {
+      "country": "France",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Romania",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Yugoslavia",
+      "count": 1,
+      "rate": 5
+    }
+  ],
+  "finalAppearances": [
+    {
+      "country": "Brazil",
+      "count": 7,
+      "rate": 35
+    },
+    {
+      "country": "Italy",
+      "count": 6,
+      "rate": 30
+    },
+    {
+      "country": "France",
+      "count": 4,
+      "rate": 20
+    },
+    {
+      "country": "Argentina",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Croatia",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Romania",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Spain",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Yugoslavia",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Nigeria",
+      "count": 2,
+      "rate": 10
+    },
+    {
+      "country": "Germany",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Iran",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Mexico",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Morocco",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Netherlands",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Paraguay",
+      "count": 1,
+      "rate": 5
+    }
+  ],
+  "semiFinalAppearances": [
+    {
+      "country": "Italy",
+      "count": 11,
+      "rate": 55
+    },
+    {
+      "country": "Brazil",
+      "count": 8,
+      "rate": 40
+    },
+    {
+      "country": "Argentina",
+      "count": 7,
+      "rate": 35
+    },
+    {
+      "country": "France",
+      "count": 7,
+      "rate": 35
+    },
+    {
+      "country": "Netherlands",
+      "count": 6,
+      "rate": 30
+    },
+    {
+      "country": "Romania",
+      "count": 6,
+      "rate": 30
+    },
+    {
+      "country": "Croatia",
+      "count": 5,
+      "rate": 25
+    },
+    {
+      "country": "Yugoslavia",
+      "count": 5,
+      "rate": 25
+    },
+    {
+      "country": "Germany",
+      "count": 4,
+      "rate": 20
+    },
+    {
+      "country": "Spain",
+      "count": 4,
+      "rate": 20
+    },
+    {
+      "country": "Nigeria",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Paraguay",
+      "count": 3,
+      "rate": 15
+    },
+    {
+      "country": "Belgium",
+      "count": 2,
+      "rate": 10
+    },
+    {
+      "country": "Mexico",
+      "count": 2,
+      "rate": 10
+    },
+    {
+      "country": "Colombia",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Denmark",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Iran",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Japan",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Morocco",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "Norway",
+      "count": 1,
+      "rate": 5
+    },
+    {
+      "country": "South Africa",
+      "count": 1,
+      "rate": 5
+    }
+  ],
+  "topGoalscorers": [
+    {
+      "player": "Davor Šuker (Croatia)",
+      "goals": 105,
+      "perTournament": 5.25
+    },
+    {
+      "player": "Ronaldo (Brazil)",
+      "goals": 96,
+      "perTournament": 4.8
+    },
+    {
+      "player": "Christian Vieri (Italy)",
+      "goals": 88,
+      "perTournament": 4.4
+    },
+    {
+      "player": "Gabriel Batistuta (Argentina)",
+      "goals": 84,
+      "perTournament": 4.2
+    },
+    {
+      "player": "Thierry Henry (France)",
+      "goals": 72,
+      "perTournament": 3.6
+    },
+    {
+      "player": "Bebeto (Brazil)",
+      "goals": 62,
+      "perTournament": 3.1
+    },
+    {
+      "player": "Victor Ikpeba (Nigeria)",
+      "goals": 57,
+      "perTournament": 2.85
+    },
+    {
+      "player": "Viorel Moldovan (Romania)",
+      "goals": 56,
+      "perTournament": 2.8
+    },
+    {
+      "player": "Jürgen Klinsmann (Germany)",
+      "goals": 50,
+      "perTournament": 2.5
+    },
+    {
+      "player": "Roberto Baggio (Italy)",
+      "goals": 50,
+      "perTournament": 2.5
+    },
+    {
+      "player": "Savo Milošević (Yugoslavia)",
+      "goals": 47,
+      "perTournament": 2.35
+    },
+    {
+      "player": "Marcelo Salas (Chile)",
+      "goals": 46,
+      "perTournament": 2.3
+    },
+    {
+      "player": "Luis Hernández (Mexico)",
+      "goals": 45,
+      "perTournament": 2.25
+    },
+    {
+      "player": "Claudio López (Argentina)",
+      "goals": 44,
+      "perTournament": 2.2
+    },
+    {
+      "player": "Stéphane Guivarc'h (France)",
+      "goals": 43,
+      "perTournament": 2.15
+    },
+    {
+      "player": "Oliver Bierhoff (Germany)",
+      "goals": 39,
+      "perTournament": 1.95
+    },
+    {
+      "player": "Marc Overmars (Netherlands)",
+      "goals": 36,
+      "perTournament": 1.8
+    },
+    {
+      "player": "Miguel Ángel Benítez (Paraguay)",
+      "goals": 36,
+      "perTournament": 1.8
+    },
+    {
+      "player": "Patrick Kluivert (Netherlands)",
+      "goals": 34,
+      "perTournament": 1.7
+    },
+    {
+      "player": "Alan Shearer (England)",
+      "goals": 33,
+      "perTournament": 1.65
+    }
+  ],
+  "biggestOverperformers": [
+    {
+      "country": "Romania",
+      "rating": 82,
+      "knockoutRate": 70,
+      "semiFinalRate": 30,
+      "performanceIndex": 0.108
+    },
+    {
+      "country": "Yugoslavia",
+      "rating": 81,
+      "knockoutRate": 85,
+      "semiFinalRate": 25,
+      "performanceIndex": 0.074
+    },
+    {
+      "country": "Croatia",
+      "rating": 82,
+      "knockoutRate": 80,
+      "semiFinalRate": 25,
+      "performanceIndex": 0.058
+    },
+    {
+      "country": "Paraguay",
+      "rating": 78,
+      "knockoutRate": 45,
+      "semiFinalRate": 15,
+      "performanceIndex": 0.022
+    },
+    {
+      "country": "Nigeria",
+      "rating": 80,
+      "knockoutRate": 80,
+      "semiFinalRate": 15,
+      "performanceIndex": -0.01
+    }
+  ],
+  "biggestUnderperformers": [
+    {
+      "country": "England",
+      "rating": 85,
+      "knockoutRate": 55,
+      "semiFinalRate": 0,
+      "performanceIndex": -0.24
+    },
+    {
+      "country": "Chile",
+      "rating": 79,
+      "knockoutRate": 60,
+      "semiFinalRate": 0,
+      "performanceIndex": -0.144
+    },
+    {
+      "country": "Norway",
+      "rating": 81,
+      "knockoutRate": 40,
+      "semiFinalRate": 5,
+      "performanceIndex": -0.126
+    },
+    {
+      "country": "Denmark",
+      "rating": 80,
+      "knockoutRate": 35,
+      "semiFinalRate": 5,
+      "performanceIndex": -0.11
+    },
+    {
+      "country": "Colombia",
+      "rating": 79,
+      "knockoutRate": 45,
+      "semiFinalRate": 5,
+      "performanceIndex": -0.094
+    }
+  ],
+  "teamsAppearingTooStrong": [
+    {
+      "country": "Paraguay",
+      "rating": 78,
+      "knockoutRate": 45,
+      "semiFinalRate": 15,
+      "performanceIndex": 0.022
+    },
+    {
+      "country": "Belgium",
+      "rating": 77,
+      "knockoutRate": 40,
+      "semiFinalRate": 10,
+      "performanceIndex": -0.012
+    }
+  ],
+  "teamsAppearingTooWeak": [
+    {
+      "country": "Spain",
+      "rating": 86,
+      "knockoutRate": 50,
+      "semiFinalRate": 20,
+      "performanceIndex": -0.056
+    }
+  ],
+  "playersScoringUnrealisticallyOften": []
+}

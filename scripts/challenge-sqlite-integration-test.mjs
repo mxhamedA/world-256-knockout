@@ -29,11 +29,13 @@ premierLeagueTitleClubs.forEach((clubId) => {
     `${clubId} must require winning the league.`,
   );
 });
-["hull-city", "ipswich-town", "leeds-united", "sunderland"].forEach((clubId) => {
+["ipswich-town", "leeds-united", "sunderland"].forEach((clubId) => {
   const definition = premierLeagueAchievementDefinition(clubId);
   assert.equal(definition?.targetPosition, 10, `${clubId} must require a top-half finish.`);
   assert.equal(definition?.objectiveLabel, "Finish in the top half");
 });
+assert.equal(premierLeagueAchievementDefinition("hull-city")?.targetPosition, 17);
+assert.equal(premierLeagueAchievementDefinition("hull-city")?.objectiveLabel, "Avoid relegation");
 assert.equal(premierLeagueAchievementDefinition("coventry-city")?.targetPosition, 17);
 assert.equal(premierLeagueAchievementDefinition("coventry-city")?.objectiveLabel, "Avoid relegation");
 assert.deepEqual(
@@ -124,6 +126,8 @@ let sessionCookie = "";
 
 assert.equal(retroAchievementPoints(2010, "Spain"), 1);
 assert.equal(retroAchievementPoints(2010, "North Korea"), 10);
+assert.equal(retroAchievementPoints(1998, "France"), 2);
+assert.equal(retroAchievementPoints(1998, "Jamaica"), 10);
 assert.equal(retroAchievementPoints(2006, "Italy"), 1);
 assert.equal(retroAchievementPoints(2006, "Saudi Arabia"), 10);
 assert.equal(retroAchievementPoints(2022, "France"), 1);
@@ -703,7 +707,7 @@ assert.equal(
     + uclCeljeTop24.payload.unlockedTeam.points,
 );
 assert.equal(achievementBoard.payload.currentUser.rank, 1);
-assert.equal(achievementBoard.payload.totalAchievements, 579);
+assert.equal(achievementBoard.payload.totalAchievements, 611);
 
 const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
 assert.equal(publicAchievementBoard.response.status, 200);
@@ -716,6 +720,12 @@ assert.equal(
   publicAchievementPoints.payload.achievement.teams.find((team) => team.teamName === "North Korea").points,
   10,
 );
+
+const publicRetro1998 = await request("/achievements/retro-1998", { session: false });
+assert.equal(publicRetro1998.response.status, 200);
+assert.equal(publicRetro1998.payload.achievement.id, "retro-1998-world-tour");
+assert.equal(publicRetro1998.payload.achievement.total, 32);
+assert.equal(publicRetro1998.payload.achievement.completed, 0);
 
 const remainingRetro2006Teams = retro2006Persisted.payload.achievement.teams
   .map((team) => team.teamName)
@@ -805,6 +815,36 @@ assert.equal(retro2002BrazilWin.payload.unlockedTeam.won, true);
 assert.equal(retro2002BrazilWin.payload.achievement.id, "retro-2002-world-tour");
 assert.equal(
   sqlite.prepare("SELECT won FROM retro_2002_attempts WHERE account_id = (SELECT id FROM accounts WHERE username = ?) AND seed = ? AND team_name = 'Brazil'").get(username, 2002063001).won,
+  1,
+);
+
+const retro1998Seed = 1998061001;
+const retro1998Started = await request("/achievements/retro-1998", {
+  method: "POST",
+  body: { seed: retro1998Seed, teamName: "France", phase: "start", champion: null },
+});
+assert.equal(retro1998Started.response.status, 200);
+assert.equal(retro1998Started.payload.unlockedTeam.attempts, 1);
+assert.equal(retro1998Started.payload.unlockedTeam.won, false);
+
+const retro1998Won = await request("/achievements/retro-1998", {
+  method: "POST",
+  body: { seed: retro1998Seed, teamName: "France", phase: "complete", champion: "France" },
+});
+assert.equal(retro1998Won.response.status, 200);
+assert.equal(retro1998Won.payload.countryUnlocked, true);
+assert.equal(retro1998Won.payload.unlockedTeam.teamName, "France");
+assert.equal(retro1998Won.payload.unlockedTeam.won, true);
+
+const retro1998Duplicate = await request("/achievements/retro-1998", {
+  method: "POST",
+  body: { seed: retro1998Seed, teamName: "France", phase: "complete", champion: "France" },
+});
+assert.equal(retro1998Duplicate.response.status, 200);
+assert.equal(retro1998Duplicate.payload.countryUnlocked, false);
+assert.equal(retro1998Duplicate.payload.unlockedTeam.attempts, 1);
+assert.equal(
+  sqlite.prepare("SELECT COUNT(*) AS total, MAX(won) AS won FROM retro_1998_attempts WHERE account_id = (SELECT id FROM accounts WHERE username = ?) AND seed = ? AND team_name = 'France'").get(username, retro1998Seed).total,
   1,
 );
 

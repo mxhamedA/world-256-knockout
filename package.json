@@ -20,6 +20,8 @@
     "test:retro-2022-theme": "node scripts/retro-2022-theme-test.mjs",
     "test:retro-2002-data": "node scripts/validate-retro-2002-dataset.mjs",
     "test:retro-2026": "node scripts/retro-2026-mode-test.mjs",
+    "test:retro-1998": "node scripts/retro-1998-menu-test.mjs",
+    "test:retro-1998-balance": "node scripts/retro-1998-balance-test.mjs",
     "test:possession": "node scripts/possession-engine-test.mjs",
     "test:presentation": "node scripts/presentation-engine-test.mjs",
     "test:penalties": "node scripts/penalty-visual-test.mjs && node scripts/interactive-penalty-boundary-test.mjs && node scripts/online-live-engine-test.mjs && node scripts/room-security-test.mjs",
