@@ -43,8 +43,7 @@ const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
 const RETRO_1998_ANNOUNCEMENT_KEY = "world-256-announcement-retro-1998-v1";
 const RETRO_COPA_2024_ANNOUNCEMENT_KEY = "world-256-announcement-copa-america-2024-v1";
-// Keep the finished dataset and engine available while the release UI remains gated.
-const RETRO_COPA_2024_PLAYABLE = false;
+const RETRO_COPA_2024_PLAYABLE = true;
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -9283,6 +9282,21 @@ function drawSnapshotConfetti(context, championId) {
 }
 
 function retroSnapshotPalette(year) {
+  if (Number(year) === 2024) {
+    return {
+      accent: "#e51b2b",
+      backgroundStart: "#061d54",
+      backgroundMiddle: "#0b3f96",
+      backgroundEnd: "#041536",
+      panel: "rgba(4, 21, 54, 0.96)",
+      award: "rgba(229, 27, 43, 0.96)",
+      flagBacking: "#e9edf5",
+      primaryText: "#ffffff",
+      secondaryText: "#cfd6e6",
+      glow: "rgba(229, 27, 43, 0.3)",
+      footer: "COPA AMÉRICA USA 2024",
+    };
+  }
   if (Number(year) === 1998) {
     return {
       accent: "#f4f4df",
@@ -9632,7 +9646,7 @@ async function createMatchSnapshotCanvas() {
   context.fillStyle = glow;
   context.fillRect(0, 0, 1200, canvasHeight);
 
-  snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, Number(retroYear) === 1998 ? 8 : 28);
+  snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, [1998, 2024].includes(Number(retroYear)) ? 8 : 28);
   context.fillStyle = retroTheme?.panel || (uclSnapshot ? "rgba(4, 18, 48, 0.94)" : domesticLeagueSnapshot ? "rgba(40, 0, 45, 0.9)" : "rgba(17, 24, 36, 0.88)");
   context.fill();
   if (!retroSnapshot) {
@@ -10085,12 +10099,13 @@ async function openSnapshotModal() {
   try {
     const uclSnapshot = Boolean(state?.uclSeason || document.body.classList.contains("ucl-match-mode-active"));
     const premierLeagueSnapshot = Boolean(state.premierLeagueSeason);
+    const copaSnapshot = Number(retroTournament?.year || retroWorldCupYearFromPath()) === 2024;
     els.snapshotModalKicker.textContent = uclSnapshot
       ? "UCL 26/27 SIMULATION"
-      : premierLeagueSnapshot ? "PL 26/27 SIMULATION" : "SHARE THE MOMENT";
+      : premierLeagueSnapshot ? "PL 26/27 SIMULATION" : copaSnapshot ? "COPA AMÉRICA USA 2024" : "SHARE THE MOMENT";
     els.snapshotModalTitle.textContent = uclSnapshot
       ? "Champions League match snapshot"
-      : premierLeagueSnapshot ? "Premier League match snapshot" : "Match snapshot";
+      : premierLeagueSnapshot ? "Premier League match snapshot" : copaSnapshot ? "Copa América match snapshot" : "Match snapshot";
     snapshotBlob = await canvasPngBlob(await createMatchSnapshotCanvas());
     if (snapshotObjectUrl) URL.revokeObjectURL(snapshotObjectUrl);
     snapshotObjectUrl = URL.createObjectURL(snapshotBlob);
@@ -10099,9 +10114,9 @@ async function openSnapshotModal() {
       ? "Generated UCL 26/27 match snapshot"
       : premierLeagueSnapshot
         ? "Generated PL 26/27 match snapshot"
-      : "Generated 256 TEAMS WC snapshot";
+      : copaSnapshot ? "Generated Copa América USA 2024 match snapshot" : "Generated 256 TEAMS WC snapshot";
     const snapshot = snapshotMatchContext();
-    snapshotFilename = `${uclSnapshot ? "ucl-26-27" : premierLeagueSnapshot ? "pl-26-27" : "world-256"}-${snapshot.home.name}-vs-${snapshot.away.name}`
+    snapshotFilename = `${uclSnapshot ? "ucl-26-27" : premierLeagueSnapshot ? "pl-26-27" : copaSnapshot ? "copa-america-2024" : "world-256"}-${snapshot.home.name}-vs-${snapshot.away.name}`
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "") + ".png";
@@ -17283,7 +17298,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
         <span class="retro-standard-fixture-meta">
           ${escapeHtml([
             match.schedule.dateLabel,
-            Number(retroTournament?.year) === 2024 ? match.schedule.timeLabel : null,
+            Number(retroTournament?.year) === 2024 ? null : match.schedule.timeLabel,
             [match.schedule.stadium, match.schedule.city].filter(Boolean).join(", "),
           ].filter(Boolean).join(" · "))}
         </span>
@@ -21209,7 +21224,9 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   const isEuros = selectedCompetition === "euros";
   const isCopa = selectedCompetition === "copa";
   const selectedYear = isCopa ? 2024 : isEuros ? RETRO_EURO_2016.year : year;
-  const playable = !isCopa && (isEuros || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear)));
+  const playable = isCopa
+    ? RETRO_COPA_2024_PLAYABLE
+    : isEuros || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear));
   const hasTeamField = playable && (isCopa
     ? Boolean(RETRO_COPA_2024.teams.length)
     : isEuros
@@ -21470,6 +21487,7 @@ function renderRetroSquadsView() {
   const year = retroTournament.year;
   const isFrance1998 = Number(year) === 1998;
   const isEuro2016 = Number(year) === 2016;
+  const isCopa2024 = Number(year) === 2024;
   const isWorldCup2026 = Number(year) === 2026;
   const available = RETRO_WORLD_CUPS[year].teams;
   const squads = retroSquadsForYear(year);
@@ -21506,7 +21524,7 @@ function renderRetroSquadsView() {
                     <b class="retro-squad-number">${player.number}</b>
                     <span>
                       <strong>${escapeHtml(player.name)}${player.captain && !isWorldCup2026 ? " (C)" : ""}</strong>
-                      ${isWorldCup2026 ? "" : `<small>${escapeHtml(player.club || player.position)}${!isFrance1998 && !isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>`}
+                      ${isWorldCup2026 ? "" : `<small>${escapeHtml(player.club || player.position)}${!isFrance1998 && !isEuro2016 && !isCopa2024 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>`}
                     </span>
                     ${isEuro2016 || isWorldCup2026 ? "" : `<em>${escapeHtml(player.position)}</em><i>${player.overall}</i>`}
                   </div>

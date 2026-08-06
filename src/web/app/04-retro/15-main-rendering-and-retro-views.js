@@ -512,7 +512,9 @@ function syncRetroWorldCupCardAction(year = readRetroWorldCupYear()) {
   const isEuros = selectedCompetition === "euros";
   const isCopa = selectedCompetition === "copa";
   const selectedYear = isCopa ? 2024 : isEuros ? RETRO_EURO_2016.year : year;
-  const playable = !isCopa && (isEuros || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear)));
+  const playable = isCopa
+    ? RETRO_COPA_2024_PLAYABLE
+    : isEuros || ["1998", "2002", "2006", "2010", "2014", "2018", "2022", "2024", "2026"].includes(String(selectedYear));
   const hasTeamField = playable && (isCopa
     ? Boolean(RETRO_COPA_2024.teams.length)
     : isEuros
@@ -773,6 +775,7 @@ function renderRetroSquadsView() {
   const year = retroTournament.year;
   const isFrance1998 = Number(year) === 1998;
   const isEuro2016 = Number(year) === 2016;
+  const isCopa2024 = Number(year) === 2024;
   const isWorldCup2026 = Number(year) === 2026;
   const available = RETRO_WORLD_CUPS[year].teams;
   const squads = retroSquadsForYear(year);
@@ -809,7 +812,7 @@ function renderRetroSquadsView() {
                     <b class="retro-squad-number">${player.number}</b>
                     <span>
                       <strong>${escapeHtml(player.name)}${player.captain && !isWorldCup2026 ? " (C)" : ""}</strong>
-                      ${isWorldCup2026 ? "" : `<small>${escapeHtml(player.club || player.position)}${!isFrance1998 && !isEuro2016 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>`}
+                      ${isWorldCup2026 ? "" : `<small>${escapeHtml(player.club || player.position)}${!isFrance1998 && !isEuro2016 && !isCopa2024 && player.preferredFoot ? ` · ${escapeHtml(player.preferredFoot)} foot` : ""}</small>`}
                     </span>
                     ${isEuro2016 || isWorldCup2026 ? "" : `<em>${escapeHtml(player.position)}</em><i>${player.overall}</i>`}
                   </div>

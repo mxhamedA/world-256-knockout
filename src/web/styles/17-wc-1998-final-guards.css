@@ -197,8 +197,8 @@ body.retro-mode-active.retro-copa-2024-active {
   --copa-navy: #061d54;
   --copa-blue: #0b3f96;
   --copa-blue-bright: #176fe4;
-  --copa-red: #e51b2b;
-  --copa-red-dark: #a70f20;
+  --copa-red: #a9233a;
+  --copa-red-dark: #74172a;
   --copa-white: #ffffff;
   --copa-silver: #cfd6e6;
   --copa-ink: #071938;
@@ -880,6 +880,94 @@ body.retro-mode-active.retro-1998-active #mainContent :is(.bracket-connector::be
   }
 }
 
+/* Copa America 2024 dark broadcast surfaces. Group tables stay white. */
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-view {
+  border: 1px solid #31528d !important; border-top: 5px solid var(--copa-red) !important;
+  border-radius: 6px !important; color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 58%, #04153e) !important;
+  box-shadow: 0 18px 38px rgba(0,8,38,.26) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-heading {
+  border: 0 !important; border-bottom: 1px solid rgba(255,255,255,.22) !important;
+  color: var(--copa-white) !important; background: transparent !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-heading :is(strong, small, em, label, span) {
+  color: var(--copa-white) !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-heading select {
+  border: 1px solid #8fa5ca !important; border-radius: 4px !important;
+  color: var(--copa-navy) !important; background: var(--copa-white) !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group {
+  overflow: hidden !important; border: 1px solid #49679a !important; border-radius: 5px !important;
+  color: var(--copa-white) !important; background: #0a2b70 !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group > h2 {
+  border: 0 !important; border-bottom: 3px solid var(--copa-red) !important;
+  color: var(--copa-white) !important; background: #041b4d !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group > h2 b,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-number {
+  border: 1px solid rgba(255,255,255,.48) !important; color: var(--copa-white) !important;
+  background: var(--copa-red) !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row:nth-child(even) {
+  border: 0 !important; border-bottom: 1px solid rgba(255,255,255,.14) !important;
+  color: var(--copa-white) !important; background: #0a2b70 !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row:nth-child(even) { background: #0d347f !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row:is(:hover, :focus-within),
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row.is-likely-starter {
+  background: #164ca4 !important; box-shadow: inset 4px 0 var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row :is(strong, em, i) {
+  color: var(--copa-white) !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row small {
+  color: #c8d4e8 !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board {
+  border: 1px solid #31528d !important; border-top: 5px solid var(--copa-red) !important;
+  border-radius: 6px !important; color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 62%, #04153e) !important;
+  box-shadow: 0 18px 38px rgba(0,8,38,.24) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board > :is(h2, h3),
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board :is(.round-title, .board-title) {
+  color: var(--copa-white) !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture {
+  border: 1px solid #49679a !important; border-left: 5px solid var(--copa-red) !important;
+  border-radius: 5px !important; color: var(--copa-white) !important; background: #0a2b70 !important;
+  box-shadow: 0 8px 18px rgba(0,8,38,.22) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture:is(:hover, .selected) {
+  border-color: #ff6671 !important; background: #123f92 !important;
+  box-shadow: 0 10px 22px rgba(0,8,38,.3) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture :is(strong, b, span, small, .fixture-team, .fixture-score) {
+  color: var(--copa-white) !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture :is(.fixture-meta, .fixture-details, footer) {
+  border-color: rgba(255,255,255,.16) !important; color: #d8e1f0 !important; background: #041b4d !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture-grid.bracket-mode, .bracket-shell, .bracket-canvas, .bracket-board) {
+  border-color: #31528d !important; color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 64%, #04153e) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture.bracket-fixture, .bracket-card, .bracket-match, .third-place-card) {
+  border: 1px solid #5b78aa !important; border-left: 5px solid var(--copa-red) !important;
+  color: var(--copa-white) !important; background: #0b2d70 !important;
+  box-shadow: 0 8px 18px rgba(0,8,38,.24) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture.bracket-fixture, .bracket-card, .bracket-match, .third-place-card) :is(strong, b, span, small, .fixture-team, .fixture-score) {
+  color: var(--copa-white) !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture.bracket-fixture:is(:hover, .selected) {
+  border-color: #ff6671 !important; background: #123f92 !important;
+}
+
 /* France 1998 final component guard. */
 body.retro-mode-active.retro-1998-active .retro-tournament-screen .retro-tournament-heading {
   display: block !important; height: 112px !important; min-height: 112px !important;
@@ -1369,4 +1457,927 @@ body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading > div:fi
   border-color: #cfd6e6 !important;
   color: #061d54 !important;
   background: #eef2f8 !important;
+}
+
+/* Copa América 2024 final UI lock. These selectors intentionally sit last so
+   the shared Brazil 2014 skin cannot restyle dialogs, popovers or brackets. */
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading {
+  border-color: transparent !important;
+  border-left-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading > * {
+  visibility: hidden !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading::before,
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading::after {
+  display: none !important;
+  content: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage {
+  border: 1px solid #ff6470 !important;
+  border-radius: 6px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+  background-image: none !important;
+  box-shadow: 0 14px 30px rgba(0, 8, 38, .28) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage::before,
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage::after {
+  display: none !important;
+  content: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage :is(
+  .team,
+  .score-zone,
+  .matchup,
+  #matchContent
+) {
+  border-color: rgba(255,255,255,.28) !important;
+  color: var(--copa-white) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage :is(
+  .team-name,
+  .team-name span,
+  .match-score,
+  .score-separator,
+  .seed,
+  .result-note,
+  .discipline,
+  .event-side,
+  .event-side strong,
+  .event-side span,
+  .retro-scorers,
+  .retro-scorers span,
+  .retro-scorers b,
+  .retro-no-scorers
+) {
+  color: var(--copa-white) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage .stage-action {
+  border-top: 0 !important;
+  color: var(--copa-white) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage .play-button {
+  border-color: rgba(255,255,255,.62) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage .play-button:is(:hover, :focus-visible) {
+  border-color: var(--copa-white) !important;
+  background: var(--copa-blue) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .team-filter-control .search-result-popover {
+  overflow: hidden !important;
+  border: 1px solid #9eabc1 !important;
+  border-top: 4px solid var(--copa-red) !important;
+  border-radius: 5px !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-white) !important;
+  background-image: none !important;
+  box-shadow: 0 14px 32px rgba(0, 12, 54, .24) !important;
+  transform-origin: top right !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .search-result-popover :is(.search-result, button) {
+  border: 0 !important;
+  border-bottom: 1px solid #dce2ec !important;
+  border-radius: 0 !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-white) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .search-result-popover :is(.search-result, button):is(:hover, :focus-visible) {
+  color: var(--copa-navy) !important;
+  background: #eef2f8 !important;
+  box-shadow: inset 4px 0 var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .search-result-popover :is(strong, small, span) {
+  color: inherit !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .team-filter-chip {
+  border: 1px solid var(--copa-red) !important;
+  border-radius: 4px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-match-tactics {
+  overflow: hidden !important;
+  border: 1px solid rgba(7,25,56,.18) !important;
+  border-top: 5px solid var(--copa-red) !important;
+  border-radius: 6px !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-white) !important;
+  background-image: none !important;
+  box-shadow: 0 10px 24px rgba(0,12,54,.16) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-match-tactics::before,
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-match-tactics::after {
+  display: none !important;
+  content: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-match-tactics > span {
+  color: var(--copa-navy) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-match-tactics > small {
+  color: #53627c !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-tactic-buttons {
+  border: 0 !important;
+  background: transparent !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-tactic-buttons button {
+  border: 1px solid #b6c0d1 !important;
+  border-radius: 4px !important;
+  color: var(--copa-navy) !important;
+  background: #f2f5fa !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-tactic-buttons button:is(:hover, :focus-visible):not(.active) {
+  border-color: var(--copa-blue) !important;
+  background: #e1eafa !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .standard-tactic-buttons button.active {
+  border-color: var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture-grid.bracket-mode, .bracket-shell, .bracket-canvas, .bracket-board) {
+  border-color: rgba(7,25,56,.16) !important;
+  border-radius: 6px !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-white) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-heads {
+  overflow: hidden !important;
+  border: 1px solid var(--copa-line) !important;
+  border-top: 5px solid var(--copa-red) !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture.bracket-fixture, .bracket-card, .bracket-match, .third-place-card) {
+  border: 1px solid #c9d1df !important;
+  border-radius: 4px !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-white) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.bracket-connector::before, .bracket-connector::after, .bracket-line) {
+  border-width: 1px !important;
+  border-color: #aeb8c9 !important;
+  background: #aeb8c9 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-connector::before,
+body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-connector::after,
+body.retro-mode-active.retro-copa-2024-active #mainContent .bracket-fixture[data-connects="true"]::after {
+  border-color: #aeb8c9 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal) {
+  border: 1px solid #9eabc1 !important;
+  border-top: 6px solid var(--copa-red) !important;
+  border-radius: 7px !important;
+  clip-path: none !important;
+  color: var(--copa-ink) !important;
+  background: var(--copa-panel) !important;
+  background-image: none !important;
+  box-shadow: 0 26px 70px rgba(0, 12, 54, .36) !important;
+}
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal)::before,
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal)::after {
+  display: none !important;
+  content: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal) form {
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: var(--copa-ink) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal) :is(h2, h3, strong, .section-kicker) {
+  color: var(--copa-navy) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal) :is(p, small, label) {
+  color: #53627c !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .confirm-modal .confirm-icon {
+  border: 1px solid var(--copa-red) !important;
+  border-radius: 50% !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .confirm-modal :is(.primary-button, .danger-button),
+body.retro-mode-active.retro-copa-2024-active .snapshot-modal .snapshot-actions .primary-button {
+  border: 1px solid var(--copa-red) !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .confirm-modal .secondary-button,
+body.retro-mode-active.retro-copa-2024-active .snapshot-modal .snapshot-actions .secondary-button {
+  border: 1px solid var(--copa-blue) !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-blue) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .snapshot-modal .snapshot-modal-head {
+  border: 0 !important;
+  border-bottom: 1px solid #c9d1df !important;
+  border-radius: 0 !important;
+  color: var(--copa-ink) !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .snapshot-modal .snapshot-preview {
+  border: 1px solid #9eabc1 !important;
+  border-radius: 5px !important;
+  background: var(--copa-navy) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .snapshot-modal .close-modal {
+  border: 1px solid #b6c0d1 !important;
+  border-radius: 4px !important;
+  color: var(--copa-navy) !important;
+  background: var(--copa-white) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal) button:focus-visible {
+  outline: 2px solid var(--copa-red) !important;
+  outline-offset: 2px !important;
+  border-color: var(--copa-red) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active :is(.confirm-modal, .snapshot-modal)::backdrop {
+  background: rgba(1, 9, 30, .78) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active :is(button, .search-result):active:not(:disabled) {
+  transform: scale(.97);
+}
+
+@media (max-width: 720px) {
+  body.retro-mode-active.retro-copa-2024-active .retro-tournament-heading {
+    padding: 14px 15px !important;
+  }
+  body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage .matchup {
+    padding-inline: 12px !important;
+  }
+}
+
+/* Final Copa 2024 colour lock: keep late shared guards from restoring white. */
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board {
+  border-color: #31528d !important;
+  border-top-color: var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 62%, #04153e) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board > :is(h2, h3) {
+  color: var(--copa-white) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture {
+  border-color: #49679a !important;
+  border-left: 5px solid var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: #0a2b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture :is(strong, b, span, small) {
+  color: var(--copa-white) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture :is(.fixture-meta, .fixture-details, footer) {
+  color: #d8e1f0 !important;
+  background: #041b4d !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture-grid.bracket-mode, .bracket-shell, .bracket-canvas, .bracket-board) {
+  border-color: #31528d !important;
+  color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 64%, #04153e) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture.bracket-fixture, .bracket-card, .bracket-match, .third-place-card) {
+  border-color: #5b78aa !important;
+  border-left: 5px solid var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: #0b2d70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.fixture.bracket-fixture, .bracket-card, .bracket-match, .third-place-card) :is(strong, b, span, small) {
+  color: var(--copa-white) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-view {
+  border-color: #31528d !important;
+  border-top: 5px solid var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 58%, #04153e) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-heading {
+  border-color: rgba(255,255,255,.22) !important;
+  color: var(--copa-white) !important;
+  background: #061d54 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group {
+  border: 1px solid #49679a !important;
+  background: #0a2b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group > h2 {
+  border-bottom: 3px solid var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: #041b4d !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group .retro-squad-row,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group .retro-squad-row:nth-child(even) {
+  border-bottom: 1px solid rgba(255,255,255,.14) !important;
+  color: var(--copa-white) !important;
+  background: #0a2b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group .retro-squad-row:nth-child(even) {
+  background: #0d347f !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-position-group .retro-squad-row.is-likely-starter {
+  background: #164ca4 !important;
+  box-shadow: inset 4px 0 var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row :is(strong, small) {
+  color: var(--copa-white) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-squad-row > :is(em, i) {
+  display: none !important;
+}
+
+/* Squad view is rendered beside #mainContent inside the historical screen. */
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-view {
+  border: 1px solid #31528d !important; border-top: 5px solid var(--copa-red) !important;
+  color: var(--copa-white) !important;
+  background: linear-gradient(145deg, #0a2b70, #061d54 58%, #04153e) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-heading {
+  border-color: rgba(255,255,255,.22) !important; color: var(--copa-white) !important; background: #061d54 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-heading :is(strong, small, em, label, span) { color: var(--copa-white) !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-position-group {
+  border: 1px solid #49679a !important; background: #0a2b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-position-group > h2 {
+  border-bottom: 3px solid var(--copa-red) !important; color: var(--copa-white) !important; background: #041b4d !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-position-group > h2 b,
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-number {
+  border-color: rgba(255,255,255,.48) !important; color: var(--copa-white) !important; background: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-row,
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-row:nth-child(even) {
+  border-bottom: 1px solid rgba(255,255,255,.14) !important; color: var(--copa-white) !important; background: #0a2b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-row:nth-child(even) { background: #0d347f !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-row.is-likely-starter {
+  background: #164ca4 !important; box-shadow: inset 4px 0 var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-row :is(strong, small) { color: var(--copa-white) !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-tournament-body .retro-squad-row > :is(em, i) { display: none !important; }
+
+/* Final Copa 2024 contrast and interaction polish. */
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-match-lineups-panel {
+  overflow: hidden !important;
+  border: 1px solid #e26878 !important;
+  border-radius: 5px !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-match-lineups-panel > summary {
+  border: 0 !important;
+  color: var(--copa-white) !important;
+  background: var(--copa-red) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-match-lineups-panel > summary::marker,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-match-lineups-panel > summary::before {
+  color: var(--copa-white) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-match-lineups-panel[open] > :not(summary) {
+  color: var(--copa-white) !important;
+  background: var(--copa-navy) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board .section-heading :is(h2, h3),
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board > :is(h2, h3),
+body.retro-mode-active.retro-copa-2024-active #mainContent .round-board :is(.round-title, .board-title) {
+  color: var(--copa-white) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-golden-boot > div > b {
+  color: var(--copa-white) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .golden-boot-rank {
+  color: var(--copa-white) !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent #teamFilterControl.team-filter-control {
+  overflow: visible !important;
+  padding: 0 !important;
+  border: 0 !important;
+  color: var(--copa-white) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent #teamFilterControl .team-filter-search {
+  overflow: hidden !important;
+  border: 1px solid #6f88b5 !important;
+  border-radius: 4px !important;
+  color: var(--copa-white) !important;
+  background: #08245f !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent #teamFilterControl .team-filter-search :is(input, .search-input) {
+  padding-inline: 8px !important;
+  border: 0 !important;
+  outline: 0 !important;
+  color: var(--copa-white) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent #teamFilterControl .team-filter-search :is(input, .search-input)::placeholder {
+  color: #b7c5dd !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent #teamFilterControl .team-filter-search :is(svg, .search-icon, span) {
+  color: var(--copa-white) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-stage {
+  width: min(760px, calc(100% - 48px)) !important;
+  margin-inline: auto !important;
+  padding: 18px 20px !important;
+  border: 1px solid #6982ad !important;
+  border-top: 5px solid var(--copa-red) !important;
+  border-radius: 6px !important;
+  color: var(--copa-white) !important;
+  background: #061d54 !important;
+  background-image: linear-gradient(145deg, #0a2b70, #061d54 68%, #04153e) !important;
+  box-shadow: 0 14px 30px rgba(0,8,38,.3) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-stage-head {
+  color: #dce5f3 !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-stage-head strong,
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-stage-head strong b {
+  color: var(--copa-white) !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,.42) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-stage-head strong i {
+  color: #d9e2f1 !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-stage-head strong b.score-pop {
+  color: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-scene {
+  border: 1px solid #9bb0d1 !important;
+  border-radius: 5px !important;
+  background: linear-gradient(180deg, rgba(4,21,62,.06), rgba(4,21,62,.38)), #163f80 !important;
+  box-shadow: inset 0 0 32px rgba(0,8,38,.24) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-call strong,
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-ledgers span {
+  color: var(--copa-white) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-mark {
+  width: 13px !important;
+  height: 13px !important;
+  border: 2px solid #9aabc7 !important;
+  border-radius: 50% !important;
+  background: #243f70 !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-mark.goal,
+body.retro-mode-active.retro-copa-2024-active #mainContent .shootout-summary-row.scored i,
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.penalty-score-dot, .kick-result-marker).goal {
+  border-color: #74d89b !important;
+  background: #159447 !important;
+  box-shadow: 0 0 0 3px rgba(21,148,71,.16) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-mark.miss,
+body.retro-mode-active.retro-copa-2024-active #mainContent .shootout-summary-row.missed i,
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.penalty-score-dot, .kick-result-marker).miss {
+  border-color: #f28a96 !important;
+  background: #c7243b !important;
+  box-shadow: 0 0 0 3px rgba(199,36,59,.15) !important;
+}
+
+/* Copa 2024 final readability lock. */
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stat-row span,
+body.retro-mode-active.retro-copa-2024-active #mainContent .golden-boot-rank {
+  color: #071938 !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-mark {
+  border-color: #ffffff !important;
+  background: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-mark.goal,
+body.retro-mode-active.retro-copa-2024-active #mainContent .shootout-summary-row.scored i {
+  border: 3px solid #8be0aa !important;
+  background: #138a43 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-mark.miss,
+body.retro-mode-active.retro-copa-2024-active #mainContent .shootout-summary-row.missed i {
+  border: 3px solid #ffffff !important;
+  background: #cf263f !important;
+  box-shadow: 0 0 0 3px rgba(207,38,63,.28) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-keeper i,
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-taker i {
+  background: #c98d64 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-keeper b {
+  color: #55a7df !important;
+  background: #55a7df !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .penalty-taker b {
+  color: #f1f4fa !important;
+  background: #f1f4fa !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage .team-match-events :is(span, b, strong, small),
+body.retro-mode-active.retro-copa-2024-active #mainContent .match-stage .shootout-summary-row {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-match-lineups-panel[open] {
+  border-color: #d06b7c !important;
+  background: #071f59 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-lineup-workspace,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-lineup.is-live-ratings {
+  color: #ffffff !important;
+  background: #071f59 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-ratings-side,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-ratings-side > header {
+  border-color: #8ca3c8 !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-ratings-side > header :is(span, small, strong, b),
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-ratings-side > header * {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row {
+  border-color: #ccd5e4 !important;
+  color: #071938 !important;
+  background: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row :is(strong, small, span) {
+  color: #071938 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row > b {
+  color: #ffffff !important;
+  background: #153d78 !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row > b.is-excellent,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row > b.is-good { background: #087642 !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row > b.is-average { background: #8a6410 !important; }
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-live-rating-row > b.is-poor { background: #9b1d35 !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(#snapshotButton, .snapshot-button, .match-snapshot-button) {
+  border: 1px solid #ffffff !important;
+  border-radius: 5px !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage {
+  overflow: hidden !important;
+  border: 1px solid #d06b7c !important;
+  border-top: 7px solid #ffffff !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  background: linear-gradient(145deg, #a9233a, #74172a) !important;
+  box-shadow: 0 18px 40px rgba(0,8,38,.34) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage::before,
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage::after {
+  display: none !important;
+  content: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage :is(.champion-content, .champion-podium) {
+  border: 0 !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage :is(h1, h2, h3, p, strong, span, small, b) {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .champion-stage :is(.champion-place, .champion-award, .champion-extra-awards > *) {
+  border: 1px solid #7890b8 !important;
+  border-radius: 4px !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+  box-shadow: none !important;
+}
+
+/* Components moved outside #mainContent by the shared historical renderer. */
+body.retro-mode-active.retro-copa-2024-active .champion-stage {
+  border: 1px solid #d06b7c !important; border-top: 7px solid #ffffff !important;
+  color: #ffffff !important; background: linear-gradient(145deg, #a9233a, #74172a) !important;
+  background-image: linear-gradient(145deg, #a9233a, #74172a) !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .champion-stage::before,
+body.retro-mode-active.retro-copa-2024-active .champion-stage::after { display: none !important; content: none !important; }
+body.retro-mode-active.retro-copa-2024-active .champion-stage :is(.champion-content, .champion-podium) {
+  border: 0 !important; color: #ffffff !important; background: transparent !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .champion-stage :is(h1, h2, h3, p, strong, span, small, b) {
+  color: #ffffff !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .champion-stage :is(.champion-place, .champion-award, .champion-extra-awards > *) {
+  border: 1px solid #7890b8 !important; color: #ffffff !important; background: #092b70 !important; box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-side > header,
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-side > header :is(strong, small, span, b, em),
+body.retro-mode-active.retro-copa-2024-active .retro-lineups-heading :is(h2, p) {
+  color: #ffffff !important; text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-side > header { background: #092b70 !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-side li small,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player small { color: #52627e !important; }
+
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs {
+  overflow: hidden !important; border: 1px solid #7890b8 !important; border-radius: 5px !important;
+  background: #061d54 !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs button,
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs button:last-child {
+  border: 0 !important; border-radius: 0 !important; color: #ffffff !important;
+  background: #092b70 !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs button.active,
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs button[aria-selected="true"] {
+  color: #ffffff !important; background: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-workspace,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-layout {
+  border-color: #7890b8 !important; color: #071938 !important; background: #eef2f8 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-workspace > p { color: #52627e !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player.is-bench {
+  border-color: #bdc8da !important; color: #071938 !important; background: #ffffff !important; box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player :is(strong, em) { color: #071938 !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player > b,
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player i {
+  border-color: #ffffff !important; color: #ffffff !important; background: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player > i {
+  border-color: #7890b8 !important; color: #071938 !important; background: #e8edf6 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player.is-selected {
+  border-color: var(--copa-red) !important; background: #f8e9ed !important; box-shadow: inset 4px 0 var(--copa-red) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-standard-fixture-meta {
+  margin-top: 12px !important; padding: 10px 0 0 !important;
+  border: 0 !important; border-top: 1px solid rgba(255,255,255,.22) !important;
+  color: #dce5f3 !important; background: transparent !important; box-shadow: none !important;
+}
+
+/* High-specificity corrections for the shared manager and fixture widgets. */
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs button *,
+body.retro-mode-active.retro-copa-2024-active .retro-lineup-tabs button.active * {
+  color: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player > b,
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player.is-selected > b,
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player.is-drop-target > b {
+  border: 2px solid #ffffff !important;
+  color: #ffffff !important;
+  background: var(--copa-red) !important;
+  box-shadow: 0 3px 8px rgba(0,8,38,.24) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player > i {
+  border: 1px solid #ffffff !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player > span {
+  color: #071938 !important;
+  background: rgba(255,255,255,.9) !important;
+  text-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-section,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-pitch-box {
+  border-color: #9aabc7 !important;
+  color: #071938 !important;
+  background: #eef2f8 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-section-title :is(strong, span),
+body.retro-mode-active.retro-copa-2024-active .retro-manager-section :is(h3, h4) {
+  color: #071938 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player small {
+  color: #52627e !important;
+  opacity: 1 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player-list {
+  scrollbar-color: var(--copa-red) #d7deea !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player-list::-webkit-scrollbar-track { background: #d7deea !important; }
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player-list::-webkit-scrollbar-thumb { background: var(--copa-red) !important; }
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .fixture-grid:not(.bracket-mode) .fixture .retro-standard-fixture-meta {
+  display: block !important;
+  margin: 12px 0 0 !important;
+  padding: 10px 0 0 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(255,255,255,.25) !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active .champion-stage .champion-content > *,
+body.retro-mode-active.retro-copa-2024-active .champion-stage .champion-award-copy > *,
+body.retro-mode-active.retro-copa-2024-active .champion-stage .champion-place > * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent :is(.event-live-clock, .event-live-clock strong, .live-clock, .score-live-clock, .score-live-clock strong) {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0,8,38,.35) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-formation-badge,
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-corner-control .retro-formation-badge {
+  border: 1px solid #8fa5ca !important;
+  border-radius: 4px !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-sub-counter {
+  gap: 6px !important;
+  padding: 5px 7px !important;
+  border: 1px solid #8fa5ca !important;
+  border-radius: 4px !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-sub-counter span {
+  color: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-sub-counter.is-pending {
+  gap: 4px !important;
+  padding: 4px 5px !important;
+  background: #061d54 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-sub-counter.is-pending button,
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-sub-counter.is-pending button:last-child {
+  min-height: 26px !important;
+  padding: 0 7px !important;
+  border: 1px solid #8fa5ca !important;
+  border-radius: 3px !important;
+  color: #ffffff !important;
+  background: #092b70 !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-sub-counter.is-pending button:last-child {
+  border-color: #d06b7c !important;
+  background: var(--copa-red) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-player > span {
+  padding: 2px 5px !important;
+  border-radius: 2px !important;
+  color: #071938 !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 5px rgba(0,8,38,.18) !important;
+}
+
+/* Live clock and clean pitch-player lock (disabled buttons inherit a white fill). */
+body.retro-mode-active.retro-copa-2024-active :is(.event-live-clock, .event-live-clock > span, .event-live-clock strong, .event-live-clock small, .live-clock, .score-live-clock, .score-live-clock strong),
+body.retro-mode-active.retro-copa-2024-active :is(.event-live-clock, .score-live-clock) * {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: 0 2px 6px rgba(0,8,38,.4) !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-pitch button.retro-pitch-player,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-pitch button.retro-pitch-player:disabled,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-pitch button.retro-pitch-player:disabled {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-pitch button.retro-pitch-player > span {
+  padding: 1px 3px !important;
+  border: 0 !important;
+  color: #ffffff !important;
+  background: rgba(6,29,84,.78) !important;
+  box-shadow: none !important;
+  text-shadow: 0 2px 4px rgba(0,8,38,.9) !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #eventLiveClock,
+body.retro-mode-active.retro-copa-2024-active #eventLiveClock > span,
+body.retro-mode-active.retro-copa-2024-active #eventLiveClock > span *,
+body.retro-mode-active.retro-copa-2024-active #liveClock,
+body.retro-mode-active.retro-copa-2024-active #livePhase {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0,8,38,.5) !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-pitch button.retro-pitch-player,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-pitch button.retro-pitch-player:not(:disabled) {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active .retro-manager-hint,
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-hint {
+  color: #071938 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-pitch .retro-pitch-player > b,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-pitch .retro-pitch-player > b {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-manager-player > b,
+body.retro-mode-active.retro-copa-2024-active .retro-manager-player > b {
+  padding: 0 !important;
+  border: 0 !important;
+  color: #071938 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body.retro-mode-active.retro-copa-2024-active #mainContent .retro-formation-badge,
+body.retro-mode-active.retro-copa-2024-active .retro-pitch-corner-control .retro-formation-badge {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+body.retro-mode-active.retro-copa-2024-active #championStage,
+body.retro-mode-active.retro-copa-2024-active #championStage * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
 }

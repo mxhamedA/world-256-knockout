@@ -972,7 +972,7 @@ function fixtureMarkup(match, index, roundIndex = state.activeRound, options = {
         <span class="retro-standard-fixture-meta">
           ${escapeHtml([
             match.schedule.dateLabel,
-            Number(retroTournament?.year) === 2024 ? match.schedule.timeLabel : null,
+            Number(retroTournament?.year) === 2024 ? null : match.schedule.timeLabel,
             [match.schedule.stadium, match.schedule.city].filter(Boolean).join(", "),
           ].filter(Boolean).join(" · "))}
         </span>
