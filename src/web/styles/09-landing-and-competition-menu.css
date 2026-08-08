@@ -1930,16 +1930,8 @@ html.light-mode body.before-start .mode-card-career :is(
   box-shadow: inset 3px 0 #6f96ff;
 }
 
-.home-achievement-row:is(.is-all-achievements, .is-podium-gold) .home-achievement-player b {
+body.before-start .home-achievement-row.is-all-achievements .home-achievement-player b {
   color: #ffe58a;
-}
-
-.home-achievement-row.is-podium-silver .home-achievement-player b {
-  color: #e6edf5;
-}
-
-.home-achievement-row.is-podium-bronze .home-achievement-player b {
-  color: #e8ad78;
 }
 
 .home-achievement-row > strong {

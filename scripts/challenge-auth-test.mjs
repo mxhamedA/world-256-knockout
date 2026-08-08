@@ -90,6 +90,7 @@ assert.deepEqual(challengeSessionTokensFromRequest(new Request("https://www.256t
 
 const authUi = fs.readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const authClient = fs.readFileSync(new URL("../challenge.js", import.meta.url), "utf8");
+const leaderboardCss = fs.readFileSync(new URL("../src/web/styles/09-landing-and-competition-menu.css", import.meta.url), "utf8");
 assert.match(authUi, /id="challengeEmail"[^>]*type="email"[^>]*autocomplete="email"/);
 assert.match(authUi, /id="challengeIdentifierLabel">Username or email/);
 assert.match(authClient, /elements\.email\.required = isRegister/);
@@ -114,6 +115,14 @@ assert.doesNotMatch(renderProfileSource, /openAuth\(/,
 assert.match(authClient, /const recoveredAccount = dashboard\?\.account \|\| expectedAccount \|\| null;/);
 assert.match(authClient, /error\.status === 401 && !recoveredAccount\) openAuth\("login"\)/,
   "The profile route should request login only after both authenticated checks fail.");
+assert.match(authClient, /Number\(entry\.achievements \|\| 0\) >= totalAchievements \? " is-all-achievements" : ""/,
+  "Completing every trophy must mark a leaderboard name for gold styling.");
+assert.doesNotMatch(authClient, /is-podium-(?:gold|silver|bronze)/,
+  "Leaderboard name styling must not depend on podium rank.");
+assert.match(leaderboardCss, /body\.before-start \.home-achievement-row\.is-all-achievements \.home-achievement-player b\s*\{\s*color:\s*#ffe58a/,
+  "All-trophy names must remain gold in both light and dark themes.");
+assert.doesNotMatch(leaderboardCss, /is-podium-(?:silver|bronze)/,
+  "Silver and bronze leaderboard name colours must be removed.");
 assert.match(authUi, /id="usernameReviewModal"/);
 assert.match(authClient, /account\?\.usernameNeedsReview/);
 assert.match(authClient, /body: \{ username: elements\.usernameReviewInput\.value \}/);
