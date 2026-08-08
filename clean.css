@@ -7241,6 +7241,7 @@ body.retro-mode-active.retro-2026-active #mainContent .penalty-mark.miss {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  margin-top: 18px;
   padding: 13px 14px;
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -14102,10 +14103,6 @@ body.before-start .home-achievement-row.is-all-achievements .home-achievement-pl
   .field-overview > .mode-select {
     grid-column: 1;
     min-width: 0;
-  }
-
-  .field-overview > .home-editorial {
-    grid-column: 1 / -1;
   }
 
   .home-achievement-leaderboard {
@@ -45520,6 +45517,10 @@ body.retro-mode-active.retro-euro-2020-active #mainContent :is(
 
 /* A routed full-screen mode must never remain in document flow after navigation. */
 :is(#retroWorldCupScreen, #premierLeagueSeasonScreen, #uclSimulatorScreen, #playerCareerScreen)[hidden] {
+  display: none !important;
+}
+
+body[data-desktop-mode-setup] .mode-select > .home-editorial {
   display: none !important;
 }
 

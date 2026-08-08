@@ -4768,6 +4768,10 @@ body.retro-mode-active.retro-euro-2020-active #mainContent :is(
   display: none !important;
 }
 
+body[data-desktop-mode-setup] .mode-select > .home-editorial {
+  display: none !important;
+}
+
 /* Tablet home: preserve the desktop composition without squeezing three launchers together. */
 @media (min-width: 721px) and (max-width: 1159px) {
   body.before-start:not([data-desktop-mode-setup]) .mode-grid {

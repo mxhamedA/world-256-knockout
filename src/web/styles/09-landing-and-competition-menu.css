@@ -2076,10 +2076,6 @@ body.before-start .home-achievement-row.is-all-achievements .home-achievement-pl
     min-width: 0;
   }
 
-  .field-overview > .home-editorial {
-    grid-column: 1 / -1;
-  }
-
   .home-achievement-leaderboard {
     position: sticky;
     top: 92px;

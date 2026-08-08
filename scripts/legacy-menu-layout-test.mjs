@@ -13,6 +13,8 @@ assert.match(html, /class="mode-card mode-card-custom"[\s\S]*custom-mode-prefix"
 assert.doesNotMatch(html.match(/class="mode-card mode-card-legacy"[\s\S]*?<\/article>/)?.[0] || "", /id="legacyLandingSetup"/);
 assert.match(html, /id="legacySetupModal"[\s\S]*id="legacyLandingSetup"[\s\S]*id="confirmLegacyDraftButton"/);
 assert.match(html, /class="mode-card mode-card-ucl"[^>]*id="uclModeCard"[\s\S]*ucl-starball-white\.png[\s\S]*UCL simulator[\s\S]*id="uclTeamPickerButton"[\s\S]*id="startUclSimulatorButton"/);
+assert.match(html, /class="mode-select"[\s\S]*class="mode-grid"[\s\S]*class="home-editorial"[\s\S]*<\/section>\s*<dialog class="legacy-setup-modal"/,
+  "About the simulator must sit inside the modes column, immediately after the launcher grid.");
 assert.doesNotMatch(html.match(/id="uclModeCard"[\s\S]*?<\/article>/)?.[0] || "", /Coming soon/);
 assert.doesNotMatch(html, /EUROPEAN CLUB FOOTBALL/);
 assert.match(app, /const UCL_2026_27_QUALIFIED_TEAMS = Object\.freeze\(\[/);
@@ -81,8 +83,10 @@ assert.doesNotMatch(css, /@keyframes achievement-(?:gold|silver|bronze)-glow/,
   "Leaderboard podium styling must not use animated text glows that render as colour blocks.");
 assert.match(css, /@media \(min-width: 721px\)\s*\{[\s\S]*?\.field-overview\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) clamp\(250px, 29vw, 330px\)/,
   "Tablet layouts must keep the leaderboard in a compact right-hand column.");
-assert.match(css, /\.field-overview > \.home-editorial\s*\{\s*grid-column:\s*1 \/ -1/,
-  "The simulator information footer must span beneath both tablet columns.");
+assert.doesNotMatch(css, /\.field-overview > \.home-editorial\s*\{\s*grid-column:/,
+  "The simulator information panel must not wait beneath the leaderboard grid row.");
+assert.match(css, /body\[data-desktop-mode-setup\] \.mode-select > \.home-editorial\s*\{\s*display:\s*none !important/,
+  "The relocated information panel must stay hidden on routed setup screens.");
 assert.match(css, /@media \(min-width: 721px\) and \(max-width: 1159px\)[\s\S]*?\.mode-card:not\(\.mode-card-retro, \.mode-card-custom\)[\s\S]*?grid-column:\s*span 3 !important/,
   "Tablet launchers must use two columns instead of squeezing into three.");
 assert.match(css, /\.mode-grid > \.mode-card\.mode-card-custom\s*\{\s*grid-column:\s*1 \/ -1 !important/,
