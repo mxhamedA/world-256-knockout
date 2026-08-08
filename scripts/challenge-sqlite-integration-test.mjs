@@ -124,7 +124,18 @@ const db = {
   },
 };
 
-const env = { CHALLENGE_DB: db };
+const sentEmails = [];
+const env = {
+  CHALLENGE_DB: db,
+  ACCOUNT_EMAIL_FROM: "notifications@256teams.com",
+  ACCOUNT_REQUEST_NOTIFICATION_EMAIL: "owner@example.com",
+  ACCOUNT_EMAIL: {
+    async send(message) {
+      sentEmails.push(message);
+      return { messageId: `test-${sentEmails.length}` };
+    },
+  },
+};
 let sessionCookie = "";
 
 assert.equal(retroAchievementPoints(2010, "Spain"), 1);
@@ -227,6 +238,68 @@ const usernameLogin = await request("/login", {
 });
 assert.equal(usernameLogin.response.status, 200);
 assert.deepEqual(usernameLogin.payload.account.assetPacks, []);
+
+const unknownResetRequest = await request("/forgot-password", {
+  method: "POST",
+  body: { identifier: "missing@example.com" },
+  session: false,
+});
+assert.equal(unknownResetRequest.response.status, 202);
+assert.equal(sentEmails.length, 0);
+
+const resetRequest = await request("/forgot-password", {
+  method: "POST",
+  body: { identifier: email.toUpperCase() },
+  session: false,
+});
+assert.equal(resetRequest.response.status, 202);
+assert.match(resetRequest.payload.message, /if an account matches/i);
+assert.equal(sentEmails.length, 1);
+assert.equal(sentEmails[0].to, email);
+const resetToken = sentEmails[0].text.match(/\/reset-password\?token=([A-Za-z0-9_-]+)/)?.[1];
+assert.ok(resetToken);
+
+const newPassword = "a-new-secure-test-password";
+const reset = await request("/reset-password", {
+  method: "POST",
+  body: { token: resetToken, password: newPassword },
+  session: false,
+});
+assert.equal(reset.response.status, 200);
+const reusedReset = await request("/reset-password", {
+  method: "POST",
+  body: { token: resetToken, password: "another-secure-password" },
+  session: false,
+});
+assert.equal(reusedReset.response.status, 400);
+
+sessionCookie = "";
+const oldPasswordLogin = await request("/login", {
+  method: "POST",
+  body: { identifier: username, password },
+  session: false,
+});
+assert.equal(oldPasswordLogin.response.status, 401);
+const resetPasswordLogin = await request("/login", {
+  method: "POST",
+  body: { identifier: username, password: newPassword },
+  session: false,
+});
+assert.equal(resetPasswordLogin.response.status, 200);
+
+const deletionRequest = await request("/profile/deletion-request", {
+  method: "POST",
+  body: { reason: "privacy", details: "Integration test request" },
+});
+assert.equal(deletionRequest.response.status, 201);
+assert.equal(deletionRequest.payload.notificationSent, true);
+assert.equal(sentEmails.length, 2);
+assert.equal(sentEmails[1].to, "owner@example.com");
+assert.match(sentEmails[1].subject, new RegExp(username));
+assert.ok(deletionRequest.payload.deletionRequest.notification_sent_at);
+const profileWithDeletion = await request("/profile");
+assert.equal(profileWithDeletion.payload.deletionRequest.status, "pending");
+assert.ok(profileWithDeletion.payload.deletionRequest.notification_sent_at);
 
 const accountCustomTeam = {
   id: "custom-cloud-abc123",
@@ -521,6 +594,38 @@ assert.equal(persistedEuroProgress.response.status, 200);
 assert.equal(persistedEuroProgress.payload.achievement.unlocked, true);
 assert.equal(persistedEuroProgress.payload.achievement.completed, 24);
 
+const euro2020Started = await request("/achievements/retro-2020", {
+  method: "POST",
+  body: { seed: 2020061101, teamName: "Italy", phase: "start", champion: null },
+});
+assert.equal(euro2020Started.response.status, 200);
+assert.equal(euro2020Started.payload.achievement.id, "retro-2020-european-tour");
+assert.equal(euro2020Started.payload.achievement.total, 24);
+assert.equal(euro2020Started.payload.unlockedTeam.attempts, 1);
+
+const euro2020Won = await request("/achievements/retro-2020", {
+  method: "POST",
+  body: { seed: 2020061101, teamName: "Italy", phase: "complete", champion: "Italy" },
+});
+assert.equal(euro2020Won.response.status, 200);
+assert.equal(euro2020Won.payload.countryUnlocked, true);
+assert.equal(euro2020Won.payload.unlockedTeam.won, true);
+assert.equal(euro2020Won.payload.achievement.completed, 1);
+
+const euro2020Duplicate = await request("/achievements/retro-2020", {
+  method: "POST",
+  body: { seed: 2020061101, teamName: "Italy", phase: "complete", champion: "Italy" },
+});
+assert.equal(euro2020Duplicate.response.status, 200);
+assert.equal(euro2020Duplicate.payload.countryUnlocked, false);
+assert.equal(euro2020Duplicate.payload.achievement.completed, 1);
+
+const euro2020InvalidTeam = await request("/achievements/retro-2020", {
+  method: "POST",
+  body: { seed: 2020061102, teamName: "Iceland", phase: "complete", champion: "Iceland" },
+});
+assert.equal(euro2020InvalidTeam.response.status, 400);
+
 const spainFinalist = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
@@ -551,14 +656,15 @@ assert.equal(
   false,
 );
 const hardenedFinalistBoard = await request("/achievements/leaderboard");
-assert.equal(hardenedFinalistBoard.payload.currentUser.achievements, 28);
+assert.equal(hardenedFinalistBoard.payload.currentUser.achievements, 29);
 assert.equal(
   hardenedFinalistBoard.payload.currentUser.points,
   retro2006Win.payload.unlockedTeam.points
     + completed.payload.unlockedTeam.points
     + copaArgentinaWin.payload.unlockedTeam.points
     + retro2026Completed.payload.unlockedTeam.points
-    + euroMastered.completedPoints,
+    + euroMastered.completedPoints
+    + euro2020Won.payload.unlockedTeam.points,
 );
 
 const spainChampion = await request("/achievements/knockout-256", {
@@ -610,6 +716,35 @@ assert.equal(nauruRoundOf16.payload.achievement.total, 256);
 assert.equal(nauruRoundOf16.payload.unlockedTeam.attempts, 1);
 assert.equal(nauruRoundOf16.payload.unlockedTeam.achievedOnAttempt, 1);
 
+const specialFirstRoundExit = await request("/achievements/knockout-256", {
+  method: "POST",
+  body: {
+    seed: 256006,
+    teamId: "team-25",
+    bestRoundIndex: 0,
+    championTeamId: null,
+    phase: "complete",
+  },
+});
+assert.equal(specialFirstRoundExit.response.status, 200);
+assert.equal(specialFirstRoundExit.payload.countryUnlocked, true);
+assert.equal(specialFirstRoundExit.payload.unlockedTeam.complete, true);
+assert.equal(specialFirstRoundExit.payload.unlockedTeam.points, 4);
+
+const specialLaterDeeperRun = await request("/achievements/knockout-256", {
+  method: "POST",
+  body: {
+    seed: 256007,
+    teamId: "team-25",
+    bestRoundIndex: 1,
+    championTeamId: null,
+    phase: "complete",
+  },
+});
+assert.equal(specialLaterDeeperRun.response.status, 200);
+assert.equal(specialLaterDeeperRun.payload.countryUnlocked, false);
+assert.equal(specialLaterDeeperRun.payload.unlockedTeam.complete, true);
+
 const invalidKnockoutTeam = await request("/achievements/knockout-256", {
   method: "POST",
   body: {
@@ -636,14 +771,16 @@ assert.equal(invalidKnockoutRound.response.status, 400);
 
 const knockoutProgress = await request("/achievements/knockout-256");
 assert.equal(knockoutProgress.response.status, 200);
-assert.equal(knockoutProgress.payload.achievement.completed, 2);
+assert.equal(knockoutProgress.payload.achievement.completed, 3);
 assert.equal(
   knockoutProgress.payload.achievement.teams.find((team) => team.teamId === "team-50")?.achievedOnAttempt,
   2,
 );
 assert.equal(
   knockoutProgress.payload.achievement.completedPoints,
-  spainChampion.payload.unlockedTeam.points + nauruRoundOf16.payload.unlockedTeam.points,
+  spainChampion.payload.unlockedTeam.points
+    + nauruRoundOf16.payload.unlockedTeam.points
+    + specialFirstRoundExit.payload.unlockedTeam.points,
 );
 
 const publicKnockoutAchievements = await request("/achievements/knockout-256", { session: false });
@@ -770,10 +907,21 @@ assert.equal(
     + uclCeljeTop24.payload.unlockedTeam.points,
 );
 
+// Achievement unlocks are permanent. If an older stored UCL attempt has an
+// achieved flag but stale stage metadata, the leaderboard must agree with the
+// achievement popup instead of silently dropping one completed club.
+sqlite.prepare(`
+  UPDATE ucl_attempts
+  SET best_stage_index = 3
+  WHERE account_id = (SELECT id FROM accounts WHERE username = ?)
+    AND club_id = 'arsenal'
+    AND achieved = 1
+`).run(username);
+
 const achievementBoard = await request("/achievements/leaderboard");
 assert.equal(achievementBoard.response.status, 200);
 assert.equal(achievementBoard.payload.leaderboard[0].username, username);
-assert.equal(achievementBoard.payload.leaderboard[0].achievements, 35);
+assert.equal(achievementBoard.payload.leaderboard[0].achievements, 37);
 assert.equal(
   achievementBoard.payload.leaderboard[0].points,
   retro2006Win.payload.unlockedTeam.points
@@ -781,8 +929,10 @@ assert.equal(
     + copaArgentinaWin.payload.unlockedTeam.points
     + retro2026Completed.payload.unlockedTeam.points
     + euroMastered.completedPoints
+    + euro2020Won.payload.unlockedTeam.points
     + spainChampion.payload.unlockedTeam.points
     + nauruRoundOf16.payload.unlockedTeam.points
+    + specialFirstRoundExit.payload.unlockedTeam.points
     + premierLeagueWon.payload.unlockedTeam.points
     + ipswichSurvived.payload.unlockedTeam.points
     + uclRealChampion.payload.unlockedTeam.points
@@ -790,7 +940,7 @@ assert.equal(
     + uclCeljeTop24.payload.unlockedTeam.points,
 );
 assert.equal(achievementBoard.payload.currentUser.rank, 1);
-assert.equal(achievementBoard.payload.totalAchievements, 627);
+assert.equal(achievementBoard.payload.totalAchievements, 651);
 
 const publicAchievementBoard = await request("/achievements/leaderboard", { session: false });
 assert.equal(publicAchievementBoard.response.status, 200);

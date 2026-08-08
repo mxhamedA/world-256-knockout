@@ -36,13 +36,17 @@
     authTitle: $("#challengeAuthTitle"),
     authSubmit: $("#challengeAuthSubmit"),
     authSwitch: $("#challengeAuthSwitch"),
+    forgotPassword: $("#challengeForgotPassword"),
     authClose: $("#challengeAuthCloseButton"),
     googleSignIn: $("#challengeGoogleSignIn"),
+    authDivider: $("#challengeAuthDivider"),
     authMessage: $("#challengeAuthMessage"),
     emailField: $("#challengeEmailField"),
     email: $("#challengeEmail"),
+    identifierField: $("#challengeIdentifierField"),
     identifierLabel: $("#challengeIdentifierLabel"),
     username: $("#challengeUsername"),
+    passwordField: $("#challengePasswordField"),
     password: $("#challengePassword"),
     usernameReviewModal: $("#usernameReviewModal"),
     usernameReviewForm: $("#usernameReviewForm"),
@@ -196,6 +200,9 @@
   function achievementsRouteActive() {
     return window.location.pathname.replace(/\/+$/, "") === "/achievements";
   }
+  function resetPasswordRouteActive() {
+    return window.location.pathname.replace(/\/+$/, "") === "/reset-password";
+  }
 
   function setRoute(active, replace = false) {
     const path = active ? "/palestine-challenge" : "/";
@@ -206,7 +213,7 @@
   function setProfileRoute(active = true, replace = false) {
     if (active && !profileRouteActive()) {
       const currentPath = `${window.location.pathname}${window.location.search}`;
-      profileReturnPath = /^\/(?:retro-(?:98|02|06|10|14|18|22)-world-cup|retro-euro-2016|copa-america-2024)(?:\?|$)/.test(currentPath) ? currentPath : "/";
+      profileReturnPath = /^\/(?:retro-(?:98|02|06|10|14|18|22)-world-cup|retro-euro-(?:2016|2020)|copa-america-2024)(?:\?|$)/.test(currentPath) ? currentPath : "/";
     }
     const path = active ? "/profile" : profileReturnPath;
     window.history[replace ? "replaceState" : "pushState"]({ appMode: active ? "profile" : "home" }, "", path);
@@ -230,7 +237,10 @@
       elements.profileEditToggle.textContent = "Edit profile";
       void loadProfile();
       window.scrollTo({ top: 0, behavior: "auto" });
-    } else void loadHomeAccount();
+    } else {
+      void loadHomeAccount();
+      if (resetPasswordRouteActive() && !authModal.open) openAuth("reset");
+    }
   }
 
   function syncMainAccount() {
@@ -576,6 +586,7 @@
   function achievementCompetitionLabel(key) {
     if (Number(key) === 256) return "256 Knockout";
     if (Number(key) === 2016) return "UEFA Euro 2016";
+    if (Number(key) === 2020) return "UEFA Euro 2020";
     if (Number(key) === 2024) return "Copa América USA 2024";
     if (key === "pl") return "Premier League 26/27";
     if (key === "ucl") return "UEFA Champions League 26/27";
@@ -586,7 +597,7 @@
     if (key === "pl" || String(key).toLowerCase() === "pl") return "pl";
     if (key === "ucl" || String(key).toLowerCase() === "ucl") return "ucl";
     const year = Number(key);
-    return [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year) ? year : 2014;
+    return [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(year) ? year : 2014;
   }
 
   function knockoutObjectiveForTeam(team, teamIndex = -1) {
@@ -621,6 +632,7 @@
       2010: "SOUTH AFRICA 2010",
       2014: "BRAZIL 2014",
       2016: "UEFA EURO 2016",
+      2020: "UEFA EURO 2020",
       2018: "RUSSIA 2018",
       2022: "QATAR 2022",
       2024: "COPA AMÉRICA USA 2024",
@@ -638,6 +650,18 @@
       : Number(year) === 256 ? "TEAMS COMPLETE" : "COUNTRIES COMPLETE";
     if (elements.achievementProgressLabel) elements.achievementProgressLabel.textContent = progressLabel;
     if (elements.retroAchievementProgressLabel) elements.retroAchievementProgressLabel.textContent = progressLabel;
+  }
+
+  function syncAchievementTabSelection(year = activeAchievementYear) {
+    const selectedYear = normalizeAchievementKey(year);
+    document.querySelectorAll(".achievement-year-tabs").forEach((tabList) => {
+      tabList.querySelectorAll("[data-achievement-year]").forEach((button) => {
+        const selected = normalizeAchievementKey(button.dataset.achievementYear) === selectedYear;
+        button.setAttribute("aria-selected", String(selected));
+        button.classList.toggle("is-selected", selected);
+        button.tabIndex = selected ? 0 : -1;
+      });
+    });
   }
 
   function renderAchievements() {
@@ -682,7 +706,7 @@
         : activeAchievementYear === "ucl" ? 39
         : activeAchievementYear === 2024 ? 16
         : activeAchievementYear === 2026 ? 48
-        : activeAchievementYear === 2016 ? 24
+        : [2016, 2020].includes(activeAchievementYear) ? 24
           : 32
     ));
     const progressMarkup = teams.map((progress) => {
@@ -727,21 +751,24 @@
         ? "Complete the season objective for every Premier League club"
         : activeAchievementYear === "ucl"
           ? "Complete the Champions League objective for every selectable club"
-      : activeAchievementYear === 2016
-        ? "Win UEFA Euro 2016 with every country"
+      : [2016, 2020].includes(activeAchievementYear)
+        ? `Win UEFA Euro ${activeAchievementYear} with every country`
         : activeAchievementYear === 2024
           ? "Win Copa América USA 2024 with every country"
         : `Win the ${activeAchievementYear} WC with every country`;
     if (elements.achievementChallengeTitle) elements.achievementChallengeTitle.textContent = challengeCopy;
     if (elements.retroAchievementModalDescription) elements.retroAchievementModalDescription.textContent = challengeCopy;
-    document.querySelectorAll("[data-achievement-year]").forEach((button) => {
-      button.setAttribute("aria-selected", String(normalizeAchievementKey(button.dataset.achievementYear) === activeAchievementYear));
-    });
+    syncAchievementTabSelection();
   }
 
   async function loadAchievements(year = activeAchievementYear) {
     if (!elements.achievementGrid) return;
     activeAchievementYear = normalizeAchievementKey(year);
+    // Update the visible tab before waiting on the API. Otherwise the old tab
+    // stays selected while the clicked tab has hover/focus, which looks like
+    // two achievement years are active at once on slower requests.
+    syncAchievementTheme();
+    syncAchievementTabSelection();
     try {
       achievementPayloads.set(activeAchievementYear, await challengeApi(achievementEndpoint(activeAchievementYear)));
     } catch (error) {
@@ -767,12 +794,12 @@
     const year = normalizeAchievementKey(payload.achievement?.year);
     elements.achievementModal.dataset.achievementTheme = String(year);
     const knockout = year === 256;
-    const euros = year === 2016;
+    const euros = [2016, 2020].includes(year);
     const copa = year === 2024;
     const premierLeague = year === "pl";
     const ucl = year === "ucl";
     elements.achievementModalTitle.textContent = grandUnlock
-      ? knockout ? "256 Knockout mastered" : premierLeague ? "Premier League mastered" : ucl ? "Champions League mastered" : euros ? "UEFA Euro 2016 mastered" : copa ? "Copa América 2024 mastered" : `${year} World Cup mastered`
+      ? knockout ? "256 Knockout mastered" : premierLeague ? "Premier League mastered" : ucl ? "Champions League mastered" : euros ? `UEFA Euro ${year} mastered` : copa ? "Copa América 2024 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete`;
     elements.achievementModalCopy.textContent = grandUnlock
       ? knockout
@@ -782,7 +809,7 @@
         : ucl
           ? `You have completed the objective for all 39 Champions League clubs. ${payload.achievement.completedPoints} points earned in this mode.`
         : euros
-          ? `You have won UEFA Euro 2016 with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
+          ? `You have won UEFA Euro ${year} with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
         : copa
           ? `You have won Copa América USA 2024 with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this competition.`
           : `You have won the ${year} World Cup with all ${payload.achievement.total} countries. ${payload.achievement.completedPoints} points earned in this World Cup.`
@@ -800,7 +827,7 @@
     elements.achievementBanner.dataset.achievementTheme = String(year);
     elements.achievementModal.dataset.achievementTheme = String(year);
     elements.achievementBannerTitle.textContent = grandUnlock
-      ? year === 256 ? "256 Knockout mastered" : year === "pl" ? "Premier League mastered" : year === "ucl" ? "Champions League mastered" : year === 2016 ? "UEFA Euro 2016 mastered" : year === 2024 ? "Copa América 2024 mastered" : `${year} World Cup mastered`
+      ? year === 256 ? "256 Knockout mastered" : year === "pl" ? "Premier League mastered" : year === "ucl" ? "Champions League mastered" : [2016, 2020].includes(year) ? `UEFA Euro ${year} mastered` : year === 2024 ? "Copa América 2024 mastered" : `${year} World Cup mastered`
       : `${payload.unlockedTeam.teamName} complete · +${payload.unlockedTeam.points} pts`;
     clearTimeout(achievementBannerTimer);
     elements.achievementBanner.hidden = false;
@@ -856,7 +883,7 @@
 
   async function trackRetroTournament(tournament) {
     const year = Number(tournament?.year);
-    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
+    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(year) || !tournament?.managedTeam || !Number.isInteger(Number(tournament.seed))) return;
     const champion = completedRetroChampion(tournament);
     const phase = tournament.phase === "complete" && champion ? "complete" : "start";
     const key = `${year}:${tournament.seed}:${tournament.managedTeam}:${phase}:${champion || ""}`;
@@ -1053,11 +1080,11 @@
   }
 
   function renderProfileAchievements() {
-    const years = [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026, "pl", "ucl"];
+    const years = [256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026, "pl", "ucl"];
     const achievements = years.map((year) => achievementPayloads.get(year)?.achievement || {
       year,
       completed: 0,
-      total: year === 256 ? 256 : year === 2016 ? 24 : year === 2024 ? 16 : year === 2026 ? 48 : year === "pl" ? 20 : year === "ucl" ? 39 : 32,
+      total: year === 256 ? 256 : [2016, 2020].includes(year) ? 24 : year === 2024 ? 16 : year === 2026 ? 48 : year === "pl" ? 20 : year === "ucl" ? 39 : 32,
       teams: [],
     });
     const completed = achievements.reduce((sum, achievement) => sum + Number(achievement.completed || 0), 0);
@@ -1291,7 +1318,7 @@
       if (profilePayload?.account) {
         dashboard = { ...(dashboard || {}), account: profilePayload.account };
         await syncStoredRetroAchievements();
-        await Promise.all([256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026, "pl", "ucl"].map(async (year) => {
+        await Promise.all([256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026, "pl", "ucl"].map(async (year) => {
           try {
             achievementPayloads.set(year, await challengeApi(achievementEndpoint(year)));
           } catch {
@@ -1318,20 +1345,30 @@
   function openAuth(mode = "login") {
     authMode = mode;
     const isLogin = mode === "login";
-    elements.authTitle.textContent = mode === "login" ? "Log in" : "Create account";
-    elements.authSubmit.textContent = mode === "login" ? "Log in" : "Register";
-    elements.authSwitch.textContent = mode === "login" ? "Create an account" : "I already have an account";
-    elements.password.autocomplete = mode === "login" ? "current-password" : "new-password";
-    elements.emailField.hidden = isLogin;
-    elements.email.required = !isLogin;
-    elements.identifierLabel.textContent = isLogin ? "Username or email" : "Username";
-    elements.username.name = isLogin ? "identifier" : "username";
+    const isRegister = mode === "register";
+    const isForgot = mode === "forgot";
+    const isReset = mode === "reset";
+    elements.authTitle.textContent = isLogin ? "Log in" : isRegister ? "Create account" : isForgot ? "Forgot password" : "Set a new password";
+    elements.authSubmit.textContent = isLogin ? "Log in" : isRegister ? "Register" : isForgot ? "Email reset link" : "Update password";
+    elements.authSwitch.textContent = isLogin ? "Create an account" : "Back to log in";
+    elements.password.autocomplete = isLogin ? "current-password" : "new-password";
+    elements.emailField.hidden = !isRegister;
+    elements.email.required = isRegister;
+    elements.identifierField.hidden = isReset;
+    elements.username.required = !isReset;
+    elements.passwordField.hidden = isForgot;
+    elements.password.required = !isForgot;
+    elements.identifierLabel.textContent = isRegister ? "Username" : "Username or email";
+    elements.username.name = isRegister ? "username" : "identifier";
     elements.username.autocomplete = "username";
-    elements.username.maxLength = isLogin ? 254 : 20;
+    elements.username.maxLength = isRegister ? 20 : 254;
+    elements.forgotPassword.hidden = !isLogin;
+    elements.authDivider.hidden = isForgot || isReset;
+    elements.googleSignIn.hidden = isForgot || isReset;
     elements.authMessage.textContent = "";
     syncGoogleButton();
     if (!authModal.open) authModal.showModal();
-    elements.username.focus();
+    (isReset ? elements.password : elements.username).focus();
   }
 
   async function submitAuth(event) {
@@ -1339,6 +1376,26 @@
     elements.authSubmit.disabled = true;
     elements.authMessage.textContent = "";
     try {
+      if (authMode === "forgot") {
+        const payload = await challengeApi("/forgot-password", {
+          method: "POST",
+          body: { identifier: elements.username.value },
+        });
+        elements.authMessage.textContent = payload.message;
+        return;
+      }
+      if (authMode === "reset") {
+        const token = new URLSearchParams(window.location.search).get("token") || "";
+        const payload = await challengeApi("/reset-password", {
+          method: "POST",
+          body: { token, password: elements.password.value },
+        });
+        window.history.replaceState({ appMode: "home" }, "", "/");
+        authForm.reset();
+        openAuth("login");
+        elements.authMessage.textContent = payload.message;
+        return;
+      }
       const body = authMode === "login"
         ? { identifier: elements.username.value, password: elements.password.value }
         : { email: elements.email.value, username: elements.username.value, password: elements.password.value };
@@ -1427,14 +1484,20 @@
     if (!elements.profileDeleteRequest) return;
     const loggedIn = Boolean(profilePayload?.account);
     const pending = profilePayload?.deletionRequest?.status === "pending";
-    elements.profileDeleteRequest.disabled = !loggedIn || pending;
-    elements.profileDeleteRequest.textContent = pending ? "Deletion requested" : "Request deletion";
+    const notificationPending = pending && !profilePayload?.deletionRequest?.notification_sent_at;
+    elements.profileDeleteRequest.disabled = !loggedIn || (pending && !notificationPending);
+    elements.profileDeleteRequest.textContent = notificationPending ? "Retry notification" : pending ? "Deletion requested" : "Request deletion";
   }
 
   function openDeletionRequest() {
     if (!elements.profileDeleteModal || elements.profileDeleteRequest.disabled) return;
     elements.profileDeleteMessage.textContent = "";
     elements.profileDeleteForm.reset();
+    const existing = profilePayload?.deletionRequest;
+    if (existing?.status === "pending" && !existing.notification_sent_at) {
+      elements.profileDeleteReason.value = existing.reason || "";
+      elements.profileDeleteDetails.value = existing.details || "";
+    }
     if (!elements.profileDeleteModal.open) elements.profileDeleteModal.showModal();
   }
 
@@ -1452,8 +1515,10 @@
       });
       profilePayload = { ...(profilePayload || {}), deletionRequest: payload.deletionRequest };
       syncDeletionRequest();
-      elements.profileDeleteMessage.textContent = "Deletion request sent.";
-      window.setTimeout(() => elements.profileDeleteModal.close(), 900);
+      elements.profileDeleteMessage.textContent = payload.notificationSent
+        ? "Deletion request sent. The site owner has been notified."
+        : "Your request was saved, but the notification could not be sent. Please retry.";
+      if (payload.notificationSent) window.setTimeout(() => elements.profileDeleteModal.close(), 1200);
     } catch (error) {
       elements.profileDeleteMessage.textContent = error.message;
     } finally {
@@ -1565,6 +1630,7 @@
   authForm.addEventListener("submit", submitAuth);
   elements.authClose.addEventListener("click", () => authModal.close());
   elements.authSwitch.addEventListener("click", () => openAuth(authMode === "login" ? "register" : "login"));
+  elements.forgotPassword.addEventListener("click", () => openAuth("forgot"));
   elements.googleSignIn.addEventListener("click", startGoogleSignIn);
   document.querySelectorAll("[data-challenge-tab]").forEach((button) => button.addEventListener("click", () => setTab(button.dataset.challengeTab)));
   window.addEventListener("popstate", syncRoute);

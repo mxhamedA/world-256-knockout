@@ -37,7 +37,7 @@ function tournamentHasThirdPlacePlayoff() {
     return (state.rounds.at(-1) || []).some((match) => isThirdPlacePlayoff(match));
   }
   if (state?.premierLeagueSeason) return false;
-  if (isRetroSimulatorState()) return Number(retroTournament?.year) !== 2016;
+  if (isRetroSimulatorState()) return ![2016, 2020].includes(Number(retroTournament?.year));
   if (!state.customTournament) return true;
   return state.customTournament.thirdPlace === true;
 }
@@ -280,6 +280,10 @@ function renderUclTeamList(query = "") {
 }
 
 function openUclTeamPicker() {
+  if (window.UclSimulator?.hasStarted?.()) {
+    showToast("Restart the UCL season before changing your club.");
+    return;
+  }
   spectatePickerMode = "ucl";
   els.spectateModalTitle.textContent = "Choose a Champions League club";
   els.spectateSearch.placeholder = `Search ${UCL_2026_27_QUALIFIED_TEAMS.length} qualified clubs`;
@@ -606,25 +610,35 @@ function retroWorldCupTeamStorageKey(year) {
 }
 
 function readRetroCompetition() {
-  if (Number(retroWorldCupYearFromPath()) === 2016) return "euros";
+  if ([2016, 2020].includes(Number(retroWorldCupYearFromPath()))) return "euros";
   try {
     const savedCompetition = localStorage.getItem(RETRO_COMPETITION_KEY);
-    return ["wc", "euros", "copa"].includes(savedCompetition) ? savedCompetition : "wc";
+    return ["wc", "euros", "copa", "afcon"].includes(savedCompetition) ? savedCompetition : "wc";
   } catch {
     return "wc";
   }
 }
 
+function readRetroEuroYear() {
+  try {
+    const year = localStorage.getItem(RETRO_EURO_YEAR_KEY);
+    return ["2016", "2020"].includes(year) ? year : "2016";
+  } catch {
+    return "2016";
+  }
+}
+
 function selectedRetroTournamentYear() {
   const competition = readRetroCompetition();
-  if (competition === "euros") return 2016;
+  if (competition === "euros") return Number(readRetroEuroYear());
   if (competition === "copa") return 2024;
+  if (competition === "afcon") return 0;
   return Number(readRetroWorldCupYear());
 }
 
 function retroMenuTeamEntries(year = readRetroWorldCupYear()) {
   const competition = readRetroCompetition();
-  if (competition === "euros") return RETRO_EURO_2016.teams;
+  if (competition === "euros") return readRetroEuroYear() === "2020" ? RETRO_EURO_2020.teams : RETRO_EURO_2016.teams;
   if (competition === "copa") return RETRO_COPA_2024.teams;
   return retroWorldCupMenuTeams(year);
 }
@@ -633,19 +647,29 @@ function retroWorldCupMenuTeams(year) {
   return RETRO_WORLD_CUPS[year]?.teams || RETRO_WORLD_CUP_PREVIEW_TEAMS[year] || [];
 }
 
-function readRetroEuroTeam() {
+function retroEuroEdition(year = readRetroEuroYear()) {
+  return String(year) === RETRO_EURO_2020.year ? RETRO_EURO_2020 : RETRO_EURO_2016;
+}
+
+function retroEuroTeamStorageKey(year = readRetroEuroYear()) {
+  return String(year) === RETRO_EURO_2020.year ? RETRO_EURO_2020_TEAM_KEY : RETRO_EURO_2016_TEAM_KEY;
+}
+
+function readRetroEuroTeam(year = readRetroEuroYear()) {
   try {
-    const name = localStorage.getItem(RETRO_EURO_2016_TEAM_KEY);
-    return RETRO_EURO_2016.teams.some((team) => team.name === name) ? name : null;
+    const edition = retroEuroEdition(year);
+    const name = localStorage.getItem(retroEuroTeamStorageKey(year));
+    return edition.teams.some((team) => team.name === name) ? name : null;
   } catch {
     return null;
   }
 }
 
-function saveRetroEuroTeam(name) {
+function saveRetroEuroTeam(name, year = readRetroEuroYear()) {
   try {
-    if (name) localStorage.setItem(RETRO_EURO_2016_TEAM_KEY, name);
-    else localStorage.removeItem(RETRO_EURO_2016_TEAM_KEY);
+    const key = retroEuroTeamStorageKey(year);
+    if (name) localStorage.setItem(key, name);
+    else localStorage.removeItem(key);
   } catch {
     // Selection remains usable for the current page when storage is unavailable.
   }
@@ -733,21 +757,22 @@ function renderRetroWorldCupTeamPicker(year) {
   const competition = readRetroCompetition();
   const isEuros = competition === "euros";
   const isCopa = competition === "copa";
-  const selectedYear = isCopa ? RETRO_COPA_2024.year : isEuros ? RETRO_EURO_2016.year : year;
+  const selectedYear = isCopa ? RETRO_COPA_2024.year : isEuros ? readRetroEuroYear() : year;
+  const euroEdition = isEuros ? retroEuroEdition(selectedYear) : null;
   const activeTournament = retroTournamentForYear(selectedYear);
   const selectedName = isCopa
     ? readRetroCopaTeam()
     : isEuros
     ? activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
-      : readRetroEuroTeam()
+      : readRetroEuroTeam(selectedYear)
     : activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
       : readRetroWorldCupTeam(year);
   const selected = isCopa
     ? RETRO_COPA_2024.teams.find((team) => team.name === selectedName)
     : isEuros
-    ? RETRO_EURO_2016.teams.find((team) => team.name === selectedName)
+    ? euroEdition.teams.find((team) => team.name === selectedName)
     : retroWorldCupTeamData(year, selectedName);
   const team = selected ? retroTeamForFlag(selected.name) : null;
   els.retroTeamPickerButton?.classList.toggle("has-team", Boolean(team));
@@ -760,7 +785,7 @@ function renderRetroWorldCupTeamPicker(year) {
       isCopa
         ? "Choose a team from Copa América 2024. Current view: Neutral"
         : isEuros
-        ? "Choose a team from Euro 2016. Current view: Neutral"
+        ? `Choose a team from Euro ${selectedYear}. Current view: Neutral`
         : `Choose a team from the ${year} World Cup. Current view: Neutral`,
     );
     return;
@@ -773,7 +798,7 @@ function renderRetroWorldCupTeamPicker(year) {
     isCopa
       ? `Change ${team.name} as your Copa América 2024 team`
       : isEuros
-        ? `Change ${team.name} as your Euro 2016 team`
+        ? `Change ${team.name} as your Euro ${selectedYear} team`
         : `Change ${team.name} as your ${year} World Cup team`,
   );
 }
@@ -789,7 +814,7 @@ function renderRetroWorldCupTeamList(query = "") {
     : isEuros
     ? activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
-      : readRetroEuroTeam()
+      : readRetroEuroTeam(year)
     : activeTournament
       ? retroTournamentLockedSetup(activeTournament)?.managedTeam
       : readRetroWorldCupTeam(year);
@@ -814,7 +839,7 @@ function renderRetroWorldCupTeamList(query = "") {
       <span><strong>${entry.name}</strong><small>Group ${entry.group}</small></span>
       <i aria-hidden="true">${entry.name === selectedName ? "✓" : ""}</i>
     </button>
-  `).join("") || `<div class="overview-empty">No ${isCopa ? "Copa América 2024" : isEuros ? "Euro 2016" : year} team matches that search.</div>`;
+  `).join("") || `<div class="overview-empty">No ${isCopa ? "Copa América 2024" : isEuros ? `Euro ${year}` : year} team matches that search.</div>`;
 }
 
 function openRetroWorldCupTeamPicker() {
@@ -830,12 +855,12 @@ function openRetroWorldCupTeamPicker() {
   els.spectateModalTitle.textContent = isCopa
     ? "Choose a Copa América 2024 team"
     : isEuros
-      ? "Choose a Euro 2016 team"
+      ? `Choose a Euro ${year} team`
       : `Choose a ${year} World Cup team`;
   els.spectateSearch.placeholder = isCopa
     ? "Search Copa América 2024 teams"
     : isEuros
-      ? "Search Euro 2016 teams"
+      ? `Search Euro ${year} teams`
       : `Search ${year} teams`;
   els.spectateSearch.value = "";
   renderRetroWorldCupTeamList();
@@ -1472,7 +1497,7 @@ function createTournamentHistoryRecord() {
     sum + (match?.result?.bye ? 0 : Number(match?.result?.homeGoals || 0) + Number(match?.result?.awayGoals || 0))
   ), 0);
   const typeLabel = mode === "retro"
-    ? year === 2016 ? "UEFA Euro 2016" : year === 2024 ? "Copa América USA 2024" : `World Cup ${year}`
+    ? [2016, 2020].includes(year) ? `UEFA Euro ${year}` : year === 2024 ? "Copa América USA 2024" : `World Cup ${year}`
     : mode === "custom"
       ? `${state.customTournament.teamCount}-team custom tournament`
       : mode === "legacy"
@@ -2438,6 +2463,21 @@ function retroSnapshotPalette(year) {
       footer: "UEFA EURO 2016",
     };
   }
+  if (Number(year) === 2020) {
+    return {
+      accent: "#b9dc18",
+      backgroundStart: "#034f5c",
+      backgroundMiddle: "#078c9e",
+      backgroundEnd: "#0ba9b8",
+      panel: "rgba(3, 79, 92, 0.95)",
+      award: "rgba(5, 102, 117, 0.97)",
+      flagBacking: "#056675",
+      primaryText: "#f4fdff",
+      secondaryText: "#c6eef2",
+      glow: "rgba(185, 220, 24, 0.28)",
+      footer: "UEFA EURO 2020",
+    };
+  }
   if (Number(year) === 2018) {
     return {
       accent: "#e9c477",
@@ -2712,7 +2752,7 @@ async function createMatchSnapshotCanvas() {
   context.fillStyle = glow;
   context.fillRect(0, 0, 1200, canvasHeight);
 
-  snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, [1998, 2024].includes(Number(retroYear)) ? 8 : 28);
+  snapshotRoundedRect(context, 55, 42, 1090, canvasHeight - 117, [1998, 2020, 2024].includes(Number(retroYear)) ? 8 : 28);
   context.fillStyle = retroTheme?.panel || (uclSnapshot ? "rgba(4, 18, 48, 0.94)" : domesticLeagueSnapshot ? "rgba(40, 0, 45, 0.9)" : "rgba(17, 24, 36, 0.88)");
   context.fill();
   if (!retroSnapshot) {

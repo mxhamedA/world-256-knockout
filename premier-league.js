@@ -1416,7 +1416,12 @@
     closeSavedHistory,
   };
 
-  startButton?.addEventListener("click", () => openSeason());
+  startButton?.addEventListener("click", () => {
+    if (document.body.dataset.desktopModeSetup !== "premierLeague"
+      && window.openDesktopModeSetup?.("premierLeague")) return;
+    window.closeDesktopModeSetup?.();
+    openSeason();
+  });
   backButton?.addEventListener("click", () => {
     if (savedHistorySession) {
       window.TournamentHistory?.close?.();
@@ -1587,7 +1592,9 @@
     if (!screen?.hidden) renderSeason();
   });
 
-  if (typeof currentAppMode === "function" && currentAppMode() === "premierLeague") {
+  if (typeof currentAppMode === "function"
+    && currentAppMode() === "premierLeague"
+    && document.body.dataset.desktopModeSetup !== "premierLeague") {
     openSeason({ updateUrl: false });
   }
   syncMenuState();

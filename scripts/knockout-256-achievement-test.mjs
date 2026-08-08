@@ -88,7 +88,7 @@ assert.match(challengeSource, /function knockoutObjectiveForTeam\(team, teamInde
 assert.match(challengeSource, /Reach the Round of 64/);
 assert.doesNotMatch(challengeSource, /Loading objective/);
 assert.doesNotMatch(challengeSource, /Progress sync unavailable/);
-assert.match(challengeSource, /activeAchievementYear === 256 \? 256[\s\S]*activeAchievementYear === 2016 \? 24[\s\S]*: 32/);
+assert.match(challengeSource, /activeAchievementYear === 256 \? 256[\s\S]*\[2016, 2020\]\.includes\(activeAchievementYear\) \? 24[\s\S]*: 32/);
 assert.match(htmlSource, /data-achievement-year="256"[^>]*>256 KO<\/button>/);
 
 console.log("256 knockout achievement checks passed.");

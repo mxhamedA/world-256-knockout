@@ -1,0 +1,213 @@
+- generic [ref=f50e1]:
+  - generic [ref=f50e2]:
+    - complementary [ref=f50e3]:
+      - link "256 Teams home" [ref=f50e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f50e5]:
+          - generic [ref=f50e6]: "256"
+          - generic [ref=f50e7]: TEAMS
+      - generic:
+        - button "Settings" [ref=f50e8] [cursor=pointer]:
+          - generic [ref=f50e9]: ⚙
+        - button "News" [ref=f50e11] [cursor=pointer]
+        - button "Feedback" [ref=f50e14] [cursor=pointer]:
+          - generic [ref=f50e15]: ⚠
+        - button "Achievements" [ref=f50e17] [cursor=pointer]:
+          - generic [ref=f50e18]: 🏆
+        - button "Donate" [ref=f50e20] [cursor=pointer]:
+          - generic [ref=f50e21]: $
+        - button "Log in" [ref=f50e23] [cursor=pointer]
+    - main [ref=f50e29]:
+      - generic [ref=f50e31]:
+        - region "Tournament modes" [ref=f50e32]:
+          - generic [ref=f50e33]:
+            - article [ref=f50e34]:
+              - heading "256-team knockout" [level=3] [ref=f50e36]
+              - button "Set up tournament" [expanded] [active] [ref=f50e37] [cursor=pointer]:
+                - generic [ref=f50e39]: ▾
+              - generic [ref=f50e196]:
+                - generic "Default mode settings" [ref=f50e197]:
+                  - generic [ref=f50e198]:
+                    - generic [ref=f50e199]:
+                      - generic [ref=f50e200]: Simulation style
+                      - group [ref=f50e201]:
+                        - generic "Explain simulation styles" [ref=f50e202] [cursor=pointer]: i
+                    - generic [ref=f50e203]:
+                      - button "Realistic" [ref=f50e204] [cursor=pointer]
+                      - button "Standard" [ref=f50e205] [cursor=pointer]
+                      - button "Pure chaos" [ref=f50e206] [cursor=pointer]
+                  - generic [ref=f50e207]:
+                    - generic [ref=f50e208]:
+                      - generic [ref=f50e209]: Goal level
+                      - group [ref=f50e210]:
+                        - generic "Explain goal levels" [ref=f50e211] [cursor=pointer]: i
+                    - generic [ref=f50e212]:
+                      - button "Tight" [ref=f50e213] [cursor=pointer]
+                      - button "Normal" [ref=f50e214] [cursor=pointer]
+                      - button "Goal fest" [ref=f50e215] [cursor=pointer]
+                  - generic [ref=f50e216]:
+                    - generic [ref=f50e217]: Choose team
+                    - 'button "Choose a team to spectate. Current view: Neutral" [ref=f50e218]':
+                      - generic [ref=f50e219]: ◎
+                      - generic [ref=f50e220]:
+                        - strong [ref=f50e221]: Neutral
+                        - generic [ref=f50e222]: Show every match as normal
+                      - generic [ref=f50e223]: ›
+                - button "Start tournament" [ref=f50e225] [cursor=pointer]:
+                  - text: Start tournament
+                  - generic [ref=f50e226]: →
+            - article [ref=f50e40]:
+              - generic [ref=f50e41]:
+                - heading "Online mode Coming soon" [level=3] [ref=f50e42]
+                - paragraph [ref=f50e43]: Match with other players or create a private knockout room, then draft your countries and play every match in real time.
+            - article [ref=f50e44]:
+              - generic [ref=f50e45]:
+                - heading "World Cup Legacy Draft" [level=3] [ref=f50e46]
+                - paragraph [ref=f50e47]: Draft an XI from classic World Cup squads, then enter them into a 16-team knockout.
+              - button "Start tournament" [ref=f50e49] [cursor=pointer]:
+                - text: Start tournament
+                - generic [ref=f50e50]: →
+            - article [ref=f50e51]:
+              - generic [ref=f50e53]:
+                - heading "WC Simulator" [level=3] [ref=f50e54]
+                - group "Tournament" [ref=f50e55]:
+                  - button "WC" [pressed] [ref=f50e56] [cursor=pointer]
+                  - button "Euros" [ref=f50e57] [cursor=pointer]
+                  - button "Copa" [ref=f50e58] [cursor=pointer]
+                - group "World Cup year" [ref=f50e59]:
+                  - button "1998 World Cup" [ref=f50e60] [cursor=pointer]: "1998"
+                  - button "2002 World Cup, coming soon" [ref=f50e61] [cursor=pointer]: "2002"
+                  - button "2006" [ref=f50e62] [cursor=pointer]
+                  - button "2010" [ref=f50e63] [cursor=pointer]
+                  - button "2014" [pressed] [ref=f50e64] [cursor=pointer]
+                  - button "2018" [ref=f50e65] [cursor=pointer]
+                  - button "2022" [ref=f50e66] [cursor=pointer]
+                  - button "2026" [ref=f50e67] [cursor=pointer]
+              - button "Set up World Cup" [ref=f50e68] [cursor=pointer]:
+                - generic [ref=f50e70]: ▾
+            - article [ref=f50e71]:
+              - generic [ref=f50e72]:
+                - heading "Custom tournament" [level=3] [ref=f50e73]
+                - paragraph [ref=f50e74]: Build the field, tune team strength and script individual matches.
+              - generic [ref=f50e75]:
+                - button "Build tournament" [ref=f50e76] [cursor=pointer]:
+                  - text: Build tournament
+                  - generic [ref=f50e77]: →
+                - button "Set up match" [ref=f50e78] [cursor=pointer]:
+                  - text: Set up match
+                  - generic [ref=f50e79]: →
+            - article [ref=f50e80]:
+              - generic [ref=f50e81]:
+                - generic [ref=f50e82]: PL
+                - generic [ref=f50e84]:
+                  - heading "PL 26/27 Simulator" [level=3] [ref=f50e85]
+                  - button "Install assets" [ref=f50e86] [cursor=pointer]
+              - button "Set up season" [ref=f50e87] [cursor=pointer]:
+                - generic [ref=f50e89]: ▾
+            - article [ref=f50e90]:
+              - generic [ref=f50e92]:
+                - heading "UCL simulator" [level=3] [ref=f50e93]
+                - button "Install assets" [ref=f50e94] [cursor=pointer]
+                - paragraph [ref=f50e95]: Take on the league phase and fight through the knockouts for Europe’s biggest trophy.
+              - button "Set up UCL mode" [ref=f50e96] [cursor=pointer]:
+                - generic [ref=f50e98]: ▾
+        - region [ref=f50e99]:
+          - generic [ref=f50e100]:
+            - heading "Leaderboard" [level=2] [ref=f50e101]
+            - button "View top 50" [ref=f50e102] [cursor=pointer]
+          - generic [ref=f50e103]:
+            - generic [ref=f50e104]:
+              - generic [ref=f50e105]: Rank
+              - generic [ref=f50e106]: Player
+              - generic [ref=f50e107]: Points
+              - generic [ref=f50e108]: Unlocked
+            - generic [ref=f50e109]:
+              - strong [ref=f50e110]: "1"
+              - generic [ref=f50e111]: player_msag165i_x
+              - strong [ref=f50e113]: "35"
+              - generic [ref=f50e114]: 7 / 627
+            - generic [ref=f50e115]:
+              - strong [ref=f50e116]: "2"
+              - generic [ref=f50e117]: player_ms3eo9mp_x
+              - strong [ref=f50e119]: "33"
+              - generic [ref=f50e120]: 6 / 627
+            - generic [ref=f50e121]:
+              - strong [ref=f50e122]: "3"
+              - generic [ref=f50e123]: player_ms3gp6vr_x
+              - strong [ref=f50e125]: "33"
+              - generic [ref=f50e126]: 6 / 627
+            - generic [ref=f50e127]:
+              - strong [ref=f50e128]: "4"
+              - generic [ref=f50e129]: player_mrzgd9xh_x
+              - strong [ref=f50e131]: "16"
+              - generic [ref=f50e132]: 3 / 627
+            - generic [ref=f50e133]:
+              - strong [ref=f50e134]: "5"
+              - generic [ref=f50e135]: player_mrzgu5aj_x
+              - strong [ref=f50e137]: "16"
+              - generic [ref=f50e138]: 3 / 627
+            - generic [ref=f50e139]:
+              - strong [ref=f50e140]: "6"
+              - generic [ref=f50e141]: mohamed
+              - strong [ref=f50e143]: "12"
+              - generic [ref=f50e144]: 10 / 627
+            - generic [ref=f50e145]:
+              - strong [ref=f50e146]: "7"
+              - generic [ref=f50e147]: player_mrz9ghyc_x
+              - strong [ref=f50e149]: "6"
+              - generic [ref=f50e150]: 2 / 627
+            - generic [ref=f50e151]:
+              - strong [ref=f50e152]: "8"
+              - generic [ref=f50e153]: player_mrz8xbgq_x
+              - strong [ref=f50e155]: "2"
+              - generic [ref=f50e156]: 1 / 627
+            - generic [ref=f50e157]:
+              - strong [ref=f50e158]: "9"
+              - generic [ref=f50e159]: eurocheck037548
+              - strong [ref=f50e161]: "2"
+              - generic [ref=f50e162]: 1 / 627
+            - generic [ref=f50e163]:
+              - strong [ref=f50e164]: "10"
+              - generic [ref=f50e165]: france98_test
+              - strong [ref=f50e167]: "2"
+              - generic [ref=f50e168]: 1 / 627
+        - region [ref=f50e169]:
+          - heading "About the simulator" [level=2] [ref=f50e171]
+          - navigation "Simulator information" [ref=f50e172]:
+            - link "How it works" [ref=f50e173] [cursor=pointer]:
+              - /url: ./how-it-works.html
+            - link "Mode guide" [ref=f50e174] [cursor=pointer]:
+              - /url: ./guides.html
+            - link "Methodology" [ref=f50e175] [cursor=pointer]:
+              - /url: ./methodology.html
+            - link "The 256 teams" [ref=f50e176] [cursor=pointer]:
+              - /url: ./team-field.html
+            - link "FAQ" [ref=f50e177] [cursor=pointer]:
+              - /url: ./faq.html
+            - link "About" [ref=f50e178] [cursor=pointer]:
+              - /url: ./about.html
+      - generic [ref=f50e179]:
+        - generic [ref=f50e180]:
+          - strong [ref=f50e181]: 256 TEAMS WC
+          - generic [ref=f50e182]: An unofficial football tournament simulator built for entertainment.
+        - time [ref=f50e183]:
+          - generic [ref=f50e184]: "Last updated:"
+          - strong [ref=f50e185]: 29 Jul, 3:14 AM BST
+        - generic [ref=f50e186]:
+          - navigation "Legal information" [ref=f50e187]:
+            - link "Guides" [ref=f50e188] [cursor=pointer]:
+              - /url: ./guides.html
+            - link "Methodology" [ref=f50e189] [cursor=pointer]:
+              - /url: ./methodology.html
+            - link "FAQ" [ref=f50e190] [cursor=pointer]:
+              - /url: ./faq.html
+            - link "About" [ref=f50e191] [cursor=pointer]:
+              - /url: ./about.html
+            - link "Privacy" [ref=f50e192] [cursor=pointer]:
+              - /url: ./privacy.html
+            - link "Terms" [ref=f50e193] [cursor=pointer]:
+              - /url: ./terms.html
+            - link "Disclaimer" [ref=f50e194] [cursor=pointer]:
+              - /url: ./disclaimer.html
+          - generic [ref=f50e195]: © 2026 Mohamed A. All rights reserved.
+  - status

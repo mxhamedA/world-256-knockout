@@ -56,7 +56,7 @@ function readCustomTournamentSetup() {
   }
 }
 
-[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022].forEach((year) => installRetroTeams(year));
+[1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022].forEach((year) => installRetroTeams(year));
 installRetroTeams(2026);
 let customTournamentSetup = readCustomTournamentSetup();
 let customTournamentSetupViewOpen = false;
@@ -559,6 +559,7 @@ function readCustomMatchSetup() {
       const team = TEAM_BY_ID.get(teamId);
       if (team?.customTeam) return "custom";
       if (team?.premierLeague) return "premier-league";
+      if (team?.uclClub) return "champions-league";
       if (team?.retroWorldCup) return String(team.retroYear);
       return "current";
     };
@@ -1057,20 +1058,22 @@ function customSetupTeam(id) {
 function customTeamDisplayName(team) {
   if (!team) return "Unknown team";
   return team.retroWorldCup
-    ? `${team.name} ${Number(team.retroYear) === 2016 ? "Euro 2016" : team.retroYear}`
+    ? `${team.name} ${[2016, 2020].includes(Number(team.retroYear)) ? `Euro ${team.retroYear}` : team.retroYear}`
     : team.name;
 }
 
 function customTeamCompetitionLabel(team) {
   if (team?.customTeam) return "Custom squad";
   if (team?.premierLeague) return "Premier League";
+  if (team?.uclClub) return "Champions League";
   if (!team?.retroWorldCup) return team?.confed || "";
-  return Number(team.retroYear) === 2016 ? "UEFA Euro 2016" : `World Cup ${team.retroYear}`;
+  return [2016, 2020].includes(Number(team.retroYear)) ? `UEFA Euro ${team.retroYear}` : `World Cup ${team.retroYear}`;
 }
 
 function customTeamSourcePool(source = customTournamentSetup.sourceFilter) {
   if (source === "current") return [...TEAMS];
   if (source === "premier-league") return [...CUSTOM_PREMIER_LEAGUE_TEAMS].sort((left, right) => left.name.localeCompare(right.name));
+  if (source === "champions-league") return [...CUSTOM_UCL_TEAMS].sort((left, right) => left.name.localeCompare(right.name));
   if (source === "custom") return [...customTeamLibrary].sort((left, right) => left.name.localeCompare(right.name));
   const retroTeams = [...TEAM_BY_ID.values()].filter((team) => team.retroWorldCup);
   if (source === "all-retro") return retroTeams.sort((left, right) => (
@@ -1126,6 +1129,7 @@ function customPresetPool(preset) {
   if (preset === "north-america") return TEAMS.filter((team) => team.confed === "CONCACAF");
   if (preset === "asia") return TEAMS.filter((team) => team.confed === "AFC");
   if (preset === "africa") return TEAMS.filter((team) => team.confed === "CAF");
+  if (preset === "oceania") return TEAMS.filter((team) => team.confed === "OFC");
   if (preset === "guests") return TEAMS.filter((team) => team.confed === "INVITED");
   if (preset === "underdogs") return TEAMS.filter((team) => (
     (team.simulationRatings?.overall ?? team.rating) <= 70
@@ -1343,6 +1347,7 @@ function customBracketPanelMarkup() {
               <option value="north-america" ${customTournamentUi.quickFillPreset === "north-america" ? "selected" : ""}>Only North America</option>
               <option value="asia" ${customTournamentUi.quickFillPreset === "asia" ? "selected" : ""}>Only Asia</option>
               <option value="africa" ${customTournamentUi.quickFillPreset === "africa" ? "selected" : ""}>Only Africa</option>
+              <option value="oceania" ${customTournamentUi.quickFillPreset === "oceania" ? "selected" : ""}>Only Oceania</option>
               <option value="underdogs" ${customTournamentUi.quickFillPreset === "underdogs" ? "selected" : ""}>Only underdogs</option>
               <option value="guests" ${customTournamentUi.quickFillPreset === "guests" ? "selected" : ""}>Only guest nations</option>
             </select>

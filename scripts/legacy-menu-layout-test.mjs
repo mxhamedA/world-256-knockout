@@ -8,6 +8,8 @@ const [html, app, css] = await Promise.all([
 ]);
 
 assert.match(html, /class="mode-card mode-card-legacy"[\s\S]*id="startLegacyDraftButton"[\s\S]*Start tournament/);
+assert.match(html, /class="mode-card mode-card-custom"[\s\S]*custom-mode-prefix">Custom<[\s\S]*>Tournament<[\s\S]*class="custom-match-card-copy"[\s\S]*custom-mode-prefix">Custom<[\s\S]*>Match<[\s\S]*id="openCustomTournamentButton"[\s\S]*id="openCustomMatchButton"/,
+  "Custom Tournament and Custom Match must share one menu card.");
 assert.doesNotMatch(html.match(/class="mode-card mode-card-legacy"[\s\S]*?<\/article>/)?.[0] || "", /id="legacyLandingSetup"/);
 assert.match(html, /id="legacySetupModal"[\s\S]*id="legacyLandingSetup"[\s\S]*id="confirmLegacyDraftButton"/);
 assert.match(html, /class="mode-card mode-card-ucl"[^>]*id="uclModeCard"[\s\S]*ucl-starball-white\.png[\s\S]*UCL simulator[\s\S]*id="uclTeamPickerButton"[\s\S]*id="startUclSimulatorButton"/);
@@ -25,8 +27,33 @@ assert.match(css, /\.ucl-mode-logo[\s\S]*object-fit:\s*contain/);
 assert.match(css, /\.mode-card-ucl\s*{[^}]*radial-gradient[\s\S]*linear-gradient/);
 assert.match(css, /\.mode-card-legacy\s*{[^}]*order:\s*6;[^}]*grid-column:\s*span 2;/);
 assert.match(css, /\.mode-card-ucl\s*{[^}]*order:\s*4;[^}]*grid-column:\s*span 3;/);
+assert.match(css, /\.mode-card-custom[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/,
+  "The shared Custom card must split into two equal desktop launch areas.");
+assert.match(css, /#openCustomTournamentButton, #openCustomMatchButton[\s\S]*?display:\s*inline-flex !important/,
+  "Both Custom launch actions must remain visible on desktop.");
+assert.match(css, /\.retro-competition-switch button,[\s\S]*?\.retro-year-switch button[\s\S]*?font-size:\s*10px !important/,
+  "Retro competition and year labels must be larger without resizing their controls.");
+assert.match(css, /#premierLeagueLogo\s*\{[\s\S]*?width:\s*34px !important;[\s\S]*?height:\s*40px !important/,
+  "The Premier League crest must stay contained beside its title.");
+assert.match(css, /#openCustomTournamentButton::before,[\s\S]*?#openCustomTournamentButton::after[\s\S]*?content:\s*none !important/,
+  "The Custom Tournament button must not duplicate its live Play or Resume label.");
+assert.match(app, /openCustomTournamentButton\.innerHTML = `\$\{customActive \? "Resume" : "Play"\}/,
+  "The compact Custom Tournament action should use Play or Resume.");
+assert.match(app, /openCustomMatchButton\.innerHTML = `\$\{matchActive \? "Resume" : "Play"\}/,
+  "The compact Custom Match action should use Play or Resume.");
 assert.match(css, /\.legacy-setup-modal::backdrop/);
 assert.match(app, /startLegacyDraftButton\?\.addEventListener[\s\S]*renderLegacyLandingSetup\(\);[\s\S]*legacySetupModal\?\.showModal\(\)/);
+assert.match(app, /renderLegacyLandingSetup\(\);\s*setAppModeUrl\("legacy"\);/,
+  "Opening a fresh Legacy Draft setup must navigate to its own URL.");
+const legacyMenuLaunchHandler = app.match(/startLegacyDraftButton\?\.addEventListener\("click", \(\) => \{[\s\S]*?\n\}\);/)?.[0] || "";
+assert.doesNotMatch(legacyMenuLaunchHandler, /if \(legacyDraft\)/,
+  "The Legacy menu launch must not bypass setup when a saved draft exists.");
+assert.match(app, /activeLegacySession \? "Resume draft" : "Start draft"/,
+  "The setup screen must resume an active Legacy Draft instead of replacing it.");
+assert.match(html, /id="legacySetupRestartButton"[^>]*hidden>Restart<\/button>/,
+  "An active Legacy setup needs an explicit restart action.");
+assert.match(css, /:is\(#retroWorldCupScreen, #premierLeagueSeasonScreen, #uclSimulatorScreen, #playerCareerScreen\)\[hidden\][\s\S]{0,80}display: none !important/,
+  "Hidden full-screen modes must not remain in the document flow.");
 assert.match(app, /confirmLegacyDraftButton\?\.addEventListener[\s\S]*legacySetupModal\?\.close\(\)[\s\S]*startLegacyDraft\(legacySetup\.nationId\)/);
 assert.match(app, /activeLegacySession \? "Resume tournament" : "Start tournament"/);
 assert.match(app, /function setupMobileModeCards\(\)/, "The mobile menu must progressively disclose mode setup cards.");

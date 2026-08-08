@@ -288,7 +288,7 @@ function shootoutPositionPriority(position) {
 }
 
 function retroShootoutActiveNames(team) {
-  if (!team?.retroWorldCup || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))) {
+  if (!team?.retroWorldCup || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(retroTournament?.year))) {
     return null;
   }
   const match = selectedMatch();
@@ -1143,7 +1143,7 @@ function premierLeagueFormationTacticalImpact(tacticKey) {
 function retroManagedTeamSheetImpact(team, opponent, tacticKey) {
   if (
     !isRetroSimulatorState()
-    || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
+    || ![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(retroTournament?.year))
     || team?.name !== retroTournament?.managedTeam
   ) return { attack: 1, defence: 1, score: 0, fit: 0, selection: 0, synergy: 0 };
   const squad = retroManagerSquadForTeam(team);

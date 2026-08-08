@@ -92,9 +92,13 @@ const authUi = fs.readFileSync(new URL("../index.html", import.meta.url), "utf8"
 const authClient = fs.readFileSync(new URL("../challenge.js", import.meta.url), "utf8");
 assert.match(authUi, /id="challengeEmail"[^>]*type="email"[^>]*autocomplete="email"/);
 assert.match(authUi, /id="challengeIdentifierLabel">Username or email/);
-assert.match(authClient, /elements\.email\.required = !isLogin/);
+assert.match(authClient, /elements\.email\.required = isRegister/);
 assert.match(authClient, /\? \{ identifier: elements\.username\.value, password: elements\.password\.value \}/);
 assert.match(authClient, /: \{ email: elements\.email\.value, username: elements\.username\.value, password: elements\.password\.value \}/);
+assert.match(authUi, /id="challengeForgotPassword"[^>]*>Forgot password\?/);
+assert.match(authClient, /challengeApi\("\/forgot-password"/);
+assert.match(authClient, /challengeApi\("\/reset-password"/);
+assert.match(authClient, /new URLSearchParams\(window\.location\.search\)\.get\("token"\)/);
 assert.match(authClient, /credentials: "include"/);
 assert.match(authClient, /dashboard\?\.auth\?\.googleEnabled !== false/);
 assert.match(authClient, /const authPayload = await challengeApi/);

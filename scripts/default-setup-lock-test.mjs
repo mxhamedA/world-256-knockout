@@ -38,6 +38,8 @@ assert.equal(context.locked({ started: true, rounds: [openingRound], customTourn
   "The default lock must not be applied to custom tournaments.");
 
 assert.match(html, /id="defaultModeCard"/, "The default mode card needs a lock-state target.");
+assert.match(html, /class="[^"]*standard-route-back[^"]*"[^>]*data-mode-route-back/,
+  "The desktop 256 setup needs a direct route back to the mode library.");
 assert.match(functionSource("syncStandardTournamentCardLock"), /button\.disabled = setupLocked/,
   "Simulation controls must be disabled while locked.");
 assert.match(functionSource("syncStandardTournamentCardLock"), /spectatePickerButton\.disabled = setupLocked/,
@@ -48,5 +50,9 @@ assert.match(app, /Restart the tournament before changing your managed team\./,
   "Changing the managed team must also have an event-level lock guard.");
 assert.match(css, /\.mode-card-default\.is-setup-locked[\s\S]*content: "\\1F512"/,
   "Locked default settings need visible lock indicators.");
+assert.match(css, /body\[data-desktop-mode-setup="standard"\] \.mode-select\s*\{[\s\S]*?place-items: center/,
+  "The desktop 256 setup should use a centered, dedicated setup surface.");
+assert.match(css, /body\[data-desktop-mode-setup="standard"\] \.landing-team-setting\s*\{[\s\S]*?grid-column: 1 \/ -1/,
+  "The team picker should occupy its own full-width row in the desktop setup.");
 
 console.log("Default 256 tournament setup lock tests passed.");

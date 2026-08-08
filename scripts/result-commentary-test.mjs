@@ -17,6 +17,7 @@ const storylineSection = appSource.slice(
 assert.match(storylineSection, /groupResultCommentary\(match, winner, loser/);
 assert.match(storylineSection, /PremierLeagueSeason\?\.resultCommentary/);
 assert.match(storylineSection, /title: winner \? `\$\{winner\.name\} beat \$\{loser\.name\}`/);
+assert.match(storylineSection, /Array\.isArray\(round\) && round\.includes\(match\)/);
 
 assert.match(premierLeagueSource, /function resultCommentary\(/);
 assert.match(premierLeagueSource, /title race with a vital win/);

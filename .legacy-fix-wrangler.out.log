@@ -1,0 +1,531 @@
+
+ ⛅️ wrangler 4.115.0
+────────────────────
+Using secrets defined in process.env
+Your Worker has access to the following bindings:
+Binding                                                          Resource                      Mode
+env.TOURNAMENT_ROOMS (TournamentRoom)                            Durable Object                local
+env.ONLINE_CAPACITY (OnlineCapacityCoordinator)                  Durable Object                local
+env.PUBLIC_MATCHMAKER (PublicMatchmaker)                         Durable Object                local
+env.CHALLENGE_DB (256teams-accounts)                             D1 Database                   local
+env.ONLINE_ANALYTICS (world_256_online)                          Analytics Engine Dataset      local
+env.ROOM_CREATE_LIMITER (6 requests/60s)                         Rate Limit                    local
+env.ROOM_JOIN_LIMITER (20 requests/60s)                          Rate Limit                    local
+env.ROOM_API_LIMITER (120 requests/60s)                          Rate Limit                    local
+env.ROOM_STATUS_LIMITER (360 requests/60s)                       Rate Limit                    local
+env.BUG_REPORT_LIMITER (5 requests/60s)                          Rate Limit                    local
+env.CHALLENGE_AUTH_LIMITER (10 requests/60s)                     Rate Limit                    local
+env.CHALLENGE_API_LIMITER (120 requests/60s)                     Rate Limit                    local
+env.ASSETS                                                       Assets                        local
+env.ONLINE_MODE_ENABLED ("(hidden)")                             Environment Variable          local
+env.ONLINE_MAX_ACTIVE_MATCHES ("64")                             Environment Variable          local
+env.PALESTINE_CHALLENGE_ENABLED ("true")                         Environment Variable          local
+env.LOCAL_DEV_AUTH ("(hidden)")                                  Environment Variable          local
+
+Wrangler detected this dev session is running in an AI agent.
+The Local Explorer API is available at http://127.0.0.1:8799/cdn-cgi/explorer/api
+Useful routes:
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api - OpenAPI schema
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api/d1/database - D1 databases
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api/local/workers - local Workers and bindings
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api/r2/buckets - R2 buckets
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api/storage/kv/namespaces - KV namespaces
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api/workers/durable_objects/namespaces - Durable Object namespaces
+  GET http://127.0.0.1:8799/cdn-cgi/explorer/api/workflows - Workflows
+⎔ Starting local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+[wrangler:info] Ready on http://127.0.0.1:8799
+{"type":"worker-request","timestamp":"2026-08-07T18:47:22.308Z","requestId":"d3b555bf-f481-47e8-a8b9-eaf30da25134","method":"GET","route":"/draft-mode"}
+[wrangler:info] GET /draft-mode 200 OK (27ms)
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:22.321Z","requestId":"d3b555bf-f481-47e8-a8b9-eaf30da25134","method":"GET","route":"/draft-mode","status":200,"elapsedMs":13}
+[wrangler:info] GET /redirect.js 200 OK (12ms)
+[wrangler:info] GET /styles.css 200 OK (14ms)
+[wrangler:info] GET /clean.css 200 OK (20ms)
+[wrangler:info] GET /premier-league.css 200 OK (23ms)
+[wrangler:info] GET /ucl-simulator.css 200 OK (27ms)
+[wrangler:info] GET /career.css 200 OK (24ms)
+[wrangler:info] GET /assets/flags/palestine.svg 200 OK (29ms)
+[wrangler:info] GET /player-pools.generated.js 200 OK (12ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 200 OK (12ms)
+[wrangler:info] GET /assets/prem-logo.webp 200 OK (13ms)
+[wrangler:info] GET /assets/ucl-starball-white.png 200 OK (15ms)
+[wrangler:info] GET /data.js 200 OK (18ms)
+[wrangler:info] GET /retro-data.js 200 OK (8ms)
+[wrangler:info] GET /data/retro/2002/squads.js 200 OK (9ms)
+[wrangler:info] GET /data/retro/2002/schedule.js 200 OK (10ms)
+[wrangler:info] GET /data/retro/2006/squads.js 200 OK (16ms)
+[wrangler:info] GET /data/retro/2006/schedule.js 200 OK (5ms)
+[wrangler:info] GET /data/retro/1998/squads.js 200 OK (6ms)
+[wrangler:info] GET /data/retro/1998/schedule.js 200 OK (13ms)
+[wrangler:info] GET /data/retro/2010/squads.js 200 OK (6ms)
+[wrangler:info] GET /data/retro/2010/schedule.js 200 OK (13ms)
+[wrangler:info] GET /data/retro/2014/squads.js 200 OK (13ms)
+[wrangler:info] GET /data/retro/2014/schedule.js 200 OK (13ms)
+[wrangler:info] GET /data/retro/euro-2016/squads.js 200 OK (19ms)
+[wrangler:info] GET /data/retro/euro-2016/schedule.js 200 OK (22ms)
+[wrangler:info] GET /data/retro/2018/squads.js 200 OK (30ms)
+[wrangler:info] GET /data/retro/2018/schedule.js 200 OK (7ms)
+[wrangler:info] GET /data/retro/2022/squads.js 200 OK (18ms)
+[wrangler:info] GET /data/retro/2022/schedule.js 200 OK (24ms)
+[wrangler:info] GET /data/retro/copa-america-2024/squads.js 200 OK (27ms)
+[wrangler:info] GET /data/retro/copa-america-2024/schedule.js 200 OK (19ms)
+[wrangler:info] GET /data/retro/2026/squads.js 200 OK (15ms)
+[wrangler:info] GET /presentation-engine.js 200 OK (12ms)
+[wrangler:info] GET /retro-engine.js 200 OK (16ms)
+[wrangler:info] GET /data/retro/2026/schedule.js 200 OK (20ms)
+[wrangler:info] GET /simulation-engine.js 200 OK (17ms)
+[wrangler:info] GET /premier-league-squads.generated.js 200 OK (14ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (19ms)
+[wrangler:info] GET /premier-league-data.js 200 OK (18ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:47:22.757Z","requestId":"cf52b889-f1d0-425d-9663-312ad71cd45f","method":"GET","route":"/premier-league-fc26-ratings.js"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:22.758Z","requestId":"cf52b889-f1d0-425d-9663-312ad71cd45f","method":"GET","route":"/premier-league-fc26-ratings.js","status":404,"elapsedMs":1}
+[wrangler:info] GET /premier-league-fc26-ratings.js 404 Not Found (23ms)
+[wrangler:info] GET /ucl-draw-solver.js 200 OK (14ms)
+[wrangler:info] GET /ucl-squads.generated.js 200 OK (11ms)
+[wrangler:info] GET /ucl-squad-calibration.js 200 OK (15ms)
+[wrangler:info] GET /career-engine.js 200 OK (19ms)
+[wrangler:info] GET /ucl-engine.js 200 OK (25ms)
+[wrangler:info] GET /app.js 200 OK (16ms)
+[wrangler:info] GET /premier-league.js 200 OK (13ms)
+[wrangler:info] GET /ucl-simulator.js 200 OK (17ms)
+[wrangler:info] GET /career.js 200 OK (22ms)
+[wrangler:info] GET /analytics.js 200 OK (20ms)
+[wrangler:info] GET /challenge.js 200 OK (29ms)
+[wrangler:info] GET /assets/retro-1998/france-98-logo.webp 200 OK (8ms)
+[wrangler:info] GET /assets/copa-america-2024-logo.png 200 OK (7ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 200 OK (4ms)
+[wrangler:info] GET /assets/retro-2014/brazil-watercolor-stadium.webp 200 OK (21ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:47:22.961Z","requestId":"c372b7ab-f5fc-4740-a6b3-e059d9efea51","method":"GET","route":"/api/challenge"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:22.997Z","requestId":"c372b7ab-f5fc-4740-a6b3-e059d9efea51","method":"GET","route":"/api/challenge","status":200,"elapsedMs":36}
+[wrangler:info] GET /api/challenge 200 OK (39ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:47:23.003Z","requestId":"db7d8ff8-628a-40e3-ab00-f27b0083f6c8","method":"GET","route":"/api/challenge/career"}
+[wrangler:info] GET /api/challenge/career 500 Internal Server Error (109ms)
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:23.074Z","requestId":"db7d8ff8-628a-40e3-ab00-f27b0083f6c8","method":"GET","route":"/api/challenge/career","status":500,"elapsedMs":71}
+{"type":"worker-request","timestamp":"2026-08-07T18:47:23.084Z","requestId":"0000d188-f8ef-4466-a82c-6e20afe2d92f","method":"GET","route":"/api/challenge/custom-teams"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:23.089Z","requestId":"0000d188-f8ef-4466-a82c-6e20afe2d92f","method":"GET","route":"/api/challenge/custom-teams","status":200,"elapsedMs":5}
+{"type":"worker-request","timestamp":"2026-08-07T18:47:23.090Z","requestId":"8f701ac4-3cb5-4a10-b8b4-c8e8e99a506e","method":"GET","route":"/api/challenge/career"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:23.097Z","requestId":"8f701ac4-3cb5-4a10-b8b4-c8e8e99a506e","method":"GET","route":"/api/challenge/career","status":500,"elapsedMs":7}
+{"type":"worker-request","timestamp":"2026-08-07T18:47:23.098Z","requestId":"b489020f-77bc-4067-95d2-96d1a3e74eb1","method":"GET","route":"/api/challenge/achievements/leaderboard"}
+[wrangler:info] GET /api/challenge/custom-teams 200 OK (10ms)
+[wrangler:info] GET /api/challenge/career 500 Internal Server Error (15ms)
+[wrangler:info] GET /api/challenge/achievements/leaderboard 200 OK (46ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (41ms)
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:47:23.128Z","requestId":"b489020f-77bc-4067-95d2-96d1a3e74eb1","method":"GET","route":"/api/challenge/achievements/leaderboard","status":200,"elapsedMs":29}
+[wrangler:info] GET /app.js 200 OK (5ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+[wrangler:info] GET /app.js 200 OK (1795ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:48:51.844Z","requestId":"2b2925db-84cf-4ae8-8ae4-c4bc99ebe26b","method":"GET","route":"/"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:51.915Z","requestId":"2b2925db-84cf-4ae8-8ae4-c4bc99ebe26b","method":"GET","route":"/","status":200,"elapsedMs":71}
+[wrangler:info] GET / 200 OK (78ms)
+[wrangler:info] GET /redirect.js 304 Not Modified (17ms)
+[wrangler:info] GET /styles.css 304 Not Modified (78ms)
+[wrangler:info] GET /career.css 200 OK (86ms)
+[wrangler:info] GET /analytics.js 304 Not Modified (125ms)
+[wrangler:info] GET /assets/flags/palestine.svg 304 Not Modified (60ms)
+[wrangler:info] GET /clean.css 200 OK (155ms)
+[wrangler:info] GET /player-pools.generated.js 304 Not Modified (67ms)
+[wrangler:info] GET /premier-league.css 304 Not Modified (207ms)
+[wrangler:info] GET /assets/retro-world-cup-2014.png 304 Not Modified (80ms)
+[wrangler:info] GET /ucl-simulator.css 304 Not Modified (235ms)
+[wrangler:info] GET /assets/prem-logo.webp 304 Not Modified (54ms)
+[wrangler:info] GET /data.js 304 Not Modified (63ms)
+[wrangler:info] GET /assets/ucl-starball-white.png 304 Not Modified (73ms)
+[wrangler:info] GET /retro-data.js 304 Not Modified (80ms)
+[wrangler:info] GET /data/retro/2002/squads.js 304 Not Modified (101ms)
+[wrangler:info] GET /data/retro/2002/schedule.js 304 Not Modified (109ms)
+[wrangler:info] GET /data/retro/2006/squads.js 304 Not Modified (124ms)
+[wrangler:info] GET /data/retro/2006/schedule.js 304 Not Modified (134ms)
+[wrangler:info] GET /data/retro/1998/squads.js 304 Not Modified (157ms)
+[wrangler:info] GET /data/retro/1998/schedule.js 304 Not Modified (146ms)
+[wrangler:info] GET /data/retro/2010/squads.js 304 Not Modified (165ms)
+[wrangler:info] GET /data/retro/2010/schedule.js 304 Not Modified (149ms)
+[wrangler:info] GET /data/retro/2014/squads.js 304 Not Modified (159ms)
+[wrangler:info] GET /data/retro/2014/schedule.js 304 Not Modified (136ms)
+[wrangler:info] GET /data/retro/euro-2016/squads.js 304 Not Modified (151ms)
+[wrangler:info] GET /data/retro/euro-2016/schedule.js 304 Not Modified (129ms)
+[wrangler:info] GET /data/retro/2018/squads.js 304 Not Modified (136ms)
+[wrangler:info] GET /data/retro/2018/schedule.js 304 Not Modified (123ms)
+[wrangler:info] GET /data/retro/2022/squads.js 304 Not Modified (140ms)
+[wrangler:info] GET /data/retro/2022/schedule.js 304 Not Modified (125ms)
+[wrangler:info] GET /data/retro/copa-america-2024/squads.js 304 Not Modified (126ms)
+[wrangler:info] GET /data/retro/copa-america-2024/schedule.js 304 Not Modified (99ms)
+[wrangler:info] GET /data/retro/2026/squads.js 304 Not Modified (120ms)
+[wrangler:info] GET /data/retro/2026/schedule.js 304 Not Modified (103ms)
+[wrangler:info] GET /retro-engine.js 304 Not Modified (108ms)
+[wrangler:info] GET /presentation-engine.js 304 Not Modified (118ms)
+[wrangler:info] GET /simulation-engine.js 304 Not Modified (148ms)
+[wrangler:info] GET /legacy-data/catalog.generated.js 200 OK (134ms)
+[wrangler:info] GET /premier-league-squads.generated.js 304 Not Modified (137ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:48:52.940Z","requestId":"5f3ca8b8-1b43-476d-ab34-49778d7d7898","method":"GET","route":"/premier-league-fc26-ratings.js"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:52.941Z","requestId":"5f3ca8b8-1b43-476d-ab34-49778d7d7898","method":"GET","route":"/premier-league-fc26-ratings.js","status":404,"elapsedMs":1}
+[wrangler:info] GET /premier-league-fc26-ratings.js 404 Not Found (109ms)
+[wrangler:info] GET /premier-league-data.js 304 Not Modified (108ms)
+[wrangler:info] GET /ucl-draw-solver.js 304 Not Modified (99ms)
+[wrangler:info] GET /ucl-squads.generated.js 304 Not Modified (97ms)
+[wrangler:info] GET /ucl-engine.js 304 Not Modified (127ms)
+[wrangler:info] GET /ucl-squad-calibration.js 304 Not Modified (123ms)
+[wrangler:info] GET /career-engine.js 304 Not Modified (126ms)
+[wrangler:info] GET /app.js 200 OK (84ms)
+[wrangler:info] GET /ucl-simulator.js 304 Not Modified (93ms)
+[wrangler:info] GET /premier-league.js 304 Not Modified (122ms)
+[wrangler:info] GET /challenge.js 304 Not Modified (124ms)
+[wrangler:info] GET /career.js 304 Not Modified (129ms)
+[wrangler:info] GET /assets/retro-1998/france-98-logo.webp 304 Not Modified (101ms)
+[wrangler:info] GET /assets/copa-america-2024-logo.png 304 Not Modified (84ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (12ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:48:53.402Z","requestId":"bf754291-9180-44ac-a2d9-08614ffa244b","method":"GET","route":"/api/challenge"}
+[wrangler:info] GET /assets/retro-2014/brazil-watercolor-stadium.webp 304 Not Modified (23ms)
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:53.434Z","requestId":"bf754291-9180-44ac-a2d9-08614ffa244b","method":"GET","route":"/api/challenge","status":200,"elapsedMs":32}
+[wrangler:info] GET /api/challenge 200 OK (36ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:48:53.436Z","requestId":"326a26aa-67a4-429f-9771-87c22d2da888","method":"GET","route":"/api/challenge/career"}
+[wrangler:info] GET /api/challenge/career 500 Internal Server Error (52ms)
+[wrangler:info] GET /assets/256-teams-icon.svg 304 Not Modified (7ms)
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:53.451Z","requestId":"326a26aa-67a4-429f-9771-87c22d2da888","method":"GET","route":"/api/challenge/career","status":500,"elapsedMs":15}
+{"type":"worker-request","timestamp":"2026-08-07T18:48:53.476Z","requestId":"47525f21-6b2d-4996-ab19-0c1c5a9c16d0","method":"GET","route":"/api/challenge/custom-teams"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:53.487Z","requestId":"47525f21-6b2d-4996-ab19-0c1c5a9c16d0","method":"GET","route":"/api/challenge/custom-teams","status":200,"elapsedMs":11}
+{"type":"worker-request","timestamp":"2026-08-07T18:48:53.488Z","requestId":"d517ac4e-82a6-49e5-8e5e-59725a865302","method":"GET","route":"/api/challenge/career"}
+[wrangler:info] GET /api/challenge/custom-teams 200 OK (17ms)
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:53.503Z","requestId":"d517ac4e-82a6-49e5-8e5e-59725a865302","method":"GET","route":"/api/challenge/career","status":500,"elapsedMs":15}
+[wrangler:info] GET /api/challenge/career 500 Internal Server Error (34ms)
+{"type":"worker-request","timestamp":"2026-08-07T18:48:53.507Z","requestId":"e6c9bb06-0253-4cbb-aedd-eae826f86138","method":"GET","route":"/api/challenge/achievements/leaderboard"}
+{"type":"worker-request-complete","timestamp":"2026-08-07T18:48:53.538Z","requestId":"e6c9bb06-0253-4cbb-aedd-eae826f86138","method":"GET","route":"/api/challenge/achievements/leaderboard","status":200,"elapsedMs":31}
+[wrangler:info] GET /api/challenge/achievements/leaderboard 200 OK (65ms)
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+Using secrets defined in process.env
+Your Worker has access to the following bindings:
+Binding                                                          Resource                      Mode
+env.TOURNAMENT_ROOMS (TournamentRoom)                            Durable Object                local
+env.ONLINE_CAPACITY (OnlineCapacityCoordinator)                  Durable Object                local
+env.PUBLIC_MATCHMAKER (PublicMatchmaker)                         Durable Object                local
+env.CHALLENGE_DB (256teams-accounts)                             D1 Database                   local
+env.ONLINE_ANALYTICS (world_256_online)                          Analytics Engine Dataset      local
+env.ROOM_CREATE_LIMITER (6 requests/60s)                         Rate Limit                    local
+env.ROOM_JOIN_LIMITER (20 requests/60s)                          Rate Limit                    local
+env.ROOM_API_LIMITER (120 requests/60s)                          Rate Limit                    local
+env.ROOM_STATUS_LIMITER (360 requests/60s)                       Rate Limit                    local
+env.BUG_REPORT_LIMITER (5 requests/60s)                          Rate Limit                    local
+env.CHALLENGE_AUTH_LIMITER (10 requests/60s)                     Rate Limit                    local
+env.CHALLENGE_API_LIMITER (120 requests/60s)                     Rate Limit                    local
+env.ASSETS                                                       Assets                        local
+env.ONLINE_MODE_ENABLED ("(hidden)")                             Environment Variable          local
+env.ONLINE_MAX_ACTIVE_MATCHES ("64")                             Environment Variable          local
+env.PALESTINE_CHALLENGE_ENABLED ("true")                         Environment Variable          local
+env.LOCAL_DEV_AUTH ("(hidden)")                                  Environment Variable          local
+
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...
+[wrangler:info] ✨ Parsed 3 valid header rules.
+⎔ Local server updated and ready
+⎔ Reloading local server...

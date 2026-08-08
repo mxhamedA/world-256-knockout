@@ -172,7 +172,7 @@ const copaEnd = copaSourceCss.indexOf("/* France 1998", copaStart);
 const copaCss = copaSourceCss.slice(copaStart, copaEnd > copaStart ? copaEnd : undefined);
 assert.doesNotMatch(copaCss, /#34c77b|#ffd21f|#5f8cff|#7d9878|#526d56/, "the Copa scoped block must not reintroduce green, yellow or Argentina chrome");
 assert.match(service, /retro_copa_2024_attempts/);
-assert.match(service, /retro-\(1998\|2002\|2006\|2010\|2014\|2016\|2018\|2022\|2024\|2026\)/);
+assert.match(service, /retro-\(1998\|2002\|2006\|2010\|2014\|2016\|2018\|2020\|2022\|2024\|2026\)/);
 assert.match(migration, /tournament_seed/);
 assert.match(migration, /PRIMARY KEY \(account_id, tournament_seed, team_name\)/);
 

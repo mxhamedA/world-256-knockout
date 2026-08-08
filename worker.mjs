@@ -64,17 +64,20 @@ const FIFA_RANKED_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS
 const GREAT_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank <= 20);
 const MID_DRAFT_TEAMS = FIFA_RANKED_DRAFT_TEAMS.filter((team) => team.officialFifaRank >= 40 && team.officialFifaRank <= 90);
 const LOWER_DRAFT_TEAMS = DRAFT_ELIGIBLE_TEAMS.filter((team) => !team.officialFifaRank || team.officialFifaRank >= 120);
-const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/custom-matches", "/draft-mode", "/retro-world-cup", "/retro-98-world-cup", "/retro-02-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026", "/retro-euro-2016", "/copa-america-2024", "/achievements", "/online-mode", "/pl-simulator", "/ucl-simulator", "/palestine-challenge", "/profile"]);
+const APP_SHELL_PATHS = new Set(["/", "/default-mode", "/custom-tournament", "/custom-matches", "/draft-mode", "/retro-world-cup", "/retro-98-world-cup", "/retro-02-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026", "/retro-euro-2016", "/retro-euro-2020", "/copa-america-2024", "/player-career", "/achievements", "/online-mode", "/pl-simulator", "/ucl-simulator", "/palestine-challenge", "/profile", "/reset-password"]);
 const SAVED_TOURNAMENT_PATH = /^\/saved-tournaments\/[A-Za-z0-9-]+$/;
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    if (url.pathname === "/ads.txt") {
+      return Response.redirect("https://cdn.fuseplatform.net/ads-txt/publift/256teams/ads.txt", 301);
+    }
     const requestId = request.headers.get("CF-Ray") || crypto.randomUUID();
     const startedAt = performance.now();
     structuredLog("worker-request", { requestId, method: request.method, route: url.pathname });
     writeOnlineAnalytics(env, "worker-request", 1, 0, 0);
-    const response = await handleWorkerRequest(request, env, url);
+    const response = await handleWorkerRequest(request, env, url, ctx);
     structuredLog("worker-request-complete", {
       requestId,
       method: request.method,
@@ -86,7 +89,7 @@ export default {
   },
 };
 
-async function handleWorkerRequest(request, env, url = new URL(request.url)) {
+async function handleWorkerRequest(request, env, url = new URL(request.url), ctx) {
     if (!url.pathname.startsWith("/api/")) return serveHtmlAsset(request, env);
 
     if (!sameOriginRequest(request, url)) {
@@ -96,14 +99,14 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
     try {
       if (url.pathname === "/api/challenge" || url.pathname.startsWith("/api/challenge/")) {
         if (env.PALESTINE_CHALLENGE_ENABLED !== "true") return json({ error: "Not found." }, 404);
-        if (["/api/challenge/login", "/api/challenge/register", "/api/challenge/google/start", "/api/challenge/google/callback"].includes(url.pathname)) {
+        if (["/api/challenge/login", "/api/challenge/register", "/api/challenge/forgot-password", "/api/challenge/reset-password", "/api/challenge/google/start", "/api/challenge/google/callback"].includes(url.pathname)) {
           if (!(await allowRequest(env.CHALLENGE_AUTH_LIMITER, rateKey(request, "challenge-auth")))) {
             return json({ error: "Too many account attempts. Try again in a minute." }, 429);
           }
         } else if (!(await allowRequest(env.CHALLENGE_API_LIMITER, rateKey(request, "challenge-api")))) {
           return json({ error: "Too many challenge requests. Slow down and try again." }, 429);
         }
-        return handleChallengeRequest(request, env, url);
+        return handleChallengeRequest(request, env, url, ctx);
       }
 
       if (url.pathname === "/api/bug-report" && request.method === "POST") {
@@ -197,6 +200,12 @@ async function handleWorkerRequest(request, env, url = new URL(request.url)) {
 async function serveHtmlAsset(request, env) {
   const assetUrl = new URL(request.url);
   const normalizedPath = assetUrl.pathname.replace(/\/+$/, "") || "/";
+  if (normalizedPath === "/online-mode") {
+    return new Response("Not found.", {
+      status: 404,
+      headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+    });
+  }
   if (normalizedPath === "/palestine-challenge" && env.PALESTINE_CHALLENGE_ENABLED !== "true") {
     return Response.redirect(new URL("/", request.url), 302);
   }

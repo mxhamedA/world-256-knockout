@@ -1,0 +1,3 @@
+[     376ms] [ERROR] Setting the document's base URI to 'http://localhost:8787/' violates the following Content Security Policy directive: "base-uri 'none'". The action has been blocked. @ http://localhost:8787/:4
+[     819ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8787/premier-league-fc26-ratings.js?v=fc26-official-1:0
+[    2780ms] [ERROR] Refused to execute script from 'http://localhost:8787/premier-league-fc26-ratings.js?v=fc26-official-1' because its MIME type ('') is not executable, and strict MIME type checking is enabled. @ http://localhost:8787/:0

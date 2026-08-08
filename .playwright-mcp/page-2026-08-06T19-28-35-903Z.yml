@@ -1,0 +1,220 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "256 Teams home" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]:
+          - generic [ref=e6]: "256"
+          - generic [ref=e7]: TEAMS
+      - generic:
+        - button "Settings" [ref=e8] [cursor=pointer]:
+          - generic [ref=e9]: ⚙
+        - button "News" [ref=e11] [cursor=pointer]
+        - button "Feedback" [ref=e14] [cursor=pointer]:
+          - generic [ref=e15]: ⚠
+        - button "Achievements" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: 🏆
+        - button "Donate" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: $
+        - button "Log in" [ref=e23] [cursor=pointer]
+    - main [ref=e29]:
+      - generic [ref=e31]:
+        - region "Tournament modes" [ref=e32]:
+          - generic [ref=e33]:
+            - article [ref=e34]:
+              - heading "256-team knockout" [level=3] [ref=e36]
+              - generic "Default mode settings" [ref=e37]:
+                - generic [ref=e38]:
+                  - generic [ref=e39]:
+                    - generic [ref=e40]: Simulation style
+                    - group [ref=e41]:
+                      - generic "Explain simulation styles" [ref=e42] [cursor=pointer]: i
+                  - generic [ref=e43]:
+                    - button "Realistic" [ref=e44] [cursor=pointer]
+                    - button "Standard" [ref=e45] [cursor=pointer]
+                    - button "Pure chaos" [ref=e46] [cursor=pointer]
+                - generic [ref=e47]:
+                  - generic [ref=e48]:
+                    - generic [ref=e49]: Goal level
+                    - group [ref=e50]:
+                      - generic "Explain goal levels" [ref=e51] [cursor=pointer]: i
+                  - generic [ref=e52]:
+                    - button "Tight" [ref=e53] [cursor=pointer]
+                    - button "Normal" [ref=e54] [cursor=pointer]
+                    - button "Goal fest" [ref=e55] [cursor=pointer]
+                - generic [ref=e56]:
+                  - generic [ref=e57]: Choose team
+                  - 'button "Choose a team to spectate. Current view: Neutral" [ref=e58]':
+                    - generic [ref=e59]: ◎
+                    - generic [ref=e60]:
+                      - strong [ref=e61]: Neutral
+                      - generic [ref=e62]: Show every match as normal
+                    - generic [ref=e63]: ›
+              - button "Start tournament" [ref=e65] [cursor=pointer]:
+                - text: Start tournament
+                - generic [ref=e66]: →
+            - article [ref=e67]:
+              - generic [ref=e68]:
+                - heading "Online mode Coming soon" [level=3] [ref=e69]
+                - paragraph [ref=e70]: Match with other players or create a private knockout room, then draft your countries and play every match in real time.
+            - article [ref=e71]:
+              - generic [ref=e72]:
+                - heading "World Cup Legacy Draft" [level=3] [ref=e73]
+                - paragraph [ref=e74]: Draft an XI from classic World Cup squads, then enter them into a 16-team knockout.
+              - button "Start tournament" [ref=e76] [cursor=pointer]:
+                - text: Start tournament
+                - generic [ref=e77]: →
+            - article [ref=e78]:
+              - generic [ref=e80]:
+                - heading "WC Simulator" [level=3] [ref=e81]
+                - group "Tournament" [ref=e82]:
+                  - button "WC" [pressed] [ref=e83] [cursor=pointer]
+                  - button "Euros" [ref=e84] [cursor=pointer]
+                  - button "Copa" [ref=e85] [cursor=pointer]
+                - group "World Cup year" [ref=e86]:
+                  - button "1998 World Cup" [ref=e87] [cursor=pointer]: "1998"
+                  - button "2002 World Cup, coming soon" [ref=e88] [cursor=pointer]: "2002"
+                  - button "2006" [ref=e89] [cursor=pointer]
+                  - button "2010" [ref=e90] [cursor=pointer]
+                  - button "2014" [pressed] [ref=e91] [cursor=pointer]
+                  - button "2018" [ref=e92] [cursor=pointer]
+                  - button "2022" [ref=e93] [cursor=pointer]
+                  - button "2026" [ref=e94] [cursor=pointer]
+              - generic "World Cup Simulator settings" [ref=e95]:
+                - generic [ref=e96]:
+                  - generic [ref=e97]:
+                    - generic [ref=e98]: Simulation style
+                    - group [ref=e99]:
+                      - generic "Explain simulation styles" [ref=e100] [cursor=pointer]: i
+                  - generic "Retro simulation style" [ref=e101]:
+                    - button "Realistic" [ref=e102] [cursor=pointer]
+                    - button "Standard" [ref=e103] [cursor=pointer]
+                    - button "Pure chaos" [ref=e104] [cursor=pointer]
+                - generic [ref=e105]:
+                  - generic [ref=e106]:
+                    - generic [ref=e107]: Goal level
+                    - group [ref=e108]:
+                      - generic "Explain goal levels" [ref=e109] [cursor=pointer]: i
+                  - generic "Retro goal level" [ref=e110]:
+                    - button "Tight" [ref=e111] [cursor=pointer]
+                    - button "Normal" [ref=e112] [cursor=pointer]
+                    - button "Goal fest" [ref=e113] [cursor=pointer]
+                - generic [ref=e114]:
+                  - generic [ref=e115]: Choose team
+                  - 'button "Choose a team from the 2014 World Cup. Current view: Neutral" [ref=e116]':
+                    - generic [ref=e117]: ◎
+                    - generic [ref=e118]:
+                      - strong [ref=e119]: Neutral
+                      - generic [ref=e120]: Show every match as normal
+                    - generic [ref=e121]: ›
+              - button "Start World Cup" [ref=e123] [cursor=pointer]:
+                - text: Start World Cup
+                - generic [ref=e124]: →
+            - article [ref=e125]:
+              - generic [ref=e126]:
+                - heading "Custom tournament" [level=3] [ref=e127]
+                - paragraph [ref=e128]: Build the field, tune team strength and script individual matches.
+              - generic [ref=e129]:
+                - button "Build tournament" [ref=e130] [cursor=pointer]:
+                  - text: Build tournament
+                  - generic [ref=e131]: →
+                - button "Set up match" [ref=e132] [cursor=pointer]:
+                  - text: Set up match
+                  - generic [ref=e133]: →
+            - article [ref=e134]:
+              - generic [ref=e135]:
+                - generic [ref=e136]: PL
+                - generic [ref=e138]:
+                  - heading "PL 26/27 Simulator" [level=3] [ref=e139]
+                  - button "Install assets" [ref=e140] [cursor=pointer]
+              - generic "Premier League simulator settings" [ref=e141]:
+                - generic [ref=e142]:
+                  - generic [ref=e143]:
+                    - generic [ref=e144]: Simulation style
+                    - group [ref=e145]:
+                      - generic "Explain simulation styles" [ref=e146] [cursor=pointer]: i
+                  - generic "Premier League simulation style" [ref=e147]:
+                    - button "Realistic" [ref=e148] [cursor=pointer]
+                    - button "Standard" [ref=e149] [cursor=pointer]
+                    - button "Pure chaos" [ref=e150] [cursor=pointer]
+                - generic [ref=e151]:
+                  - generic [ref=e152]:
+                    - generic [ref=e153]: Goal level
+                    - group [ref=e154]:
+                      - generic "Explain goal levels" [ref=e155] [cursor=pointer]: i
+                  - generic "Premier League goal level" [ref=e156]:
+                    - button "Tight" [ref=e157] [cursor=pointer]
+                    - button "Normal" [ref=e158] [cursor=pointer]
+                    - button "Goal fest" [ref=e159] [cursor=pointer]
+                - generic [ref=e160]:
+                  - generic [ref=e161]: Choose team
+                  - 'button "Choose a Premier League club. Current view: Neutral" [ref=e162]':
+                    - generic [ref=e163]: PL
+                    - generic [ref=e164]:
+                      - strong [ref=e165]: Neutral
+                      - generic [ref=e166]: Watch the whole title race
+                    - generic [ref=e167]: ›
+              - button "BETA Start season" [ref=e169] [cursor=pointer]:
+                - generic [ref=e170]: BETA
+                - text: Start season
+                - generic [ref=e171]: →
+            - article [ref=e172]:
+              - generic [ref=e174]:
+                - heading "UCL simulator" [level=3] [ref=e175]
+                - button "Install assets" [ref=e176] [cursor=pointer]
+                - paragraph [ref=e177]: Take on the league phase and fight through the knockouts for Europe’s biggest trophy.
+              - generic "UCL simulator settings" [ref=e178]:
+                - generic [ref=e179]:
+                  - generic [ref=e180]: Choose team
+                  - 'button "Choose a 2026/27 Champions League club. Current view: Neutral" [ref=e181]':
+                    - generic [ref=e183]:
+                      - strong [ref=e184]: Neutral
+                      - generic [ref=e185]: 39 league-phase and qualifying clubs
+                    - generic [ref=e186]: ›
+              - button "Play UCL mode" [ref=e188] [cursor=pointer]:
+                - generic [ref=e190]: →
+        - region [ref=e191]:
+          - generic [ref=e192]:
+            - heading "Leaderboard" [level=2] [ref=e193]
+            - button "View top 50" [ref=e194] [cursor=pointer]
+          - paragraph [ref=e196]: Loading standings...
+        - region [ref=e197]:
+          - heading "About the simulator" [level=2] [ref=e199]
+          - navigation "Simulator information" [ref=e200]:
+            - link "How it works" [ref=e201] [cursor=pointer]:
+              - /url: ./how-it-works.html
+            - link "Mode guide" [ref=e202] [cursor=pointer]:
+              - /url: ./guides.html
+            - link "Methodology" [ref=e203] [cursor=pointer]:
+              - /url: ./methodology.html
+            - link "The 256 teams" [ref=e204] [cursor=pointer]:
+              - /url: ./team-field.html
+            - link "FAQ" [ref=e205] [cursor=pointer]:
+              - /url: ./faq.html
+            - link "About" [ref=e206] [cursor=pointer]:
+              - /url: ./about.html
+      - generic [ref=e207]:
+        - generic [ref=e208]:
+          - strong [ref=e209]: 256 TEAMS WC
+          - generic [ref=e210]: An unofficial football tournament simulator built for entertainment.
+        - time [ref=e211]:
+          - generic [ref=e212]: "Last updated:"
+          - strong [ref=e213]: 29 Jul, 3:14 AM BST
+        - generic [ref=e214]:
+          - navigation "Legal information" [ref=e215]:
+            - link "Guides" [ref=e216] [cursor=pointer]:
+              - /url: ./guides.html
+            - link "Methodology" [ref=e217] [cursor=pointer]:
+              - /url: ./methodology.html
+            - link "FAQ" [ref=e218] [cursor=pointer]:
+              - /url: ./faq.html
+            - link "About" [ref=e219] [cursor=pointer]:
+              - /url: ./about.html
+            - link "Privacy" [ref=e220] [cursor=pointer]:
+              - /url: ./privacy.html
+            - link "Terms" [ref=e221] [cursor=pointer]:
+              - /url: ./terms.html
+            - link "Disclaimer" [ref=e222] [cursor=pointer]:
+              - /url: ./disclaimer.html
+          - generic [ref=e223]: © 2026 Mohamed A. All rights reserved.
+  - status

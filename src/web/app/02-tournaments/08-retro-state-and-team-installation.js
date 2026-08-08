@@ -75,6 +75,7 @@ function retroSquadsForYear(year = retroTournament?.year || Number(readRetroWorl
   if (Number(year) === 2006) return RETRO_2006_SQUADS;
   if (Number(year) === 2010) return RETRO_2010_SQUADS;
   if (Number(year) === 2016) return RETRO_EURO_2016_SQUADS;
+  if (Number(year) === 2020) return RETRO_EURO_2020_SQUADS;
   if (Number(year) === 2018) return RETRO_2018_SQUADS;
   if (Number(year) === 2022) return RETRO_2022_SQUADS;
   if (Number(year) === 2024) return RETRO_COPA_2024_SQUADS;

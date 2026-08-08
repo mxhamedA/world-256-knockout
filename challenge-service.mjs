@@ -22,6 +22,7 @@ import {
 } from "./challenge-auth.mjs";
 
 const SESSION_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
+const PASSWORD_RESET_LIFETIME_MS = 60 * 60 * 1000;
 const OAUTH_STATE_LIFETIME_MS = 10 * 60 * 1000;
 const COMMAND_ID_PATTERN = /^[A-Za-z0-9_-]{16,80}$/;
 const PL_ASSET_PACK_ID = "pl-26-27";
@@ -83,6 +84,14 @@ const RETRO_2016_TEAMS = Object.freeze([
   "Spain", "Czech Republic", "Turkey", "Croatia",
   "Belgium", "Italy", "Republic of Ireland", "Sweden",
   "Portugal", "Iceland", "Austria", "Hungary",
+]);
+const RETRO_2020_TEAMS = Object.freeze([
+  "Turkey", "Italy", "Wales", "Switzerland",
+  "Denmark", "Finland", "Belgium", "Russia",
+  "Netherlands", "Ukraine", "Austria", "North Macedonia",
+  "England", "Croatia", "Scotland", "Czech Republic",
+  "Spain", "Sweden", "Poland", "Slovakia",
+  "Hungary", "Portugal", "France", "Germany",
 ]);
 const RETRO_2018_TEAMS = Object.freeze([
   "Russia", "Saudi Arabia", "Egypt", "Uruguay",
@@ -156,6 +165,11 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     89, 78, 83, 75, 88, 78, 80, 86,
     87, 86, 77, 80, 87, 78, 81, 77,
   ]),
+  2020: Object.freeze([
+    78, 91, 81, 85, 88, 75, 89, 78,
+    86, 84, 82, 73, 90, 84, 77, 84,
+    89, 82, 81, 77, 80, 88, 89, 86,
+  ]),
   2018: Object.freeze([
     81, 71, 74, 86, 86, 89, 75, 73,
     92, 75, 78, 81, 87, 77, 87, 77,
@@ -181,7 +195,7 @@ const RETRO_TEAM_RATINGS = Object.freeze({
     86, 88, 72, 71,
   ]),
 });
-const RETRO_ACHIEVEMENT_YEARS = Object.freeze([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026]);
+const RETRO_ACHIEVEMENT_YEARS = Object.freeze([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026]);
 const KNOCKOUT_256_KEY = 256;
 const PREMIER_LEAGUE_KEY = "pl";
 const UCL_KEY = "ucl";
@@ -288,7 +302,7 @@ function googleAuthEnabled(env) {
 }
 
 function oauthReturnPath(value) {
-  return value === "/palestine-challenge" || value === "/profile" ? value : "/";
+  return value === "/palestine-challenge" || value === "/profile" || value === "/player-career" ? value : "/";
 }
 
 function googleRedirectUri(env, url) {
@@ -557,6 +571,64 @@ async function readJson(request, maxBytes = 2048) {
   }
 }
 
+function escapeEmailHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character]);
+}
+
+async function sendAccountEmail(env, message) {
+  if (!env.ACCOUNT_EMAIL || !env.ACCOUNT_EMAIL_FROM) {
+    throw new Error("Account email binding is not configured.");
+  }
+  return await env.ACCOUNT_EMAIL.send({
+    ...message,
+    from: { email: env.ACCOUNT_EMAIL_FROM, name: "256 Teams" },
+  });
+}
+
+async function notifyDeletionRequest(env, account, requestDetails) {
+  if (!env.ACCOUNT_REQUEST_NOTIFICATION_EMAIL) {
+    throw new Error("Account request notification recipient is not configured.");
+  }
+  const reasonLabels = {
+    not_using: "No longer using 256 Teams",
+    privacy: "Privacy concerns",
+    technical: "Technical problems",
+    other: "Other",
+  };
+  const requestedAt = new Date(requestDetails.requestedAt).toISOString();
+  const reason = reasonLabels[requestDetails.reason] || requestDetails.reason;
+  const details = requestDetails.details || "No additional details supplied.";
+  await sendAccountEmail(env, {
+    to: env.ACCOUNT_REQUEST_NOTIFICATION_EMAIL,
+    subject: `Account deletion requested by ${account.username}`,
+    text: [
+      "A 256 Teams account deletion has been requested.",
+      `Username: ${account.username}`,
+      `Email: ${account.email || "No email on account"}`,
+      `Reason: ${reason}`,
+      `Details: ${details}`,
+      `Requested at: ${requestedAt}`,
+      "Review the request in the 256teams-accounts D1 database.",
+    ].join("\n"),
+    html: `<h1>Account deletion requested</h1>
+      <p>A 256 Teams account deletion has been requested.</p>
+      <dl>
+        <dt><strong>Username</strong></dt><dd>${escapeEmailHtml(account.username)}</dd>
+        <dt><strong>Email</strong></dt><dd>${escapeEmailHtml(account.email || "No email on account")}</dd>
+        <dt><strong>Reason</strong></dt><dd>${escapeEmailHtml(reason)}</dd>
+        <dt><strong>Details</strong></dt><dd>${escapeEmailHtml(details)}</dd>
+        <dt><strong>Requested at</strong></dt><dd>${escapeEmailHtml(requestedAt)}</dd>
+      </dl>
+      <p>Review the request in the <code>256teams-accounts</code> D1 database.</p>`,
+  });
+}
+
 async function userAgentHash(request) {
   const value = request.headers.get("User-Agent") || "unknown";
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
@@ -767,6 +839,111 @@ async function login(request, env) {
   });
 }
 
+async function requestPasswordReset(request, env, url, ctx) {
+  const body = await readJson(request);
+  const rawIdentifier = typeof body.identifier === "string" ? body.identifier.trim() : "";
+  const email = normalizeChallengeEmail(rawIdentifier);
+  const username = normalizeChallengeUsername(rawIdentifier);
+  if ((!email && !username) || rawIdentifier.length > 254) {
+    throw new ChallengeRequestError("Enter your username or email address.");
+  }
+
+  const accountLookup = email
+    ? "accounts.email = ? COLLATE NOCASE"
+    : "accounts.username = ? COLLATE NOCASE";
+  const account = await env.CHALLENGE_DB.prepare(`
+    SELECT id, username, email
+    FROM accounts
+    WHERE ${accountLookup}
+  `).bind(email || username).first();
+
+  if (account?.email) {
+    const token = makeChallengeSessionToken();
+    const tokenHash = await hashChallengeSessionToken(token);
+    const now = Date.now();
+    const expiresAt = now + PASSWORD_RESET_LIFETIME_MS;
+    await env.CHALLENGE_DB.batch([
+      env.CHALLENGE_DB.prepare("DELETE FROM password_reset_tokens WHERE account_id = ? OR expires_at <= ? OR used_at IS NOT NULL")
+        .bind(account.id, now),
+      env.CHALLENGE_DB.prepare(`
+        INSERT INTO password_reset_tokens (token_hash, account_id, created_at, expires_at, used_at)
+        VALUES (?, ?, ?, ?, NULL)
+      `).bind(tokenHash, account.id, now, expiresAt),
+    ]);
+
+    const resetUrl = new URL("/reset-password", url.origin);
+    resetUrl.searchParams.set("token", token);
+    const delivery = sendAccountEmail(env, {
+      to: account.email,
+      subject: "Reset your 256 Teams password",
+      text: [
+        `Hi ${account.username},`,
+        "A password reset was requested for your 256 Teams account.",
+        `Reset your password: ${resetUrl.toString()}`,
+        "This link expires in 1 hour. If you did not request it, you can ignore this email.",
+      ].join("\n\n"),
+      html: `<p>Hi ${escapeEmailHtml(account.username)},</p>
+        <p>A password reset was requested for your 256 Teams account.</p>
+        <p><a href="${escapeEmailHtml(resetUrl.toString())}">Reset your password</a></p>
+        <p>This link expires in 1 hour. If you did not request it, you can ignore this email.</p>`,
+    }).catch((error) => {
+      console.error(JSON.stringify({
+        message: "password reset email failed",
+        accountId: account.id,
+        error: error instanceof Error ? error.message : String(error),
+      }));
+    });
+    if (ctx?.waitUntil) ctx.waitUntil(delivery);
+    else await delivery;
+  } else {
+    await hashChallengeSessionToken(makeChallengeSessionToken());
+  }
+
+  return responseJson({
+    ok: true,
+    message: "If an account matches those details, a password reset link will be emailed shortly.",
+  }, 202);
+}
+
+async function resetPassword(request, env) {
+  const body = await readJson(request);
+  const token = typeof body.token === "string" ? body.token.trim() : "";
+  if (token.length < 32 || token.length > 256 || !validChallengePassword(body.password)) {
+    throw new ChallengeRequestError("This password reset link is invalid or has expired.", 400);
+  }
+
+  const tokenHash = await hashChallengeSessionToken(token);
+  const password = await hashChallengePassword(body.password);
+  const now = Date.now();
+  const useMarker = crypto.randomUUID();
+  const results = await env.CHALLENGE_DB.batch([
+    env.CHALLENGE_DB.prepare(`
+      UPDATE password_reset_tokens
+      SET used_at = ?, use_marker = ?
+      WHERE token_hash = ? AND used_at IS NULL AND expires_at > ?
+    `).bind(now, useMarker, tokenHash, now),
+    env.CHALLENGE_DB.prepare(`
+      UPDATE accounts
+      SET password_hash = ?, password_salt = ?, password_iterations = ?
+      WHERE id = (
+        SELECT account_id FROM password_reset_tokens
+        WHERE token_hash = ? AND use_marker = ?
+      )
+    `).bind(password.hash, password.salt, password.iterations, tokenHash, useMarker),
+    env.CHALLENGE_DB.prepare(`
+      UPDATE sessions SET revoked_at = ?
+      WHERE account_id = (
+        SELECT account_id FROM password_reset_tokens
+        WHERE token_hash = ? AND use_marker = ?
+      ) AND revoked_at IS NULL
+    `).bind(now, tokenHash, useMarker),
+  ]);
+  if (!results[0]?.meta?.changes || !results[1]?.meta?.changes) {
+    throw new ChallengeRequestError("This password reset link is invalid or has expired.", 400);
+  }
+  return responseJson({ ok: true, message: "Your password has been updated. You can log in now." });
+}
+
 async function logout(request, env) {
   const account = await authenticatedAccount(request, env.CHALLENGE_DB, false, env.LOCAL_DEV_AUTH === "true");
   if (account) await env.CHALLENGE_DB.prepare("UPDATE sessions SET revoked_at = ? WHERE token_hash = ?").bind(Date.now(), account.tokenHash).run();
@@ -778,7 +955,7 @@ async function logout(request, env) {
 async function profile(request, env, account) {
   if (request.method === "GET") {
     const deletionRequest = await env.CHALLENGE_DB.prepare(`
-      SELECT reason, details, status, requested_at, completed_at
+      SELECT reason, details, status, requested_at, completed_at, notification_sent_at
       FROM account_deletion_requests WHERE account_id = ?
     `).bind(account.id).first();
     return responseJson({
@@ -856,17 +1033,42 @@ async function requestAccountDeletion(request, env, account) {
   if (details.length > 500) throw new ChallengeRequestError("Keep the additional details under 500 characters.");
   const now = Date.now();
   await env.CHALLENGE_DB.prepare(`
-    INSERT INTO account_deletion_requests (account_id, reason, details, status, requested_at, completed_at)
-    VALUES (?, ?, ?, 'pending', ?, NULL)
+    INSERT INTO account_deletion_requests (account_id, reason, details, status, requested_at, completed_at, notification_sent_at)
+    VALUES (?, ?, ?, 'pending', ?, NULL, NULL)
     ON CONFLICT(account_id) DO UPDATE SET
       reason = excluded.reason,
       details = excluded.details,
       status = 'pending',
       requested_at = excluded.requested_at,
-      completed_at = NULL
+      completed_at = NULL,
+      notification_sent_at = NULL
   `).bind(account.id, reason, details, now).run();
+  let notificationSentAt = null;
+  try {
+    await notifyDeletionRequest(env, account, { reason, details, requestedAt: now });
+    notificationSentAt = Date.now();
+    await env.CHALLENGE_DB.prepare(`
+      UPDATE account_deletion_requests
+      SET notification_sent_at = ?
+      WHERE account_id = ? AND requested_at = ?
+    `).bind(notificationSentAt, account.id, now).run();
+  } catch (error) {
+    console.error(JSON.stringify({
+      message: "account deletion notification failed",
+      accountId: account.id,
+      error: error instanceof Error ? error.message : String(error),
+    }));
+  }
   return responseJson({
-    deletionRequest: { reason, details, status: "pending", requested_at: now, completed_at: null },
+    deletionRequest: {
+      reason,
+      details,
+      status: "pending",
+      requested_at: now,
+      completed_at: null,
+      notification_sent_at: notificationSentAt,
+    },
+    notificationSent: Boolean(notificationSentAt),
   }, 201);
 }
 
@@ -1170,6 +1372,15 @@ function retroAchievementConfig(year) {
       teams: RETRO_2016_TEAMS,
       id: "retro-2016-european-tour",
       title: "UEFA Euro 2016 Tour",
+    };
+  }
+  if (Number(year) === 2020) {
+    return {
+      year: 2020,
+      table: "retro_2020_attempts",
+      teams: RETRO_2020_TEAMS,
+      id: "retro-2020-european-tour",
+      title: "UEFA Euro 2020 Tour",
     };
   }
   if (Number(year) === 2022) {
@@ -1582,6 +1793,10 @@ async function achievementLeaderboard(request, env) {
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2016_attempts WHERE won = 1 GROUP BY account_id, team_name
       UNION ALL
+      SELECT account_id, 2020 AS year, team_name, 1 AS champion,
+        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      FROM retro_2020_attempts WHERE won = 1 GROUP BY account_id, team_name
+      UNION ALL
       SELECT account_id, 2018 AS year, team_name, 1 AS champion,
         MIN(COALESCE(completed_at, started_at)) AS unlocked_at
       FROM retro_2018_attempts WHERE won = 1 GROUP BY account_id, team_name
@@ -1601,12 +1816,12 @@ async function achievementLeaderboard(request, env) {
       FROM retro_2026_attempts WHERE won = 1 GROUP BY account_id, team_name
     `).all(),
     env.CHALLENGE_DB.prepare(`
-      SELECT account_id, 256 AS year, team_id AS team_name, MAX(champion) AS champion,
-        MAX(best_round_index) AS best_round_index,
-        MAX(CASE WHEN completed_at IS NOT NULL THEN 1 ELSE 0 END) AS completed,
-        MIN(COALESCE(completed_at, started_at)) AS unlocked_at
+      SELECT account_id, 256 AS year, team_id AS team_name, champion,
+        best_round_index,
+        CASE WHEN completed_at IS NOT NULL THEN 1 ELSE 0 END AS completed,
+        COALESCE(completed_at, started_at) AS unlocked_at
       FROM knockout_256_attempts
-      GROUP BY account_id, team_id
+      ORDER BY account_id, team_id, COALESCE(completed_at, started_at) ASC
     `).all(),
     env.CHALLENGE_DB.prepare(`
       SELECT account_id, 'pl' AS year, club_id AS team_name, 0 AS champion,
@@ -1635,6 +1850,7 @@ async function achievementLeaderboard(request, env) {
       latestUnlock: 0,
     },
   ]));
+  const countedUnlocks = new Set();
   [
     ...(earlyRetroRows.results || []),
     ...(recentRetroRows.results || []),
@@ -1662,12 +1878,13 @@ async function achievementLeaderboard(request, env) {
             championTeamId: Number(row.champion) === 1 ? row.team_name : null,
             phase: Number(row.completed) === 1 ? "complete" : "progress",
           }) === 1
-        : uclDefinition
-          ? Number(row.best_stage_index ?? -1) >= uclDefinition.targetStageIndex
-          : true;
+        : true;
       if (!validUnlock) {
         return;
       }
+      const unlockKey = `${row.account_id}:${row.year}:${row.team_name}`;
+      if (countedUnlocks.has(unlockKey)) return;
+      countedUnlocks.add(unlockKey);
       entry.points += Number(row.year) === KNOCKOUT_256_KEY
         ? knockoutDefinition?.points || 0
         : String(row.year) === PREMIER_LEAGUE_KEY
@@ -2033,12 +2250,104 @@ async function accountCustomTeams(request, env, account, teamId = null) {
   return responseJson({ error: "Method not allowed." }, 405);
 }
 
-export async function handleChallengeRequest(request, env, url) {
+function sanitizePlayerCareerSave(value) {
+  const save = value?.save;
+  if (!save || typeof save !== "object" || Array.isArray(save)) {
+    throw new ChallengeRequestError("The career save is invalid.", 400);
+  }
+  let serialized;
+  try {
+    serialized = JSON.stringify(save);
+  } catch {
+    throw new ChallengeRequestError("The career save could not be read.", 400);
+  }
+  if (serialized.length > 500_000) throw new ChallengeRequestError("The career save is too large.", 413);
+  const positions = new Set(["GK", "CB", "LB", "RB", "CDM", "CM", "CAM", "LW", "RW", "ST"]);
+  const feet = new Set(["Left", "Right", "Both"]);
+  const attributeKeys = ["pace", "shooting", "passing", "dribbling", "defending", "physical"];
+  const safeInteger = (input, minimum, maximum) => Number.isFinite(Number(input))
+    && Math.round(Number(input)) >= minimum
+    && Math.round(Number(input)) <= maximum;
+  if (
+    Number(save.version) !== 1
+    || !/^career-[a-z0-9-]{8,120}$/i.test(String(save.id || ""))
+    || typeof save.player?.fullName !== "string"
+    || save.player.fullName.trim().length < 3
+    || save.player.fullName.length > 60
+    || !positions.has(save.player.position)
+    || !feet.has(save.player.preferredFoot)
+    || !safeInteger(save.player.age, 15, 38)
+    || !safeInteger(save.player.overall, 1, 99)
+    || !attributeKeys.every((key) => safeInteger(save.player.attributes?.[key], 1, 99))
+    || typeof save.player.nationality?.name !== "string"
+    || save.player.nationality.name.length > 70
+    || !Array.isArray(save.world?.clubs)
+    || save.world.clubs.length < 8
+    || save.world.clubs.length > 40
+    || !Array.isArray(save.season?.fixtures)
+    || save.season.fixtures.length > 100
+    || !["active", "transfer", "retired"].includes(save.season?.status)
+    || !Array.isArray(save.news)
+    || save.news.length > 30
+    || !Array.isArray(save.history)
+    || save.history.length > 30
+    || !safeInteger(save.coins?.balance, 0, 1_000_000)
+    || !safeInteger(save.training?.points, 0, 100_000)
+  ) {
+    throw new ChallengeRequestError("The career save failed validation.", 400);
+  }
+  return JSON.parse(serialized);
+}
+
+async function accountPlayerCareer(request, env, account) {
+  if (request.method === "GET") {
+    const row = await env.CHALLENGE_DB.prepare(`
+      SELECT save_json, version, created_at, updated_at
+      FROM player_career_saves WHERE account_id = ?
+    `).bind(account.id).first();
+    if (!row) return responseJson({ save: null, slot: 1 });
+    let save = null;
+    try {
+      save = JSON.parse(row.save_json);
+    } catch (error) {
+      console.error("Career save JSON is unreadable", account.id, error instanceof Error ? error.message : String(error));
+    }
+    return responseJson({ save, slot: 1, version: Number(row.version), createdAt: Number(row.created_at), updatedAt: Number(row.updated_at) });
+  }
+  if (request.method === "PUT") {
+    const body = await readJson(request, 550_000);
+    const save = sanitizePlayerCareerSave(body);
+    const now = Date.now();
+    save.updatedAt = Math.max(Number(save.updatedAt) || 0, now);
+    await env.CHALLENGE_DB.prepare(`
+      INSERT INTO player_career_saves (account_id, save_json, version, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(account_id) DO UPDATE SET
+        save_json = excluded.save_json,
+        version = excluded.version,
+        updated_at = excluded.updated_at
+    `).bind(account.id, JSON.stringify(save), Number(save.version), now, now).run();
+    return responseJson({ save, slot: 1, updatedAt: now });
+  }
+  if (request.method === "DELETE") {
+    await env.CHALLENGE_DB.prepare("DELETE FROM player_career_saves WHERE account_id = ?").bind(account.id).run();
+    return responseJson({ deleted: true, slot: 1 });
+  }
+  return responseJson({ error: "Method not allowed." }, 405);
+}
+
+export async function handleChallengeRequest(request, env, url, ctx) {
   if (!env.CHALLENGE_DB) return responseJson({ error: "The account service is not configured." }, 503);
   try {
     if (url.pathname === "/api/challenge" && request.method === "GET") return await dashboard(request, env);
     if (url.pathname === "/api/challenge/register" && request.method === "POST") return await register(request, env);
     if (url.pathname === "/api/challenge/login" && request.method === "POST") return await login(request, env);
+    if (url.pathname === "/api/challenge/forgot-password" && request.method === "POST") {
+      return await requestPasswordReset(request, env, url, ctx);
+    }
+    if (url.pathname === "/api/challenge/reset-password" && request.method === "POST") {
+      return await resetPassword(request, env);
+    }
     if (url.pathname === "/api/challenge/logout" && request.method === "POST") return await logout(request, env);
     if (url.pathname === "/api/challenge/google/start" && request.method === "GET") return await startGoogleLogin(request, env, url);
     if (url.pathname === "/api/challenge/google/callback" && request.method === "GET") return await completeGoogleLogin(request, env, url);
@@ -2072,7 +2381,7 @@ export async function handleChallengeRequest(request, env, url) {
       );
       return await uclAchievement(request, env, achievementAccount);
     }
-    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(1998|2002|2006|2010|2014|2016|2018|2022|2024|2026)$/);
+    const retroAchievementMatch = url.pathname.match(/^\/api\/challenge\/achievements\/retro-(1998|2002|2006|2010|2014|2016|2018|2020|2022|2024|2026)$/);
     if (retroAchievementMatch) {
       const achievementAccount = await authenticatedAccount(
         request,
@@ -2084,6 +2393,7 @@ export async function handleChallengeRequest(request, env, url) {
     }
     const account = await authenticatedAccount(request, env.CHALLENGE_DB, true, env.LOCAL_DEV_AUTH === "true");
     if (url.pathname === "/api/challenge/profile") return await profile(request, env, account);
+    if (url.pathname === "/api/challenge/career") return await accountPlayerCareer(request, env, account);
     if (url.pathname === "/api/challenge/profile/deletion-request") return await requestAccountDeletion(request, env, account);
     if (url.pathname === "/api/challenge/custom-teams") return await accountCustomTeams(request, env, account);
     const customTeamMatch = url.pathname.match(/^\/api\/challenge\/custom-teams\/(custom-[a-z0-9-]{6,80})$/);
@@ -2099,7 +2409,14 @@ export async function handleChallengeRequest(request, env, url) {
       return responseJson({ error: error.message, ...(error.details || {}) }, error.status);
     }
     console.error("Palestine Challenge API failure", error instanceof Error ? error.stack || error.message : String(error));
-    const accountRequest = ["/api/challenge/register", "/api/challenge/login", "/api/challenge/profile"].includes(url.pathname);
+    const accountRequest = [
+      "/api/challenge/register",
+      "/api/challenge/login",
+      "/api/challenge/forgot-password",
+      "/api/challenge/reset-password",
+      "/api/challenge/profile",
+      "/api/challenge/career",
+    ].includes(url.pathname);
     return responseJson({
       error: accountRequest
         ? "The account request failed unexpectedly. Please try again."

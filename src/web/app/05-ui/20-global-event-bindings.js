@@ -106,7 +106,31 @@ els.customMatchStartButton?.addEventListener("click", () => {
 });
 els.customPresetFile?.addEventListener("change", (event) => readCustomTournamentPresetFile(event.target.files?.[0]));
 
+[
+  ["#startPremierLeagueSeasonButton", "premierLeague"],
+  ["#startUclSimulatorButton", "ucl"],
+].forEach(([selector, mode]) => {
+  document.querySelector(selector)?.addEventListener("click", (event) => {
+    if (currentAppMode() !== "home" || !desktopModeSetupEnabled()) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    openDesktopModeSetup(mode);
+  }, { capture: true });
+});
+
+document.querySelectorAll("[data-mode-route-back]").forEach((button) => {
+  button.addEventListener("click", () => {
+    closeDesktopModeSetup();
+    restoreClubRouteSetupControls();
+    setAppModeUrl("home");
+    render();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  });
+});
+
 els.startTournamentButton.addEventListener("click", () => {
+  if (currentAppMode() === "home" && openDesktopModeSetup("standard")) return;
+  closeDesktopModeSetup();
   if (isValidCustomTournamentState(state)) {
     if (state.customTournament?.customMatch === true) customMatchState = state;
     else customTournamentState = state;
@@ -156,6 +180,22 @@ els.startTournamentButton.addEventListener("click", () => {
 });
 
 els.startLegacyDraftButton?.addEventListener("click", () => {
+  renderLegacyLandingSetup();
+  setAppModeUrl("legacy");
+  if (desktopModeSetupEnabled()) {
+    document.body.classList.add("legacy-route-setup-active");
+  }
+  if (document.body.classList.contains("legacy-route-setup-active")) {
+    els.legacySetupModal?.show();
+  } else {
+    els.legacySetupModal?.showModal();
+  }
+});
+
+els.confirmLegacyDraftButton?.addEventListener("click", () => {
+  els.legacySetupModal.dataset.confirmed = "true";
+  document.body.classList.remove("legacy-route-setup-active");
+  els.legacySetupModal?.close();
   if (state.legacyTournament && state.started) {
     if (!isValidLegacyTournamentState(state) && legacyDraft?.complete) {
       state = createLegacyTournamentState();
@@ -191,19 +231,30 @@ els.startLegacyDraftButton?.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     return;
   }
-  renderLegacyLandingSetup();
-  els.legacySetupModal?.showModal();
-});
-
-els.confirmLegacyDraftButton?.addEventListener("click", () => {
-  els.legacySetupModal?.close();
   legacyDraft = null;
   localStorage.removeItem("legacyDraftState");
   startLegacyDraft(legacySetup.nationId);
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+els.legacySetupRestartButton?.addEventListener("click", () => {
+  const legacyTeamId = legacyDraft?.nationId ? `legacy-${legacyDraft.nationId}-xi` : state.spectateTeamId;
+  if (typeof legacyTeamId === "string" && legacyTeamId.startsWith("legacy-")) TEAM_BY_ID.delete(legacyTeamId);
+  legacyDraft = null;
+  localStorage.removeItem("legacyDraftState");
+  localStorage.removeItem(LEGACY_TOURNAMENT_SESSION_KEY);
+  if (state.legacyTournament) {
+    const previousSettings = { ...state.settings };
+    state = createInitialState();
+    state.settings = previousSettings;
+    saveState();
+  }
+  renderLegacyLandingSetup();
+  showToast("Choose a new Legacy Draft setup.");
+});
+
 els.restartLegacyDraftButton?.addEventListener("click", () => {
+  document.body.classList.remove("legacy-route-setup-active");
   els.legacySetupModal?.close();
   const legacyTeamId = legacyDraft?.nationId ? `legacy-${legacyDraft.nationId}-xi` : state.spectateTeamId;
   if (typeof legacyTeamId === "string" && legacyTeamId.startsWith("legacy-")) TEAM_BY_ID.delete(legacyTeamId);
@@ -222,6 +273,16 @@ els.restartLegacyDraftButton?.addEventListener("click", () => {
   showToast("Legacy tournament restarted.");
 });
 
+els.legacySetupModal?.addEventListener("close", () => {
+  document.body.classList.remove("legacy-route-setup-active");
+  const confirmed = els.legacySetupModal.dataset.confirmed === "true";
+  delete els.legacySetupModal.dataset.confirmed;
+  if (!confirmed && currentAppMode() === "legacy") {
+    setAppModeUrl("home", { replace: true });
+    render();
+  }
+});
+
 els.legacyDraftBackButton.addEventListener("click", () => {
   if (state?.premierLeagueSeason || document.body.classList.contains("pl-match-mode-active")) {
     window.PremierLeagueSeason?.returnToSeason?.();
@@ -235,6 +296,7 @@ els.legacyDraftBackButton.addEventListener("click", () => {
     openCustomTournamentSettings();
     return;
   }
+  closeDesktopModeSetup();
   setAppModeUrl("home");
   render();
 });
@@ -244,6 +306,7 @@ els.legacyHeaderBackButton.addEventListener("click", () => {
     window.PremierLeagueSeason?.returnToSeason?.();
     return;
   }
+  closeDesktopModeSetup();
   setAppModeUrl("home");
   render();
 });

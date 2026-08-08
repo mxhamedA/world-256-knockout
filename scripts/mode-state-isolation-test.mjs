@@ -24,5 +24,8 @@ assert.match(
   /openCustomTournamentButton\?\.addEventListener\("click"[\s\S]*?state = customTournamentState/,
   "Returning to Custom must preserve its active tournament.",
 );
+assert.match(app, /if \(premierLeagueScreen && mode !== "premierLeague" && !premierLeagueSharedMatchActive\) premierLeagueScreen\.hidden = true/);
+assert.match(app, /if \(uclScreen && mode !== "ucl" && !uclSharedMatchActive\) uclScreen\.hidden = true/,
+  "An inactive UCL screen must never leak below another mode.");
 
 console.log("Default/custom mode isolation checks passed.");

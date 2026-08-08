@@ -146,6 +146,8 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     },
     2016: Object.fromEntries(Object.entries(typeof RETRO_EURO_2016_SQUADS !== "undefined" ? RETRO_EURO_2016_SQUADS : {})
       .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
+    2020: Object.fromEntries(Object.entries(typeof RETRO_EURO_2020_SQUADS !== "undefined" ? RETRO_EURO_2020_SQUADS : {})
+      .map(([team, squad]) => [team, (squad.penaltyTakers || []).map((name) => normalizedPlayerName({ name }))])),
     2018: {
       Argentina: ["lionelmessi"],
       Belgium: ["edenhazard", "romelulukaku"],
@@ -237,6 +239,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2010) return typeof RETRO_2010_SQUADS !== "undefined" ? RETRO_2010_SQUADS : {};
     if (Number(year) === 2014) return typeof RETRO_2014_SQUADS !== "undefined" ? RETRO_2014_SQUADS : {};
     if (Number(year) === 2016) return typeof RETRO_EURO_2016_SQUADS !== "undefined" ? RETRO_EURO_2016_SQUADS : {};
+    if (Number(year) === 2020) return typeof RETRO_EURO_2020_SQUADS !== "undefined" ? RETRO_EURO_2020_SQUADS : {};
     if (Number(year) === 2018) return typeof RETRO_2018_SQUADS !== "undefined" ? RETRO_2018_SQUADS : {};
     if (Number(year) === 2022) return typeof RETRO_2022_SQUADS !== "undefined" ? RETRO_2022_SQUADS : {};
     if (Number(year) === 2024) return typeof RETRO_COPA_2024_SQUADS !== "undefined" ? RETRO_COPA_2024_SQUADS : {};
@@ -251,6 +254,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2010) return RETRO_2010_GROUP_SCHEDULE;
     if (Number(year) === 2014) return RETRO_2014_GROUP_SCHEDULE;
     if (Number(year) === 2016) return RETRO_EURO_2016_GROUP_SCHEDULE;
+    if (Number(year) === 2020) return RETRO_EURO_2020_GROUP_SCHEDULE;
     if (Number(year) === 2018) return RETRO_2018_GROUP_SCHEDULE;
     if (Number(year) === 2022) return RETRO_2022_GROUP_SCHEDULE;
     if (Number(year) === 2024) return RETRO_COPA_2024_GROUP_SCHEDULE;
@@ -265,6 +269,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if (Number(year) === 2010) return RETRO_2010_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2014) return RETRO_2014_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2016) return RETRO_EURO_2016_KNOCKOUT_SCHEDULE;
+    if (Number(year) === 2020) return RETRO_EURO_2020_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2018) return RETRO_2018_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2022) return RETRO_2022_KNOCKOUT_SCHEDULE;
     if (Number(year) === 2024) return RETRO_COPA_2024_KNOCKOUT_SCHEDULE;
@@ -335,7 +340,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     if ([2002, 2022].includes(year) && Number.isFinite(Number(player?.worldCupGoals))) {
       return Number(player.worldCupGoals);
     }
-    if (year === 2016 && Number.isFinite(Number(player?.euroGoals))) {
+    if ([2016, 2020].includes(year) && Number.isFinite(Number(player?.euroGoals))) {
       return Number(player.euroGoals);
     }
     if (year === 2024) {
@@ -376,12 +381,12 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     const tournamentFormWeight = tournamentGoals
       ? is2022
         ? 1.04 + Math.min(6, tournamentGoals) * 0.09
-        : Number(year) === 2016
+        : [2016, 2020].includes(Number(year))
           ? 1.02 + Math.min(6, tournamentGoals) * 0.1
           : isCopa2024
             ? 1 + Math.min(5, tournamentGoals) * 0.08
           : 1.05 + tournamentGoals * 0.18
-      : is2022 ? 0.88 : Number(year) === 2016 ? 0.9 : isCopa2024 ? 0.92 : 0.82;
+      : is2022 ? 0.88 : [2016, 2020].includes(Number(year)) ? 0.9 : isCopa2024 ? 0.92 : 0.82;
     const internationalWeight = is2022
       ? 1 + Math.min(0.18, internationalGoals / 120)
       : 1 + Math.min(0.3, internationalGoals / 65);
@@ -396,7 +401,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       * internationalWeight
       * tournamentFormWeight
       * scoringRoleMultiplier
-      * (isStarter ? 1 : is2022 ? 0.22 : Number(year) === 2016 ? 0.09 : 0.16);
+      * (isStarter ? 1 : is2022 ? 0.22 : [2016, 2020].includes(Number(year)) ? 0.09 : 0.16);
     // Keep the best-known attackers favored while avoiding one superstar
     // absorbing a quarter of a team's tournament goals on average.
     return isCopa2024 ? Math.pow(weight, 0.78) : weight;
@@ -447,7 +452,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
             const existingGoals = scorerTotals.get(player.name) || 0;
             const diversityWeight = Number(year) === 2022
               ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.18)
-              : Number(year) === 2016
+              : [2016, 2020].includes(Number(year))
                 ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.25)
                 : Number(year) === 2024
                   ? 1 / (1 + Math.max(0, existingGoals - 2) * 0.22)
@@ -480,7 +485,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function expectedGoals(home, away, tournament = null) {
-    const isEuro2016 = Number(tournament?.year) === 2016;
+    const isEuro2016 = [2016, 2020].includes(Number(tournament?.year));
     const isCopa2024 = Number(tournament?.year) === 2024;
     const managedRatingBonus = (team) => {
       if (!tournament?.managedTeam || team.name !== tournament.managedTeam) return 0;
@@ -1085,7 +1090,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
       buildWorldCup2026RoundOf32(tournament);
       return;
     }
-    if (Number(tournament.year) === 2016) {
+    if ([2016, 2020].includes(Number(tournament.year))) {
       buildEuro2016RoundOf16(tournament);
       return;
     }
@@ -1112,7 +1117,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
     }
     if (current.name === "Semi-finals") {
       const winners = current.matches.map((match) => match.result.winner);
-      if (Number(tournament.year) === 2016) {
+      if ([2016, 2020].includes(Number(tournament.year))) {
         tournament.knockoutRounds.push({
           name: roundNames[finalRoundIndex],
           matches: [{
@@ -1191,7 +1196,7 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
   }
 
   function createTournament({ year = 2014, seed = Date.now(), managedTeam = null } = {}) {
-    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
+    if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(year)) || !RETRO_WORLD_CUPS[year] || !Object.keys(squadsForYear(year)).length) {
       throw new Error("That retro tournament is not playable yet.");
     }
     return {
@@ -1288,12 +1293,12 @@ const RETRO_WORLD_CUP_ENGINE = (() => {
 
   function validate(tournament) {
     const year = Number(tournament?.year);
-    const expectedTeams = year === 2026 ? 48 : year === 2016 ? 24 : year === 2024 ? 16 : 32;
-    const expectedGroupMatches = year === 2026 ? 72 : year === 2016 ? 36 : year === 2024 ? 24 : 48;
+    const expectedTeams = year === 2026 ? 48 : [2016, 2020].includes(year) ? 24 : year === 2024 ? 16 : 32;
+    const expectedGroupMatches = year === 2026 ? 72 : [2016, 2020].includes(year) ? 36 : year === 2024 ? 24 : 48;
     return Boolean(
       tournament
       && tournament.version === VERSION
-      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(year)
+      && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(year)
       && Array.isArray(tournament.groupMatches)
       && tournament.groupMatches.length === expectedGroupMatches
       && RETRO_WORLD_CUPS[tournament.year]?.teams.length === expectedTeams

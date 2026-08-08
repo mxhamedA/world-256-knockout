@@ -356,6 +356,8 @@ function renderChampionConfetti(championId) {
     ? ["#ef233c", "#ffd21f", "#075891", "#fff8e7", "#ff4055"]
     : retroYear === 2006
     ? ["#f3d566", "#d8eff7", "#78b0c7", "#f4fbff", "#0b5274"]
+    : retroYear === 2020
+      ? ["#b9dc18", "#f48a08", "#e62b58", "#38c8d7", "#effdff", "#056675"]
     : retroYear === 2024
       ? ["#e51b2b", "#0b3f96", "#ffffff", "#cfd6e6", "#176fe4"]
     : retroYear === 2026
@@ -399,7 +401,7 @@ function completedTournamentHonours() {
       label: "Third place",
       team: teamById(thirdPlacePlayoff.result.winnerId),
     });
-  } else if (isRetroSimulatorState() && Number(retroTournament.year) === 2016) {
+  } else if (isRetroSimulatorState() && [2016, 2020].includes(Number(retroTournament.year))) {
     const semiFinals = state.rounds[finalRoundIndex - 1] || [];
     const semiFinalists = semiFinals
       .filter((match) => match?.result?.winnerId)
@@ -521,8 +523,8 @@ function renderStage() {
       const summary = els.championStage.querySelector(".champion-content > p");
       if (trophy) {
         trophy.textContent = isRetroSimulatorState()
-          ? Number(retroTournament.year) === 2016
-            ? "FRANCE 2016 EUROPEAN CHAMPIONS"
+          ? [2016, 2020].includes(Number(retroTournament.year))
+            ? `${Number(retroTournament.year) === 2020 ? "EUROPE" : "FRANCE"} ${retroTournament.year} EUROPEAN CHAMPIONS`
             : Number(retroTournament.year) === 2024
               ? "COPA AMÉRICA USA 2024 CHAMPIONS"
               : `${RETRO_WORLD_CUP_EDITIONS[retroTournament.year].host.toUpperCase()} ${retroTournament.year} WORLD CHAMPIONS`
@@ -538,7 +540,7 @@ function renderStage() {
           )).length
           : 0;
         summary.textContent = isRetroSimulatorState()
-          ? Number(retroTournament.year) === 2016
+          ? [2016, 2020].includes(Number(retroTournament.year))
             ? "Seven matches. One unforgettable European Championship."
             : Number(retroTournament.year) === 2024
               ? "32 matches. One unforgettable Copa América."
@@ -1216,7 +1218,10 @@ function storylineFor(match) {
   const away = teamById(match.awayId);
   const winner = match.result.winnerId ? teamById(match.result.winnerId) : null;
   const loser = winner ? (winner.id === home.id ? away : home) : null;
-  const roundIndex = state.rounds.findIndex((round) => round.includes(match));
+  // Later rounds are represented by null placeholders until the preceding
+  // round has been resolved. Storylines render between matches, so skip those
+  // placeholders instead of aborting the next live playback during render().
+  const roundIndex = state.rounds.findIndex((round) => Array.isArray(round) && round.includes(match));
   const leagueCopy = state.premierLeagueSeason
     ? window.PremierLeagueSeason?.resultCommentary?.(match, Math.max(0, roundIndex))
     : null;
@@ -1615,6 +1620,10 @@ function renderLegacyLandingSetup() {
   if (!LEGACY_NATIONS[legacySetup.nationId] && nations[0]) legacySetup.nationId = nations[0].id;
   const formation = LEGACY_FORMATIONS[legacySetup.formationId] || LEGACY_FORMATIONS["433"];
   const nation = LEGACY_NATIONS[legacySetup.nationId] || nations[0];
+  if (els.confirmLegacyDraftButton) {
+    els.confirmLegacyDraftButton.innerHTML = `${activeLegacySession ? "Resume draft" : "Start draft"} <span aria-hidden="true">&rarr;</span>`;
+  }
+  if (els.legacySetupRestartButton) els.legacySetupRestartButton.hidden = !activeLegacySession;
   els.legacyLandingSetup.innerHTML = `
     ${activeLegacySession ? `<div class="legacy-active-session"><strong>Active tournament</strong><span>${flagMarkup(legacyNationTeam(nation), "legacy-active-flag")} ${nation.name} · ${legacySetup.mode === "expert" ? "Expert" : "Classic"} · ${formation.label}</span></div>` : ""}
     <div class="legacy-landing-setting legacy-landing-mode-setting">
@@ -1687,8 +1696,12 @@ function renderLegacyDraftMode() {
   els.pageKicker.textContent = "OFFLINE MODE";
   els.pageTitle.textContent = "World Cup Legacy Draft";
   if (!legacyDraft) {
-    setAppModeUrl("home", { replace: true });
-    render();
+    renderLegacyLandingSetup();
+    if (desktopModeSetupEnabled()) document.body.classList.add("legacy-route-setup-active");
+    if (!els.legacySetupModal?.open) {
+      if (document.body.classList.contains("legacy-route-setup-active")) els.legacySetupModal?.show();
+      else els.legacySetupModal?.showModal();
+    }
     return;
   }
   const expert = legacyDraft.mode === "expert";
@@ -1805,6 +1818,7 @@ function renderLegacyDraftMode() {
 const CUSTOM_TEAM_SOURCE_OPTIONS = Object.freeze([
   ["current", "Current teams"],
   ["premier-league", "Premier League clubs"],
+  ["champions-league", "Champions League clubs"],
   ["custom", "My custom teams"],
   ["2006", "World Cup 2006"],
   ["2010", "World Cup 2010"],

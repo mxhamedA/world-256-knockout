@@ -1530,7 +1530,9 @@
     menuCard?.classList.toggle("is-season-started", hasSeason);
     const picker = $("#uclTeamPickerButton");
     if (picker) {
-      picker.disabled = hasSeason;
+      picker.disabled = false;
+      picker.removeAttribute("aria-disabled");
+      picker.dataset.seasonLocked = hasSeason ? "true" : "false";
       picker.title = hasSeason ? "Restart the competition before changing clubs." : "";
     }
     window.dispatchEvent(new CustomEvent("ucl-season-state", {
@@ -2587,7 +2589,12 @@
     startLeagueDraw();
   }
 
-  startButton.addEventListener("click", () => openSimulator());
+  startButton.addEventListener("click", () => {
+    if (document.body.dataset.desktopModeSetup !== "ucl"
+      && window.openDesktopModeSetup?.("ucl")) return;
+    window.closeDesktopModeSetup?.();
+    openSimulator();
+  });
   settingsButton?.addEventListener("click", () => document.querySelector("#settingsButton")?.click());
   backButton?.addEventListener("click", () => closeSimulator());
   feedbackButton?.addEventListener("click", () => document.querySelector("#bugReportButton")?.click());
@@ -2815,7 +2822,7 @@
   window.addEventListener("pagehide", () => sounds.dispose());
   window.addEventListener("popstate", () => {
     const isUclRoute = typeof window.currentAppMode === "function" && window.currentAppMode() === "ucl";
-    if (isUclRoute && screen.hidden) openSimulator({ updateUrl: false });
+    if (isUclRoute && screen.hidden && document.body.dataset.desktopModeSetup !== "ucl") openSimulator({ updateUrl: false });
     else if (!isUclRoute && (!screen.hidden || !drawStage.hidden)) closeSimulator({ updateUrl: false });
   });
 
@@ -2830,5 +2837,7 @@
   ensureMusicLoaded();
   renderMusicState();
   syncMenuState();
-  if (typeof window.currentAppMode === "function" && window.currentAppMode() === "ucl") openSimulator({ updateUrl: false });
+  if (typeof window.currentAppMode === "function"
+    && window.currentAppMode() === "ucl"
+    && document.body.dataset.desktopModeSetup !== "ucl") openSimulator({ updateUrl: false });
 })();

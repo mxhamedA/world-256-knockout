@@ -1,6 +1,8 @@
 let featureAnnouncementRetryTimer = null;
+let matchThemesAnnouncementShownThisPage = false;
 let retro1998AnnouncementShownThisPage = false;
 let retroCopaAnnouncementShownThisPage = false;
+let retroEuro2020AnnouncementShownThisPage = false;
 
 function announcementWasSeen(storageKey) {
   try {
@@ -22,10 +24,31 @@ function openNextFeatureAnnouncement() {
   clearTimeout(featureAnnouncementRetryTimer);
   featureAnnouncementRetryTimer = null;
   const anotherDialogIsOpen = [...document.querySelectorAll("dialog[open]")].some((dialog) => (
-    dialog !== els.retro1998AnnouncementModal && dialog !== els.retroCopaAnnouncementModal
+    dialog !== els.matchThemesAnnouncementModal
+    && dialog !== els.retro1998AnnouncementModal
+    && dialog !== els.retroCopaAnnouncementModal
+    && dialog !== els.retroEuro2020AnnouncementModal
   ));
   if (anotherDialogIsOpen) {
     featureAnnouncementRetryTimer = window.setTimeout(openNextFeatureAnnouncement, 250);
+    return;
+  }
+  if (
+    els.retroEuro2020AnnouncementModal
+    && !retroEuro2020AnnouncementShownThisPage
+    && !announcementWasSeen(RETRO_EURO_2020_ANNOUNCEMENT_KEY)
+  ) {
+    retroEuro2020AnnouncementShownThisPage = true;
+    els.retroEuro2020AnnouncementModal.showModal();
+    return;
+  }
+  if (
+    els.matchThemesAnnouncementModal
+    && !matchThemesAnnouncementShownThisPage
+    && !announcementWasSeen(MATCH_THEMES_ANNOUNCEMENT_KEY)
+  ) {
+    matchThemesAnnouncementShownThisPage = true;
+    els.matchThemesAnnouncementModal.showModal();
     return;
   }
   if (
@@ -37,6 +60,19 @@ function openNextFeatureAnnouncement() {
     els.retroCopaAnnouncementModal.showModal();
   }
 }
+
+function closeMatchThemesAnnouncement() {
+  rememberAnnouncement(MATCH_THEMES_ANNOUNCEMENT_KEY);
+  if (els.matchThemesAnnouncementModal?.open) els.matchThemesAnnouncementModal.close();
+}
+
+els.matchThemesAnnouncementClose?.addEventListener("click", closeMatchThemesAnnouncement);
+els.matchThemesAnnouncementModal?.addEventListener("cancel", closeMatchThemesAnnouncement);
+els.matchThemesAnnouncementModal?.addEventListener("close", () => rememberAnnouncement(MATCH_THEMES_ANNOUNCEMENT_KEY));
+els.matchThemesAnnouncementAction?.addEventListener("click", () => {
+  closeMatchThemesAnnouncement();
+  window.setTimeout(() => els.settingsButton?.click(), 80);
+});
 
 function closeRetro1998Announcement() {
   rememberAnnouncement(RETRO_1998_ANNOUNCEMENT_KEY);
@@ -78,6 +114,22 @@ els.retroCopaAnnouncementAction?.addEventListener("click", () => {
   window.setTimeout(() => els.startRetroWorldCupButton?.click(), 120);
 });
 
+function closeRetroEuro2020Announcement() {
+  rememberAnnouncement(RETRO_EURO_2020_ANNOUNCEMENT_KEY);
+  if (els.retroEuro2020AnnouncementModal?.open) els.retroEuro2020AnnouncementModal.close();
+}
+
+els.retroEuro2020AnnouncementClose?.addEventListener("click", closeRetroEuro2020Announcement);
+els.retroEuro2020AnnouncementModal?.addEventListener("cancel", closeRetroEuro2020Announcement);
+els.retroEuro2020AnnouncementModal?.addEventListener("close", () => rememberAnnouncement(RETRO_EURO_2020_ANNOUNCEMENT_KEY));
+els.retroEuro2020AnnouncementAction?.addEventListener("click", () => {
+  closeRetroEuro2020Announcement();
+  setRetroEuroYear("2020");
+  setAppModeUrl("home");
+  render();
+  window.setTimeout(() => els.startRetroWorldCupButton?.click(), 120);
+});
+
 function openCustomTournamentSettings() {
   stopStandardPlaybackForNavigation();
   if (currentAppMode() === "customMatch" || state.customTournament?.customMatch === true) customMatchSetupViewOpen = true;
@@ -93,7 +145,7 @@ els.retroFeedbackButton?.addEventListener("click", () => els.bugReportButton.cli
 $("#profileFeedbackButton")?.addEventListener("click", () => els.bugReportButton.click());
 $("#profileAchievementsButton")?.addEventListener("click", () => els.openAchievementsButton.click());
 els.retroAchievementsButton?.addEventListener("click", () => {
-  if ([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))) {
+  if ([1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(retroTournament?.year))) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;
   }
@@ -187,7 +239,7 @@ els.openAchievementsButton?.addEventListener("click", () => {
   }
   if (
     els.retroWorldCupScreen?.hidden === false
-    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year))
+    && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(retroTournament?.year))
   ) {
     window.AccountAchievements?.openRetroModal(Number(retroTournament.year));
     return;

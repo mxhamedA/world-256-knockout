@@ -54,6 +54,16 @@ assert.match(app, /customFlag: true|customFlag/);
 assert.match(app, /function createCustomMatchState\(\)/);
 assert.match(
   app,
+  /function searchableTeamsForCurrentMode\(\)[\s\S]{0,700}return \[\.\.\.activeTournamentTeamIds\(\)\][\s\S]{0,180}\.map\(\(teamId\) => teamById\(teamId\)\)/,
+  "The match filter must build its suggestions from the active tournament roster.",
+);
+assert.doesNotMatch(
+  app,
+  /function searchableTeamsForCurrentMode\(\)[\s\S]{0,900}return TEAMS;/,
+  "Custom tournaments must not fall back to the global team catalogue.",
+);
+assert.match(
+  app,
   /const officialRetroSquad = Boolean\(team\.retroWorldCup && team\.playerProfiles\?\.length\)/,
   "Retro teams in Custom Match must keep their historical player profiles.",
 );
@@ -94,6 +104,14 @@ assert.match(app, /customMatch: true/);
 assert.match(app, /count === 2 && candidate\.customTournament\.customMatch === true/);
 assert.match(app, /customMatch: "\/custom-matches"/);
 assert.match(app, /\["premier-league", "Premier League clubs"\]/);
+assert.match(app, /\["champions-league", "Champions League clubs"\]/,
+  "Custom tournaments must expose the Champions League club pool.");
+assert.match(app, /const CUSTOM_UCL_TEAMS = Object\.freeze\([\s\S]*window\.UclEngine\?\.TEAM_DATA/,
+  "The custom club pool must use the simulator's calibrated UCL teams.");
+assert.match(app, /if \(source === "champions-league"\) return \[\.\.\.CUSTOM_UCL_TEAMS\]/);
+assert.match(app, /if \(preset === "oceania"\) return TEAMS\.filter\(\(team\) => team\.confed === "OFC"\)/,
+  "Custom tournament quick fill must include Oceania.");
+assert.match(app, /<option value="oceania"[\s\S]{0,180}>Only Oceania<\/option>/);
 assert.match(app, /data-custom-match-source=/);
 assert.match(app, /function reconcileCustomMatchTeamSelections\(\)/);
 assert.match(app, /No custom teams yet/);

@@ -244,6 +244,38 @@ const CUSTOM_PREMIER_LEAGUE_TEAMS = Object.freeze(
 );
 CUSTOM_PREMIER_LEAGUE_TEAMS.forEach((team) => TEAM_BY_ID.set(team.id, team));
 
+const CUSTOM_UCL_TEAMS = Object.freeze(
+  (window.UclEngine?.TEAM_DATA || []).map((team) => {
+    const squad = window.UCL_FC27_SQUADS?.[team.id];
+    const playerProfiles = Array.isArray(squad?.players) ? squad.players.map((player) => ({ ...player })) : [];
+    const overall = Number(team.simulationRatings?.overall) || Number(team.rating) || 75;
+    return Object.freeze({
+      ...team,
+      id: `ucl-${team.id}`,
+      uclTeamId: team.id,
+      uclClub: true,
+      confed: "UEFA",
+      flag: "UCL",
+      rating: overall,
+      strength: overall,
+      simulationRatings: Object.freeze({
+        overall,
+        attack: Number(team.simulationRatings?.attack) || overall,
+        midfield: Number(team.simulationRatings?.midfield) || overall,
+        defence: Number(team.simulationRatings?.defence) || overall,
+        goalkeeper: Number(team.simulationRatings?.goalkeeper) || overall,
+        squadDepth: Number(team.simulationRatings?.squadDepth) || overall,
+        experience: Number(team.simulationRatings?.experience) || overall,
+        penalties: Number(team.simulationRatings?.penalties) || overall,
+        discipline: Number(team.simulationRatings?.discipline) || 72,
+      }),
+      players: playerProfiles.map((player) => player.name),
+      playerProfiles,
+    });
+  }),
+);
+CUSTOM_UCL_TEAMS.forEach((team) => TEAM_BY_ID.set(team.id, team));
+
 let customTeamLibrary = readCustomTeamLibrary();
 customTeamLibrary.forEach((team) => TEAM_BY_ID.set(team.id, team));
 

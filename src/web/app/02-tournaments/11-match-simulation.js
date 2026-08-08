@@ -1175,7 +1175,7 @@ function retroPlayersOnPitchAtMinute(match, team, minute, management = null) {
 }
 
 function repairLiveGoalParticipants(match) {
-  if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(retroTournament?.year)) || !match?.result) return;
+  if (![1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(retroTournament?.year)) || !match?.result) return;
   ["home", "away"].forEach((side) => {
     const team = teamById(side === "home" ? match.homeId : match.awayId);
     const management = retroLiveTeamManagement(team.id);

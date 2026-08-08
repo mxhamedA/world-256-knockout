@@ -3129,6 +3129,29 @@ body.standard-mode-active .retro-third-place-playoff {
     linear-gradient(145deg, var(--achievement-surface), var(--achievement-surface-deep));
 }
 
+#achievementsScreen[data-achievement-theme="2020"],
+#retroAchievementsModal[data-achievement-theme="2020"] {
+  --achievement-accent: #b9dc18;
+  --achievement-accent-text: #073f49;
+  --achievement-surface: #087f8e;
+  --achievement-surface-deep: #023743;
+  --achievement-tab-surface: rgba(2, 55, 67, .86);
+  --achievement-card: rgba(5, 102, 117, .9);
+  --achievement-card-complete: #0a8996;
+  --achievement-copy: #effdff;
+  --achievement-muted: #b9e5e9;
+  --achievement-points: #dff25c;
+  --achievement-shadow: rgba(2, 55, 67, .5);
+}
+
+#achievementsScreen[data-achievement-theme="2020"] .achievement-progress-panel,
+#retroAchievementsModal[data-achievement-theme="2020"] {
+  border-radius: 2px;
+  background:
+    radial-gradient(circle at 88% 10%, rgba(185, 220, 24, .14), transparent 30%),
+    linear-gradient(145deg, var(--achievement-surface), var(--achievement-surface-deep));
+}
+
 #achievementsScreen[data-achievement-theme="2018"],
 #retroAchievementsModal[data-achievement-theme="2018"] {
   --achievement-accent: #c9343c;
@@ -6166,7 +6189,7 @@ body.retro-mode-active.retro-euro-2016-active #mainContent #shootoutSkipControl 
   display: none;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 720px) {
   .mode-select {
     padding-top: 10px;
   }

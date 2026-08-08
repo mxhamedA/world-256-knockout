@@ -1,32 +1,107 @@
-/* Real competition presentations, adapted from the existing Retro World Cup
-   match UIs and deliberately loaded after every mode-specific stylesheet. */
+/* Theme selection reuses the real edition skins already present in clean.css.
+   This file only keeps the picker neutral and adapts the standard/custom shell. */
+
+.feature-announcement-match-themes {
+  background: #09111e;
+}
+
+.feature-announcement-match-themes .feature-announcement-accent {
+  min-height: 174px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(104, 146, 255, .42), transparent 42%),
+    linear-gradient(135deg, #071a38 0%, #12498a 52%, #5b1736 100%);
+}
+
+.feature-announcement-match-themes .feature-announcement-accent::after {
+  height: 128px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .16));
+}
+
+.match-themes-announcement-visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 280px;
+}
+
+.match-themes-announcement-logo {
+  display: grid;
+  width: 74px;
+  height: 88px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 14px;
+  background: rgba(4, 13, 31, .58);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .28);
+  backdrop-filter: blur(8px);
+}
+
+.match-themes-announcement-logo img {
+  width: 54px;
+  height: 62px;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 9px rgba(0, 0, 0, .3));
+}
+
+.match-themes-announcement-logo-main {
+  z-index: 2;
+  width: 88px;
+  height: 104px;
+  margin: 0 -5px;
+  border-color: rgba(255, 255, 255, .38);
+  transform: translateY(-2px);
+}
+
+.match-themes-announcement-logo-main img {
+  width: 66px;
+  height: 76px;
+}
+
+.match-themes-announcement-logo-left { transform: rotate(-7deg) translateX(3px); }
+.match-themes-announcement-logo-right { transform: rotate(7deg) translateX(-3px); }
+
+.feature-announcement-match-themes .feature-announcement-label { color: #86aaff; }
+.feature-announcement-match-themes .feature-announcement-button {
+  color: #fff;
+  background: #315fca;
+}
+
+.feature-announcement-match-themes .feature-announcement-button:hover { background: #3e70dd; }
 
 .tournament-edition-options {
-  grid-template-columns: minmax(0, 1fr) !important;
-  max-height: min(360px, 48vh);
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  max-height: none;
+  gap: 8px !important;
   overflow-x: hidden;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-color: #516078 transparent;
-  scrollbar-width: thin;
+  overflow-y: visible;
+  padding: 0 !important;
 }
 
 .tournament-edition-options > button {
-  grid-template-columns: 38px minmax(0, 1fr) 20px !important;
-  min-height: 58px !important;
-  padding: 9px 11px !important;
+  position: relative;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 42px auto !important;
+  gap: 5px !important;
+  min-width: 0;
+  min-height: 76px !important;
+  padding: 8px 6px 7px !important;
+  justify-items: center;
+  text-align: center;
   overflow: hidden;
 }
 
 .tournament-edition-options > button > img {
   position: static !important;
   display: block !important;
-  width: 38px !important;
-  min-width: 38px !important;
-  max-width: 38px !important;
-  height: 38px !important;
-  min-height: 38px !important;
-  max-height: 38px !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
   margin: 0 !important;
   padding: 0 !important;
   object-fit: contain !important;
@@ -34,15 +109,46 @@
   filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .22));
 }
 
-.tournament-edition-options > button > span:nth-child(2) {
-  position: static !important;
-  align-self: center;
-  color: inherit;
-  transform: none !important;
+.tournament-theme-off-icon {
+  position: relative;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid #536176;
+  border-radius: 50%;
 }
 
-/* Settings is a global utility, not part of the selected match presentation.
-   Keep it neutral and stable even when opened from a strongly branded Retro UI. */
+.tournament-theme-off-icon::after {
+  width: 24px;
+  height: 2px;
+  content: "";
+  border-radius: 2px;
+  background: currentColor;
+  transform: rotate(-45deg);
+}
+
+/* The source artwork has a large transparent area below the badge. Crop that
+   empty canvas so the visible Euro mark sits centrally like the other logos. */
+.tournament-edition-options > button[data-tournament-theme-option="2016"] > img {
+  object-fit: cover !important;
+  object-position: center top !important;
+}
+
+.tournament-edition-options > button > strong {
+  min-width: 0;
+  font: 800 11px/1 "DM Mono", monospace !important;
+  letter-spacing: .04em;
+}
+
+.tournament-edition-options > button .tournament-theme-check {
+  position: absolute !important;
+  top: 6px;
+  right: 6px;
+  width: 18px !important;
+  height: 18px !important;
+}
+
 html body #settingsModal.settings-modal {
   width: min(560px, calc(100vw - 32px)) !important;
   max-width: calc(100vw - 32px) !important;
@@ -131,336 +237,153 @@ html.light-mode body #settingsModal.settings-modal :is(.tournament-theme-heading
   background: #f4f7fb !important;
 }
 
-html[data-tournament-theme="2006"] {
-  --match-ui-bg: linear-gradient(135deg, rgba(216, 239, 247, .1), rgba(3, 27, 43, .42)), url("./assets/retro-2006/germany-2006-bg.png") center top / cover fixed no-repeat;
-  --match-ui-shell: rgba(3, 27, 43, .94);
-  --match-ui-panel: rgba(7, 53, 80, .92);
-  --match-ui-panel-soft: rgba(11, 82, 116, .76);
-  --match-ui-text: #f4fbff;
-  --match-ui-muted: #b9d4df;
-  --match-ui-accent: #d6aa21;
-  --match-ui-accent-soft: #f3d566;
-  --match-ui-accent-text: #071b2a;
-  --match-ui-line: rgba(194, 225, 237, .3);
-  --match-ui-shadow: 0 18px 42px rgba(3, 27, 43, .3);
-  --match-ui-radius: 8px;
-  --match-ui-font: "Manrope", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #d8eff7, #78b0c7 34%, #d6aa21 34% 68%, #0b5274 68%);
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active #appShell {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
 }
 
-html[data-tournament-theme="2010"] {
-  --match-ui-bg: linear-gradient(rgba(67, 36, 22, .74), rgba(45, 23, 15, .86)), url("./assets/retro-2010/south-africa-sunburst-desktop.webp") center top / cover fixed no-repeat;
-  --match-ui-shell: rgba(55, 29, 18, .96);
-  --match-ui-panel: rgba(65, 34, 20, .95);
-  --match-ui-panel-soft: rgba(119, 52, 18, .88);
-  --match-ui-text: #fff4d4;
-  --match-ui-muted: #e4bf8d;
-  --match-ui-accent: #ffd34f;
-  --match-ui-accent-soft: #eb950e;
-  --match-ui-accent-text: #342016;
-  --match-ui-line: rgba(255, 211, 79, .34);
-  --match-ui-shadow: 8px 8px 0 rgba(115, 46, 10, .42), 0 18px 40px rgba(54, 24, 10, .22);
-  --match-ui-radius: 6px;
-  --match-ui-font: "Manrope", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #0d7046 0 17%, #ffd34f 17% 46%, #d64a24 46% 68%, #2374a6 68% 84%, #eb950e 84%);
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .retro-tournament-screen {
+  display: none !important;
 }
 
-html[data-tournament-theme="2014"] {
-  --match-ui-bg: #fff8e8 url("./assets/retro-2014/brazil-watercolor-bg.webp") center top / cover fixed no-repeat;
-  --match-ui-shell: rgba(255, 252, 241, .9);
-  --match-ui-panel: rgba(255, 253, 245, .91);
-  --match-ui-panel-soft: rgba(238, 248, 230, .86);
-  --match-ui-text: #173f35;
-  --match-ui-muted: #5d8074;
-  --match-ui-accent: #f6c945;
-  --match-ui-accent-soft: #168f5b;
-  --match-ui-accent-text: #123a2f;
-  --match-ui-line: rgba(29, 121, 82, .2);
-  --match-ui-shadow: 0 18px 48px rgba(31, 103, 72, .14);
-  --match-ui-radius: 18px;
-  --match-ui-font: "Trebuchet MS", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #168f5b 0 35%, #f6c945 35% 64%, #1689c7 64% 84%, #ef6a5b 84%);
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(110deg, #08274f, #174f92);
+  --theme-banner-line: #e7edf7;
+  --theme-banner-text: #fff;
+  --theme-banner-muted: #d4deec;
+  --theme-banner-control: rgba(3, 17, 43, .56);
+  --theme-banner-control-line: rgba(255, 255, 255, .28);
+  --theme-banner-logo: url("./assets/retro-1998/france-98-logo.webp");
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 88px !important;
+  border: 0 !important;
+  border-bottom: 5px solid var(--theme-banner-line) !important;
+  color: var(--theme-banner-text) !important;
+  background: var(--theme-banner-bg) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28) !important;
 }
 
-html[data-tournament-theme="2016"] {
-  --match-ui-bg: radial-gradient(circle at 84% 8%, rgba(98, 219, 255, .35), transparent 28%), radial-gradient(circle at 14% 88%, rgba(0, 91, 196, .45), transparent 34%), linear-gradient(135deg, #020c2d 0%, #043878 48%, #078fc4 100%) fixed;
-  --match-ui-shell: rgba(2, 17, 58, .94);
-  --match-ui-panel: rgba(3, 31, 88, .94);
-  --match-ui-panel-soft: rgba(5, 58, 125, .88);
-  --match-ui-text: #f8fdff;
-  --match-ui-muted: #b9e8f6;
-  --match-ui-accent: #1cc7ee;
-  --match-ui-accent-soft: #ffdc38;
-  --match-ui-accent-text: #020d32;
-  --match-ui-line: rgba(111, 220, 249, .4);
-  --match-ui-shadow: 0 18px 42px rgba(0, 8, 37, .34);
-  --match-ui-radius: 16px;
-  --match-ui-font: "Manrope", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #1cc7ee, #0756aa 50%, #ffdc38);
+html[data-tournament-theme="2002"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(105deg, #062f5b 0 44%, #075891 44% 74%, #052849 74%);
+  --theme-banner-line: #ffd21f;
+  --theme-banner-muted: #d6e7f5;
+  --theme-banner-control: rgba(3, 21, 47, .68);
+  --theme-banner-control-line: rgba(255, 210, 31, .48);
+  --theme-banner-logo: url("./assets/retro-2002/worldcup-2002-logo.png");
 }
 
-html[data-tournament-theme="2018"] {
-  --match-ui-bg: radial-gradient(circle at 10% 18%, transparent 0 28px, rgba(255, 221, 159, .11) 29px 31px, transparent 32px), repeating-conic-gradient(from 45deg at 75% 72%, rgba(255, 236, 195, .055) 0 12deg, transparent 12deg 30deg), linear-gradient(135deg, #671018, #a51a16 70%);
-  --match-ui-shell: rgba(105, 12, 25, .96);
-  --match-ui-panel: rgba(103, 16, 24, .93);
-  --match-ui-panel-soft: rgba(7, 52, 95, .88);
-  --match-ui-text: #fff4d6;
-  --match-ui-muted: #e9cfa2;
-  --match-ui-accent: #e9c477;
-  --match-ui-accent-soft: #075f9f;
-  --match-ui-accent-text: #53101a;
-  --match-ui-line: rgba(233, 196, 119, .4);
-  --match-ui-shadow: 10px 10px 0 rgba(82, 9, 21, .42), 0 18px 40px rgba(55, 3, 13, .28);
-  --match-ui-radius: 6px;
-  --match-ui-font: "Manrope", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #e9c477, #075f9f 40% 67%, #fff4d6 67% 74%, #a51a16 74%);
+html[data-tournament-theme="2006"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(104deg, rgba(216, 239, 247, .98) 0 22%, #0b5274 38% 76%, #073550 76%);
+  --theme-banner-line: #d6aa21;
+  --theme-banner-muted: #dceef5;
+  --theme-banner-control: rgba(3, 27, 43, .66);
+  --theme-banner-control-line: rgba(216, 239, 247, .42);
+  --theme-banner-logo: url("./assets/retro-world-cup-2006.png");
 }
 
-html[data-tournament-theme="2022"] {
-  --match-ui-bg: #16070d url("./assets/retro-2022/qatar-night-landscape.png") center top / cover fixed no-repeat;
-  --match-ui-shell: rgba(15, 4, 9, .95);
-  --match-ui-panel: rgba(27, 8, 16, .94);
-  --match-ui-panel-soft: rgba(52, 12, 29, .9);
-  --match-ui-text: #f4ead8;
-  --match-ui-muted: #c9b9b3;
-  --match-ui-accent: #c9a96a;
-  --match-ui-accent-soft: #54c2b0;
-  --match-ui-accent-text: #13070c;
-  --match-ui-line: rgba(201, 169, 106, .3);
-  --match-ui-shadow: 0 18px 42px rgba(5, 0, 3, .36);
-  --match-ui-radius: 2px;
-  --match-ui-font: "Manrope", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #77153b, #c9a96a 48%, #54c2b0 72%, #d66069);
+html[data-tournament-theme="2010"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(108deg, #2c1a13 0 30%, #743513 30% 72%, #3b2116 72%);
+  --theme-banner-line: #ffd34f;
+  --theme-banner-muted: #f0c890;
+  --theme-banner-control: rgba(48, 25, 16, .72);
+  --theme-banner-control-line: rgba(255, 211, 79, .4);
+  --theme-banner-logo: url("./assets/retro-2010/worldcup-2010-logo.png");
 }
 
-html[data-tournament-theme="2026"] {
-  --match-ui-bg: radial-gradient(circle at 82% 12%, rgba(73, 116, 255, .95) 0 18%, transparent 18.2%), linear-gradient(132deg, #3768ff 0 31%, #0a45ff 31% 100%);
-  --match-ui-shell: #030b28;
-  --match-ui-panel: rgba(6, 22, 79, .94);
-  --match-ui-panel-soft: rgba(16, 40, 111, .9);
-  --match-ui-text: #fff;
-  --match-ui-muted: #c9d7ff;
-  --match-ui-accent: #ff9e2f;
-  --match-ui-accent-soft: #3768ff;
-  --match-ui-accent-text: #07143d;
-  --match-ui-line: rgba(255, 255, 255, .25);
-  --match-ui-shadow: 0 18px 42px rgba(0, 15, 72, .3);
-  --match-ui-radius: 14px;
-  --match-ui-font: "Manrope", Arial, sans-serif;
-  --match-ui-stripe: linear-gradient(90deg, #ff9e2f, #fff 30% 36%, #0a45ff 36% 75%, #ff9e2f 75%);
+html[data-tournament-theme="2014"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(105deg, rgba(0, 83, 53, .98), rgba(0, 112, 69, .95) 62%, rgba(0, 74, 174, .94));
+  --theme-banner-line: #f4ce22;
+  --theme-banner-muted: #e3f1da;
+  --theme-banner-control: rgba(0, 61, 40, .64);
+  --theme-banner-control-line: rgba(244, 206, 34, .44);
+  --theme-banner-logo: url("./assets/retro-world-cup-2014.png");
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) {
-  color: var(--match-ui-text) !important;
-  background: var(--match-ui-bg) !important;
-  font-family: var(--match-ui-font) !important;
+html[data-tournament-theme="2016"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: radial-gradient(circle at 68% 15%, rgba(28, 199, 238, .28), transparent 28%), linear-gradient(110deg, #020c2d, #0756aa 68%, #043878);
+  --theme-banner-line: #1cc7ee;
+  --theme-banner-muted: #c8eef8;
+  --theme-banner-control: rgba(2, 17, 58, .68);
+  --theme-banner-control-line: rgba(28, 199, 238, .42);
+  --theme-banner-logo: url("./assets/euro-2016-logo.png");
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(button, input, select, textarea) {
-  font-family: var(--match-ui-font);
+html[data-tournament-theme="2018"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(108deg, #671018 0 33%, #a51a16 33% 72%, #07345f 72%);
+  --theme-banner-line: #e9c477;
+  --theme-banner-muted: #f0d9aa;
+  --theme-banner-control: rgba(82, 9, 21, .7);
+  --theme-banner-control-line: rgba(233, 196, 119, .44);
+  --theme-banner-logo: url("./assets/retro-world-cup-2018.png");
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.sidebar, .topbar, .retro-screen-header, .pl-season-header, .ucl-simulator-header) {
-  border-color: var(--match-ui-line) !important;
-  color: var(--match-ui-text) !important;
-  background: var(--match-ui-shell) !important;
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--match-ui-shell) 78%, transparent) !important;
+html[data-tournament-theme="2022"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: linear-gradient(108deg, #18070e 0 28%, #77153b 28% 72%, #2d0a19 72%);
+  --theme-banner-line: #c9a96a;
+  --theme-banner-muted: #d7c6bd;
+  --theme-banner-control: rgba(21, 5, 12, .72);
+  --theme-banner-control-line: rgba(201, 169, 106, .4);
+  --theme-banner-logo: url("./assets/retro-world-cup-2022.png");
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.main, .retro-tournament-screen, .pl-season-screen, .ucl-simulator-screen) {
-  color: var(--match-ui-text) !important;
-  background: transparent !important;
+html[data-tournament-theme="2026"] body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar {
+  --theme-banner-bg: radial-gradient(circle at 78% 20%, rgba(73, 116, 255, .96) 0 18%, transparent 18.4%), linear-gradient(108deg, #030b28 0 26%, #0a45ff 26% 78%, #06164c 78%);
+  --theme-banner-line: #ff9e2f;
+  --theme-banner-muted: #d7e1ff;
+  --theme-banner-control: rgba(3, 11, 40, .7);
+  --theme-banner-control-line: rgba(255, 158, 47, .5);
+  --theme-banner-logo: url("./assets/world-cup-2026-logo.png");
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(
-  .match-stage,
-  .round-board,
-  .panel,
-  .match-analysis,
-  .standard-match-tactics,
-  .story-card,
-  .champion-stage,
-  .penalty-stage
-),
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
-  .custom-workspace-panel,
-  .custom-team-library,
-  .custom-builder-group,
-  .retro-group-table,
-  .retro-squad-view,
-  .retro-lineups-view,
-  .retro-match-stage,
-  .retro-active-fixtures,
-  .retro-golden-boot,
-  .retro-champion
-) {
-  border: 1px solid var(--match-ui-line) !important;
-  border-radius: var(--match-ui-radius) !important;
-  color: var(--match-ui-text) !important;
-  background: var(--match-ui-panel) !important;
-  box-shadow: var(--match-ui-shadow) !important;
-  backdrop-filter: blur(10px);
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar .brand {
+  width: 92px !important;
+  height: 68px !important;
+  background: var(--theme-banner-logo) center / contain no-repeat !important;
+  filter: drop-shadow(0 5px 9px rgba(0, 0, 0, .3));
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(.match-stage, .round-board, .match-analysis, .champion-stage)::before,
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.retro-match-stage, .retro-active-fixtures, .retro-champion)::before {
-  height: 7px !important;
-  background: var(--match-ui-stripe) !important;
-  clip-path: none !important;
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar .brand-mark {
+  visibility: hidden !important;
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
-  .fixture,
-  .team,
-  .queue-item,
-  .plot-item,
-  .live-feed-item,
-  .golden-boot-row,
-  .retro-fixture,
-  .custom-bracket-edit-match
-) {
-  border-color: var(--match-ui-line) !important;
-  color: var(--match-ui-text) !important;
-  background: var(--match-ui-panel-soft) !important;
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar :is(.utility-button, .header-new-tournament, .legacy-header-back) {
+  border: 1px solid var(--theme-banner-control-line) !important;
+  border-radius: 8px !important;
+  color: var(--theme-banner-muted) !important;
+  background: var(--theme-banner-control) !important;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .1) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(
-  .match-stats-grid,
-  .match-stat-row,
-  .match-events,
-  .live-sim,
-  .standard-tactic-buttons,
-  .match-highlight-mode,
-  .team-filter-search,
-  .search
-) {
-  border-color: var(--match-ui-line) !important;
-  color: var(--match-ui-text) !important;
-  background: var(--match-ui-panel-soft) !important;
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar :is(.utility-button, .header-new-tournament, .legacy-header-back):hover {
+  color: var(--theme-banner-text) !important;
+  border-color: var(--theme-banner-line) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(.team-filter-search input, .search input) {
-  color: var(--match-ui-text) !important;
-  background: transparent !important;
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar .header-donate-link {
+  color: #111 !important;
+  background: var(--theme-banner-line) !important;
 }
 
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) #mainContent :is(.team-filter-search input, .search input)::placeholder {
-  color: var(--match-ui-muted) !important;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
-  h1, h2, h3,
-  .team-name,
-  .match-score,
-  .score-separator,
-  .panel-heading strong,
-  .match-analysis-heading strong,
-  .golden-boot-player strong,
-  .fixture-team strong,
-  .fixture-team b
-) {
-  color: var(--match-ui-text) !important;
-  text-shadow: none;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
-  p, small,
-  .venue,
-  .fixture-meta,
-  .result-note,
-  .match-stat-row span,
-  .event-live-clock small
-) {
-  color: var(--match-ui-muted) !important;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(
-  .primary-button:not(:disabled),
-  .play-button:not(:disabled),
-  .simulate-button:not(:disabled),
-  .live-control:not(:disabled),
-  .standard-tactic-buttons button.active,
-  .match-highlight-mode button.active,
-  .round-nav button.active,
-  #simulateRoundButton,
-  #unresolvedFilter.active
-) {
-  border-color: var(--match-ui-accent) !important;
-  border-radius: var(--match-ui-radius) !important;
-  color: var(--match-ui-accent-text) !important;
-  background: var(--match-ui-accent) !important;
-  box-shadow: 0 5px 0 color-mix(in srgb, var(--match-ui-accent) 68%, #000) !important;
-}
-
-html[data-tournament-theme="2014"] body:not(.before-start):not(.custom-tournament-mode-active) :is(
-  .primary-button:not(:disabled),
-  .play-button:not(:disabled),
-  .simulate-button:not(:disabled),
-  .live-control:not(:disabled),
-  .standard-tactic-buttons button.active,
-  .match-highlight-mode button.active,
-  .round-nav button.active
-) {
-  border-radius: 999px !important;
-}
-
-html[data-tournament-theme="2022"] body:not(.before-start):not(.custom-tournament-mode-active) :is(.match-stage, .round-board, .panel, .match-analysis) {
-  backdrop-filter: none;
-}
-
-html[data-tournament-theme="2026"] body:not(.before-start):not(.custom-tournament-mode-active) :is(h1, h2, .stage-round, .board-title) {
-  font-family: Impact, "Arial Narrow", "Manrope", sans-serif !important;
-  letter-spacing: .015em;
-  text-transform: uppercase;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.stage-round, .page-kicker, .eyebrow-row, .section-kicker) {
-  color: var(--match-ui-accent) !important;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.progress-track span, .match-stat-bar span) {
-  background: var(--match-ui-accent) !important;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) :is(.modal, .confirm-modal, .snapshot-modal) {
-  border-color: var(--match-ui-line) !important;
-  color: var(--match-ui-text) !important;
-  background: var(--match-ui-panel) !important;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) .tournament-theme-options > button.is-selected {
-  border-color: var(--match-ui-accent) !important;
-  background: var(--match-ui-panel-soft) !important;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--match-ui-accent) 24%, transparent) !important;
-}
-
-html[data-tournament-theme] body:not(.before-start):not(.custom-tournament-mode-active) .tournament-theme-options > button.is-selected .tournament-theme-check {
-  border-color: var(--match-ui-accent) !important;
-  color: var(--match-ui-accent-text) !important;
-  background: var(--match-ui-accent) !important;
-}
-
-@media (max-width: 700px) {
-  html[data-tournament-theme="2010"] {
-    --match-ui-bg: linear-gradient(rgba(67, 36, 22, .78), rgba(45, 23, 15, .9)), url("./assets/retro-2010/south-africa-sunburst-portrait.webp") center top / cover fixed no-repeat;
-  }
-
-  html[data-tournament-theme="2022"] {
-    --match-ui-bg: #16070d url("./assets/retro-2022/qatar-night-portrait.png") center top / cover fixed no-repeat;
-  }
+body.authentic-tournament-theme-active.tournament-theme-shared-shell-active .sidebar .account-avatar-icon svg {
+  stroke: currentColor !important;
 }
 
 @media (max-width: 480px) {
+  .tournament-edition-options {
+    gap: 6px !important;
+  }
+
   .tournament-edition-options > button {
-    grid-template-columns: 34px minmax(0, 1fr) 20px !important;
+    min-height: 70px !important;
   }
 
   .tournament-edition-options > button > img {
-    width: 34px !important;
-    min-width: 34px !important;
-    max-width: 34px !important;
-    height: 34px !important;
-    min-height: 34px !important;
-    max-height: 34px !important;
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
   }
 }

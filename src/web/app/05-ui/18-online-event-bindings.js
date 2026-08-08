@@ -191,19 +191,25 @@ els.spectateList.addEventListener("click", (event) => {
     const selectedData = isCopa
       ? RETRO_COPA_2024.teams.find((team) => team.name === name)
       : isEuros
-      ? RETRO_EURO_2016.teams.find((team) => team.name === name)
+      ? retroEuroEdition(year).teams.find((team) => team.name === name)
       : retroWorldCupTeamData(year, name);
     if (name && !selectedData) return;
     if (isCopa) saveRetroCopaTeam(name);
-    else if (isEuros) saveRetroEuroTeam(name);
+    else if (isEuros) saveRetroEuroTeam(name, year);
     else saveRetroWorldCupTeam(year, name);
     renderRetroWorldCupTeamPicker(year);
     els.spectateModal.close();
     showToast(
       name
-        ? `${name} selected for ${isCopa ? "Copa América 2024" : isEuros ? "Euro 2016" : `the ${year} World Cup`}.`
+        ? `${name} selected for ${isCopa ? "Copa América 2024" : isEuros ? `Euro ${year}` : `the ${year} World Cup`}.`
         : "Neutral view selected.",
     );
+    if (document.body.classList.contains("retro-route-setup-active") && desktopModeSetupEnabled()) {
+      window.setTimeout(() => {
+        closeDesktopModeSetup();
+        startRetroWorldCup();
+      }, 120);
+    }
     return;
   }
   if (standardTournamentSetupLocked()) {

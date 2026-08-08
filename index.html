@@ -12,7 +12,7 @@
       if (initialPath === "/ucl-simulator") {
         document.documentElement.classList.add("route-ucl-loading");
       }
-      if (["/retro-98-world-cup", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(initialPath)) {
+      if (["/retro-98-world-cup", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-euro-2020", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(initialPath)) {
         document.documentElement.classList.add("route-retro-loading");
         if (initialPath === "/retro-06-world-cup") document.documentElement.classList.add("route-retro-2006-loading");
         if (initialPath === "/retro-22-world-cup") document.documentElement.classList.add("route-retro-2022-loading");
@@ -24,17 +24,27 @@
           if (localStorage.getItem("world-256-colour-theme") === "light" || document.cookie.includes("world-256-colour-theme=light")) {
             document.documentElement.classList.add("light-mode");
           }
-        } catch {}
+          const supportedMatchThemes = ["off", "1998", "2002", "2006", "2010", "2014", "2016", "2018", "2022", "2026"];
+          const savedMatchTheme = localStorage.getItem("world-256-tournament-theme");
+          const cookieMatchTheme = document.cookie.match(/(?:^|;\s*)world-256-tournament-theme=([^;]+)/)?.[1];
+          const requestedMatchTheme = savedMatchTheme || cookieMatchTheme || "off";
+          const migratedMatchTheme = requestedMatchTheme === "wc" ? "2014" : requestedMatchTheme === "euros" ? "2016" : requestedMatchTheme;
+          document.documentElement.dataset.tournamentTheme = supportedMatchThemes.includes(migratedMatchTheme)
+            ? migratedMatchTheme
+            : "off";
+        } catch {
+          document.documentElement.dataset.tournamentTheme = "off";
+        }
       })();
     </script>
     <script>
       (function () {
         const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
-        if (pathname === "/palestine-challenge" || pathname === "/profile") return;
+        if (pathname === "/palestine-challenge" || pathname === "/profile" || pathname === "/player-career") return;
         if (pathname === "/ucl-simulator") {
           setTimeout(() => document.documentElement.classList.remove("route-ucl-loading"), 4000);
         }
-        const isRetroRoute = ["/retro-98-world-cup", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(pathname);
+        const isRetroRoute = ["/retro-98-world-cup", "/retro-world-cup", "/retro-06-world-cup", "/retro-10-world-cup", "/retro-14-world-cup", "/retro-euro-2016", "/retro-euro-2020", "/retro-18-world-cup", "/retro-22-world-cup", "/world-cup-2026"].includes(pathname);
         const clearRetroLoading = () => {
           document.documentElement.classList.remove("route-retro-loading", "route-retro-2006-loading", "route-retro-2022-loading");
           const appShell = document.getElementById("appShell");
@@ -84,9 +94,11 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=copa-2024-ui-14" />
+    <link rel="stylesheet" href="./clean.css?v=custom-club-pool-1" />
     <link rel="stylesheet" href="./premier-league.css?v=pl-table-no-spoilers-1" />
     <link rel="stylesheet" href="./ucl-simulator.css?v=ucl-knockout-leg-history-1" />
+    <link rel="stylesheet" href="./career.css?v=player-career-core-1" />
+    <link rel="stylesheet" href="./match-themes.css?v=match-screen-theme-5" />
   </head>
   <body class="before-start">
     <div class="ambient ambient-one"></div>
@@ -214,6 +226,10 @@
               </article>
 
               <article class="mode-card mode-card-default" id="defaultModeCard">
+                <button class="standard-route-back setup-panel-back legacy-topbar-back" type="button" data-mode-route-back aria-label="Back to modes">
+                  <span aria-hidden="true">&larr;</span>
+                  <span>Back to modes</span>
+                </button>
                 <div class="mode-card-copy">
                   <h3>256-team knockout</h3>
                 </div>
@@ -275,13 +291,34 @@
                 </div>
               </article>
 
+              <article class="mode-card mode-card-coming-soon mode-card-career mode-card-career-player" id="playerCareerModeCard">
+                <div class="mode-card-copy career-coming-soon-copy">
+                  <div class="career-coming-soon-title">
+                    <h3>Player Career</h3>
+                  </div>
+                  <p>Take one player from academy football to the top of the game.</p>
+                </div>
+                <button class="mode-coming-soon-button" type="button" disabled>Coming soon</button>
+              </article>
+
+              <article class="mode-card mode-card-coming-soon mode-card-career mode-card-career-manager" id="managerCareerModeCard">
+                <div class="mode-card-copy career-coming-soon-copy">
+                  <div class="career-coming-soon-title">
+                    <h3>Manager Career</h3>
+                  </div>
+                  <p>Build a squad and lead your club across multiple seasons.</p>
+                </div>
+                <button class="mode-coming-soon-button" type="button" disabled>Coming soon</button>
+              </article>
+
               <article class="mode-card mode-card-online">
                 <div class="mode-card-copy">
-                  <h3>Online party mode</h3>
-                  <p id="onlineModeCopy">Create or join a private knockout room, draft your countries, and play every match together in real time.</p>
+                  <h3>Online mode</h3>
+                  <p id="onlineModeCopy">Online multiplayer is coming soon. Check back later to play private knockout rooms with friends.</p>
                 </div>
+                <button class="mode-coming-soon-button" type="button" disabled>Coming soon</button>
                 <div class="online-mode-actions" id="onlineModeActions">
-                  <button class="primary-button start-tournament" id="joinOnlineRoomButton" type="button">Play online <span aria-hidden="true">→</span></button>
+                  <button class="primary-button start-tournament" id="joinOnlineRoomButton" type="button" hidden>Coming soon</button>
                 </div>
               </article>
 
@@ -299,7 +336,7 @@
                 </div>
               </article>
 
-                <article class="mode-card mode-card-retro" id="retroModeCard">
+                <article class="mode-card mode-card-retro mode-card-retro-wc" id="retroModeCard">
                   <div class="mode-card-copy retro-mode-heading">
                     <img id="retroWorldCupLogo" src="./assets/retro-world-cup-2014.png" alt="" />
                     <div class="retro-mode-title">
@@ -308,6 +345,7 @@
                         <button class="active" type="button" data-retro-competition="wc" aria-pressed="true">WC</button>
                         <button type="button" data-retro-competition="euros" aria-pressed="false">Euros</button>
                         <button type="button" data-retro-competition="copa" aria-pressed="false">Copa</button>
+                        <button class="retro-afcon-switch-button" type="button" data-retro-competition="afcon" aria-pressed="false">AFCON</button>
                       </div>
                       <div class="retro-year-switch" id="retroWorldCupYearSwitch" role="group" aria-label="World Cup year">
                         <button class="retro-98-menu-button" type="button" data-retro-year="1998" aria-label="1998 World Cup" aria-pressed="false">1998</button>
@@ -319,6 +357,7 @@
                         <button type="button" data-retro-year="2022" aria-pressed="false">2022</button>
                         <button type="button" data-retro-year="2026" aria-pressed="false">2026</button>
                         <button type="button" data-euro-year="2016" aria-pressed="true" hidden>2016</button>
+                        <button type="button" data-euro-year="2020" aria-label="Euro 2020" aria-pressed="false" hidden>2020</button>
                         <button type="button" data-copa-year="2024" aria-pressed="true" hidden>2024</button>
                       </div>
                     </div>
@@ -328,7 +367,7 @@
                   <strong>Copa América 2024</strong>
                   <p>The stars of the Americas are taking shape. This tournament mode is coming soon.</p>
                 </div>
-                <div class="landing-settings retro-landing-settings" aria-label="World Cup Simulator settings">
+                <div class="landing-settings retro-landing-settings" id="retroLandingSettings" aria-label="World Cup Simulator settings">
                   <div class="landing-setting">
                     <div class="landing-setting-heading">
                       <span>Simulation style</span>
@@ -377,7 +416,7 @@
                       </button>
                   </div>
                 </div>
-                <div class="mode-card-actions">
+                <div class="mode-card-actions" id="retroModeActions">
                   <button class="primary-button start-tournament retro-start-button" id="startRetroWorldCupButton" type="button">
                     Start World Cup
                     <span aria-hidden="true">&rarr;</span>
@@ -388,15 +427,18 @@
 
               <article class="mode-card mode-card-custom">
                 <div class="mode-card-copy">
-                  <h3>Custom tournament</h3>
+                  <h3 id="customTournamentCardTitle"><span class="custom-mode-prefix">Custom</span> <span>Tournament</span></h3>
                   <p>Build the field, tune team strength and script individual matches.</p>
                 </div>
+                <div class="custom-match-card-copy">
+                  <h3 id="customMatchCardTitle"><span class="custom-mode-prefix">Custom</span> <span>Match</span></h3>
+                </div>
                 <div class="mode-card-actions">
-                  <button class="primary-button start-tournament" id="openCustomTournamentButton" type="button">
+                  <button class="primary-button start-tournament" id="openCustomTournamentButton" type="button" aria-labelledby="customTournamentCardTitle openCustomTournamentButton">
                     Build tournament
                     <span aria-hidden="true">&rarr;</span>
                   </button>
-                  <button class="secondary-button custom-match-card-button" id="openCustomMatchButton" type="button">
+                  <button class="secondary-button custom-match-card-button" id="openCustomMatchButton" type="button" aria-labelledby="customMatchCardTitle openCustomMatchButton">
                     Custom match
                     <span aria-hidden="true">&rarr;</span>
                   </button>
@@ -417,7 +459,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="landing-settings premier-league-settings" aria-label="Premier League simulator settings">
+                <div class="landing-settings premier-league-settings" id="premierLeagueLandingSettings" aria-label="Premier League simulator settings">
                   <div class="landing-setting">
                     <div class="landing-setting-heading">
                       <span>Simulation style</span>
@@ -466,7 +508,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="mode-card-actions">
+                <div class="mode-card-actions" id="premierLeagueModeActions">
                   <button class="primary-button start-tournament" id="startPremierLeagueSeasonButton" type="button">
                     <span class="premier-league-launch-beta">BETA</span>
                     Start season
@@ -489,7 +531,7 @@
                     <p>Take on the league phase and fight through the knockouts for Europe&rsquo;s biggest trophy.</p>
                   </div>
                 </div>
-                <div class="landing-settings ucl-landing-settings" aria-label="UCL simulator settings">
+                <div class="landing-settings ucl-landing-settings" id="uclLandingSettings" aria-label="UCL simulator settings">
                   <div class="landing-setting landing-team-setting">
                     <span>Choose team</span>
                     <button class="spectate-picker ucl-team-picker" id="uclTeamPickerButton" type="button" aria-haspopup="dialog">
@@ -502,7 +544,7 @@
                     </button>
                   </div>
                 </div>
-                <div class="mode-card-actions">
+                <div class="mode-card-actions" id="uclModeActions">
                   <button class="primary-button start-tournament ucl-launch-button" id="startUclSimulatorButton" type="button">
                     Play UCL mode <span aria-hidden="true">&rarr;</span>
                   </button>
@@ -516,7 +558,11 @@
           </section>
 
           <dialog class="legacy-setup-modal" id="legacySetupModal" aria-labelledby="legacySetupModalTitle">
-            <form method="dialog" class="legacy-setup-modal-card">
+            <button class="legacy-setup-back legacy-topbar-back" type="submit" value="cancel" form="legacySetupForm">
+              <span aria-hidden="true">&larr;</span>
+              <span>Back to modes</span>
+            </button>
+            <form method="dialog" class="legacy-setup-modal-card" id="legacySetupForm">
               <header>
                 <div>
                   <span>WORLD CUP LEGACY DRAFT</span>
@@ -527,8 +573,8 @@
               </header>
               <div class="legacy-landing-settings" id="legacyLandingSetup" aria-label="Legacy Draft settings"></div>
               <footer>
-                <button class="secondary-button" type="submit" value="cancel">Cancel</button>
                 <button class="primary-button" id="confirmLegacyDraftButton" type="button">Start draft <span aria-hidden="true">&rarr;</span></button>
+                <button class="secondary-button" id="legacySetupRestartButton" type="button" hidden>Restart</button>
               </footer>
             </form>
           </dialog>
@@ -649,7 +695,7 @@
           <header class="achievements-intro">
             <span class="achievements-mode-label" id="achievementsModeLabel">BRAZIL 2014</span>
             <h1 id="achievementsTitle">Achievements</h1>
-            <p>Complete challenges across the 256-team knockout, every Retro World Cup and UEFA Euro 2016. Progress is saved to your account.</p>
+            <p>Complete challenges across the 256-team knockout, every Retro World Cup and UEFA Euro mode. Progress is saved to your account.</p>
           </header>
           <section class="achievement-progress-panel">
             <div class="achievement-year-tabs" role="tablist" aria-label="World Cup achievement year">
@@ -660,6 +706,7 @@
               <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
               <button type="button" role="tab" data-achievement-year="2014" aria-selected="true">2014</button>
               <button type="button" role="tab" data-achievement-year="2016" aria-selected="false">EURO 16</button>
+              <button type="button" role="tab" data-achievement-year="2020" aria-selected="false">EURO 20</button>
               <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
               <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
               <button type="button" role="tab" data-achievement-year="2024" aria-selected="false">COPA 24</button>
@@ -1107,6 +1154,14 @@
         </nav>
       </header>
 
+      <section class="mode-route-setup mode-route-setup-ucl" id="uclRouteSetup" aria-label="Champions League setup" hidden>
+        <button class="mode-route-setup-back setup-panel-back ucl-back-button" type="button" data-mode-route-back>
+          <span aria-hidden="true">&larr;</span>
+          <span>Back to modes</span>
+        </button>
+        <div class="mode-route-setup-panel" id="uclRouteSetupControls"></div>
+      </section>
+
       <main class="ucl-simulator-main">
         <div class="ucl-action-row">
           <div class="ucl-stage-copy">
@@ -1298,6 +1353,14 @@
         </nav>
       </header>
 
+      <section class="mode-route-setup mode-route-setup-pl" id="premierLeagueRouteSetup" aria-label="Premier League setup" hidden>
+        <button class="mode-route-setup-back setup-panel-back pl-back-button" type="button" data-mode-route-back>
+          <span aria-hidden="true">&larr;</span>
+          <span>Back to modes</span>
+        </button>
+        <div class="mode-route-setup-panel" id="premierLeagueRouteSetupControls"></div>
+      </section>
+
       <main class="pl-season-main">
         <div class="pl-season-action-row">
           <button class="pl-back-button" id="plSeasonBackButton" type="button">
@@ -1382,6 +1445,13 @@
         </div>
       </header>
       <main class="retro-tournament-main">
+        <section class="retro-route-setup" id="retroRouteSetup" aria-label="Tournament setup" hidden>
+          <button class="retro-route-setup-back setup-panel-back retro-back-to-modes" type="button" data-mode-route-back>
+            <span aria-hidden="true">&larr;</span>
+            <span>Back to modes</span>
+          </button>
+          <div class="retro-route-setup-controls" id="retroRouteSetupControls"></div>
+        </section>
         <div class="retro-saved-tournament-actions">
           <button class="retro-back-to-modes" id="retroWorldCupBackButton" type="button" aria-label="Back to modes">
             <span aria-hidden="true">&larr;</span>
@@ -1482,6 +1552,41 @@
           </div>
         </section>
       </main>
+    </section>
+
+    <section class="career-screen" id="playerCareerScreen" aria-labelledby="careerPageTitle" hidden>
+      <header class="career-header">
+        <a class="career-back-button" href="/" aria-label="Back to modes">
+          <span aria-hidden="true">&larr;</span>
+          <span>Modes</span>
+        </a>
+        <a class="career-brand" href="/" aria-label="256 Teams home">
+          <span class="career-brand-number">256</span>
+          <span class="career-brand-label">TEAMS</span>
+        </a>
+        <div class="career-header-title">
+          <span>PLAYER CAREER</span>
+          <strong id="careerPageTitle">Road to greatness</strong>
+        </div>
+        <div class="career-header-actions">
+          <span class="career-save-status" id="careerSaveStatus" role="status" aria-live="polite">Local save</span>
+          <span class="career-coin-balance" aria-label="Career coin balance">
+            <span aria-hidden="true">C</span>
+            <strong id="careerCoinBalance">0</strong>
+          </span>
+          <button class="career-account-button" id="careerAccountButton" type="button">Log in</button>
+        </div>
+      </header>
+      <main class="career-main" id="careerApp">
+        <section class="career-loading-card" aria-live="polite">
+          <span class="career-loading-mark" aria-hidden="true">256</span>
+          <div>
+            <span>PLAYER CAREER</span>
+            <h1>Preparing your career...</h1>
+          </div>
+        </section>
+      </main>
+      <p class="career-global-message" id="careerGlobalMessage" role="status" aria-live="polite"></p>
     </section>
 
     <section class="profile-screen" id="profileScreen" aria-labelledby="profileTitle" hidden>
@@ -1631,10 +1736,11 @@
           <button class="icon-button close-modal" id="challengeAuthCloseButton" type="button" aria-label="Close">&times;</button>
         </div>
         <label id="challengeEmailField" hidden><span>Email</span><input id="challengeEmail" name="email" type="email" autocomplete="email" maxlength="254" /></label>
-        <label><span id="challengeIdentifierLabel">Username or email</span><input id="challengeUsername" name="identifier" autocomplete="username" minlength="3" maxlength="254" required /></label>
-        <label><span>Password</span><input id="challengePassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required /></label>
+        <label id="challengeIdentifierField"><span id="challengeIdentifierLabel">Username or email</span><input id="challengeUsername" name="identifier" autocomplete="username" minlength="3" maxlength="254" required /></label>
+        <label id="challengePasswordField"><span>Password</span><input id="challengePassword" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required /></label>
         <button class="primary-button" id="challengeAuthSubmit" type="submit">Log in</button>
-        <div class="challenge-auth-divider"><span>or</span></div>
+        <button class="text-button challenge-forgot-password" id="challengeForgotPassword" type="button">Forgot password?</button>
+        <div class="challenge-auth-divider" id="challengeAuthDivider"><span>or</span></div>
         <button class="secondary-button challenge-google-button" id="challengeGoogleSignIn" type="button">
           <span class="google-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" focusable="false">
@@ -2102,6 +2208,63 @@
           </div>
           <button class="icon-button close-modal" value="cancel" aria-label="Close">&times;</button>
         </div>
+        <section class="tournament-theme-setting" aria-labelledby="tournamentThemeTitle">
+          <div class="tournament-theme-heading">
+            <strong id="tournamentThemeTitle">Match theme</strong>
+          </div>
+          <div class="tournament-theme-options tournament-edition-options" role="group" aria-label="Match screen theme">
+            <button class="tournament-theme-off-option" type="button" data-tournament-theme-option="off" aria-pressed="true" aria-label="Turn custom match theme off">
+              <span class="tournament-theme-off-icon" aria-hidden="true"></span>
+              <strong>DEFAULT</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="1998" aria-pressed="false" aria-label="France 1998">
+              <img src="./assets/retro-1998/france-98-logo.webp" alt="" />
+              <strong>1998</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2002" aria-pressed="false" aria-label="Korea and Japan 2002">
+              <img src="./assets/retro-2002/worldcup-2002-logo.png" alt="" />
+              <strong>2002</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2006" aria-pressed="false" aria-label="Germany 2006">
+              <img src="./assets/retro-world-cup-2006.png" alt="" />
+              <strong>2006</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2010" aria-pressed="false" aria-label="South Africa 2010">
+              <img src="./assets/retro-2010/worldcup-2010-logo.png" alt="" />
+              <strong>2010</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2014" aria-pressed="false" aria-label="Brazil 2014">
+              <img src="./assets/retro-world-cup-2014.png" alt="" />
+              <strong>2014</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2016" aria-pressed="false" aria-label="Euro 2016">
+              <img src="./assets/euro-2016-logo.png" alt="" />
+              <strong>EURO 16</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2018" aria-pressed="false" aria-label="Russia 2018">
+              <img src="./assets/retro-world-cup-2018.png" alt="" />
+              <strong>2018</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2022" aria-pressed="false" aria-label="Qatar 2022">
+              <img src="./assets/retro-world-cup-2022.png" alt="" />
+              <strong>2022</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+            <button type="button" data-tournament-theme-option="2026" aria-pressed="false" aria-label="World Cup 2026">
+              <img src="./assets/world-cup-2026-logo.png" alt="" />
+              <strong>2026</strong>
+              <i class="tournament-theme-check" aria-hidden="true">&#10003;</i>
+            </button>
+          </div>
+        </section>
         <button class="settings-option" id="lightModeSetting" type="button" aria-pressed="false">
           <span class="settings-option-copy">
             <strong>Light mode</strong>
@@ -2184,6 +2347,55 @@
         </button>
         <p class="settings-note">Changes apply to matches simulated after the setting is changed.</p>
       </form>
+    </dialog>
+
+    <dialog class="feature-announcement-modal feature-announcement-match-themes" id="matchThemesAnnouncementModal">
+      <div class="feature-announcement-accent" aria-hidden="true">
+        <div class="match-themes-announcement-visual">
+          <span class="match-themes-announcement-logo match-themes-announcement-logo-left">
+            <img src="./assets/retro-1998/france-98-logo.webp" alt="" />
+          </span>
+          <span class="match-themes-announcement-logo match-themes-announcement-logo-main">
+            <img src="./assets/retro-2010/worldcup-2010-logo.png" alt="" />
+          </span>
+          <span class="match-themes-announcement-logo match-themes-announcement-logo-right">
+            <img src="./assets/retro-world-cup-2022.png" alt="" />
+          </span>
+        </div>
+      </div>
+      <div class="feature-announcement-content">
+        <span class="feature-announcement-label">NEW</span>
+        <h2>Match themes are here</h2>
+        <p>Mix any World Cup style with 256 knockout, custom tournaments, or a different World Cup year.</p>
+        <button class="feature-announcement-button" id="matchThemesAnnouncementAction" type="button">
+          Choose a match theme <span aria-hidden="true">&rarr;</span>
+        </button>
+        <button class="feature-announcement-dismiss" id="matchThemesAnnouncementClose" type="button">Not now</button>
+      </div>
+    </dialog>
+
+    <dialog
+      class="feature-announcement-modal feature-announcement-euro-2020"
+      id="retroEuro2020AnnouncementModal"
+      aria-labelledby="retroEuro2020AnnouncementTitle"
+      aria-describedby="retroEuro2020AnnouncementDescription"
+    >
+      <div class="feature-announcement-accent" aria-hidden="true">
+        <div class="feature-announcement-euro-2020-visual">
+          <span class="feature-announcement-euro-2020-orbit"></span>
+          <img src="./assets/euro-2020-logo.png" alt="" />
+          <span class="feature-announcement-euro-2020-wordmark">EURO 2020</span>
+        </div>
+      </div>
+      <div class="feature-announcement-content">
+        <span class="feature-announcement-label">NEW MODE</span>
+        <h2 id="retroEuro2020AnnouncementTitle">UEFA Euro 2020 is live</h2>
+        <p id="retroEuro2020AnnouncementDescription">Manage any of the 24 finalists through the authentic group stage and road to Wembley, with tournament-era squads, ratings and achievements.</p>
+        <button class="feature-announcement-button" id="retroEuro2020AnnouncementAction" type="button">
+          Play Euro 2020 <span aria-hidden="true">&rarr;</span>
+        </button>
+        <button class="feature-announcement-dismiss" id="retroEuro2020AnnouncementClose" type="button">Maybe later</button>
+      </div>
     </dialog>
 
     <dialog class="feature-announcement-modal feature-announcement-1998" id="retro1998AnnouncementModal">
@@ -2342,6 +2554,7 @@
         <button type="button" role="tab" data-achievement-year="2010" aria-selected="false">2010</button>
         <button type="button" role="tab" data-achievement-year="2014" aria-selected="true">2014</button>
         <button type="button" role="tab" data-achievement-year="2016" aria-selected="false">EURO 16</button>
+        <button type="button" role="tab" data-achievement-year="2020" aria-selected="false">EURO 20</button>
         <button type="button" role="tab" data-achievement-year="2018" aria-selected="false">2018</button>
         <button type="button" role="tab" data-achievement-year="2022" aria-selected="false">2022</button>
         <button type="button" role="tab" data-achievement-year="2024" aria-selected="false">COPA 24</button>
@@ -2379,6 +2592,8 @@
     <script src="./data/retro/2018/schedule.js?v=retro-schedule-2018-1"></script>
     <script src="./data/retro/2022/squads.js?v=retro-squads-2022-1"></script>
     <script src="./data/retro/2022/schedule.js?v=retro-schedule-2022-1"></script>
+    <script src="./data/retro/euro-2020/squads.js?v=euro-2020-squads-1"></script>
+    <script src="./data/retro/euro-2020/schedule.js?v=euro-2020-schedule-1"></script>
     <script src="./data/retro/copa-america-2024/squads.js?v=copa-2024-squads-1"></script>
     <script src="./data/retro/copa-america-2024/schedule.js?v=copa-2024-schedule-1"></script>
     <script src="./data/retro/2026/squads.js?v=world-cup-2026-official-1"></script>
@@ -2394,10 +2609,12 @@
     <script src="./ucl-engine.js?v=ucl-neutral-balance-1"></script>
     <script src="./ucl-squads.generated.js?v=fc27-ucl-squads-1"></script>
     <script src="./ucl-squad-calibration.js?v=ucl-squad-balance-2"></script>
-  <script src="./app.js?v=copa-2024-ui-14"></script>
-    <script src="./premier-league.js?v=pl-table-no-spoilers-1"></script>
-    <script src="./ucl-simulator.js?v=ucl-release-launch-1"></script>
+    <script src="./career-engine.js?v=player-career-core-1"></script>
+    <script src="./app.js?v=ucl-mobile-picker-1"></script>
+    <script src="./premier-league.js?v=compact-mode-setup-1"></script>
+    <script src="./ucl-simulator.js?v=ucl-mobile-picker-1"></script>
     <script src="./challenge.js?v=ipswich-avoid-relegation-1"></script>
+    <script src="./career.js?v=player-career-core-1"></script>
     <script>
       window.va = window.va || function () {
         (window.vaq = window.vaq || []).push(arguments);

@@ -72,6 +72,8 @@ window.addEventListener("keydown", (event) => {
 
 function setupMobileModeCards() {
   const descriptions = [
+    ["mode-card-career-player", "Coming soon · Build your player"],
+    ["mode-card-career-manager", "Coming soon · Lead your club"],
     ["mode-card-retro", "World Cups, Euros & Copa"],
     ["mode-card-premier-league", "League season"],
     ["mode-card-default", "256-team knockout"],
@@ -81,7 +83,7 @@ function setupMobileModeCards() {
     ["mode-card-online", "Private multiplayer"],
     ["mode-card-challenge", "Timed tournament challenge"],
   ];
-  const cards = [...document.querySelectorAll(".mode-grid > .mode-card")];
+  const cards = [...document.querySelectorAll(".mode-grid > .mode-card:not([data-desktop-only-mode])")];
 
   const syncToggle = (card) => {
     const toggle = card.querySelector(":scope > .mode-card-mobile-toggle");
@@ -164,6 +166,11 @@ window.addEventListener("popstate", () => {
   }
   if (activeTournamentHistoryRecord) closeTournamentHistory({ updateUrl: false });
   const mode = currentAppMode();
+  if (modeSetupRouteEnabled(mode) && ["standard", "retro", "premierLeague", "ucl"].includes(mode)) {
+    document.body.dataset.desktopModeSetup = mode;
+  } else {
+    closeDesktopModeSetup();
+  }
   const routedRetroYear = retroWorldCupYearFromPath();
   if (mode === "retro" && routedRetroYear) {
     if (Number(routedRetroYear) === 2024) setRetroCompetition("copa");
@@ -184,6 +191,11 @@ window.addEventListener("popstate", () => {
     return;
   }
   if (mode === "premierLeague") {
+    if (document.body.dataset.desktopModeSetup === "premierLeague") {
+      render();
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
     stopStandardPlaybackForNavigation();
     if (!els.onlineRoomScreen.hidden) closeOnlineScreen({ updateUrl: false, force: true });
     window.PremierLeagueSeason?.openSeason?.({ updateUrl: false });
@@ -210,7 +222,10 @@ if (initialRetroYear) setRetroWorldCupYear(initialRetroYear);
 if (legacyModeQuery) {
   setAppModeUrl(initialAppMode, { replace: true });
 }
-if (initialAppMode === "standard" && !state.started) {
+if (modeSetupRouteEnabled(initialAppMode) && ["standard", "retro", "premierLeague", "ucl"].includes(initialAppMode)) {
+  document.body.dataset.desktopModeSetup = initialAppMode;
+}
+if (initialAppMode === "standard" && !state.started && !modeSetupRouteEnabled(initialAppMode)) {
   setAppModeUrl("home", { replace: true });
   initialAppMode = "home";
 } else if (!legacyModeQuery) {
@@ -226,20 +241,22 @@ syncOnlineRoomCard();
 renderPremierLeagueTeamPicker();
 renderPremierLeagueAssetState();
 setRetroWorldCupYear(initialRetroYear || readRetroWorldCupYear());
-setRetroCompetition(Number(initialRetroYear) === 2016 ? "euros" : Number(initialRetroYear) === 2024 ? "copa" : initialRetroYear ? "wc" : readRetroCompetition());
+if ([2016, 2020].includes(Number(initialRetroYear))) setRetroEuroYear(initialRetroYear);
+else setRetroCompetition(Number(initialRetroYear) === 2024 ? "copa" : initialRetroYear ? "wc" : readRetroCompetition());
 if (
   initialAppMode === "retro"
-  && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2024, 2026].includes(Number(initialRetroYear))
+  && [1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026].includes(Number(initialRetroYear))
   && (Number(initialRetroYear) !== 2024 || RETRO_COPA_2024_PLAYABLE)
+  && document.body.dataset.desktopModeSetup !== "retro"
   && !retroTournament
 ) {
   const routedYear = Number(initialRetroYear);
-  const managedTeam = routedYear === 2016
-    ? readRetroEuroTeam() || "France"
+  const managedTeam = [2016, 2020].includes(routedYear)
+    ? readRetroEuroTeam(routedYear) || (routedYear === 2020 ? "Italy" : "France")
     : routedYear === 2024
       ? readRetroCopaTeam()
       : readRetroWorldCupTeam(String(routedYear));
-  if (routedYear === 2016) saveRetroEuroTeam(managedTeam);
+  if ([2016, 2020].includes(routedYear)) saveRetroEuroTeam(managedTeam, routedYear);
   if (routedYear === 2024 && !managedTeam) saveRetroCopaTeam(null);
   retroTournament = RETRO_WORLD_CUP_ENGINE.createTournament({
     year: routedYear,

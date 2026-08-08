@@ -467,7 +467,10 @@ $("#confirmResetButton").addEventListener("click", () => {
   }
   saveState();
   if (wasCustomMatch) customMatchSetupViewOpen = true;
-  setAppModeUrl(wasCustomMatch ? "customMatch" : wasCustomTournament ? "custom" : restartDefaultInPlace ? "standard" : "home", { replace: true });
+  if (returnToSetup && wasDefaultKnockout) document.body.dataset.desktopModeSetup = "standard";
+  let resetDestination = wasCustomMatch ? "customMatch" : wasCustomTournament ? "custom" : restartDefaultInPlace ? "standard" : "home";
+  if (returnToSetup && wasDefaultKnockout) resetDestination = "standard";
+  setAppModeUrl(resetDestination, { replace: true });
   render();
   window.scrollTo({ top: 0, behavior: "smooth" });
   if (wasCustomTournament) {
@@ -542,25 +545,37 @@ document.addEventListener("click", (event) => {
 els.retroWorldCupYearSwitch?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-retro-year]");
   if (button) setRetroWorldCupYear(button.dataset.retroYear);
+  const euroButton = event.target.closest("[data-euro-year]");
+  if (euroButton) setRetroEuroYear(euroButton.dataset.euroYear);
 });
 els.retroCompetitionSwitch?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-retro-competition]");
   if (button) setRetroCompetition(button.dataset.retroCompetition);
 });
 
-els.startRetroWorldCupButton?.addEventListener("click", startRetroWorldCup);
+els.startRetroWorldCupButton?.addEventListener("click", () => {
+  if (currentAppMode() === "home" && desktopModeSetupEnabled()) {
+    openDesktopModeSetup("retro");
+    return;
+  }
+  closeDesktopModeSetup();
+  startRetroWorldCup();
+});
+
 els.restartRetroWorldCupButton?.addEventListener("click", () => {
   const year = selectedRetroTournamentYear();
   const title = els.retroRestartModal.querySelector("h2");
-  if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
-  els.retroRestartModal.dataset.returnHome = "true";
+  if (title) title.textContent = `Restart ${[2016, 2020].includes(year) ? `Euro ${year}` : `World Cup ${year}`}?`;
+  const returnSetup = document.body.dataset.desktopModeSetup === "retro";
+  els.retroRestartModal.dataset.returnHome = String(!returnSetup);
+  els.retroRestartModal.dataset.returnSetup = String(returnSetup);
   els.retroRestartModal.dataset.restartYear = String(year);
   els.retroRestartModal.showModal();
 });
 els.retroWorldCupRestartButton?.addEventListener("click", () => {
   const title = els.retroRestartModal.querySelector("h2");
   const year = Number(retroTournament?.year || 2014);
-  if (title) title.textContent = `Restart ${year === 2016 ? "Euro 2016" : `World Cup ${year}`}?`;
+  if (title) title.textContent = `Restart ${[2016, 2020].includes(year) ? `Euro ${year}` : `World Cup ${year}`}?`;
   els.retroRestartModal.dataset.returnHome = "false";
   els.retroRestartModal.showModal();
 });
@@ -575,6 +590,7 @@ document.querySelectorAll("[data-retro-view]").forEach((button) => {
     renderRetroWorldCupMode();
   });
 });
+
 els.retroTournamentBody?.addEventListener("click", (event) => {
   const matchButton = event.target.closest("[data-retro-match-id]");
   if (matchButton) {

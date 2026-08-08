@@ -7,7 +7,9 @@ const REMOVE_INJURIES_STORAGE_KEY = "world-256-remove-injuries";
 const COLOUR_THEME_STORAGE_KEY = "world-256-colour-theme";
 const TOURNAMENT_THEME_STORAGE_KEY = "world-256-tournament-theme";
 const MATCH_SCREEN_THEMES = Object.freeze({
+  off: Object.freeze({ label: "Default", colour: "#0b0f17" }),
   "1998": Object.freeze({ label: "France 1998", colour: "#082c6c" }),
+  "2002": Object.freeze({ label: "Korea/Japan 2002", colour: "#03152f" }),
   "2006": Object.freeze({ label: "Germany 2006", colour: "#062f47" }),
   "2010": Object.freeze({ label: "South Africa 2010", colour: "#432416" }),
   "2014": Object.freeze({ label: "Brazil 2014", colour: "#fff8e8" }),
@@ -23,7 +25,9 @@ const ONLINE_DISPLAY_NAME_KEY = "world-256-online-display-name-v1";
 const RETRO_WORLD_CUP_YEAR_KEY = "world-256-retro-world-cup-year";
 const RETRO_WORLD_CUP_TEAM_KEY_PREFIX = "world-256-retro-world-cup-team";
 const RETRO_COMPETITION_KEY = "world-256-retro-competition";
+const RETRO_EURO_YEAR_KEY = "world-256-retro-euro-year";
 const RETRO_EURO_2016_TEAM_KEY = "world-256-retro-euro-2016-team";
+const RETRO_EURO_2020_TEAM_KEY = "world-256-retro-euro-2020-team";
 const RETRO_COPA_2024_TEAM_KEY = "world-256-retro-copa-2024-team";
 const RETRO_TOURNAMENT_STORAGE_KEY = "world-256-retro-tournament-v1";
 const RETRO_SETTINGS_STORAGE_KEY = "world-256-retro-settings-v1";
@@ -42,12 +46,14 @@ const TOURNAMENT_HISTORY_DATABASE_VERSION = 1;
 const TOURNAMENT_HISTORY_OBJECT_STORE = "tournaments";
 const RETRO_1998_ANNOUNCEMENT_KEY = "world-256-announcement-retro-1998-v1";
 const RETRO_COPA_2024_ANNOUNCEMENT_KEY = "world-256-announcement-copa-america-2024-v1";
+const RETRO_EURO_2020_ANNOUNCEMENT_KEY = "world-256-announcement-euro-2020-launch-v1";
+const MATCH_THEMES_ANNOUNCEMENT_KEY = "world-256-announcement-match-themes-v1";
 const RETRO_COPA_2024_PLAYABLE = true;
 const POST_WIN_DONATION_STORAGE_KEY = "world-256-post-win-donation-v1";
 const POST_WIN_DONATION_CHANCE = 0.25;
 const POST_WIN_DONATION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
 const CUSTOM_TOURNAMENT_TEAM_COUNTS = Object.freeze([8, 16, 24, 32, 48, 64, 128, 256]);
-const ONLINE_PARTY_MODE_ENABLED = true;
+const ONLINE_PARTY_MODE_ENABLED = false;
 const LIVE_MATCH_MANAGEMENT_UI_ENABLED = true;
 const STATE_VERSION = 2;
 const TOURNAMENT_HISTORY_VERSION = 1;
@@ -151,6 +157,7 @@ const RETRO_WORLD_CUP_PATHS = Object.freeze({
   2010: "/retro-10-world-cup",
   2014: "/retro-14-world-cup",
   2016: "/retro-euro-2016",
+  2020: "/retro-euro-2020",
   2018: "/retro-18-world-cup",
   2022: "/retro-22-world-cup",
   2024: "/copa-america-2024",
@@ -199,6 +206,14 @@ const RETRO_WORLD_CUP_EDITIONS = Object.freeze({
     logo: "./assets/euro-2016-logo.png",
     accent: "#00a8dc",
     accentText: "#ffffff",
+    competition: "UEFA Euro",
+  }),
+  2020: Object.freeze({
+    label: "Europe 2020",
+    host: "Europe",
+    logo: "./assets/euro-2020-logo.png",
+    accent: "#c7da3a",
+    accentText: "#073f49",
     competition: "UEFA Euro",
   }),
   2018: Object.freeze({
@@ -334,6 +349,40 @@ const RETRO_EURO_2016 = Object.freeze({
     { name: "Iceland", group: "F" },
     { name: "Austria", group: "F" },
     { name: "Hungary", group: "F" },
+  ]),
+});
+
+const RETRO_EURO_2020 = Object.freeze({
+  year: "2020",
+  label: "Europe 2020",
+  logo: "./assets/euro-2020-logo.png",
+  accent: "#c7da3a",
+  accentText: "#073f49",
+  teams: Object.freeze([
+    { name: "Turkey", group: "A" },
+    { name: "Italy", group: "A" },
+    { name: "Wales", group: "A" },
+    { name: "Switzerland", group: "A" },
+    { name: "Denmark", group: "B" },
+    { name: "Finland", group: "B" },
+    { name: "Belgium", group: "B" },
+    { name: "Russia", group: "B" },
+    { name: "Netherlands", group: "C" },
+    { name: "Ukraine", group: "C" },
+    { name: "Austria", group: "C" },
+    { name: "North Macedonia", group: "C" },
+    { name: "England", group: "D" },
+    { name: "Croatia", group: "D" },
+    { name: "Scotland", group: "D" },
+    { name: "Czech Republic", group: "D" },
+    { name: "Spain", group: "E" },
+    { name: "Sweden", group: "E" },
+    { name: "Poland", group: "E" },
+    { name: "Slovakia", group: "E" },
+    { name: "Hungary", group: "F" },
+    { name: "Portugal", group: "F" },
+    { name: "France", group: "F" },
+    { name: "Germany", group: "F" },
   ]),
 });
 
@@ -529,12 +578,18 @@ const els = {
   lightModeLabel: $("#lightModeLabel"),
   onlineSettingsButton: $("#onlineSettingsButton"),
   newsButton: $("#newsButton"),
+  matchThemesAnnouncementModal: $("#matchThemesAnnouncementModal"),
+  matchThemesAnnouncementClose: $("#matchThemesAnnouncementClose"),
+  matchThemesAnnouncementAction: $("#matchThemesAnnouncementAction"),
   retro1998AnnouncementModal: $("#retro1998AnnouncementModal"),
   retro1998AnnouncementClose: $("#retro1998AnnouncementClose"),
   retro1998AnnouncementAction: $("#retro1998AnnouncementAction"),
   retroCopaAnnouncementModal: $("#retroCopaAnnouncementModal"),
   retroCopaAnnouncementClose: $("#retroCopaAnnouncementClose"),
   retroCopaAnnouncementAction: $("#retroCopaAnnouncementAction"),
+  retroEuro2020AnnouncementModal: $("#retroEuro2020AnnouncementModal"),
+  retroEuro2020AnnouncementClose: $("#retroEuro2020AnnouncementClose"),
+  retroEuro2020AnnouncementAction: $("#retroEuro2020AnnouncementAction"),
   realPlayersOnlySetting: $("#realPlayersOnlySetting"),
   removeInjuriesSetting: $("#removeInjuriesSetting"),
   removeInjuriesLabel: $("#removeInjuriesLabel"),
@@ -600,6 +655,10 @@ const els = {
   retroWorldCupTeamHint: $("#retroWorldCupTeamHint"),
   retroTeamPickerButton: $("#retroTeamPickerButton"),
   retroTeamPickerMark: $("#retroTeamPickerMark"),
+  retroLandingSettings: $("#retroLandingSettings"),
+  retroModeActions: $("#retroModeActions"),
+  retroRouteSetup: $("#retroRouteSetup"),
+  retroRouteSetupControls: $("#retroRouteSetupControls"),
   premierLeagueTeamPickerButton: $("#premierLeagueTeamPickerButton"),
   premierLeagueTeamPickerMark: $("#premierLeagueTeamPickerMark"),
   premierLeagueTeamLabel: $("#premierLeagueTeamLabel"),
@@ -641,6 +700,7 @@ const els = {
   legacySetupModal: $("#legacySetupModal"),
   legacySetupModalClose: $("#legacySetupModalClose"),
   confirmLegacyDraftButton: $("#confirmLegacyDraftButton"),
+  legacySetupRestartButton: $("#legacySetupRestartButton"),
   legacyDraftScreen: $("#legacyDraftScreen"),
   legacyDraftBody: $("#legacyDraftBody"),
   legacyDraftBackButton: $("#legacyDraftBackButton"),

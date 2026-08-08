@@ -1,0 +1,220 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - complementary [ref=f5e3]:
+      - link "256 Teams home" [ref=f5e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f5e5]:
+          - generic [ref=f5e6]: "256"
+          - generic [ref=f5e7]: TEAMS
+      - generic:
+        - button "Settings" [ref=f5e8] [cursor=pointer]:
+          - generic [ref=f5e9]: ⚙
+        - button "News" [ref=f5e11] [cursor=pointer]
+        - button "Feedback" [ref=f5e14] [cursor=pointer]:
+          - generic [ref=f5e15]: ⚠
+        - button "Achievements" [ref=f5e17] [cursor=pointer]:
+          - generic [ref=f5e18]: 🏆
+        - button "Donate" [ref=f5e20] [cursor=pointer]:
+          - generic [ref=f5e21]: $
+        - button "Log in" [ref=f5e23] [cursor=pointer]
+    - main [ref=f5e29]:
+      - generic [ref=f5e31]:
+        - region "Tournament modes" [ref=f5e32]:
+          - generic [ref=f5e33]:
+            - article [ref=f5e34]:
+              - heading "256-team knockout" [level=3] [ref=f5e36]
+              - generic "Default mode settings" [ref=f5e37]:
+                - generic [ref=f5e38]:
+                  - generic [ref=f5e39]:
+                    - generic [ref=f5e40]: Simulation style
+                    - group [ref=f5e41]:
+                      - generic "Explain simulation styles" [ref=f5e42] [cursor=pointer]: i
+                  - generic [ref=f5e43]:
+                    - button "Realistic" [ref=f5e44] [cursor=pointer]
+                    - button "Standard" [ref=f5e45] [cursor=pointer]
+                    - button "Pure chaos" [ref=f5e46] [cursor=pointer]
+                - generic [ref=f5e47]:
+                  - generic [ref=f5e48]:
+                    - generic [ref=f5e49]: Goal level
+                    - group [ref=f5e50]:
+                      - generic "Explain goal levels" [ref=f5e51] [cursor=pointer]: i
+                  - generic [ref=f5e52]:
+                    - button "Tight" [ref=f5e53] [cursor=pointer]
+                    - button "Normal" [ref=f5e54] [cursor=pointer]
+                    - button "Goal fest" [ref=f5e55] [cursor=pointer]
+                - generic [ref=f5e56]:
+                  - generic [ref=f5e57]: Choose team
+                  - 'button "Choose a team to spectate. Current view: Neutral" [ref=f5e58]':
+                    - generic [ref=f5e59]: ◎
+                    - generic [ref=f5e60]:
+                      - strong [ref=f5e61]: Neutral
+                      - generic [ref=f5e62]: Show every match as normal
+                    - generic [ref=f5e63]: ›
+              - button "Start tournament" [ref=f5e65] [cursor=pointer]:
+                - text: Start tournament
+                - generic [ref=f5e66]: →
+            - article [ref=f5e67]:
+              - generic [ref=f5e68]:
+                - heading "Online mode Coming soon" [level=3] [ref=f5e69]
+                - paragraph [ref=f5e70]: Match with other players or create a private knockout room, then draft your countries and play every match in real time.
+            - article [ref=f5e71]:
+              - generic [ref=f5e72]:
+                - heading "World Cup Legacy Draft" [level=3] [ref=f5e73]
+                - paragraph [ref=f5e74]: Draft an XI from classic World Cup squads, then enter them into a 16-team knockout.
+              - button "Start tournament" [ref=f5e76] [cursor=pointer]:
+                - text: Start tournament
+                - generic [ref=f5e77]: →
+            - article [ref=f5e78]:
+              - generic [ref=f5e80]:
+                - heading "WC Simulator" [level=3] [ref=f5e81]
+                - group "Tournament" [ref=f5e82]:
+                  - button "WC" [pressed] [ref=f5e83] [cursor=pointer]
+                  - button "Euros" [ref=f5e84] [cursor=pointer]
+                  - button "Copa" [ref=f5e85] [cursor=pointer]
+                - group "World Cup year" [ref=f5e86]:
+                  - button "1998 World Cup" [ref=f5e87] [cursor=pointer]: "1998"
+                  - button "2002 World Cup, coming soon" [ref=f5e88] [cursor=pointer]: "2002"
+                  - button "2006" [ref=f5e89] [cursor=pointer]
+                  - button "2010" [ref=f5e90] [cursor=pointer]
+                  - button "2014" [pressed] [ref=f5e91] [cursor=pointer]
+                  - button "2018" [ref=f5e92] [cursor=pointer]
+                  - button "2022" [ref=f5e93] [cursor=pointer]
+                  - button "2026" [ref=f5e94] [cursor=pointer]
+              - generic "World Cup Simulator settings" [ref=f5e95]:
+                - generic [ref=f5e96]:
+                  - generic [ref=f5e97]:
+                    - generic [ref=f5e98]: Simulation style
+                    - group [ref=f5e99]:
+                      - generic "Explain simulation styles" [ref=f5e100] [cursor=pointer]: i
+                  - generic "Retro simulation style" [ref=f5e101]:
+                    - button "Realistic" [ref=f5e102] [cursor=pointer]
+                    - button "Standard" [ref=f5e103] [cursor=pointer]
+                    - button "Pure chaos" [ref=f5e104] [cursor=pointer]
+                - generic [ref=f5e105]:
+                  - generic [ref=f5e106]:
+                    - generic [ref=f5e107]: Goal level
+                    - group [ref=f5e108]:
+                      - generic "Explain goal levels" [ref=f5e109] [cursor=pointer]: i
+                  - generic "Retro goal level" [ref=f5e110]:
+                    - button "Tight" [ref=f5e111] [cursor=pointer]
+                    - button "Normal" [ref=f5e112] [cursor=pointer]
+                    - button "Goal fest" [ref=f5e113] [cursor=pointer]
+                - generic [ref=f5e114]:
+                  - generic [ref=f5e115]: Choose team
+                  - 'button "Choose a team from the 2014 World Cup. Current view: Neutral" [ref=f5e116]':
+                    - generic [ref=f5e117]: ◎
+                    - generic [ref=f5e118]:
+                      - strong [ref=f5e119]: Neutral
+                      - generic [ref=f5e120]: Show every match as normal
+                    - generic [ref=f5e121]: ›
+              - button "Start World Cup" [ref=f5e123] [cursor=pointer]:
+                - text: Start World Cup
+                - generic [ref=f5e124]: →
+            - article [ref=f5e125]:
+              - generic [ref=f5e126]:
+                - heading "Custom tournament" [level=3] [ref=f5e127]
+                - paragraph [ref=f5e128]: Build the field, tune team strength and script individual matches.
+              - generic [ref=f5e129]:
+                - button "Build tournament" [ref=f5e130] [cursor=pointer]:
+                  - text: Build tournament
+                  - generic [ref=f5e131]: →
+                - button "Set up match" [ref=f5e132] [cursor=pointer]:
+                  - text: Set up match
+                  - generic [ref=f5e133]: →
+            - article [ref=f5e134]:
+              - generic [ref=f5e135]:
+                - generic [ref=f5e136]: PL
+                - generic [ref=f5e138]:
+                  - heading "PL 26/27 Simulator" [level=3] [ref=f5e139]
+                  - button "Install assets" [ref=f5e140] [cursor=pointer]
+              - generic "Premier League simulator settings" [ref=f5e141]:
+                - generic [ref=f5e142]:
+                  - generic [ref=f5e143]:
+                    - generic [ref=f5e144]: Simulation style
+                    - group [ref=f5e145]:
+                      - generic "Explain simulation styles" [ref=f5e146] [cursor=pointer]: i
+                  - generic "Premier League simulation style" [ref=f5e147]:
+                    - button "Realistic" [ref=f5e148] [cursor=pointer]
+                    - button "Standard" [ref=f5e149] [cursor=pointer]
+                    - button "Pure chaos" [ref=f5e150] [cursor=pointer]
+                - generic [ref=f5e151]:
+                  - generic [ref=f5e152]:
+                    - generic [ref=f5e153]: Goal level
+                    - group [ref=f5e154]:
+                      - generic "Explain goal levels" [ref=f5e155] [cursor=pointer]: i
+                  - generic "Premier League goal level" [ref=f5e156]:
+                    - button "Tight" [ref=f5e157] [cursor=pointer]
+                    - button "Normal" [ref=f5e158] [cursor=pointer]
+                    - button "Goal fest" [ref=f5e159] [cursor=pointer]
+                - generic [ref=f5e160]:
+                  - generic [ref=f5e161]: Choose team
+                  - 'button "Choose a Premier League club. Current view: Neutral" [ref=f5e162]':
+                    - generic [ref=f5e163]: PL
+                    - generic [ref=f5e164]:
+                      - strong [ref=f5e165]: Neutral
+                      - generic [ref=f5e166]: Watch the whole title race
+                    - generic [ref=f5e167]: ›
+              - button "BETA Start season" [ref=f5e169] [cursor=pointer]:
+                - generic [ref=f5e170]: BETA
+                - text: Start season
+                - generic [ref=f5e171]: →
+            - article [ref=f5e172]:
+              - generic [ref=f5e174]:
+                - heading "UCL simulator" [level=3] [ref=f5e175]
+                - button "Install assets" [ref=f5e176] [cursor=pointer]
+                - paragraph [ref=f5e177]: Take on the league phase and fight through the knockouts for Europe’s biggest trophy.
+              - generic "UCL simulator settings" [ref=f5e178]:
+                - generic [ref=f5e179]:
+                  - generic [ref=f5e180]: Choose team
+                  - 'button "Choose a 2026/27 Champions League club. Current view: Neutral" [ref=f5e181]':
+                    - generic [ref=f5e183]:
+                      - strong [ref=f5e184]: Neutral
+                      - generic [ref=f5e185]: 39 league-phase and qualifying clubs
+                    - generic [ref=f5e186]: ›
+              - button "Play UCL mode" [ref=f5e188] [cursor=pointer]:
+                - generic [ref=f5e190]: →
+        - region [ref=f5e191]:
+          - generic [ref=f5e192]:
+            - heading "Leaderboard" [level=2] [ref=f5e193]
+            - button "View top 50" [ref=f5e194] [cursor=pointer]
+          - paragraph [ref=f5e196]: Loading standings...
+        - region [ref=f5e197]:
+          - heading "About the simulator" [level=2] [ref=f5e199]
+          - navigation "Simulator information" [ref=f5e200]:
+            - link "How it works" [ref=f5e201] [cursor=pointer]:
+              - /url: ./how-it-works.html
+            - link "Mode guide" [ref=f5e202] [cursor=pointer]:
+              - /url: ./guides.html
+            - link "Methodology" [ref=f5e203] [cursor=pointer]:
+              - /url: ./methodology.html
+            - link "The 256 teams" [ref=f5e204] [cursor=pointer]:
+              - /url: ./team-field.html
+            - link "FAQ" [ref=f5e205] [cursor=pointer]:
+              - /url: ./faq.html
+            - link "About" [ref=f5e206] [cursor=pointer]:
+              - /url: ./about.html
+      - generic [ref=f5e207]:
+        - generic [ref=f5e208]:
+          - strong [ref=f5e209]: 256 TEAMS WC
+          - generic [ref=f5e210]: An unofficial football tournament simulator built for entertainment.
+        - time [ref=f5e211]:
+          - generic [ref=f5e212]: "Last updated:"
+          - strong [ref=f5e213]: 29 Jul, 3:14 AM BST
+        - generic [ref=f5e214]:
+          - navigation "Legal information" [ref=f5e215]:
+            - link "Guides" [ref=f5e216] [cursor=pointer]:
+              - /url: ./guides.html
+            - link "Methodology" [ref=f5e217] [cursor=pointer]:
+              - /url: ./methodology.html
+            - link "FAQ" [ref=f5e218] [cursor=pointer]:
+              - /url: ./faq.html
+            - link "About" [ref=f5e219] [cursor=pointer]:
+              - /url: ./about.html
+            - link "Privacy" [ref=f5e220] [cursor=pointer]:
+              - /url: ./privacy.html
+            - link "Terms" [ref=f5e221] [cursor=pointer]:
+              - /url: ./terms.html
+            - link "Disclaimer" [ref=f5e222] [cursor=pointer]:
+              - /url: ./disclaimer.html
+          - generic [ref=f5e223]: © 2026 Mohamed A. All rights reserved.
+  - status

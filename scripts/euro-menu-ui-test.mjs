@@ -16,6 +16,7 @@ const euroCompletionLock = cssSource.slice(cssSource.lastIndexOf("/* Euro 2016 c
 const euroIdentityLock = cssSource.slice(cssSource.lastIndexOf("/* Euro 2016 final colour lock: keep cyan accents without overriding menu geometry. */"));
 
 assert.ok(existsSync(join(root, "assets", "euro-2016-logo.png")), "The Euro 2016 logo asset must exist.");
+assert.ok(existsSync(join(root, "assets", "euro-2020-logo.png")), "The Euro 2020 preview logo asset must exist.");
 assert.ok(existsSync(join(root, "data/retro/euro-2016/squads.js")), "The playable Euro 2016 squads must exist.");
 assert.ok(existsSync(join(root, "data/retro/euro-2016/schedule.js")), "The Euro 2016 schedule must exist.");
 assert.ok(existsSync(join(root, "data/retro/euro-2016/squad-dataset.json")), "The research dataset must exist.");
@@ -23,12 +24,12 @@ assert.match(appSource, /logo: "\.\/assets\/euro-2016-logo\.png"/);
 assert.match(appSource, /2016: "\/retro-euro-2016"/);
 assert.match(
   appSource,
-  /initialAppMode === "retro"\s*&&\s*\[[\s\S]*?2016[\s\S]*?\]\.includes\(Number\(initialRetroYear\)\)\s*&&\s*!retroTournament/,
+  /initialAppMode === "retro"\s*&&\s*\[[\s\S]*?2016[\s\S]*?\]\.includes\(Number\(initialRetroYear\)\)[\s\S]*?&&\s*!retroTournament/,
   "Euro 2016 must remain a valid direct retro route.",
 );
-assert.match(appSource, /readRetroEuroTeam\(\) \|\| "France"/);
+assert.match(appSource, /readRetroEuroTeam\(routedYear\)/);
 assert.match(appSource, /if \(Number\(year\) === 2016\)[\s\S]*?footer: "UEFA EURO 2016"/);
-assert.match(appSource, /const playable = isEuros \|\|/);
+assert.match(appSource, /\[RETRO_EURO_2016\.year, RETRO_EURO_2020\.year\]\.includes\(String\(selectedYear\)\)/);
 assert.match(appSource, /retro-euro-2016-active/);
 assert.match(appSource, /"3-4-2-1"/);
 assert.match(appSource, /rankLabel:\s*"SF"/);
@@ -51,7 +52,7 @@ assert.match(
 );
 assert.match(
   appSource,
-  /function tournamentHasThirdPlacePlayoff\(\)[\s\S]*Number\(retroTournament\?\.year\) !== 2016/,
+  /function tournamentHasThirdPlacePlayoff\(\)[\s\S]*!\[2016, 2020\]\.includes\(Number\(retroTournament\?\.year\)\)/,
   "Euro 2016 must not suppress elimination choices by inventing a third-place match.",
 );
 assert.match(appSource, /function savedRetroAchievementTournamentStates\(\)/);
@@ -61,8 +62,10 @@ assert.match(appSource, /retroWorldCupScreen\?\.hidden === false[\s\S]*openRetro
 assert.doesNotMatch(appSource, /retroAchievementsButton\.hidden = isEuros/);
 assert.match(htmlSource, /data\/retro\/euro-2016\/squads\.js/);
 assert.match(htmlSource, /data\/retro\/euro-2016\/schedule\.js/);
+assert.match(htmlSource, /data-euro-year="2020"[^>]*>2020<\/button>/);
 assert.equal((htmlSource.match(/data-achievement-year="2016"/g) || []).length, 2);
-assert.match(challengeSource, /\[256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2022, 2026\]\.includes\(year\)/);
+assert.equal((htmlSource.match(/data-achievement-year="2020"/g) || []).length, 2);
+assert.match(challengeSource, /\[256, 1998, 2002, 2006, 2010, 2014, 2016, 2018, 2020, 2022, 2024, 2026\]\.includes\(year\)/);
 assert.match(challengeSource, /function completedRetroChampion\(tournament\)/);
 assert.match(challengeSource, /\n\s+champion,\n/);
 assert.match(challengeSource, /achievementBanner\.dataset\.achievementTheme = String\(year\)/);
@@ -78,6 +81,19 @@ assert.match(buildSource, /cpSync\(retroDataRoot, join\(outputRoot, "data", "ret
 assert.match(workerSource, /"\/retro-euro-2016"/);
 assert.match(wranglerSource, /"\/retro-euro-2016"/);
 assert.match(cssSource, /body\.retro-mode-active\.retro-euro-2016-active/);
+assert.match(
+  cssSource,
+  /\/\* Compact mobile mode browser:[\s\S]*?@media \(max-width: 720px\)/,
+  "The compact mode browser must cover the full mobile range without a 701-720px breakpoint gap.",
+);
+assert.match(appSource, /const RETRO_EURO_2020 = Object\.freeze/);
+assert.match(appSource, /\{ name: "Turkey", group: "A" \}/);
+assert.match(appSource, /\{ name: "Germany", group: "F" \}/);
+assert.match(appSource, /RETRO_EURO_2020_TEAM_KEY/);
+assert.match(appSource, /function setRetroEuroYear\(year\)/);
+assert.match(appSource, /\[RETRO_EURO_2016\.year, RETRO_EURO_2020\.year\]\.includes\(String\(selectedYear\)\)/);
+assert.match(cssSource, /data-retro-edition="2020"/);
+assert.match(cssSource, /#c7da3a/);
 assert.match(cssSource, /--e16-cyan:\s*#1cc7ee/);
 assert.match(cssSource, /\.retro-euro-2016-active \.retro-manager-pitch/);
 assert.match(cssSource, /\.retro-euro-2016-active \.retro-squad-summary/);

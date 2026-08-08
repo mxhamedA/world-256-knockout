@@ -42,6 +42,11 @@ assert.equal(Object.keys(squadData.UCL_FC27_SQUADS).length, 39, "Every selectabl
 assert.equal(engine.team("union-saint-gilloise").name, "Union SG", "The club must display as Union SG while keeping its stable team id.");
 assert.equal(squadData.UCL_FC27_SQUADS["union-saint-gilloise"].team, "Union SG", "The generated squad metadata must use the short Union SG name.");
 assert.doesNotMatch(appSource, /Royale Union Saint-Gilloise/, "The app team list must not reintroduce the long Union club name.");
+assert.doesNotMatch(simulatorSource, /picker\.disabled = hasSeason/,
+  "The UCL club picker must remain tappable on mobile when a saved season exists.");
+assert.match(simulatorSource, /picker\.dataset\.seasonLocked = hasSeason \? "true" : "false"/);
+assert.match(appSource, /function openUclTeamPicker\(\) \{\s*if \(window\.UclSimulator\?\.hasStarted\?\.\(\)\)/,
+  "A locked UCL picker must explain that the season needs restarting instead of silently ignoring taps.");
 const expectedShortNames = {
   "manchester-city": "Man City",
   "olympique-lyonnais": "Lyon",

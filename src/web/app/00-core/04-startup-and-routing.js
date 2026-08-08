@@ -31,7 +31,7 @@ document.addEventListener("error", (event) => {
 function clearRetroRouteLoadingState() {
   document.documentElement.classList.remove("route-retro-loading", "route-retro-2006-loading", "route-retro-2022-loading");
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
-  if (pathname === "/palestine-challenge" || pathname === "/profile") return;
+  if (pathname === "/palestine-challenge" || pathname === "/profile" || pathname === "/player-career") return;
 
   document.body.classList.remove("challenge-mode-active", "profile-mode-active", "online-screen-open", "mobile-menu-open");
   if (els.appShell) {
@@ -43,8 +43,36 @@ function clearRetroRouteLoadingState() {
 }
 
 function enforceModeScreenVisibility(mode = currentAppMode()) {
-  const activeRetroYear = Number(retroTournament?.year || retroWorldCupYearFromPath() || readRetroWorldCupYear());
+  const routedRetroYear = retroWorldCupYearFromPath();
+  const retroSetupRouteActive = document.body.dataset.desktopModeSetup === "retro" && routedRetroYear;
+  const activeRetroYear = Number(retroSetupRouteActive ? routedRetroYear : retroTournament?.year || routedRetroYear || readRetroWorldCupYear());
+  const activeRetroIsWorldCup = [1998, 2002, 2006, 2010, 2014, 2018, 2022, 2026].includes(activeRetroYear);
+  const selectedPresentationYear = activeRetroIsWorldCup && !retroSetupRouteActive
+    && document.documentElement.dataset.tournamentTheme !== "off"
+    && MATCH_SCREEN_THEMES[document.documentElement.dataset.tournamentTheme]
+    ? Number(document.documentElement.dataset.tournamentTheme)
+    : activeRetroYear;
+  const careerScreen = document.getElementById("playerCareerScreen");
+  const premierLeagueScreen = document.getElementById("premierLeagueSeasonScreen");
+  const uclScreen = document.getElementById("uclSimulatorScreen");
+  const premierLeagueSharedMatchActive = state?.premierLeagueSeason === true;
+  const uclSharedMatchActive = state?.uclSeason === true;
+  if (premierLeagueScreen && mode !== "premierLeague" && !premierLeagueSharedMatchActive) premierLeagueScreen.hidden = true;
+  if (uclScreen && mode !== "ucl" && !uclSharedMatchActive) uclScreen.hidden = true;
+  const careerActive = mode === "career";
+  document.body.classList.toggle("career-mode-active", careerActive);
   document.body.classList.toggle("standard-mode-active", mode === "standard");
+  if (careerActive) {
+    if (els.appShell) {
+      els.appShell.style.setProperty("display", "none", "important");
+      els.appShell.hidden = true;
+    }
+    if (els.retroWorldCupScreen) els.retroWorldCupScreen.hidden = true;
+    if (careerScreen) careerScreen.hidden = false;
+    document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-euro-2020-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
+    return;
+  }
+  if (careerScreen) careerScreen.hidden = true;
   if (els.newsButton) els.newsButton.hidden = false;
   if (mode !== "retro") {
     if (els.appShell) {
@@ -54,20 +82,21 @@ function enforceModeScreenVisibility(mode = currentAppMode()) {
     if (els.retroWorldCupScreen) {
       els.retroWorldCupScreen.hidden = true;
     }
-    document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
+    document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-euro-2020-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
     return;
   }
 
   document.body.classList.add("retro-mode-active");
-  document.body.classList.toggle("retro-1998-active", activeRetroYear === 1998);
-  document.body.classList.toggle("retro-2002-active", activeRetroYear === 2002);
-  document.body.classList.toggle("retro-2006-active", activeRetroYear === 2006);
-  document.body.classList.toggle("retro-2010-active", activeRetroYear === 2010);
-  document.body.classList.toggle("retro-euro-2016-active", activeRetroYear === 2016);
-  document.body.classList.toggle("retro-2018-active", activeRetroYear === 2018);
-  document.body.classList.toggle("retro-2022-active", activeRetroYear === 2022);
+  document.body.classList.toggle("retro-1998-active", selectedPresentationYear === 1998);
+  document.body.classList.toggle("retro-2002-active", selectedPresentationYear === 2002);
+  document.body.classList.toggle("retro-2006-active", selectedPresentationYear === 2006);
+  document.body.classList.toggle("retro-2010-active", selectedPresentationYear === 2010);
+  document.body.classList.toggle("retro-euro-2016-active", selectedPresentationYear === 2016);
+  document.body.classList.toggle("retro-euro-2020-active", activeRetroYear === 2020);
+  document.body.classList.toggle("retro-2018-active", selectedPresentationYear === 2018);
+  document.body.classList.toggle("retro-2022-active", selectedPresentationYear === 2022);
   document.body.classList.toggle("retro-copa-2024-active", activeRetroYear === 2024);
-  document.body.classList.toggle("retro-2026-active", activeRetroYear === 2026);
+  document.body.classList.toggle("retro-2026-active", selectedPresentationYear === 2026);
   if (els.appShell) {
     els.appShell.style.setProperty("display", "none", "important");
     els.appShell.hidden = false;
@@ -81,15 +110,18 @@ function forceUnlockStartupState() {
   const pathname = window.location.pathname.replace(/\/+$/, "") || "/";
   const isChallengeRoute = pathname === "/palestine-challenge";
   const isProfileRoute = pathname === "/profile";
+  const isCareerRoute = pathname === "/player-career";
   const mode = currentAppMode();
   const isChallengeMode = mode === "challenge" || isChallengeRoute;
   const isProfileMode = mode === "profile" || isProfileRoute;
+  const isCareerMode = mode === "career" || isCareerRoute;
   const isOnlineMode = mode === "online";
 
   clearRetroRouteLoadingState();
   if (!isChallengeMode) document.body.classList.remove("challenge-mode-active");
   if (!isProfileMode) document.body.classList.remove("profile-mode-active");
-  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
+  if (!isCareerMode) document.body.classList.remove("career-mode-active");
+  if (mode !== "retro") document.body.classList.remove("retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-euro-2020-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active");
 
   if (!isOnlineMode && document.body.classList.contains("online-screen-open")) {
     document.body.classList.remove("online-screen-open");
@@ -106,16 +138,22 @@ function forceUnlockStartupState() {
     closeOpenDialogsAndMenus();
   }
   if (isChallengeMode || isProfileMode) return;
+  if (isCareerMode) {
+    enforceModeScreenVisibility("career");
+    return;
+  }
   if (els.retroWorldCupScreen) els.retroWorldCupScreen.hidden = true;
   if (els.appShell) {
     if (mode === "retro") {
       els.appShell.style.removeProperty("display");
+    } else if (document.body.dataset.desktopModeSetup === "standard") {
+      els.appShell.style.setProperty("display", "block", "important");
     } else {
       els.appShell.style.setProperty("display", "grid", "important");
     }
     els.appShell.hidden = false;
   }
-  enforceModeScreenVisibility(mode);
+  enforceModeScreenVisibility(document.body.dataset.desktopModeSetup ? "home" : mode);
 }
 
 function startStartupUnfreezeWatchdog() {
@@ -138,6 +176,7 @@ function startStartupUnfreezeWatchdog() {
 }
 
 function startupRecoveryNeeded() {
+  if (document.body.dataset.desktopModeSetup) return false;
   if (document.documentElement.classList.contains("route-retro-loading")
     || document.documentElement.classList.contains("route-retro-2006-loading")
     || document.documentElement.classList.contains("route-retro-2022-loading")) {
@@ -175,10 +214,12 @@ function recoverFromStartupError(error, context = "startup") {
   stopOnlineLivePresentation();
 
   document.body.classList.remove(
-    "retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active",
+    "retro-mode-active", "retro-1998-active", "retro-2002-active", "retro-2006-active", "retro-2010-active", "retro-euro-2016-active", "retro-euro-2020-active", "retro-2018-active", "retro-2022-active", "retro-copa-2024-active", "retro-2026-active",
     "legacy-mode-active", "achievements-mode-active", "online-screen-open",
-    "challenge-mode-active", "profile-mode-active", "mobile-menu-open",
+    "challenge-mode-active", "profile-mode-active", "career-mode-active", "mobile-menu-open",
   );
+  const careerScreen = document.getElementById("playerCareerScreen");
+  if (careerScreen) careerScreen.hidden = true;
   if (els.retroWorldCupScreen) els.retroWorldCupScreen.hidden = true;
   if (els.onlineRoomScreen) els.onlineRoomScreen.hidden = true;
   if (els.achievementsScreen) els.achievementsScreen.hidden = true;
@@ -241,6 +282,32 @@ let uclAssetAccount = undefined;
 let uclAssetsInstalled = false;
 let uclAssetInstallBusy = false;
 let retroTournament = readRetroTournamentState();
+
+function desktopModeSetupEnabled() {
+  return window.matchMedia?.("(min-width: 721px)").matches === true;
+}
+
+function modeSetupRouteEnabled(mode) {
+  return mode === "standard" || desktopModeSetupEnabled();
+}
+
+function openDesktopModeSetup(mode) {
+  if (!modeSetupRouteEnabled(mode)) return false;
+  document.body.dataset.desktopModeSetup = mode;
+  setAppModeUrl(mode);
+  render();
+  window.scrollTo({ top: 0, behavior: "auto" });
+  return true;
+}
+
+function closeDesktopModeSetup() {
+  delete document.body.dataset.desktopModeSetup;
+}
+
+window.desktopModeSetupEnabled = desktopModeSetupEnabled;
+window.modeSetupRouteEnabled = modeSetupRouteEnabled;
+window.openDesktopModeSetup = openDesktopModeSetup;
+window.closeDesktopModeSetup = closeDesktopModeSetup;
 let retroMenuSettings = readRetroWorldCupSettings();
 let retroTournamentView = "matches";
 let retroBottomGroupsVisible = false;
@@ -422,6 +489,7 @@ const APP_MODE_PATHS = Object.freeze({
   custom: "/custom-tournament",
   customMatch: "/custom-matches",
   challenge: "/palestine-challenge",
+  career: "/player-career",
   standard: "/default-mode",
   legacy: "/draft-mode",
   retro: "/retro-world-cup",
@@ -460,7 +528,7 @@ function currentAppMode() {
 function setAppModeUrl(mode, { replace = false } = {}) {
   const url = new URL(window.location.href);
   const selectedMode = Object.hasOwn(APP_MODE_PATHS, mode) ? mode : "home";
-  const retroYear = String(retroTournament?.year || readRetroWorldCupYear());
+  const retroYear = String(retroTournament?.year || selectedRetroTournamentYear());
   url.pathname = selectedMode === "retro"
     ? RETRO_WORLD_CUP_PATHS[retroYear] || RETRO_WORLD_CUP_PATHS[2014]
     : APP_MODE_PATHS[selectedMode];
