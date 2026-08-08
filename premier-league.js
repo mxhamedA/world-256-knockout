@@ -1417,8 +1417,9 @@
   };
 
   startButton?.addEventListener("click", () => {
-    if (document.body.dataset.desktopModeSetup !== "premierLeague"
-      && window.openDesktopModeSetup?.("premierLeague")) return;
+    const onModeMenu = typeof window.currentAppMode !== "function"
+      || window.currentAppMode() === "home";
+    if (onModeMenu && window.openDesktopModeSetup?.("premierLeague")) return;
     window.closeDesktopModeSetup?.();
     openSeason();
   });

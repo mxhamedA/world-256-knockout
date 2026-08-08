@@ -302,6 +302,9 @@ function openDesktopModeSetup(mode) {
 
 function closeDesktopModeSetup() {
   delete document.body.dataset.desktopModeSetup;
+  restoreRetroRouteSetupControls();
+  restoreClubRouteSetupControls();
+  els.appShell?.style.removeProperty("display");
 }
 
 window.desktopModeSetupEnabled = desktopModeSetupEnabled;

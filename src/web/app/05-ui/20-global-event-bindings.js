@@ -106,17 +106,6 @@ els.customMatchStartButton?.addEventListener("click", () => {
 });
 els.customPresetFile?.addEventListener("change", (event) => readCustomTournamentPresetFile(event.target.files?.[0]));
 
-[
-  ["#startPremierLeagueSeasonButton", "premierLeague"],
-].forEach(([selector, mode]) => {
-  document.querySelector(selector)?.addEventListener("click", (event) => {
-    if (currentAppMode() !== "home" || !desktopModeSetupEnabled()) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    openDesktopModeSetup(mode);
-  }, { capture: true });
-});
-
 document.querySelectorAll("[data-mode-route-back]").forEach((button) => {
   button.addEventListener("click", () => {
     closeDesktopModeSetup();

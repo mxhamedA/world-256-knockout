@@ -8,6 +8,7 @@ const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "clean.css"), "utf8");
 const uclSimulator = fs.readFileSync(path.join(root, "ucl-simulator.js"), "utf8");
+const premierLeagueSimulator = fs.readFileSync(path.join(root, "premier-league.js"), "utf8");
 
 const setupBackButtons = html.match(/class="[^"]*setup-panel-back[^"]*"[^>]*data-mode-route-back/g) || [];
 assert.equal(setupBackButtons.length, 4,
@@ -20,6 +21,8 @@ assert.match(html, /id="customTournamentBackButton"[\s\S]*?Back to modes/,
   "The custom tournament setup must keep its Back to modes action.");
 assert.match(app, /document\.querySelectorAll\("\[data-mode-route-back\]"\)[\s\S]*?setAppModeUrl\("home"\)/,
   "Shared setup back buttons must return directly to the mode menu.");
+assert.match(app, /function closeDesktopModeSetup\(\) \{[\s\S]*?delete document\.body\.dataset\.desktopModeSetup;[\s\S]*?restoreRetroRouteSetupControls\(\);[\s\S]*?restoreClubRouteSetupControls\(\);[\s\S]*?removeProperty\("display"\);[\s\S]*?\}/,
+  "Closing a setup route must unmount its setup panel before a simulator screen opens.");
 assert.match(app, /function modeSetupRouteEnabled\(mode\)[\s\S]*?mode === "standard" \|\| desktopModeSetupEnabled\(\)/,
   "The 256 knockout setup route must remain available on mobile screens.");
 assert.match(app, /classList\.contains\("legacy-route-setup-active"\)[\s\S]*?legacySetupModal\?\.show\(\)[\s\S]*?legacySetupModal\?\.showModal\(\)/,
@@ -62,7 +65,11 @@ assert.match(css, /\.setup-panel-back:active\s*\{\s*transform: scale\(\.97\)/,
   "Setup back buttons need responsive press feedback.");
 assert.doesNotMatch(app, /\["#startUclSimulatorButton", "ucl"\]/,
   "The shared menu router must not swallow the UCL module's launch click.");
+assert.doesNotMatch(app, /#startPremierLeagueSeasonButton[\s\S]{0,300}stopImmediatePropagation/,
+  "The shared menu router must not swallow the Premier League module's launch click.");
 assert.match(uclSimulator, /window\.currentAppMode\(\) === "home"[\s\S]*?openDesktopModeSetup\?\.\("ucl"\)[\s\S]*?openSimulator\(\)/,
   "UCL launch must open setup only from the menu, then start from the UCL route even if setup DOM state was refreshed.");
+assert.match(premierLeagueSimulator, /window\.currentAppMode\(\) === "home"[\s\S]*?openDesktopModeSetup\?\.\("premierLeague"\)[\s\S]*?openSeason\(\)/,
+  "Premier League launch must open setup only from the menu, then start from the league route.");
 
 console.log("Mode setup navigation checks passed.");
