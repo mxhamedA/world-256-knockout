@@ -14098,18 +14098,22 @@ html.light-mode body.before-start .mode-card-career :is(
   background: #17253a;
 }
 
-@media (min-width: 1160px) {
+@media (min-width: 721px) {
   .field-overview {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 330px;
+    grid-template-columns: minmax(0, 1fr) clamp(250px, 29vw, 330px);
     align-items: start;
-    gap: 20px;
+    gap: clamp(12px, 1.6vw, 20px);
     max-width: 1440px;
   }
 
   .field-overview > .mode-select {
     grid-column: 1;
     min-width: 0;
+  }
+
+  .field-overview > .home-editorial {
+    grid-column: 1 / -1;
   }
 
   .home-achievement-leaderboard {
@@ -45525,4 +45529,38 @@ body.retro-mode-active.retro-euro-2020-active #mainContent :is(
 /* A routed full-screen mode must never remain in document flow after navigation. */
 :is(#retroWorldCupScreen, #premierLeagueSeasonScreen, #uclSimulatorScreen, #playerCareerScreen)[hidden] {
   display: none !important;
+}
+
+/* Tablet home: preserve the desktop composition without squeezing three launchers together. */
+@media (min-width: 721px) and (max-width: 1159px) {
+  body.before-start:not([data-desktop-mode-setup]) .mode-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-grid > .mode-card:not(.mode-card-retro, .mode-card-custom) {
+    grid-column: span 3 !important;
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-grid > .mode-card.mode-card-retro,
+  body.before-start:not([data-desktop-mode-setup]) .mode-grid > .mode-card.mode-card-custom {
+    grid-column: 1 / -1 !important;
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-premier-league,
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-ucl { order: 1; }
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-retro { order: 2; }
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-custom { order: 3; }
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-default,
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-legacy { order: 4; }
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-career { order: 5; }
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-online { order: 6; }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-retro .retro-year-switch {
+    grid-template-columns: repeat(8, minmax(42px, 1fr)) !important;
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-grid > .mode-card.mode-card-retro {
+    min-height: 162px !important;
+    height: 162px;
+  }
 }

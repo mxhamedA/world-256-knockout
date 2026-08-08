@@ -7,6 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "app.js"), "utf8");
 const css = fs.readFileSync(path.join(root, "clean.css"), "utf8");
+const uclSimulator = fs.readFileSync(path.join(root, "ucl-simulator.js"), "utf8");
 
 const setupBackButtons = html.match(/class="[^"]*setup-panel-back[^"]*"[^>]*data-mode-route-back/g) || [];
 assert.equal(setupBackButtons.length, 4,
@@ -59,5 +60,9 @@ assert.match(html, /setup-panel-back retro-back-to-modes/,
   "Retro setup routes must reuse each edition's themed tournament back-button UI.");
 assert.match(css, /\.setup-panel-back:active\s*\{\s*transform: scale\(\.97\)/,
   "Setup back buttons need responsive press feedback.");
+assert.doesNotMatch(app, /\["#startUclSimulatorButton", "ucl"\]/,
+  "The shared menu router must not swallow the UCL module's launch click.");
+assert.match(uclSimulator, /window\.currentAppMode\(\) === "home"[\s\S]*?openDesktopModeSetup\?\.\("ucl"\)[\s\S]*?openSimulator\(\)/,
+  "UCL launch must open setup only from the menu, then start from the UCL route even if setup DOM state was refreshed.");
 
 console.log("Mode setup navigation checks passed.");

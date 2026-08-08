@@ -2070,18 +2070,22 @@ html.light-mode body.before-start .mode-card-career :is(
   background: #17253a;
 }
 
-@media (min-width: 1160px) {
+@media (min-width: 721px) {
   .field-overview {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 330px;
+    grid-template-columns: minmax(0, 1fr) clamp(250px, 29vw, 330px);
     align-items: start;
-    gap: 20px;
+    gap: clamp(12px, 1.6vw, 20px);
     max-width: 1440px;
   }
 
   .field-overview > .mode-select {
     grid-column: 1;
     min-width: 0;
+  }
+
+  .field-overview > .home-editorial {
+    grid-column: 1 / -1;
   }
 
   .home-achievement-leaderboard {

@@ -2590,8 +2590,9 @@
   }
 
   startButton.addEventListener("click", () => {
-    if (document.body.dataset.desktopModeSetup !== "ucl"
-      && window.openDesktopModeSetup?.("ucl")) return;
+    const onModeMenu = typeof window.currentAppMode !== "function"
+      || window.currentAppMode() === "home";
+    if (onModeMenu && window.openDesktopModeSetup?.("ucl")) return;
     window.closeDesktopModeSetup?.();
     openSimulator();
   });

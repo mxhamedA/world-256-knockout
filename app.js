@@ -25197,7 +25197,6 @@ els.customPresetFile?.addEventListener("change", (event) => readCustomTournament
 
 [
   ["#startPremierLeagueSeasonButton", "premierLeague"],
-  ["#startUclSimulatorButton", "ucl"],
 ].forEach(([selector, mode]) => {
   document.querySelector(selector)?.addEventListener("click", (event) => {
     if (currentAppMode() !== "home" || !desktopModeSetupEnabled()) return;
@@ -25445,9 +25444,10 @@ function stopStandardPlaybackForNavigation() {
 
 const menuButton = $("#menuButton");
 const menuBackdrop = $("#menuBackdrop");
+const mobileNavigationMedia = window.matchMedia("(max-width: 850px)");
 
 function setMobileMenu(open) {
-  const shouldOpen = Boolean(open && window.matchMedia("(max-width: 850px)").matches);
+  const shouldOpen = Boolean(open && mobileNavigationMedia.matches);
   els.sidebar.classList.toggle("open", shouldOpen);
   menuBackdrop.hidden = !shouldOpen;
   menuButton.setAttribute("aria-expanded", String(shouldOpen));
@@ -25457,8 +25457,8 @@ function setMobileMenu(open) {
 
 menuButton.addEventListener("click", () => setMobileMenu(!els.sidebar.classList.contains("open")));
 menuBackdrop.addEventListener("click", () => setMobileMenu(false));
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 850) setMobileMenu(false);
+mobileNavigationMedia.addEventListener("change", ({ matches }) => {
+  if (!matches) setMobileMenu(false);
 });
 $("#fullscreenButton").addEventListener("click", async () => {
   try {

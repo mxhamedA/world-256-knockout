@@ -108,7 +108,6 @@ els.customPresetFile?.addEventListener("change", (event) => readCustomTournament
 
 [
   ["#startPremierLeagueSeasonButton", "premierLeague"],
-  ["#startUclSimulatorButton", "ucl"],
 ].forEach(([selector, mode]) => {
   document.querySelector(selector)?.addEventListener("click", (event) => {
     if (currentAppMode() !== "home" || !desktopModeSetupEnabled()) return;

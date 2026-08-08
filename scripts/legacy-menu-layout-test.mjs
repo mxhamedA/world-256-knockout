@@ -79,5 +79,19 @@ assert.match(
 );
 assert.doesNotMatch(css, /@keyframes achievement-(?:gold|silver|bronze)-glow/,
   "Leaderboard podium styling must not use animated text glows that render as colour blocks.");
+assert.match(css, /@media \(min-width: 721px\)\s*\{[\s\S]*?\.field-overview\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) clamp\(250px, 29vw, 330px\)/,
+  "Tablet layouts must keep the leaderboard in a compact right-hand column.");
+assert.match(css, /\.field-overview > \.home-editorial\s*\{\s*grid-column:\s*1 \/ -1/,
+  "The simulator information footer must span beneath both tablet columns.");
+assert.match(css, /@media \(min-width: 721px\) and \(max-width: 1159px\)[\s\S]*?\.mode-card:not\(\.mode-card-retro, \.mode-card-custom\)[\s\S]*?grid-column:\s*span 3 !important/,
+  "Tablet launchers must use two columns instead of squeezing into three.");
+assert.match(css, /\.mode-grid > \.mode-card\.mode-card-custom\s*\{\s*grid-column:\s*1 \/ -1 !important/,
+  "The shared Custom launcher must span both tablet columns.");
+assert.match(css, /@media \(min-width: 721px\) and \(max-width: 1159px\)[\s\S]*?\.mode-grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(6, minmax\(0, 1fr\)\)/,
+  "The tablet mode grid must override the single-column mobile rule.");
+assert.match(css, /@media \(min-width: 721px\) and \(max-width: 1159px\)[\s\S]*?\.mode-card-retro \.retro-year-switch\s*\{[\s\S]*?repeat\(8, minmax\(42px, 1fr\)\)/,
+  "World Cup year controls must retain readable tap targets on tablets.");
+assert.doesNotMatch(app, /window\.addEventListener\("resize"/,
+  "Navigation should react to breakpoint changes instead of running on every resize event.");
 
 console.log("Legacy menu layout checks passed.");
