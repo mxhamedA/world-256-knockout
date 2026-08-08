@@ -224,7 +224,7 @@ body.retro-mode-active.retro-1998-active {
 
   body.before-start:not([data-desktop-mode-setup]) .home-achievement-leaderboard {
     min-height: 176px;
-    height: 176px;
+    height: auto;
     margin-top: 18px;
     padding: 18px;
   }

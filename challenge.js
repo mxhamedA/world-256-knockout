@@ -1294,7 +1294,6 @@
       renderProfileCountries();
       renderProfileAchievements();
       syncDeletionRequest();
-      openAuth("login");
       return;
     }
     selectedProfileCountryId = account.profileCountryId || selectedProfileCountryId || null;
@@ -1331,14 +1330,16 @@
       queueGeneratedUsernamePrompt();
     } catch (error) {
       if (loadVersion !== accountLoadVersion) return;
-      if (expectedAccount) throw error;
+      if (expectedAccount && error.status === 401) throw error;
       try {
         dashboard = await challengeApi();
       } catch {}
       if (loadVersion !== accountLoadVersion) return;
-      profilePayload = { account: null };
+      const recoveredAccount = dashboard?.account || expectedAccount || null;
+      profilePayload = { account: recoveredAccount };
       renderProfile();
-      if (error.status !== 401) elements.profileMessage.textContent = error.message;
+      if (error.status === 401 && !recoveredAccount) openAuth("login");
+      else elements.profileMessage.textContent = error.message;
     }
   }
 

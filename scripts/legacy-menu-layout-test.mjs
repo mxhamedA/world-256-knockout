@@ -72,5 +72,12 @@ assert.match(css, /\.mode-card\.is-mobile-expanded > \.mode-card-mobile-toggle[\
 assert.match(css, /\.is-mobile-expanded \.mode-card-mobile-artwork img\s*\{[\s\S]{0,100}width:\s*58px;[\s\S]{0,80}height:\s*58px;/, "Expanded tournament logos must not retain the compact collapsed size.");
 assert.match(css, /data-retro-competition="euros"\] \.mode-card-mobile-artwork img\s*\{[\s\S]{0,100}object-fit:\s*cover;[\s\S]{0,100}transform:\s*none;/, "The padded Euro artwork must use a stable crop instead of moving when expanded.");
 assert.match(css, /\.mode-card-ucl\s*\{\s*order:\s*3;[\s\S]{0,100}\.mode-card-default\s*\{\s*order:\s*4;/, "UCL must be the third mobile mode, ahead of the 256-team knockout.");
+assert.match(
+  css,
+  /body\.before-start:not\(\[data-desktop-mode-setup\]\) \.home-achievement-leaderboard\s*\{[^}]*min-height:\s*176px;[^}]*height:\s*auto;/,
+  "A populated leaderboard must expand with its rows instead of overflowing a fixed-height card.",
+);
+assert.doesNotMatch(css, /@keyframes achievement-(?:gold|silver|bronze)-glow/,
+  "Leaderboard podium styling must not use animated text glows that render as colour blocks.");
 
 console.log("Legacy menu layout checks passed.");

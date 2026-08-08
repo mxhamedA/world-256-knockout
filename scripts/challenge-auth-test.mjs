@@ -105,6 +105,15 @@ assert.match(authClient, /const authPayload = await challengeApi/);
 assert.match(authClient, /loadHomeAccount\(account\)/);
 assert.match(authClient, /function challengeApiForAccount/);
 assert.match(authClient, /\[0, 150, 450\]/);
+const renderProfileSource = authClient.slice(
+  authClient.indexOf("function renderProfile()"),
+  authClient.indexOf("async function loadProfile"),
+);
+assert.doesNotMatch(renderProfileSource, /openAuth\(/,
+  "Rendering a missing profile payload must not itself trigger a login modal.");
+assert.match(authClient, /const recoveredAccount = dashboard\?\.account \|\| expectedAccount \|\| null;/);
+assert.match(authClient, /error\.status === 401 && !recoveredAccount\) openAuth\("login"\)/,
+  "The profile route should request login only after both authenticated checks fail.");
 assert.match(authUi, /id="usernameReviewModal"/);
 assert.match(authClient, /account\?\.usernameNeedsReview/);
 assert.match(authClient, /body: \{ username: elements\.usernameReviewInput\.value \}/);
