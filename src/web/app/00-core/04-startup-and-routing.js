@@ -281,6 +281,9 @@ let premierLeagueAssetInstallBusy = false;
 let uclAssetAccount = undefined;
 let uclAssetsInstalled = false;
 let uclAssetInstallBusy = false;
+let europaAssetAccount = undefined;
+let europaAssetsInstalled = false;
+let europaAssetInstallBusy = false;
 let retroTournament = readRetroTournamentState();
 
 function desktopModeSetupEnabled() {

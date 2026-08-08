@@ -71,6 +71,42 @@ els.restartCustomMatchButton?.addEventListener("click", () => {
   render();
 });
 
+const clubCompetitionCard = document.querySelector("#uclModeCard");
+const clubCompetitionTitle = document.querySelector("#clubCompetitionTitle");
+const clubCompetitionLogo = document.querySelector("#clubCompetitionLogo");
+const clubCompetitionDescription = document.querySelector("#clubCompetitionDescription");
+const clubCompetitionSwitch = document.querySelector("#clubCompetitionSwitch");
+const europaComingSoon = document.querySelector("#europaComingSoon");
+
+function setClubCompetitionPreview(competition) {
+  const isEuropa = competition === "europa";
+  clubCompetitionCard?.classList.toggle("is-europa-preview", isEuropa);
+  if (clubCompetitionCard) clubCompetitionCard.dataset.clubCompetition = isEuropa ? "europa" : "ucl";
+  if (clubCompetitionTitle) clubCompetitionTitle.textContent = isEuropa ? "Europa simulator" : "UCL simulator";
+  if (clubCompetitionLogo) clubCompetitionLogo.src = isEuropa ? "./assets/europa-league.png" : "./assets/ucl-starball-white.png";
+  if (clubCompetitionDescription) {
+    clubCompetitionDescription.textContent = isEuropa
+      ? "European nights, knockout drama and a new trophy to chase."
+      : "Take on the league phase and fight through the knockouts for Europe’s biggest trophy.";
+  }
+  if (els.uclInstallButton) els.uclInstallButton.hidden = isEuropa;
+  if (els.europaInstallButton) els.europaInstallButton.hidden = !isEuropa;
+  if (els.uclLandingSettings) els.uclLandingSettings.hidden = isEuropa;
+  if (els.uclModeActions) els.uclModeActions.hidden = isEuropa;
+  if (europaComingSoon) europaComingSoon.hidden = !isEuropa;
+  clubCompetitionSwitch?.querySelectorAll("[data-club-competition]").forEach((button) => {
+    const active = button.dataset.clubCompetition === (isEuropa ? "europa" : "ucl");
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+clubCompetitionSwitch?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-club-competition]");
+  if (!button) return;
+  setClubCompetitionPreview(button.dataset.clubCompetition);
+});
+
 els.customTournamentBackButton?.addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
   setAppModeUrl("home");

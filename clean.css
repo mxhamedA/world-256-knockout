@@ -13196,6 +13196,124 @@ body.standard-mode-active #newsButton {
     linear-gradient(145deg, #111a31, #0b1020 68%);
 }
 
+.club-competition-switch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(72px, 1fr));
+  gap: 3px;
+  margin: 11px 0 3px;
+  padding: 3px;
+  border: 1px solid rgba(143, 178, 255, .25);
+  border-radius: 6px;
+  background: rgba(5, 12, 30, .58);
+}
+
+.club-competition-switch button {
+  min-height: 30px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 4px;
+  color: #8999b8;
+  background: transparent;
+  font: 800 11px "Manrope", sans-serif;
+  cursor: pointer;
+}
+
+.club-competition-switch button.active {
+  color: #fff;
+  background: #244fae;
+}
+
+.mode-card-ucl.is-europa-preview {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255, 109, 0, .3), transparent 31%),
+    linear-gradient(122deg, transparent 64%, rgba(255, 102, 0, .16) 64% 67%, transparent 67%),
+    linear-gradient(145deg, #17120f, #080908 72%);
+}
+
+.mode-card-ucl.is-europa-preview::after {
+  position: absolute;
+  top: -42px;
+  right: -20px;
+  width: 190px;
+  height: 290px;
+  border: 18px solid rgba(255, 101, 0, .16);
+  border-block-color: transparent;
+  transform: rotate(7deg);
+  content: "";
+  z-index: -1;
+  pointer-events: none;
+}
+
+.mode-card-ucl.is-europa-preview .ucl-mode-logo {
+  filter: brightness(0) invert(1) drop-shadow(0 10px 20px rgba(255, 93, 0, .2));
+}
+
+.mode-card-ucl.is-europa-preview .mode-card-mobile-artwork img {
+  filter: brightness(0) invert(1);
+}
+
+.mode-card-ucl.is-europa-preview .club-competition-switch {
+  border-color: rgba(255, 116, 26, .42);
+  background: rgba(0, 0, 0, .46);
+}
+
+.mode-card-ucl.is-europa-preview .club-competition-switch button.active {
+  color: #17100b;
+  background: #ff6900;
+}
+
+.europa-coming-soon {
+  display: grid;
+  max-width: 470px;
+  gap: 7px;
+  margin-top: auto;
+}
+
+.europa-coming-soon[hidden] {
+  display: none;
+}
+
+.europa-coming-soon > span {
+  color: #ff7620;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.europa-coming-soon > strong {
+  color: #fff;
+  font-size: 16px;
+}
+
+.europa-coming-soon > p {
+  margin: 0 0 8px;
+  color: #b9aea7;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.europa-coming-soon .mode-coming-soon-button {
+  width: min(210px, 100%);
+  border-color: rgba(255, 118, 32, .44);
+  color: #ffb17d;
+  background: rgba(76, 29, 5, .62);
+}
+
+.europa-asset-pack-intro img {
+  filter: brightness(0) invert(1);
+}
+
+.europa-asset-pack-modal .pl-asset-pack-intro {
+  background: linear-gradient(135deg, #25140b, #612400);
+}
+
+.europa-asset-pack-modal .pl-asset-pack-badge.is-provisional {
+  outline: 1px dashed rgba(255, 112, 28, .5);
+  outline-offset: -2px;
+}
+
 .mode-card-ucl .ucl-launch-button {
   display: inline-flex;
   align-items: center;
@@ -38134,6 +38252,20 @@ body.retro-mode-active.retro-2026-active #mainContent .retro-lineup-side li:nth-
   background: transparent;
   box-shadow: none;
 }
+body.custom-match-mode-active:not(.before-start) #mainContent .flag-orb:has(.pl-club-flag) {
+  width: clamp(108px, 10vw, 136px);
+  height: clamp(82px, 7vw, 96px);
+}
+body.custom-match-mode-active:not(.before-start) #mainContent .hero-flag.pl-club-flag img {
+  padding: 0;
+  object-fit: contain;
+}
+@media (min-width: 701px) {
+  body.custom-match-mode-active:not(.before-start) .site-footer {
+    margin-top: clamp(96px, 12vh, 150px);
+    margin-bottom: clamp(42px, 6vh, 72px);
+  }
+}
 body.custom-match-mode-active #roundNav,
 body.custom-match-mode-active .golden-boot-panel,
 body.custom-match-mode-active #roundBoard {
@@ -45555,5 +45687,63 @@ body[data-desktop-mode-setup] .mode-select > .home-editorial {
   body.before-start:not([data-desktop-mode-setup]) .mode-grid > .mode-card.mode-card-retro {
     min-height: 162px !important;
     height: 162px;
+  }
+}
+
+/* Europa League menu preview sits above the general light/dark card guards. */
+body.before-start .mode-card-ucl.is-europa-preview {
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255, 109, 0, .32), transparent 31%),
+    linear-gradient(122deg, transparent 64%, rgba(255, 102, 0, .17) 64% 67%, transparent 67%),
+    linear-gradient(145deg, #17120f, #080908 72%) !important;
+}
+
+body.before-start .mode-card-ucl.is-europa-preview :is(
+  .ucl-landing-settings,
+  .mode-card-actions,
+  #uclInstallButton
+) {
+  display: none !important;
+}
+
+body.before-start .mode-card-ucl:not(.is-europa-preview) #europaInstallButton {
+  display: none !important;
+}
+
+body.before-start .mode-card-ucl.is-europa-preview #europaInstallButton {
+  display: inline-flex !important;
+}
+
+@media (min-width: 721px) {
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-ucl.is-europa-preview .europa-coming-soon > :not(.mode-coming-soon-button) {
+    display: none;
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-ucl .club-competition-switch {
+    grid-template-columns: repeat(2, 52px);
+    width: 110px;
+    gap: 2px;
+    margin: 6px 0 0;
+    padding: 2px;
+    border-radius: 5px;
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-ucl .club-competition-switch button {
+    min-height: 22px;
+    padding: 0 5px;
+    border-radius: 3px;
+    font-size: 8px;
+  }
+
+  body.before-start:not([data-desktop-mode-setup]) .mode-card-ucl.is-europa-preview .mode-coming-soon-button {
+    width: auto;
+    min-width: 84px;
+    min-height: 32px;
+    padding: 0 13px;
+    border-radius: 7px;
+    border-color: rgba(255, 118, 32, .54);
+    color: #fff;
+    background: #bc4b0d;
+    font-size: 11px;
   }
 }

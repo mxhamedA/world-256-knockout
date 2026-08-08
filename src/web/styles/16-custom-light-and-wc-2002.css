@@ -118,6 +118,20 @@
   background: transparent;
   box-shadow: none;
 }
+body.custom-match-mode-active:not(.before-start) #mainContent .flag-orb:has(.pl-club-flag) {
+  width: clamp(108px, 10vw, 136px);
+  height: clamp(82px, 7vw, 96px);
+}
+body.custom-match-mode-active:not(.before-start) #mainContent .hero-flag.pl-club-flag img {
+  padding: 0;
+  object-fit: contain;
+}
+@media (min-width: 701px) {
+  body.custom-match-mode-active:not(.before-start) .site-footer {
+    margin-top: clamp(96px, 12vh, 150px);
+    margin-bottom: clamp(42px, 6vh, 72px);
+  }
+}
 body.custom-match-mode-active #roundNav,
 body.custom-match-mode-active .golden-boot-panel,
 body.custom-match-mode-active #roundBoard {

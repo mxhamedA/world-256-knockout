@@ -143,10 +143,15 @@ els.uclInstallButton?.addEventListener("click", openUclAssetPack);
 els.uclAssetPackCloseButton?.addEventListener("click", () => els.uclAssetPackModal?.close());
 els.uclAssetPackCancelButton?.addEventListener("click", () => els.uclAssetPackModal?.close());
 els.uclAssetPackConfirmButton?.addEventListener("click", installUclAssetPack);
+els.europaInstallButton?.addEventListener("click", openEuropaAssetPack);
+els.europaAssetPackCloseButton?.addEventListener("click", () => els.europaAssetPackModal?.close());
+els.europaAssetPackCancelButton?.addEventListener("click", () => els.europaAssetPackModal?.close());
+els.europaAssetPackConfirmButton?.addEventListener("click", installEuropaAssetPack);
 window.addEventListener("accountstatechange", (event) => {
   const account = event.detail?.account || null;
   setPremierLeagueAssetAccount(account);
   setUclAssetAccount(account);
+  setEuropaAssetAccount(account);
   setCustomTeamAccount(account);
 });
 els.spectateSearch.addEventListener("input", (event) => renderSpectateList(event.target.value));

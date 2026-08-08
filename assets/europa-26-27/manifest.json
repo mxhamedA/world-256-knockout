@@ -1,0 +1,40 @@
+{
+  "id": "europa-26-27",
+  "name": "Europa League 26/27 Asset Pack",
+  "version": 1,
+  "season": "2026/27",
+  "competitionLogo": "../europa-league.png",
+  "source": {
+    "name": "UEFA team list, football-logos.cc and Kassiesa",
+    "url": "https://www.uefa.com/uefaeuropaleague/clubs/",
+    "usage": "Editorial and reference use. Club crests remain trademarks of their respective owners."
+  },
+  "teams": [
+    { "id": "az-alkmaar", "name": "AZ Alkmaar", "code": "AZ", "association": "NED", "status": "confirmed", "badge": "./badges/az-alkmaar.png" },
+    { "id": "bournemouth", "name": "Bournemouth", "code": "BOU", "association": "ENG", "status": "confirmed", "badge": "./badges/bournemouth.png" },
+    { "id": "celta", "name": "Celta", "code": "CEL", "association": "ESP", "status": "confirmed", "badge": "./badges/celta.png" },
+    { "id": "crystal-palace", "name": "Crystal Palace", "code": "CRY", "association": "ENG", "status": "confirmed", "badge": "./badges/crystal-palace.png" },
+    { "id": "hoffenheim", "name": "Hoffenheim", "code": "TSG", "association": "GER", "status": "confirmed", "badge": "./badges/hoffenheim.png" },
+    { "id": "juventus", "name": "Juventus", "code": "JUV", "association": "ITA", "status": "confirmed", "badge": "./badges/juventus.png" },
+    { "id": "bayer-leverkusen", "name": "Bayer Leverkusen", "code": "B04", "association": "GER", "status": "confirmed", "badge": "./badges/bayer-leverkusen.png" },
+    { "id": "marseille", "name": "Marseille", "code": "OM", "association": "FRA", "status": "confirmed", "badge": "./badges/marseille.png" },
+    { "id": "ac-milan", "name": "Milan", "code": "MIL", "association": "ITA", "status": "confirmed", "badge": "./badges/ac-milan.png" },
+    { "id": "real-sociedad", "name": "Real Sociedad", "code": "RSO", "association": "ESP", "status": "confirmed", "badge": "./badges/real-sociedad.png" },
+    { "id": "rennes", "name": "Rennes", "code": "REN", "association": "FRA", "status": "confirmed", "badge": "./badges/rennes.png" },
+    { "id": "sunderland", "name": "Sunderland", "code": "SUN", "association": "ENG", "status": "confirmed", "badge": "./badges/sunderland.png" },
+    { "id": "torreense", "name": "Torreense", "code": "TOR", "association": "POR", "status": "confirmed", "badge": "./badges/torreense.png" },
+    { "id": "iberia-tbilisi", "name": "FC Iberia 1999", "code": "IBE", "association": "GEO", "status": "provisional", "badge": "./badges/iberia-tbilisi.png" },
+    { "id": "besiktas", "name": "Besiktas", "code": "BJK", "association": "TUR", "status": "provisional", "badge": "./badges/besiktas.png" },
+    { "id": "omonia", "name": "Omonoia", "code": "OMO", "association": "CYP", "status": "provisional", "badge": "./badges/omonia.png" },
+    { "id": "gornik-zabrze", "name": "Gornik Zabrze", "code": "GOR", "association": "POL", "status": "provisional", "badge": "./badges/gornik-zabrze.png" },
+    { "id": "salzburg", "name": "Salzburg", "code": "SAL", "association": "AUT", "status": "provisional", "badge": "./badges/salzburg.png" },
+    { "id": "universitatea-craiova", "name": "Universitatea Craiova", "code": "UCV", "association": "ROU", "status": "provisional", "badge": "./badges/universitatea-craiova.png" },
+    { "id": "lech-poznan", "name": "Lech Poznan", "code": "LPO", "association": "POL", "status": "provisional", "badge": "./badges/lech-poznan.png" },
+    { "id": "fc-thun", "name": "FC Thun", "code": "THU", "association": "SUI", "status": "provisional", "badge": "./badges/fc-thun.png" },
+    { "id": "cska-sofia", "name": "CSKA Sofia", "code": "CSK", "association": "BUL", "status": "provisional", "badge": "./badges/cska-sofia.png" },
+    { "id": "anderlecht", "name": "Anderlecht", "code": "AND", "association": "BEL", "status": "provisional", "badge": "./badges/anderlecht.png" },
+    { "id": "rangers", "name": "Rangers", "code": "RAN", "association": "SCO", "status": "provisional", "badge": "./badges/rangers.png" },
+    { "id": "benfica", "name": "Benfica", "code": "BEN", "association": "POR", "status": "provisional", "badge": "./badges/benfica.png" },
+    { "id": "shamrock-rovers", "name": "Shamrock Rovers", "code": "SHR", "association": "IRL", "status": "provisional", "badge": "./badges/shamrock-rovers.png" }
+  ]
+}

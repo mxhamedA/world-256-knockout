@@ -94,7 +94,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./clean.css?v=custom-club-pool-1" />
+    <link rel="stylesheet" href="./clean.css?v=custom-match-spacing-1" />
     <link rel="stylesheet" href="./premier-league.css?v=pl-table-no-spoilers-1" />
     <link rel="stylesheet" href="./ucl-simulator.css?v=ucl-knockout-leg-history-1" />
     <link rel="stylesheet" href="./career.css?v=player-career-core-1" />
@@ -522,13 +522,20 @@
 
               <article class="mode-card mode-card-ucl" id="uclModeCard">
                 <div class="mode-card-copy ucl-mode-heading">
-                  <img class="ucl-mode-logo" src="./assets/ucl-starball-white.png" alt="" />
+                  <img class="ucl-mode-logo" id="clubCompetitionLogo" src="./assets/ucl-starball-white.png" alt="" />
                   <div>
-                    <h3>UCL simulator</h3>
+                    <h3 id="clubCompetitionTitle">UCL simulator</h3>
+                    <div class="club-competition-switch" id="clubCompetitionSwitch" role="group" aria-label="European club competition">
+                      <button class="active" type="button" data-club-competition="ucl" aria-pressed="true">UCL</button>
+                      <button type="button" data-club-competition="europa" aria-pressed="false">Europa</button>
+                    </div>
                     <button class="ucl-install-button" id="uclInstallButton" type="button" aria-haspopup="dialog">
                       Install assets
                     </button>
-                    <p>Take on the league phase and fight through the knockouts for Europe&rsquo;s biggest trophy.</p>
+                    <button class="ucl-install-button europa-install-button" id="europaInstallButton" type="button" aria-haspopup="dialog" hidden>
+                      Install assets
+                    </button>
+                    <p id="clubCompetitionDescription">Take on the league phase and fight through the knockouts for Europe&rsquo;s biggest trophy.</p>
                   </div>
                 </div>
                 <div class="landing-settings ucl-landing-settings" id="uclLandingSettings" aria-label="UCL simulator settings">
@@ -551,6 +558,9 @@
                   <button class="premier-league-menu-restart" id="restartUclSimulatorButton" type="button" hidden>
                     Restart
                   </button>
+                </div>
+                <div class="europa-coming-soon" id="europaComingSoon" hidden>
+                  <button class="mode-coming-soon-button" type="button" disabled>Coming soon</button>
                 </div>
               </article>
 
@@ -1859,6 +1869,31 @@
           <button class="primary-button" id="uclAssetPackConfirmButton" type="button">Install asset pack</button>
         </div>
         <small class="pl-asset-pack-credit">Club marks belong to their respective owners.</small>
+      </div>
+    </dialog>
+
+    <dialog class="modal pl-asset-pack-modal ucl-asset-pack-modal europa-asset-pack-modal" id="europaAssetPackModal" aria-labelledby="europaAssetPackTitle">
+      <div class="pl-asset-pack-shell">
+        <div class="modal-head">
+          <div>
+            <h2 id="europaAssetPackTitle">Europa League 26/27 Asset Pack</h2>
+          </div>
+          <button class="icon-button close-modal" id="europaAssetPackCloseButton" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="pl-asset-pack-intro europa-asset-pack-intro">
+          <img src="./assets/europa-league.png" alt="" />
+          <div>
+            <strong>Bring Thursday nights to life</strong>
+            <p>Add crests for 13 confirmed league-phase clubs and the 13 current qualifier favourites. Installation is saved to your account.</p>
+          </div>
+        </div>
+        <div class="pl-asset-pack-badges" id="europaAssetPackBadgeGrid" aria-label="26 club crests"></div>
+        <p class="pl-asset-pack-status" id="europaAssetPackStatus" role="status" aria-live="polite"></p>
+        <div class="pl-asset-pack-actions">
+          <button class="text-button" id="europaAssetPackCancelButton" type="button">Not now</button>
+          <button class="primary-button" id="europaAssetPackConfirmButton" type="button">Install asset pack</button>
+        </div>
+        <small class="pl-asset-pack-credit">Qualifier favourites are provisional. Club marks belong to their respective owners.</small>
       </div>
     </dialog>
 

@@ -1073,7 +1073,7 @@ const RETRO_MANAGER_FORMATIONS = Object.freeze([
   "5-2-2-1",
   "5-2-3",
 ]);
-const RETRO_LINEUP_SLOT_ORDER_VERSION = 10;
+const RETRO_LINEUP_SLOT_ORDER_VERSION = 11;
 const RETRO_MANAGER_SLOT_POSITIONS = Object.freeze({
   "4-3-3": Object.freeze(["GK", "LB", "CB", "CB", "RB", "LCM", "CM", "RCM", "LW", "ST", "RW"]),
   "4-2-3-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "LW", "CAM", "RW", "ST"]),
@@ -1461,8 +1461,13 @@ function sharedLineupDefaultForTeam(team) {
   if (state?.premierLeagueSeason) {
     const squad = retroManagerSquadForTeam(team);
     if (!squad?.players?.length) return null;
+    const savedManagerLineup = state.managerLineups?.[team.id];
     const requestedFormation = sharedLineupManagedTeamMatches(team)
-      ? state.managerLineups?.[team.id]?.formation || state.standardFormation
+      ? savedManagerLineup?.slotOrderVersion === RETRO_LINEUP_SLOT_ORDER_VERSION
+        ? savedManagerLineup.formation
+        : savedManagerLineup
+          ? team.preferredFormation || state.standardFormation
+          : state.standardFormation
       : team.selectedFormation || team.preferredFormation;
     const formation = standardFormationKey(requestedFormation || squad.formation || "4-3-3");
     const unavailable = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
@@ -1534,16 +1539,20 @@ function retroManagerLineupForTeam(team) {
     if (!squad?.players?.length) return null;
     state.managerLineups ||= {};
     const saved = state.managerLineups[team.id] || {};
-    const formation = RETRO_MANAGER_FORMATIONS.includes(saved.formation)
+    const savedLineupIsCurrent = saved.slotOrderVersion === RETRO_LINEUP_SLOT_ORDER_VERSION;
+    const formation = savedLineupIsCurrent && RETRO_MANAGER_FORMATIONS.includes(saved.formation)
       ? saved.formation
-      : standardFormationKey(state.standardFormation || squad.formation);
+      : standardFormationKey(team.preferredFormation || state.standardFormation || squad.formation);
     const unavailableNames = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
     const availablePlayers = squad.players.filter((player) => !unavailableNames.has(player.name));
     const validNumbers = new Set(availablePlayers.map((player) => player.number));
     const savedStarters = Array.isArray(saved.starters) ? saved.starters : [];
     const defaultLineup = sharedLineupDefaultForTeam(team);
     const defaultStarters = defaultLineup?.players.map((player) => player.number) || [];
-    let preferredStarters = savedStarters.length === 11 && new Set(savedStarters).size === 11
+    const savedStartersAreCurrent = savedLineupIsCurrent
+      && savedStarters.length === 11
+      && new Set(savedStarters).size === 11;
+    let preferredStarters = savedStartersAreCurrent
       ? savedStarters
       : defaultStarters;
     if (saved.slotOrderVersion !== RETRO_LINEUP_SLOT_ORDER_VERSION) {

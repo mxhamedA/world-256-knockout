@@ -62,6 +62,7 @@ const TOURNAMENT_HISTORY_LIMIT = 50;
 
 const PREMIER_LEAGUE_ASSET_PACK_ID = "pl-26-27";
 const UCL_ASSET_PACK_ID = "ucl-26-27";
+const EUROPA_ASSET_PACK_ID = "europa-26-27";
 const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
   { id: "arsenal", name: "Arsenal", code: "ARS", badge: "./assets/pl-26-27/badges/arsenal.webp" },
   { id: "aston-villa", name: "Aston Villa", code: "AVL", badge: "./assets/pl-26-27/badges/aston-villa.webp" },
@@ -149,6 +150,42 @@ const UCL_2026_27_QUALIFIED_TEAMS = Object.freeze([
   association,
   code,
   badge: UCL_2026_27_BADGE_PATHS[id],
+})));
+
+const EUROPA_2026_27_ASSET_TEAMS = Object.freeze([
+  ["az-alkmaar", "AZ Alkmaar", "NED", "AZ", "confirmed"],
+  ["bournemouth", "Bournemouth", "ENG", "BOU", "confirmed"],
+  ["celta", "Celta", "ESP", "CEL", "confirmed"],
+  ["crystal-palace", "Crystal Palace", "ENG", "CRY", "confirmed"],
+  ["hoffenheim", "Hoffenheim", "GER", "TSG", "confirmed"],
+  ["juventus", "Juventus", "ITA", "JUV", "confirmed"],
+  ["bayer-leverkusen", "Bayer Leverkusen", "GER", "B04", "confirmed"],
+  ["marseille", "Marseille", "FRA", "OM", "confirmed"],
+  ["ac-milan", "Milan", "ITA", "MIL", "confirmed"],
+  ["real-sociedad", "Real Sociedad", "ESP", "RSO", "confirmed"],
+  ["rennes", "Rennes", "FRA", "REN", "confirmed"],
+  ["sunderland", "Sunderland", "ENG", "SUN", "confirmed"],
+  ["torreense", "Torreense", "POR", "TOR", "confirmed"],
+  ["iberia-tbilisi", "FC Iberia 1999", "GEO", "IBE", "provisional"],
+  ["besiktas", "Besiktas", "TUR", "BJK", "provisional"],
+  ["omonia", "Omonoia", "CYP", "OMO", "provisional"],
+  ["gornik-zabrze", "Gornik Zabrze", "POL", "GOR", "provisional"],
+  ["salzburg", "Salzburg", "AUT", "SAL", "provisional"],
+  ["universitatea-craiova", "Universitatea Craiova", "ROU", "UCV", "provisional"],
+  ["lech-poznan", "Lech Poznan", "POL", "LPO", "provisional"],
+  ["fc-thun", "FC Thun", "SUI", "THU", "provisional"],
+  ["cska-sofia", "CSKA Sofia", "BUL", "CSK", "provisional"],
+  ["anderlecht", "Anderlecht", "BEL", "AND", "provisional"],
+  ["rangers", "Rangers", "SCO", "RAN", "provisional"],
+  ["benfica", "Benfica", "POR", "BEN", "provisional"],
+  ["shamrock-rovers", "Shamrock Rovers", "IRL", "SHR", "provisional"],
+].map(([id, name, association, code, status]) => Object.freeze({
+  id,
+  name,
+  association,
+  code,
+  status,
+  badge: `./assets/europa-26-27/badges/${id}.png`,
 })));
 
 const RETRO_WORLD_CUP_PATHS = Object.freeze({
@@ -674,12 +711,19 @@ const els = {
   plAssetPackBadgeGrid: $("#plAssetPackBadgeGrid"),
   plAssetPackStatus: $("#plAssetPackStatus"),
   uclInstallButton: $("#uclInstallButton"),
+  europaInstallButton: $("#europaInstallButton"),
   uclAssetPackModal: $("#uclAssetPackModal"),
   uclAssetPackCloseButton: $("#uclAssetPackCloseButton"),
   uclAssetPackCancelButton: $("#uclAssetPackCancelButton"),
   uclAssetPackConfirmButton: $("#uclAssetPackConfirmButton"),
   uclAssetPackBadgeGrid: $("#uclAssetPackBadgeGrid"),
   uclAssetPackStatus: $("#uclAssetPackStatus"),
+  europaAssetPackModal: $("#europaAssetPackModal"),
+  europaAssetPackCloseButton: $("#europaAssetPackCloseButton"),
+  europaAssetPackCancelButton: $("#europaAssetPackCancelButton"),
+  europaAssetPackConfirmButton: $("#europaAssetPackConfirmButton"),
+  europaAssetPackBadgeGrid: $("#europaAssetPackBadgeGrid"),
+  europaAssetPackStatus: $("#europaAssetPackStatus"),
   startRetroWorldCupButton: $("#startRetroWorldCupButton"),
   restartRetroWorldCupButton: $("#restartRetroWorldCupButton"),
   retroWorldCupScreen: $("#retroWorldCupScreen"),
@@ -2057,6 +2101,9 @@ let premierLeagueAssetInstallBusy = false;
 let uclAssetAccount = undefined;
 let uclAssetsInstalled = false;
 let uclAssetInstallBusy = false;
+let europaAssetAccount = undefined;
+let europaAssetsInstalled = false;
+let europaAssetInstallBusy = false;
 let retroTournament = readRetroTournamentState();
 
 function desktopModeSetupEnabled() {
@@ -7631,6 +7678,110 @@ async function installUclAssetPack() {
   } finally {
     uclAssetInstallBusy = false;
     renderUclAssetState();
+  }
+}
+
+function accountHasEuropaAssets(account) {
+  return Array.isArray(account?.assetPacks) && account.assetPacks.includes(EUROPA_ASSET_PACK_ID);
+}
+
+function europaClubBadgeMarkup(team) {
+  return `<img class="ucl-club-badge" src="${team.badge}" alt="" loading="lazy" decoding="async" />`;
+}
+
+function renderEuropaAssetPackPreview() {
+  if (!els.europaAssetPackBadgeGrid) return;
+  els.europaAssetPackBadgeGrid.innerHTML = EUROPA_2026_27_ASSET_TEAMS.map((team) => `
+    <span class="pl-asset-pack-badge ${team.status === "provisional" ? "is-provisional" : ""}" title="${escapeHtml(team.name)} · ${team.status === "provisional" ? "Qualifier favourite" : "Confirmed league phase"}">
+      ${europaClubBadgeMarkup(team)}
+    </span>
+  `).join("");
+}
+
+function renderEuropaAssetState() {
+  europaAssetsInstalled = accountHasEuropaAssets(europaAssetAccount);
+  if (els.europaInstallButton) {
+    els.europaInstallButton.textContent = europaAssetsInstalled ? "Assets installed" : "Install assets";
+    els.europaInstallButton.classList.toggle("is-installed", europaAssetsInstalled);
+    els.europaInstallButton.setAttribute("aria-pressed", String(europaAssetsInstalled));
+  }
+  if (els.europaAssetPackConfirmButton) {
+    els.europaAssetPackConfirmButton.disabled = europaAssetInstallBusy || europaAssetsInstalled;
+    els.europaAssetPackConfirmButton.textContent = europaAssetsInstalled
+      ? "Installed"
+      : europaAssetAccount
+        ? "Install asset pack"
+        : "Log in to install";
+  }
+}
+
+function setEuropaAssetAccount(account) {
+  europaAssetAccount = account || null;
+  renderEuropaAssetState();
+}
+
+function openEuropaAssetPack() {
+  renderEuropaAssetPackPreview();
+  if (els.europaAssetPackStatus) {
+    els.europaAssetPackStatus.textContent = europaAssetsInstalled
+      ? "This asset pack is installed on your account."
+      : europaAssetAccount
+        ? `Ready to install for ${europaAssetAccount.username}.`
+        : "Log in to save this asset pack to your account.";
+    els.europaAssetPackStatus.classList.toggle("is-success", europaAssetsInstalled);
+    els.europaAssetPackStatus.classList.remove("is-error");
+  }
+  renderEuropaAssetState();
+  if (!els.europaAssetPackModal?.open) els.europaAssetPackModal?.showModal();
+}
+
+async function installEuropaAssetPack() {
+  if (europaAssetInstallBusy || europaAssetsInstalled) return;
+  if (!europaAssetAccount) {
+    els.europaAssetPackModal?.close();
+    document.querySelector("#mainAccountButton")?.click();
+    showToast("Log in, then install the Europa League 26/27 Asset Pack.");
+    return;
+  }
+  europaAssetInstallBusy = true;
+  renderEuropaAssetState();
+  if (els.europaAssetPackStatus) {
+    els.europaAssetPackStatus.textContent = `Installing ${EUROPA_2026_27_ASSET_TEAMS.length} club crests...`;
+    els.europaAssetPackStatus.classList.remove("is-error", "is-success");
+  }
+  try {
+    const response = await fetch(`/api/challenge/assets/${EUROPA_ASSET_PACK_ID}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || "The asset pack could not be installed.");
+      error.status = response.status;
+      throw error;
+    }
+    setEuropaAssetAccount(payload.account || {
+      ...europaAssetAccount,
+      assetPacks: [...new Set([...(europaAssetAccount.assetPacks || []), EUROPA_ASSET_PACK_ID])],
+    });
+    if (els.europaAssetPackStatus) {
+      els.europaAssetPackStatus.textContent = `Installed. All ${EUROPA_2026_27_ASSET_TEAMS.length} Europa club crests are now active.`;
+      els.europaAssetPackStatus.classList.add("is-success");
+    }
+    showToast("Europa League 26/27 Asset Pack installed.");
+  } catch (error) {
+    if (error.status === 401) europaAssetAccount = null;
+    if (els.europaAssetPackStatus) {
+      els.europaAssetPackStatus.textContent = error.status === 401
+        ? "Your session expired. Log in again to install this pack."
+        : error.message;
+      els.europaAssetPackStatus.classList.add("is-error");
+    }
+  } finally {
+    europaAssetInstallBusy = false;
+    renderEuropaAssetState();
   }
 }
 
@@ -22008,7 +22159,7 @@ const RETRO_MANAGER_FORMATIONS = Object.freeze([
   "5-2-2-1",
   "5-2-3",
 ]);
-const RETRO_LINEUP_SLOT_ORDER_VERSION = 10;
+const RETRO_LINEUP_SLOT_ORDER_VERSION = 11;
 const RETRO_MANAGER_SLOT_POSITIONS = Object.freeze({
   "4-3-3": Object.freeze(["GK", "LB", "CB", "CB", "RB", "LCM", "CM", "RCM", "LW", "ST", "RW"]),
   "4-2-3-1": Object.freeze(["GK", "LB", "CB", "CB", "RB", "CDM", "CDM", "LW", "CAM", "RW", "ST"]),
@@ -22396,8 +22547,13 @@ function sharedLineupDefaultForTeam(team) {
   if (state?.premierLeagueSeason) {
     const squad = retroManagerSquadForTeam(team);
     if (!squad?.players?.length) return null;
+    const savedManagerLineup = state.managerLineups?.[team.id];
     const requestedFormation = sharedLineupManagedTeamMatches(team)
-      ? state.managerLineups?.[team.id]?.formation || state.standardFormation
+      ? savedManagerLineup?.slotOrderVersion === RETRO_LINEUP_SLOT_ORDER_VERSION
+        ? savedManagerLineup.formation
+        : savedManagerLineup
+          ? team.preferredFormation || state.standardFormation
+          : state.standardFormation
       : team.selectedFormation || team.preferredFormation;
     const formation = standardFormationKey(requestedFormation || squad.formation || "4-3-3");
     const unavailable = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
@@ -22469,16 +22625,20 @@ function retroManagerLineupForTeam(team) {
     if (!squad?.players?.length) return null;
     state.managerLineups ||= {};
     const saved = state.managerLineups[team.id] || {};
-    const formation = RETRO_MANAGER_FORMATIONS.includes(saved.formation)
+    const savedLineupIsCurrent = saved.slotOrderVersion === RETRO_LINEUP_SLOT_ORDER_VERSION;
+    const formation = savedLineupIsCurrent && RETRO_MANAGER_FORMATIONS.includes(saved.formation)
       ? saved.formation
-      : standardFormationKey(state.standardFormation || squad.formation);
+      : standardFormationKey(team.preferredFormation || state.standardFormation || squad.formation);
     const unavailableNames = new Set(unavailablePlayersForTeam(team.id, state.activeRound));
     const availablePlayers = squad.players.filter((player) => !unavailableNames.has(player.name));
     const validNumbers = new Set(availablePlayers.map((player) => player.number));
     const savedStarters = Array.isArray(saved.starters) ? saved.starters : [];
     const defaultLineup = sharedLineupDefaultForTeam(team);
     const defaultStarters = defaultLineup?.players.map((player) => player.number) || [];
-    let preferredStarters = savedStarters.length === 11 && new Set(savedStarters).size === 11
+    const savedStartersAreCurrent = savedLineupIsCurrent
+      && savedStarters.length === 11
+      && new Set(savedStarters).size === 11;
+    let preferredStarters = savedStartersAreCurrent
       ? savedStarters
       : defaultStarters;
     if (saved.slotOrderVersion !== RETRO_LINEUP_SLOT_ORDER_VERSION) {
@@ -24380,10 +24540,15 @@ els.uclInstallButton?.addEventListener("click", openUclAssetPack);
 els.uclAssetPackCloseButton?.addEventListener("click", () => els.uclAssetPackModal?.close());
 els.uclAssetPackCancelButton?.addEventListener("click", () => els.uclAssetPackModal?.close());
 els.uclAssetPackConfirmButton?.addEventListener("click", installUclAssetPack);
+els.europaInstallButton?.addEventListener("click", openEuropaAssetPack);
+els.europaAssetPackCloseButton?.addEventListener("click", () => els.europaAssetPackModal?.close());
+els.europaAssetPackCancelButton?.addEventListener("click", () => els.europaAssetPackModal?.close());
+els.europaAssetPackConfirmButton?.addEventListener("click", installEuropaAssetPack);
 window.addEventListener("accountstatechange", (event) => {
   const account = event.detail?.account || null;
   setPremierLeagueAssetAccount(account);
   setUclAssetAccount(account);
+  setEuropaAssetAccount(account);
   setCustomTeamAccount(account);
 });
 els.spectateSearch.addEventListener("input", (event) => renderSpectateList(event.target.value));
@@ -25163,6 +25328,42 @@ els.restartCustomMatchButton?.addEventListener("click", () => {
   render();
 });
 
+const clubCompetitionCard = document.querySelector("#uclModeCard");
+const clubCompetitionTitle = document.querySelector("#clubCompetitionTitle");
+const clubCompetitionLogo = document.querySelector("#clubCompetitionLogo");
+const clubCompetitionDescription = document.querySelector("#clubCompetitionDescription");
+const clubCompetitionSwitch = document.querySelector("#clubCompetitionSwitch");
+const europaComingSoon = document.querySelector("#europaComingSoon");
+
+function setClubCompetitionPreview(competition) {
+  const isEuropa = competition === "europa";
+  clubCompetitionCard?.classList.toggle("is-europa-preview", isEuropa);
+  if (clubCompetitionCard) clubCompetitionCard.dataset.clubCompetition = isEuropa ? "europa" : "ucl";
+  if (clubCompetitionTitle) clubCompetitionTitle.textContent = isEuropa ? "Europa simulator" : "UCL simulator";
+  if (clubCompetitionLogo) clubCompetitionLogo.src = isEuropa ? "./assets/europa-league.png" : "./assets/ucl-starball-white.png";
+  if (clubCompetitionDescription) {
+    clubCompetitionDescription.textContent = isEuropa
+      ? "European nights, knockout drama and a new trophy to chase."
+      : "Take on the league phase and fight through the knockouts for Europe’s biggest trophy.";
+  }
+  if (els.uclInstallButton) els.uclInstallButton.hidden = isEuropa;
+  if (els.europaInstallButton) els.europaInstallButton.hidden = !isEuropa;
+  if (els.uclLandingSettings) els.uclLandingSettings.hidden = isEuropa;
+  if (els.uclModeActions) els.uclModeActions.hidden = isEuropa;
+  if (europaComingSoon) europaComingSoon.hidden = !isEuropa;
+  clubCompetitionSwitch?.querySelectorAll("[data-club-competition]").forEach((button) => {
+    const active = button.dataset.clubCompetition === (isEuropa ? "europa" : "ucl");
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+clubCompetitionSwitch?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-club-competition]");
+  if (!button) return;
+  setClubCompetitionPreview(button.dataset.clubCompetition);
+});
+
 els.customTournamentBackButton?.addEventListener("click", () => {
   stopStandardPlaybackForNavigation();
   setAppModeUrl("home");
@@ -25481,7 +25682,7 @@ function setupMobileModeCards() {
     ["mode-card-retro", "World Cups, Euros & Copa"],
     ["mode-card-premier-league", "League season"],
     ["mode-card-default", "256-team knockout"],
-    ["mode-card-ucl", "League phase & knockouts"],
+    ["mode-card-ucl", "UCL & Europa League"],
     ["mode-card-custom", "Build your own"],
     ["mode-card-legacy", "Classic squads"],
     ["mode-card-online", "Private multiplayer"],
@@ -25505,11 +25706,13 @@ function setupMobileModeCards() {
       : card.classList.contains("mode-card-premier-league")
         ? "./assets/prem-logo.webp"
         : card.classList.contains("mode-card-ucl")
-          ? "./assets/ucl-starball-white.png"
+          ? card.querySelector("#clubCompetitionLogo")?.getAttribute("src") || "./assets/ucl-starball-white.png"
           : card.classList.contains("mode-card-default")
             ? "./assets/256-teams-icon.svg"
             : null;
-    const description = /resume/i.test(primaryAction?.textContent || "")
+    const description = card.classList.contains("is-europa-preview")
+      ? "Coming soon · UEFA Europa League"
+      : /resume/i.test(primaryAction?.textContent || "")
       ? `Resume available · ${baseDescription}`
       : baseDescription;
     if (titleNode.textContent !== title) titleNode.textContent = title;

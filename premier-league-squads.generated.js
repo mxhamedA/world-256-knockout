@@ -1,6 +1,6 @@
 // Generated from the official Fantasy Premier League bootstrap feed.
 // Run: npm run generate:pl-squads
-const PREMIER_LEAGUE_2026_27_SQUADS_UPDATED = "29 July 2026";
+const PREMIER_LEAGUE_2026_27_SQUADS_UPDATED = "8 August 2026";
 const PREMIER_LEAGUE_2026_27_SQUAD_SOURCE = "https://fantasy.premierleague.com/api/bootstrap-static/";
 const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
   "arsenal": [
@@ -27,7 +27,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
     },
     {
       "fplId": 4,
-      "name": "Gabriel Magalhães",
+      "name": "Gabriel dos Santos Magalhães",
       "displayName": "Gabriel",
       "position": "CB",
       "overall": 85
@@ -40,18 +40,18 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 76
     },
     {
-      "fplId": 11,
-      "name": "Cristhian Mosquera",
-      "displayName": "Mosquera",
-      "position": "CB",
-      "overall": 74
-    },
-    {
       "fplId": 6,
       "name": "William Saliba",
       "displayName": "Saliba",
       "position": "CB",
       "overall": 74
+    },
+    {
+      "fplId": 11,
+      "name": "Cristhian Mosquera",
+      "displayName": "Mosquera",
+      "position": "CB",
+      "overall": 73
     },
     {
       "fplId": 8,
@@ -171,13 +171,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "displayName": "Nelson",
       "position": "CM",
       "overall": 72
-    },
-    {
-      "fplId": 21,
-      "name": "Christian Nørgaard",
-      "displayName": "Nørgaard",
-      "position": "CM",
-      "overall": 70
     },
     {
       "fplId": 25,
@@ -375,7 +368,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Bradley Burrowes",
       "displayName": "Burrowes",
       "position": "CM",
-      "overall": 68
+      "overall": 67
     },
     {
       "fplId": 51,
@@ -436,6 +429,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 72
     },
     {
+      "fplId": 566,
+      "name": "António João Pereira de Albuquerque Tavares da Silva",
+      "displayName": "Silva",
+      "position": "CB",
+      "overall": 70
+    },
+    {
       "fplId": 62,
       "name": "Bafodé Diakité",
       "displayName": "Diakité",
@@ -453,6 +453,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "fplId": 64,
       "name": "Adam Smith",
       "displayName": "Smith",
+      "position": "CB",
+      "overall": 67
+    },
+    {
+      "fplId": 573,
+      "name": "Juanlu Sánchez",
+      "displayName": "Sanchez",
       "position": "CB",
       "overall": 67
     },
@@ -475,7 +482,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Junior Kroupi",
       "displayName": "Kroupi.Jr",
       "position": "CM",
-      "overall": 82
+      "overall": 81
     },
     {
       "fplId": 67,
@@ -606,6 +613,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 70
     },
     {
+      "fplId": 87,
+      "name": "Kristoffer Ajer",
+      "displayName": "Ajer",
+      "position": "CB",
+      "overall": 68
+    },
+    {
       "fplId": 88,
       "name": "Michael Kayode",
       "displayName": "Kayode",
@@ -637,13 +651,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "fplId": 92,
       "name": "Kim Ji-soo",
       "displayName": "Ji-soo",
-      "position": "CB",
-      "overall": 67
-    },
-    {
-      "fplId": 87,
-      "name": "Kristoffer Ajer",
-      "displayName": "Ajer",
       "position": "CB",
       "overall": 67
     },
@@ -683,6 +690,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 72
     },
     {
+      "fplId": 565,
+      "name": "Mamadou Sangaré",
+      "displayName": "Sangaré",
+      "position": "CM",
+      "overall": 72
+    },
+    {
       "fplId": 97,
       "name": "Mathias Jensen",
       "displayName": "Jensen",
@@ -707,13 +721,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "fplId": 100,
       "name": "Fábio Freitas Gouveia Carvalho",
       "displayName": "Carvalho",
-      "position": "CM",
-      "overall": 70
-    },
-    {
-      "fplId": 101,
-      "name": "Jordan Henderson",
-      "displayName": "Henderson",
       "position": "CM",
       "overall": 70
     },
@@ -767,13 +774,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "displayName": "Verbruggen",
       "position": "GK",
       "overall": 69
-    },
-    {
-      "fplId": 110,
-      "name": "Carl Rushworth",
-      "displayName": "Rushworth",
-      "position": "GK",
-      "overall": 67
     },
     {
       "fplId": 111,
@@ -881,16 +881,16 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 74
     },
     {
-      "fplId": 126,
-      "name": "Matt O'Riley",
-      "displayName": "O'Riley",
-      "position": "CM",
-      "overall": 72
-    },
-    {
       "fplId": 124,
       "name": "Pascal Groß",
       "displayName": "Groß",
+      "position": "CM",
+      "overall": 73
+    },
+    {
+      "fplId": 126,
+      "name": "Matt O'Riley",
+      "displayName": "O'Riley",
       "position": "CM",
       "overall": 72
     },
@@ -951,13 +951,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 67
     },
     {
-      "fplId": 136,
-      "name": "Danny Welbeck",
-      "displayName": "Welbeck",
-      "position": "ST",
-      "overall": 74
-    },
-    {
       "fplId": 138,
       "name": "Charalampos Kostoulas",
       "displayName": "Kostoulas",
@@ -1007,6 +1000,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "displayName": "Penders",
       "position": "GK",
       "overall": 67
+    },
+    {
+      "fplId": 200,
+      "name": "Maxence Lacroix",
+      "displayName": "Lacroix",
+      "position": "CB",
+      "overall": 75
     },
     {
       "fplId": 142,
@@ -1156,6 +1156,20 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 72
     },
     {
+      "fplId": 568,
+      "name": "Valentín Barco",
+      "displayName": "Barco",
+      "position": "CM",
+      "overall": 72
+    },
+    {
+      "fplId": 101,
+      "name": "Jordan Henderson",
+      "displayName": "Henderson",
+      "position": "CM",
+      "overall": 70
+    },
+    {
       "fplId": 161,
       "name": "Roméo Lavia",
       "displayName": "Lavia",
@@ -1182,6 +1196,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "displayName": "N.Jackson",
       "position": "ST",
       "overall": 76
+    },
+    {
+      "fplId": 136,
+      "name": "Danny Welbeck",
+      "displayName": "Welbeck",
+      "position": "ST",
+      "overall": 74
     },
     {
       "fplId": 167,
@@ -1221,11 +1242,18 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 67
     },
     {
+      "fplId": 110,
+      "name": "Carl Rushworth",
+      "displayName": "Rushworth",
+      "position": "GK",
+      "overall": 67
+    },
+    {
       "fplId": 171,
       "name": "Oliver Dovin",
       "displayName": "Dovin",
       "position": "GK",
-      "overall": 66
+      "overall": 65
     },
     {
       "fplId": 175,
@@ -1407,7 +1435,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Norman Bassette",
       "displayName": "Bassette",
       "position": "ST",
-      "overall": 68
+      "overall": 67
     }
   ],
   "crystal-palace": [
@@ -1431,13 +1459,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "displayName": "Matthews",
       "position": "GK",
       "overall": 65
-    },
-    {
-      "fplId": 200,
-      "name": "Maxence Lacroix",
-      "displayName": "Lacroix",
-      "position": "CB",
-      "overall": 75
     },
     {
       "fplId": 201,
@@ -1577,7 +1598,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Will Hughes",
       "displayName": "Hughes",
       "position": "CM",
-      "overall": 68
+      "overall": 69
     },
     {
       "fplId": 221,
@@ -1743,6 +1764,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 70
     },
     {
+      "fplId": 21,
+      "name": "Christian Nørgaard",
+      "displayName": "Nørgaard",
+      "position": "CM",
+      "overall": 70
+    },
+    {
       "fplId": 244,
       "name": "Harrison Armstrong",
       "displayName": "Armstrong",
@@ -1857,6 +1885,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 72
     },
     {
+      "fplId": 570,
+      "name": "César Palacios",
+      "displayName": "Palacios",
+      "position": "CM",
+      "overall": 72
+    },
+    {
       "fplId": 262,
       "name": "Emile Smith Rowe",
       "displayName": "Smith Rowe",
@@ -1913,6 +1948,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 68
     },
     {
+      "fplId": 569,
+      "name": "Gonzalo García",
+      "displayName": "García",
+      "position": "ST",
+      "overall": 74
+    },
+    {
       "fplId": 271,
       "name": "Rodrigo Muniz Carvalho",
       "displayName": "Muniz",
@@ -1934,6 +1976,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "displayName": "Butland",
       "position": "GK",
       "overall": 68
+    },
+    {
+      "fplId": 572,
+      "name": "Konstantinos Tzolakis",
+      "displayName": "Tzolakis",
+      "position": "GK",
+      "overall": 67
     },
     {
       "fplId": 273,
@@ -2129,7 +2178,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Mason Burstow",
       "displayName": "Burstow",
       "position": "ST",
-      "overall": 68
+      "overall": 67
     }
   ],
   "ipswich-town": [
@@ -2267,6 +2316,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 70
     },
     {
+      "fplId": 571,
+      "name": "Florentino Ibrain Morris Luís",
+      "displayName": "Florentino",
+      "position": "CM",
+      "overall": 70
+    },
+    {
       "fplId": 309,
       "name": "Marcelino Núñez",
       "displayName": "Núñez",
@@ -2338,6 +2394,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
     }
   ],
   "leeds-united": [
+    {
+      "fplId": 385,
+      "name": "James Trafford",
+      "displayName": "Trafford",
+      "position": "GK",
+      "overall": 70
+    },
     {
       "fplId": 326,
       "name": "Lucas Estella Perri",
@@ -2756,13 +2819,6 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 73
     },
     {
-      "fplId": 385,
-      "name": "James Trafford",
-      "displayName": "Trafford",
-      "position": "GK",
-      "overall": 70
-    },
-    {
       "fplId": 386,
       "name": "Marcus Bettinelli",
       "displayName": "Bettinelli",
@@ -2774,7 +2830,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Nico O'Reilly",
       "displayName": "O'Reilly",
       "position": "CB",
-      "overall": 79
+      "overall": 78
     },
     {
       "fplId": 388,
@@ -2788,7 +2844,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Matheus Nunes",
       "displayName": "Matheus N.",
       "position": "CB",
-      "overall": 75
+      "overall": 74
     },
     {
       "fplId": 391,
@@ -2883,7 +2939,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
     },
     {
       "fplId": 402,
-      "name": "Rodri",
+      "name": "Rodrigo 'Rodri' Hernandez Cascante",
       "displayName": "Rodrigo",
       "position": "CM",
       "overall": 76
@@ -3060,7 +3116,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
     },
     {
       "fplId": 426,
-      "name": "Bruno Fernandes",
+      "name": "Bruno Borges Fernandes",
       "displayName": "B.Fernandes",
       "position": "CM",
       "overall": 94
@@ -3070,7 +3126,7 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "name": "Bryan Mbeumo",
       "displayName": "Mbeumo",
       "position": "CM",
-      "overall": 84
+      "overall": 85
     },
     {
       "fplId": 428,
@@ -3193,6 +3249,13 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
     }
   ],
   "newcastle-united": [
+    {
+      "fplId": 567,
+      "name": "Lukás Hornícek",
+      "displayName": "Horníček",
+      "position": "GK",
+      "overall": 70
+    },
     {
       "fplId": 442,
       "name": "Nick Pope",
@@ -3532,16 +3595,16 @@ const PREMIER_LEAGUE_2026_27_CURRENT_SQUADS = Object.freeze({
       "overall": 68
     },
     {
-      "fplId": 490,
-      "name": "Chris Wood",
-      "displayName": "Wood",
-      "position": "ST",
-      "overall": 74
-    },
-    {
       "fplId": 491,
       "name": "Igor Jesus Maciel da Cruz",
       "displayName": "Igor Jesus",
+      "position": "ST",
+      "overall": 75
+    },
+    {
+      "fplId": 490,
+      "name": "Chris Wood",
+      "displayName": "Wood",
       "position": "ST",
       "overall": 74
     },

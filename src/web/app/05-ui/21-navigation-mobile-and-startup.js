@@ -78,7 +78,7 @@ function setupMobileModeCards() {
     ["mode-card-retro", "World Cups, Euros & Copa"],
     ["mode-card-premier-league", "League season"],
     ["mode-card-default", "256-team knockout"],
-    ["mode-card-ucl", "League phase & knockouts"],
+    ["mode-card-ucl", "UCL & Europa League"],
     ["mode-card-custom", "Build your own"],
     ["mode-card-legacy", "Classic squads"],
     ["mode-card-online", "Private multiplayer"],
@@ -102,11 +102,13 @@ function setupMobileModeCards() {
       : card.classList.contains("mode-card-premier-league")
         ? "./assets/prem-logo.webp"
         : card.classList.contains("mode-card-ucl")
-          ? "./assets/ucl-starball-white.png"
+          ? card.querySelector("#clubCompetitionLogo")?.getAttribute("src") || "./assets/ucl-starball-white.png"
           : card.classList.contains("mode-card-default")
             ? "./assets/256-teams-icon.svg"
             : null;
-    const description = /resume/i.test(primaryAction?.textContent || "")
+    const description = card.classList.contains("is-europa-preview")
+      ? "Coming soon · UEFA Europa League"
+      : /resume/i.test(primaryAction?.textContent || "")
       ? `Resume available · ${baseDescription}`
       : baseDescription;
     if (titleNode.textContent !== title) titleNode.textContent = title;

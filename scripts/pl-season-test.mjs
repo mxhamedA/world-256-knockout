@@ -71,6 +71,10 @@ assert.match(css, /\.pl-fixture-score small\s*\{[\s\S]*?font:\s*700 9px "Manrope
 
 const clubs = context.window.PREMIER_LEAGUE_2026_27_CLUBS;
 const schedule = context.window.createPremierLeagueSchedule();
+const currentOfficialPlayerCount = Object.values(context.window.PREMIER_LEAGUE_2026_27_CURRENT_SQUADS)
+  .flat().length;
+const manualSquadAdditionCount = context.window.PREMIER_LEAGUE_2026_27_MANUAL_SQUAD_ADDITIONS?.length || 0;
+const expectedRegisteredPlayerCount = currentOfficialPlayerCount + manualSquadAdditionCount;
 const registeredPlayerNames = new Set(
   clubs.flatMap((club) => club.playerProfiles.map((player) => player.name)),
 );
@@ -92,8 +96,8 @@ assert.doesNotMatch(
 );
 assert.equal(clubs.length, 20, "The season must contain 20 clubs");
 assert.equal(new Set(clubs.map((club) => club.id)).size, 20, "Club ids must be unique");
-assert.equal(clubs.reduce((total, club) => total + club.playerProfiles.length, 0), 564, "The simulator must include every player in the current official FPL feed");
-assert.equal(new Set(clubs.flatMap((club) => club.playerProfiles.map((player) => player.fplId))).size, 564, "Official FPL player ids must be unique across all clubs");
+assert.equal(clubs.reduce((total, club) => total + club.playerProfiles.length, 0), expectedRegisteredPlayerCount, "The simulator must include every official player plus manual PL additions");
+assert.equal(new Set(clubs.flatMap((club) => club.playerProfiles.map((player) => player.fplId))).size, expectedRegisteredPlayerCount, "Registered PL player ids must be unique across all clubs");
 assert.ok(clubs.every((club) => club.playerProfiles.length >= 20), "Every club needs its full current squad");
 assert.ok(clubs.every((club) => club.playerProfiles.some((player) => player.position === "GK")), "Every club needs goalkeeper coverage");
 assert.ok(clubs.every((club) => new Set(club.players).size === club.players.length), "Club squads must not repeat players");
@@ -132,10 +136,12 @@ assert.ok(manCity.playerProfiles.some((player) => player.name === "Rúben Dias")
   "Manchester City's squad must use Rúben Dias's familiar short name.");
 assert.ok(!manCity.playerProfiles.some((player) => player.name === "Rúben dos Santos Gato Alves Dias"),
   "Rúben Dias's full legal name must not be shown in the simulator.");
-assert.ok(newcastle.playerProfiles.some((player) => player.name === "Bruno Guimarães"),
-  "Newcastle's squad must use Bruno Guimarães's familiar short name.");
+assert.ok(arsenal.playerProfiles.some((player) => player.name === "Bruno Guimarães"),
+  "Arsenal's squad must include Bruno Guimarães after the transfer.");
+assert.ok(!newcastle.playerProfiles.some((player) => player.name === "Bruno Guimarães"),
+  "Bruno Guimarães must no longer appear in Newcastle's squad.");
 assert.ok(!newcastle.playerProfiles.some((player) => player.name === "Bruno Guimarães Rodriguez Moura"),
-  "Bruno Guimarães's full legal name must not be shown in the simulator.");
+  "Bruno Guimarães's full legal name must not remain in Newcastle's squad.");
 assert.ok(manUnited.playerProfiles.some((player) => player.name === "Andrey Santos"),
   "Manchester United's squad must use Andrey Santos's familiar short name.");
 assert.ok(!manUnited.playerProfiles.some((player) => player.name === "Andrey Nascimento dos Santos"),

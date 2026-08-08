@@ -61,6 +61,7 @@ const TOURNAMENT_HISTORY_LIMIT = 50;
 
 const PREMIER_LEAGUE_ASSET_PACK_ID = "pl-26-27";
 const UCL_ASSET_PACK_ID = "ucl-26-27";
+const EUROPA_ASSET_PACK_ID = "europa-26-27";
 const PREMIER_LEAGUE_2026_27_TEAMS = Object.freeze([
   { id: "arsenal", name: "Arsenal", code: "ARS", badge: "./assets/pl-26-27/badges/arsenal.webp" },
   { id: "aston-villa", name: "Aston Villa", code: "AVL", badge: "./assets/pl-26-27/badges/aston-villa.webp" },
@@ -148,6 +149,42 @@ const UCL_2026_27_QUALIFIED_TEAMS = Object.freeze([
   association,
   code,
   badge: UCL_2026_27_BADGE_PATHS[id],
+})));
+
+const EUROPA_2026_27_ASSET_TEAMS = Object.freeze([
+  ["az-alkmaar", "AZ Alkmaar", "NED", "AZ", "confirmed"],
+  ["bournemouth", "Bournemouth", "ENG", "BOU", "confirmed"],
+  ["celta", "Celta", "ESP", "CEL", "confirmed"],
+  ["crystal-palace", "Crystal Palace", "ENG", "CRY", "confirmed"],
+  ["hoffenheim", "Hoffenheim", "GER", "TSG", "confirmed"],
+  ["juventus", "Juventus", "ITA", "JUV", "confirmed"],
+  ["bayer-leverkusen", "Bayer Leverkusen", "GER", "B04", "confirmed"],
+  ["marseille", "Marseille", "FRA", "OM", "confirmed"],
+  ["ac-milan", "Milan", "ITA", "MIL", "confirmed"],
+  ["real-sociedad", "Real Sociedad", "ESP", "RSO", "confirmed"],
+  ["rennes", "Rennes", "FRA", "REN", "confirmed"],
+  ["sunderland", "Sunderland", "ENG", "SUN", "confirmed"],
+  ["torreense", "Torreense", "POR", "TOR", "confirmed"],
+  ["iberia-tbilisi", "FC Iberia 1999", "GEO", "IBE", "provisional"],
+  ["besiktas", "Besiktas", "TUR", "BJK", "provisional"],
+  ["omonia", "Omonoia", "CYP", "OMO", "provisional"],
+  ["gornik-zabrze", "Gornik Zabrze", "POL", "GOR", "provisional"],
+  ["salzburg", "Salzburg", "AUT", "SAL", "provisional"],
+  ["universitatea-craiova", "Universitatea Craiova", "ROU", "UCV", "provisional"],
+  ["lech-poznan", "Lech Poznan", "POL", "LPO", "provisional"],
+  ["fc-thun", "FC Thun", "SUI", "THU", "provisional"],
+  ["cska-sofia", "CSKA Sofia", "BUL", "CSK", "provisional"],
+  ["anderlecht", "Anderlecht", "BEL", "AND", "provisional"],
+  ["rangers", "Rangers", "SCO", "RAN", "provisional"],
+  ["benfica", "Benfica", "POR", "BEN", "provisional"],
+  ["shamrock-rovers", "Shamrock Rovers", "IRL", "SHR", "provisional"],
+].map(([id, name, association, code, status]) => Object.freeze({
+  id,
+  name,
+  association,
+  code,
+  status,
+  badge: `./assets/europa-26-27/badges/${id}.png`,
 })));
 
 const RETRO_WORLD_CUP_PATHS = Object.freeze({
@@ -673,12 +710,19 @@ const els = {
   plAssetPackBadgeGrid: $("#plAssetPackBadgeGrid"),
   plAssetPackStatus: $("#plAssetPackStatus"),
   uclInstallButton: $("#uclInstallButton"),
+  europaInstallButton: $("#europaInstallButton"),
   uclAssetPackModal: $("#uclAssetPackModal"),
   uclAssetPackCloseButton: $("#uclAssetPackCloseButton"),
   uclAssetPackCancelButton: $("#uclAssetPackCancelButton"),
   uclAssetPackConfirmButton: $("#uclAssetPackConfirmButton"),
   uclAssetPackBadgeGrid: $("#uclAssetPackBadgeGrid"),
   uclAssetPackStatus: $("#uclAssetPackStatus"),
+  europaAssetPackModal: $("#europaAssetPackModal"),
+  europaAssetPackCloseButton: $("#europaAssetPackCloseButton"),
+  europaAssetPackCancelButton: $("#europaAssetPackCancelButton"),
+  europaAssetPackConfirmButton: $("#europaAssetPackConfirmButton"),
+  europaAssetPackBadgeGrid: $("#europaAssetPackBadgeGrid"),
+  europaAssetPackStatus: $("#europaAssetPackStatus"),
   startRetroWorldCupButton: $("#startRetroWorldCupButton"),
   restartRetroWorldCupButton: $("#restartRetroWorldCupButton"),
   retroWorldCupScreen: $("#retroWorldCupScreen"),

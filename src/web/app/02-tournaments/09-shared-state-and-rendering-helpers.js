@@ -536,6 +536,110 @@ async function installUclAssetPack() {
   }
 }
 
+function accountHasEuropaAssets(account) {
+  return Array.isArray(account?.assetPacks) && account.assetPacks.includes(EUROPA_ASSET_PACK_ID);
+}
+
+function europaClubBadgeMarkup(team) {
+  return `<img class="ucl-club-badge" src="${team.badge}" alt="" loading="lazy" decoding="async" />`;
+}
+
+function renderEuropaAssetPackPreview() {
+  if (!els.europaAssetPackBadgeGrid) return;
+  els.europaAssetPackBadgeGrid.innerHTML = EUROPA_2026_27_ASSET_TEAMS.map((team) => `
+    <span class="pl-asset-pack-badge ${team.status === "provisional" ? "is-provisional" : ""}" title="${escapeHtml(team.name)} · ${team.status === "provisional" ? "Qualifier favourite" : "Confirmed league phase"}">
+      ${europaClubBadgeMarkup(team)}
+    </span>
+  `).join("");
+}
+
+function renderEuropaAssetState() {
+  europaAssetsInstalled = accountHasEuropaAssets(europaAssetAccount);
+  if (els.europaInstallButton) {
+    els.europaInstallButton.textContent = europaAssetsInstalled ? "Assets installed" : "Install assets";
+    els.europaInstallButton.classList.toggle("is-installed", europaAssetsInstalled);
+    els.europaInstallButton.setAttribute("aria-pressed", String(europaAssetsInstalled));
+  }
+  if (els.europaAssetPackConfirmButton) {
+    els.europaAssetPackConfirmButton.disabled = europaAssetInstallBusy || europaAssetsInstalled;
+    els.europaAssetPackConfirmButton.textContent = europaAssetsInstalled
+      ? "Installed"
+      : europaAssetAccount
+        ? "Install asset pack"
+        : "Log in to install";
+  }
+}
+
+function setEuropaAssetAccount(account) {
+  europaAssetAccount = account || null;
+  renderEuropaAssetState();
+}
+
+function openEuropaAssetPack() {
+  renderEuropaAssetPackPreview();
+  if (els.europaAssetPackStatus) {
+    els.europaAssetPackStatus.textContent = europaAssetsInstalled
+      ? "This asset pack is installed on your account."
+      : europaAssetAccount
+        ? `Ready to install for ${europaAssetAccount.username}.`
+        : "Log in to save this asset pack to your account.";
+    els.europaAssetPackStatus.classList.toggle("is-success", europaAssetsInstalled);
+    els.europaAssetPackStatus.classList.remove("is-error");
+  }
+  renderEuropaAssetState();
+  if (!els.europaAssetPackModal?.open) els.europaAssetPackModal?.showModal();
+}
+
+async function installEuropaAssetPack() {
+  if (europaAssetInstallBusy || europaAssetsInstalled) return;
+  if (!europaAssetAccount) {
+    els.europaAssetPackModal?.close();
+    document.querySelector("#mainAccountButton")?.click();
+    showToast("Log in, then install the Europa League 26/27 Asset Pack.");
+    return;
+  }
+  europaAssetInstallBusy = true;
+  renderEuropaAssetState();
+  if (els.europaAssetPackStatus) {
+    els.europaAssetPackStatus.textContent = `Installing ${EUROPA_2026_27_ASSET_TEAMS.length} club crests...`;
+    els.europaAssetPackStatus.classList.remove("is-error", "is-success");
+  }
+  try {
+    const response = await fetch(`/api/challenge/assets/${EUROPA_ASSET_PACK_ID}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || "The asset pack could not be installed.");
+      error.status = response.status;
+      throw error;
+    }
+    setEuropaAssetAccount(payload.account || {
+      ...europaAssetAccount,
+      assetPacks: [...new Set([...(europaAssetAccount.assetPacks || []), EUROPA_ASSET_PACK_ID])],
+    });
+    if (els.europaAssetPackStatus) {
+      els.europaAssetPackStatus.textContent = `Installed. All ${EUROPA_2026_27_ASSET_TEAMS.length} Europa club crests are now active.`;
+      els.europaAssetPackStatus.classList.add("is-success");
+    }
+    showToast("Europa League 26/27 Asset Pack installed.");
+  } catch (error) {
+    if (error.status === 401) europaAssetAccount = null;
+    if (els.europaAssetPackStatus) {
+      els.europaAssetPackStatus.textContent = error.status === 401
+        ? "Your session expired. Log in again to install this pack."
+        : error.message;
+      els.europaAssetPackStatus.classList.add("is-error");
+    }
+  } finally {
+    europaAssetInstallBusy = false;
+    renderEuropaAssetState();
+  }
+}
+
 function selectedPremierLeagueTeam() {
   return PREMIER_LEAGUE_2026_27_TEAMS.find((team) => team.id === premierLeagueMenuSetup.teamId) || null;
 }
